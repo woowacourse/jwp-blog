@@ -10,6 +10,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -44,4 +47,21 @@ public class HelloWorldControllerTests {
                         Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
 
     }
+
+   /* @Test
+    void passParamWithPost2() {
+        String blogName = "helloWrold";
+        Map<String, String> params = new HashMap();
+        params.put("blogName", blogName);
+
+        webTestClient.post()
+                .uri("/helloworld")
+                .body(Mono.just(params), Map.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response ->
+                        Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
+
+    }*/
 }

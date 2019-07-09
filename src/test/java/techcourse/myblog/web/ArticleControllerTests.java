@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,11 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.domain.Article;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
@@ -23,10 +29,23 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void articleForm() {
+    void showArticleWritingPages() {
         webTestClient.get().uri("/writing")
                 .exchange()
                 .expectStatus().isOk();
     }
 
+    @Test
+    void saveArticle() {
+        Map<String, String> params = new HashMap<>();
+        params.put("title", "myTitle");
+        params.put("contents", "myContents");
+        params.put("coverUrl", "coverUrl");
+
+        webTestClient.post()
+                .uri("/articles")
+                .body(Mono.just(params), Map.class)
+                .exchange()
+                .expectStatus().isOk();
+    }
 }
