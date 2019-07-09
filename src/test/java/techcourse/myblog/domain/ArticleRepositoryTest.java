@@ -37,4 +37,13 @@ public class ArticleRepositoryTest {
             .orElseThrow(IllegalStateException::new);
         assertThat(articleFound.getTitle()).isEqualTo("changed title");
     }
+
+    @Test
+    void delete() {
+        ArticleRepository articleRepository = new ArticleRepository();
+        Article newArticle = Article.of("title", "http://background.com", "가나다라마바사");
+        articleRepository.addArticle(newArticle);
+        articleRepository.deleteById(newArticle.getId());
+        assertThat(articleRepository.findAll()).hasSize(0);
+    }
 }

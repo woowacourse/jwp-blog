@@ -24,4 +24,9 @@ public class ArticleRepository {
             .filter(a -> a.getId().equals(id))
             .findFirst();
     }
+
+    public void deleteById(Long id) {
+        Article toDelete = findById(id).orElseThrow(() -> new IllegalArgumentException("Article not found " + id));
+        articles.remove(toDelete);
+    }
 }

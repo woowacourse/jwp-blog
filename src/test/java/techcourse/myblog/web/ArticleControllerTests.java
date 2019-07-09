@@ -91,4 +91,15 @@ public class ArticleControllerTests {
             .exchange()
             .expectStatus().isOk();
     }
+
+    @Test
+    void deleteArticle(){
+        Article newArticle = Article.of("my article", "http://image.com/", "origin contents");
+        articleRepository.addArticle(newArticle);
+
+        webTestClient.delete()
+            .uri("/articles/" + newArticle.getId() )
+            .exchange()
+            .expectStatus().isOk();
+    }
 }

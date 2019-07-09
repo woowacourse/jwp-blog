@@ -3,10 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
@@ -64,5 +61,11 @@ public class ArticleController {
             .orElseThrow(() -> new IllegalStateException("Can't find changed article: " + articleId));
         model.addAttribute("article", articleToShow);
         return "article";
+    }
+
+    @DeleteMapping("/articles/{articleId}")
+    public String deleteArticle(@PathVariable Long articleId){
+        articleRepository.deleteById(articleId);
+        return "index";
     }
 }
