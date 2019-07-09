@@ -31,13 +31,6 @@ public class ArticleControllerTests {
     }
 
     @Test
-    public void articleForm() {
-        webTestClient.get().uri("/articles/new")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
     public void addArticle() {
         String title = "TEST";
         String postUrl = "aaa";
@@ -47,6 +40,13 @@ public class ArticleControllerTests {
         webTestClient.post()
                 .uri("/write")
                 .body(Mono.just(article), Article.class)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    public void articleForm() {
+        webTestClient.get().uri("/articles/new")
                 .exchange()
                 .expectStatus().isOk();
     }
