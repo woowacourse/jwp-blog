@@ -21,6 +21,11 @@ public class ArticleController {
         return "index.html";
     }
 
+    @GetMapping("/writing")
+    public String showWritingPage() {
+        return "article-edit.html";
+    }
+
     @GetMapping("/articles/new")
     public String getNewArticle() {
         return "article-edit.html";
