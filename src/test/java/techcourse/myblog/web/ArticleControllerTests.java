@@ -21,6 +21,13 @@ public class ArticleControllerTests {
     }
 
     @Test
+    void showWritingPage() {
+        webTestClient.get().uri("/writing")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
     void articleForm() {
         webTestClient.get().uri("/articles/new")
                 .exchange()
