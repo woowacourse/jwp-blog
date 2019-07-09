@@ -1,18 +1,18 @@
 package techcourse.myblog;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/" +
-        "")
+@Controller
 public class HelloWorldController {
 
-    @GetMapping
-    public String passParamWithGet(String blogName) {
-        return blogName;
+    @GetMapping("/")
+    public String passParamWithGet() {
+        return "index";
     }
 
-    @PostMapping
-    public String passParamWithPost(@RequestBody String blogName){
-        return blogName;
-    }
+//    @PostMapping
+//    public String passParamWithPost(@RequestBody String blogName){
+//        return blogName;
+//    }
 }
