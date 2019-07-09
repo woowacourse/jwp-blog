@@ -26,5 +26,4 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().isOk();
     }
-
 }
