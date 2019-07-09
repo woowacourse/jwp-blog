@@ -21,6 +21,16 @@ public class ArticleController {
         return "index.html";
     }
 
+    @GetMapping("/articles/{articleId}")
+    public String showArticleById(@PathVariable long articleId, Model model) {
+        System.out.println("aaaaaa" + articleId);
+        Article article = articleRepository.findById(articleId);
+        model.addAttribute("title", article.getTitle());
+        model.addAttribute("coverUrl", article.getCoverUrl());
+        model.addAttribute("contents", article.getContents());
+        return "article.html";
+    }
+
     @GetMapping("/writing")
     public String showWritingPage() {
         return "article-edit.html";

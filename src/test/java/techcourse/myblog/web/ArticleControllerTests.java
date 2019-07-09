@@ -1,6 +1,7 @@
 package techcourse.myblog.web;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,15 @@ public class ArticleControllerTests {
     @Test
     public void index() {
         webTestClient.get().uri("/")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    public void showArticleById() {
+        addArticle();
+
+        webTestClient.get().uri("/articles/1")
                 .exchange()
                 .expectStatus().isOk();
     }
