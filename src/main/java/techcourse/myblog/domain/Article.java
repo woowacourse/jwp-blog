@@ -21,7 +21,7 @@ public class Article {
         return id;
     }
 
-    private void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -29,7 +29,7 @@ public class Article {
         return title;
     }
 
-    private void setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -37,7 +37,7 @@ public class Article {
         return backgroundURL;
     }
 
-    private void setBackgroundURL(String backgroundURL) {
+    public void setBackgroundURL(String backgroundURL) {
         this.backgroundURL = backgroundURL;
     }
 
@@ -45,7 +45,7 @@ public class Article {
         return content;
     }
 
-    private void setContent(String content) {
+    public void setContent(String content) {
         this.content = content;
     }
 }

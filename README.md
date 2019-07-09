@@ -13,12 +13,12 @@
         - [x] request받은 게시글을 ArticleRespository에 저장한다.
 
 - `/articles/{articleId}`: 게시글 페이지(`article.html`)
-    - [ ] 수정 버튼을 누르면 게시글 수정 페이지(`/articles/{articleId}/edit`)로 이동
+    - [x] 수정 버튼을 누르면 게시글 수정 페이지(`/articles/{articleId}/edit`)로 이동
     - [ ] 삭제 버튼을 누르면 `articles/{articleId}`로 DELETE 요청을 보낸다.
         - [ ] 요청이 처리되면 메인 페이지(`/`)로 리다이렉트한다.
 
 - `/articles/{articleId}/edit`: 게시글 수정 페이지(`article-edit.html`)
-    - [ ] 수정을 완료하면 `/articles/{articleId}`로 PUT 요청을 보낸다.
-    - [ ] 요청이 처리되면 게시글 페이지(`/article/{articleId}`)로 리다이렉트한다.
+    - [x] 수정을 완료하면 `/articles/{articleId}`로 PUT 요청을 보낸다.
+    - [x] 요청이 처리되면 게시글 페이지(`/article/{articleId}`)로 리다이렉트한다.
 
 

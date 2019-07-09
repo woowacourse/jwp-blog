@@ -6,13 +6,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class ArticleController {
@@ -20,14 +20,14 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String indexView(Model model) {
         List<Article> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
     }
 
     @GetMapping("/writing")
-    public String editArticle() {
+    public String writeArticleView() {
         return "article-edit";
     }
 
@@ -38,10 +38,31 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}")
-    public String retrieveArticleById(@PathVariable Long articleId, Model model) {
+    public String articleView(@PathVariable Long articleId, Model model) {
         Article article = articleRepository.findById(articleId)
             .orElseThrow(() -> new IllegalArgumentException("Article not found: " + articleId));
         model.addAttribute("article", article);
+        return "article";
+    }
+
+    @GetMapping("/articles/{articleId}/edit")
+    public String editArticleView(@PathVariable Long articleId, Model model) {
+        Article article = articleRepository.findById(articleId)
+            .orElseThrow(() -> new IllegalArgumentException("Article not found" + articleId));
+        model.addAttribute("article", article);
+        return "article-edit";
+    }
+
+    @PutMapping("/articles/{articleId}")
+    public String editArticle(@PathVariable Long articleId, String title, String coverUrl, String contents, Model model) {
+        Article article = articleRepository.findById(articleId)
+            .orElseThrow(() -> new IllegalArgumentException("Article not found: " + articleId));
+        article.setTitle(title);
+        article.setBackgroundURL(coverUrl);
+        article.setContent(contents);
+        Article articleToShow = articleRepository.findById(articleId)
+            .orElseThrow(() -> new IllegalStateException("Can't find changed article: " + articleId));
+        model.addAttribute("article", articleToShow);
         return "article";
     }
 }

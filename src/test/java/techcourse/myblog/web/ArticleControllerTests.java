@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,27 +25,27 @@ public class ArticleControllerTests {
     @Test
     void index() {
         webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
+            .exchange()
+            .expectStatus().isOk();
     }
 
     @Test
     void articleForm() {
         webTestClient.get().uri("/writing")
-                .exchange()
-                .expectStatus().isOk();
+            .exchange()
+            .expectStatus().isOk();
     }
 
     @Test
     void createArticlePost() {
-        Map<String,String> requestMap = new HashMap<>();
+        Map<String, String> requestMap = new HashMap<>();
         String title = "hello";
         String backgroundURL = "http://asdf.com";
         String content = "helloContent";
 
         requestMap.put("title", title);
         requestMap.put("backgroundURL", backgroundURL);
-        requestMap.put("content",content);
+        requestMap.put("content", content);
         webTestClient.post()
             .uri("/articles")
             .body(Mono.just(requestMap), Map.class)
@@ -61,6 +60,34 @@ public class ArticleControllerTests {
 
         webTestClient.get()
             .uri("/articles/" + newArticle.getId())
+            .exchange()
+            .expectStatus().isOk();
+    }
+
+    @Test
+    void editArticle() {
+        Article newArticle = Article.of("title", "http://background.com", "가나다라마바사");
+        articleRepository.addArticle(newArticle);
+
+        webTestClient.get()
+            .uri("/articles/" + newArticle.getId() + "/edit")
+            .exchange()
+            .expectStatus().isOk();
+    }
+
+
+    @Test
+    void editArticlePut() {
+        Article newArticle = Article.of("my article", "http://image.com/", "origin contents");
+        articleRepository.addArticle(newArticle);
+        Map<String, String> requestMap = new HashMap<>();
+
+        requestMap.put("title", "changed title");
+        requestMap.put("backgroundURL", newArticle.getBackgroundURL());
+        requestMap.put("content", "changed contents");
+        webTestClient.put()
+            .uri("/articles/" + newArticle.getId() )
+            .body(Mono.just(requestMap), Map.class)
             .exchange()
             .expectStatus().isOk();
     }
