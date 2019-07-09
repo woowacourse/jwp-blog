@@ -41,4 +41,11 @@ public class ArticleController {
         System.out.println(articleRepository.findAll());
         return "article";
     }
+
+    @GetMapping("/articles/{articleId}")
+    public String fetchArticle(@PathVariable long articleId, Model model) {
+        Article article = articleRepository.find(articleId);
+        model.addAttribute("article", article);
+        return "article";
+    }
 }

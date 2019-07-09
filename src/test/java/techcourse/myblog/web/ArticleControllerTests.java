@@ -51,4 +51,20 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+    @Test
+    void fetchArticle() {
+        Article article = new Article();
+        article.setTitle("제목");
+        article.setCoverUrl("http");
+        article.setContents("내용");
+
+        webTestClient.post().uri("/articles")
+                .body(Mono.just(article), Article.class)
+                .exchange();
+
+        webTestClient.get().uri("/articles/0")
+                .exchange()
+                .expectStatus().isOk();
+    }
 }
