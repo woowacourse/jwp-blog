@@ -3,8 +3,8 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
@@ -27,5 +27,13 @@ public class ArticleController {
     @GetMapping("/writing")
     public String writeArticleForm() {
         return "article-edit";
+    }
+
+    @PostMapping("/articles")
+    public String saveArticle(Article article, Model model) {
+        articleRepository.save(article);
+        model.addAttribute("article", article);
+        System.out.println(articleRepository.findAll());
+        return "article";
     }
 }
