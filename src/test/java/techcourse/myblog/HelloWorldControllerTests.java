@@ -25,12 +25,11 @@ public class HelloWorldControllerTests {
                 .expectBody()
                 .consumeWith(response ->
                         Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
-
     }
 
     @Test
     void passParamWithPost() {
-        String blogName = "helloWrold";
+        String blogName = "helloWorld";
 
         webTestClient.post()
                 .uri("/helloworld")
@@ -40,6 +39,5 @@ public class HelloWorldControllerTests {
                 .expectBody()
                 .consumeWith(response ->
                         Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
-
     }
 }
