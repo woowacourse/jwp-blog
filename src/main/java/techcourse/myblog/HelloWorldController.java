@@ -12,6 +12,7 @@ public class HelloWorldController {
 		return blogName;
 	}
 
+	@ResponseBody
 	@PostMapping("/helloworld")
 	public String getBlogNameUsingPost(@RequestBody String blogName) {
 		return blogName;
