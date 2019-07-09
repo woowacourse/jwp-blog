@@ -20,7 +20,7 @@ public class HelloWorldControllerTests {
 
     @Test
     void passParamWithGet() {
-        String blogName = "helloWorld";
+        String blogName = "index";
         webTestClient.get().uri("/helloworld?blogName=" + blogName)
                 .exchange()
                 .expectStatus().isOk()
@@ -32,7 +32,7 @@ public class HelloWorldControllerTests {
 
     @Test
     void passParamWithPost() {
-        String blogName = "helloWorld";
+        String blogName = "index";
 
         webTestClient.post()
                 .uri("/helloworld")

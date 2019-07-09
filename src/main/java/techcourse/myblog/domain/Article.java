@@ -1,9 +1,9 @@
 package techcourse.myblog.domain;
 
 public class Article {
-    String title;
-    String coverUrl;
-    String contents;
+    private String title;
+    private String coverUrl;
+    private String contents;
 
     public String getTitle() {
         return title;

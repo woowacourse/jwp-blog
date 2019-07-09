@@ -7,14 +7,19 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
 
     @GetMapping("/")
-    public String helloWorld(String blogName, Model model) {
-        model.addAttribute("blogName", blogName);
+    public String index(Model model) {
+        List<Article> articles = articleRepository.findAll();
+        model.addAttribute("articles", articles);
         return "index";
     }
 
