@@ -10,7 +10,7 @@ public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
 
-    @GetMapping("/articles/new")
+    @GetMapping("/writing")
     public String index() {
         return "article-edit";
     }
