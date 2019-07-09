@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +19,9 @@ import java.util.Map;
 public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private ArticleRepository articleRepository;
 
     @Test
     void index() {
@@ -47,6 +52,16 @@ public class ArticleControllerTests {
             .body(Mono.just(requestMap), Map.class)
             .exchange()
             .expectStatus().is3xxRedirection();
+    }
 
+    @Test
+    void retrieveArticle() {
+        Article newArticle = Article.of("title", "http://background.com", "가나다라마바사");
+        articleRepository.addArticle(newArticle);
+
+        webTestClient.get()
+            .uri("/articles/" + newArticle.getId())
+            .exchange()
+            .expectStatus().isOk();
     }
 }
