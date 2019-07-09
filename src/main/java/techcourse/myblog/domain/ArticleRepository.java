@@ -18,7 +18,6 @@ public class ArticleRepository {
     }
 
     public Article find(int i) {
-        articles.add(new Article("andole", "easy"));
-        return articles.get(i - 1);
+        return articles.get(i);
     }
 }

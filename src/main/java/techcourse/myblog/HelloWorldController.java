@@ -9,14 +9,14 @@ public class HelloWorldController {
 
     @ResponseBody
     @GetMapping("/helloworld")
-    private String getName(@RequestParam("blogName") String blogName, Model model){
-        model.addAttribute("blogName",blogName);
+    private String getName(@RequestParam("blogName") String blogName, Model model) {
+        model.addAttribute("blogName", blogName);
         return blogName;
     }
 
     @ResponseBody
     @PostMapping("/helloworld")
-    private String getNameByPost(@RequestBody String body, Model model){
+    private String getNameByPost(@RequestBody String body, Model model) {
         return body;
     }
 

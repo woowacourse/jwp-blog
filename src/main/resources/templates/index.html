@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"
@@ -36,13 +37,14 @@
     <link href="css/main.css" rel="stylesheet">
     <link href="css/index.css" rel="stylesheet">
 </head>
+
 <body>
 <div>
     <header class="header navbar bg-transparent no-border" id="header">
         <div class="header-container">
             <ul class="nav-left mrg-left-0">
                 <li>
-                    <a href="index.html">
+                    <a href="/">
                         <div class="logo logo-dark d-none"
                              style="background-image: url('images/logo/logo_full_dark.png')"></div>
                         <div class="logo logo-white"
@@ -88,30 +90,32 @@
                         </li>
                     </ul>
                     <div class="width-100 fixed left-0 border bottom"></div>
-                    <div class="tab-content">
+                    <div class="tab-content" th:each="article,index : ${articles}">
                         <div class="tab-pane fade in active" id="tab-centered-1" role="tabpanel">
                             <div class="pdd-horizon-15 pdd-vertical-20">
-                                <a class="card article-container" href="article.html">
+                                <a class="card article-container" th:href="'/articles/' + ${index.index}">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
                                             <div class="background-holder has-content"
-                                                 style="background-image: url('images/pages/index/study.jpg')"></div>
+                                                 th:style="'background:url(' + ${article.background} + ');'"></div>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-md-8 ml-auto">
                                                     <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 class="mrg-btm-20 text-bold">목적의식 있는 연습을 통한 효과적인 학습</h2>
-                                                        <p>우아한테크코스의 선발 과정을 목적의식 있는 연습으로 설계한 내용과 목적의식 있는 연습으로 진행했을 때의 학습
-                                                            효과에 대해 다루고 있습니다.</p>
+                                                        <h2 class="mrg-btm-20 text-bold" th:text="${article.title}">
+                                                        </h2>
+                                                        <p th:text="${article.contents}"></p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
                                                                 <i class="ti-heart text-danger pdd-right-5"></i>
-                                                                <span class="text-gray font-size-14 relative">33</span>
+                                                                <span
+                                                                        class="text-gray font-size-14 relative">33</span>
                                                             </li>
                                                             <li class="inline-block">
                                                                 <i class="ti-comments text-primary pdd-right-5"></i>
-                                                                <span class="text-gray font-size-14 relative">3</span>
+                                                                <span
+                                                                        class="text-gray font-size-14 relative">3</span>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -138,7 +142,7 @@
         </div>
 
         <a class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px"
-           href="article-edit.html">
+           href="/writing">
             <i class="ti-plus"></i>
         </a>
 
@@ -149,24 +153,24 @@
     <div class="footer">
         <div class="copyright">
             <img class="d-inline-block logo relative right-5" src="images/logo/logo_full_dark.png">
-            <p class="pdd-left-5 mrg-top-minus-15px">Copyright © <b class="text-dark">우아한테크코스</b>. All rights reserved.
+            <p class="pdd-left-5 mrg-top-minus-15px">Copyright © <b class="text-dark">우아한테크코스</b>. All rights
+                reserved.
             </p>
         </div>
-        <a class="btn btn-default btn-rounded bg-transparent" href="https://woowabros.github.io/" target="_blank">우아한형제들
+        <a class="btn btn-default btn-rounded bg-transparent" href="https://woowabros.github.io/"
+           target="_blank">우아한형제들
             기술블로그</a>
     </div>
 </footer>
 
-<script crossorigin="anonymous"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+<script crossorigin="anonymous" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script crossorigin="anonymous"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+<script crossorigin="anonymous" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script crossorigin="anonymous"
-        integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl"
+<script crossorigin="anonymous" integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl"
         src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 <script src="js/index.js"></script>
 </body>
+
 </html>
