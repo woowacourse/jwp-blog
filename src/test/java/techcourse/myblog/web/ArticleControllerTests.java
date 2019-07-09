@@ -9,7 +9,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -64,6 +63,38 @@ public class ArticleControllerTests {
                 .exchange();
 
         webTestClient.get().uri("/articles/0")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void editArticle() {
+        Article article = new Article();
+        article.setTitle("제목");
+        article.setCoverUrl("http");
+        article.setContents("내용");
+
+        webTestClient.post().uri("/articles")
+                .body(Mono.just(article), Article.class)
+                .exchange();
+
+        webTestClient.get().uri("/articles/0/edit")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void saveEditedArticle() {
+        Article article = new Article();
+        article.setTitle("제목");
+        article.setCoverUrl("http");
+        article.setContents("내용");
+
+        webTestClient.post().uri("/articles")
+                .body(Mono.just(article), Article.class)
+                .exchange();
+
+        webTestClient.put().uri("/articles/0")
                 .exchange()
                 .expectStatus().isOk();
     }
