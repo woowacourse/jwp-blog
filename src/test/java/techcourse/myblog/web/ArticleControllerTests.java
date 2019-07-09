@@ -26,4 +26,18 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+    @Test
+    void 게시물_작성_페이지_이동_테스트() {
+        webTestClient.get().uri("/writing")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void 게시물_작성_요청_후_리다이렉팅_테스트() {
+        webTestClient.post().uri("/articles")
+                .exchange()
+                .expectStatus().is3xxRedirection();
+    }
 }
