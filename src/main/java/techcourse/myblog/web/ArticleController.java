@@ -37,11 +37,24 @@ public class ArticleController {
 
     @GetMapping("/writing")
     public String showWritingPage() {
-        return "article-edit.html";
+        return "article-edit";
     }
 
     @GetMapping("/articles/new")
     public String getNewArticle() {
         return "article-edit";
+    }
+
+    @GetMapping("/articles/{articleId}/edit")
+    public String updateArticle(@PathVariable long articleId, Model model) {
+        Article article = articleRepository.findById(articleId);
+        model.addAttribute("article", article);
+        return "article-edit";
+    }
+
+    @PutMapping("/articles/{articleId}")
+    public RedirectView updateArticle(@PathVariable long articleId, Article articleParam) {
+        long updateId = articleRepository.updateById(articleParam, articleId);
+        return new RedirectView("/articles/" + updateId);
     }
 }
