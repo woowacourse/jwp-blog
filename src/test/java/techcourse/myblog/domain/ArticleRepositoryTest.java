@@ -11,11 +11,7 @@ class ArticleRepositoryTest {
     void save() {
         // Given
         ArticleRepository articleRepository = new ArticleRepository();
-        Article article = new Article();
-
-        article.setTitle("test title");
-        article.setContent("test content");
-        article.setCoverUrl("test url");
+        Article article = new Article("test title", "test contents", "test Url");
 
         // When
         articleRepository.save(article);

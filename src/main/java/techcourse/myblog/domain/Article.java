@@ -3,7 +3,13 @@ package techcourse.myblog.domain;
 public class Article {
     private String title;
     private String coverUrl;
-    private String content;
+    private String contents;
+
+    public Article(String title, String coverUrl, String contents) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+    }
 
     public String getTitle() {
         return title;
@@ -22,10 +28,10 @@ public class Article {
     }
 
     public String getContent() {
-        return content;
+        return contents;
     }
 
     public void setContent(String content) {
-        this.content = content;
+        this.contents = content;
     }
 }
