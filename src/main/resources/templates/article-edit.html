@@ -3,20 +3,20 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}"
       lang="ko">
-<th:block layout:fragment="custom-head">
+<head>
     <link rel="stylesheet" href="/css/article-edit.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
     <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
     <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
-</th:block>
+</head>
 <th:block layout:fragment="content">
     <div>
         <div class="header navbar bg-transparent no-border">
             <div class="header-container">
                 <ul class="nav-left mrg-left-0">
                     <li>
-                        <a href="index.html">
+                        <a href="/">
                             <div class="logo logo-dark d-none"
                                  style="background-image: url('/images/logo/logo_full_dark.png')"></div>
                             <div class="logo logo-white"
@@ -43,7 +43,7 @@
                             </li>
                             <li role="separator" class="divider"></li>
                             <li class="text-dark">
-                                <a href="index.html">
+                                <a href="/">
                                     <i class="ti-power-off pdd-right-10"></i>
                                     <span class="text-dark">로그아웃</span>
                                 </a>
@@ -54,7 +54,7 @@
             </div>
         </div>
 
-        <form action="/write" name="article" method="post" accept-charset="utf-8">
+        <form action="/articles" name="article" method="post" accept-charset="utf-8">
             <div class="about-cover card no-border">
                 <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                     <div class="height-300px vertical-center pdd-horizon-50">
@@ -82,7 +82,7 @@
                             <button id="save-btn" type="submit" class="btn btn-default">
                                 <i class="ti-save"></i>
                             </button>
-                            <a href="/index.html" class="btn btn-default">
+                            <a href="/" class="btn btn-default">
                                 <i class="ti-close"></i>
                             </a>
                         </div>
