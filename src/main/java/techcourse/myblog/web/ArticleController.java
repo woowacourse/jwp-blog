@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.dto.ArticleDto;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -27,8 +28,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(@RequestBody Article article) {
-        int articleId = articleRepository.save(article);
+    public String createArticle(ArticleDto.Create articleDto) {
+        long articleId = articleRepository.save(articleDto);
         return "redirect:/article/" + articleId;
     }
 
