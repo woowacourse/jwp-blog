@@ -30,4 +30,16 @@ public class Article {
     private boolean isBlank(String text) {
         return text == null || "".equals(text);
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public String getContents() {
+        return contents;
+    }
 }

@@ -28,4 +28,10 @@ public class ArticleController {
         articleRepository.insert(article);
         return "article";
     }
+
+    @GetMapping("/")
+    public String articles(Model model) {
+        model.addAttribute("articles", articleRepository.findAll());
+        return "index";
+    }
 }
