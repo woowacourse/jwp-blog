@@ -1,6 +1,5 @@
 package techcourse.myblog.domain;
 
-
 public class Article {
     private String title;
     private String coverUrl;

@@ -12,6 +12,12 @@ public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
 
+    @GetMapping("/")
+    public String index(Model model){
+        model.addAttribute("articles",articleRepository.findAll());
+        return "index";
+    }
+
     @GetMapping("/articles/new")
     public String articleCreateForm() {
         return "article-edit";
