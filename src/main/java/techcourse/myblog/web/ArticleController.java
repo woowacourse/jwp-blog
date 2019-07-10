@@ -10,13 +10,17 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
 
+import java.util.List;
+
 @Controller
 public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
 
     @GetMapping("/")
-    public String index() {
+    public String index(Model model) {
+        List<Article> articles = articleRepository.findAll();
+        model.addAttribute("articles", articles);
         return "index";
     }
 
@@ -29,7 +33,7 @@ public class ArticleController {
     public String createArticle(ArticleDto.Create articleDto) {
         Article article = new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
         long articleId = articleRepository.save(article);
-        return "redirect:/article/" + articleId;
+        return "redirect:/articles/" + articleId;
     }
 
     @GetMapping("/articles/{articleId}")
