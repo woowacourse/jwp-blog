@@ -29,9 +29,9 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public void publishArticle(String title, String coverUrl, String contents, HttpServletResponse response) throws IOException {
-        articleRepository.addArticle(Article.of(title, coverUrl, contents));
-        response.sendRedirect("/");
+    public String publishArticle(Article article) {
+        articleRepository.addArticle(Article.of(article.getTitle(), article.getCoverUrl(), article.getContents()));
+        return "redirect:/";
     }
 
     @GetMapping("/articles/{articleId}")
@@ -55,8 +55,8 @@ public class ArticleController {
         Article article = articleRepository.findById(articleId)
             .orElseThrow(() -> new IllegalArgumentException("Article not found: " + articleId));
         article.setTitle(title);
-        article.setBackgroundURL(coverUrl);
-        article.setContent(contents);
+        article.setCoverUrl(coverUrl);
+        article.setContents(contents);
         Article articleToShow = articleRepository.findById(articleId)
             .orElseThrow(() -> new IllegalStateException("Can't find changed article: " + articleId));
         model.addAttribute("article", articleToShow);
@@ -64,8 +64,8 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable Long articleId){
+    public String deleteArticle(@PathVariable Long articleId) {
         articleRepository.deleteById(articleId);
-        return "index";
+        return "redirect:/";
     }
 }

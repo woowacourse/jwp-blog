@@ -5,15 +5,15 @@ public class Article {
 
     private Long id;
     private String title;
-    private String backgroundURL;
-    private String content;
+    private String coverUrl;
+    private String contents;
 
     public static Article of(String title, String backgroundURL, String content) {
         Article newArticle = new Article();
         newArticle.setId(NEXT_ID++);
         newArticle.setTitle(title);
-        newArticle.setBackgroundURL(backgroundURL);
-        newArticle.setContent(content);
+        newArticle.setCoverUrl(backgroundURL);
+        newArticle.setContents(content);
         return newArticle;
     }
 
@@ -33,19 +33,19 @@ public class Article {
         this.title = title;
     }
 
-    public String getBackgroundURL() {
-        return backgroundURL;
+    public String getCoverUrl() {
+        return coverUrl;
     }
 
-    public void setBackgroundURL(String backgroundURL) {
-        this.backgroundURL = backgroundURL;
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 
-    public String getContent() {
-        return content;
+    public String getContents() {
+        return contents;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 }

@@ -83,7 +83,7 @@ public class ArticleControllerTests {
         Map<String, String> requestMap = new HashMap<>();
 
         requestMap.put("title", "changed title");
-        requestMap.put("backgroundURL", newArticle.getBackgroundURL());
+        requestMap.put("backgroundURL", newArticle.getCoverUrl());
         requestMap.put("content", "changed contents");
         webTestClient.put()
             .uri("/articles/" + newArticle.getId() )
