@@ -21,8 +21,8 @@ public class ArticleRepository {
 
     public Optional<Article> findById(Long id) {
         return articles.stream()
-            .filter(a -> a.getId().equals(id))
-            .findFirst();
+                .filter(a -> a.getId().equals(id))
+                .findFirst();
     }
 
     public void deleteById(Long id) {

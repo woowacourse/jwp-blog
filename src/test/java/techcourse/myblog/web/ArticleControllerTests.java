@@ -25,15 +25,15 @@ public class ArticleControllerTests {
     @Test
     void index() {
         webTestClient.get().uri("/")
-            .exchange()
-            .expectStatus().isOk();
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @Test
     void articleForm() {
         webTestClient.get().uri("/writing")
-            .exchange()
-            .expectStatus().isOk();
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @Test
@@ -47,10 +47,10 @@ public class ArticleControllerTests {
         requestMap.put("backgroundURL", backgroundURL);
         requestMap.put("content", content);
         webTestClient.post()
-            .uri("/articles")
-            .body(Mono.just(requestMap), Map.class)
-            .exchange()
-            .expectStatus().is3xxRedirection();
+                .uri("/articles")
+                .body(Mono.just(requestMap), Map.class)
+                .exchange()
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
@@ -59,9 +59,9 @@ public class ArticleControllerTests {
         articleRepository.addArticle(newArticle);
 
         webTestClient.get()
-            .uri("/articles/" + newArticle.getId())
-            .exchange()
-            .expectStatus().isOk();
+                .uri("/articles/" + newArticle.getId())
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @Test
@@ -70,9 +70,9 @@ public class ArticleControllerTests {
         articleRepository.addArticle(newArticle);
 
         webTestClient.get()
-            .uri("/articles/" + newArticle.getId() + "/edit")
-            .exchange()
-            .expectStatus().isOk();
+                .uri("/articles/" + newArticle.getId() + "/edit")
+                .exchange()
+                .expectStatus().isOk();
     }
 
 
@@ -86,20 +86,20 @@ public class ArticleControllerTests {
         requestMap.put("backgroundURL", newArticle.getCoverUrl());
         requestMap.put("content", "changed contents");
         webTestClient.put()
-            .uri("/articles/" + newArticle.getId() )
-            .body(Mono.just(requestMap), Map.class)
-            .exchange()
-            .expectStatus().isOk();
+                .uri("/articles/" + newArticle.getId())
+                .body(Mono.just(requestMap), Map.class)
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @Test
-    void deleteArticle(){
+    void deleteArticle() {
         Article newArticle = Article.of("my article", "http://image.com/", "origin contents");
         articleRepository.addArticle(newArticle);
 
         webTestClient.delete()
-            .uri("/articles/" + newArticle.getId() )
-            .exchange()
-            .expectStatus().isOk();
+                .uri("/articles/" + newArticle.getId())
+                .exchange()
+                .expectStatus().isOk();
     }
 }

@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -37,7 +35,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}")
     public String articleView(@PathVariable Long articleId, Model model) {
         Article article = articleRepository.findById(articleId)
-            .orElseThrow(() -> new IllegalArgumentException("Article not found: " + articleId));
+                .orElseThrow(() -> new IllegalArgumentException("Article not found: " + articleId));
         model.addAttribute("article", article);
         return "article";
     }
@@ -45,7 +43,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}/edit")
     public String editArticleView(@PathVariable Long articleId, Model model) {
         Article article = articleRepository.findById(articleId)
-            .orElseThrow(() -> new IllegalArgumentException("Article not found" + articleId));
+                .orElseThrow(() -> new IllegalArgumentException("Article not found" + articleId));
         model.addAttribute("article", article);
         return "article-edit";
     }
@@ -53,12 +51,12 @@ public class ArticleController {
     @PutMapping("/articles/{articleId}")
     public String editArticle(@PathVariable Long articleId, String title, String coverUrl, String contents, Model model) {
         Article article = articleRepository.findById(articleId)
-            .orElseThrow(() -> new IllegalArgumentException("Article not found: " + articleId));
+                .orElseThrow(() -> new IllegalArgumentException("Article not found: " + articleId));
         article.setTitle(title);
         article.setCoverUrl(coverUrl);
         article.setContents(contents);
         Article articleToShow = articleRepository.findById(articleId)
-            .orElseThrow(() -> new IllegalStateException("Can't find changed article: " + articleId));
+                .orElseThrow(() -> new IllegalStateException("Can't find changed article: " + articleId));
         model.addAttribute("article", articleToShow);
         return "article";
     }

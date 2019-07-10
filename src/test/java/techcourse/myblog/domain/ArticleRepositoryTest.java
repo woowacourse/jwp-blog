@@ -31,10 +31,10 @@ public class ArticleRepositoryTest {
         Article newArticle = Article.of("title", "http://background.com", "가나다라마바사");
         articleRepository.addArticle(newArticle);
         Article articleFound = articleRepository.findById(newArticle.getId())
-            .orElseThrow(IllegalStateException::new);
+                .orElseThrow(IllegalStateException::new);
         articleFound.setTitle("changed title");
         articleFound = articleRepository.findById(newArticle.getId())
-            .orElseThrow(IllegalStateException::new);
+                .orElseThrow(IllegalStateException::new);
         assertThat(articleFound.getTitle()).isEqualTo("changed title");
     }
 
