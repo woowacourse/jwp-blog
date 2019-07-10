@@ -20,8 +20,9 @@ public class ArticleController {
         return "index";
     }
 
-    @GetMapping("/articles")
-    public String article() {
+    @GetMapping("/articles/{articleId}")
+    public String article(@PathVariable("articleId") int articleId, Model model) {
+        model.addAttribute("article", articleRepository.get(articleId));
         return "article";
     }
 
