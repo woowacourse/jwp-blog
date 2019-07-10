@@ -30,5 +30,15 @@ public class Article {
         return id;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
+    public void setContents(String contents) {
+        this.contents = contents;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
 }

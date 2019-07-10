@@ -34,4 +34,11 @@ public class ArticleRepository {
     public Article getLatestArticle() {
         return articles.get(articles.size() - 1);
     }
+
+    public void update(int articleId, Article article) {
+        Article originalArticle = findById(articleId);
+        originalArticle.setTitle(article.getTitle());
+        originalArticle.setContents(article.getContents());
+        originalArticle.setCoverUrl(article.getCoverUrl());
+    }
 }
