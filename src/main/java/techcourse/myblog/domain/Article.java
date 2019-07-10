@@ -11,7 +11,7 @@ public class Article {
         this.title = title;
         this.contents = contents;
         this.background = background;
-        if (background.isEmpty()) {
+        if (this.background.isEmpty()) {
             this.background = DEFAULT_BACKGROUND;
         }
     }

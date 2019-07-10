@@ -29,6 +29,7 @@ public class ArticleController {
     private String getArticleById(@PathVariable int id, Model model) {
         Article article = articleRepository.find(id);
         model.addAttribute("title", article.getTitle());
+        model.addAttribute("background", article.getBackground());
         model.addAttribute("contents", article.getContents());
         return "article";
     }
