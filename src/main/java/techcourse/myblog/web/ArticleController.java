@@ -29,15 +29,15 @@ public class ArticleController {
         return "article";
     }
 
-    @GetMapping("/writing")
-    public String showWritingPage() {
-        return "article-edit.html";
-    }
-
     @PostMapping("/write")
     public RedirectView addArticle(Article articleParam) {
         Long latestId = articleRepository.add(articleParam);
         return new RedirectView("/articles/" + latestId);
+    }
+
+    @GetMapping("/writing")
+    public String showWritingPage() {
+        return "article-edit.html";
     }
 
     @GetMapping("/articles/new")
