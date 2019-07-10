@@ -2,8 +2,8 @@
 <html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:include="fragments/main/main_header :: mainHead"></head>
-    <link rel="stylesheet" href="../static/css/index.css">
-    <link rel="stylesheet" href="../static/css/article-edit.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/article-edit.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
     <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
@@ -17,9 +17,9 @@
                 <li>
                     <a href="index.html">
                         <div class="logo logo-dark d-none"
-                             style="background-image: url('../static/images/logo/logo_full_dark.png')"></div>
+                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
                         <div class="logo logo-white"
-                             style="background-image: url('../static/images/logo/logo_full_white.png')"></div>
+                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
@@ -56,15 +56,21 @@
     <form action="/articles" name="article" method="post" accept-charset="utf-8">
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg"
-                 style="background-image: url('../static/images/pages/index/study.jpg')">
+                 style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="text" name="title"
+                        <input th:if="${article} == null" type="text" name="title"
                                class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
                                placeholder="제목을 입력해주세요" autocomplete="off">
-                        <input type="text" name="coverUrl"
+                        <input th:if="${article} != null" type="text" name="title"
+                               class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
+                               th:value="${article.title}" autocomplete="off">
+                        <input th:if="${article} == null" type="text" name="coverUrl"
                                class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
                                placeholder="배경 url을 입력해주세요" autocomplete="off">
+                        <input th:if="${article} != null" type="text" name="coverUrl"
+                               class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
+                               th:value="${article.coverUrl}" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -99,8 +105,15 @@
         integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl"
         crossorigin="anonymous"></script>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-<script src="../static/js/index.js"></script>
-<script type="text/javascript">
+<script src="/js/index.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var initValue = "";
+
+    [# th:if="${article} != null" ]
+        initValue = /*[[${article.contents}]]*/ 'default';
+    [/]
+
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
@@ -110,8 +123,10 @@
                 document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
             }
         },
-        height: 'calc(100vh - 360px)'
+        height: 'calc(100vh - 360px)',
+        initialValue: initValue
     });
+    /*]]>*/
 </script>
 </body>
 </html>

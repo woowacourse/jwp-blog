@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
+import techcourse.myblog.web.ArticleNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +19,19 @@ public class ArticleRepository {
     }
 
     public Article findById(int articleId) {
-        if (articleId < 0 || articleId >= articles.size()) {
-            return null;
+        for (Article article : articles) {
+            if (articleId == article.getId()) {
+                return article;
+            }
         }
-        return articles.get(articleId);
+        throw new ArticleNotFoundException();
     }
 
     public int getSize() {
         return articles.size();
+    }
+
+    public Article getLatestArticle() {
+        return articles.get(articles.size() - 1);
     }
 }

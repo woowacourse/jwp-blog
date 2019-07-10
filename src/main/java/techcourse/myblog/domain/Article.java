@@ -1,6 +1,8 @@
 package techcourse.myblog.domain;
 
 public class Article {
+    private static int currentId = 1;
+    private final int id;
     private String title;
     private String contents;
     private String coverUrl;
@@ -9,6 +11,7 @@ public class Article {
         this.title = title;
         this.contents = contents;
         this.coverUrl = coverUrl;
+        this.id = currentId++;
     }
 
     public String getTitle() {
@@ -22,4 +25,10 @@ public class Article {
     public String getCoverUrl() {
         return coverUrl;
     }
+
+    public int getId() {
+        return id;
+    }
+
+
 }
