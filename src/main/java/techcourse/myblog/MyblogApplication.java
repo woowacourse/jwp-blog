@@ -12,7 +12,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 public class MyblogApplication {
 
     public static void main(String[] args) {
-        System.setProperty("spring.devtools.restart.enabled","false");
+        System.setProperty("spring.devtools.restart.enabled","true");
         System.setProperty("spring.devtools.livereload.enabled","true");
         SpringApplication.run(MyblogApplication.class, args);
     }
