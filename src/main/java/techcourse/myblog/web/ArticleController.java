@@ -18,7 +18,7 @@ public class ArticleController {
     public String index(Model model) {
         List<Article> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
-        return "index.html";
+        return "index";
     }
 
     @GetMapping("/articles/{articleId}")
@@ -28,7 +28,7 @@ public class ArticleController {
         model.addAttribute("title", article.getTitle());
         model.addAttribute("coverUrl", article.getCoverUrl());
         model.addAttribute("contents", article.getContents());
-        return "article.html";
+        return "article";
     }
 
     @GetMapping("/writing")
@@ -40,14 +40,12 @@ public class ArticleController {
     public String addArticle(Article articleParam, Model model) {
         Long latestId = articleRepository.add(articleParam);
         Article article = articleRepository.findById(latestId);
-        model.addAttribute("title", article.getTitle());
-        model.addAttribute("coverUrl", article.getCoverUrl());
-        model.addAttribute("contents", article.getContents());
-        return "article.html";
+        model.addAttribute("article", article);
+        return "article";
     }
 
     @GetMapping("/articles/new")
     public String getNewArticle() {
-        return "article-edit.html";
+        return "article-edit";
     }
 }
