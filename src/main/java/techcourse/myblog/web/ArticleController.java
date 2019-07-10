@@ -13,8 +13,8 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 
     @GetMapping("/")
-    public String index(Model model){
-        model.addAttribute("articles",articleRepository.findAll());
+    public String index(Model model) {
+        model.addAttribute("articles", articleRepository.findAll());
         return "index";
     }
 
@@ -30,8 +30,15 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String createArticle(@ModelAttribute Article article, Model model) {
-        model.addAttribute("article",article);
+        model.addAttribute("article", article);
         articleRepository.save(article);
+        return "article";
+    }
+
+    @GetMapping("/articles/{articleId}")
+    public String showArticle(@PathVariable Long articleId, Model model) {
+        Article article = articleRepository.findById(articleId);
+        model.addAttribute("article", article);
         return "article";
     }
 }

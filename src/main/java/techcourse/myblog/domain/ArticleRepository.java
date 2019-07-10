@@ -16,4 +16,11 @@ public class ArticleRepository {
     public void save(Article article){
         articles.add(article);
     }
+
+    public Article findById(Long articleId) {
+        return articles.stream()
+                .filter(article -> article.getArticleId().equals(articleId))
+                .findAny()
+                .get();
+    }
 }
