@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.domain.Article;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -43,15 +46,24 @@ public class ArticleControllerTests {
     @Test
     public void addArticle() {
         String title = "TEST";
-        String postUrl = "aaa";
-        String articleContents = "testtest";
-        Article article = new Article(0L, title, postUrl, articleContents);
+        String coverUrl = "aaa";
+        String contents = "testtest";
+        Article article = new Article(0L, title, coverUrl, contents);
 
         webTestClient.post()
                 .uri("/write")
-                .body(Mono.just(article), Article.class)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk().expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(title)).isTrue();
+                    assertThat(body.contains(coverUrl)).isTrue();
+                    assertThat(body.contains(contents)).isTrue();
+                });
     }
 
     @Test
