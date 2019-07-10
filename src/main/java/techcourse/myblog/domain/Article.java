@@ -3,7 +3,7 @@ package techcourse.myblog.domain;
 public class Article {
     private static long articleId = 1;
 
-    private Long id;
+    private long id;
     private String title;
     private String coverUrl;
     private String contents;

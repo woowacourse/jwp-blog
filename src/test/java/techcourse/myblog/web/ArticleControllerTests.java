@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+
     @Autowired
     private WebTestClient webTestClient;
 
@@ -23,13 +24,6 @@ public class ArticleControllerTests {
     @Test
     void index() {
         webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    void articleForm() {
-        webTestClient.get().uri("/articles/new")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -67,6 +61,5 @@ public class ArticleControllerTests {
                     assertThat(body.contains(coverUrl)).isTrue();
                     assertThat(body.contains(contents)).isTrue();
                 });
-
     }
 }
