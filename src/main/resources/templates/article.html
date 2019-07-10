@@ -26,9 +26,15 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a class="float-right pointer btn btn-icon" href="article-edit.html">
+                <a class="float-right pointer btn btn-icon" th:href="'/articles/' + ${id} + '/edit'">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
+                <form method="post" th:action="'/articles/' + ${id}">
+                    <input name="_method" type="hidden" value="DELETE"/>
+                    <button class="btn btn-default" id="delete-btn" type="submit">
+                        <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                    </button>
+                </form>
                 <div id="viewerSection">
                     <p th:text="${contents}"></p>
                 </div>
@@ -49,20 +55,7 @@
                 </div>
                 <div class="comment">
                     <ul class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30">
-                            <img alt="" class="thumb-img img-circle"
-                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4">
-                            <div class="info">
-                                <span class="text-bold inline-block" href="">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                        <i class="ti-timer pdd-right-5"></i>
-                                        <span>6 min ago</span>
-                                    </span>
-                                <p class="width-80">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로
-                                    살다 보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의
-                                    중요성을 느낄 수 있는 계기가 되었다.</p>
-                            </div>
-                        </li>
+                        <th:block th:include="fragment/common_jun_comment"></th:block>
                         <th:block th:include="fragment/common_jun"></th:block>
                     </ul>
                     <div class="add-comment">

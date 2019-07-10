@@ -20,4 +20,8 @@ public class ArticleRepository {
     public Article find(int i) {
         return articles.get(i);
     }
+
+    public void delete(int i) {
+        articles.remove(i);
+    }
 }

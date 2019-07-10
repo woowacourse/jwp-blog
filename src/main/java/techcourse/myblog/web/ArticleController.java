@@ -3,10 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
@@ -24,10 +21,10 @@ public class ArticleController {
         return "index";
     }
 
-
     @GetMapping("/articles/{id}")
     private String getArticleById(@PathVariable int id, Model model) {
         Article article = articleRepository.find(id);
+        model.addAttribute("id", id);
         model.addAttribute("title", article.getTitle());
         model.addAttribute("background", article.getBackground());
         model.addAttribute("contents", article.getContents());
@@ -36,7 +33,6 @@ public class ArticleController {
 
     @GetMapping("/articles/new")
     private String getArticle(Model model) {
-        model.addAttribute("message", "articles");
         return "article-edit";
     }
 
@@ -57,4 +53,38 @@ public class ArticleController {
 
         return "redirect:/articles/" + id;
     }
+
+    @GetMapping("/articles/{id}/edit")
+    private String getEditArticle(@PathVariable int id, Model model) {
+        Article article = articleRepository.find(id);
+        model.addAttribute("id", id);
+        model.addAttribute("title", article.getTitle());
+        model.addAttribute("background", article.getBackground());
+        model.addAttribute("contents", article.getContents());
+        return "article-edit";
+    }
+
+    //    @RequestMapping(value = "/articles/{id}", method = RequestMethod.PUT)
+    @PutMapping("/articles/{id}")
+    private String putArticle(
+            @RequestParam("title") String title,
+            @RequestParam("contents") String contents,
+            @RequestParam("coverUrl") String coverUrl,
+            @PathVariable int id,
+            Model model) {
+
+        Article article = articleRepository.find(id);
+        article.setTitle(title);
+        article.setContents(contents);
+        article.setBackground(coverUrl);
+
+        return "redirect:/articles/" + id;
+    }
+
+    @DeleteMapping("/articles/{id}")
+    private String deleteArticleById(@PathVariable int id) {
+        articleRepository.delete(id);
+        return "redirect:/";
+    }
+
 }
