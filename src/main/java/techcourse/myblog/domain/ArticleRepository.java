@@ -30,4 +30,12 @@ public class ArticleRepository {
                 .filter(article -> article.getId() == latestId)
                 .findFirst().orElseThrow(IllegalArgumentException::new);
     }
+
+    public long updateById(Article articleParam, long articleId) {
+        Article article = findById(articleId);
+        article.setTitle(articleParam.getTitle());
+        article.setCoverUrl(articleParam.getCoverUrl());
+        article.setContents(articleParam.getContents());
+        return articleId;
+    }
 }

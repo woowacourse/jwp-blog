@@ -34,7 +34,8 @@ public class ArticleControllerTests {
         webTestClient.get()
                 .uri("/")
                 .exchange()
-                .expectStatus().isOk().expectBody()
+                .expectStatus().isOk()
+                .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
                     assertEquals(count, StringUtils.countOccurrencesOf(body, ARTICLE_DELIMITER));
@@ -48,6 +49,27 @@ public class ArticleControllerTests {
         webTestClient.get().uri("/articles/1")
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    public void updateArticleById() {
+        addArticle();
+
+        String title = "TEST";
+        String coverUrl = "aaa";
+        String contents = "testtest";
+        Article article = new Article(0L, title, coverUrl, contents);
+
+        webTestClient.get().uri("/articles/1/edit")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(title)).isTrue();
+                    assertThat(body.contains(coverUrl)).isTrue();
+                    assertThat(body.contains(contents)).isTrue();
+                });
     }
 
     @Test
