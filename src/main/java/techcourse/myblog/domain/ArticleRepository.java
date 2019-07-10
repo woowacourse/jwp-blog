@@ -8,8 +8,14 @@ import java.util.List;
 @Repository
 public class ArticleRepository {
     private List<Article> articles = new ArrayList<>();
-
     public List<Article> findAll() {
         return articles;
+    }
+    public void add (Article article){
+        articles.add(article);
+    }
+
+    public Article findById(final int articleId) {
+        return articles.get(articleId);
     }
 }
