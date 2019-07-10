@@ -8,23 +8,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.domain.Article;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+    private static final String ARTICLE_DELIMITER
+            = "<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tab-centered-1\">";
     @Autowired
     private WebTestClient webTestClient;
 
     @Test
     public void index() {
-        webTestClient.get().uri("/")
+        final int count = 3;
+        addArticle();
+        addArticle();
+        addArticle();
+
+        webTestClient.get()
+                .uri("/")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk().expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertEquals(count, StringUtils.countOccurrencesOf(body, ARTICLE_DELIMITER));
+                });
     }
 
     @Test
@@ -57,13 +71,7 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().isOk().expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
+                .expectStatus().isFound();
     }
 
     @Test
