@@ -27,9 +27,9 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public void createArticle(@RequestBody Article article, HttpServletResponse res) throws IOException {
+    public String createArticle(@RequestBody Article article) {
         int articleId = articleRepository.save(article);
-        res.sendRedirect("/article/" + articleId);
+        return "redirect:/article/" + articleId;
     }
 
     @GetMapping("/articles/new")
