@@ -79,18 +79,18 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
                             <div class="pdd-horizon-15 pdd-vertical-20">
-                                <a href="article.html" class="card article-container">
-                                    <div th:each="article, index : ${articles}"  class="card-horizon">
+                                <div class="card article-container">
+                                <div th:each="article, index : ${articles}" class="card-horizon">
+                                    <a th:href="@{article/{index}(index=${index.index})}">
                                         <div class="image-container col-md-4">
-                                            <!--<div class="background-holder has-content" style="background-image: url('images/pages/index/study.jpg')"></div>-->
                                             <div class="background-holder has-content" th:style="'background:url('+${article.coverUrl}+');'"></div>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-md-8 ml-auto">
                                                     <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 th:value="${article.title}" class="mrg-btm-20 text-bold"></h2>
-                                                        <p th:value="${article.contents}"></p>
+                                                        <h2 th:text="${article.title}" th:value="${article.title}" class="mrg-btm-20 text-bold"></h2>
+                                                        <p th:text="${#strings.length(article.contents) < 100 ? article.contents : #strings.concat(#strings.substring(article.contents, 0, 100), '...')}"></p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
                                                                 <i class="ti-heart text-danger pdd-right-5"></i>
@@ -105,8 +105,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </a>
+                                    </a>
+                                </div>
+                                </div>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="tab-centered-2">

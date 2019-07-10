@@ -16,4 +16,8 @@ public class ArticleRepository {
     public void save(Article article) {
         articles.add(article);
     }
+
+    public Article findById(int index) {
+        return articles.get(index);
+    }
 }

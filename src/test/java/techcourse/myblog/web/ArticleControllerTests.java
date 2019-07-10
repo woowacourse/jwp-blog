@@ -85,4 +85,26 @@ public class ArticleControllerTests {
 					assertThat(body.contains(contents)).isTrue();
 				});
 	}
+
+	@Test
+	void findByIndex() {
+		String title = "제목";
+		String contents = "contents";
+		String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
+
+		articleRepository.save(new Article(title, contents, coverUrl));
+
+		webTestClient.get()
+				.uri("/article/0")
+				.exchange()
+				.expectStatus()
+				.isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body.contains(title)).isTrue();
+					assertThat(body.contains(coverUrl)).isTrue();
+					assertThat(body.contains(contents)).isTrue();
+				});
+	}
 }
