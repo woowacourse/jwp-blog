@@ -62,7 +62,7 @@ public class ArticleControllerTests {
                 .body(Mono.just(article), Article.class)
                 .exchange();
 
-        webTestClient.get().uri("/articles/0")
+        webTestClient.get().uri("/articles/1")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -78,7 +78,7 @@ public class ArticleControllerTests {
                 .body(Mono.just(article), Article.class)
                 .exchange();
 
-        webTestClient.get().uri("/articles/0/edit")
+        webTestClient.get().uri("/articles/1/edit")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -94,7 +94,23 @@ public class ArticleControllerTests {
                 .body(Mono.just(article), Article.class)
                 .exchange();
 
-        webTestClient.put().uri("/articles/0")
+        webTestClient.put().uri("/articles/1")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void deleteArticle() {
+        Article article = new Article();
+        article.setTitle("제목");
+        article.setCoverUrl("http");
+        article.setContents("내용");
+
+        webTestClient.post().uri("/articles")
+                .body(Mono.just(article), Article.class)
+                .exchange();
+
+        webTestClient.delete().uri("/articles/1")
                 .exchange()
                 .expectStatus().isOk();
     }

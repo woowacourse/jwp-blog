@@ -82,7 +82,7 @@
 		</div>
 	</div>
 	
-	<form action="/articles" name="article" method="post" accept-charset="utf-8">
+	<form id="article-write-form" action="/articles" name="article" method="post" accept-charset="utf-8">
 		<input id="article-write" type="hidden" name="_method" value="post"/>
 		<div class="about-cover card no-border">
 			<div class="cover-img overlay-dark bg" style="background-image: url('images/pages/index/study.jpg')">
@@ -111,9 +111,9 @@
 						<button id="save-btn" type="submit" class="btn btn-default">
 							<i class="ti-save"></i>
 						</button>
-						<a href="/" class="btn btn-default">
+						<button id="delete-btn" class="btn btn-default" onclick="deleteArticle(event)" style="display:none">
 							<i class="ti-close"></i>
-						</a>
+						</button>
 					</div>
 				</div>
 			</div>
@@ -147,7 +147,14 @@
         document.getElementById("coverUrl").value = [[${article?.coverUrl}]]
         editor.setValue([[${article?.contents}]])
         document.getElementById("article-write").setAttribute("value", "put")
-        document.getElementById("article-write").parentElement.setAttribute("action", "/articles/" + [[${article?.articleId}]])
+        document.getElementById("article-write-form").setAttribute("action", "/articles/" + [[${article?.articleId}]])
+        document.getElementById("delete-btn").style.display = "block"
+    }
+
+    function deleteArticle(event) {
+        event.preventDefault()
+        document.getElementById("article-write").setAttribute("value", "delete")
+        document.getElementById("article-write-form").submit()
     }
 
 </script>

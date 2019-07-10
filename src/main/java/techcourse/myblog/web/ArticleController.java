@@ -1,12 +1,12 @@
 package techcourse.myblog.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
@@ -16,6 +16,15 @@ import java.util.List;
 public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Bean
+    public FilterRegistrationBean httpMethodFilter() {
+        FilterRegistrationBean filter = new FilterRegistrationBean();
+        filter.setFilter(new HiddenHttpMethodFilter());
+        filter.setName("httpMethodFilter");
+        filter.addUrlPatterns("/*");
+        return filter;
+    }
 
     @GetMapping("/")
     public String index(Model model) {
@@ -63,5 +72,11 @@ public class ArticleController {
         articleRepository.saveEdited(article);
         model.addAttribute("article", article);
         return "article";
+    }
+
+    @DeleteMapping("/articles/{articleId}")
+    public String deleteArticle(@PathVariable long articleId, Article article, Model model) {
+        articleRepository.delete(articleId);
+        return "redirect:/";
     }
 }

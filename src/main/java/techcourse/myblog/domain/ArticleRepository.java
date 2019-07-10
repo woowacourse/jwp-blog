@@ -21,18 +21,22 @@ public class ArticleRepository {
 
     public Article find(long articleId) {
         return articles.stream()
-                .filter(article -> article.getArticleId() == articleId)
+                .filter(article -> article.getArticleId() == (int) articleId)
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new)
                 ;
     }
 
     public void saveEdited(Article editedArticle) {
+        delete(editedArticle.getArticleId());
+        articles.add(editedArticle);
+    }
+
+    public void delete(long articleId) {
         Article articleToDelete = articles.stream()
-                .filter(article -> article.getArticleId() == editedArticle.getArticleId())
+                .filter(article -> article.getArticleId() == (int) articleId)
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
         articles.remove(articleToDelete);
-        articles.add(editedArticle);
     }
 }
