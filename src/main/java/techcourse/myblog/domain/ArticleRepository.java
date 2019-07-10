@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ArticleRepository {
@@ -13,6 +14,16 @@ public class ArticleRepository {
 
     public List<Article> findAll() {
         return articles;
+    }
+
+    public void addArticle(Article article) {
+        this.articles.add(article);
+    }
+
+    public Optional<Article> findArticleById (final Long articleId) {
+        return articles.stream()
+                .filter(x -> x.getArticleId().equals(articleId))
+                .findAny();
     }
 
     public Long generateNewId() {
