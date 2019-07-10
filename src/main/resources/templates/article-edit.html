@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>우아한테크코스 기술블로그</title>
     <th:block th:replace="fragments/head :: headFragment"></th:block>
     <link rel="stylesheet" href="/css/index.css">
@@ -16,13 +17,17 @@
 <div>
     <header th:replace="fragments/login-header :: loginHeaderFragment"></header>
 
-    <form action="/articles" name="article" method="post" accept-charset="utf-8" >
+    <form action="/articles" name="article" method="post" accept-charset="utf-8">
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" autocomplete="off">
-                        <input type="text" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"  placeholder="배경 url을 입력해주세요" autocomplete="off">
+                        <input type="text" name="title"
+                               class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
+                               placeholder="제목을 입력해주세요" autocomplete="off">
+                        <input type="text" name="coverUrl"
+                               class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
+                               placeholder="배경 url을 입력해주세요" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -64,6 +69,7 @@
         },
         height: 'calc(100vh - 360px)'
     });
+
 </script>
 </body>
 </html>

@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
     <title>우아한테크코스 기술블로그</title>
     <th:block th:replace="fragments/head :: headFragment"></th:block>
     <link rel="stylesheet" href="/css/index.css">
@@ -40,16 +41,19 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
                             <div class="pdd-horizon-15 pdd-vertical-20">
-                                <a th:each="article : ${articles}" href="article.html" class="card article-container">
+                                <a th:each="article,index : ${articles}" th:href="@{'/articles/' + ${index.index}}"
+                                   class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
-                                            <div class="background-holder has-content" th:style="'background:url(' + ${article.coverUrl} + ');'"></div>
+                                            <div class="background-holder has-content"
+                                                 th:style="'background:url(' + ${article.coverUrl} + ');'"></div>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-md-8 ml-auto">
                                                     <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 th:text="${article.title}" class="mrg-btm-20 text-bold"></h2>
+                                                        <h2 th:text="${article.title}"
+                                                            class="mrg-btm-20 text-bold"></h2>
                                                         <p th:text="${article.contents}"></p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
@@ -84,7 +88,8 @@
             <div class="col-lg-3"></div>
         </div>
 
-        <a href="/articles/new" class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
+        <a href="/articles/new"
+           class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
             <i class="ti-plus"></i>
         </a>
     </div>
