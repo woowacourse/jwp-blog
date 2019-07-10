@@ -1,43 +1,71 @@
 package techcourse.myblog.domain;
 
-public class Article {
-    private final Long articleId;
-    private final String title;
-    private final String content;
-    private final String writer;
-    private final String pictureSource;
-    private final String writeDate;
+import java.util.Objects;
 
-    public Article(Long articleId, String title, String content, String writer, String pictureSource, String writeDate) {
-        this.articleId = articleId;
-        this.title = title;
-        this.content = content;
-        this.writer = writer;
-        this.pictureSource = pictureSource;
-        this.writeDate = writeDate;
-    }
+public class Article {
+    private Long articleId;
+    private String title;
+    private String contents;
+    private String coverUrl;
 
     public Long getArticleId() {
         return articleId;
+    }
+
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getContent() {
-        return content;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getWriter() {
-        return writer;
+    public String getContents() {
+        return contents;
     }
 
-    public String getPictureSource() {
-        return pictureSource;
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 
-    public String getWriteDate() {
-        return writeDate;
+    public String getCoverUrl() {
+        if (coverUrl == null) {
+            return "../static/images/pages/index/study.jpg";
+        }
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return Objects.equals(articleId, article.articleId) &&
+                Objects.equals(title, article.title) &&
+                Objects.equals(contents, article.contents) &&
+                Objects.equals(coverUrl, article.coverUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(articleId, title, contents, coverUrl);
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "articleId=" + articleId +
+                ", title='" + title + '\'' +
+                ", contents='" + contents + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                '}';
     }
 }
