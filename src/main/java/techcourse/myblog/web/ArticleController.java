@@ -21,8 +21,10 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String writeArticle(HttpServletRequest request) {
+    public String writeArticle(HttpServletRequest request, Model model) {
+        int articleId = articleRepository.getSize();
         articleRepository.save(new Article(request.getParameter("title"), request.getParameter("contents"), request.getParameter("coverUrl")));
+        model.addAttribute("article", findArticleById(articleId));
         return "article";
     }
 
@@ -35,11 +37,15 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String showArticleById(@PathVariable int articleId, Model model) {
+        model.addAttribute("article", findArticleById(articleId));
+        return "article";
+    }
+
+    private Article findArticleById(int articleId) {
         Article article = articleRepository.findById(articleId);
         if (article == null) {
             throw new ArticleNotFoundException();
         }
-        model.addAttribute("article", article);
-        return "article";
+        return article;
     }
 }

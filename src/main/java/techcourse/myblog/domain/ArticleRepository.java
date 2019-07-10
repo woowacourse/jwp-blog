@@ -23,4 +23,8 @@ public class ArticleRepository {
         }
         return articles.get(articleId);
     }
+
+    public int getSize() {
+        return articles.size();
+    }
 }
