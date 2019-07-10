@@ -2,15 +2,13 @@ package techcourse.myblog.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Controller
 public class ArticleController {
@@ -29,12 +27,15 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String createArticle(ArticleDto.Create articleDto) {
-        long articleId = articleRepository.save(articleDto);
+        Article article = new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
+        long articleId = articleRepository.save(article);
         return "redirect:/article/" + articleId;
     }
 
-    @GetMapping("/articles/new")
-    public String getNewArticle() {
-        return "article-edit";
+    @GetMapping("/articles/{articleId}")
+    public String readArticle(@PathVariable Long articleId, Model model) {
+        Article article = articleRepository.find(articleId);
+        model.addAttribute("article", article);
+        return "article";
     }
 }

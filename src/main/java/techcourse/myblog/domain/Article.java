@@ -46,4 +46,8 @@ public class Article {
     public void setContents(String contents) {
         this.contents = contents;
     }
+
+    public boolean equals(long articleId) {
+        return this.id == articleId;
+    }
 }
