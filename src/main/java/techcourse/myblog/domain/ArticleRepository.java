@@ -16,4 +16,8 @@ public class ArticleRepository {
     public void insert(Article article) {
         articles.add(article);
     }
+
+    public Article find(Integer articleId) {
+        return articles.get(articleId);
+    }
 }

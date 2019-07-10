@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleRepository;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -16,6 +18,9 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private ArticleRepository articleRepository;
 
     @Test
     void index() {
@@ -76,5 +81,33 @@ public class ArticleControllerTests {
                     assertThat(body.contains(coverUrl)).isTrue();
                     assertThat(body.contains(contents)).isTrue();
                 });
+    }
+
+    @Test
+    void 게시글_페이지_정상_조회() {
+        String title = "titleTest";
+        String coverUrl = "urlTest";
+        String contents = "contentsTest";
+        articleRepository.insert(new Article(title, coverUrl, contents));
+
+        webTestClient.get()
+                .uri("/articles/0")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(title)).isTrue();
+                    assertThat(body.contains(coverUrl)).isTrue();
+                    assertThat(body.contains(contents)).isTrue();
+                });
+    }
+
+    @Test
+    void 존재하지_않는_게시글_조회_에러() {
+        webTestClient.get()
+                .uri("/articles/0")
+                .exchange()
+                .expectStatus().is5xxServerError();
     }
 }
