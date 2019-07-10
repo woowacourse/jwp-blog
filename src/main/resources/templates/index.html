@@ -86,12 +86,11 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
                             <div class="pdd-horizon-15 pdd-vertical-20">
-<!--                                <a th:if="${articles != null}" th:each="article : ${articles}" ref="/articles" class="card article-container">-->
-                                <a href="/articles" class="card article-container" >
+                                <a th:each="article : ${articles}" href="/articles" class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
-<!--                                            <div class="background-holder has-content" th:if="article.coverUrl" th:style="'background-image: url(' + ${/<images/pages/index/study.jpg>} + ')"></div>-->
-                                            <div class="background-holder has-content" style="background-image: url('../images/pages/index/study.jpg')"></div>
+                                            <div class="background-holder has-content" th:if="${article.coverUrl != null && !article.coverUrl.isEmpty()}" th:style="'background:url(' + @{${article.coverUrl}} + ');'"></div>
+                                            <div class="background-holder has-content" th:unless="${article.coverUrl != null && !article.coverUrl.isEmpty()}" style="background-image: url('images/pages/index/study.jpg')"></div>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
@@ -100,8 +99,8 @@
 <!--                                                        <h2 th:if="${article.title}" th:text="${article.title}" class="mrg-btm-20 text-bold">목적의식 있는 연습을 통한 효과적인 학습</h2>-->
 <!--                                                        <p th:if="${article.contents}" th:text="${article.contents}">우아한테크코스의 선발 과정을 목적의식 있는 연습으로 설계한 내용과 목적의식 있는 연습으로 진행했을 때의 학습 효과에 대해 다루고 있습니다.</p>-->
 <!--                                                        <p th:else="article.contents" th:text="${article.contents}">우아한테크코스의 선발 과정을 목적의식 있는 연습으로 설계한 내용과 목적의식 있는 연습으로 진행했을 때의 학습 효과에 대해 다루고 있습니다.</p>-->
-                                                        <h2 class="mrg-btm-20 text-bold">목적의식 있는 연습을 통한 효과적인 학습</h2>
-                                                        <p> 우아한테크코스의 선발 과정을 목적의식 있는 연습으로 설계한 내용과 목적의식 있는 연습으로 진행했을 때의 학습 효과에 대해 다루고 있습니다.</p>
+                                                        <h2 class="mrg-btm-20 text-bold" th:text="${article.title}">목적의식 있는 연습을 통한 효과적인 학습</h2>
+                                                        <p th:text="${#strings.abbreviate(article.contents,100)}"> 우아한테크코스의 선발 과정을 목적의식 있는 연습으로 설계한 내용과 목적의식 있는 연습으로 진행했을 때의 학습 효과에 대해 다루고 있습니다.</p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
                                                                 <i class="ti-heart text-danger pdd-right-5"></i>

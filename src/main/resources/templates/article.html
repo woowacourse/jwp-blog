@@ -173,6 +173,8 @@
 <script th:inline="javascript">
     /* <![CDATA[ */
     const initValue = /*[[ ${article.contents} ]]*/;
+    /* ]]> */
+    // const initValue = ${#strings.unescapeJavaScript(article.contents)};
 
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
@@ -191,7 +193,6 @@
         },
         height: '200px'
     });
-    /* ]]> */
 </script>
 </body>
 </html>

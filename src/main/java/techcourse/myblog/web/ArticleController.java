@@ -15,7 +15,8 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 
     @GetMapping("/")
-    public String home() {
+    public String home(Model model) {
+        model.addAttribute("articles", articleRepository.findAll());
         return "index";
     }
 
