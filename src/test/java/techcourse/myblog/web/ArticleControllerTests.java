@@ -2,6 +2,8 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -20,6 +22,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ArticleControllerTests {
 	@Autowired
 	private WebTestClient webTestClient;
+
+	@Autowired
+	private ArticleRepository articleRepository;
 
 	@Test
 	void index() {
@@ -53,7 +58,28 @@ public class ArticleControllerTests {
 				.expectBody()
 				.consumeWith(response -> {
 					String body = new String(response.getResponseBody());
-					System.out.println(new String(response.getResponseBody()));
+					assertThat(body.contains(title)).isTrue();
+					assertThat(body.contains(coverUrl)).isTrue();
+					assertThat(body.contains(contents)).isTrue();
+				});
+	}
+
+	@Test
+	void lookUpArticle() {
+		String title = "제목";
+		String contents = "contents";
+		String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
+
+		articleRepository.save(new Article(title, contents, coverUrl));
+
+		webTestClient.get()
+				.uri("/")
+				.exchange()
+				.expectStatus()
+				.isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
 					assertThat(body.contains(title)).isTrue();
 					assertThat(body.contains(coverUrl)).isTrue();
 					assertThat(body.contains(contents)).isTrue();
