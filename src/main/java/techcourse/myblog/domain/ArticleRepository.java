@@ -22,4 +22,15 @@ public class ArticleRepository {
     public int getLastId() {
         return lastId;
     }
+
+    public List<Article> getArticles() {
+        return articles;
+    }
+
+    public Article getArticleById(int index) {
+        return articles.stream()
+                .filter(article -> article.getId() == index)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+    }
 }
