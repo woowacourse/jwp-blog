@@ -27,4 +27,6 @@ public class ArticleControllerTests {
                 .expectStatus().isOk();
     }
 
+    @Test create+artic
+
 }
