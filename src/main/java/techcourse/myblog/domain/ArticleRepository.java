@@ -12,4 +12,12 @@ public class ArticleRepository {
     public List<Article> findAll() {
         return articles;
     }
+
+    public void addArticle(Article article) {
+        articles.add(article);
+    }
+
+    public int getSize() {
+        return articles.size();
+    }
 }
