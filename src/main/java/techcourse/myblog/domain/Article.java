@@ -1,10 +1,19 @@
 package techcourse.myblog.domain;
 
 public class Article {
+    private static long articleId = 1;
+
     private Long id;
     private String title;
     private String coverUrl;
     private String contents;
+
+    public Article(String title, String coverUrl, String contents) {
+        this.id = articleId++;
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+    }
 
     public Long getId() {
         return id;
