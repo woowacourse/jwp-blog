@@ -15,4 +15,9 @@ public class ArticleController {
     public String articleCreateForm() {
         return "article-edit";
     }
+
+    @GetMapping("/writing")
+    public String createArticle() {
+        return "article-edit";
+    }
 }

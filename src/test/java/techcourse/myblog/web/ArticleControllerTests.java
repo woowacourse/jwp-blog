@@ -30,6 +30,13 @@ public class ArticleControllerTests {
                 .expectStatus().isOk();
     }
 
+    @Test
+    void createArticle(){
+        webTestClient.get().uri("/writing")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
 
 
 }
