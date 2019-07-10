@@ -32,4 +32,14 @@ public class ArticleController {
         model.addAttribute("articles", articles);
         return "index";
     }
+
+    @GetMapping("/articles/{articleId}")
+    public String showArticleById(@PathVariable int articleId, Model model) {
+        Article article = articleRepository.findById(articleId);
+        if (article == null) {
+            throw new ArticleNotFoundException();
+        }
+        model.addAttribute("article", article);
+        return "article";
+    }
 }

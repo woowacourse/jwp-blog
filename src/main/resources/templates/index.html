@@ -60,9 +60,9 @@
                     <div class="width-100 fixed left-0 border bottom"></div>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
-                            <div th:each="article : ${articles}">
+                            <div th:each="article,index : ${articles}">
                                 <div class="pdd-horizon-15 pdd-vertical-20">
-                                    <a href="article-edit.html" class="card article-container">
+                                    <a th:href="@{/articles/{id}(id=${index.index})}" class="card article-container">
                                         <div class="card-horizon">
                                             <div class="image-container col-md-4">
                                                 <div class="background-holder has-content"

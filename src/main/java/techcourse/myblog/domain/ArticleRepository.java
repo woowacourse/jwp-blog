@@ -16,4 +16,11 @@ public class ArticleRepository {
     public void save(Article article) {
         articles.add(article);
     }
+
+    public Article findById(int articleId) {
+        if (articleId < 0 || articleId >= articles.size()) {
+            return null;
+        }
+        return articles.get(articleId);
+    }
 }

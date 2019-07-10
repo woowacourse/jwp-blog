@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-import techcourse.myblog.domain.Article;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,5 +52,12 @@ public class ArticleControllerTests {
         webTestClient.get().uri("/")
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void findArticleById() {
+        webTestClient.get().uri("/articles/0")
+                .exchange()
+                .expectStatus().is4xxClientError();
     }
 }
