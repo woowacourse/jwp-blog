@@ -20,13 +20,6 @@ public class ArticleControllerTests {
     private WebTestClient webTestClient;
 
     @Test
-    void index() {
-        webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
     void articleForm() {
         webTestClient.get().uri("/articles/new")
                 .exchange()
