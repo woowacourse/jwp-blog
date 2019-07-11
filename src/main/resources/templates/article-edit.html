@@ -77,8 +77,11 @@
             </ul>
         </div>
     </div>
+    <div id="input-section">
 
-    <form action="/articles" name="article" method="post" accept-charset="utf-8" >
+    </div>
+    <form  name="article" method="post" accept-charset="utf-8" th:if="${method}" th:action="'/articles/' + ${article.id}">
+        <input type="hidden" name="_method" value="put"/>
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
@@ -89,7 +92,38 @@
                 </div>
             </div>
         </div>
-
+        <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
+            <div class="row">
+                <div class="col-lg-1 col-md-1"></div>
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                    <input id="article-contents" name="contents" type="hidden">
+                    <input name="id" type="hidden"  value="0">
+                    <div id="editSection"></div>
+                </div>
+                <div class="col-lg-1 col-md-1">
+                    <div class="btn-group btn-group-vertical">
+                        <button id="save-btn" type="submit" class="btn btn-default">
+                            <i class="ti-save"></i>
+                        </button>
+                        <a href="/" class="btn btn-default">
+                            <i class="ti-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form th:unless="${method}" name="article" method="post" accept-charset="utf-8" action="/articles">
+        <div class="about-cover card no-border">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
+                <div class="height-300px vertical-center pdd-horizon-50">
+                    <div class="width-80">
+                        <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" autocomplete="off">
+                        <input type="text" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"  placeholder="배경 url을 입력해주세요" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
             <div class="row">
                 <div class="col-lg-1 col-md-1"></div>
@@ -131,6 +165,53 @@
         },
         height: 'calc(100vh - 360px)'
     });
+</script>
+<script id="input-template" type="tv-template">
+    <form  name="article" method="post" accept-charset="utf-8" action="/articles{path}">
+        {putTag}
+        <div class="about-cover card no-border">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
+                <div class="height-300px vertical-center pdd-horizon-50">
+                    <div class="width-80">
+                        <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" autocomplete="off">
+                        <input type="text" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"  placeholder="배경 url을 입력해주세요" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
+            <div class="row">
+                <div class="col-lg-1 col-md-1"></div>
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                    <input id="article-contents" name="contents" type="hidden">
+                    <input name="id" type="hidden"  value="0">
+                    <div id="editSection"></div>
+                </div>
+                <div class="col-lg-1 col-md-1">
+                    <div class="btn-group btn-group-vertical">
+                        <button id="save-btn" type="submit" class="btn btn-default">
+                            <i class="ti-save"></i>
+                        </button>
+                        <a href="/" class="btn btn-default">
+                            <i class="ti-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
+<script type="text/javascript" th:inline="javascript">
+    let putTag = "";
+    let path = "";
+    /* <![CDATA[ */
+    if(/*[[${method}]]*/){
+        path = "/" + /*[[${article.id}]]*/
+        putTag = "<input type=\"hidden\" name=\"_method\" value=\"put\"/>";
+    }
+    /*]]>*/
+    let inputTemplate = document.querySelector("#input-template").innerText;
+    document.querySelector("#input-section").innerHTML += inputTemplate.replace("{path}", path).replace("{putTag}", putTag);
 </script>
 </body>
 </html>

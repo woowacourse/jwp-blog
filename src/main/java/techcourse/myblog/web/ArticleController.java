@@ -35,7 +35,7 @@ public class ArticleController {
         Article article = articleRepository.findById(articleId);
 
         model.addAttribute("article", article);
-
+        model.addAttribute("method", "put");
         return "article-edit";
     }
 
