@@ -9,8 +9,13 @@ import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
 public class ArticleController {
+
+    private final ArticleRepository articleRepository;
+
     @Autowired
-    private ArticleRepository articleRepository;
+    public ArticleController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @GetMapping("/")
     public String index(Model model) {
@@ -35,5 +40,12 @@ public class ArticleController {
         Article article = articleRepository.findById(articleId);
         model.addAttribute("article", article);
         return "article";
+    }
+
+    @GetMapping("/articles/{articleId}/edit")
+    public String editArticle(@PathVariable Long articleId, Model model) {
+        Article article = articleRepository.findById(articleId);
+        model.addAttribute("article", article);
+        return "article-edit";
     }
 }
