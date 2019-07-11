@@ -21,7 +21,7 @@ public class ArticleRepository {
 
     public Optional<Article> findById(Long id) {
         return articles.stream()
-                .filter(a -> a.getId().equals(id))
+                .filter(article -> article.getId().equals(id))
                 .findFirst();
     }
 
