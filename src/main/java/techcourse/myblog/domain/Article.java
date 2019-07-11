@@ -9,17 +9,23 @@ public class Article {
     private String contents;
     private String category;
 
+    private Article(){
+
+    }
+
     public static Article of(String title, String backgroundURL, String content) {
         return of(title, backgroundURL, content, "");
     }
 
-    public static Article of(String title, String backgroundURL, String content, String category) {
+    public static Article of(String title, String coverUrl, String contents, String category) {
         Article newArticle = new Article();
-        newArticle.setId(NEXT_ID++);
-        newArticle.setTitle(title);
-        newArticle.setCoverUrl(backgroundURL);
-        newArticle.setContents(content);
-        newArticle.setCategory(category);
+
+        newArticle.id = NEXT_ID++;
+        newArticle.title = title;
+        newArticle.coverUrl = coverUrl;
+        newArticle.contents = contents;
+        newArticle.category = category;
+
         return newArticle;
     }
 

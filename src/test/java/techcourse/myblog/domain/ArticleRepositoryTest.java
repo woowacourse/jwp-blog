@@ -38,8 +38,9 @@ public class ArticleRepositoryTest {
         articleRepository.addArticle(newArticle);
         Article articleFound = articleRepository.findById(newArticle.getId())
                 .orElseThrow(IllegalStateException::new);
+        Article editArticle = Article.of("changed title","http://background.com", "가나다라마바사", "자유");
 
-        articleFound.setTitle("changed title");
+        articleFound.update(editArticle);
         articleFound = articleRepository.findById(newArticle.getId())
                 .orElseThrow(IllegalStateException::new);
 
