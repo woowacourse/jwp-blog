@@ -10,12 +10,13 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public Article(String title, String coverUrl, String contents) {
-        this.articleId = incrementNumber++;
+    public Article(String title,String coverUrl,String contents){
         this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
+        this.title = coverUrl;
+        this.title = contents;
+        this.articleId = incrementNumber++;
     }
+
 
     public Long getArticleId() {
         return articleId;

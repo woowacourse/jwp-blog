@@ -50,4 +50,14 @@ public class ArticleRepositoryTest {
         articleRepository.save(article);
         assertThat(articleRepository.findById(1L)).isEqualTo(article);
     }
+
+
+    @Test
+    void update() {
+        Article article  = new Article("title","coverUrl","contents");
+        Article article2  = new Article("title2","coverUrl2","contents2");
+        articleRepository.save(article);
+        articleRepository.update(article,article2);
+        assertThat(articleRepository.findAll()).isEqualTo(Arrays.asList(article2));
+    }
 }

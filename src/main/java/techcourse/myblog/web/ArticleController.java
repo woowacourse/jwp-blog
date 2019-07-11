@@ -47,7 +47,7 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String showUpdatedArticle(@PathVariable Long articleId,@ModelAttribute Article updatedArticle,Model model){
+    public String showUpdatedArticle(@PathVariable Long articleId, Article updatedArticle, Model model){
         Article originArticle = articleRepository.findById(articleId);
         articleRepository.update(originArticle,updatedArticle);
         model.addAttribute("article",updatedArticle);

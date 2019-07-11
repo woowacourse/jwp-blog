@@ -30,6 +30,6 @@ public class ArticleRepository {
 
     public void update(Article originArticle, Article updatedArticle) {
         articles.remove(originArticle);
-        articles.add(updatedArticle);
+        save(updatedArticle);
     }
 }
