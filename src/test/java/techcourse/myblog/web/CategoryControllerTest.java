@@ -19,4 +19,11 @@ public class CategoryControllerTest {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+    @Test
+    void categoryPost() {
+        webTestClient.post().uri("/category")
+                .exchange()
+                .expectStatus().is3xxRedirection();
+    }
 }
