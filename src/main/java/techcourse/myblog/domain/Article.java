@@ -1,25 +1,25 @@
 package techcourse.myblog.domain;
 
 public class Article {
-    private Long id;
+    private long id;
     private String title;
     private String coverUrl;
     private String contents;
 
     public Article() {}
 
-    public Article(final Long id, final String title, final String coverUrl, final String contents) {
+    public Article(final long id, final String title, final String coverUrl, final String contents) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

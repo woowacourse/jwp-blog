@@ -12,6 +12,7 @@ import java.util.List;
 
 @Controller
 public class ArticleController {
+
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -22,11 +23,9 @@ public class ArticleController {
         return "index";
     }
 
-    @GetMapping("/articles/{articleId}")
-    public String showArticleById(@PathVariable long articleId, Model model) {
-        Article article = articleRepository.findById(articleId);
-        model.addAttribute("article", article);
-        return "article";
+    @GetMapping("/writing")
+    public String showWritingPage() {
+        return "article-edit";
     }
 
     @PostMapping("/write")
@@ -35,21 +34,11 @@ public class ArticleController {
         return new RedirectView("/articles/" + latestId);
     }
 
-    @GetMapping("/writing")
-    public String showWritingPage() {
-        return "article-edit";
-    }
-
-    @GetMapping("/articles/{articleId}/edit")
-    public String updateArticle(@PathVariable long articleId, Model model) {
+    @GetMapping("/articles/{articleId}")
+    public String showArticleById(@PathVariable long articleId, Model model) {
         Article article = articleRepository.findById(articleId);
         model.addAttribute("article", article);
-        return "article-edit";
-    }
-
-    @GetMapping("/articles/new")
-    public String getNewArticle() {
-        return "article-edit";
+        return "article";
     }
 
     @PutMapping("/articles/{articleId}")
@@ -62,5 +51,12 @@ public class ArticleController {
     public RedirectView deleteArticle(@PathVariable long articleId) {
         articleRepository.deleteById(articleId);
         return new RedirectView("/");
+    }
+
+    @GetMapping("/articles/{articleId}/edit")
+    public String updateArticle(@PathVariable long articleId, Model model) {
+        Article article = articleRepository.findById(articleId);
+        model.addAttribute("article", article);
+        return "article-edit";
     }
 }

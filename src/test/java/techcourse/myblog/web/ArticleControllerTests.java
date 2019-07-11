@@ -97,13 +97,6 @@ public class ArticleControllerTests {
     }
 
     @Test
-    public void articleForm() {
-        webTestClient.get().uri("/articles/new")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
     public void deleteArticle() {
         addArticle();
 

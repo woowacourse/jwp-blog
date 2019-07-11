@@ -7,25 +7,25 @@ import java.util.List;
 
 @Repository
 public class ArticleRepository {
-    private long latestId = 0;
     private List<Article> articles = new ArrayList<>();
+    private long latestId = 0;
 
     public List<Article> findAll() {
         return articles;
     }
 
-    public Long add(final Article article) {
+    public long add(final Article article) {
         article.setId(latestId());
         articles.add(article);
         return latestId;
     }
 
-    private Long latestId() {
+    private long latestId() {
         latestId = latestId + 1;
         return latestId;
     }
 
-    public Article findById(final Long latestId) {
+    public Article findById(final long latestId) {
         return articles.stream()
                 .filter(article -> article.getId() == latestId)
                 .findFirst().orElseThrow(IllegalArgumentException::new);
