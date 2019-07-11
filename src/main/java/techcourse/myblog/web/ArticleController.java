@@ -27,7 +27,7 @@ public class ArticleController {
     public String createArticle(@ModelAttribute Article article, Model model) {
         model.addAttribute("article", article);
         articleRepository.save(article);
-        return "article";
+        return "redirect:/articles/"+article.getArticleId();
     }
 
     @GetMapping("/articles/{articleId}")
