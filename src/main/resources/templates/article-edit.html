@@ -15,14 +15,7 @@
 <div>
     <div class="header navbar bg-transparent no-border">
         <div class="header-container">
-            <ul class="nav-left mrg-left-0">
-                <li>
-                    <a href="../static/index.html">
-                        <div class="logo logo-dark d-none" style="background-image: url('/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white" style="background-image: url('/images/logo/logo_full_white.png')"></div>
-                    </a>
-                </li>
-            </ul>
+            <th:block th:include="common_index_logo"></th:block>
             <ul class="nav-right">
                 <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
                     <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
