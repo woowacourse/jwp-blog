@@ -114,6 +114,9 @@
                         <input type="text" name="coverUrl"
                                class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
                                placeholder="배경 url을 입력해주세요" autocomplete="off">
+                        <select name="category">
+                            <option th:each="category: ${categorys}" th:value="${category}" th:text="${category}"></option>
+                        </select>
                     </div>
                 </div>
             </div>

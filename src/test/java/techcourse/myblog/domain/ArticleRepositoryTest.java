@@ -14,7 +14,7 @@ public class ArticleRepositoryTest {
     @BeforeEach
     void setUp() {
         articleRepository = new ArticleRepository();
-        newArticle = Article.of("title", "http://background.com", "가나다라마바사");
+        newArticle = Article.of("title", "http://background.com", "가나다라마바사", "자유");
     }
 
     @Test

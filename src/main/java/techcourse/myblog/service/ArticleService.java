@@ -25,7 +25,7 @@ public class ArticleService {
     }
 
     public void addArticle(Article article) {
-        articleRepository.addArticle(Article.of(article.getTitle(), article.getCoverUrl(), article.getContents()));
+        articleRepository.addArticle(Article.of(article.getTitle(), article.getCoverUrl(), article.getContents(), article.getCategory()));
     }
 
     public void deleteById(Long articleId) {

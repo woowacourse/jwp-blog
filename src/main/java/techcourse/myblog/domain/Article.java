@@ -7,13 +7,19 @@ public class Article {
     private String title;
     private String coverUrl;
     private String contents;
+    private String category;
 
     public static Article of(String title, String backgroundURL, String content) {
+        return of(title, backgroundURL, content, "");
+    }
+
+    public static Article of(String title, String backgroundURL, String content, String category) {
         Article newArticle = new Article();
         newArticle.setId(NEXT_ID++);
         newArticle.setTitle(title);
         newArticle.setCoverUrl(backgroundURL);
         newArticle.setContents(content);
+        newArticle.setCategory(category);
         return newArticle;
     }
 
@@ -47,5 +53,13 @@ public class Article {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
