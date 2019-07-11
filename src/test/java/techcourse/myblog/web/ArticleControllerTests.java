@@ -102,4 +102,14 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+    @Test
+    public void deleteArticle() {
+        addArticle();
+
+        webTestClient.delete()
+                .uri("/articles/1")
+                .exchange()
+                .expectStatus().isFound();
+    }
 }
