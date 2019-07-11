@@ -77,4 +77,15 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+    @Test
+    void delete_article() {
+        Article article = new Article("title", "url", "contents");
+        int articleId = articleRepository.insertArticle(article);
+
+        webTestClient.delete()
+                .uri("/articles/" + articleId)
+                .exchange()
+                .expectStatus().isOk();
+    }
 }
