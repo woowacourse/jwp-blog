@@ -1,12 +1,9 @@
 package techcourse.myblog.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.filter.HiddenHttpMethodFilter;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
@@ -16,15 +13,6 @@ import java.util.List;
 public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
-
-    @Bean
-    public FilterRegistrationBean httpMethodFilter() {
-        FilterRegistrationBean filter = new FilterRegistrationBean();
-        filter.setFilter(new HiddenHttpMethodFilter());
-        filter.setName("httpMethodFilter");
-        filter.addUrlPatterns("/*");
-        return filter;
-    }
 
     @GetMapping("/")
     public String index(Model model) {
