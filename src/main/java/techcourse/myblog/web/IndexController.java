@@ -16,7 +16,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model) {
-        List<Article> articles=  articleRepository.findAll();
+        List<Article> articles = articleRepository.findAll();
 
         model.addAttribute("articles", articles);
         return "index";
