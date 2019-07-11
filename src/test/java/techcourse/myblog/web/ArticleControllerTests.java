@@ -29,6 +29,7 @@ public class ArticleControllerTests {
 
     @Test
     void create_article() {
+        String id = "0";
         String title = "title";
         String coverUrl = "coverUrl";
         String contents = "contents";
@@ -37,7 +38,8 @@ public class ArticleControllerTests {
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", title)
+                        .fromFormData("id", id)
+                        .with("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
@@ -46,7 +48,7 @@ public class ArticleControllerTests {
 
     @Test
     void read_article() {
-        Article article = new Article("title", "url", "contents");
+        Article article = Article.of("title", "url", "contents");
         int articleId = articleRepository.insertArticle(article);
 
         webTestClient.get()
@@ -55,10 +57,9 @@ public class ArticleControllerTests {
                 .expectStatus().isOk();
     }
 
-    // GET /articles/{articleId}/edit
     @Test
     void read_article_edit_page() {
-        Article article = new Article("title", "url", "contents");
+        Article article = Article.of("title", "url", "contents");
         int articleId = articleRepository.insertArticle(article);
 
         webTestClient.get()
@@ -69,18 +70,24 @@ public class ArticleControllerTests {
 
     @Test
     void update_article() {
-        Article article = new Article("title", "url", "contents");
+        Article article = Article.of("title", "url", "contents");
         int articleId = articleRepository.insertArticle(article);
 
         webTestClient.put()
                 .uri("/articles/" + articleId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("id",  Integer.toString(article.getId()))
+                        .with("title", article.getTitle())
+                        .with("coverUrl", article.getCoverUrl())
+                        .with("contents", article.getContents()))
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void delete_article() {
-        Article article = new Article("title", "url", "contents");
+        Article article = Article.of("title", "url", "contents");
         int articleId = articleRepository.insertArticle(article);
 
         webTestClient.delete()

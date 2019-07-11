@@ -10,23 +10,24 @@ import java.util.TreeMap;
 @Repository
 public class ArticleRepository {
     private Map<Integer, Article> articles = new TreeMap<>();
-    private int newId = 0;
 
     public List<Article> findAll() {
         return new ArrayList<>(articles.values());
     }
 
     public int insertArticle(Article article) {
-        articles.put(newId, article);
-        return newId++;
+        article = Article.from(article);
+        int id = article.getId();
+        articles.put(id, article);
+        return id;
     }
 
     public Article findById(int articleId) {
         return articles.get(articleId);
     }
 
-    public void updateArticle(int articleId, Article article) {
-        articles.put(articleId, article);
+    public void updateArticle(Article article) {
+        articles.put(article.getId(), article);
     }
 
     public void deleteArticle(int articleId) {

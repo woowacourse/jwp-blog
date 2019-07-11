@@ -41,7 +41,8 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String updateArticle(@PathVariable int articleId, Article article, Model model) {
-        articleRepository.updateArticle(articleId, article);
+        article.setId(articleId);
+        articleRepository.updateArticle(article);
 
         model.addAttribute("article", article);
 
@@ -49,8 +50,10 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId) {
+    public String deleteArticle(@PathVariable int articleId, Model model) {
         articleRepository.deleteArticle(articleId);
+
+        model.addAttribute("articles", articleRepository.findAll());
 
         return "index";
     }
