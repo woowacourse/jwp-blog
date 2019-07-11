@@ -23,7 +23,7 @@ public class ArticleController {
     @PostMapping
     public String write(@ModelAttribute Article article){
         articleRepository.save(article);
-        return "redirect:articles/"+article.getId();
+        return "redirect:/articles/"+article.getId();
     }
 
     @GetMapping("/{id}")
@@ -32,4 +32,18 @@ public class ArticleController {
         model.addAttribute("article", article);
         return "article";
     }
+
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model) {
+        Article article = articleRepository.findById(id);
+        model.addAttribute("article", article);
+        return "article-edit";
+    }
+
+    @PutMapping("/{id}")
+    public String edit(@ModelAttribute Article article) {
+        articleRepository.update(article);
+        return "redirect:/articles/"+article.getId();
+    }
+
 }

@@ -21,4 +21,9 @@ public class ArticleRepository {
     public Article findById(final Long id) {
         return articles.get(id.intValue());
     }
+
+    public void update(final Article article) {
+        Long id = article.getId();
+        articles.set(id.intValue(), article);
+    }
 }
