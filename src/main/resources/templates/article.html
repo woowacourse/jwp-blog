@@ -156,7 +156,7 @@
 
     document.getElementById('title').innerText = [[${article.title}]]
 
-    document.getElementById('cover-img').style.backgroundImage = "url('" + [[${article.coverUrl}]] + "')";
+    document.getElementById('cover-img').style.backgroundImage = "url('" + [[${article.coverUrl}]] + "'), url('/images/pages/index/study.jpg')";
 
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
