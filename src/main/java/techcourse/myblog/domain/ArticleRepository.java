@@ -2,15 +2,12 @@ package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Repository
 public class ArticleRepository {
-    private List<Article> articles = new ArrayList<>();
+    private Articles articles = new Articles();
     private int articleId = 0;
 
-    public List<Article> findAll() {
+    public Articles findAll() {
         return articles;
     }
 
@@ -20,11 +17,7 @@ public class ArticleRepository {
     }
 
     public Article find(int articleId) {
-        return articles.stream()
-                .filter(article -> article.getId() == articleId)
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new)
-                ;
+        return articles.find(articleId);
     }
 
     public void saveEdited(Article editedArticle) {
@@ -33,10 +26,6 @@ public class ArticleRepository {
     }
 
     public void delete(int articleId) {
-        Article articleToDelete = articles.stream()
-                .filter(article -> article.getId() == articleId)
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
-        articles.remove(articleToDelete);
+        articles.remove(articleId);
     }
 }

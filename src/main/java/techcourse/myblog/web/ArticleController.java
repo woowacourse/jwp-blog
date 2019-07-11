@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.Articles;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String index(Model model) {
-        List<Article> articles = articleRepository.findAll();
+        Articles articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
     }
