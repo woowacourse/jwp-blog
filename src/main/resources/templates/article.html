@@ -68,6 +68,9 @@
                     <a th:href="@{/articles/{articleId}/edit(articleId = ${article.id})}" class="float-right pointer btn btn-icon">
                         <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                     </a>
+                    <form th:action="@{/articles/{articleId}(articleId=${article.id})}" th:method="delete">
+                        <button type="submit">X</button>
+                    </form>
                     <div id="viewerSection" th:text="${article.contents}"></div>
                 </div>
                 <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
