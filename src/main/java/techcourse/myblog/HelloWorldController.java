@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class HelloWorldController {
-
     @ResponseBody
     @GetMapping("/helloworld")
     private String getName(@RequestParam("blogName") String blogName, Model model) {
@@ -19,5 +18,4 @@ public class HelloWorldController {
     private String getNameByPost(@RequestBody String body, Model model) {
         return body;
     }
-
 }

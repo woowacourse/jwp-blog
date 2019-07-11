@@ -30,8 +30,9 @@ public class ArticleControllerTests {
 
     @BeforeEach
     void setUp() {
-        if (!isFirstSetUp)
+        if (!isFirstSetUp) {
             return;
+        }
         articles = Arrays.asList(
                 new Article("title_1", "contents_1", "background_1")
                 , new Article("title_2", "contents_2", "background_2")

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <th:block th:include="fragment/common_head"></th:block>
     <link href="/css/article.css" rel="stylesheet">
@@ -9,12 +8,10 @@
     <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css" rel="stylesheet">
     <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css" rel="stylesheet">
 </head>
-
 <body>
 <div>
     <header th:replace="fragment/common_navbar :: navbar">
     </header>
-
     <div class="about-cover card no-border ">
         <div class="cover-img overlay-dark bg" th:style="'background:url(' + ${background} + ');'">
             <div class="padding-30">
@@ -22,7 +19,6 @@
             </div>
         </div>
     </div>
-
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
@@ -70,5 +66,4 @@
 <th:block th:include="fragment/common_js"></th:block>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 </body>
-
 </html>
