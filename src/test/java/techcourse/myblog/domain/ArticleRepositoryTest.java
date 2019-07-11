@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
@@ -48,7 +49,7 @@ public class ArticleRepositoryTest {
     void findById() {
         Article article  = new Article("title","coverUrl","contents");
         articleRepository.save(article);
-        assertThat(articleRepository.findById(1L)).isEqualTo(article);
+        assertThat(articleRepository.findById(article.getArticleId())).isEqualTo(article);
     }
 
 
@@ -59,5 +60,13 @@ public class ArticleRepositoryTest {
         articleRepository.save(article);
         articleRepository.update(article,article2);
         assertThat(articleRepository.findAll()).isEqualTo(Arrays.asList(article2));
+    }
+
+    @Test
+    void delete() {
+        Article article  = new Article("title","coverUrl","contents");
+        articleRepository.save(article);
+        articleRepository.delete(article.getArticleId());
+        assertThat(articleRepository.findAll()).isEqualTo(Arrays.asList());
     }
 }

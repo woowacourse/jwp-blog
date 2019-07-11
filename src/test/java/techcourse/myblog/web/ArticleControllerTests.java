@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
@@ -80,22 +79,53 @@ public class ArticleControllerTests {
                 });
     }
 
-
     @Test
-    void create_update() {
+    void create_update(){
         String title = "title";
         String coverUrl = "coverUrl";
         String contents = "contents";
         articleRepository.save(new Article(title, coverUrl, contents));
-        webTestClient.get().uri("/articles/1/edit").exchange().expectBody()
+        webTestClient.get().uri("articles/1/edit").exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void submit_update() {
+        String title = "update title";
+        String coverUrl = "update coverUrl";
+        String contents = "update contents";
+        articleRepository.save(new Article("title", "coverUrl", "contents"));
+        webTestClient.put().uri("/articles/1")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                .fromFormData("title",title)
+                .with("coverUrl",coverUrl)
+                .with("contents",contents))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody()
                 .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
+                    webTestClient.get().uri(Objects.requireNonNull(response.getResponseHeaders().get("Location")).get(0))
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody()
+                            .consumeWith(res -> {
+                                String body = new String(Objects.requireNonNull(res.getResponseBody()));
+                                assertThat(body.contains(title)).isTrue();
+                                assertThat(body.contains(coverUrl)).isTrue();
+                                assertThat(body.contains(contents)).isTrue();
+                            });
+
                 });
 
     }
 
+    @Test
+    void create_delete(){
+        String title = "title";
+        String coverUrl = "coverUrl";
+        String contents = "contents";
+        articleRepository.save(new Article(title,coverUrl,contents));
+        webTestClient.delete().uri("delete/articles/1").exchange().expectStatus().is3xxRedirection();
+    }
 
 }

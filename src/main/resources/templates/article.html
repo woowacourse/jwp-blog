@@ -92,9 +92,15 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a th:href="@{/articles/{articleId}/edit(articleId=${article.articleId})}" class="float-right pointer btn btn-icon">
-                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                </a>
+                    <a th:href="@{/articles/{articleId}/edit(articleId=${article.articleId})}" class="float-right pointer btn btn-icon" type="submit">
+                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                     </a>
+                <form method="post" th:action="@{/delete/articles/{articleId}(articleId=${article.articleId})}">
+                    <input type="hidden" name="_method" value="delete">
+                     <button type="submit" class="float-right pointer btn btn-icon">
+                        <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                     </button>
+                </form>
                 <div id="viewerSection"></div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">

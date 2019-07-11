@@ -53,4 +53,10 @@ public class ArticleController {
         model.addAttribute("article",updatedArticle);
         return "redirect:/articles/"+articleId;
     }
+
+    @DeleteMapping("delete/articles/{articleId}")
+    public String deleteArticle(@PathVariable Long articleId){
+        articleRepository.delete(articleId);
+        return "redirect:/";
+    }
 }
