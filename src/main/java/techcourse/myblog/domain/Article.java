@@ -28,13 +28,4 @@ public class Article {
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
     }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "title='" + title + '\'' +
-                ", contents='" + contents + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                '}';
-    }
 }
