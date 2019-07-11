@@ -3,9 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleDTO;
 import techcourse.myblog.domain.ArticleRepository;
@@ -25,11 +23,19 @@ public class ArticleController {
         String articleCoverUrl = articleDTO.getCoverUrl();
         String articleContents = articleDTO.getContents();
         articleRepository.addArticle(new Article(articleId, articleTitle, articleCoverUrl, articleContents));
+        model.addAttribute("articleDTO", articleDTO);
+        return "article";
+    }
 
-        model.addAttribute("title", articleTitle);
-        model.addAttribute("coverUrl", articleCoverUrl);
-        model.addAttribute("contents", articleContents);
-
+    @GetMapping("/{articleId}")
+    public String eachArticle(@PathVariable int articleId, Model model) {
+        Article article = articleRepository.getArticleById(articleId);
+        ArticleDTO articleDTO = new ArticleDTO();
+        articleDTO.setArticleId(article.getArticleId());
+        articleDTO.setTitle(article.getTitle());
+        articleDTO.setCoverUrl(article.getCoverUrl());
+        articleDTO.setContents(article.getContents());
+        model.addAttribute("articleDTO", articleDTO);
         return "article";
     }
 }

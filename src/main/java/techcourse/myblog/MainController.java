@@ -24,6 +24,7 @@ public class MainController {
         List<ArticleDTO> articles = new ArrayList<>();
         for (Article article : articles1) {
             ArticleDTO articleDTO = new ArticleDTO();
+            articleDTO.setArticleId(article.getArticleId());
             articleDTO.setTitle(article.getTitle());
             articleDTO.setCoverUrl(article.getCoverUrl());
             articleDTO.setContents(article.getContents());

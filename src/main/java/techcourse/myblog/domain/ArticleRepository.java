@@ -20,4 +20,11 @@ public class ArticleRepository {
     public int getSize() {
         return articles.size();
     }
+
+    public Article getArticleById(int articleId) {
+        return articles.stream()
+                .filter(article -> article.getArticleId() == articleId)
+                .findFirst()
+                .get();
+    }
 }

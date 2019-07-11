@@ -1,9 +1,18 @@
 package techcourse.myblog.domain;
 
 public class ArticleDTO {
+    private int articleId;
     private String title;
     private String coverUrl;
     private String contents;
+
+    public int getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(int articleId) {
+        this.articleId = articleId;
+    }
 
     public String getTitle() {
         return title;

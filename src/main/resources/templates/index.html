@@ -91,7 +91,7 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
                             <div class="pdd-horizon-15 pdd-vertical-20" th:each="article : ${articles}">
-                                <a href="article.html" class="card article-container">
+                                <a href="article.html" th:href="@{/articles/{articleId}(articleId=${article.articleId})}" class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
                                             <div class="background-holder has-content"

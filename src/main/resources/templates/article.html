@@ -37,7 +37,7 @@
     <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
 </head>
 <body>
-<div>
+<div th:object="${articleDTO}">
     <header id="header" class="header navbar bg-transparent no-border">
         <div class="header-container">
             <ul class="nav-left mrg-left-0">
@@ -79,7 +79,7 @@
     <div class="about-cover card no-border ">
         <div class="cover-img overlay-dark bg" style="background-image: url('../static/images/pages/index/study.jpg')">
             <div class="padding-30">
-                <h1 class="text-center cover-title" th:text="${title}">-</h1>
+                <h1 class="text-center cover-title" th:text="*{title}">-</h1>
             </div>
         </div>
     </div>
@@ -90,7 +90,7 @@
                 <a href="article-edit.html" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
-                <div id="viewerSection" th:text="${contents}">-</div>
+                <div id="viewerSection" th:text="*{contents}">-</div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
                 <div class="profile-container row mrg-top-30 mrg-btm-30">
