@@ -44,29 +44,29 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}")
-    public String fetchArticle(@PathVariable long id, Model model) {
+    public String fetchArticle(@PathVariable int id, Model model) {
         Article article = articleRepository.find(id);
         model.addAttribute("article", article);
         return "article";
     }
 
     @GetMapping("/articles/{id}/edit")
-    public String editArticle(@PathVariable long id, Model model) {
+    public String editArticle(@PathVariable int id, Model model) {
         Article article = articleRepository.find(id);
         model.addAttribute("article", article);
         return "article-edit";
     }
 
     @PutMapping("/articles/{id}")
-    public String saveEditedArticle(@PathVariable long id, Article article, Model model) {
-        article.setId((int) id);
+    public String saveEditedArticle(@PathVariable int id, Article article, Model model) {
+        article.setId(id);
         articleRepository.saveEdited(article);
         model.addAttribute("article", article);
         return "article";
     }
 
     @DeleteMapping("/articles/{id}")
-    public String deleteArticle(@PathVariable long id) {
+    public String deleteArticle(@PathVariable int id) {
         articleRepository.delete(id);
         return "redirect:/";
     }

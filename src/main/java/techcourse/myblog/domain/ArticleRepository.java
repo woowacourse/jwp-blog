@@ -19,9 +19,9 @@ public class ArticleRepository {
         articles.add(article);
     }
 
-    public Article find(long articleId) {
+    public Article find(int articleId) {
         return articles.stream()
-                .filter(article -> article.getId() == (int) articleId)
+                .filter(article -> article.getId() == articleId)
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new)
                 ;
@@ -32,9 +32,9 @@ public class ArticleRepository {
         articles.add(editedArticle);
     }
 
-    public void delete(long articleId) {
+    public void delete(int articleId) {
         Article articleToDelete = articles.stream()
-                .filter(article -> article.getId() == (int) articleId)
+                .filter(article -> article.getId() == articleId)
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
         articles.remove(articleToDelete);
