@@ -15,18 +15,18 @@ public class ArticleRepository {
     }
 
     public void save(final Article article) {
-        if(articles.isEmpty()) {
+        if (articles.isEmpty()) {
             article.setId(0);
             articles.add(article);
             return;
         }
-        article.setId(articles.get(articles.size()-1).getId() + 1);
+        article.setId(articles.get(articles.size() - 1).getId() + 1);
         articles.add(article);
     }
 
     public Optional<Article> findById(final Long id) {
         for (Article article : articles) {
-            if(article.getId() == id) {
+            if (article.getId() == id) {
                 return Optional.of(article);
             }
         }

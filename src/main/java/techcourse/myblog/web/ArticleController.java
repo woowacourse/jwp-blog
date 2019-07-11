@@ -16,14 +16,12 @@ public class ArticleController {
     }
 
     @GetMapping("/new")
-    public String articleForm(){
+    public String articleForm() {
         return "article-edit";
     }
 
-
-
     @GetMapping("/{id}")
-    public String show(@PathVariable Long id, Model model){
+    public String show(@PathVariable Long id, Model model) {
         //TODO 에러처리
         Article article = articleRepository.findById(id).get();
         model.addAttribute("article", article);
@@ -38,15 +36,15 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String write(@ModelAttribute Article article){
+    public String write(@ModelAttribute Article article) {
         articleRepository.save(article);
-        return "redirect:/articles/"+article.getId();
+        return "redirect:/articles/" + article.getId();
     }
 
     @PutMapping("/{id}")
     public String edit(@ModelAttribute Article article) {
         articleRepository.update(article);
-        return "redirect:/articles/"+article.getId();
+        return "redirect:/articles/" + article.getId();
     }
 
     @DeleteMapping("/{id}")

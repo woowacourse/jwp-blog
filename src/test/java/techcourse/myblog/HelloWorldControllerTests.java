@@ -40,6 +40,5 @@ public class HelloWorldControllerTests {
                 .consumeWith(response ->
                         Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
 
-
     }
 }

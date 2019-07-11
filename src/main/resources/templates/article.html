@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html layout:decorator="layouts/defaultLayout"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      layout:decorator="layouts/defaultLayout">
+      xmlns:th="http://www.thymeleaf.org">
 
 <th:block layout:fragment="content">
     <div>
@@ -17,17 +17,17 @@
         <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
             <div class="row">
                 <div class="col-lg-10 mx-auto">
-                    <a th:href="'/articles/'+${article.id}+ '/edit'" class="float-right pointer btn btn-icon">
+                    <a class="float-right pointer btn btn-icon" th:href="'/articles/'+${article.id}+ '/edit'">
                         <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                     </a>
                     <form method="post" th:action="'/articles/' + ${article.id}">
-                        <input name="_method" type="hidden" value="DELETE" />
+                        <input name="_method" type="hidden" value="DELETE"/>
                         <button class="btn btn-icon float-right pointer" id="delete-button" type="submit">
-                            <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
+                            <i class="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
                         </button>
                     </form>
 
-                    <input type="hidden" id="content" th:value="${article.contents}">
+                    <input id="content" th:value="${article.contents}" type="hidden">
                     <div id="viewerSection"></div>
                 </div>
 
@@ -41,10 +41,11 @@
                     <div class="comment">
                         <ul class="list-unstyled list-info">
                             <li class="comment-item border bottom mrg-btm-30">
-                                <img class="thumb-img img-circle"
-                                     src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+                                <img alt=""
+                                     class="thumb-img img-circle"
+                                     src="https://avatars3.githubusercontent.com/u/50367798?v=4">
                                 <div class="info">
-                                    <span href="" class="text-bold inline-block">Jun</span>
+                                    <span class="text-bold inline-block" href="">Jun</span>
                                     <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span>6 min ago</span>
@@ -56,10 +57,11 @@
                             </li>
 
                             <li class="comment-item border bottom mrg-btm-30">
-                                <img class="thumb-img img-circle"
-                                     src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
+                                <img alt=""
+                                     class="thumb-img img-circle"
+                                     src="https://avatars2.githubusercontent.com/u/3433096?v=4">
                                 <div class="info">
-                                    <span href="" class="text-bold inline-block">Jun</span>
+                                    <span class="text-bold inline-block" href="">Jun</span>
                                     <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span>6 min ago</span>
