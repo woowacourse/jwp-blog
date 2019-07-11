@@ -3,7 +3,7 @@ package techcourse.myblog.domain;
 public class Article implements Comparable<Article> {
     private int number;
     private String title;
-    private String coverUrl;
+    private String coverUrl = "";
     private String contents;
 
     public int getNumber() {
