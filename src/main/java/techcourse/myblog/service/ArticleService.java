@@ -10,8 +10,12 @@ import java.util.NoSuchElementException;
 
 @Service
 public class ArticleService {
+    private final ArticleRepository articleRepository;
+
     @Autowired
-    private ArticleRepository articleRepository;
+    public ArticleService(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     public Long addArticle(Article article) {
         return articleRepository.addArticle(Article.of(article.getTitle(), article.getCoverUrl(), article.getContents()));

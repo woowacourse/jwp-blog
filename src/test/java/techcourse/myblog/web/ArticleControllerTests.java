@@ -164,7 +164,6 @@ public class ArticleControllerTests {
                         assertThat(body.contains(title)).isFalse();
                         assertThat(body.contains(coverUrl)).isFalse();
                     });
-
             });
     }
 }

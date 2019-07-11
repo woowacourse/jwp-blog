@@ -12,8 +12,12 @@ import java.util.List;
 
 @Controller
 public class ArticleController {
+    private final ArticleService articleService;
+
     @Autowired
-    private ArticleService articleService;
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
 
     @GetMapping("/")
     public String indexView(Model model) {
