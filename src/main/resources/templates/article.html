@@ -15,9 +15,9 @@
         <div class="header-container">
             <ul class="nav-left mrg-left-0">
                 <li>
-                    <a href="index.html">
-                        <div id="logo-dark" class="logo logo-dark d-none" style="background-image: url('../static/images/logo/logo_full_dark.png')"></div>
-                        <div id="logo-white" class="logo logo-white" style="background-image: url('../static/images/logo/logo_full_white.png')"></div>
+                    <a href="/">
+                        <div id="logo-dark" class="logo logo-dark d-none" style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                        <div id="logo-white" class="logo logo-white" style="background-image: url('/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
@@ -60,9 +60,13 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a href="article-edit.html" class="float-right pointer btn btn-icon">
+                <a th:href="@{'/articles/'+${articleId}+'/edit'}" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
+                <form name="question" method="post" th:action="@{'/articles/'+${articleId}}">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button class="link-delete-article" type="submit">삭제</button>
+                </form>
                 <div id="viewerSection"></div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
@@ -139,11 +143,9 @@
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script src="/js/index.js"></script>
 <script type="text/javascript" th:inline="javascript">
-
     /*<![CDATA[*/
     const content = /*[[ ${article.contents} ]]*/;
     /*]]>*/
-
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
         viewer: true,
