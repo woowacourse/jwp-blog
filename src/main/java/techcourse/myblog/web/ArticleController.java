@@ -20,11 +20,7 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PostMapping
-    public String write(@ModelAttribute Article article){
-        articleRepository.save(article);
-        return "redirect:/articles/"+article.getId();
-    }
+
 
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model){
@@ -39,6 +35,12 @@ public class ArticleController {
         Article article = articleRepository.findById(id).get();
         model.addAttribute("article", article);
         return "article-edit";
+    }
+
+    @PostMapping
+    public String write(@ModelAttribute Article article){
+        articleRepository.save(article);
+        return "redirect:/articles/"+article.getId();
     }
 
     @PutMapping("/{id}")

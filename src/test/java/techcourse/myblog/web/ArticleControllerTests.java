@@ -28,9 +28,9 @@ public class ArticleControllerTests {
 
     @Test
     void create_article() {
-        String title = "목적의식 있는 연습을 통한 효과적인 학습";
-        String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-        String contents = "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 '선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?'였다.";
+        String title = "스파이더맨 보고싶다";
+        String coverUrl = "https://pgnqdrjultom1827145.cdn.ntruss.com/img/bc/30/bc30f170793e5342c4ca6cca771da57f922f8a9a25fa09eb2b672962cda1ea92_v1.jpg";
+        String contents = "스파이더맨과 미슽테리우스";
 
         webTestClient.post()
                 .uri("/articles")
@@ -40,13 +40,24 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus()
+                .is3xxRedirection()
                 .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
+                .consumeWith(redirectResponse -> {
+                    webTestClient.get()
+                            .uri(redirectResponse.getResponseHeaders().get("Location").get(0))
+                            .exchange()
+                            .expectBody()
+                            .consumeWith(response -> {
+                                String body = new String(response.getResponseBody());
+                                System.out.println(body);
+                                assertThat(body.contains(title)).isTrue();
+                                assertThat(body.contains(coverUrl)).isTrue();
+                                assertThat(body.contains(contents)).isTrue();
+
+                            });
                 });
     }
+
+
 }
