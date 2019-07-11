@@ -33,14 +33,11 @@ public class Article {
     }
 
     public String getCoverUrl() {
-        if (coverUrl == null) {
-            return "/images/pages/index/study.jpg";
-        }
         return coverUrl;
     }
 
     public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
+        this.coverUrl = (coverUrl.length() != 0) ? coverUrl : "/images/pages/index/study.jpg";
     }
 
     @Override

@@ -9,6 +9,7 @@ import java.util.Optional;
 @Repository
 public class ArticleRepository {
     private static final int NEXT_ID = 1;
+    private static final int DEFAULT_ARTICLE_INDEX = 0;
 
     private List<Article> articles = new ArrayList<>();
 
@@ -34,5 +35,20 @@ public class ArticleRepository {
         }
 
         return maxId + NEXT_ID;
+    }
+
+    public void updateArticle(Article updatedArticle) {
+        int targetArticleIndex = findArticleIndexByArticle(updatedArticle);
+        articles.set(targetArticleIndex, updatedArticle);
+    }
+
+    private int findArticleIndexByArticle(Article article) {
+        int targetArticleIndex = DEFAULT_ARTICLE_INDEX;
+
+        for (int i = 0; i < articles.size(); i++) {
+            targetArticleIndex = articles.get(i).getArticleId().equals(article.getArticleId()) ? i : targetArticleIndex;
+        }
+
+        return targetArticleIndex;
     }
 }

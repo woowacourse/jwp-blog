@@ -77,10 +77,10 @@
     </header>
 
     <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg" th:if="${article.coverUrl} != null" th:style="'background-image: url(' + ${article.coverUrl} + ')'">
+        <div class="cover-img overlay-dark bg" th:style="'background-image: url(\'' + ${article.coverUrl} + '\')'">
+
             <div class="padding-30">
-                <h1 th:if="${article.title} != null" th:text="${article.title}" class="text-center cover-title">목적의식 있는 연습을 통한 효과적인 학습</h1>
-                <h1 th:unless="${article.title} != null" th:text="untitled" class="text-center cover-title">목적의식 있는 연습을 통한 효과적인 학습</h1>
+                <h1 th:text="${article.title} == null ? '목적의식 있는 연습을 통한 효과적인 학습' : ${article.title}" class="text-center cover-title"></h1>
             </div>
         </div>
     </div>
@@ -88,7 +88,7 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a href="article-edit.html" class="float-right pointer btn btn-icon">
+                <a th:href="'/articles/' + ${article.articleId}+ '/edit'" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
                 <div id="viewerSection" th:if="${#strings.length(article.contents)} != 0" th:text="${article.contents}">뚱이자식아</div>

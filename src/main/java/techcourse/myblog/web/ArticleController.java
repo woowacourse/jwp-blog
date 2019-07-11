@@ -12,7 +12,6 @@ import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
 public class ArticleController {
-    // 필드에서 애노테이션을 해주기보다는 생성자에서 해주는 것을 추천함
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -30,9 +29,24 @@ public class ArticleController {
         return new ModelAndView("redirect:/articles/" + latestId);
     }
 
+    @PostMapping("/update")
+    public String updateArticle(final Article article) {
+        articleRepository.updateArticle(article);
+
+        return "redirect:/articles/" + article.getArticleId();
+    }
+
     @GetMapping("/articles/{articleId}")
     public String findArticleById(@PathVariable Long articleId, Model model) {
         articleRepository.findArticleById(articleId).ifPresent(a -> model.addAttribute("article", a));
+
         return "article";
+    }
+
+    @GetMapping("/articles/{articleId}/edit")
+    public String updateArticle(@PathVariable Long articleId, Model model) {
+        articleRepository.findArticleById(articleId).ifPresent(a -> model.addAttribute("article", a));
+
+        return "article-edit";
     }
 }

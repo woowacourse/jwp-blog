@@ -24,6 +24,10 @@ public class ArticleControllerTests {
     @Autowired
     private ArticleRepository articleRepository;
 
+    private final String title = "안녕슬로스";
+    private final String contents = "쩌싀워더펑여우";
+    private final String coverUrl = "/images/article/sloth.jpg";
+
     @Test
     void index() {
         webTestClient.get().uri("/")
@@ -38,13 +42,8 @@ public class ArticleControllerTests {
                 .expectStatus().isOk();
     }
 
-    // 아래의 테스트와 같은 기능, 삭제 가능
     @Test
     void 작성된_게시글을_리스트에_등록하는지_테스트() {
-        String title = "안녕슬로스";
-        String contents = "쩌싀워더펑여우";
-        String coverUrl = "/images/article/sloth.jpg";
-
         webTestClient.post()
                 .uri("/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -67,10 +66,6 @@ public class ArticleControllerTests {
 
     @Test
     void 게시물_작성_테스트() {
-        String title = "안녕슬로스";
-        String contents = "쩌싀워더펑여우";
-        String coverUrl = "/images/article/sloth.jpg";
-
         webTestClient.post()
                 .uri("/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -95,4 +90,32 @@ public class ArticleControllerTests {
                             });
                 });
     }
+
+    @Test
+    void 수정할_게시물의_내용_출력_확인_테스트() {
+        webTestClient.post()
+                .uri("/write")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody()
+                .consumeWith(response -> {
+                    webTestClient.get().uri(response.getResponseHeaders().getLocation() + "/edit")
+                            .exchange()
+                            .expectStatus()
+                            .isOk()
+                            .expectBody()
+                            .consumeWith(res -> {
+                                String body = new String(res.getResponseBody());
+                                assertThat(body.contains(title)).isTrue();
+                                assertThat(body.contains(coverUrl)).isTrue();
+                                assertThat(body.contains(contents)).isTrue();
+                            });
+                });
+    }
+
 }
