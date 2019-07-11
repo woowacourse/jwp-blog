@@ -77,11 +77,7 @@
     </header>
 
     <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg" th:if="${article.coverUrl} == ''" style="background-color: white;">
-            <div class="padding-30">
-                <h1 class="text-center cover-title" th:text="${article.title}"></h1>
-            </div>
-        <div class="cover-img overlay-dark bg" th:unless="${article.coverUrl} == ''" th:style="'background:url(' + ${article.coverUrl} + ');'">
+        <div class="cover-img overlay-dark bg" th:style="'background:url(' + ${article.coverUrl} + ');'">
             <div class="padding-30">
                 <h1 class="text-center cover-title" th:text="${article.title}"></h1>
             </div>
@@ -91,7 +87,7 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a href="article-edit.html" class="float-right pointer btn btn-icon">
+                <a th:href="${'/articles/' + article.articleId + '/edit'}" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
                 <div th:if="${article.contents}" th:text="${article.contents}"></div>
@@ -185,7 +181,7 @@
         el: document.querySelector('#viewerSection'),
         viewer: true,
         height: '100%',
-        initialValue: initValue
+        initialValue: initialValue
     })
 
     const editor = new tui.Editor({

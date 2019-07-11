@@ -2,10 +2,8 @@ package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class ArticleRepository {
@@ -17,10 +15,6 @@ public class ArticleRepository {
     public ArticleRepository() {
         this.articles = new ArrayList<>();
         this.lastArticleId = INITIAL_ID;
-    }
-
-    public List<Article> findAll() {
-        return articles;
     }
 
     public void save(Article article) {
@@ -35,14 +29,31 @@ public class ArticleRepository {
         return articles.contains(article);
     }
 
-    public int getLastArticleId() {
-        return lastArticleId;
-    }
-
     public Article find(int articleId) {
         return articles.stream()
                 .filter(article -> article.getArticleId() == articleId)
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("ID를 찾을 수 없습니다."));
+    }
+
+    public void delete(int articleId) {
+        Article article = find(articleId);
+
+        articles.remove(article);
+    }
+
+    public void update(int articleId, String title, String coverUrl, String contents) {
+        Article article = find(articleId);
+        article.setTitle(title);
+        article.setCoverUrl(coverUrl);
+        article.setContents(contents);
+    }
+
+    public int getLastArticleId() {
+        return lastArticleId;
+    }
+
+    public List<Article> findAll() {
+        return articles;
     }
 }

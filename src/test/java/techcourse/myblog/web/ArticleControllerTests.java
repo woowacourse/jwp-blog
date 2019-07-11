@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,14 +11,29 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+    private static final int ARTICLE_TEST_ID = 1;
+    private Article article;
+
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @BeforeEach
+    void setUp() {
+        article = new Article("test title", "test coverUrl", "test contents", ARTICLE_TEST_ID);
+
+        articleRepository.save(article);
+    }
 
     @Test
     void index() {
@@ -26,6 +43,7 @@ public class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("새로운 article-edit 페이지를 되돌려준다.")
     void articleForm() {
         webTestClient.get().uri("/articles/new")
                 .exchange()
@@ -35,7 +53,7 @@ public class ArticleControllerTests {
     @Test
     @DisplayName("/article-edit 요청에 대해 edit 페이지를 되돌려준다.")
     void articleEdit() {
-        webTestClient.get().uri("/article-edit")
+        webTestClient.get().uri("/articles/" + ARTICLE_TEST_ID + "/edit")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -63,5 +81,26 @@ public class ArticleControllerTests {
                     assertThat(body.contains(coverUrl)).isTrue();
                     assertThat(body.contains(contents)).isTrue();
                 });
+    }
+
+    @Test
+    @DisplayName("게시글을 작성한 뒤 생성 버튼을 눌렀을 때 생성된 게시글을 보여준다.")
+    void getArticleEditPage() {
+        webTestClient.get()
+                .uri("/articles/" + ARTICLE_TEST_ID + "/edit")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(article.getTitle())).isTrue();
+                    assertThat(body.contains(article.getCoverUrl())).isTrue();
+                    assertThat(body.contains(article.getContents())).isTrue();
+                });
+    }
+
+    @AfterEach
+    void tearDown() {
+        articleRepository.delete(ARTICLE_TEST_ID);
     }
 }
