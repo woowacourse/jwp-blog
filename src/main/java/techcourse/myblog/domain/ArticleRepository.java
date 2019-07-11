@@ -11,10 +11,10 @@ public class ArticleRepository {
 
     public ArticleRepository() {
         // Test 데이터 추가
-        this.articles.add(new Article("1번 게시물", "testUrl", "testcomntents"));
-        this.articles.add(new Article("2번 게시물", "testUrl2", "#nice"));
-        this.articles.add(new Article("3번 게시물", "testUrl3", "#nice3"));
-        this.articles.add(new Article("4번 게시물", "testUrl4", "#nice4"));
+        this.articles.add(new Article("1번 게시물", "", "testcomntents"));
+        this.articles.add(new Article("2번 게시물", "http://www.kinews.net/news/photo/200907/bjs.jpg", "#nice"));
+        this.articles.add(new Article("3번 게시물", "", "#nice3"));
+        this.articles.add(new Article("4번 게시물", "https://www.woowahan.com/img/mobile/woowabros.jpg", "#nice4"));
     }
 
     public List<Article> findAll() {
