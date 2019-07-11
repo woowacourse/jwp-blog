@@ -111,7 +111,7 @@
         document.getElementById("coverUrl").value = [[${article?.coverUrl}]]
         editor.setValue([[${article?.contents}]])
         document.getElementById("article-write").setAttribute("value", "put")
-        document.getElementById("article-write-form").setAttribute("action", "/articles/" + [[${article?.articleId}]])
+        document.getElementById("article-write-form").setAttribute("action", "/articles/" + [[${article?.id}]])
         document.getElementById("delete-btn").style.display = "block"
     }
 

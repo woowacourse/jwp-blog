@@ -3,17 +3,17 @@ package techcourse.myblog.domain;
 import org.apache.commons.lang3.StringUtils;
 
 public class Article {
-    private int articleId;
+    private int id;
     private String title;
     private String coverUrl;
     private String contents;
 
-    public int getArticleId() {
-        return articleId;
+    public int getId() {
+        return id;
     }
 
-    public void setArticleId(int articleId) {
-        this.articleId = articleId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -47,7 +47,7 @@ public class Article {
     @Override
     public String toString() {
         return "Article{" +
-                "articleId=" + articleId +
+                "id=" + id +
                 ", title='" + title + '\'' +
                 ", coverUrl='" + coverUrl + '\'' +
                 ", contents='" + contents + '\'' +

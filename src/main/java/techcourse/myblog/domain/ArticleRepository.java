@@ -14,32 +14,32 @@ public class ArticleRepository {
 
     public List<Article> findAll() {
         return articles.stream()
-                .sorted(Comparator.comparing(Article::getArticleId).reversed())
+                .sorted(Comparator.comparing(Article::getId).reversed())
                 .collect(Collectors.toList())
                 ;
     }
 
     public void save(Article article) {
-        article.setArticleId(++articleId);
+        article.setId(++articleId);
         articles.add(article);
     }
 
     public Article find(long articleId) {
         return articles.stream()
-                .filter(article -> article.getArticleId() == (int) articleId)
+                .filter(article -> article.getId() == (int) articleId)
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new)
                 ;
     }
 
     public void saveEdited(Article editedArticle) {
-        delete(editedArticle.getArticleId());
+        delete(editedArticle.getId());
         articles.add(editedArticle);
     }
 
     public void delete(long articleId) {
         Article articleToDelete = articles.stream()
-                .filter(article -> article.getArticleId() == (int) articleId)
+                .filter(article -> article.getId() == (int) articleId)
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
         articles.remove(articleToDelete);
