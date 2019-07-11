@@ -43,4 +43,9 @@ public class ArticleRepository {
         Article article = findById(articleIdParam);
         return articles.remove(article);
     }
+
+    public void deleteAll() {
+        latestId = 0;
+        articles = new ArrayList<>();
+    }
 }

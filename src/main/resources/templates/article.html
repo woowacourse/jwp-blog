@@ -18,7 +18,8 @@
     <th:block th:include="/fragment/login-header"></th:block>
 
     <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg" th:style="'background-image: url('+ ((${article.coverUrl} != '')? ${article.coverUrl} : '../static/images/pages/index/study.jpg') + ');'">
+        <div class="cover-img overlay-dark bg"
+             th:style="'background-image: url('+ ((${article.coverUrl} != '')? ${article.coverUrl} : '../static/images/pages/index/study.jpg') + ');'">
             <div class="padding-30">
                 <h1 class="text-center cover-title" th:text="${article.title}">목적의식 있는 연습을 통한 효과적인 학습</h1>
             </div>
@@ -33,7 +34,8 @@
                         <i class="ti-close"></i>
                     </button>
                 </form>
-                <a href="article-edit.html" th:href="@{/articles/{articleId}/edit(articleId=${article.id})}" class="float-right pointer btn btn-icon">
+                <a href="article-edit.html" th:href="@{/articles/{articleId}/edit(articleId=${article.id})}"
+                   class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
                 <div id="viewerSection"></div>
