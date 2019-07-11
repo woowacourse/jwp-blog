@@ -18,11 +18,6 @@ public class ArticleController {
         return "index";
     }
 
-    @GetMapping("/articles/new")
-    public String articleCreateForm() {
-        return "article-edit";
-    }
-
     @GetMapping("/writing")
     public String writeArticle() {
         return "article-edit";

@@ -23,4 +23,8 @@ public class ArticleRepository {
                 .findAny()
                 .get();
     }
+
+    public int size() {
+        return articles.size();
+    }
 }

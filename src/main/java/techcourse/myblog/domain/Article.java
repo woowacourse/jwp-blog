@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import java.util.Objects;
+
 public class Article {
 
     private static long incrementNumber = 1;
@@ -45,5 +47,21 @@ public class Article {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return Objects.equals(articleId, article.articleId) &&
+                Objects.equals(title, article.title) &&
+                Objects.equals(coverUrl, article.coverUrl) &&
+                Objects.equals(contents, article.contents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(articleId, title, coverUrl, contents);
     }
 }
