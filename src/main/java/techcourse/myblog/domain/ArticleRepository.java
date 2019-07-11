@@ -19,7 +19,7 @@ public class ArticleRepository {
         return article.getId();
     }
 
-    public Article find(long articleId) {
+    public Article findById(long articleId) {
         return articles.stream()
                 .filter(article -> article.equals(articleId))
                 .findFirst()
@@ -27,7 +27,7 @@ public class ArticleRepository {
     }
 
     public long update(Article updatedArticle) {
-        Article article = find(updatedArticle.getId());
+        Article article = findById(updatedArticle.getId());
         int atUpdateIndex = articles.indexOf(article);
         articles.set(atUpdateIndex, updatedArticle);
 
@@ -35,7 +35,7 @@ public class ArticleRepository {
     }
 
     public void delete(long articleId) {
-        Article article = find(articleId);
+        Article article = findById(articleId);
         articles.remove(article);
     }
 }

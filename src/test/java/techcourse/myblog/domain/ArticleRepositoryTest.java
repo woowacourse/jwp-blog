@@ -26,17 +26,17 @@ public class ArticleRepositoryTest {
 
     @Test
     void 첫_번째_게시물_조회_테스트() {
-        assertThat(articleRepository.find(1)).isEqualTo(articleFirst);
+        assertThat(articleRepository.findById(1)).isEqualTo(articleFirst);
     }
 
     @Test
     void 마지막_게시물_조회_테스트() {
-        assertThat(articleRepository.find(3)).isEqualTo(articleThird);
+        assertThat(articleRepository.findById(3)).isEqualTo(articleThird);
     }
 
     @Test
     void 존재하지_않는_게시물_조회시_예외처리() {
-        assertThrows(IllegalArgumentException.class, () -> articleRepository.find(4));
+        assertThrows(IllegalArgumentException.class, () -> articleRepository.findById(4));
     }
 
     @Test
@@ -49,13 +49,13 @@ public class ArticleRepositoryTest {
         Article updatedArticle = new Article(1, "제목", "이미지경로", "내용");
         long updatedArticleId = articleRepository.update(updatedArticle);
 
-        assertThat(articleRepository.find(updatedArticleId)).isEqualTo(updatedArticle);
+        assertThat(articleRepository.findById(updatedArticleId)).isEqualTo(updatedArticle);
     }
 
     @Test
     void 게시물_삭제_테스트() {
         articleRepository.delete(1);
-        assertThrows(IllegalArgumentException.class, () -> articleRepository.find(1));
+        assertThrows(IllegalArgumentException.class, () -> articleRepository.findById(1));
     }
 
     @AfterEach

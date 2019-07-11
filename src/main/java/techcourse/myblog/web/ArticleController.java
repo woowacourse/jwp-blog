@@ -37,14 +37,14 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String readArticle(@PathVariable long articleId, Model model) {
-        Article article = articleRepository.find(articleId);
+        Article article = articleRepository.findById(articleId);
         model.addAttribute("article", article);
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String renderUpdatePage(@PathVariable long articleId, Model model) {
-        Article article = articleRepository.find(articleId);
+        Article article = articleRepository.findById(articleId);
         model.addAttribute("article", article);
         return "article-edit";
     }
