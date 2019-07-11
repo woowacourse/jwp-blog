@@ -15,8 +15,12 @@ import java.util.List;
 
 @Controller
 public class ArticleController {
+    private final ArticleRepository articleRepository;
+
     @Autowired
-    private ArticleRepository articleRepository;
+    public ArticleController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @GetMapping("/")
     public String index(Model model) {
