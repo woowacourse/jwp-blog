@@ -31,7 +31,7 @@ public class ArticleController {
     @PostMapping("/articles")
     public ModelAndView confirmWrite(final Article article) {
         articleRepository.write(article);
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/articles/" + article.getNumber() + "/");
     }
 
     @GetMapping("/articles/{articleId}/")
@@ -52,12 +52,12 @@ public class ArticleController {
     @PutMapping("/articles/{articleId}/")
     public ModelAndView confirmEdit(@PathVariable final int articleId, final Article article) {
         articleRepository.edit(article, articleId);
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/articles/" + articleId + "/");
     }
 
     @ResponseBody
     @DeleteMapping("/articles/{articleId}/")
-    public ModelAndView confirmEdit(@PathVariable final int articleId) {
+    public ModelAndView deleteArticle(@PathVariable final int articleId) {
         articleRepository.delete(articleId);
         return new ModelAndView("redirect:/");
     }

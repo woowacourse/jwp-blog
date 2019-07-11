@@ -14,6 +14,12 @@ public class Article implements Comparable<Article> {
         this.number = number;
     }
 
+    public void setTo(Article rhs) {
+        this.title = rhs.title;
+        this.coverUrl = rhs.coverUrl;
+        this.contents = rhs.contents;
+    }
+
     public String getTitle() {
         return this.title;
     }
