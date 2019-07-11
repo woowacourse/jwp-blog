@@ -14,7 +14,7 @@ class ArticleTest {
             stringBuilder.append(Collections.nCopies(i, "andole"));
         }
 
-        Article article = new Article("andole", stringBuilder.toString());
+        Article article = new Article("andole", stringBuilder.toString(), "");
         System.out.println(stringBuilder.toString().length());
         assertEquals(stringBuilder.toString(), article.getContents());
     }
