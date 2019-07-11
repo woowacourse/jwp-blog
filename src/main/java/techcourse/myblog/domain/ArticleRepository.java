@@ -21,6 +21,12 @@ public class ArticleRepository {
     }
 
     public void save(Article article) {
+        int nextId = articles.stream()
+                .mapToInt(Article::getId)
+                .max()
+                .orElse(0) + 1;
+
+        article.setId(nextId);
         articles.add(article);
     }
 
