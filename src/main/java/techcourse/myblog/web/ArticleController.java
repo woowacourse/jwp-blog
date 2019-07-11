@@ -75,7 +75,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable long articleId, Article article, Model model) {
+    public String deleteArticle(@PathVariable long articleId) {
         articleRepository.delete(articleId);
         return "redirect:/";
     }
