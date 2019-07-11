@@ -17,7 +17,11 @@ public class ArticleRepository {
         articles.add(article);
     }
 
-    public Article findById(int index) {
-        return articles.get(index);
+    public Article findById(int id) {
+        return articles.stream()
+                .filter(article -> article.getId() == id)
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new)
+                ;
     }
 }

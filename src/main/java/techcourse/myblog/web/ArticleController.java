@@ -33,10 +33,16 @@ public class ArticleController {
 		return "index";
 	}
 
-	@GetMapping("article/{index}")
-	public String getArticle(@PathVariable int index, Model model) {
-		model.addAttribute("article", articleRepository.findById(index));
+	@GetMapping("article/{id}")
+	public String getArticle(@PathVariable int id, Model model) {
+		model.addAttribute("article", articleRepository.findById(id));
 		return "article";
+	}
+
+	@GetMapping("articles/{articleId}/edit")
+	public String editArticle(@PathVariable int articleId, Model model) {
+		model.addAttribute("article", articleRepository.findById(articleId));
+		return "article-edit";
 	}
 }
 

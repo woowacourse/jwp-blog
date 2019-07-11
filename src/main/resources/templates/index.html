@@ -81,7 +81,7 @@
                             <div class="pdd-horizon-15 pdd-vertical-20">
                                 <div class="card article-container">
                                 <div th:each="article, index : ${articles}" class="card-horizon">
-                                    <a th:href="@{article/{index}(index=${index.index})}">
+                                    <a th:href="@{article/{id}(id=${article.id})}">
                                         <div class="image-container col-md-4">
                                             <div class="background-holder has-content" th:style="'background:url('+${article.coverUrl}+');'"></div>
                                         </div>
