@@ -1,7 +1,11 @@
 package techcourse.myblog.domain;
 
+import lombok.Data;
+
+@Data
 public class Article {
     private static int currentId = 1;
+
     private final int id;
     private String title;
     private String contents;
@@ -14,31 +18,7 @@ public class Article {
         this.id = currentId++;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
+    public static void initCurrentId() {
+        currentId = 1;
     }
 }

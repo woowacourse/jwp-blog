@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -56,6 +55,6 @@ public class ArticleController {
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable int articleId) {
         articleRepository.delete(articleId);
-        return "index";
+        return "redirect:/";
     }
 }
