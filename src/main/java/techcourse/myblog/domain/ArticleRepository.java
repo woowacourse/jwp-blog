@@ -21,4 +21,8 @@ public class ArticleRepository {
     public Article findById(int articleId) {
         return articles.get(articleId);
     }
+
+    public void updateArticle(int articleId, Article article) {
+        articles.set(articleId, article);
+    }
 }

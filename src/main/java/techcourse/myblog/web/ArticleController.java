@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
@@ -39,5 +40,14 @@ public class ArticleController {
         model.addAttribute("article", article);
 
         return "article-edit";
+    }
+
+    @PutMapping("/articles/{articleId}")
+    public String updateArticle(@PathVariable int articleId, Article article, Model model) {
+        articleRepository.updateArticle(articleId, article);
+
+        model.addAttribute("article", article);
+
+        return "article";
     }
 }
