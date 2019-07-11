@@ -34,7 +34,7 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void articleForm() {
+    void showCreatePage() {
         webTestClient.get().uri("/articles/new")
                 .exchange()
                 .expectStatus().isOk();
@@ -125,6 +125,48 @@ public class ArticleControllerTests {
                     assertThat(body.contains(title)).isTrue();
                     assertThat(body.contains(coverUrl)).isTrue();
                     assertThat(body.contains(contents)).isTrue();
+                });
+    }
+
+    @Test
+    void editArticle() {
+        String title = "test";
+        String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
+        String contents = "Hi";
+        String newContents = "Bye";
+
+        webTestClient.post()
+                .uri("/articles")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange()
+                .expectStatus().is3xxRedirection();
+
+        webTestClient.put()
+                .uri("/articles/1")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", newContents))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody()
+                .consumeWith(response -> {
+                    URI location = response.getResponseHeaders().getLocation();
+                    webTestClient.get()
+                            .uri(location)
+                            .exchange()
+                            .expectBody()
+                            .consumeWith(res -> {
+                                String body = new String(res.getResponseBody());
+                                assertThat(body.contains(title)).isTrue();
+                                assertThat(body.contains(coverUrl)).isTrue();
+                                assertThat(body.contains(newContents)).isTrue();
+                            });
                 });
     }
 }

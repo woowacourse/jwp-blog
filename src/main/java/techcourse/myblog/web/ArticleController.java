@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
@@ -15,13 +16,13 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 
     @GetMapping(value = {"/", "/articles"})
-    public String show(Model model) {
+    public String showArticles(Model model) {
         model.addAttribute("articles", articleRepository.findAll());
         return "index";
     }
 
     @PostMapping("/articles")
-    public String create(Article article, Model model) {
+    public String createArticle(Article article, Model model) {
         articleRepository.add(article);
         return "redirect:/articles/" + article.getId();
     }
@@ -41,5 +42,12 @@ public class ArticleController {
     public String showEditPage(@PathVariable("id") long id, Model model) {
         model.addAttribute("article", articleRepository.findById(id));
         return "article-edit";
+    }
+
+    @PutMapping("/articles/{id}")
+    public String editArticle(@PathVariable("id") long id, Article newArticle) {
+        Article article = articleRepository.findById(id);
+        article.updateArticle(newArticle);
+        return "redirect:/articles/" + id;
     }
 }

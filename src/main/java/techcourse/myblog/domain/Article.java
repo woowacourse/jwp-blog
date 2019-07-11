@@ -37,4 +37,10 @@ public class Article {
     public void setContents(String contents) {
         this.contents = contents;
     }
+
+    public void updateArticle(Article article) {
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
+    }
 }
