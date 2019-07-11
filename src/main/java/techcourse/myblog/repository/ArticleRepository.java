@@ -10,6 +10,7 @@ import techcourse.myblog.domain.Article;
 @Repository
 public class ArticleRepository {
 	private static int articleCount = 0;
+
 	private List<Article> articles = new ArrayList<>();
 
 	public List<Article> findAll() {

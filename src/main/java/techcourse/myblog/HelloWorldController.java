@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class HelloWorldController {
-
 	@ResponseBody
 	@GetMapping("/helloworld")
 	public String getBlogNameUsingGet(String blogName) {
