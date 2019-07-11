@@ -50,4 +50,10 @@ public class ArticleController {
         articleRepository.update(articleId, article);
         return "redirect:/articles/" + articleId;
     }
+
+    @DeleteMapping("/articles/{articleId}")
+    public String deleteArticle(@PathVariable("articleId") int articleId) {
+        articleRepository.remove(articleId);
+        return "redirect:/";
+    }
 }

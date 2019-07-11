@@ -22,10 +22,18 @@ public class ArticleRepository {
     }
 
     public int lastIndex() {
-        return articles.size() - 1;
+        return size() - 1;
     }
 
     public void update(int articleId, Article article) {
         articles.set(articleId, article);
+    }
+
+    public int size(){
+        return articles.size();
+    }
+
+    public void remove(int articleId) {
+        articles.remove(articles.get(articleId));
     }
 }

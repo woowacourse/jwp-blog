@@ -76,17 +76,26 @@
                 </div>
                 <div class="col-lg-1 col-md-1">
                     <div class="btn-group btn-group-vertical">
-                        <button id="save-btn" type="submit" class="btn btn-default">
-                            <i class="ti-save"></i>
-                        </button>
-                        <a href="/templates/index.html" class="btn btn-default">
+                        <form th:action="|/articles/${articleId}|" method="post">
+                            <input th:if="${articleId != null}" type="hidden" name="_method" value="put"/>
+                            <button id="save-btn" type="submit" class="btn btn-default">
+                                <i class="ti-save"></i>
+                            </button>
+                        </form>
+                        <a th:if="${articleId == null}" href="/" class="btn btn-default">
                             <i class="ti-close"></i>
                         </a>
+                        <form th:action="|/articles/${articleId}|" method="post">
+                            <input th:if="${articleId != null}" type="hidden" name="_method" value="delete"/>
+
+                            <button th:unless="${articleId == null}" type="submit" class="btn btn-default">
+                                <i class="ti-close"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-        <input th:if="${articleId != null}" type="hidden" name="_method" value="put"/>
     </form>
     </th:block>
 </div>

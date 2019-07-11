@@ -35,13 +35,6 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void article() {
-        webTestClient.get().uri("/articles")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
     void articleForm() {
         webTestClient.get().uri("/articles/new")
                 .exchange()
@@ -120,5 +113,20 @@ public class ArticleControllerTests {
                                 }
                             });
                 });
+    }
+
+    @Test
+    void articleDelete() {
+        Article testArticle = new Article();
+        testArticle.setTitle("title");
+        testArticle.setCoverUrl("coverUrl");
+        testArticle.setContents("contents");
+        articleRepository.add(testArticle);
+
+        webTestClient.delete().uri("/articles/0")
+                .exchange()
+                .expectStatus().is3xxRedirection();
+
+        assertThat(articleRepository.size()).isEqualTo(0);
     }
 }
