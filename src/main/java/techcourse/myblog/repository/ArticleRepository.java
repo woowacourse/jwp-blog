@@ -1,9 +1,11 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.repository;
 
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import techcourse.myblog.domain.Article;
 
 @Repository
 public class ArticleRepository {
@@ -14,9 +16,10 @@ public class ArticleRepository {
 		return articles;
 	}
 
-	public void save(Article article) {
+	public Article save(Article article) {
 		article.setId(++articleCount);
 		articles.add(article);
+		return findById(articleCount);
 	}
 
 	public Article findById(int id) {
