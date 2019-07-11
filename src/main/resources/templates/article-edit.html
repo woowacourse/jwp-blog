@@ -3,14 +3,14 @@
 <head>
     <th:block th:include="fragments/head :: head"/>
     <th:block th:include="fragments/head :: articleHead"/>
-    <link rel="stylesheet" href="../static/css/article-edit.css">
+    <link rel="stylesheet" href="/css/article-edit.css">
 </head>
 <body>
 <div>
     <th:block th:include="fragments/header :: header"></th:block>
     <form action="/articles" name="article" method="post" accept-charset="utf-8" >
         <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg" style="background-image: url('../static/images/pages/index/study.jpg')">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
                         <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" autocomplete="off">
@@ -19,7 +19,6 @@
                 </div>
             </div>
         </div>
-
         <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
             <div class="row">
                 <div class="col-lg-1 col-md-1"></div>
@@ -46,7 +45,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-<script src="../static/js/index.js"></script>
+<script src="/js/index.js"></script>
 <script type="text/javascript">
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
