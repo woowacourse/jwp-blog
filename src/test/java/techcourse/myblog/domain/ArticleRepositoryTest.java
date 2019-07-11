@@ -1,20 +1,19 @@
 package techcourse.myblog.domain;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ArticleRepositoryTest {
-
-    @Autowired
     private ArticleRepository articleRepository;
+
+    @BeforeEach
+    void setUp() {
+        articleRepository = new ArticleRepository();
+    }
 
     @Test
     void 게시글_정상_추가() {
@@ -32,6 +31,20 @@ class ArticleRepositoryTest {
 
     @Test
     void 존재하지_않는_게시글_검색_에러() {
-        assertThrows(RuntimeException.class, () -> articleRepository.find(0));
+        assertThrows(IndexOutOfBoundsException.class, () ->
+                articleRepository.find(0));
+    }
+
+    @Test
+    void 존재하는_게시글_정상_수정() {
+        articleRepository.insert(new Article("title", "url", "contents"));
+        assertDoesNotThrow(() ->
+                articleRepository.update(0, new Article("a", "a", "a")));
+    }
+
+    @Test
+    void 존재하지않는_게시글_수정_시도_에러() {
+        assertThrows(IndexOutOfBoundsException.class, () ->
+                articleRepository.update(0, new Article("a", "a", "a")));
     }
 }

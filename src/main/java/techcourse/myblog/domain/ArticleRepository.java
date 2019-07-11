@@ -20,4 +20,12 @@ public class ArticleRepository {
     public Article find(Integer articleId) {
         return articles.get(articleId);
     }
+
+    public void update(Integer articleId, Article article) {
+        articles.set(articleId, article);
+    }
+
+    public int size() {
+        return articles.size();
+    }
 }

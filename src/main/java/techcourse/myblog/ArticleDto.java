@@ -1,7 +1,6 @@
 package techcourse.myblog;
 
 public class ArticleDto {
-
     private String title;
     private String coverUrl;
     private String contents;

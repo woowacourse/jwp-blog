@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,13 +51,20 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().is3xxRedirection()
                 .expectBody()
                 .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
+                    webTestClient.get()
+                            .uri(response.getRequestHeaders().getLocation())
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody()
+                            .consumeWith(response2 -> {
+                                String body = new String(response2.getResponseBody());
+                                assertThat(body.contains(title)).isTrue();
+                                assertThat(body.contains(coverUrl)).isTrue();
+                                assertThat(body.contains(StringEscapeUtils.escapeJava(contents))).isTrue();
+                            });
                 });
     }
 
@@ -73,13 +81,20 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().is3xxRedirection()
                 .expectBody()
                 .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
+                    webTestClient.get()
+                            .uri(response.getRequestHeaders().getLocation())
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody()
+                            .consumeWith(response2 -> {
+                                String body = new String(response2.getResponseBody());
+                                assertThat(body.contains(title)).isTrue();
+                                assertThat(body.contains(coverUrl)).isTrue();
+                                assertThat(body.contains(contents)).isTrue();
+                            });
                 });
     }
 
@@ -91,7 +106,7 @@ public class ArticleControllerTests {
         articleRepository.insert(new Article(title, coverUrl, contents));
 
         webTestClient.get()
-                .uri("/articles/0")
+                .uri("/articles/" + (articleRepository.size() - 1))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -106,8 +121,48 @@ public class ArticleControllerTests {
     @Test
     void 존재하지_않는_게시글_조회_에러() {
         webTestClient.get()
-                .uri("/articles/0")
+                .uri("/articles/" + (articleRepository.size()))
                 .exchange()
                 .expectStatus().is5xxServerError();
+    }
+
+    @Test
+    void 게시글_수정페이지_이동() {
+        String title = "titleTest";
+        String coverUrl = "urlTest";
+        String contents = "contentsTest";
+        articleRepository.insert(new Article(title, coverUrl, contents));
+
+        webTestClient.get()
+                .uri("/articles/0/edit")
+                .exchange()
+                .expectStatus().isOk()
+        ;
+    }
+
+    @Test
+    void 게시글_수정() {
+        String newTitle = "newTile";
+        String title = "title";
+        String coverUrl = "coverUrl";
+        String contents = "contents";
+        articleRepository.insert(new Article(title, coverUrl, contents));
+
+        webTestClient.put()
+                .uri("/articles/0")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", newTitle)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(newTitle)).isTrue();
+                    assertThat(body.contains(coverUrl)).isTrue();
+                    assertThat(body.contains(contents)).isTrue();
+                });
     }
 }
