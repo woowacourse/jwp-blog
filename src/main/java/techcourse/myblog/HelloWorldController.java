@@ -8,9 +8,11 @@ import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
 public class HelloWorldController {
+    private final ArticleRepository articleRepository;
 
-    @Autowired
-    private ArticleRepository articleRepository;
+    public HelloWorldController(final ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @GetMapping("/")
     public String passParamWithGet(Model model) {
