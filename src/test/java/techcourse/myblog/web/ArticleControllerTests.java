@@ -180,7 +180,6 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection();
 
-
         webTestClient.get()
                 .uri("/articles/" + article.getId())
                 .exchange()

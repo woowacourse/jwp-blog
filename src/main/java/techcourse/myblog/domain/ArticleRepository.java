@@ -14,11 +14,6 @@ public class ArticleRepository {
         return articles;
     }
 
-    public void add(Article article) {
-        article.setId(nextId++);
-        articles.add(article);
-    }
-
     public Article findById(long id) {
         return articles.stream()
                 .filter(article -> article.getId() == id)
@@ -26,11 +21,16 @@ public class ArticleRepository {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
     }
 
-    public void clear() {
-        articles.clear();
+    public void add(Article article) {
+        article.setId(nextId++);
+        articles.add(article);
     }
-
+    
     public void deleteById(long id) {
         articles.removeIf(article -> article.getId() == id);
+    }
+
+    public void clear() {
+        articles.clear();
     }
 }

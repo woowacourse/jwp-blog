@@ -18,12 +18,6 @@ public class ArticleController {
         return "index";
     }
 
-    @PostMapping("/articles")
-    public String createArticle(Article article, Model model) {
-        articleRepository.add(article);
-        return "redirect:/articles/" + article.getId();
-    }
-
     @GetMapping("/articles/new")
     public String showCreatePage() {
         return "article-edit";
@@ -39,6 +33,12 @@ public class ArticleController {
     public String showEditPage(@PathVariable("id") long id, Model model) {
         model.addAttribute("article", articleRepository.findById(id));
         return "article-edit";
+    }
+
+    @PostMapping("/articles")
+    public String createArticle(Article article) {
+        articleRepository.add(article);
+        return "redirect:/articles/" + article.getId();
     }
 
     @PutMapping("/articles/{id}")
