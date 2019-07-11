@@ -3,7 +3,7 @@ package techcourse.myblog.service;
 import java.util.List;
 
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.repository.ArticleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 public class ArticleService {
 	@Autowired
 	private ArticleRepository articleRepository;
-
 
 	public void save(Article article) {
 		articleRepository.save(article);
