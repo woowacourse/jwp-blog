@@ -17,15 +17,6 @@ public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
 
-    @Bean
-    public FilterRegistrationBean httpMethodFilter() {
-        FilterRegistrationBean filter = new FilterRegistrationBean();
-        filter.setFilter(new HiddenHttpMethodFilter());
-        filter.setName("httpMethodFilter");
-        filter.addUrlPatterns("/*");
-        return filter;
-    }
-
     @GetMapping("/")
     public String index(Model model) {
         List<Article> articles = articleRepository.findAll();
