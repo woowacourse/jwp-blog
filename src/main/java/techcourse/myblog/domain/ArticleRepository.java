@@ -43,4 +43,8 @@ public class ArticleRepository {
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }
+
+    public void removeArticleById(int id) {
+        articles.removeIf(a -> a.getId() == id);
+    }
 }
