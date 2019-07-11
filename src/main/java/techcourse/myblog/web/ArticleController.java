@@ -31,11 +31,6 @@ public class ArticleController {
         return "article";
     }
 
-    @GetMapping("/articles/new")
-    private String getArticle(Model model) {
-        return "article-edit";
-    }
-
     @GetMapping("/writing")
     private String getArticleEdit() {
         return "article-edit";
@@ -64,7 +59,6 @@ public class ArticleController {
         return "article-edit";
     }
 
-    //    @RequestMapping(value = "/articles/{id}", method = RequestMethod.PUT)
     @PutMapping("/articles/{id}")
     private String putArticle(
             @RequestParam("title") String title,
@@ -86,5 +80,4 @@ public class ArticleController {
         articleRepository.delete(id);
         return "redirect:/";
     }
-
 }

@@ -14,8 +14,13 @@ class ArticleTest {
             stringBuilder.append(Collections.nCopies(i, "andole"));
         }
 
-        Article article = new Article("andole", stringBuilder.toString());
-        System.out.println(stringBuilder.toString().length());
+        Article article = new Article("andole", stringBuilder.toString(), "");
         assertEquals(stringBuilder.toString(), article.getContents());
+    }
+
+    @Test
+    void default_background_테스트() {
+        Article article = new Article("andole", "ABC", "");
+        assertEquals(article.getBackground(), Article.DEFAULT_BACKGROUND);
     }
 }
