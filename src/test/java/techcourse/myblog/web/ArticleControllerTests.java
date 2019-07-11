@@ -65,7 +65,8 @@ public class ArticleControllerTests {
 					assertThat(body.contains(title)).isTrue();
 					assertThat(body.contains(coverUrl)).isTrue();
 					assertThat(body.contains(contents)).isTrue();
-				});
+				})
+		;
 	}
 
 	@Test
@@ -83,7 +84,8 @@ public class ArticleControllerTests {
 					assertThat(body.contains(title)).isTrue();
 					assertThat(body.contains(coverUrl)).isTrue();
 					assertThat(body.contains(contents)).isTrue();
-				});
+				})
+		;
 	}
 
 	@Test
@@ -101,7 +103,8 @@ public class ArticleControllerTests {
 					assertThat(body.contains(title)).isTrue();
 					assertThat(body.contains(coverUrl)).isTrue();
 					assertThat(body.contains(contents)).isTrue();
-				});
+				})
+		;
 	}
 
 	@Test
@@ -123,7 +126,8 @@ public class ArticleControllerTests {
 					assertThat(body.contains("updatedTitle")).isTrue();
 					assertThat(body.contains("updatedCoverUrl")).isTrue();
 					assertThat(body.contains("updatedContents")).isTrue();
-				});
+				})
+		;
 	}
 
 	@Test
