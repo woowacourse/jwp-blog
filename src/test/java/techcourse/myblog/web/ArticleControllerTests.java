@@ -14,8 +14,10 @@ import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -104,7 +106,9 @@ public class ArticleControllerTests {
         webTestClient.delete()
             .uri("/articles/" + newArticle.getId())
             .exchange()
-            .expectStatus().isOk();
+            .expectStatus().is3xxRedirection();
+
+        assertThat(articleRepository.findById(newArticle.getId()).isPresent()).isFalse();
     }
 
     @Test

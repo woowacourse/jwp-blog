@@ -6,17 +6,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.service.ArticleService;
 
 import java.util.List;
 
 @Controller
 public class ArticleController {
     @Autowired
-    private ArticleRepository articleRepository;
+    private ArticleService articleService;
 
     @GetMapping("/")
     public String indexView(Model model) {
-        List<Article> articles = articleRepository.findAll();
+        List<Article> articles = articleService.findAll();
         model.addAttribute("articles", articles);
         return "index";
     }
@@ -28,42 +29,36 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String publishArticle(Article article) {
-        articleRepository.addArticle(Article.of(article.getTitle(), article.getCoverUrl(), article.getContents()));
+        articleService.addArticle(article);
         return "redirect:/";
     }
 
     @GetMapping("/articles/{articleId}")
     public String articleView(@PathVariable Long articleId, Model model) {
-        Article article = articleRepository.findById(articleId)
-            .orElseThrow(() -> new IllegalArgumentException("Article not found: " + articleId));
+        Article article = articleService.findById(articleId);
         model.addAttribute("article", article);
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String editArticleView(@PathVariable Long articleId, Model model) {
-        Article article = articleRepository.findById(articleId)
-            .orElseThrow(() -> new IllegalArgumentException("Article not found" + articleId));
+        Article article = articleService.findById(articleId);
         model.addAttribute("article", article);
         return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable Long articleId, String title, String coverUrl, String contents, Model model) {
-        Article article = articleRepository.findById(articleId)
-            .orElseThrow(() -> new IllegalArgumentException("Article not found: " + articleId));
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
-        Article articleToShow = articleRepository.findById(articleId)
-            .orElseThrow(() -> new IllegalStateException("Can't find changed article: " + articleId));
+    public String editArticle(@PathVariable Long articleId, Article reqArticle, Model model) {
+        reqArticle.setId(articleId);
+        articleService.update(reqArticle);
+        Article articleToShow = articleService.findById(articleId);
         model.addAttribute("article", articleToShow);
         return "article";
     }
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable Long articleId) {
-        articleRepository.deleteById(articleId);
+        articleService.deleteById(articleId);
         return "redirect:/";
     }
 }

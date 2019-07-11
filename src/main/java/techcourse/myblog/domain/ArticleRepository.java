@@ -21,12 +21,13 @@ public class ArticleRepository {
 
     public Optional<Article> findById(Long id) {
         return articles.stream()
-            .filter(a -> a.getId().equals(id))
+            .filter(article -> article.getId().equals(id))
             .findFirst();
     }
 
     public void deleteById(Long id) {
-        Article toDelete = findById(id).orElseThrow(() -> new IllegalArgumentException("Article not found " + id));
+        Article toDelete = findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Article not found " + id));
         articles.remove(toDelete);
     }
 }
