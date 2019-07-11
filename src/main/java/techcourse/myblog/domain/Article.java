@@ -1,19 +1,30 @@
 package techcourse.myblog.domain;
 
+import java.util.Objects;
 
 public class Article {
     private static final String DEFAULT_BACKGROUND = "/images/default/bg.jpg";
     private String title;
     private String contents;
-    private String background;
+    private String coverUrl;
 
-    public Article(String title, String contents, String background) {
+    public Article(String title, String contents, String coverUrl) {
         this.title = title;
         this.contents = contents;
-        this.background = background;
-        if (this.background.isEmpty()) {
-            this.background = DEFAULT_BACKGROUND;
+        this.coverUrl = getDefaultCoverUrl(coverUrl);
+    }
+
+    private String getDefaultCoverUrl(String coverUrl) {
+        if (coverUrl.isEmpty()) {
+            return DEFAULT_BACKGROUND;
         }
+        return coverUrl;
+    }
+
+    public void updateByArticle(Article article) {
+        this.title = article.getTitle();
+        this.contents = article.getContents();
+        this.coverUrl = article.getCoverUrl();
     }
 
     public String getTitle() {
@@ -32,12 +43,12 @@ public class Article {
         this.contents = contents;
     }
 
-    public String getBackground() {
-        return background;
+    public String getCoverUrl() {
+        return coverUrl;
     }
 
-    public void setBackground(String background) {
-        this.background = background;
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = getDefaultCoverUrl(coverUrl);
     }
 
     @Override
@@ -45,7 +56,22 @@ public class Article {
         return "Article{" +
                 "title='" + title + '\'' +
                 ", contents='" + contents + '\'' +
-                ", background='" + background + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return Objects.equals(title, article.title) &&
+                Objects.equals(contents, article.contents) &&
+                Objects.equals(coverUrl, article.coverUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, contents, coverUrl);
     }
 }

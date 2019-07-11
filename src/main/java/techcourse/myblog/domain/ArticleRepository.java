@@ -17,11 +17,11 @@ public class ArticleRepository {
         articles.add(article);
     }
 
-    public Article find(int i) {
-        return articles.get(i);
+    public Article findByIndex(int index) {
+        return articles.get(index);
     }
 
-    public void delete(int i) {
-        articles.remove(i);
+    public void deleteByIndex(int index) {
+        articles.remove(index);
     }
 }
