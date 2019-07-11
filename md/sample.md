@@ -24,3 +24,11 @@
 > `<div th:if="${article.coverUrl==''}">` coverUrl이 빈 문자열이면 이 부분이 출력 `</div>`
 > `<div th:unless="${article.coverUrl==''}">` coverUrl이 빈 문자열이 아니면 이 부분이 출력 `</div>`
 
+- 3항 연산자도 사용 가능
+
+
+### 궁금한 점
+- html에서 thymeleaf 쓸 때, thymeleaf들의 위치는 어디가 맞는건지?
+ 태그 바로 다음? 아니면 마지막?
+ 
+ ex) <div th:text="~~~" id="~" ...> , <div id="~" ~~~" th:text="~"> 
