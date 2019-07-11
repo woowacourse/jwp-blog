@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
@@ -29,7 +30,7 @@ public class ArticleController {
         return new ModelAndView("redirect:/articles/" + latestId);
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public String updateArticle(final Article article) {
         articleRepository.updateArticle(article);
 

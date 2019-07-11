@@ -118,4 +118,34 @@ public class ArticleControllerTests {
                 });
     }
 
+    @Test
+    void 게시글_삭제_테스트() {
+        webTestClient.post()
+                .uri("/write")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody()
+                .consumeWith(response -> {
+                    webTestClient.get().uri("/delete"+ response.getResponseHeaders().getLocation())
+                            .exchange()
+                            .expectStatus()
+                            .isOk();
+
+                    Long latestId = articleRepository.generateNewId() - 1;
+
+                    Article article = new Article();
+                    article.setTitle(title);
+                    article.setContents(contents);
+                    article.setCoverUrl(coverUrl);
+                    article.setArticleId(latestId);
+
+                    assertThat(articleRepository.findAll().contains(article)).isTrue();
+                });
+    }
+
 }
