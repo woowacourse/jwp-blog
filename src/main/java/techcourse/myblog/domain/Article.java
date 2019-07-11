@@ -12,4 +12,20 @@ public class Article {
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
+
+    public int getArticleId() {
+        return articleId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public String getContents() {
+        return contents;
+    }
 }
