@@ -8,6 +8,9 @@ public class Article {
     private String coverUrl;
     private String contents;
 
+    public Article() {
+    }
+
     public Article(final String title, final String coverUrl, final String contents) {
         this.title = title;
         this.coverUrl = coverUrl;

@@ -16,19 +16,18 @@ public class ArticleController {
     }
 
     @GetMapping("/new")
-    public String articleForm(){
+    public String writeForm(){
         return "article-edit";
     }
 
     @PostMapping
-    public String write(@ModelAttribute Article article){
+    public String write(Article article){
         articleRepository.save(article);
         return "redirect:/articles/"+article.getId();
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model){
-        //TODO 에러처리
         Article article = articleRepository.findById(id).get();
         model.addAttribute("article", article);
         return "article";
