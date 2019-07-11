@@ -34,7 +34,7 @@ public class Article {
 
     public String getCoverUrl() {
         if (coverUrl == null) {
-            return "../static/images/pages/index/study.jpg";
+            return "/images/pages/index/study.jpg";
         }
         return coverUrl;
     }

@@ -12,18 +12,18 @@ public class ArticleRepository {
 
     private List<Article> articles = new ArrayList<>();
 
-    public List<Article> findAll() {
-        return articles;
-    }
-
     public void addArticle(Article article) {
         this.articles.add(article);
     }
 
-    public Optional<Article> findArticleById (final Long articleId) {
+    public Optional<Article> findArticleById(final Long articleId) {
         return articles.stream()
                 .filter(x -> x.getArticleId().equals(articleId))
                 .findAny();
+    }
+
+    public List<Article> findAll() {
+        return articles;
     }
 
     public Long generateNewId() {
@@ -32,6 +32,7 @@ public class ArticleRepository {
         for (Article article : articles) {
             maxId = Math.max(article.getArticleId(), maxId);
         }
+
         return maxId + NEXT_ID;
     }
 }
