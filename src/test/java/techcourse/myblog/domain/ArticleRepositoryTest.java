@@ -52,6 +52,12 @@ public class ArticleRepositoryTest {
         assertThat(articleRepository.find(updatedArticleId)).isEqualTo(updatedArticle);
     }
 
+    @Test
+    void 게시물_삭제_테스트() {
+        articleRepository.delete(1);
+        assertThrows(IllegalArgumentException.class, () -> articleRepository.find(1));
+    }
+
     @AfterEach
     void tearDown() {
         articleRepository = null;

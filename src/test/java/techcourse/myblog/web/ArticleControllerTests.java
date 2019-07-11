@@ -82,6 +82,13 @@ public class ArticleControllerTests {
                 .expectStatus().is3xxRedirection();
     }
 
+    @Test
+    void 게시물_삭제_요청_테스트() {
+        webTestClient.delete().uri("/articles/1")
+                .exchange()
+                .expectStatus().is3xxRedirection();
+    }
+
     @AfterEach
     void tearDown() {
         articleRepository = null;

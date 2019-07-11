@@ -32,4 +32,9 @@ public class ArticleRepository {
 
         return article.getId();
     }
+
+    public void delete(long articleId) {
+        Article article = find(articleId);
+        articles.remove(article);
+    }
 }
