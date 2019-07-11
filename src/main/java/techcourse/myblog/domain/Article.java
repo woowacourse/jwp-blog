@@ -3,15 +3,12 @@ package techcourse.myblog.domain;
 import java.util.Objects;
 
 public class Article {
-	private static int articleCount = 0;
-
 	private int id;
 	private String title;
 	private String contents;
 	private String coverUrl;
 
 	public Article(String title, String contents, String coverUrl) {
-		this.id = ++articleCount;
 		this.title = title;
 		this.contents = contents;
 		this.coverUrl = coverUrl;
@@ -45,8 +42,8 @@ public class Article {
 		return id;
 	}
 
-	public void setId() {
-		this.id = ++articleCount;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	@Override

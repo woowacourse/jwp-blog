@@ -7,6 +7,7 @@ import java.util.List;
 
 @Repository
 public class ArticleRepository {
+    private static int articleCount = 0;
     private List<Article> articles = new ArrayList<>();
 
     public List<Article> findAll() {
@@ -14,6 +15,7 @@ public class ArticleRepository {
     }
 
     public void save(Article article) {
+        article.setId(++articleCount);
         articles.add(article);
     }
 
@@ -23,5 +25,12 @@ public class ArticleRepository {
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new)
                 ;
+    }
+
+    public void update(Article modifiedArticle) {
+        Article originArticle = findById(modifiedArticle.getId());
+        originArticle.setCoverUrl(modifiedArticle.getCoverUrl());
+        originArticle.setTitle(modifiedArticle.getTitle());
+        originArticle.setContents(modifiedArticle.getContents());
     }
 }

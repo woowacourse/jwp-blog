@@ -107,4 +107,31 @@ public class ArticleControllerTests {
 					assertThat(body.contains(contents)).isTrue();
 				});
 	}
+
+	@Test
+	void updateArticle() {
+		String title = "제목";
+		String contents = "contents";
+		String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
+
+		articleRepository.save(new Article(title, contents, coverUrl));
+
+		webTestClient.put()
+				.uri("/articles/1")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.body(BodyInserters
+						.fromFormData("title", "updatedTitle")
+						.with("coverUrl", "updatedCoverUrl")
+						.with("contents", "updatedContents"))
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body.contains("updatedTitle")).isTrue();
+					assertThat(body.contains("updatedCoverUrl")).isTrue();
+					assertThat(body.contains("updatedContents")).isTrue();
+				});
+
+	}
 }
