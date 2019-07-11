@@ -19,7 +19,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(Article article, Model model) {
+    public String createArticle(Article article) {
         articleRepository.add(article);
         return "redirect:/articles/" + article.getId();
     }
