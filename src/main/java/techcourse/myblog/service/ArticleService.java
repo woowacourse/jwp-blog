@@ -19,9 +19,7 @@ public class ArticleService {
     public void editArticle(Long articleId, Article article) {
         Article articleToChange = findById(articleId);
 
-        articleToChange.setTitle(article.getTitle());
-        articleToChange.setCoverUrl(article.getCoverUrl());
-        articleToChange.setContents(article.getContents());
+        articleToChange.update(article);
     }
 
     public void addArticle(Article article) {

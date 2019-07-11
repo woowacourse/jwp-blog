@@ -62,4 +62,11 @@ public class Article {
     public void setCategory(String category) {
         this.category = category;
     }
+
+    public void update(Article article) {
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
+        this.category = article.category;
+    }
 }
