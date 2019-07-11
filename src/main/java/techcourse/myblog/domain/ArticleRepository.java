@@ -19,7 +19,7 @@ public class ArticleRepository {
     }
 
     // TODO: 2019-07-10 고치기....
-    private int lastId = 1;
+    private int lastId = 2;
 
     public List<Article> findAll() {
         return articles;

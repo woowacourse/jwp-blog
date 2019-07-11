@@ -20,7 +20,8 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 
     @GetMapping("/writing")
-    public String writing(){
+    public String writing(Model model) {
+        model.addAttribute("method", "POST");
         return "article-edit";
     }
 
@@ -44,24 +45,26 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public String index(Model model){
-        model.addAttribute("articles",articleRepository.getArticles());
+    public String index(Model model) {
+        model.addAttribute("articles", articleRepository.getArticles());
         return "index";
     }
 
     @GetMapping("/articles/{id}/edit")
-    public String editArticle(@PathVariable int id,Model model){
-        model.addAttribute("article",articleRepository.getArticleById(id));
+    public String editArticle(@PathVariable int id, Model model) {
+        model.addAttribute("article", articleRepository.getArticleById(id));
+        model.addAttribute("method", "PUT");
         return "article-edit";
     }
 
-    @PutMapping("/articles")
-    public String putArticle(Article article,Model model){
-        Article updatedArticle = articleRepository.getArticleById(article.getId());
+    @PutMapping("/articles/{id}")
+    public String putArticle(@PathVariable int id, Article article, Model model) {
+        Article updatedArticle = articleRepository.getArticleById(id);
         updatedArticle.setTitle(article.getTitle());
         updatedArticle.setContents(article.getContents());
         updatedArticle.setCoverUrl(article.getCoverUrl());
-        model.addAttribute("articles",articleRepository);
+
+        model.addAttribute("article", updatedArticle);
         return "article";
     }
 }
