@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -134,18 +137,16 @@ public class ArticleControllerTests {
                     webTestClient.delete().uri(response.getResponseHeaders().getLocation() + "/delete")
                             .exchange()
                             .expectStatus()
-                            .isOk();
+                            .is3xxRedirection();
 
                     Long latestId = articleRepository.generateNewId() - 1;
 
-                    Article article = new Article();
-                    article.setTitle(title);
-                    article.setContents(contents);
-                    article.setCoverUrl(coverUrl);
-                    article.setArticleId(latestId);
-
-                    assertThat(articleRepository.findAll().contains(article)).isTrue();
+                    assertThat(articleRepository.findArticleById(latestId)).isEqualTo(Optional.empty());
                 });
     }
 
+    @AfterEach
+    void tearDown() {
+        articleRepository.findAll().clear();
+    }
 }
