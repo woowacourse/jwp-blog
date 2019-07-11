@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ArticleRepositoryTest {
     private static final int ARTICLE_TEST_ID = 1;
-    public static final int NOT_FIND_ARTICLE_ID = 2;
+    private static final int ARTICLE_ID_NOT_IN_REPO = 2;
     private ArticleRepository articleRepository;
     private Article article;
 
@@ -42,7 +42,7 @@ class ArticleRepositoryTest {
     void notFindTest() {
         articleRepository.save(article);
 
-        assertThrows(IllegalArgumentException.class, () -> articleRepository.find(NOT_FIND_ARTICLE_ID));
+        assertThrows(IllegalArgumentException.class, () -> articleRepository.find(ARTICLE_ID_NOT_IN_REPO));
     }
 
     @Test
@@ -55,20 +55,38 @@ class ArticleRepositoryTest {
     }
 
     @Test
-    void updateTest() {
-        String updateTitle = "updated title";
-        String updateCoverUrl = "updated coverUrl";
-        String updateContents = "updated contents";
+    @DisplayName("게시물의 title을 업데이트 한다.")
+    void updateTitleTest() {
+        String updatedTitle = "updated title";
+
         articleRepository.save(article);
-        articleRepository.update(
-                ARTICLE_TEST_ID,
-                updateTitle,
-                updateCoverUrl,
-                updateContents
-        );
-        Article updateArticle = articleRepository.find(ARTICLE_TEST_ID);
-        assertThat(updateArticle.getTitle()).isEqualTo(updateTitle);
-        assertThat(updateArticle.getCoverUrl()).isEqualTo(updateCoverUrl);
-        assertThat(updateArticle.getContents()).isEqualTo(updateContents);
+        articleRepository.updateTitle(ARTICLE_TEST_ID, updatedTitle);
+
+        Article updatedArticle = articleRepository.find(ARTICLE_TEST_ID);
+        assertThat(updatedArticle.getTitle()).isEqualTo(updatedTitle);
+    }
+
+    @Test
+    @DisplayName("게시물의 coverUrl을 업데이트 한다.")
+    void updateCoverUrlTest() {
+        String updateCoverUrl = "updated coverUrl";
+
+        articleRepository.save(article);
+        articleRepository.updateCoverUrl(ARTICLE_TEST_ID, updateCoverUrl);
+
+        Article updatedArticle = articleRepository.find(ARTICLE_TEST_ID);
+        assertThat(updatedArticle.getCoverUrl()).isEqualTo(updateCoverUrl);
+    }
+
+    @Test
+    @DisplayName("게시물의 contents를 업데이트 한다.")
+    void updateContentsTest() {
+        String updateContents = "updated contents";
+
+        articleRepository.save(article);
+        articleRepository.updateContents(ARTICLE_TEST_ID, updateContents);
+
+        Article updatedArticle = articleRepository.find(ARTICLE_TEST_ID);
+        assertThat(updatedArticle.getContents()).isEqualTo(updateContents);
     }
 }

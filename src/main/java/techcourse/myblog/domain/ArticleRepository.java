@@ -42,11 +42,16 @@ public class ArticleRepository {
         articles.remove(article);
     }
 
-    public void update(int articleId, String title, String coverUrl, String contents) {
-        Article article = find(articleId);
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
+    public void updateTitle(int articleId, String updatedTitle) {
+        find(articleId).setTitle(updatedTitle);
+    }
+
+    public void updateCoverUrl(int articleId, String updateCoverUrl) {
+        find(articleId).setCoverUrl(updateCoverUrl);
+    }
+
+    public void updateContents(int articleId, String updateContents) {
+        find(articleId).setContents(updateContents);
     }
 
     public int getLastArticleId() {

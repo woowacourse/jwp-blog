@@ -3,12 +3,11 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+
+import java.util.List;
 
 @Controller
 public class ArticleController {
@@ -54,12 +53,24 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PutMapping("articles/{articleId}")
+    @PutMapping("/articles/{articleId}")
     public String editArticle(@PathVariable int articleId, String title, String coverUrl, String contents, Model model) {
-        articleRepository.update(articleId, title, coverUrl, contents);
-        Article article = articleRepository.find(articleId);
+        articleRepository.updateTitle(articleId, title);
+        articleRepository.updateCoverUrl(articleId, coverUrl);
+        articleRepository.updateContents(articleId, contents);
 
+        Article article = articleRepository.find(articleId);
         model.addAttribute("article", article);
         return "article";
+    }
+
+    //TODO 테스트랑 삭제 버튼 만들기
+    @DeleteMapping("/articles/{articleId}")
+    public String deleteArticle(@PathVariable int articleId, Model model) {
+        articleRepository.delete(articleId);
+        List<Article> articles = articleRepository.findAll();
+
+        model.addAttribute("articles", articles);
+        return "index";
     }
 }

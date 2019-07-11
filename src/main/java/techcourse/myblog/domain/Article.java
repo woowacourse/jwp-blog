@@ -1,7 +1,5 @@
 package techcourse.myblog.domain;
 
-import java.util.Objects;
-
 public class Article {
     private final int articleId;
     private String title;
@@ -41,18 +39,5 @@ public class Article {
 
     public void setContents(String contents) {
         this.contents = contents;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return articleId == article.articleId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(articleId);
     }
 }

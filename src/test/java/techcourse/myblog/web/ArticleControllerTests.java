@@ -36,6 +36,7 @@ public class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("index 페이지를 되돌려준다.")
     void index() {
         webTestClient.get().uri("/")
                 .exchange()
