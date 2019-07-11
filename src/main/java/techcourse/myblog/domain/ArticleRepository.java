@@ -1,13 +1,15 @@
 package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
+import techcourse.myblog.domain.validator.CouldNotFindArticleIdException;
+import techcourse.myblog.domain.validator.DuplicateArticleIdException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class ArticleRepository {
-    private final int INITIAL_ID = 1;
+    private static final int INITIAL_ID = 1;
 
     private List<Article> articles;
     private int lastArticleId;
@@ -18,22 +20,23 @@ public class ArticleRepository {
     }
 
     public void save(Article article) {
-        if (isSame(article)) {
-            throw new IllegalArgumentException("중복된 ID가 있습니다.");
-        }
-        lastArticleId++;
+        containsDuplicate(article);
+
         articles.add(article);
+        lastArticleId++;
     }
 
-    private boolean isSame(Article article) {
-        return articles.contains(article);
+    private void containsDuplicate(Article article) {
+        if (articles.contains(article)) {
+            throw new DuplicateArticleIdException();
+        }
     }
 
     public Article find(int articleId) {
         return articles.stream()
                 .filter(article -> article.getArticleId() == articleId)
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("ID를 찾을 수 없습니다."));
+                .orElseThrow(CouldNotFindArticleIdException::new);
     }
 
     public void delete(int articleId) {
