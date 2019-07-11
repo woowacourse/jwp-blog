@@ -1,27 +1,20 @@
 package techcourse.myblog;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
 public class HelloWorldController {
-    private final ArticleRepository articleRepository;
 
-    public HelloWorldController(final ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    @GetMapping("/helloworld")
+    @ResponseBody
+    public String passParamWithGet(String blogName) {
+        return blogName;
     }
 
-    @GetMapping("/")
-    public String passParamWithGet(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
-        return "index";
+    @PostMapping("/helloworld")
+    @ResponseBody
+    public String passParamWithPost(@RequestBody String blogName){
+        return blogName;
     }
-
-//    @PostMapping
-//    public String passParamWithPost(@RequestBody String blogName){
-//        return blogName;
-//    }
 }
