@@ -11,7 +11,9 @@ public class ArticleRepository {
     private List<Article> articles = new ArrayList<>();
 
     public List<Article> findAll() {
-        return articles;
+        List<Article> copyArticles = new ArrayList<>();
+        copyArticles.addAll(articles);
+        return copyArticles;
     }
 
     public void save(Article article) {
