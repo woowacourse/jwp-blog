@@ -6,13 +6,7 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public Article() {}
-
-    public Article(final long id, final String title, final String coverUrl, final String contents) {
-        this.id = id;
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
+    public Article() {
     }
 
     public long getId() {
