@@ -20,5 +20,10 @@
 - `/articles/{articleId}/edit`: 게시글 수정 페이지(`article-edit.html`)
     - [x] 수정을 완료하면 `/articles/{articleId}`로 PUT 요청을 보낸다.
     - [x] 요청이 처리되면 게시글 페이지(`/article/{articleId}`)로 리다이렉트한다.
+    
+
+- 게시글 수정시 기존 카테고리 선택된 상태로 보여지게끔 설정
+- 카테고리 삭제 기능 추가
+
 
 
