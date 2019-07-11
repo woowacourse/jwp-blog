@@ -53,13 +53,15 @@
         </div>
     </div>
 
-    <form action="/write" name="article" method="post" accept-charset="utf-8" >
+    <form th:action="${articleId == null} ? '/write' : |/articles/${articleId}|" name="article" method="post" accept-charset="utf-8" >
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" autocomplete="off">
-                        <input type="text" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"  placeholder="배경 url을 입력해주세요" autocomplete="off">
+                        <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
+                               placeholder="제목을 입력해주세요" autocomplete="off" th:value="${article != null} ? ${article.title} : ''">
+                        <input type="text" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
+                               placeholder="배경 url을 입력해주세요" autocomplete="off" th:value="${article != null} ? ${article.coverUrl} : ''">
                     </div>
                 </div>
             </div>
@@ -84,13 +86,33 @@
                 </div>
             </div>
         </div>
+        <input th:if="${articleId != null}" type="hidden" name="_method" value="put"/>
     </form>
     </th:block>
 </div>
 
 <th:block layout:fragment="addScript">
     <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-    <script type="text/javascript">
+    <script th:if="${article != null}" th:inline="javascript">
+        /* <![CDATA[ */
+        const initValue = [[ ${article.contents} ]];
+        /* ]]> */
+        // const initValue = ${#strings.unescapeJavaScript(article.contents)};
+
+        const editor = new tui.Editor({
+            el: document.querySelector('#editSection'),
+            initialEditType: 'markdown',
+            previewStyle: 'vertical',
+            events: {
+                change: function () {
+                    document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
+                }
+            },
+            height: 'calc(100vh - 360px)',
+            initialValue: initValue
+        });
+    </script>
+    <script th:unless="${article != null}" th:inline="javascript">
         const editor = new tui.Editor({
             el: document.querySelector('#editSection'),
             initialEditType: 'markdown',

@@ -23,6 +23,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}")
     public String article(@PathVariable("articleId") int articleId, Model model) {
         model.addAttribute("article", articleRepository.get(articleId));
+        model.addAttribute("articleId", articleId);
         return "article";
     }
 
@@ -32,9 +33,21 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public String createArticle(@ModelAttribute Article article, Model model){
+    public String createArticle(@ModelAttribute Article article){
         articleRepository.add(article);
-        model.addAttribute("article", article);
-        return "article";
+        return "redirect:/articles/" + articleRepository.lastIndex();
+    }
+
+    @GetMapping("/articles/{articleId}/edit")
+    public String articleUpdateForm(@PathVariable("articleId") int articleId, Model model) {
+        model.addAttribute("article", articleRepository.get(articleId));
+        model.addAttribute("articleId", articleId);
+        return "article-edit";
+    }
+
+    @PutMapping("/articles/{articleId}")
+    public String updateArticle(@PathVariable("articleId") int articleId, Article article) {
+        articleRepository.update(articleId, article);
+        return "redirect:/articles/" + articleId;
     }
 }

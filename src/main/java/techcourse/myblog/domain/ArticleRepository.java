@@ -20,4 +20,12 @@ public class ArticleRepository {
     public Article get(int articleId) {
         return articles.get(articleId);
     }
+
+    public int lastIndex() {
+        return articles.size() - 1;
+    }
+
+    public void update(int articleId, Article article) {
+        articles.set(articleId, article);
+    }
 }
