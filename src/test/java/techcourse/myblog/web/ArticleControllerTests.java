@@ -110,8 +110,12 @@ public class ArticleControllerTests {
                 .body(Mono.just(article), Article.class)
                 .exchange();
 
-        webTestClient.delete().uri("/articles/1")
+        webTestClient.post().uri("/articles")
+                .body(Mono.just(article), Article.class)
+                .exchange();
+
+        webTestClient.delete().uri("/articles/2")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isFound();
     }
 }
