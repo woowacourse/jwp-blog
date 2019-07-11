@@ -14,10 +14,8 @@ import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -138,6 +136,33 @@ public class ArticleControllerTests {
                         assertThat(body.contains(coverUrl)).isTrue();
                         // This assertion can fail when length of contents over 100 because of excerpt.
 //                        assertThat(body.contains(contents)).isTrue();
+                    });
+
+            });
+    }
+
+    @Test
+    void delete_article() {
+        String title = "article to delete";
+        String coverUrl = "http://cover-url.com/delete.jpg";
+        String contents = "article contents to delete";
+        Article newArticle = Article.of(title, coverUrl, contents);
+        articleRepository.addArticle(newArticle);
+
+        webTestClient.delete()
+            .uri("/articles/" + newArticle.getId())
+            .exchange()
+            .expectStatus().is3xxRedirection()
+            .expectBody()
+            .consumeWith(response -> {
+                webTestClient.get().uri(response.getResponseHeaders().get("Location").get(0))
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .consumeWith(res -> {
+                        String body = new String(res.getResponseBody());
+                        assertThat(body.contains(title)).isFalse();
+                        assertThat(body.contains(coverUrl)).isFalse();
                     });
 
             });
