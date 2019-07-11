@@ -31,4 +31,13 @@ public class ArticleController {
 
         return "article";
     }
+
+    @GetMapping("/articles/{articleId}/edit")
+    public String readArticleEditPage(@PathVariable int articleId, Model model) {
+        Article article = articleRepository.findById(articleId);
+
+        model.addAttribute("article", article);
+
+        return "article-edit";
+    }
 }

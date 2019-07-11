@@ -55,4 +55,15 @@ public class ArticleControllerTests {
                 .expectStatus().isOk();
     }
 
+    // GET /articles/{articleId}/edit
+    @Test
+    void read_article_edit_page() {
+        Article article = new Article("title", "url", "contents");
+        int articleId = articleRepository.insertArticle(article);
+
+        webTestClient.get()
+                .uri("/articles/" + articleId + "/edit" )
+                .exchange()
+                .expectStatus().isOk();
+    }
 }
