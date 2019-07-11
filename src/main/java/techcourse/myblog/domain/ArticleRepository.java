@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ArticleRepository {
@@ -14,16 +15,32 @@ public class ArticleRepository {
     }
 
     public void save(final Article article) {
-        article.setId(articles.size());
+        if(articles.isEmpty()) {
+            article.setId(0);
+            articles.add(article);
+            return;
+        }
+        article.setId(articles.get(articles.size()-1).getId() + 1);
         articles.add(article);
     }
 
-    public Article findById(final Long id) {
-        return articles.get(id.intValue());
+    public Optional<Article> findById(final Long id) {
+        for (Article article : articles) {
+            if(article.getId() == id) {
+                return Optional.of(article);
+            }
+        }
+        return Optional.empty();
     }
 
     public void update(final Article article) {
         Long id = article.getId();
         articles.set(id.intValue(), article);
+    }
+
+    public void deleteById(final Long id) {
+        //TODO OPTIONAL ERROR SHOULD BE HANDLED
+        Article article = findById(id).get();
+        articles.remove(article);
     }
 }

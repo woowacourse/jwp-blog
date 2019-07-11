@@ -28,14 +28,15 @@ public class ArticleController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model){
-        Article article = articleRepository.findById(id);
+        //TODO 에러처리
+        Article article = articleRepository.findById(id).get();
         model.addAttribute("article", article);
         return "article";
     }
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
-        Article article = articleRepository.findById(id);
+        Article article = articleRepository.findById(id).get();
         model.addAttribute("article", article);
         return "article-edit";
     }
@@ -46,4 +47,10 @@ public class ArticleController {
         return "redirect:/articles/"+article.getId();
     }
 
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Long id) {
+        articleRepository.deleteById(id);
+        return "redirect:/";
+
+    }
 }
