@@ -37,6 +37,11 @@ public class ArticleRepository {
         return maxId + NEXT_ID;
     }
 
+    public void deleteArticle(Long articleId) {
+        findArticleById(articleId)
+                .ifPresent(a -> articles.remove(findArticleIndexByArticle(a)));
+    }
+
     public void updateArticle(Article updatedArticle) {
         int targetArticleIndex = findArticleIndexByArticle(updatedArticle);
         articles.set(targetArticleIndex, updatedArticle);

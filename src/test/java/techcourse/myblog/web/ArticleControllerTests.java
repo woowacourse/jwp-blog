@@ -131,7 +131,7 @@ public class ArticleControllerTests {
                 .expectStatus().is3xxRedirection()
                 .expectBody()
                 .consumeWith(response -> {
-                    webTestClient.get().uri("/delete"+ response.getResponseHeaders().getLocation())
+                    webTestClient.delete().uri(response.getResponseHeaders().getLocation() + "/delete")
                             .exchange()
                             .expectStatus()
                             .isOk();

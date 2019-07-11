@@ -3,10 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
@@ -50,4 +47,11 @@ public class ArticleController {
 
         return "article-edit";
     }
+
+    @DeleteMapping("/articles/{articleId}/delete")
+    public String deleteArticle(@PathVariable Long articleId) {
+        articleRepository.deleteArticle(articleId);
+        return "redirect:/";
+    }
+
 }
