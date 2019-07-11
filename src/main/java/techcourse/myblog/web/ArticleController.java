@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
@@ -19,16 +20,12 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String posting(Article article, Model model) {
-
+    public String posting(Article article) {
         // TODO: 2019-07-10 아이디 처리...
         article.setId(articleRepository.getLastId() + 1);
-
         articleRepository.add(article);
 
-        model.addAttribute(article);
-        // redirect?
-        return "article";
+        return "redirect:/articles/" + article.getId();
     }
 
     @GetMapping("/articles/{id}")
@@ -51,18 +48,17 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{id}")
-    public String putArticle(@PathVariable int id, Article article, Model model) {
+    public String putArticle(@PathVariable int id, Article article) {
         Article updatedArticle = articleRepository.getArticleById(id);
         updatedArticle.setTitle(article.getTitle());
         updatedArticle.setContents(article.getContents());
         updatedArticle.setCoverUrl(article.getCoverUrl());
 
-        model.addAttribute("article", updatedArticle);
-        return "article";
+        return "redirect:/articles/" + id;
     }
 
     @DeleteMapping("/articles/{id}")
-    public String deleteArticle(@PathVariable int id){
+    public String deleteArticle(@PathVariable int id) {
         articleRepository.removeArticleById(id);
         return "redirect:/";
     }
