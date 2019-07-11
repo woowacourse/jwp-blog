@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ArticleRepositoryTest {
     private Article article;
@@ -34,5 +35,14 @@ class ArticleRepositoryTest {
         articleRepository.save(article);
 
         assertThat(articleRepository.find(1)).isEqualTo(article);
+    }
+
+    @Test
+    @DisplayName("게시물 id가 없는 경우 예외를 던져준다.")
+    void notFindTest() {
+        ArticleRepository articleRepository = new ArticleRepository();
+        articleRepository.save(article);
+
+        assertThrows(IllegalArgumentException.class, () -> articleRepository.find(2));
     }
 }

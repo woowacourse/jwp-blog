@@ -27,6 +27,7 @@ public class ArticleRepository {
         if (isSame(article)) {
             throw new IllegalArgumentException("중복된 ID가 있습니다.");
         }
+        lastArticleId++;
         articles.add(article);
     }
 
@@ -39,10 +40,9 @@ public class ArticleRepository {
     }
 
     public Article find(int articleId) {
-        return Optional.ofNullable(articles.stream()
+        return articles.stream()
                 .filter(article -> article.getArticleId() == articleId)
-                .findAny())
-                .map(Optional::get)
-                .orElse(new Article("","","",0));
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("ID를 찾을 수 없습니다."));
     }
 }
