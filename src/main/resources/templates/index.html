@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-    <title>뚱이의 기슬불로그</title>
+    <title>뚱이의 기슬불로</title>
     <meta name="robots" content="index, follow">
 
     <meta name="keyword" content="우아한테크코스, 프로그래밍, 개발자, 백엔드, 프론트엔드, Backend, Frontend, IOS, Android">
@@ -42,7 +42,7 @@
         <div class="header-container">
             <ul class="nav-left mrg-left-0">
                 <li>
-                    <a href="index.html">
+                    <a href="/">
                         <div class="logo logo-dark d-none"
                              style="background-image: url('/images/logo/logo_full_dark.png')"></div>
                         <div class="logo logo-white"
@@ -66,7 +66,7 @@
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
         <div class="welcome-text-container">
             <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5" th:text="${blogName}+'님 안녕하세요'"></h1>
+                <h1 class="text-white border bottom font-size-35 padding-5" th:text="${blogName} ? ${blogName}+'님 안녕하세요'"></h1>
             </div>
         </div>
     </div>
@@ -90,10 +90,9 @@
                     <div class="width-100 fixed left-0 border bottom"></div>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
-                            <div th:each="dto,index : ${articleRepository.findAll()}"
+                            <div th:each="article : ${articleRepository.findAll()}"
                                  class="pdd-horizon-15 pdd-vertical-20">
-                                <!--<th:block th:if="${index.index} > 0">-->
-                                <a href="article.html" th:href="@{'/article/'+${index.index}}" class="card article-container">
+                                <a href="article.html" th:href="@{'/article/'+${article.getId()}}" class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
                                             <div class="background-holder has-content"
@@ -103,8 +102,8 @@
                                             <div class="row">
                                                 <div class="col-md-8 ml-auto">
                                                     <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 class="mrg-btm-20 text-bold" th:text="${dto.getTitle()}"></h2>
-                                                        <p th:text="${dto.getContents()}"></p>
+                                                        <h2 class="mrg-btm-20 text-bold" th:text="${article.getTitle()}"></h2>
+                                                        <p th:text="${article.getContents()}"></p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
                                                                 <i class="ti-heart text-danger pdd-right-5"></i>
