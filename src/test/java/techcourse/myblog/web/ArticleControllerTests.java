@@ -3,6 +3,7 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.service.ArticleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,6 +142,6 @@ public class ArticleControllerTests {
 				.isFound()
 		;
 
-		assertThrows(IllegalArgumentException.class, () -> articleService.findById(articleId));
+		assertThrows(NotFoundArticleException.class, () -> articleService.findById(articleId));
 	}
 }

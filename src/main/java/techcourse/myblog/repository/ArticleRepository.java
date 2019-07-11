@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.exception.NotFoundArticleException;
 
 @Repository
 public class ArticleRepository {
@@ -27,7 +28,7 @@ public class ArticleRepository {
 		return articles.stream()
 				.filter(article -> article.getId() == id)
 				.findFirst()
-				.orElseThrow(IllegalArgumentException::new)
+				.orElseThrow(NotFoundArticleException::new)
 				;
 	}
 
