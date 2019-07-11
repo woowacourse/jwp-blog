@@ -54,7 +54,7 @@
                             <a href="#tab-centered-3" class="nav-link" role="tab" data-toggle="tab">Learning</a>
                         </li>
                     </ul>
-                    <div class="width-100 fixed left-0 border bottom"></div>
+                    <div class="width-100 absolute left-0 border bottom"></div>
                     <div class="tab-content">
                         <div role="tabpanel" th:each="article: ${articles}" class="tab-pane fade in active" id="tab-centered-1">
                             <div class="pdd-horizon-15 pdd-vertical-20">
@@ -101,6 +101,10 @@
             </div>
             <div class="col-lg-3"></div>
         </div>
+
+        <a href="/category" class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-100 bottom-50 width-50px height-50px">
+            <i class="ti-plus"></i>
+        </a>
 
         <a href="/writing" class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
             <i class="ti-plus"></i>
