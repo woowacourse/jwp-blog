@@ -3,7 +3,7 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.repository.ArticleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -16,11 +16,14 @@ import org.springframework.web.reactive.function.BodyInserters;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+	private String title = "제목";
+	private String contents = "contents";
+	private String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
+
 	@Autowired
 	private WebTestClient webTestClient;
 
@@ -31,22 +34,22 @@ public class ArticleControllerTests {
 	void index() {
 		webTestClient.get().uri("/")
 				.exchange()
-				.expectStatus().isOk();
+				.expectStatus()
+				.isOk()
+		;
 	}
 
 	@Test
 	void articleForm() {
 		webTestClient.get().uri("/writing")
 				.exchange()
-				.expectStatus().isOk();
+				.expectStatus()
+				.isOk()
+		;
 	}
 
 	@Test
 	void saveArticle() {
-		String title = "제목";
-		String contents = "contents";
-		String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
-
 		webTestClient.post()
 				.uri("/articles")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -67,10 +70,6 @@ public class ArticleControllerTests {
 
 	@Test
 	void lookUpArticle() {
-		String title = "제목";
-		String contents = "contents";
-		String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
-
 		articleRepository.save(new Article(title, contents, coverUrl));
 
 		webTestClient.get()
@@ -89,14 +88,10 @@ public class ArticleControllerTests {
 
 	@Test
 	void findByIndex() {
-		String title = "제목";
-		String contents = "contents";
-		String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
-
-		articleRepository.save(new Article(title, contents, coverUrl));
+		int articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
 
 		webTestClient.get()
-				.uri("/article/0")
+				.uri("/article/" + articleId)
 				.exchange()
 				.expectStatus()
 				.isOk()
@@ -111,14 +106,10 @@ public class ArticleControllerTests {
 
 	@Test
 	void updateArticle() {
-		String title = "제목";
-		String contents = "contents";
-		String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
-
-		articleRepository.save(new Article(title, contents, coverUrl));
+		int articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
 
 		webTestClient.put()
-				.uri("/articles/1")
+				.uri("/articles/" + articleId)
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.body(BodyInserters
 						.fromFormData("title", "updatedTitle")
@@ -133,24 +124,19 @@ public class ArticleControllerTests {
 					assertThat(body.contains("updatedCoverUrl")).isTrue();
 					assertThat(body.contains("updatedContents")).isTrue();
 				});
-
 	}
 
 	@Test
 	void deleteArticle() {
-		String title = "제목";
-		String contents = "contents";
-		String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
-
-		articleRepository.save(new Article(title, contents, coverUrl));
+		int articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
 
 		webTestClient.delete()
-				.uri("/articles/1")
+				.uri("/articles/" + articleId)
 				.exchange()
 				.expectStatus()
-				.isOk()
+				.isFound()
 		;
 
-		assertThrows(IllegalArgumentException.class, () -> articleRepository.findById(1));
+		assertThrows(IllegalArgumentException.class, () -> articleRepository.findById(articleId));
 	}
 }
