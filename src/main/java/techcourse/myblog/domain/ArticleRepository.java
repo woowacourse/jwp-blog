@@ -12,7 +12,11 @@ public class ArticleRepository {
 
     public List<Article> findAll() {
         List<Article> copyArticles = new ArrayList<>();
-        copyArticles.addAll(articles);
+
+        for (Article article : articles) {
+            copyArticles.add(article.copyArticles());
+        }
+
         return copyArticles;
     }
 
