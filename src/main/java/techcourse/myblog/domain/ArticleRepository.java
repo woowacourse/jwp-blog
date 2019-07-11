@@ -28,7 +28,7 @@ public class ArticleRepository {
     public long update(Article updatedArticle) {
         Article article = find(updatedArticle.getId());
         int atUpdateIndex = articles.indexOf(article);
-        articles.add(atUpdateIndex, updatedArticle);
+        articles.set(atUpdateIndex, updatedArticle);
 
         return article.getId();
     }
