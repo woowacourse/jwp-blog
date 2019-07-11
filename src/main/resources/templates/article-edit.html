@@ -12,7 +12,7 @@
 </head>
 <th:block layout:fragment="content">
     <div>
-        <th:block th:replace="layout/header :: header"></th:block>
+        <th:block th:replace="fragment/header :: header"></th:block>
 
         <form th:object="${article}" th:action="${article == null ? '/articles' : '/articles/'+ article.id}"
               name="article" th:method="${article == null ? 'post' : 'put'}" accept-charset="utf-8">
