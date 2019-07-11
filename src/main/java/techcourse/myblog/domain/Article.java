@@ -10,7 +10,7 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public Article(String title,String coverUrl,String contents){
+    public Article(String title, String coverUrl, String contents) {
         this.title = title;
         this.title = coverUrl;
         this.title = contents;

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class ArticleRepository {
@@ -14,7 +13,7 @@ public class ArticleRepository {
         return new ArrayList<>(articles);
     }
 
-    public void save(Article article){
+    public void save(Article article) {
         articles.add(article);
     }
 

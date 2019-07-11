@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
-import javax.jws.WebParam;
-
 @Controller
 public class ArticleController {
     @Autowired
@@ -27,9 +25,9 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String createArticle(@ModelAttribute Article article, Model model) {
-        model.addAttribute("article", article);
         articleRepository.save(article);
-        return "redirect:/articles/"+article.getArticleId();
+        model.addAttribute("article", article);
+        return "redirect:/articles/" + article.getArticleId();
     }
 
     @GetMapping("/articles/{articleId}")
@@ -40,22 +38,22 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String updateArticle(@PathVariable Long articleId, Model model){
+    public String updateArticle(@PathVariable Long articleId, Model model) {
         Article article = articleRepository.findById(articleId);
-        model.addAttribute("article",article);
+        model.addAttribute("article", article);
         return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String showUpdatedArticle(@PathVariable Long articleId, Article updatedArticle, Model model){
+    public String showUpdatedArticle(@PathVariable Long articleId, Article updatedArticle, Model model) {
         Article originArticle = articleRepository.findById(articleId);
-        articleRepository.update(originArticle,updatedArticle);
-        model.addAttribute("article",updatedArticle);
-        return "redirect:/articles/"+articleId;
+        articleRepository.update(originArticle, updatedArticle);
+        model.addAttribute("article", updatedArticle);
+        return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("delete/articles/{articleId}")
-    public String deleteArticle(@PathVariable Long articleId){
+    public String deleteArticle(@PathVariable Long articleId) {
         articleRepository.delete(articleId);
         return "redirect:/";
     }
