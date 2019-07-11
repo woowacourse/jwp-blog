@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 public class Article {
+    private int id;
     private String title;
     private String coverUrl;
     private String contents;
@@ -9,6 +10,14 @@ public class Article {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -38,7 +47,8 @@ public class Article {
     @Override
     public String toString() {
         return "Article{" +
-                "title='" + title + '\'' +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
                 ", coverUrl='" + coverUrl + '\'' +
                 ", contents='" + contents + '\'' +
                 '}';
