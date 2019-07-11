@@ -23,7 +23,7 @@ public class ArticleController {
     @PostMapping("/articles")
     public String create(Article article, Model model) {
         articleRepository.add(article);
-        return "redirect:/articles";
+        return "redirect:/articles/" + article.getId();
     }
 
     @GetMapping("/articles/new")
@@ -32,8 +32,8 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}")
-    public String showArticle(@PathVariable("id") int id, Model model) {
-        model.addAttribute("article", articleRepository.findAll().get(id));
+    public String showArticle(@PathVariable("id") long id, Model model) {
+        model.addAttribute("article", articleRepository.findById(id));
         return "article";
     }
 }

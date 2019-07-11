@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,31 @@ public class ArticleRepositoryTests {
         article.setCoverUrl("https://www.woowa.com");
         article.setTitle("Hi");
         articleRepository.add(article);
-        assertThat(articleRepository.findAll().get(0).getContents().equals("Contents"));
-        assertThat(articleRepository.findAll().get(0).getCoverUrl().equals("https://www.woowa.com"));
-        assertThat(articleRepository.findAll().get(0).getTitle().equals("Hi"));
+
+        Article addedArticle = articleRepository.findAll().get(0);
+        assertThat(addedArticle.getContents()).isEqualTo("Contents");
+        assertThat(addedArticle.getCoverUrl()).isEqualTo("https://www.woowa.com");
+        assertThat(addedArticle.getTitle()).isEqualTo("Hi");
+    }
+
+    @Test
+    void findById() {
+        Article article = new Article();
+        article.setContents("Contents");
+        article.setCoverUrl("https://www.woowa.com");
+        article.setTitle("Hi");
+        articleRepository.add(new Article());
+        articleRepository.add(new Article());
+        articleRepository.add(article);
+
+        Article foundArticle = articleRepository.findById(3);
+        assertThat(foundArticle.getContents()).isEqualTo("Contents");
+        assertThat(foundArticle.getCoverUrl()).isEqualTo("https://www.woowa.com");
+        assertThat(foundArticle.getTitle()).isEqualTo("Hi");
+    }
+
+    @AfterEach
+    void tearDown() {
+        articleRepository.clear();
     }
 }

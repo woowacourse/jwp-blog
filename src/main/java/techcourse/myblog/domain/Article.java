@@ -1,9 +1,18 @@
 package techcourse.myblog.domain;
 
 public class Article {
+    private long id;
     private String title;
     private String coverUrl;
     private String contents;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
