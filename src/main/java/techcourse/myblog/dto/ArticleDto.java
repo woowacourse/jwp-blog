@@ -10,4 +10,11 @@ public class ArticleDto {
         private String coverUrl;
         private String contents;
     }
+
+    @Data
+    public static class Update {
+        private String title;
+        private String coverUrl;
+        private String contents;
+    }
 }

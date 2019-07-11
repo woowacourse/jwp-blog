@@ -24,4 +24,12 @@ public class ArticleRepository {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("찾는 게시물이 없습니다."));
     }
+
+    public long update(Article updatedArticle) {
+        Article article = find(updatedArticle.getId());
+        int atUpdateIndex = articles.indexOf(article);
+        articles.add(atUpdateIndex, updatedArticle);
+
+        return article.getId();
+    }
 }

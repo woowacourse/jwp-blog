@@ -44,6 +44,14 @@ public class ArticleRepositoryTest {
         assertThat(articleRepository.findAll()).isEqualTo(Arrays.asList(articleFirst, articleSecond, articleThird));
     }
 
+    @Test
+    void 게시물_수정_테스트() {
+        Article updatedArticle = new Article(1, "제목", "이미지경로", "내용");
+        long updatedArticleId = articleRepository.update(updatedArticle);
+
+        assertThat(articleRepository.find(updatedArticleId)).isEqualTo(updatedArticle);
+    }
+
     @AfterEach
     void tearDown() {
         articleRepository = null;

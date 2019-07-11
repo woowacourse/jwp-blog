@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
@@ -37,9 +38,23 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}")
-    public String readArticle(@PathVariable Long articleId, Model model) {
+    public String readArticle(@PathVariable long articleId, Model model) {
         Article article = articleRepository.find(articleId);
         model.addAttribute("article", article);
         return "article";
+    }
+
+    @GetMapping("/articles/{articleId}/edit")
+    public String renderUpdatePage(@PathVariable long articleId, Model model) {
+        Article article = articleRepository.find(articleId);
+        model.addAttribute("article", article);
+        return "article-edit";
+    }
+
+    @PutMapping("/articles/{articleId}")
+    public String updateArticle(@PathVariable long articleId, ArticleDto.Update articleDto) {
+        Article article = new Article(articleId, articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
+        articleRepository.update(article);
+        return "redirect:/articles/" + articleId;
     }
 }

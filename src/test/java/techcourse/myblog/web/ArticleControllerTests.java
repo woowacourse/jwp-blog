@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +16,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+    private static Article article = new Article("제목", "유알엘", "컨텐츠");
 
     @Autowired
     private WebTestClient webTestClient;
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @BeforeEach
+    void setUp() {
+        articleRepository.save(article);
+    }
 
     @Test
     void index() {
@@ -47,9 +55,6 @@ public class ArticleControllerTests {
         String title = "제목";
         String coverUrl = "유알엘";
         String contents = "컨텐츠";
-        Article article = new Article(title, coverUrl, contents);
-
-        articleRepository.save(article);
 
         webTestClient.get().uri("/articles/1")
                 .exchange()
@@ -61,5 +66,24 @@ public class ArticleControllerTests {
                     assertThat(body.contains(coverUrl)).isTrue();
                     assertThat(body.contains(contents)).isTrue();
                 });
+    }
+
+    @Test
+    void 게시물_수정_페이지_이동_테스트() {
+        webTestClient.get().uri("/articles/1/edit")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void 게시물_수정_요청_테스트() {
+        webTestClient.put().uri("/articles/1")
+                .exchange()
+                .expectStatus().is3xxRedirection();
+    }
+
+    @AfterEach
+    void tearDown() {
+        articleRepository = null;
     }
 }

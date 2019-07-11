@@ -9,7 +9,11 @@ public class Article {
     private String contents;
 
     public Article(String title, String coverUrl, String contents) {
-        this.id = articleId++;
+        this(articleId++, title, coverUrl, contents);
+    }
+
+    public Article(long id, String title, String coverUrl, String contents) {
+        this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
