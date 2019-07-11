@@ -56,6 +56,10 @@ public class Article {
         this.contents = contents;
     }
 
+    public boolean isSameId(final Long other) {
+        return this.id == other;
+    }
+
     @Override
     public String toString() {
         return "Article{" +

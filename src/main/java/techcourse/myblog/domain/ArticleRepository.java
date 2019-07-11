@@ -29,14 +29,14 @@ public class ArticleRepository {
 
     public Optional<Article> findById(final Long id) {
         return articles.stream()
-                .filter(article -> article.getId() == id)
+                .filter(article -> article.isSameId(id))
                 .findFirst();
     }
 
     public Long update(final Article editedArticle) {
         Long id = editedArticle.getId();
         for (int i = 0; i < articles.size(); i++) {
-            if (articles.get(i).getId() == id) {
+            if (articles.get(i).isSameId(id)) {
                 articles.set(i, editedArticle);
             }
         }
