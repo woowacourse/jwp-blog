@@ -40,11 +40,6 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @GetMapping("/articles/new")
-    public String getNewArticle() {
-        return "article-edit";
-    }
-
     @GetMapping("/articles/{articleId}/edit")
     public String updateArticle(@PathVariable long articleId, Model model) {
         Article article = articleRepository.findById(articleId);
@@ -52,9 +47,20 @@ public class ArticleController {
         return "article-edit";
     }
 
+    @GetMapping("/articles/new")
+    public String getNewArticle() {
+        return "article-edit";
+    }
+
     @PutMapping("/articles/{articleId}")
     public RedirectView updateArticle(@PathVariable long articleId, Article articleParam) {
         long updateId = articleRepository.updateById(articleParam, articleId);
         return new RedirectView("/articles/" + updateId);
+    }
+
+    @DeleteMapping("articles/{articleId}")
+    public RedirectView deleteArticle(@PathVariable long articleId) {
+        articleRepository.deleteById(articleId);
+        return new RedirectView("/");
     }
 }

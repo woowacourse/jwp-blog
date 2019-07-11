@@ -38,4 +38,9 @@ public class ArticleRepository {
         article.setContents(articleParam.getContents());
         return articleId;
     }
+
+    public boolean deleteById(final long articleIdParam) {
+        Article article = findById(articleIdParam);
+        return articles.remove(article);
+    }
 }
