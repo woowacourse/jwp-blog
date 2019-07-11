@@ -12,4 +12,13 @@ public class ArticleRepository {
     public List<Article> findAll() {
         return articles;
     }
+
+    public int insertArticle(Article article) {
+        articles.add(article);
+        return articles.size() - 1;
+    }
+
+    public Article findById(int articleId) {
+        return articles.get(articleId);
+    }
 }
