@@ -28,5 +28,6 @@
     * 해당 Article 객체의 writer와 userId가 일치하지 않을 경우 예외 처리
     * 선택된 articleId를 이용해 해당 Article 삭제
     * List\<Article>에 저장된 전체 글 목록을 가져옴
-    
-    
+ 8. 게시글의 articleId를 생성하는 메서드 작성
+        * List\<Article>의 가장 마지막 articleId보다 1만큼 큰 Id를 반환
+   
