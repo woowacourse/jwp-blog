@@ -9,12 +9,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleRepository;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private ArticleRepository articleRepository;
 
     @BeforeEach
     void setUp() {
@@ -39,13 +46,6 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void articleForm() {
-        webTestClient.get().uri("/articles/new")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
     void postArticleTest() {
         String title = "title";
         String contents = "contents";
@@ -59,6 +59,9 @@ public class ArticleControllerTests {
                         .with("contents", contents))
                 .exchange()
                 .expectStatus().is3xxRedirection();
+
+        assertThat(articleRepository.findByIndex(1)).isEqualTo(new Article(title, contents, coverUrl));
+
     }
 
     @Test
