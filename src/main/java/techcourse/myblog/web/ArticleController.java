@@ -1,15 +1,11 @@
 package techcourse.myblog.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.filter.HiddenHttpMethodFilter;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.Articles;
 
 import java.util.List;
 
@@ -24,7 +20,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String index(Model model) {
-        Articles articles = articleRepository.findAll();
+        List<Article> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
     }
