@@ -176,7 +176,7 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void deleteTest() {
+    void delete() {
         webTestClient.post()
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
