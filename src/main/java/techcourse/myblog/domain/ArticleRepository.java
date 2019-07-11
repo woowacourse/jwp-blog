@@ -3,7 +3,9 @@ package techcourse.myblog.domain;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class ArticleRepository {
@@ -11,7 +13,10 @@ public class ArticleRepository {
     private int articleId = 0;
 
     public List<Article> findAll() {
-        return articles;
+        return articles.stream()
+                .sorted(Comparator.comparing(Article::getArticleId).reversed())
+                .collect(Collectors.toList())
+                ;
     }
 
     public void save(Article article) {
