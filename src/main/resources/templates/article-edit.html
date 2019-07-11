@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/static/css/article-edit.css">
     <th:block th:include="/fragment/common-tui-editor"></th:block>
 </head>
-<body>
+<body class="pace-done">
 <div>
     <th:block th:include="/fragment/login-header"></th:block>
 
@@ -32,6 +32,25 @@
         </div>
 
         <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
+            <div class="dropdown inline-block">
+                <button class="btn btn-default dropdown-toggle " type="button" data-toggle="dropdown">
+                    <span id="category-name" >카테고리 선택</span>
+                    <input id="category-id" type="hidden" name="categoryId">
+                    <i class="ti-angle-down font-size-9"></i>
+                </button>
+                <ul class="dropdown-menu" id="categories">
+                    <li>
+                        <a data-categoryId = "1">Java</a>
+                    </li>
+                    <li>
+                        <a data-categoryId = "2">Learning</a>
+                    </li>
+                    <li>
+                        <a data-toggle="model" data-target="#default-modal">카테고리 추가</a>
+                    </li>
+                </ul>
+            </div>
+
             <div class="row">
                 <div class="col-lg-1 col-md-1"></div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
@@ -51,6 +70,26 @@
             </div>
         </div>
     </form>
+</div>
+
+<!-- Modal START-->
+<div class="modal fade" id="default-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Modal Template</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer no-border">
+                <div class="text-right">
+                    <button class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary btn-sm" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -77,6 +116,19 @@
         height: 'calc(100vh - 360px)',
         initialValue: contents
     });
+
+    function handleClick(event) {
+        const span = document.querySelector("#category-name");
+        const input = document.querySelector("#category-id");
+
+        span.innerHTML = event.target.innerHTML;
+        input.value = event.target.getAttribute("data-categoryid");
+        console.log(event.target.innerHTML);
+        console.log(event.target.getAttribute("data-categoryid"));
+    }
+
+    const list = document.querySelectorAll("#categories li");
+    list.forEach(category => {category.addEventListener("click", handleClick)});
 
 </script>
 </body>
