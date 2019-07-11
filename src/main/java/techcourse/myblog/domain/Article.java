@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class Article {
     private static int currentId = 1;
-
     private final int id;
     private String title;
     private String contents;
