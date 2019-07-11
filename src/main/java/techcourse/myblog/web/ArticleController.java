@@ -64,7 +64,6 @@ public class ArticleController {
         return "article";
     }
 
-    //TODO 테스트랑 삭제 버튼 만들기
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable int articleId, Model model) {
         articleRepository.delete(articleId);

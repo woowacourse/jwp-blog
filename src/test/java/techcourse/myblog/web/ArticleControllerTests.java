@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
     private static final int ARTICLE_TEST_ID = 1;
+    public static final int ARTICLE_DELETE_TEST_ID = 2;
     private Article article;
 
     @Autowired
@@ -97,6 +98,29 @@ public class ArticleControllerTests {
                     assertThat(body.contains(article.getTitle())).isTrue();
                     assertThat(body.contains(article.getCoverUrl())).isTrue();
                     assertThat(body.contains(article.getContents())).isTrue();
+                });
+    }
+
+    @Test
+    @DisplayName("게시글을 삭제한다.")
+    void deleteArticle() {
+        Article deleteArticle = new Article(
+                "deleting title",
+                "deleting coverUrl",
+                "deleting contents",
+                ARTICLE_DELETE_TEST_ID
+        );
+        articleRepository.save(deleteArticle);
+        webTestClient.delete()
+                .uri("/articles/" + ARTICLE_DELETE_TEST_ID)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body).doesNotContain(deleteArticle.getTitle());
+                    assertThat(body).doesNotContain(deleteArticle.getCoverUrl());
+                    assertThat(body).doesNotContain(deleteArticle.getContents());
                 });
     }
 
