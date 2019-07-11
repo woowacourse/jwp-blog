@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
+import javax.jws.WebParam;
+
 @Controller
 public class ArticleController {
     @Autowired
@@ -35,5 +37,20 @@ public class ArticleController {
         Article article = articleRepository.findById(articleId);
         model.addAttribute("article", article);
         return "article";
+    }
+
+    @GetMapping("/articles/{articleId}/edit")
+    public String updateArticle(@PathVariable Long articleId, Model model){
+        Article article = articleRepository.findById(articleId);
+        model.addAttribute("article",article);
+        return "article-edit";
+    }
+
+    @PutMapping("/articles/{articleId}")
+    public String showUpdatedArticle(@PathVariable Long articleId,@ModelAttribute Article updatedArticle,Model model){
+        Article originArticle = articleRepository.findById(articleId);
+        articleRepository.update(originArticle,updatedArticle);
+        model.addAttribute("article",updatedArticle);
+        return "redirect:/articles/"+articleId;
     }
 }

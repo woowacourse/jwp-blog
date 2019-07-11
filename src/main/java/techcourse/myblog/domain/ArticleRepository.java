@@ -27,4 +27,9 @@ public class ArticleRepository {
     public int size() {
         return articles.size();
     }
+
+    public void update(Article originArticle, Article updatedArticle) {
+        articles.remove(originArticle);
+        articles.add(updatedArticle);
+    }
 }

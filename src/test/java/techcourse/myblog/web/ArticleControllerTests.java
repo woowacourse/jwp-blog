@@ -82,7 +82,7 @@ public class ArticleControllerTests {
 
 
     @Test
-    void update() {
+    void create_update() {
         String title = "title";
         String coverUrl = "coverUrl";
         String contents = "contents";
