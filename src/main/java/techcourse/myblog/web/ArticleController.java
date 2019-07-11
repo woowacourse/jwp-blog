@@ -26,7 +26,7 @@ public class ArticleController {
 
     @PostMapping("/write")
     public String createPosting(String title, String coverUrl, String contents, Model model) {
-        Article article = new Article(title, coverUrl, contents, articleRepository.getLastArticleId());
+        Article article = new Article(articleRepository.getLastArticleId(), title, coverUrl, contents);
 
         articleRepository.save(article);
         model.addAttribute("article", article);

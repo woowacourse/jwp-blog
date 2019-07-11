@@ -31,7 +31,12 @@ public class ArticleControllerTests {
 
     @BeforeEach
     void setUp() {
-        article = new Article("test title", "test coverUrl", "test contents", ARTICLE_TEST_ID);
+        article = new Article(
+                ARTICLE_TEST_ID,
+                "test title",
+                "test coverUrl",
+                "test contents"
+        );
 
         articleRepository.save(article);
     }
@@ -105,10 +110,10 @@ public class ArticleControllerTests {
     @DisplayName("게시글을 삭제한다.")
     void deleteArticle() {
         Article deleteArticle = new Article(
+                ARTICLE_DELETE_TEST_ID,
                 "deleting title",
                 "deleting coverUrl",
-                "deleting contents",
-                ARTICLE_DELETE_TEST_ID
+                "deleting contents"
         );
         articleRepository.save(deleteArticle);
         webTestClient.delete()

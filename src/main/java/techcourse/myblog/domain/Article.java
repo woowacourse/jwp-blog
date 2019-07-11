@@ -6,11 +6,11 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public Article(String title, String coverUrl, String contents, int articleId) {
+    public Article(int articleId, String title, String coverUrl, String contents) {
+        this.articleId = articleId;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-        this.articleId = articleId;
     }
 
     public int getArticleId() {

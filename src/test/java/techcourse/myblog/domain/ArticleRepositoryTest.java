@@ -16,7 +16,12 @@ class ArticleRepositoryTest {
     @BeforeEach
     void setUp() {
         articleRepository = new ArticleRepository();
-        article = new Article("test title", "test contents", "test Url", ARTICLE_TEST_ID);
+        article = new Article(
+                ARTICLE_TEST_ID,
+                "test title",
+                "test contents",
+                "test Url"
+        );
     }
 
     @Test
