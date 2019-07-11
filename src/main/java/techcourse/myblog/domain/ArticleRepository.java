@@ -34,6 +34,6 @@ public class ArticleRepository {
     }
 
     public void remove(int articleId) {
-        articles.remove(articles.get(articleId));
+        articles.remove(articleId);
     }
 }
