@@ -52,4 +52,10 @@ public class ArticleController {
         model.addAttribute("article", article);
         return "article";
     }
+
+    @DeleteMapping("/articles/{articleId}")
+    public String deleteArticle(@PathVariable int articleId) {
+        articleRepository.delete(articleId);
+        return "index";
+    }
 }

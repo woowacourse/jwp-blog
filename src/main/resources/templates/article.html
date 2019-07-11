@@ -65,6 +65,13 @@
                 <a th:href="@{/articles/{id}/edit(id=${article.id})}" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
+                <form th:action="@{/articles/{id}(id=${article.id})}" name="article" method="post"
+                      accept-charset="utf-8">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button id="delete-btn" type="submit" class="float-right pointer btn btn-icon">
+                        <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                    </button>
+                </form>
                 <div id="viewerSection"></div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">

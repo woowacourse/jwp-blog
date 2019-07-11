@@ -41,4 +41,14 @@ public class ArticleRepository {
         originalArticle.setContents(article.getContents());
         originalArticle.setCoverUrl(article.getCoverUrl());
     }
+
+    public void delete(int articleId) {
+        for (Article article : articles) {
+            if (articleId == article.getId()) {
+                articles.remove(article);
+                return;
+            }
+        }
+        throw new ArticleNotFoundException();
+    }
 }
