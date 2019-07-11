@@ -11,8 +11,12 @@ import java.util.List;
 
 @Controller
 public class ArticleController {
-    @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    public ArticleController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @GetMapping("/")
     private String getIndex(Model model) {
@@ -23,68 +27,44 @@ public class ArticleController {
 
     @GetMapping("/articles/{id}")
     private String getArticleById(@PathVariable int id, Model model) {
-        Article article = articleRepository.find(id);
+        Article article = articleRepository.findByIndex(id);
         model.addAttribute("id", id);
-        model.addAttribute("title", article.getTitle());
-        model.addAttribute("background", article.getBackground());
-        model.addAttribute("contents", article.getContents());
+        model.addAttribute("article", article);
         return "article";
     }
 
-    @GetMapping("/articles/new")
-    private String getArticle(Model model) {
+    @GetMapping("/writing")
+    private String getWritingArticle() {
         return "article-edit";
     }
 
-    @GetMapping("/writing")
-    private String getArticleEdit() {
+    @GetMapping("/articles/{id}/edit")
+    private String getEditArticle(@PathVariable int id, Model model) {
+        Article article = articleRepository.findByIndex(id);
+        model.addAttribute("id", id);
+        model.addAttribute("article", article);
         return "article-edit";
     }
 
     @PostMapping("/articles")
-    private String postArticle(
-            @RequestParam("title") String title,
-            @RequestParam("contents") String contents,
-            @RequestParam("coverUrl") String coverUrl,
-            Model model) {
-        Article article = new Article(title, contents, coverUrl);
+    private String postArticle(Article article) {
         articleRepository.addBlog(article);
         int id = articleRepository.findAll().size() - 1;
 
         return "redirect:/articles/" + id;
     }
 
-    @GetMapping("/articles/{id}/edit")
-    private String getEditArticle(@PathVariable int id, Model model) {
-        Article article = articleRepository.find(id);
-        model.addAttribute("id", id);
-        model.addAttribute("title", article.getTitle());
-        model.addAttribute("background", article.getBackground());
-        model.addAttribute("contents", article.getContents());
-        return "article-edit";
-    }
-
-    //    @RequestMapping(value = "/articles/{id}", method = RequestMethod.PUT)
     @PutMapping("/articles/{id}")
-    private String putArticle(
-            @RequestParam("title") String title,
-            @RequestParam("contents") String contents,
-            @RequestParam("coverUrl") String coverUrl,
-            @PathVariable int id,
-            Model model) {
-
-        Article article = articleRepository.find(id);
-        article.setTitle(title);
-        article.setContents(contents);
-        article.setBackground(coverUrl);
+    private String putArticle(@PathVariable int id, Article article) {
+        Article originArticle = articleRepository.findByIndex(id);
+        originArticle.updateByArticle(article);
 
         return "redirect:/articles/" + id;
     }
 
     @DeleteMapping("/articles/{id}")
     private String deleteArticleById(@PathVariable int id) {
-        articleRepository.delete(id);
+        articleRepository.deleteByIndex(id);
         return "redirect:/";
     }
-
 }
