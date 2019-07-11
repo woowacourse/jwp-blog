@@ -20,16 +20,19 @@
                         <input autocomplete="off"
                                class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
                                name="title"
-                               placeholder="제목을 입력해주세요" th:value="${title} != null ? ${title} : ''" type="text">
+                               placeholder="제목을 입력해주세요" th:value="${article} != null ? ${article.title} : ''"
+                               type="text">
                         <input autocomplete="off"
                                class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
                                name="coverUrl"
-                               placeholder="배경 url을 입력해주세요" th:value="${background} != null ? ${background} : ''"
+                               placeholder="배경 url을 입력해주세요"
+                               th:value="${article} != null ? ${article.coverUrl} : ''"
                                type="text">
                     </div>
                 </div>
             </div>
         </div>
+
 
         <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
             <div class="row">
@@ -66,9 +69,15 @@
                 document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
             }
         },
-        initialValue: "[[${contents}]]",
+        initialValue: "[[${article} != null ? ${article.contents} : '']]",
         height: 'calc(100vh - 360px)'
     });
+
+
+
+
+
+
 
 
 
