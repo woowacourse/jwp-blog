@@ -36,4 +36,10 @@ public class ArticleController {
         model.addAttribute("article", articleRepository.findById(id));
         return "article";
     }
+
+    @GetMapping("/articles/{id}/edit")
+    public String showEditPage(@PathVariable("id") long id, Model model) {
+        model.addAttribute("article", articleRepository.findById(id));
+        return "article-edit";
+    }
 }
