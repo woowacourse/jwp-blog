@@ -9,6 +9,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HelloWorldControllerTests {
@@ -31,6 +34,9 @@ public class HelloWorldControllerTests {
     @Test
     void passParamWithPost() {
         String blogName = "helloWrold";
+
+//        Map<String, String> params = new HashMap<>();
+//        params.put("blogName", blogName);
 
         webTestClient.post()
                 .uri("/helloworld")
