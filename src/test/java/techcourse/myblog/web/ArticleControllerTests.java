@@ -3,7 +3,7 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.service.ArticleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -28,7 +28,7 @@ public class ArticleControllerTests {
 	private WebTestClient webTestClient;
 
 	@Autowired
-	private ArticleRepository articleRepository;
+	private ArticleService articleService;
 
 	@Test
 	void index() {
@@ -70,7 +70,7 @@ public class ArticleControllerTests {
 
 	@Test
 	void lookUpArticle() {
-		articleRepository.save(new Article(title, contents, coverUrl));
+		articleService.save(new Article(title, contents, coverUrl));
 
 		webTestClient.get()
 				.uri("/")
@@ -88,7 +88,7 @@ public class ArticleControllerTests {
 
 	@Test
 	void findByIndex() {
-		int articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+		int articleId = articleService.save(new Article(title, contents, coverUrl)).getId();
 
 		webTestClient.get()
 				.uri("/article/" + articleId)
@@ -106,7 +106,7 @@ public class ArticleControllerTests {
 
 	@Test
 	void updateArticle() {
-		int articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+		int articleId = articleService.save(new Article(title, contents, coverUrl)).getId();
 
 		webTestClient.put()
 				.uri("/articles/" + articleId)
@@ -128,7 +128,7 @@ public class ArticleControllerTests {
 
 	@Test
 	void deleteArticle() {
-		int articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+		int articleId = articleService.save(new Article(title, contents, coverUrl)).getId();
 
 		webTestClient.delete()
 				.uri("/articles/" + articleId)
@@ -137,6 +137,6 @@ public class ArticleControllerTests {
 				.isFound()
 		;
 
-		assertThrows(IllegalArgumentException.class, () -> articleRepository.findById(articleId));
+		assertThrows(IllegalArgumentException.class, () -> articleService.findById(articleId));
 	}
 }
