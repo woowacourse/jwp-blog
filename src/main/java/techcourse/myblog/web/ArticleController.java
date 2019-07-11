@@ -18,7 +18,7 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public ModelAndView nameChange(String blogName, ModelAndView modelAndView) {
+    public ModelAndView getIndex(String blogName, ModelAndView modelAndView) {
         if (blogName == null) {
             blogName = "누구게?";
         }
@@ -29,7 +29,7 @@ public class ArticleController {
     }
 
     @GetMapping("/writing")
-    public String articleEdit() {
+    public String editArticle() {
         return "article-edit";
     }
 
