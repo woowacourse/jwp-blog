@@ -27,7 +27,7 @@ public class ArticleController {
 
     @GetMapping("/writing")
     public String writeArticleView(Model model) {
-        model.addAttribute("categorys", categoryService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         return "article-edit";
     }
 

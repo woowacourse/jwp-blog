@@ -7,17 +7,17 @@ import java.util.List;
 
 @Repository
 public class CategoryRepository {
-    private List<String> categorys = new ArrayList<>();
+    private List<String> categories = new ArrayList<>();
 
     public List<String> findAll() {
-        return categorys;
+        return categories;
     }
 
     public void add(String category) {
-        if (categorys.contains(category)) {
+        if (categories.contains(category)) {
             throw new IllegalArgumentException("Category is already Exist : " + category);
         }
 
-        categorys.add(category);
+        categories.add(category);
     }
 }
