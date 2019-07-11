@@ -40,7 +40,7 @@ public class ArticleRepositoryTests {
         articleRepository.add(new Article());
         articleRepository.add(article);
 
-        Article foundArticle = articleRepository.findById(3);
+        Article foundArticle = articleRepository.findById(article.getId());
         assertThat(foundArticle.getContents()).isEqualTo("Contents");
         assertThat(foundArticle.getCoverUrl()).isEqualTo("https://www.woowa.com");
         assertThat(foundArticle.getTitle()).isEqualTo("Hi");
@@ -56,7 +56,7 @@ public class ArticleRepositoryTests {
         articleRepository.add(new Article());
         articleRepository.add(article);
 
-        articleRepository.deleteById(3);
+        articleRepository.deleteById(article.getId());
         assertThrows(IllegalArgumentException.class, () -> articleRepository.findById(3));
     }
 
