@@ -15,7 +15,7 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 
     @GetMapping("/articles/new")
-    public String articlesNew(Model model) {
+    public String articleCreationPage(Model model) {
         String actionRoute = "/write";
         String formMethod = "post";
 
@@ -24,8 +24,20 @@ public class ArticleController {
         return "article-edit";
     }
 
+    @GetMapping("/articles/{articleId}/edit")
+    public String articleEditPage(@PathVariable int articleId, Model model) {
+        Article article = articleRepository.find(articleId);
+        String actionRoute = "/articles/" + articleId;
+        String formMethod = "put";
+
+        model.addAttribute("actionRoute", actionRoute);
+        model.addAttribute("formMethod", formMethod);
+        model.addAttribute("article", article);
+        return "article-edit";
+    }
+
     @PostMapping("/write")
-    public String createPosting(String title, String coverUrl, String contents, Model model) {
+    public String createNewArticle(String title, String coverUrl, String contents, Model model) {
         Article article = new Article(articleRepository.getLastArticleId(), title, coverUrl, contents);
 
         articleRepository.save(article);
@@ -39,18 +51,6 @@ public class ArticleController {
 
         model.addAttribute("article", article);
         return "article";
-    }
-
-    @GetMapping("/articles/{articleId}/edit")
-    public String getEditPage(@PathVariable int articleId, Model model) {
-        Article article = articleRepository.find(articleId);
-        String actionRoute = "/articles/" + articleId;
-        String formMethod = "put";
-
-        model.addAttribute("actionRoute", actionRoute);
-        model.addAttribute("formMethod", formMethod);
-        model.addAttribute("article", article);
-        return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
