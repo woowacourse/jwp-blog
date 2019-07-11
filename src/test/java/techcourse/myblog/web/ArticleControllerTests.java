@@ -47,9 +47,9 @@ public class ArticleControllerTests {
     @Test
     public void index() {
         final int count = 3;
-        articleRepository.add(ARTICLE_SAMPLE);
-        articleRepository.add(ARTICLE_SAMPLE);
-        articleRepository.add(ARTICLE_SAMPLE);
+        addArticle();
+        addArticle();
+        addArticle();
 
         webTestClient.get()
                 .uri("/")
@@ -60,13 +60,11 @@ public class ArticleControllerTests {
                     String body = new String(response.getResponseBody());
                     assertEquals(count, StringUtils.countOccurrencesOf(body, ARTICLE_DELIMITER));
                 });
-
-
     }
 
     @Test
     public void showArticleById() {
-        articleRepository.add(ARTICLE_SAMPLE);
+       addArticle();
 
         webTestClient.get().uri("/articles/1")
                 .exchange()
@@ -75,7 +73,7 @@ public class ArticleControllerTests {
 
     @Test
     public void updateArticleById() {
-        articleRepository.add(ARTICLE_SAMPLE);
+        addArticle();
 
         webTestClient.get().uri("/articles/1/edit")
                 .exchange()
@@ -110,7 +108,7 @@ public class ArticleControllerTests {
 
     @Test
     public void deleteArticle() {
-        articleRepository.add(ARTICLE_SAMPLE);
+        addArticle();
 
         webTestClient.delete()
                 .uri("/articles/1")
