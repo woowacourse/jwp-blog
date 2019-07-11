@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,12 +10,9 @@ import techcourse.myblog.domain.ArticleRepository;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class ArticleController {
     private final ArticleRepository articleRepository;
-
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
 
     @GetMapping("/writing")
     public String showArticleWritingPage() {

@@ -1,12 +1,16 @@
 package techcourse.myblog.domain;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 public class Article {
     private static int currentId = 1;
 
-    private final int id;
+    private int id;
     private String title;
     private String contents;
     private String coverUrl;
@@ -15,7 +19,6 @@ public class Article {
         this.title = title;
         this.contents = contents;
         this.coverUrl = coverUrl;
-        this.id = currentId++;
     }
 
     private Article(int id, String title, String contents, String coverUrl) {
@@ -23,10 +26,6 @@ public class Article {
         this.title = title;
         this.contents = contents;
         this.coverUrl = coverUrl;
-    }
-
-    public static void initCurrentId() {
-        currentId = 1;
     }
 
     public Article copyArticles() {
