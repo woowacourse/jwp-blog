@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Article {
     private int articleId;
     private String title;
@@ -36,6 +38,10 @@ public class Article {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    public boolean isCoverUrl() {
+        return StringUtils.isNotBlank(coverUrl);
     }
 
     @Override
