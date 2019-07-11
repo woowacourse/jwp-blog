@@ -29,4 +29,8 @@ public class ArticleRepository {
     public void clear() {
         articles.clear();
     }
+
+    public void deleteById(long id) {
+        articles.removeIf(article -> article.getId() == id);
+    }
 }

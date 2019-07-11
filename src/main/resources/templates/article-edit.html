@@ -16,7 +16,8 @@
 <body>
 <div>
     <header th:replace="fragments/login-header :: loginHeaderFragment"></header>
-    <form th:action="${article}? '/articles/' + ${article.id} : '/articles'" name="article" method="post" accept-charset="utf-8">
+    <form th:action="${article}? '/articles/' + ${article.id} : '/articles'" name="article" method="post"
+          accept-charset="utf-8">
         <input th:if="${article}" type="hidden" name="_method" value="put"/>
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
@@ -45,9 +46,16 @@
                         <button id="save-btn" type="submit" class="btn btn-default">
                             <i class="ti-save"></i>
                         </button>
-                        <a href="/index.html" class="btn btn-default">
-                            <i class="ti-close"></i>
-                        </a>
+                        <th:block th:if="${article}">
+                            <button id="delete-btn" type="submit" class="btn btn-default" onclick="deleteArticle()">
+                                <i class="ti-close"></i>
+                            </button>
+                        </th:block>
+                        <th:block th:unless="${article}">
+                            <a href="/" class="btn btn-default">
+                                <i class="ti-close"></i>
+                            </a>
+                        </th:block>
                     </div>
                 </div>
             </div>
@@ -74,6 +82,9 @@
         editor.setValue([[${article?.contents}]]);
     }
 
+    function deleteArticle() {
+        document.getElementsByName("_method")[0].value = "delete";
+    }
 </script>
 </body>
 </html>
