@@ -33,4 +33,9 @@ public class ArticleRepository {
         originArticle.setTitle(modifiedArticle.getTitle());
         originArticle.setContents(modifiedArticle.getContents());
     }
+
+	public void deleteById(int articleId) {
+		Article article = findById(articleId);
+		articles.remove(article);
+	}
 }

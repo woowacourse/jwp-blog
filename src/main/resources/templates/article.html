@@ -96,6 +96,12 @@
                 <a th:href="@{/articles/{articleId}/edit(articleId=${article.id})}" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
+
+                <form th:action="${#strings.concat('/articles/', article.id)}" name="article" method="post" accept-charset="utf-8" >
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit"><i class="ti-close"></i></button>
+                </form>
+
                 <div id="viewerSection"></div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">

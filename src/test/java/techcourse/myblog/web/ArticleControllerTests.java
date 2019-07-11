@@ -14,6 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @AutoConfigureWebTestClient
@@ -133,5 +134,23 @@ public class ArticleControllerTests {
 					assertThat(body.contains("updatedContents")).isTrue();
 				});
 
+	}
+
+	@Test
+	void deleteArticle() {
+		String title = "제목";
+		String contents = "contents";
+		String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
+
+		articleRepository.save(new Article(title, contents, coverUrl));
+
+		webTestClient.delete()
+				.uri("/articles/1")
+				.exchange()
+				.expectStatus()
+				.isOk()
+		;
+
+		assertThrows(IllegalArgumentException.class, () -> articleRepository.findById(1));
 	}
 }

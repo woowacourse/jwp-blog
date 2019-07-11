@@ -55,13 +55,14 @@ public class Article {
 			return false;
 		}
 		final Article article = (Article) o;
-		return Objects.equals(getTitle(), article.getTitle()) &&
+		return getId() == article.getId() &&
+				Objects.equals(getTitle(), article.getTitle()) &&
 				Objects.equals(getContents(), article.getContents()) &&
 				Objects.equals(getCoverUrl(), article.getCoverUrl());
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getTitle(), getContents(), getCoverUrl());
+		return Objects.hash(getId(), getTitle(), getContents(), getCoverUrl());
 	}
 }
