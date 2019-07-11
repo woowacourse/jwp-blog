@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <title>우아한 크루의 블로그</title>
-    <th:block th:include="common_meta"></th:block>
-    <th:block th:include="common_css"></th:block>
+    <th:block th:include="common/common_meta"></th:block>
+    <th:block th:include="common/common_css"></th:block>
 </head>
 <body>
 <div class="app">
     <div class="header navbar bg-transparent no-border">
         <div class="header-container pdd-right-15">
-            <th:block th:include="common_index_logo"></th:block>
+            <th:block th:include="common/common_index_logo"></th:block>
         </div>
     </div>
     <div class="authentication">
@@ -66,6 +66,6 @@
     </div>
 </div>
 
-<th:block th:include="common_js"></th:block>
+<th:block th:include="common/common_js"></th:block>
 </body>
 </html>
