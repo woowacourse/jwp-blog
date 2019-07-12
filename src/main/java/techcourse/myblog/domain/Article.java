@@ -3,7 +3,7 @@ package techcourse.myblog.domain;
 import java.util.Objects;
 
 public class Article {
-    private static int newId = 0;
+    private static final int EMPTY_ID = -1;
 
     private int id;
     private String title;
@@ -18,11 +18,7 @@ public class Article {
     }
 
     public static Article of(String title, String coverUrl, String contents) {
-        return new Article(newId++, title, coverUrl, contents);
-    }
-
-    public static Article from(Article article) {
-        return of(article.title, article.coverUrl, article.contents);
+        return new Article(EMPTY_ID, title, coverUrl, contents);
     }
 
     public int getId() {

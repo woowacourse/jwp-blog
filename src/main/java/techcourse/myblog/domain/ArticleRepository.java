@@ -9,6 +9,8 @@ import java.util.TreeMap;
 
 @Repository
 public class ArticleRepository {
+    private int newArticleId = 0;
+
     private Map<Integer, Article> articles = new TreeMap<>();
 
     public List<Article> findAll() {
@@ -16,8 +18,9 @@ public class ArticleRepository {
     }
 
     public int insertArticle(Article article) {
-        article = Article.from(article);
-        int id = article.getId();
+        int id = newArticleId++;
+        article.setId(id);
+
         articles.put(id, article);
         return id;
     }

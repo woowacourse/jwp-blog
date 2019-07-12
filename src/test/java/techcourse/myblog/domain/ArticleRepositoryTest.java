@@ -60,6 +60,7 @@ public class ArticleRepositoryTest {
     void insertArticle_insert테스트() {
         Article article = Article.of("t", "u", "c");
         int id = articleRepository.insertArticle(article);
+        article.setId(id);
 
         assertThat(articleRepository.findById(id)).isEqualTo(article);
     }
