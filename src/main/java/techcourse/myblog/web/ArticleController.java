@@ -9,9 +9,13 @@ import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
 public class ArticleController {
-    public static final int INCREMENT_AMOUNT = 1;
-    @Autowired
+    private static final int INCREMENT_AMOUNT = 1;
+
     private ArticleRepository articleRepository;
+
+    public ArticleController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @GetMapping("/articles/new")
     public String articleCreationPage(Model model) {
