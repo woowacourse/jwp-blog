@@ -27,9 +27,7 @@ public class ArticleController {
     private String show(@PathVariable int id, Model model) {
         Article article = articleRepository.find(id);
         model.addAttribute("id", id);
-        model.addAttribute("title", article.getTitle());
-        model.addAttribute("coverUrl", article.getCoverUrl());
-        model.addAttribute("contents", article.getContents());
+        model.addAttribute("article", article);
         return "article";
     }
 
@@ -50,9 +48,7 @@ public class ArticleController {
     private String updateForm(@PathVariable int id, Model model) {
         Article article = articleRepository.find(id);
         model.addAttribute("id", id);
-        model.addAttribute("title", article.getTitle());
-        model.addAttribute("coverUrl", article.getCoverUrl());
-        model.addAttribute("contents", article.getContents());
+        model.addAttribute("article", article);
         return "article-edit";
     }
 

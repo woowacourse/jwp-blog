@@ -14,17 +14,17 @@
           th:action="${id} == null ? '/articles/' : '/articles/' + ${id}">
         <input name="_method" th:value="${id} == null ? 'POST' : 'PUT'" type="hidden"/>
         <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg" style="ground-image: url('images/pages/index/study.jpg')">
+            <div class="cover-img overlay-dark bg" style="background-image: url('images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
                         <input autocomplete="off"
                                class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
                                name="title"
-                               placeholder="제목을 입력해주세요" th:value="${title} != null ? ${title} : ''" type="text">
+                               placeholder="제목을 입력해주세요" th:value="${article} != null ? ${article.title} : ''" type="text">
                         <input autocomplete="off"
                                class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
                                name="coverUrl"
-                               placeholder="배경 url을 입력해주세요" th:value="${coverUrl} != null ? ${coverUrl} : ''"
+                               placeholder="배경 url을 입력해주세요" th:value="${article} != null ? ${article.coverUrl} : ''"
                                type="text">
                     </div>
                 </div>
@@ -56,7 +56,7 @@
 <th:block th:include="fragment/common_js"></th:block>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script src="/js/index.js"></script>
-<script type="text/javascript">
+<script th:inline="javascript">
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
@@ -66,9 +66,15 @@
                 document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
             }
         },
-        initialValue: "[[${contents}]]",
+        initialValue: init([[${article}]]),
         height: 'calc(100vh - 360px)'
     });
 
+    function init(article) {
+        if(article == null) {
+            return ""
+        }
+        return article.contents
+    }
 </script>
 </html>

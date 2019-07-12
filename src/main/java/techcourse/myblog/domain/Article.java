@@ -37,6 +37,10 @@ public class Article {
     }
 
     public void setCoverUrl(String coverUrl) {
+        if (coverUrl.isEmpty()) {
+            this.coverUrl = DEFAULT_COVER_URL;
+            return;
+        }
         this.coverUrl = coverUrl;
     }
 
