@@ -19,9 +19,10 @@ public class ArticleRepository {
         return articles;
     }
 
-    public void save(Article article) {
+    public boolean save(Article article) {
         article.setId(++articleId);
         articles.add(article);
+        return true;
     }
 
     public Article findById(Long id) {
@@ -31,15 +32,17 @@ public class ArticleRepository {
                 .get();
     }
 
-    public void update(Article editedArticle) {
+    public boolean update(Article editedArticle) {
         for (int i = 0; i < this.size(); i++) {
             if (articles.get(i).isSameId(editedArticle)) {
-//                Article originArticle=articles.get(i);
-//                originArticle.setTitle(editedArticle.getTitle());
-//                originArticle.setCoverUrl(editedArticle.getCoverUrl());
-//                originArticle.setContents(editedArticle.getContents());
-                articles.set(i,editedArticle);
+                articles.set(i, editedArticle);
+                return true;
             }
         }
+        return false;
+    }
+
+    public boolean deleteById(Long articleId) {
+        return articles.removeIf(article -> article.getId().equals(articleId));
     }
 }
