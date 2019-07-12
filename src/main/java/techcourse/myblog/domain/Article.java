@@ -43,4 +43,8 @@ public class Article {
     public void setContents(String contents) {
         this.contents = contents;
     }
+
+    public boolean isSameId(int id) {
+        return this.id == id;
+    }
 }
