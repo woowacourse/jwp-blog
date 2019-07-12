@@ -32,7 +32,7 @@ public class ArticleController {
     public String createArticle(@ModelAttribute Article article, Model model) {
         model.addAttribute("article", article);
         articleRepository.save(article);
-        return "article";
+        return "redirect:/articles/" + article.getId();
     }
 
     @GetMapping("/articles/{articleId}")
@@ -48,4 +48,17 @@ public class ArticleController {
         model.addAttribute("article", article);
         return "article-edit";
     }
+
+    @PutMapping("/articles/{articleId}")
+    public String showUpdatedArticle(@PathVariable Long articleId,@ModelAttribute Article article) {
+        article.setId(articleId);
+        articleRepository.update(article);
+        return "redirect:/articles/" + article.getId();
+    }
+
+//    @DeleteMapping("/articles/{articleId}")
+//    public String deleteArticle(@PathVariable Long articleId){
+//
+//        return
+//    }
 }

@@ -15,6 +15,7 @@ import techcourse.myblog.domain.Article;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -44,6 +45,15 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+//    @Test
+//    void createArticle(){
+//        webTestClient.post().uri("/articles")
+//                .body(fromFormData("title","title").with("contents","sokoskeo"))
+//                .exchange()
+//                .expectStatus().isFound()
+//                .
+//    }
 
 //    @Test
 //    void submit_article() {

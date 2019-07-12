@@ -4,25 +4,23 @@ import java.util.Objects;
 
 public class Article {
 
-    private static long incrementNumber = 1;
-    private Long articleId;
+    private Long id;
     private String title;
     private String coverUrl;
     private String contents;
 
     public Article(String title, String coverUrl, String contents) {
-        this.articleId = incrementNumber++;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
 
-    public Long getArticleId() {
-        return articleId;
+    public Long getId() {
+        return id;
     }
 
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -49,12 +47,16 @@ public class Article {
         this.contents = contents;
     }
 
+    public boolean isSameId(Article anotherArticle) {
+        return this.id.equals(anotherArticle.id);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return Objects.equals(articleId, article.articleId) &&
+        return Objects.equals(id, article.id) &&
                 Objects.equals(title, article.title) &&
                 Objects.equals(coverUrl, article.coverUrl) &&
                 Objects.equals(contents, article.contents);
@@ -62,6 +64,6 @@ public class Article {
 
     @Override
     public int hashCode() {
-        return Objects.hash(articleId, title, coverUrl, contents);
+        return Objects.hash(id, title, coverUrl, contents);
     }
 }

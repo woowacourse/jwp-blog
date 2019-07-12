@@ -82,11 +82,11 @@
                             <a href="#tab-centered-3" class="nav-link" role="tab" data-toggle="tab">Learning</a>
                         </li>
                     </ul>
-                    <div class="width-100 fixed left-0 border bottom"></div>
+                    <div class="width-100 absolute left-0 border bottom"></div>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
                             <div th:each="article : ${articles}" class="pdd-horizon-15 pdd-vertical-20">
-                                <a th:href="@{/articles/{articleId}(articleId=${article.articleId})}" class="card article-container">
+                                <a th:href="@{/articles/{articleId}(articleId=${article.id})}" class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
                                             <div th:if="${article.coverUrl==''}" class="background-holder has-content" style="background-image: url('/images/pages/index/study.jpg')"></div>
@@ -131,9 +131,9 @@
             <div class="col-lg-3"></div>
         </div>
         <form action="/writing">
-        <button class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
-            <i class="ti-plus"></i>
-        </button>
+            <button class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
+                <i class="ti-plus"></i>
+            </button>
         </form>
     </div>
 </div>

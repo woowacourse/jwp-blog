@@ -4,20 +4,17 @@ package techcourse.myblog.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@AutoConfigureWebTestClient
+//@ExtendWith(SpringExtension.class)
 public class ArticleRepositoryTest {
 
     ArticleRepository articleRepository;
@@ -27,13 +24,11 @@ public class ArticleRepositoryTest {
         articleRepository = new ArticleRepository();
     }
 
-
     @Test
     void save() {
         articleRepository.save(new Article("title", "coverUrl", "contents"));
         assertThat(articleRepository.size()).isEqualTo(1);
     }
-
 
     @Test
     void findAll() {
@@ -45,7 +40,6 @@ public class ArticleRepositoryTest {
         articleRepository.save(article3);
         assertThat(articleRepository.findAll()).isEqualTo(Arrays.asList(article1,article2,article3));
     }
-
 
     @Test
     void findById() {
