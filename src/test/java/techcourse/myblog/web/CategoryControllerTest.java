@@ -8,7 +8,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CategoryControllerTest {
@@ -20,6 +19,17 @@ class CategoryControllerTest {
         webTestClient.post()
                 .uri("/categories/add")
                 .body(BodyInserters.fromFormData("categoryName", "java"))
+                .exchange()
+                .expectStatus()
+                .isFound();
+    }
+
+    @Test
+    void deleteCategories() {
+        addCategory();
+        webTestClient.post()
+                .uri("/categories/delete")
+                .body(BodyInserters.fromFormData("categoryId", "1"))
                 .exchange()
                 .expectStatus()
                 .isFound();
