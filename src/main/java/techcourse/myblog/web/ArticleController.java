@@ -21,7 +21,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}")
-    public String article(@PathVariable("articleId") int articleId, Model model) {
+    public String showArticle(@PathVariable("articleId") int articleId, Model model) {
         model.addAttribute("article", articleRepository.get(articleId));
         model.addAttribute("articleId", articleId);
         return "article";
@@ -33,7 +33,7 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public String createArticle(@ModelAttribute Article article){
+    public String saveArticle(@ModelAttribute Article article){
         articleRepository.add(article);
         return "redirect:/articles/" + articleRepository.lastIndex();
     }

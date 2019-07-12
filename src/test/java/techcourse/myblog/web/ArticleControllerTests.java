@@ -9,13 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
 import java.io.UnsupportedEncodingException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
@@ -42,6 +42,15 @@ public class ArticleControllerTests {
     }
 
     @Test
+    void createArticle() {
+        webTestClient.post().uri("/articles")
+                .body(fromFormData("title","title").with("contents","contents"))
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("/articles",".*article.*");
+    }
+
+    @Test
     void articleAddTest() {
         String title = "목적의식 있는 연습을 통한 효과적인 학습";
         String coverUrl = "https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4";
@@ -49,8 +58,7 @@ public class ArticleControllerTests {
 
         webTestClient.post().uri("/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
+                .body(fromFormData("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
@@ -89,8 +97,7 @@ public class ArticleControllerTests {
 
         webTestClient.put().uri("/articles/0")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
+                .body(fromFormData("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
