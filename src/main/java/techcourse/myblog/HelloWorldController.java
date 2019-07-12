@@ -11,13 +11,13 @@ public class HelloWorldController {
 
     @ResponseBody
     @GetMapping("/helloworld")
-    public String helloWorld(String blogName){
+    public String helloWorld(String blogName) {
         return blogName;
     }
 
     @ResponseBody
     @PostMapping("/helloworld")
-    public String helloWorld2(@RequestBody String blogName){
+    public String helloWorld2(@RequestBody String blogName) {
         return blogName;
     }
 }

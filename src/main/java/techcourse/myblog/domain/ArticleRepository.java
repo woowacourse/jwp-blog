@@ -29,7 +29,7 @@ public class ArticleRepository {
         articles.set(articleId, article);
     }
 
-    public int size(){
+    public int size() {
         return articles.size();
     }
 

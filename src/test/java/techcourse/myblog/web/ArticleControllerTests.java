@@ -42,15 +42,6 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void createArticle() {
-        webTestClient.post().uri("/articles")
-                .body(fromFormData("title","title").with("contents","contents"))
-                .exchange()
-                .expectStatus().isFound()
-                .expectHeader().valueMatches("/articles",".*article.*");
-    }
-
-    @Test
     void articleAddTest() {
         String title = "목적의식 있는 연습을 통한 효과적인 학습";
         String coverUrl = "https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4";
