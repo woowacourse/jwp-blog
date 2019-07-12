@@ -19,20 +19,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest {
-    private static final int ARTICLE_TEST_ID = 1;
-    public static final int ARTICLE_DELETE_TEST_ID = 2;
-    private Article article;
+    private static final int TEST_ARTICLE_ID = 1;
+    private static final int DELETE_TEST_ARTICLE_ID = 2;
 
-    @Autowired
-    private WebTestClient webTestClient;
+    private Article article;
 
     @Autowired
     private ArticleRepository articleRepository;
 
+    @Autowired
+    private WebTestClient webTestClient;
+
     @BeforeEach
     void setUp() {
         article = new Article(
-                ARTICLE_TEST_ID,
+                TEST_ARTICLE_ID,
                 "test title",
                 "test coverUrl",
                 "test contents"
@@ -43,31 +44,15 @@ public class ArticleControllerTest {
 
     @Test
     @DisplayName("index 페이지를 되돌려준다.")
-    void index() {
+    void indexTest() {
         webTestClient.get().uri("/")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    @DisplayName("새로운 article-edit 페이지를 되돌려준다.")
-    void articleForm() {
-        webTestClient.get().uri("/articles/new")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    @DisplayName("/article-edit 요청에 대해 edit 페이지를 되돌려준다.")
-    void articleEdit() {
-        webTestClient.get().uri("/articles/" + ARTICLE_TEST_ID + "/edit")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
     @DisplayName("게시글을 작성한 뒤 생성 버튼을 눌렀을 때 생성된 게시글을 보여준다.")
-    void articlePost() {
+    void createNewArticleTest() {
         String inputTitle = "test title";
         String inputCoverUrl = "test coverUrl";
         String intputContents = "test contents";
@@ -92,10 +77,18 @@ public class ArticleControllerTest {
     }
 
     @Test
-    @DisplayName("article에서 edit 버튼을 눌렀을 때 eidt페이지를 보여준다.")
-    void getArticleEditPage() {
+    @DisplayName("새로운 Article 생성시 article-edit 페이지를 되돌려준다.")
+    void articleCreationPageTest() {
+        webTestClient.get().uri("/articles/new")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    @DisplayName("게시글에서 수정 버튼을 누르는 경우 id에 해당하는 edit 페이지를 되돌려준다.")
+    void articleEditPageTest() {
         webTestClient.get()
-                .uri("/articles/" + ARTICLE_TEST_ID + "/edit")
+                .uri("/articles/" + TEST_ARTICLE_ID + "/edit")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -109,16 +102,16 @@ public class ArticleControllerTest {
 
     @Test
     @DisplayName("게시글을 삭제한다.")
-    void deleteArticle() {
+    void deleteArticleTest() {
         Article deleteArticle = new Article(
-                ARTICLE_DELETE_TEST_ID,
+                DELETE_TEST_ARTICLE_ID,
                 "deleting title",
                 "deleting coverUrl",
                 "deleting contents"
         );
         articleRepository.save(deleteArticle);
         webTestClient.delete()
-                .uri("/articles/" + ARTICLE_DELETE_TEST_ID)
+                .uri("/articles/" + DELETE_TEST_ARTICLE_ID)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -132,6 +125,6 @@ public class ArticleControllerTest {
 
     @AfterEach
     void tearDown() {
-        articleRepository.delete(ARTICLE_TEST_ID);
+        articleRepository.delete(TEST_ARTICLE_ID);
     }
 }
