@@ -134,11 +134,11 @@
 
     /* <![CDATA[ */
     [# th:if="${method}"]
-        path = /*[[${article.id} == null  ? "" : "/" + ${article.id}]]*/;
-        putTag = /*[[${method} == null ? "" : "<input type=\"hidden\" name=\"_method\" value=\"put\"/>"]]*/;
-        title = /*[[${article.title} == null ? "" : ${article.title}]]*/;
-        coverUrl = /*[[${article.coverUrl} == null ? "" : ${article.coverUrl}]]*/;
-        contents = /*[[${article.contents} == null ? "" : ${article.contents}]]*/;
+        path = /*[[${article.id}]]*/;
+        putTag = "<input type=\"hidden\" name=\"_method\" value=\"put\"/>";
+        title = /*[[${article.title}]]*/;
+        coverUrl = /*[[${article.coverUrl}]]*/;
+        contents = /*[[${article.contents}]]*/;
     [/]
     /*]]>*/
 

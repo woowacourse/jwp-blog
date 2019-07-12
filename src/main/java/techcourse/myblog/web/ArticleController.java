@@ -14,11 +14,11 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String createArticles(Article article, Model model) {
-        articleRepository.insertArticle(article);
+        int id = articleRepository.insertArticle(article);
 
         model.addAttribute("article", article);
 
-        return "redirect:/articles/" + article.getId();
+        return "redirect:/articles/" + id;
     }
 
     @GetMapping("/articles/{articleId}")
