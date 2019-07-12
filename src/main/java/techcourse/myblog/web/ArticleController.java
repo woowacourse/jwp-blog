@@ -40,7 +40,7 @@ public class ArticleController {
     @PutMapping("/articles/{articleId}")
     public ModelAndView editArticle(@PathVariable int articleId, Article article) {
         articleRepository.modify(articleId,article);
-        return new ModelAndView("redirect:/articles/" + articleRepository.lastestIndex());
+        return new ModelAndView("redirect:/articles/" + articleId);
     }
 
     @DeleteMapping("/articles/{articleId}")
