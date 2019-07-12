@@ -39,4 +39,10 @@ public class Article {
     public void setContents(String contents) {
         this.contents = contents;
     }
+
+    public void update(Article article) {
+        this.title = article.getTitle();
+        this.coverUrl = article.getCoverUrl();
+        this.contents = article.getContents();
+    }
 }

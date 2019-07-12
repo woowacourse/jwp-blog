@@ -23,4 +23,9 @@ public class ArticleRepository {
                 .findFirst()
                 .get();
     }
+
+    public void editArticle(int id, Article article) {
+        Article oldArticle = findArticleById(id);
+        oldArticle.update(article);
+    }
 }
