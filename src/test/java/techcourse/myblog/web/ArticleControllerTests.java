@@ -42,16 +42,19 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("content", content))
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles/.*");
     }
 
 
     @Test
-    void delete(){
+    void delete() {
         webTestClient.delete()
                 .uri("/articles/1")
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus().is3xxRedirection()
+                .expectHeader()
+                .valueMatches("location", ".*/");
     }
 
     @Test
@@ -59,7 +62,8 @@ public class ArticleControllerTests {
         webTestClient.put()
                 .uri("/articles/1")
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles/.*");
     }
 
     @Test
