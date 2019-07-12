@@ -97,7 +97,7 @@ public class ArticleControllerTests {
     @Test
     public void addArticle() {
         webTestClient.post()
-                .uri("/write")
+                .uri("/articles/new")
                 .body(BodyInserters
                         .fromFormData("title", title)
                         .with("coverUrl", coverUrl)
