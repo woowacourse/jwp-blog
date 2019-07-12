@@ -38,10 +38,7 @@ public class ArticleRepository {
     }
 
     public void delete(int articleId) {
-        Article articleToDelete = articles.stream()
-                .filter(article -> article.getId() == articleId)
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+        Article articleToDelete = find(articleId);
         articles.remove(articleToDelete);
     }
 }
