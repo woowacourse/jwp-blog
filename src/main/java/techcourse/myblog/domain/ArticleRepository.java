@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
+import techcourse.myblog.web.exception.NotExistEntityException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,14 +27,28 @@ public class ArticleRepository {
     }
 
     public Article findById(int articleId) {
+        checkExistArticleId(articleId);
+
         return articles.get(articleId);
     }
 
     public void updateArticle(Article article) {
-        articles.put(article.getId(), article);
+        int articleId = article.getId();
+
+        checkExistArticleId(articleId);
+
+        articles.put(articleId, article);
     }
 
     public void deleteArticle(int articleId) {
+        checkExistArticleId(articleId);
+
         articles.remove(articleId);
+    }
+
+    private void checkExistArticleId(int articleId){
+        if(!articles.containsKey(articleId)){
+            throw new NotExistEntityException();
+        }
     }
 }

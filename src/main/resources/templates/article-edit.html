@@ -106,7 +106,7 @@
 
 
     /* <![CDATA[ */
-    [# th:if="${method}"]
+    [# th:if="${method} == 'put'"]
         path = /*[[${article.id}]]*/;
         putTag = "<input type=\"hidden\" name=\"_method\" value=\"put\"/>";
         title = /*[[${article.title}]]*/;

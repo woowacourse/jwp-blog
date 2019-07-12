@@ -15,16 +15,17 @@ public class MyblogController {
     private ArticleRepository articleRepository;
 
     @GetMapping("/")
-    public String getIndex(Model model) {
+    public String readHomePage(Model model) {
         List<Article> articles = articleRepository.findAll();
 
         model.addAttribute("articles", articles);
 
-        return "index";
+        return "/index";
     }
 
     @GetMapping("/writing")
-    public String getWriting() {
-        return "article-edit";
+    public String readWritingPage(Model model) {
+        model.addAttribute("method", "post");
+        return "/article-edit";
     }
 }
