@@ -34,10 +34,8 @@ public class ArticleRepository {
 
     public long updateById(Article articleParam, long articleId) {
         Article article = findById(articleId);
-        article.setTitle(articleParam.getTitle());
-        article.setCoverUrl(articleParam.getCoverUrl());
-        article.setContents(articleParam.getContents());
-        article.setCategoryId(articleParam.getCategoryId());
+        article.update(articleParam);
+
         return articleId;
     }
 

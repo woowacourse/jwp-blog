@@ -50,6 +50,13 @@ public class Article {
         this.categoryId = categoryId;
     }
 
+    public void update(Article articleParam) {
+        this.title = articleParam.title;
+        this.coverUrl = articleParam.coverUrl;
+        this.contents = articleParam.contents;
+        this.categoryId = articleParam.categoryId;
+    }
+
     @Override
     public String toString() {
         return "Article{" +
