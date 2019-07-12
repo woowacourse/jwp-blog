@@ -3,65 +3,55 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
-
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Controller
 public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
 
+    @GetMapping("/")
+    public String showArticles(Model model) {
+        model.addAttribute("articles", articleRepository.findAll());
+        return "index";
+    }
+
     @GetMapping("/writing")
-    public String writing(){
+    public String writing(Model model) {
+        model.addAttribute("method", "POST");
         return "article-edit";
     }
 
     @PostMapping("/articles")
-    public String posting(Article article, Model model) {
-
-        // TODO: 2019-07-10 아이디 처리...
-        article.setId(articleRepository.getLastId() + 1);
-
-        articleRepository.add(article);
-
-        model.addAttribute(article);
-        // redirect?
-        return "article";
+    public String addArticle(@ModelAttribute Article article) {
+        articleRepository.save(article);
+        return "redirect:/articles/" + article.getId();
     }
 
     @GetMapping("/articles/{id}")
-    public String detail(@PathVariable int id, Model model) {
+    public String showArticle(@PathVariable int id, Model model) {
         model.addAttribute("article", articleRepository.getArticleById(id));
         return "article";
     }
 
-    @GetMapping("/")
-    public String index(Model model){
-        model.addAttribute("articles",articleRepository.getArticles());
-        return "index";
-    }
-
     @GetMapping("/articles/{id}/edit")
-    public String editArticle(@PathVariable int id,Model model){
-        model.addAttribute("article",articleRepository.getArticleById(id));
+    public String editArticle(@PathVariable int id, Model model) {
+        model.addAttribute("article", articleRepository.getArticleById(id));
+        model.addAttribute("method", "PUT");
         return "article-edit";
     }
 
-    @PutMapping("/articles")
-    public String putArticle(Article article,Model model){
-        Article updatedArticle = articleRepository.getArticleById(article.getId());
-        updatedArticle.setTitle(article.getTitle());
-        updatedArticle.setContents(article.getContents());
-        updatedArticle.setCoverUrl(article.getCoverUrl());
-        model.addAttribute("articles",articleRepository);
-        return "article";
+    @PutMapping("/articles/{id}")
+    public String putArticle(@PathVariable int id, Article article) {
+        articleRepository.updateArticleById(article, id);
+        return "redirect:/articles/" + id;
+    }
+
+    @DeleteMapping("/articles/{id}")
+    public String deleteArticle(@PathVariable int id) {
+        articleRepository.removeArticleById(id);
+        return "redirect:/";
     }
 }

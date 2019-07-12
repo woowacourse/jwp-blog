@@ -12,6 +12,18 @@ public class Article {
         this.contents = contents;
     }
 
+    public void updateTitle(Article updatedArticle) {
+        this.title = updatedArticle.title;
+    }
+
+    public void updateUrl(Article updatedArticle) {
+        this.coverUrl = updatedArticle.coverUrl;
+    }
+
+    public void updateContents(Article updatedArticle) {
+        this.contents = updatedArticle.contents;
+    }
+
     public int getId() {
         return id;
     }
@@ -32,12 +44,12 @@ public class Article {
         return coverUrl;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
     public String getContents() {
         return contents;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 
     public void setContents(String contents) {

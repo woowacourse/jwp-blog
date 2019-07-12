@@ -10,8 +10,10 @@
             <ul class="nav-left mrg-left-0">
                 <li>
                     <a href="index.html">
-                        <div class="logo logo-dark d-none" style="background-image: url('gi/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white" style="background-image: url('gi/images/logo/logo_full_white.png')"></div>
+                        <div class="logo logo-dark d-none"
+                             style="background-image: url('gi/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white"
+                             style="background-image: url('gi/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
@@ -59,14 +61,17 @@
                                 <a th:href="@{'/articles/' + ${article.id}}" class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
-                                            <div class="background-holder has-content" th:style="'background-image:url('+ ${article.coverUrl}+')'"></div>
+                                            <div class="background-holder has-content"
+                                                 th:style="'background-image:url('+ ${article.coverUrl}+')'"></div>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-md-8 ml-auto">
                                                     <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 class="mrg-btm-20 text-bold" th:text="${article.title}">title</h2>
-                                                        <p th:text="${#strings.abbreviate(article.contents,30)}">contents</p>
+                                                        <h2 class="mrg-btm-20 text-bold" th:text="${article.title}">
+                                                            title</h2>
+                                                        <p th:text="${#strings.abbreviate(article.contents,30)}">
+                                                            contents</p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
                                                                 <i class="ti-heart text-danger pdd-right-5"></i>
@@ -100,7 +105,8 @@
             <div class="col-lg-3"></div>
         </div>
 
-        <a href="/writing" class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
+        <a href="/writing"
+           class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
             <i class="ti-plus"></i>
         </a>
 
@@ -108,7 +114,9 @@
 </div>
 <th:block th:include="fragments/footer :: footer"/>
 <th:block th:include="fragments/footer :: footer-script"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 <script src="gi/js/index.js"></script>
 </body>

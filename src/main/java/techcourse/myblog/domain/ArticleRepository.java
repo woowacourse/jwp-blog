@@ -8,33 +8,13 @@ import java.util.List;
 @Repository
 public class ArticleRepository {
     private List<Article> articles = new ArrayList<>();
+    private int lastId = 0;
 
-    public ArticleRepository() {
-        articles.add(new Article("aaaaa", "https://previews.123rf.com/images/romeolu/romeolu1601/romeolu160100122/50594417-%EB%88%88-%EB%B0%B0%EA%B2%BD.jpg", "ccccc"));
-        articles.add(new Article("title222", "https://previews.123rf.com/images/romeolu/romeolu1601/romeolu160100122/50594417-%EB%88%88-%EB%B0%B0%EA%B2%BD.jpg", "content2222"));
-        articles.add(new Article("333333", "https://previews.123rf.com/images/romeolu/romeolu1601/romeolu160100122/50594417-%EB%88%88-%EB%B0%B0%EA%B2%BD.jpg", "3333"));
-        articles.get(0).setId(0);
-        articles.get(1).setId(1);
-        articles.get(2).setId(2);
-    }
-
-    // TODO: 2019-07-10 고치기....
-    private int lastId = 1;
-
-    public List<Article> findAll() {
-        return articles;
+    private ArticleRepository() {
     }
 
     public void add(Article article) {
         articles.add(article);
-    }
-
-    public int getLastId() {
-        return lastId;
-    }
-
-    public List<Article> getArticles() {
-        return articles;
     }
 
     public Article getArticleById(int index) {
@@ -43,4 +23,38 @@ public class ArticleRepository {
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }
+
+    public void removeArticleById(int id) {
+        int originalArticleSize = articles.size();
+        articles.removeIf(a -> a.getId() == id);
+        if (originalArticleSize == articles.size()) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public void updateArticleById(Article updatedArticle, int id) {
+        Article originalArticle = getArticleById(id);
+        originalArticle.updateTitle(updatedArticle);
+        originalArticle.updateUrl(updatedArticle);
+        originalArticle.updateContents(updatedArticle);
+    }
+
+    public void save(Article article) {
+        this.lastId += 1;
+        article.setId(this.lastId);
+        this.add(article);
+    }
+
+    public int getLastId() {
+        return lastId;
+    }
+
+    public void setLastId(int lastId) {
+        this.lastId = lastId;
+    }
+
+    public List<Article> findAll() {
+        return articles;
+    }
+
 }
