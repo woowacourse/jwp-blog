@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,15 @@ import techcourse.myblog.domain.Article;
 public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
+    private Article article;
+
+    @BeforeEach
+    void setUp() {
+        article = new Article();
+        article.setTitle("제목");
+        article.setCoverUrl("http");
+        article.setContents("내용");
+    }
 
     @Test
     void index() {
@@ -40,11 +51,6 @@ public class ArticleControllerTests {
 
     @Test
     void saveArticle() {
-        Article article = new Article();
-        article.setTitle("제목");
-        article.setCoverUrl("http");
-        article.setContents("내용");
-
         webTestClient.post().uri("/articles")
                 .body(Mono.just(article), Article.class)
                 .exchange()
@@ -53,11 +59,6 @@ public class ArticleControllerTests {
 
     @Test
     void fetchArticle() {
-        Article article = new Article();
-        article.setTitle("제목");
-        article.setCoverUrl("http");
-        article.setContents("내용");
-
         webTestClient.post().uri("/articles")
                 .body(Mono.just(article), Article.class)
                 .exchange();
@@ -69,11 +70,6 @@ public class ArticleControllerTests {
 
     @Test
     void editArticle() {
-        Article article = new Article();
-        article.setTitle("제목");
-        article.setCoverUrl("http");
-        article.setContents("내용");
-
         webTestClient.post().uri("/articles")
                 .body(Mono.just(article), Article.class)
                 .exchange();
@@ -85,11 +81,6 @@ public class ArticleControllerTests {
 
     @Test
     void saveEditedArticle() {
-        Article article = new Article();
-        article.setTitle("제목");
-        article.setCoverUrl("http");
-        article.setContents("내용");
-
         webTestClient.post().uri("/articles")
                 .body(Mono.just(article), Article.class)
                 .exchange();
@@ -101,11 +92,6 @@ public class ArticleControllerTests {
 
     @Test
     void deleteArticle() {
-        Article article = new Article();
-        article.setTitle("제목");
-        article.setCoverUrl("http");
-        article.setContents("내용");
-
         webTestClient.post().uri("/articles")
                 .body(Mono.just(article), Article.class)
                 .exchange();
@@ -117,5 +103,10 @@ public class ArticleControllerTests {
         webTestClient.delete().uri("/articles/2")
                 .exchange()
                 .expectStatus().isFound();
+    }
+
+    @AfterEach
+    void tearDown() {
+        article = null;
     }
 }
