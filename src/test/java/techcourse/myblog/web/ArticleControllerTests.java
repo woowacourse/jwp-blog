@@ -7,75 +7,71 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
+import static org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+    private static final int ARTICLE_ID = 0;
+    private static final String LOCATION = "location";
+    
     @Autowired
     private WebTestClient webTestClient;
-
-    private static final int ARTICLE_ID = 0;
-
+    
     @BeforeEach
     void 게시글_작성_확인() {
-        webTestClient.post()
-                .uri("/articles")
-                .body(fromFormData("title", "test-title").with("contents", "test-contents"))
-                .exchange()
-                .expectStatus().isFound()
-                .expectHeader().valueMatches("location", ".*articles.*");
+        checkRedirect(HttpMethod.POST, "/articles", HttpStatus.FOUND,
+                LOCATION, ".*articles.*");
     }
-
+    
     @Test
     void index_페이지_조회() {
-        webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
+        check(HttpMethod.GET, "/", HttpStatus.OK);
     }
-
+    
     @Test
     void 게시글_작성_페이지_확인() {
-        webTestClient.get().uri("/writing")
-                .exchange()
-                .expectStatus().isOk();
+        check(HttpMethod.GET, "/writing", HttpStatus.OK);
     }
-
+    
     @Test
     void 게시글_조회() {
-        webTestClient.get()
-                .uri("/articles/" + ARTICLE_ID)
-                .exchange()
-                .expectStatus().isOk();
+        check(HttpMethod.GET, "/articles/" + ARTICLE_ID, HttpStatus.OK);
     }
-
+    
     @Test
     void 게시글_수정_페이지_확인() {
-        webTestClient.get()
-                .uri("/articles/" + ARTICLE_ID + "/edit")
-                .exchange()
-                .expectStatus().isOk();
+        check(HttpMethod.GET, "/articles/" + ARTICLE_ID + "/edit", HttpStatus.OK);
     }
-
+    
     @Test
     void 게시글_수정_확인() {
-        webTestClient.put()
-                .uri("/articles/" + ARTICLE_ID)
-                .exchange()
-                .expectStatus().isFound()
-                .expectHeader().valueMatches("location", ".*articles.*");
+        checkRedirect(HttpMethod.PUT, "/articles/" + ARTICLE_ID, HttpStatus.FOUND,
+                LOCATION, ".*articles.*");
     }
-
+    
     @AfterEach
     void 게시글_삭제_확인() {
-        webTestClient.delete()
-                .uri("/articles/" + ARTICLE_ID)
+        checkRedirect(HttpMethod.DELETE, "/articles/" + ARTICLE_ID, HttpStatus.FOUND,
+                LOCATION, ".*/");
+    }
+    
+    private ResponseSpec check(HttpMethod httpMethod, String uri, HttpStatus httpStatus) {
+        return webTestClient.method(httpMethod)
+                .uri(uri)
                 .exchange()
-                .expectStatus().isFound()
-                .expectHeader().valueMatches("location", ".*/");
+                .expectStatus().isEqualTo(httpStatus);
+    }
+    
+    private ResponseSpec checkRedirect(HttpMethod httpMethod, String uri,
+                                       HttpStatus httpStatus, String name, String pattern) {
+        return check(httpMethod, uri, httpStatus)
+                .expectHeader().valueMatches(name, pattern);
     }
 }
