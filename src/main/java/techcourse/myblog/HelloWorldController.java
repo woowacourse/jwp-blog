@@ -18,9 +18,4 @@ public class HelloWorldController {
         model.addAttribute("articles", articleRepository.findAll());
         return "index";
     }
-
-//    @PostMapping
-//    public String passParamWithPost(@RequestBody String blogName){
-//        return blogName;
-//    }
 }
