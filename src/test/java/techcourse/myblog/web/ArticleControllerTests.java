@@ -48,7 +48,7 @@ public class ArticleControllerTests {
         webTestClient.post().uri("/articles")
                 .body(Mono.just(article), Article.class)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isFound();
     }
 
     @Test

@@ -41,7 +41,7 @@ public class ArticleController {
         articleRepository.save(article);
         model.addAttribute("article", article);
         System.out.println(articleRepository.findAll());
-        return "article";
+        return "redirect:/articles/" + article.getId();
     }
 
     @GetMapping("/articles/{id}")
