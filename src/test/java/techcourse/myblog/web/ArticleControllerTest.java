@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTests {
+public class ArticleControllerTest {
     private static final int ARTICLE_TEST_ID = 1;
     public static final int ARTICLE_DELETE_TEST_ID = 2;
     private Article article;
@@ -68,30 +68,31 @@ public class ArticleControllerTests {
     @Test
     @DisplayName("게시글을 작성한 뒤 생성 버튼을 눌렀을 때 생성된 게시글을 보여준다.")
     void articlePost() {
-        String title = "테스트 타이틀 ";
-        String coverUrl = "http://url.test";
-        String contents = "테스트 컨텐츠";
+        String inputTitle = "test title";
+        String inputCoverUrl = "test coverUrl";
+        String intputContents = "test contents";
 
         webTestClient.post()
                 .uri("/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .header("utf-8")
                 .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+                        .fromFormData("title", inputTitle)
+                        .with("coverUrl", inputCoverUrl)
+                        .with("contents", intputContents))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
+                    assertThat(body).contains(inputTitle);
+                    assertThat(body).contains(inputCoverUrl);
+                    assertThat(body).contains(intputContents);
                 });
     }
 
     @Test
-    @DisplayName("게시글을 작성한 뒤 생성 버튼을 눌렀을 때 생성된 게시글을 보여준다.")
+    @DisplayName("article에서 edit 버튼을 눌렀을 때 eidt페이지를 보여준다.")
     void getArticleEditPage() {
         webTestClient.get()
                 .uri("/articles/" + ARTICLE_TEST_ID + "/edit")
