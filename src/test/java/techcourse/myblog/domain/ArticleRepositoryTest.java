@@ -13,16 +13,17 @@ public class ArticleRepositoryTest {
     @BeforeEach
     void setUp() {
         this.articleRepository = new ArticleRepository();
-        this.testArticle = new Article("2", "3 ", "4");
+        this.testArticle = new Article();
         this.testArticle.setId(1);
+        this.testArticle.setTitle("2");
+        this.testArticle.setCoverUrl("3");
+        this.testArticle.setContents("4");
         this.articleRepository.add(this.testArticle);
     }
 
     @Test
     void findAll_호출후_값_조작시_에러_테스트() {
-        assertThrows(UnsupportedOperationException.class, () -> {
-            this.articleRepository.findAll().add(testArticle);
-        });
+        assertThrows(UnsupportedOperationException.class, () -> this.articleRepository.findAll().add(new Article()));
     }
 
     @Test
@@ -37,7 +38,7 @@ public class ArticleRepositoryTest {
 
     @Test
     void article_업데이트_테스트() {
-        Article articleToCompare = new Article("3", "4", "5");
+        Article articleToCompare = new Article();
         articleToCompare.setId(1);
         this.articleRepository.update(1, articleToCompare);
         assertThat(this.articleRepository.findById(1)).isEqualTo(articleToCompare);
