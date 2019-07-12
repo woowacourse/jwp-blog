@@ -91,7 +91,7 @@ public class ArticleControllerTests {
 
 	@Test
 	void findByIndex() {
-		int articleId = articleService.save(new Article(title, contents, coverUrl)).getId();
+		long articleId = articleService.save(new Article(title, contents, coverUrl)).getId();
 
 		webTestClient.get()
 				.uri("/article/" + articleId)
@@ -110,7 +110,7 @@ public class ArticleControllerTests {
 
 	@Test
 	void updateArticle() {
-		int articleId = articleService.save(new Article(title, contents, coverUrl)).getId();
+		long articleId = articleService.save(new Article(title, contents, coverUrl)).getId();
 
 		webTestClient.put()
 				.uri("/articles/" + articleId)
@@ -133,7 +133,7 @@ public class ArticleControllerTests {
 
 	@Test
 	void deleteArticle() {
-		int articleId = articleService.save(new Article(title, contents, coverUrl)).getId();
+		long articleId = articleService.save(new Article(title, contents, coverUrl)).getId();
 
 		webTestClient.delete()
 				.uri("/articles/" + articleId)

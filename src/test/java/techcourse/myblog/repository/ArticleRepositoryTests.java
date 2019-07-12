@@ -23,7 +23,7 @@ public class ArticleRepositoryTests {
 
 	@Test
 	void save() {
-		int articleId = articleRepository.save(article).getId();
+		long articleId = articleRepository.save(article).getId();
 		Article savedArticle = articleRepository.findById(articleId);
 
 		assertThat(article.getTitle()).isEqualTo(savedArticle.getTitle());
@@ -49,7 +49,7 @@ public class ArticleRepositoryTests {
 
 	@Test
 	void findById() {
-		int articleId = articleRepository.save(article).getId();
+		long articleId = articleRepository.save(article).getId();
 		Article findArticle = articleRepository.findById(articleId);
 
 		assertThat(article.getTitle()).isEqualTo(findArticle.getTitle());
@@ -60,7 +60,7 @@ public class ArticleRepositoryTests {
 	@Test
 	void update() {
 		Article modifiedArticle = new Article("modifiedTitle", "modifiedContents", "www.modifiedCoverUrl.com");
-		int articleId = articleRepository.save(article).getId();
+		long articleId = articleRepository.save(article).getId();
 		modifiedArticle.setId(articleId);
 		articleRepository.update(modifiedArticle);
 		article = articleRepository.findById(articleId);
@@ -72,7 +72,7 @@ public class ArticleRepositoryTests {
 
 	@Test
 	void deleteById() {
-		int articleId = articleRepository.save(article).getId();
+		long articleId = articleRepository.save(article).getId();
 		articleRepository.deleteById(articleId);
 
 		assertThrows(NotFoundArticleException.class, () -> articleRepository.findById(articleId));

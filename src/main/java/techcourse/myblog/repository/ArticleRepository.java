@@ -24,7 +24,7 @@ public class ArticleRepository {
 		return findById(articleCount);
 	}
 
-	public Article findById(int id) {
+	public Article findById(long id) {
 		return articles.stream()
 				.filter(article -> article.matchId(id))
 				.findFirst()
@@ -37,7 +37,7 @@ public class ArticleRepository {
 		originArticle.update(modifiedArticle);
 	}
 
-	public void deleteById(int articleId) {
+	public void deleteById(long articleId) {
 		Article article = findById(articleId);
 		articles.remove(article);
 	}
