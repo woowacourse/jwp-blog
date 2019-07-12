@@ -19,6 +19,7 @@ class ArticleRepositoryTest {
     void setUp() {
         articleRepository = new ArticleRepository();
         article = new Article("title", "contents", "coverUrl");
+        articleRepository.save(article);
     }
 
     @Test
@@ -26,15 +27,11 @@ class ArticleRepositoryTest {
         List<Article> articles = new ArrayList<>();
         articles.add(article);
 
-        articleRepository.save(article);
-
         assertThat(articleRepository.findAll()).isEqualTo(articles);
     }
 
     @Test
     void findById() {
-        articleRepository.save(article);
-
         assertThat(articleRepository.findById(FIRST_INDEX)).isEqualTo(article);
     }
 
@@ -42,7 +39,6 @@ class ArticleRepositoryTest {
     void update() {
         Article updatedArticle = new Article("title1", "content1", "coverUrl1");
 
-        articleRepository.save(article);
         articleRepository.update(1, updatedArticle);
 
         assertThat(articleRepository.findById(FIRST_INDEX).getTitle()).isEqualTo(updatedArticle.getTitle());
@@ -52,15 +48,11 @@ class ArticleRepositoryTest {
 
     @Test
     void getLatestArticle() {
-        articleRepository.save(article);
-
         assertThat(articleRepository.getLatestArticle()).isEqualTo(article);
     }
 
     @Test
     void delete() {
-        articleRepository.save(article);
-
         articleRepository.delete(FIRST_INDEX);
 
         assertThat(articleRepository.getSize()).isEqualTo(0);
