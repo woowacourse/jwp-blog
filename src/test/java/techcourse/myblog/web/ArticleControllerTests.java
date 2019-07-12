@@ -73,7 +73,8 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location",".*articles.*");
         Article article = articleRepository.find(expectedIndex);
         assertThat(article.getTitle()).isEqualTo(title);
         assertThat(article.getContents()).isEqualTo(contents);
