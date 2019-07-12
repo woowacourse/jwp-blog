@@ -26,7 +26,7 @@ public class ArticleRepository {
 
     public Article find(int articleId) {
         return articles.stream()
-                .filter(article -> article.getId() == articleId)
+                .filter(article -> article.isMatchId(articleId))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new)
                 ;

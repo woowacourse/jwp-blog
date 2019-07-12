@@ -44,6 +44,10 @@ public class Article {
         return StringUtils.isNotBlank(coverUrl);
     }
 
+    public boolean isMatchId(int id) {
+        return this.id == id;
+    }
+
     @Override
     public String toString() {
         return "Article{" +
