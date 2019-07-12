@@ -12,18 +12,18 @@ public class ArticleRepository {
     private static final int INITIAL_ID = 0;
 
     private List<Article> articles;
-    private int lastArticleId;
+    private int lastAddedId;
 
     public ArticleRepository() {
         this.articles = new ArrayList<>();
-        this.lastArticleId = INITIAL_ID;
+        this.lastAddedId = INITIAL_ID;
     }
 
     public void save(Article article) {
         containsDuplicate(article);
 
         articles.add(article);
-        lastArticleId = article.getArticleId();
+        lastAddedId = article.getArticleId();
     }
 
     private void containsDuplicate(Article article) {
@@ -41,24 +41,26 @@ public class ArticleRepository {
 
     public void delete(int articleId) {
         Article article = find(articleId);
-
         articles.remove(article);
     }
 
     public void updateTitle(int articleId, String updatedTitle) {
-        find(articleId).setTitle(updatedTitle);
+        Article article = find(articleId);
+        article.setTitle(updatedTitle);
     }
 
     public void updateCoverUrl(int articleId, String updateCoverUrl) {
-        find(articleId).setCoverUrl(updateCoverUrl);
+        Article article = find(articleId);
+        article.setCoverUrl(updateCoverUrl);
     }
 
     public void updateContents(int articleId, String updateContents) {
-        find(articleId).setContents(updateContents);
+        Article article = find(articleId);
+        article.setContents(updateContents);
     }
 
     public int getLastArticleId() {
-        return lastArticleId;
+        return lastAddedId;
     }
 
     public List<Article> findAll() {
