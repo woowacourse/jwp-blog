@@ -60,7 +60,7 @@ public class ArticleControllerTests {
     @Test
     void edit() {
         webTestClient.put()
-                .uri("/articles/1")
+                .uri("/articles/2")
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*/articles/.*");

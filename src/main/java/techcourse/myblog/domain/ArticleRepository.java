@@ -35,12 +35,13 @@ public class ArticleRepository {
 
     public Long update(final Article editedArticle) {
         Long id = editedArticle.getId();
-        for (int i = 0; i < articles.size(); i++) {
-            if (articles.get(i).isSameId(id)) {
-                articles.set(i, editedArticle);
-            }
-        }
-        return id;
+
+        return articles.stream()
+                .filter(article -> article.isSameId(id))
+                .findFirst()
+                .map(article -> articles.set(articles.indexOf(article), editedArticle))
+                .orElseThrow(() -> new IllegalArgumentException("not found id=" + id))
+                .getId();
     }
 
     public void deleteById(final Long id) {
