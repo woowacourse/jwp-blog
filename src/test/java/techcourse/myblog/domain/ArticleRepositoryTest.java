@@ -10,10 +10,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ArticleRepositoryTest {
-    private ArticleRepository articleRepository;
+    private static final int TARGET_ARTICLE_ID = 1;
     private static Article articleFirst = new Article("타이틀1", "유알엘1", "컨텐트1");
     private static Article articleSecond = new Article("타이틀2", "유알엘2", "컨텐트2");
     private static Article articleThird = new Article("타이틀3", "유알엘3", "컨텐트4");
+
+    private ArticleRepository articleRepository;
 
     @BeforeEach
     void setUp() {
@@ -26,7 +28,7 @@ public class ArticleRepositoryTest {
 
     @Test
     void 첫_번째_게시물_조회_테스트() {
-        assertThat(articleRepository.find(1)).isEqualTo(articleFirst);
+        assertThat(articleRepository.find(TARGET_ARTICLE_ID)).isEqualTo(articleFirst);
     }
 
     @Test
@@ -46,7 +48,7 @@ public class ArticleRepositoryTest {
 
     @Test
     void 게시물_수정_테스트() {
-        Article updatedArticle = new Article(1, "제목", "이미지경로", "내용");
+        Article updatedArticle = new Article(TARGET_ARTICLE_ID, "제목", "이미지경로", "내용");
         long updatedArticleId = articleRepository.update(updatedArticle);
 
         assertThat(articleRepository.find(updatedArticleId)).isEqualTo(updatedArticle);
@@ -54,8 +56,8 @@ public class ArticleRepositoryTest {
 
     @Test
     void 게시물_삭제_테스트() {
-        articleRepository.delete(1);
-        assertThrows(IllegalArgumentException.class, () -> articleRepository.find(1));
+        articleRepository.delete(TARGET_ARTICLE_ID);
+        assertThrows(IllegalArgumentException.class, () -> articleRepository.find(TARGET_ARTICLE_ID));
     }
 
     @AfterEach
