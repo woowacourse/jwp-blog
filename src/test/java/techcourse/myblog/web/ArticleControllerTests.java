@@ -14,6 +14,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,14 +64,10 @@ public class ArticleControllerTests {
                             .expectStatus().isOk()
                             .expectBody()
                             .consumeWith(redirectResponse -> {
-                                try {
-                                    String body = new String(redirectResponse.getResponseBody(), "UTF-8");
-                                    assertThat(body.contains(title)).isTrue();
-                                    assertThat(body.contains(StringEscapeUtils.escapeJava(contents))).isTrue();
-                                    assertThat(body.contains(coverUrl)).isTrue();
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                }
+                                String body = new String(redirectResponse.getResponseBody(), StandardCharsets.UTF_8);
+                                assertThat(body.contains(title)).isTrue();
+                                assertThat(body.contains(StringEscapeUtils.escapeJava(contents))).isTrue();
+                                assertThat(body.contains(coverUrl)).isTrue();
                             });
                 });
     }
@@ -103,14 +100,10 @@ public class ArticleControllerTests {
                             .expectStatus().isOk()
                             .expectBody()
                             .consumeWith(redirectResponse -> {
-                                try {
-                                    String body = new String(redirectResponse.getResponseBody(), "UTF-8");
-                                    assertThat(body.contains(title)).isTrue();
-                                    assertThat(body.contains(StringEscapeUtils.escapeJava(contents))).isTrue();
-                                    assertThat(body.contains(coverUrl)).isTrue();
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                }
+                                String body = new String(redirectResponse.getResponseBody(), StandardCharsets.UTF_8);
+                                assertThat(body.contains(title)).isTrue();
+                                assertThat(body.contains(StringEscapeUtils.escapeJava(contents))).isTrue();
+                                assertThat(body.contains(coverUrl)).isTrue();
                             });
                 });
     }

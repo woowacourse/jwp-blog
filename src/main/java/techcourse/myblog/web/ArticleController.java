@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
-import java.util.List;
-
 @Controller
 public class ArticleController {
     @Autowired
@@ -33,7 +31,7 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public String createArticle(@ModelAttribute Article article){
+    public String createArticle(@ModelAttribute Article article) {
         articleRepository.add(article);
         return "redirect:/articles/" + articleRepository.lastIndex();
     }
