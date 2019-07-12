@@ -30,12 +30,8 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public void update(Article article) {
-        Article articleFound = articleRepository.findById(article.getId())
-            .orElseThrow(() -> createNotFoundException(article.getId()));
-        articleFound.setTitle(article.getTitle());
-        articleFound.setCoverUrl(article.getCoverUrl());
-        articleFound.setContents(article.getContents());
+    public Article update(Article article) {
+        return articleRepository.update(article);
     }
 
     public void deleteById(Long id) {

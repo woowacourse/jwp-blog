@@ -83,17 +83,24 @@ public class ArticleControllerTests {
     @Test
     void editArticlePut() {
         Article newArticle = Article.of("my article", "http://image.com/", "origin contents");
+        ArticleRequestDto changedArticle = ArticleRequestDto.of("changed title", "backgroundURL", "changed contents");
         articleRepository.addArticle(newArticle);
-        Map<String, String> requestMap = new HashMap<>();
 
-        requestMap.put("title", "changed title");
-        requestMap.put("backgroundURL", newArticle.getCoverUrl());
-        requestMap.put("content", "changed contents");
         webTestClient.put()
             .uri("/articles/" + newArticle.getId())
-            .body(Mono.just(requestMap), Map.class)
+            .body(BodyInserters
+                .fromFormData("title", changedArticle.getTitle())
+                .with("coverUrl", changedArticle.getCoverUrl())
+                .with("contents", changedArticle.getContents()))
             .exchange()
-            .expectStatus().isOk();
+            .expectStatus().isOk()
+            .expectBody()
+            .consumeWith(response -> {
+                Article articleFound = articleRepository.findById(newArticle.getId()).get();
+                assertThat(articleFound.getTitle()).isEqualTo(changedArticle.getTitle());
+                assertThat(articleFound.getCoverUrl()).isEqualTo(changedArticle.getCoverUrl());
+                assertThat(articleFound.getContents()).isEqualTo(changedArticle.getContents());
+            });
     }
 
     @Test
@@ -134,7 +141,7 @@ public class ArticleControllerTests {
                         String body = new String(res.getResponseBody());
                         assertThat(body.contains(title)).isTrue();
                         assertThat(body.contains(coverUrl)).isTrue();
-                        // This assertion can fail when length of contents over 100 because of excerpt.
+//                        This assertion can fail when length of contents over 100 because of excerpt.
 //                        assertThat(body.contains(contents)).isTrue();
                     });
 

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.service.ArticleService;
 
 import java.util.List;
@@ -32,8 +31,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String publishArticle(Article article) {
-        articleService.addArticle(article);
+    public String publishArticle(ArticleRequestDto article) {
+        articleService.addArticle(Article.from(article));
         return "redirect:/";
     }
 
@@ -52,9 +51,10 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable Long articleId, Article reqArticle, Model model) {
-        reqArticle.setId(articleId);
-        articleService.update(reqArticle);
+    public String editArticle(@PathVariable Long articleId, ArticleRequestDto reqArticle, Model model) {
+        Article article = Article.from(reqArticle);
+        article.setId(articleId);
+        articleService.update(article);
         Article articleToShow = articleService.findById(articleId);
         model.addAttribute("article", articleToShow);
         return "article";
