@@ -16,6 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+    private static final String BASE_URL = "/";
+    private static final String ARTICLE_URL = "articles/";
+    private static final long TARGET_ARTICLE_ID = 1;
+
     private static Article article = new Article("제목", "유알엘", "컨텐츠");
 
     @Autowired
@@ -31,21 +35,21 @@ public class ArticleControllerTests {
 
     @Test
     void index() {
-        webTestClient.get().uri("/")
+        webTestClient.get().uri(BASE_URL)
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void 게시물_작성_페이지_이동_테스트() {
-        webTestClient.get().uri("/writing")
+        webTestClient.get().uri(BASE_URL + "writing")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void 게시물_작성_요청_후_리다이렉팅_테스트() {
-        webTestClient.post().uri("/articles")
+        webTestClient.post().uri(BASE_URL + ARTICLE_URL)
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
@@ -56,7 +60,7 @@ public class ArticleControllerTests {
         String coverUrl = "유알엘";
         String contents = "컨텐츠";
 
-        webTestClient.get().uri("/articles/1")
+        webTestClient.get().uri(BASE_URL + ARTICLE_URL + TARGET_ARTICLE_ID)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -70,21 +74,21 @@ public class ArticleControllerTests {
 
     @Test
     void 게시물_수정_페이지_이동_테스트() {
-        webTestClient.get().uri("/articles/1/edit")
+        webTestClient.get().uri(BASE_URL + ARTICLE_URL + TARGET_ARTICLE_ID + "/edit")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void 게시물_수정_요청_테스트() {
-        webTestClient.put().uri("/articles/1")
+        webTestClient.put().uri(BASE_URL + ARTICLE_URL + TARGET_ARTICLE_ID)
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
 
     @Test
     void 게시물_삭제_요청_테스트() {
-        webTestClient.delete().uri("/articles/1")
+        webTestClient.delete().uri(BASE_URL + ARTICLE_URL + TARGET_ARTICLE_ID)
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
