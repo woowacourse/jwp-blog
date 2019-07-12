@@ -32,8 +32,6 @@ public class ArticleRepositoryTest {
     void deleteTest() {
         Article savedArticle = articleRepository.save(article);
         articleRepository.deleteById(savedArticle.getId());
-        assertThrows(IllegalArgumentException.class, () -> {
-            articleRepository.findById(savedArticle.getId());
-        });
+        assertThrows(IllegalArgumentException.class, () -> articleRepository.findById(savedArticle.getId()));
     }
 }
