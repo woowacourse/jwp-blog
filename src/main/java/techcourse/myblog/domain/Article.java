@@ -57,7 +57,7 @@ public class Article {
     }
 
     public boolean isSameId(final Long other) {
-        return this.id == other;
+        return this.id.equals(other);
     }
 
     @Override

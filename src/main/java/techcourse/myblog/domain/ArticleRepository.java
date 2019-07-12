@@ -17,14 +17,14 @@ public class ArticleRepository {
     }
 
     public List<Article> findAll() {
-        return articles;
+        return new ArrayList<>(articles);
     }
 
     public Optional<Long> save(final Article article) {
         Long id = ++index;
         article.setId(id);
         articles.add(article);
-        return Optional.ofNullable(id);
+        return Optional.of(id);
     }
 
     public Optional<Article> findById(final Long id) {
