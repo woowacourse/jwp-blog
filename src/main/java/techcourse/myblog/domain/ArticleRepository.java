@@ -21,7 +21,7 @@ public class ArticleRepository {
         return articles.stream()
                 .filter(article -> article.getId() == articleId)
                 .findFirst()
-                .get();
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
     }
 
     public void editArticle(int id, Article article) {

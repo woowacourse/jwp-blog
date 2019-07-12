@@ -7,10 +7,24 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
+import java.util.List;
+
 @Controller
 public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
+
+    @GetMapping("/")
+    public String showMain(Model model) {
+        List<Article> articles = articleRepository.findAll();
+        model.addAttribute("articles", articles);
+        return "index";
+    }
+
+    @GetMapping("/writing")
+    public String showWritingPage() {
+        return "article-edit";
+    }
 
     @PostMapping("/articles")
     public String createArticle(Article article) {
