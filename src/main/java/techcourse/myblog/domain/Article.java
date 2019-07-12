@@ -47,5 +47,9 @@ public class Article {
                 ", contents='" + contents + '\'' +
                 '}';
     }
+
+    public boolean hasSameId(Long id) {
+        return this.id == id;
+    }
 }
 

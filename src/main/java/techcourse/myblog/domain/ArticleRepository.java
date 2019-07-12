@@ -26,7 +26,7 @@ public class ArticleRepository {
 
     public Optional<Article> findById(final Long id) {
         for (Article article : articles) {
-            if (article.getId() == id) {
+            if (article.hasSameId(id)) {
                 return Optional.of(article);
             }
         }
