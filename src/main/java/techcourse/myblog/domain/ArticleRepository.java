@@ -43,4 +43,8 @@ public class ArticleRepository {
         Article article = findById(id).get();
         articles.remove(article);
     }
+
+    public void deleteAll() {
+        articles.clear();
+    }
 }
