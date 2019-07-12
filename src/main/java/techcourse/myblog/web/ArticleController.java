@@ -53,22 +53,18 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable int articleId, String title, String coverUrl, String contents, Model model) {
+    public String editArticle(@PathVariable int articleId, String title, String coverUrl, String contents) {
         articleRepository.updateTitle(articleId, title);
         articleRepository.updateCoverUrl(articleId, coverUrl);
         articleRepository.updateContents(articleId, contents);
 
-        Article article = articleRepository.find(articleId);
-        model.addAttribute("article", article);
-        return "article";
+        return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId, Model model) {
+    public String deleteArticle(@PathVariable int articleId) {
         articleRepository.delete(articleId);
-        List<Article> articles = articleRepository.findAll();
 
-        model.addAttribute("articles", articles);
-        return "index";
+        return "redirect:/";
     }
 }
