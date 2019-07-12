@@ -15,7 +15,7 @@ public class ArticleRepository {
 	private List<Article> articles = new ArrayList<>();
 
 	public List<Article> findAll() {
-		return articles;
+		return new ArrayList<>(articles);
 	}
 
 	public Article save(Article article) {
