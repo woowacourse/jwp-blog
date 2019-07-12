@@ -19,7 +19,7 @@ public class ArticleRepository {
 
     public Optional<Article> findArticleById(final Long articleId) {
         return articles.stream()
-                .filter(x -> x.getArticleId().equals(articleId))
+                .filter(article -> article.getArticleId().equals(articleId))
                 .findAny();
     }
 
@@ -39,7 +39,7 @@ public class ArticleRepository {
 
     public void deleteArticle(Long articleId) {
         findArticleById(articleId)
-                .ifPresent(a -> articles.remove(findArticleIndexByArticle(a)));
+                .ifPresent(article -> articles.remove(findArticleIndexByArticle(article)));
     }
 
     public void updateArticle(Article updatedArticle) {

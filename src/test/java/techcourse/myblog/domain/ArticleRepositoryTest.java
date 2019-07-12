@@ -12,12 +12,12 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 public class ArticleRepositoryTest {
     private static final String UPDATED_TITLE = "sloth is the best!";
     private static final int NEXT_ARTICLE_ID = 1;
-    private static final long NOT_EXIST_ARTICLE_ID = 1l;
+    private static final long NOT_EXIST_ARTICLE_ID = 1L;
 
     private ArticleRepository articleRepository;
     private Article article;
 
-    private final Long articleId = 1l;
+    private final Long articleId = 1L;
     private final String title = "슬로헴";
     private final String contents = "live like sloth, ehem!";
     private final String coverUrl = "/image/sloth.jpg";

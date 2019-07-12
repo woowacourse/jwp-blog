@@ -3,6 +3,9 @@ package techcourse.myblog.domain;
 import java.util.Objects;
 
 public class Article {
+    private static final String DEFAULT_COVER_URL = "/images/pages/index/study.jpg";
+    private static final int NO_COVER_URL = 0;
+
     private Long articleId;
     private String title;
     private String contents;
@@ -37,7 +40,7 @@ public class Article {
     }
 
     public void setCoverUrl(String coverUrl) {
-        this.coverUrl = (coverUrl.length() != 0) ? coverUrl : "/images/pages/index/study.jpg";
+        this.coverUrl = (coverUrl.length() != NO_COVER_URL) ? coverUrl : DEFAULT_COVER_URL;
     }
 
     @Override
