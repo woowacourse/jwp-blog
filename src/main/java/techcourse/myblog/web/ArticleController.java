@@ -20,7 +20,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public ModelAndView writeArticle(Article article, Model model) {
-        articleRepository.add(article);
+        articleRepository.create(article);
         model.addAttribute("article", articleRepository.findLastest());
         return new ModelAndView("redirect:/articles/" + article.getId());
     }
@@ -39,7 +39,7 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public ModelAndView editArticle(@PathVariable int articleId, Article article) {
-        articleRepository.modify(article);
+        articleRepository.modify(articleId,article);
         return new ModelAndView("redirect:/articles/" + articleRepository.lastestIndex());
     }
 

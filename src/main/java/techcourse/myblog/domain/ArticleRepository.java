@@ -14,7 +14,7 @@ public class ArticleRepository {
         return articles;
     }
 
-    public void add(Article article) {
+    public void create(Article article) {
         article.setId(index++);
         articles.add(article);
     }
@@ -39,8 +39,8 @@ public class ArticleRepository {
         articles.remove(article);
     }
 
-    public void modify(final Article article) {
-        delete(article.getId());
+    public void modify(final int articleId, final Article article) {
+        delete(articleId);
         articles.add(article);
     }
 }
