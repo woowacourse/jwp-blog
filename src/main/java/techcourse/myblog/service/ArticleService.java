@@ -10,26 +10,26 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ArticleService {
-	@Autowired
-	private ArticleRepository articleRepository;
+    @Autowired
+    private ArticleRepository articleRepository;
 
-	public void save(Article article) {
-		articleRepository.save(article);
-	}
+    public void save(Article article) {
+        articleRepository.save(article);
+    }
 
-	public List<Article> findAll() {
-		return articleRepository.findAll();
-	}
+    public List<Article> findAll() {
+        return articleRepository.findAll();
+    }
 
-	public Article findById(int id) {
-		return articleRepository.findById(id);
-	}
+    public Article findById(int id) {
+        return articleRepository.findById(id);
+    }
 
-	public void update(Article article) {
-		articleRepository.update(article);
-	}
+    public void update(Article article) {
+        articleRepository.update(article);
+    }
 
-	public void deleteById(int articleId) {
-		articleRepository.deleteById(articleId);
-	}
+    public void deleteById(int articleId) {
+        articleRepository.deleteById(articleId);
+    }
 }

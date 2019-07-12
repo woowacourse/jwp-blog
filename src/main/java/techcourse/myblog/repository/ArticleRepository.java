@@ -27,8 +27,7 @@ public class ArticleRepository {
         return articles.stream()
                 .filter(article -> article.matchId(id))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new)
-                ;
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public void update(Article modifiedArticle) {
