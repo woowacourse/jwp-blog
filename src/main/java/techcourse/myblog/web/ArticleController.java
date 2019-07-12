@@ -18,7 +18,7 @@ public class ArticleController {
 
         model.addAttribute("article", article);
 
-        return "article";
+        return "redirect:/articles/" + article.getId();
     }
 
     @GetMapping("/articles/{articleId}")
@@ -50,11 +50,9 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId, Model model) {
+    public String deleteArticle(@PathVariable int articleId) {
         articleRepository.deleteArticle(articleId);
 
-        model.addAttribute("articles", articleRepository.findAll());
-
-        return "index";
+        return "redirect:/";
     }
 }
