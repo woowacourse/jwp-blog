@@ -17,14 +17,14 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    private String getIndex(Model model) {
+    private String index(Model model) {
         List<Article> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
     }
 
     @GetMapping("/articles/{id}")
-    private String getArticleById(@PathVariable int id, Model model) {
+    private String show(@PathVariable int id, Model model) {
         Article article = articleRepository.find(id);
         model.addAttribute("id", id);
         model.addAttribute("title", article.getTitle());
@@ -34,12 +34,12 @@ public class ArticleController {
     }
 
     @GetMapping("/writing")
-    private String getArticleEdit() {
+    private String createForm() {
         return "article-edit";
     }
 
     @PostMapping("/articles")
-    private String postArticle(
+    private String create(
             @RequestParam("title") String title,
             @RequestParam("contents") String contents,
             @RequestParam("coverUrl") String coverUrl,
@@ -52,7 +52,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}/edit")
-    private String getEditArticle(@PathVariable int id, Model model) {
+    private String updateForm(@PathVariable int id, Model model) {
         Article article = articleRepository.find(id);
         model.addAttribute("id", id);
         model.addAttribute("title", article.getTitle());
@@ -62,7 +62,7 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{id}")
-    private String putArticle(
+    private String update(
             @RequestParam("title") String title,
             @RequestParam("contents") String contents,
             @RequestParam("coverUrl") String coverUrl,
@@ -78,7 +78,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{id}")
-    private String deleteArticleById(@PathVariable int id) {
+    private String delete(@PathVariable int id) {
         articleRepository.delete(id);
         return "redirect:/";
     }
