@@ -22,11 +22,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 public class ArticleControllerTests {
 
-    @Autowired
     private ArticleRepository articleRepository;
 
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    ArticleControllerTests(ArticleRepository articleRepository){
+        this.articleRepository = articleRepository;
+    }
 
     @Test
     void index() {
@@ -42,15 +46,9 @@ public class ArticleControllerTests {
                 .expectStatus().isOk();
     }
 
-    @Test
-    void create_article() {
-        webTestClient.post().uri("/articles")
-                .exchange()
-                .expectStatus().isOk();
-    }
 
     @Test
-    void submit_article() {
+    void create_article() {
         String title = "sss";
         String coverUrl = "some-cover-image-url";
         String contents = "contents";
@@ -63,7 +61,7 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().is3xxRedirection()
+                .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response -> {
                     webTestClient.get().uri(Objects.requireNonNull(response.getResponseHeaders().get("Location")).get(0))
@@ -101,7 +99,7 @@ public class ArticleControllerTests {
                 .with("coverUrl",coverUrl)
                 .with("contents",contents))
                 .exchange()
-                .expectStatus().is3xxRedirection()
+                .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response -> {
                     webTestClient.get().uri(Objects.requireNonNull(response.getResponseHeaders().get("Location")).get(0))

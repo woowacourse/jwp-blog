@@ -13,8 +13,8 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 
     @Autowired
-    ArticleController() {
-        articleRepository = new ArticleRepository();
+    ArticleController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
     }
 
     @GetMapping("/")
