@@ -1,6 +1,7 @@
 package techcourse.myblog;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,8 @@ public class HelloWorldControllerTest {
     private WebTestClient webTestClient;
 
     @Test
-    void passParamWithGet() {
+    @DisplayName("get 요청을 통해 받은 파라미터를 response body에 되돌려준다.")
+    void passParamWithGetTest() {
         String blogName = "helloWrold";
         webTestClient.get().uri("/helloworld?blogName=" + blogName)
                 .exchange()
@@ -25,11 +27,11 @@ public class HelloWorldControllerTest {
                 .expectBody()
                 .consumeWith(response ->
                         Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
-
     }
 
     @Test
-    void passParamWithPost() {
+    @DisplayName("post 요청을 통해 받은 파라미터를 response body에 되돌려준다.")
+    void passParamWithPostTest() {
         String blogName = "helloWrold";
 
 //        Map<String, String> params = new HashMap<>();
@@ -43,6 +45,5 @@ public class HelloWorldControllerTest {
                 .expectBody()
                 .consumeWith(response ->
                         Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
-
     }
 }
