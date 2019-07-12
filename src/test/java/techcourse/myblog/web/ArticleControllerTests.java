@@ -19,18 +19,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+    private static final String ROOT_URL = "/";
+    private static final String EDIT_URL = "/articles/1/edit";
+    private static final String WRITING_URL = "/writing";
+    private static final String ARTICLE_URL = "/write";
+    private static final String SPECIFIC_ARTICLE_URL = "/articles/1";
+
     private static final String ARTICLE_DELIMITER
             = "<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tab-centered-1\">";
+    private static final String TITLE_NAME = "title";
+    private static final String COVER_URL_NAME = "coverUrl";
+    private static final String CONTENTS_NAME = "contents";
+    private static final String TITLE_VALUE = "TEST";
+    private static final String COVER_URL_VALUE = "https://img.com";
+    private static final String CONTENTS_VALUE = "testtest";
     private static final Article ARTICLE_SAMPLE;
-    private static String title = "TEST";
-    private static String coverUrl = "https://img.com";
-    private static String contents = "testtest";
 
     static {
         ARTICLE_SAMPLE = new Article();
-        ARTICLE_SAMPLE.setTitle(title);
-        ARTICLE_SAMPLE.setCoverUrl(coverUrl);
-        ARTICLE_SAMPLE.setContents(contents);
+        ARTICLE_SAMPLE.setTitle(TITLE_VALUE);
+        ARTICLE_SAMPLE.setCoverUrl(COVER_URL_VALUE);
+        ARTICLE_SAMPLE.setContents(CONTENTS_VALUE);
     }
 
     @Autowired
@@ -47,12 +56,12 @@ public class ArticleControllerTests {
     @Test
     public void index() {
         final int count = 3;
-        articleRepository.add(ARTICLE_SAMPLE);
-        articleRepository.add(ARTICLE_SAMPLE);
-        articleRepository.add(ARTICLE_SAMPLE);
+        addArticle();
+        addArticle();
+        addArticle();
 
         webTestClient.get()
-                .uri("/")
+                .uri(ROOT_URL)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -66,32 +75,35 @@ public class ArticleControllerTests {
 
     @Test
     public void showArticleById() {
-        articleRepository.add(ARTICLE_SAMPLE);
+        addArticle();
 
-        webTestClient.get().uri("/articles/1")
+        webTestClient.get()
+                .uri(SPECIFIC_ARTICLE_URL)
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     public void updateArticleById() {
-        articleRepository.add(ARTICLE_SAMPLE);
+        addArticle();
 
-        webTestClient.get().uri("/articles/1/edit")
+        webTestClient.get()
+                .uri(EDIT_URL)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
+                    assertThat(body.contains(TITLE_VALUE)).isTrue();
+                    assertThat(body.contains(COVER_URL_VALUE)).isTrue();
+                    assertThat(body.contains(CONTENTS_VALUE)).isTrue();
                 });
     }
 
     @Test
     public void showWritingPage() {
-        webTestClient.get().uri("/writing")
+        webTestClient.get()
+                .uri(WRITING_URL)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -99,21 +111,21 @@ public class ArticleControllerTests {
     @Test
     public void addArticle() {
         webTestClient.post()
-                .uri("/write")
+                .uri(ARTICLE_URL)
                 .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+                        .fromFormData(TITLE_NAME, TITLE_VALUE)
+                        .with(COVER_URL_NAME, COVER_URL_VALUE)
+                        .with(CONTENTS_NAME, CONTENTS_VALUE))
                 .exchange()
                 .expectStatus().isFound();
     }
 
     @Test
     public void deleteArticle() {
-        articleRepository.add(ARTICLE_SAMPLE);
+        addArticle();
 
         webTestClient.delete()
-                .uri("/articles/1")
+                .uri(SPECIFIC_ARTICLE_URL)
                 .exchange()
                 .expectStatus().isFound();
     }
