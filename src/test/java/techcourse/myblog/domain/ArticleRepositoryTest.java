@@ -37,6 +37,7 @@ class ArticleRepositoryTest {
                 "saveTest coverUrl",
                 "saveTest contents"
         );
+
         articleRepository.save(savingArticle);
 
         assertThat(articleRepository.findAll()).contains(savingArticle);
@@ -95,7 +96,7 @@ class ArticleRepositoryTest {
     }
 
     @Test
-    @DisplayName("Repository에 없는 id의 타이틀을 수정 시도하는 경우 예외를 던져준다.")
+    @DisplayName("Repository에 없는 id의 title을 수정 시도하는 경우 예외를 던져준다.")
     void updateTitleFailTest() {
         assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository.updateContents(
                 TEST_ARTICLE_ID_NOT_IN_REPO, "new contents"
@@ -103,7 +104,7 @@ class ArticleRepositoryTest {
     }
 
     @Test
-    @DisplayName("Repository에 없는 id의 CoverUrl을 수정 시도하는 경우 예외를 던져준다.")
+    @DisplayName("Repository에 없는 id의 coverUrl을 수정 시도하는 경우 예외를 던져준다.")
     void updateCoverUrlFailTest() {
         assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository.updateContents(
                 TEST_ARTICLE_ID_NOT_IN_REPO, "new contents"
@@ -111,7 +112,7 @@ class ArticleRepositoryTest {
     }
 
     @Test
-    @DisplayName("Repository에 없는 id의 컨텐츠를 수정 시도하는 경우 예외를 던져준다.")
+    @DisplayName("Repository에 없는 id의 contents를 수정 시도하는 경우 예외를 던져준다.")
     void updateContentsFailTest() {
         assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository.updateContents(
                 TEST_ARTICLE_ID_NOT_IN_REPO, "new contents"
@@ -119,7 +120,7 @@ class ArticleRepositoryTest {
     }
 
     @Test
-    @DisplayName("Repository에 없는 id를 조회하는 경우 예외를 던져준다.")
+    @DisplayName("Repository에 없는 id를 삭제하는 경우 예외를 던져준다.")
     void deleteFailTest() {
         assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository.delete(TEST_ARTICLE_ID_NOT_IN_REPO));
     }
