@@ -1,31 +1,42 @@
 package techcourse.myblog.domain;
 
 public class Article {
-    private int articleId;
+    private static int nextId = 1;
+
+    private int id;
     private String title;
     private String coverUrl;
     private String contents;
 
-    public Article(int articleId, String title, String coverUrl, String contents) {
-        this.articleId = articleId;
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
+    public int getId() {
+        return id;
     }
 
-    public int getArticleId() {
-        return articleId;
+    public void setId() {
+        this.id = nextId++;
     }
 
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getCoverUrl() {
         return coverUrl;
     }
 
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
     public String getContents() {
         return contents;
+    }
+
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 }

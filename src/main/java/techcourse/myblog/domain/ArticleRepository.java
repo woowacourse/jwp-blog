@@ -17,13 +17,9 @@ public class ArticleRepository {
         articles.add(article);
     }
 
-    public int getSize() {
-        return articles.size();
-    }
-
-    public Article getArticleById(int articleId) {
+    public Article findArticleById(int articleId) {
         return articles.stream()
-                .filter(article -> article.getArticleId() == articleId)
+                .filter(article -> article.getId() == articleId)
                 .findFirst()
                 .get();
     }
