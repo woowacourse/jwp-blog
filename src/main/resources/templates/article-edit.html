@@ -100,8 +100,8 @@
                 document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
             }
         },
-        initialValue: "[[${article == null ? '' : article.contents}]]",
-        height: 'calc(100vh - 360px)'
+        initialValue: document.getElementById('editSection').innerHTML,
+        height: 'calc(100vh - 360px)',
     });
 </script>
 </th:block>
