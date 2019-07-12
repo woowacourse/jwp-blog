@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.apache.commons.lang3.StringEscapeUtils;
 import techcourse.myblog.domain.Article;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,15 +50,7 @@ public class ArticleControllerTests {
 
     @Test
     void showArticles() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().isOk();
+        postMethod();
 
         webTestClient.get().uri("/")
                 .exchange()
@@ -71,25 +63,14 @@ public class ArticleControllerTests {
                     //assertThat(body.contains(contents)).isTrue();
                 });
 
-        webTestClient.delete()
-                .uri("/articles/1")
-                .exchange()
-                .expectStatus().is3xxRedirection();
+        deleteMethod();
     }
 
     @Test
     void findArticleById() {
         String uniContents = StringEscapeUtils.escapeJava(contents);
 
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().isOk();
+        postMethod();
 
         webTestClient.get().uri("/articles/1")
                 .exchange()
@@ -102,10 +83,7 @@ public class ArticleControllerTests {
                     assertThat(body.contains(uniContents)).isTrue();
                 });
 
-        webTestClient.delete()
-                .uri("/articles/1")
-                .exchange()
-                .expectStatus().is3xxRedirection();
+        deleteMethod();
     }
 
     @Test
@@ -128,11 +106,7 @@ public class ArticleControllerTests {
                     assertThat(body.contains(coverUrl)).isTrue();
                     assertThat(body.contains(uniContents)).isTrue();
                 });
-
-        webTestClient.delete()
-                .uri("/articles/1")
-                .exchange()
-                .expectStatus().is3xxRedirection();
+        deleteMethod();
     }
 
     @Test
@@ -142,15 +116,7 @@ public class ArticleControllerTests {
         String updatedContents = "나는 우아한형제들에서 짱이다.";
         String updatedUniContents = StringEscapeUtils.escapeJava(updatedContents);
 
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().isOk();
+        postMethod();
 
         webTestClient.put()
                 .uri("/articles/1")
@@ -169,28 +135,14 @@ public class ArticleControllerTests {
                     assertThat(body.contains(updatedUniContents)).isTrue();
                 });
 
-        webTestClient.delete()
-                .uri("/articles/1")
-                .exchange()
-                .expectStatus().is3xxRedirection();
+        deleteMethod();
     }
 
     @Test
     void deleteTest() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().isOk();
+        postMethod();
 
-        webTestClient.delete()
-                .uri("/articles/1")
-                .exchange()
-                .expectStatus().is3xxRedirection();
+        deleteMethod();
 
         webTestClient.get().uri("/articles/1")
                 .exchange()
@@ -200,5 +152,24 @@ public class ArticleControllerTests {
     @AfterEach
     void tearDown() {
         Article.initCurrentId();
+    }
+
+    void postMethod() {
+        webTestClient.post()
+                .uri("/articles")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    void deleteMethod() {
+        webTestClient.delete()
+                .uri("/articles/1")
+                .exchange()
+                .expectStatus().is3xxRedirection();
     }
 }

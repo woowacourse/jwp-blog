@@ -10,6 +10,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ArticleRepositoryTest {
+    private static final int FIRST_INDEX = 1;
+
     private ArticleRepository articleRepository;
     private Article article;
 
@@ -33,7 +35,7 @@ class ArticleRepositoryTest {
     void findById() {
         articleRepository.save(article);
 
-        assertThat(articleRepository.findById(1)).isEqualTo(article);
+        assertThat(articleRepository.findById(FIRST_INDEX)).isEqualTo(article);
     }
 
     @Test
@@ -43,9 +45,9 @@ class ArticleRepositoryTest {
         articleRepository.save(article);
         articleRepository.update(1, updatedArticle);
 
-        assertThat(articleRepository.findById(1).getTitle()).isEqualTo(updatedArticle.getTitle());
-        assertThat(articleRepository.findById(1).getContents()).isEqualTo(updatedArticle.getContents());
-        assertThat(articleRepository.findById(1).getCoverUrl()).isEqualTo(updatedArticle.getCoverUrl());
+        assertThat(articleRepository.findById(FIRST_INDEX).getTitle()).isEqualTo(updatedArticle.getTitle());
+        assertThat(articleRepository.findById(FIRST_INDEX).getContents()).isEqualTo(updatedArticle.getContents());
+        assertThat(articleRepository.findById(FIRST_INDEX).getCoverUrl()).isEqualTo(updatedArticle.getCoverUrl());
     }
 
     @Test
@@ -59,7 +61,7 @@ class ArticleRepositoryTest {
     void delete() {
         articleRepository.save(article);
 
-        articleRepository.delete(1);
+        articleRepository.delete(FIRST_INDEX);
 
         assertThat(articleRepository.getSize()).isEqualTo(0);
     }
