@@ -1,9 +1,8 @@
 # JWP Blog
 
 ## Todo
-   - thymeleaf 템플릿 엔진 사용법 찾아볼 것
-     * html 중복 제거
    - 좌측 상단 배너 클릭 시 index 페이지 이동
+   - Controller에서 Redirect 사용
 ## Done
    - 정적 파일 수정시 재시작하지 않고 변경사항 바로 반영되게 설정
    - class파일 수정시 자동으로 서버 재기동하게
@@ -21,3 +20,5 @@
      * 게시글 삭제
    - css, js file 가져오기(경로 관련 이슈)
    - 예외 처리 커스텀
+   - thymeleaf 템플릿 엔진 사용법 찾아볼 것
+     * html 중복 제거
