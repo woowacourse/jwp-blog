@@ -20,7 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTests {
+public class ArticleControllerTest {
+    private static final int PRE_ARTICLE_ID = 1;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -56,7 +57,7 @@ public class ArticleControllerTests {
                         .with("contents", contents))
                 .exchange();
 
-        Long latestId = articleRepository.generateNewId() - 1;
+        Long latestId = articleRepository.generateNewId() - PRE_ARTICLE_ID;
 
         Article article = new Article();
         article.setTitle(title);
@@ -77,7 +78,7 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().is3xxRedirection()
+                .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response -> {
                     webTestClient.get().uri(response.getResponseHeaders().getLocation())
@@ -104,7 +105,7 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().is3xxRedirection()
+                .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response -> {
                     webTestClient.get().uri(response.getResponseHeaders().getLocation() + "/edit")
@@ -131,15 +132,15 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().is3xxRedirection()
+                .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response -> {
                     webTestClient.delete().uri(response.getResponseHeaders().getLocation() + "/delete")
                             .exchange()
                             .expectStatus()
-                            .is3xxRedirection();
+                            .isFound();
 
-                    Long latestId = articleRepository.generateNewId() - 1;
+                    Long latestId = articleRepository.generateNewId() - PRE_ARTICLE_ID;
 
                     assertThat(articleRepository.findArticleById(latestId)).isEqualTo(Optional.empty());
                 });
