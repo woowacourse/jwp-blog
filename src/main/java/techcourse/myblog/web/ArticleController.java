@@ -9,12 +9,8 @@ import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
 public class ArticleController {
-    private ArticleRepository articleRepository;
-    
     @Autowired
-    public ArticleController(ArticleRepository articleRepository) {
-        this. articleRepository = articleRepository;
-    }
+    private ArticleRepository articleRepository;
 
     @GetMapping("/")
     public String index(Model model) {
