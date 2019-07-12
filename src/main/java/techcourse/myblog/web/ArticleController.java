@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.dto.ArticleDto;
 
 import java.util.List;
 
@@ -47,18 +48,17 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    private String postArticle(Article article) {
-        articleRepository.addBlog(article);
-        int id = articleRepository.findAll().size() - 1;
+    private String postArticle(ArticleDto articleDto) {
+        articleRepository.addArticle(articleDto);
+        int id = articleRepository.articleCount() - 1;
 
         return "redirect:/articles/" + id;
     }
 
     @PutMapping("/articles/{id}")
-    private String putArticle(@PathVariable int id, Article article) {
+    private String putArticle(@PathVariable int id, ArticleDto articleDto) {
         Article originArticle = articleRepository.findByIndex(id);
-        originArticle.updateByArticle(article);
-
+        originArticle.updateByArticle(articleDto);
         return "redirect:/articles/" + id;
     }
 
