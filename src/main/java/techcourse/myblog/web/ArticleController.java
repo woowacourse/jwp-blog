@@ -39,12 +39,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    private String create(
-            @RequestParam("title") String title,
-            @RequestParam("contents") String contents,
-            @RequestParam("coverUrl") String coverUrl,
-            Model model) {
-        Article article = new Article(title, contents, coverUrl);
+    private String create(@ModelAttribute Article article, Model model) {
         articleRepository.addBlog(article);
         int id = articleRepository.findAll().size() - 1;
 
@@ -62,18 +57,11 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{id}")
-    private String update(
-            @RequestParam("title") String title,
-            @RequestParam("contents") String contents,
-            @RequestParam("coverUrl") String coverUrl,
-            @PathVariable int id,
-            Model model) {
-
-        Article article = articleRepository.find(id);
-        article.setTitle(title);
-        article.setContents(contents);
-        article.setCoverUrl(coverUrl);
-
+    private String update(@ModelAttribute Article article, @PathVariable int id, Model model) {
+        Article target = articleRepository.find(id);
+        target.setTitle(article.getTitle());
+        target.setContents(article.getContents());
+        target.setCoverUrl(article.getCoverUrl());
         return "redirect:/articles/" + id;
     }
 
