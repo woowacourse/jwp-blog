@@ -15,6 +15,16 @@ public class CategoryRepository {
         categories.add(category);
     }
 
+    public boolean delete(final Category category) {
+        return categories.remove(findById(category.getCategoryId()));
+    }
+
+    public Category findById(final long categoryId) {
+        return categories.stream()
+                    .filter(category -> category.getCategoryId() == categoryId)
+                    .findFirst().orElseThrow(IllegalArgumentException::new);
+    }
+
     public List<Category> findAll() {
         return new ArrayList<>(categories);
     }

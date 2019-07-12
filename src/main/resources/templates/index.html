@@ -34,7 +34,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link " role="tab" data-toggle="modal" data-target="#default-modal">카테고리 추가</a>
+                            <a class="nav-link " role="tab" data-toggle="modal" data-target="#default-modal">카테고리 관리</a>
                         </li>
                     </ul>
                     <div class="width-100 absolute left-0 border bottom"></div>
@@ -68,6 +68,10 @@
                     <input type="text" name="categoryName" placeholder="카테고리 이름" required/>
                     <input type="submit" value="추가"/>
                 </form>
+                <li th:each="category : ${categories}">
+                    <span th:text="${category.categoryName}"></span>
+                    <a th:href="@{/categories/delete/{categoryId}(categoryId=${category.categoryId})}" >삭제</a>
+                </li>
             </div>
             <div class="modal-footer no-border">
                 <div class="text-right">
