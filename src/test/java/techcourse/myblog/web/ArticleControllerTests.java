@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.dto.ArticleRequestDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -83,18 +84,35 @@ public class ArticleControllerTests {
 
     @Test
     void editArticlePut() {
+        String title = "목적의식 있는 연습을 통한 효과적인 학습";
+        String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
+        String contents = "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 '선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?'였다.";
+        String category = "자유";
         Article newArticle = Article.of("my article", "http://image.com/", "origin contents");
         articleRepository.addArticle(newArticle);
-        Map<String, String> requestMap = new HashMap<>();
 
-        requestMap.put("title", "changed title");
-        requestMap.put("backgroundURL", newArticle.getCoverUrl());
-        requestMap.put("content", "changed contents");
+        ArticleRequestDto articleRequestDto = new ArticleRequestDto();
+        articleRequestDto.setTitle(title);
+        articleRequestDto.setCoverUrl(coverUrl);
+        articleRequestDto.setContents(contents);
+        articleRequestDto.setCategory(category);
+
         webTestClient.put()
                 .uri("/articles/" + newArticle.getId())
-                .body(Mono.just(requestMap), Map.class)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents)
+                        .with("category", category))
                 .exchange()
                 .expectStatus().isOk();
+
+//        webTestClient.put()
+//                .uri("/articles/" + newArticle.getId())
+//                .body(Mono.just(articleRequestDto), ArticleRequestDto.class)
+//                .exchange()
+//                .expectStatus().isOk();
     }
 
     @Test
