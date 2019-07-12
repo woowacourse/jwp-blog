@@ -46,6 +46,10 @@ public class Article {
 		this.id = id;
 	}
 
+	public boolean matchId(int articleId) {
+		return this.id == articleId;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
