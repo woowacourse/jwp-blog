@@ -7,8 +7,10 @@ import java.util.List;
 
 @Repository
 public class ArticleRepository {
+    private static final int FIRST_ID = 0;
+    private static final int ID_INCREASE_RANGE = 1;
     private List<Article> articles = new ArrayList<>();
-    private int lastId = 0;
+    private int lastId = FIRST_ID;
 
     private ArticleRepository() {
     }
@@ -40,7 +42,7 @@ public class ArticleRepository {
     }
 
     public void save(Article article) {
-        this.lastId += 1;
+        this.lastId += ID_INCREASE_RANGE;
         article.setId(this.lastId);
         this.add(article);
     }
@@ -55,6 +57,10 @@ public class ArticleRepository {
 
     public List<Article> findAll() {
         return articles;
+    }
+
+    public void deleteAll(){
+        articles.clear();
     }
 
 }
