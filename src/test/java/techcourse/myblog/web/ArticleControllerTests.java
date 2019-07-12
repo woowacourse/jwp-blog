@@ -54,11 +54,24 @@ public class ArticleControllerTests {
     }
 
     @Test
-    public void index() {
+    public void addArticleTest() {
+        webTestClient.post()
+                .uri(ARTICLE_URL)
+                .body(BodyInserters
+                        .fromFormData(TITLE_NAME, TITLE_VALUE)
+                        .with(COVER_URL_NAME, COVER_URL_VALUE)
+                        .with(CONTENTS_NAME, CONTENTS_VALUE))
+                .exchange()
+                .expectStatus()
+                .isFound();
+    }
+
+    @Test
+    public void indexTest() {
         final int count = 3;
-        addArticle();
-        addArticle();
-        addArticle();
+        addArticleTest();
+        addArticleTest();
+        addArticleTest();
 
         webTestClient.get()
                 .uri(ROOT_URL)
@@ -69,23 +82,22 @@ public class ArticleControllerTests {
                     String body = new String(response.getResponseBody());
                     assertEquals(count, StringUtils.countOccurrencesOf(body, ARTICLE_DELIMITER));
                 });
-
-
     }
 
     @Test
     public void showArticleById() {
-        addArticle();
+        addArticleTest();
 
         webTestClient.get()
                 .uri(SPECIFIC_ARTICLE_URL)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk();
     }
 
     @Test
     public void updateArticleById() {
-        addArticle();
+        addArticleTest();
 
         webTestClient.get()
                 .uri(EDIT_URL)
@@ -105,29 +117,19 @@ public class ArticleControllerTests {
         webTestClient.get()
                 .uri(WRITING_URL)
                 .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    public void addArticle() {
-        webTestClient.post()
-                .uri(ARTICLE_URL)
-                .body(BodyInserters
-                        .fromFormData(TITLE_NAME, TITLE_VALUE)
-                        .with(COVER_URL_NAME, COVER_URL_VALUE)
-                        .with(CONTENTS_NAME, CONTENTS_VALUE))
-                .exchange()
-                .expectStatus().isFound();
+                .expectStatus()
+                .isOk();
     }
 
     @Test
     public void deleteArticle() {
-        addArticle();
+        addArticleTest();
 
         webTestClient.delete()
                 .uri(SPECIFIC_ARTICLE_URL)
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus()
+                .isFound();
     }
 
     @AfterEach

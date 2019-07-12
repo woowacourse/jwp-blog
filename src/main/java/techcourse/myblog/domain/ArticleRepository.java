@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class ArticleRepository {
@@ -11,7 +12,8 @@ public class ArticleRepository {
     private long latestId = 0;
 
     public List<Article> findAll() {
-        return articles;
+        return articles.stream()
+                .collect(Collectors.toList());
     }
 
     public long add(final Article article) {
