@@ -1,12 +1,10 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
@@ -19,7 +17,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
     @Autowired
@@ -27,6 +24,19 @@ public class ArticleControllerTests {
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    private Article newArticle;
+
+    @BeforeEach
+    void setUp() {
+        ArticleRequestDto articleRequestDto = new ArticleRequestDto();
+        articleRequestDto.setTitle("1");
+        articleRequestDto.setCoverUrl("2");
+        articleRequestDto.setContents("3");
+        newArticle = Article.of(articleRequestDto);
+        articleRepository.addArticle(newArticle);
+
+    }
 
     @Test
     void index() {
@@ -61,9 +71,6 @@ public class ArticleControllerTests {
 
     @Test
     void retrieveArticle() {
-        Article newArticle = Article.of("title", "http://background.com", "가나다라마바사");
-        articleRepository.addArticle(newArticle);
-
         webTestClient.get()
                 .uri("/articles/" + newArticle.getId())
                 .exchange()
@@ -72,9 +79,6 @@ public class ArticleControllerTests {
 
     @Test
     void editArticle() {
-        Article newArticle = Article.of("title", "http://background.com", "가나다라마바사");
-        articleRepository.addArticle(newArticle);
-
         webTestClient.get()
                 .uri("/articles/" + newArticle.getId() + "/edit")
                 .exchange()
@@ -88,14 +92,21 @@ public class ArticleControllerTests {
         String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
         String contents = "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 '선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?'였다.";
         String category = "자유";
-        Article newArticle = Article.of("my article", "http://image.com/", "origin contents");
-        articleRepository.addArticle(newArticle);
 
         ArticleRequestDto articleRequestDto = new ArticleRequestDto();
-        articleRequestDto.setTitle(title);
-        articleRequestDto.setCoverUrl(coverUrl);
-        articleRequestDto.setContents(contents);
-        articleRequestDto.setCategory(category);
+        articleRequestDto.setTitle("1");
+        articleRequestDto.setCoverUrl("2");
+        articleRequestDto.setContents("3");
+        articleRequestDto.setCategory("4");
+
+        Article article = Article.of(articleRequestDto);
+        articleRepository.addArticle(article);
+
+        ArticleRequestDto articleRequestDtoToChange = new ArticleRequestDto();
+        articleRequestDtoToChange.setTitle(title);
+        articleRequestDtoToChange.setCoverUrl(coverUrl);
+        articleRequestDtoToChange.setContents(contents);
+        articleRequestDtoToChange.setCategory(category);
 
         webTestClient.put()
                 .uri("/articles/" + newArticle.getId())
@@ -109,17 +120,14 @@ public class ArticleControllerTests {
                 .expectStatus().isOk();
 
 //        webTestClient.put()
-//                .uri("/articles/" + newArticle.getId())
-//                .body(Mono.just(articleRequestDto), ArticleRequestDto.class)
+//                .uri("/articles/" + article.getId())
+//                .body(Mono.just(articleRequestDtoToChange), ArticleRequestDto.class)
 //                .exchange()
 //                .expectStatus().isOk();
     }
 
     @Test
     void deleteArticle() {
-        Article newArticle = Article.of("my article", "http://image.com/", "origin contents");
-        articleRepository.addArticle(newArticle);
-
         webTestClient.delete()
                 .uri("/articles/" + newArticle.getId())
                 .exchange()

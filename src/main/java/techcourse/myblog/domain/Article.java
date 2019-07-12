@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import techcourse.myblog.dto.ArticleRequestDto;
+
 public class Article {
     private static long NEXT_ID = 1;
 
@@ -13,18 +15,14 @@ public class Article {
 
     }
 
-    public static Article of(String title, String backgroundURL, String content) {
-        return of(title, backgroundURL, content, "");
-    }
-
-    public static Article of(String title, String coverUrl, String contents, String category) {
+    public static Article of(ArticleRequestDto articleRequestDto) {
         Article newArticle = new Article();
 
         newArticle.id = NEXT_ID++;
-        newArticle.title = title;
-        newArticle.coverUrl = coverUrl;
-        newArticle.contents = contents;
-        newArticle.category = category;
+        newArticle.title = articleRequestDto.getTitle();
+        newArticle.coverUrl = articleRequestDto.getCoverUrl();
+        newArticle.contents = articleRequestDto.getContents();
+        newArticle.category = articleRequestDto.getCategory();
 
         return newArticle;
     }
@@ -33,46 +31,26 @@ public class Article {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getCoverUrl() {
         return coverUrl;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
     public String getContents() {
         return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
     }
 
     public String getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public void update(Article article) {
-        this.title = article.title;
-        this.coverUrl = article.coverUrl;
-        this.contents = article.contents;
-        this.category = article.category;
+    public void update(ArticleRequestDto articleRequestDto) {
+        this.title = articleRequestDto.getTitle();
+        this.coverUrl = articleRequestDto.getCoverUrl();
+        this.contents = articleRequestDto.getContents();
+        this.category = articleRequestDto.getCategory();
     }
 }

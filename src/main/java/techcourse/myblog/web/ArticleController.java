@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
+import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CategoryService;
 
@@ -32,8 +32,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String publishArticle(Article article) {
-        articleService.addArticle(article);
+    public String publishArticle(ArticleRequestDto articleRequestDto) {
+        articleService.addArticle(articleRequestDto);
         return "redirect:/";
     }
 
@@ -50,8 +50,8 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable Long articleId, Article article, Model model) {
-        articleService.editArticle(articleId, article);
+    public String editArticle(@PathVariable Long articleId, ArticleRequestDto articleRequestDto, Model model) {
+        articleService.editArticle(articleId, articleRequestDto);
         model.addAttribute("article", articleService.findById(articleId));
         return "article";
     }

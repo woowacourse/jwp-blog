@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.dto.ArticleRequestDto;
 
 import java.util.List;
 
@@ -16,14 +17,14 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public void editArticle(Long articleId, Article article) {
+    public void editArticle(Long articleId, ArticleRequestDto articleRequestDto) {
         Article articleToChange = findById(articleId);
 
-        articleToChange.update(article);
+        articleToChange.update(articleRequestDto);
     }
 
-    public void addArticle(Article article) {
-        articleRepository.addArticle(Article.of(article.getTitle(), article.getCoverUrl(), article.getContents(), article.getCategory()));
+    public void addArticle(ArticleRequestDto articleRequestDto) {
+        articleRepository.addArticle(Article.of(articleRequestDto));
     }
 
     public void deleteById(Long articleId) {

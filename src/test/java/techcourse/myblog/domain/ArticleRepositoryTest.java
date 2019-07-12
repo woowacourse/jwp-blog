@@ -2,6 +2,7 @@ package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.dto.ArticleRequestDto;
 
 import java.util.Optional;
 
@@ -10,11 +11,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ArticleRepositoryTest {
     private ArticleRepository articleRepository;
     private Article newArticle;
+    private ArticleRequestDto articleRequestDto;
 
     @BeforeEach
     void setUp() {
         articleRepository = new ArticleRepository();
-        newArticle = Article.of("title", "http://background.com", "가나다라마바사", "자유");
+        articleRequestDto = new ArticleRequestDto();
+        articleRequestDto.setTitle("1");
+        articleRequestDto.setCoverUrl("2");
+        articleRequestDto.setContents("3");
+        newArticle = Article.of(articleRequestDto);
+
     }
 
     @Test
@@ -38,9 +45,10 @@ public class ArticleRepositoryTest {
         articleRepository.addArticle(newArticle);
         Article articleFound = articleRepository.findById(newArticle.getId())
                 .orElseThrow(IllegalStateException::new);
-        Article editArticle = Article.of("changed title","http://background.com", "가나다라마바사", "자유");
+        ArticleRequestDto articleRequestDto = new ArticleRequestDto();
+        articleRequestDto.setTitle("changed title");
 
-        articleFound.update(editArticle);
+        articleFound.update(articleRequestDto);
         articleFound = articleRepository.findById(newArticle.getId())
                 .orElseThrow(IllegalStateException::new);
 
