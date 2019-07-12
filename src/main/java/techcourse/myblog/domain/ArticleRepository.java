@@ -9,6 +9,7 @@ import java.util.Optional;
 @Repository
 public class ArticleRepository {
     private List<Article> articles = new ArrayList<>();
+    private Article article;
 
     public List<Article> findAll() {
         return articles;

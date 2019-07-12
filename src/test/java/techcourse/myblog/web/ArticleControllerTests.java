@@ -28,13 +28,18 @@ public class ArticleControllerTests {
     @BeforeEach
     void resetArticleRepository() {
         articleRepository.deleteAll();
-    }
 
-    @Test
-    void articleForm() {
-        webTestClient.get().uri("/articles/new")
-                .exchange()
-                .expectStatus().isOk();
+        String title = "스파이더맨 보고싶다";
+        String coverUrl = "https://pgnqdrjultom1827145.cdn.ntruss.com/img/bc/30/bc30f170793e5342c4ca6cca771da57f922f8a9a25fa09eb2b672962cda1ea92_v1.jpg";
+        String contents = "스파이더맨과 미슽테리우스";
+
+        Article article = new Article();
+        article.setTitle(title);
+        article.setCoverUrl(coverUrl);
+        article.setContents(contents);
+
+        articleRepository.save(article);
+
     }
 
     @Test
@@ -79,17 +84,6 @@ public class ArticleControllerTests {
 
     @Test
     void 게시글_조회_응답() {
-        String title = "스파이더맨 보고싶다";
-        String coverUrl = "https://pgnqdrjultom1827145.cdn.ntruss.com/img/bc/30/bc30f170793e5342c4ca6cca771da57f922f8a9a25fa09eb2b672962cda1ea92_v1.jpg";
-        String contents = "스파이더맨과 미슽테리우스";
-
-        Article article = new Article();
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
-
-        articleRepository.save(article);
-
         webTestClient.get().uri("/articles/0")
                 .exchange()
                 .expectStatus().isOk();
@@ -97,35 +91,13 @@ public class ArticleControllerTests {
 
     @Test
     void 게시글_수정_페이지_응답() {
-        String title = "스파이더맨 보고싶다";
-        String coverUrl = "https://pgnqdrjultom1827145.cdn.ntruss.com/img/bc/30/bc30f170793e5342c4ca6cca771da57f922f8a9a25fa09eb2b672962cda1ea92_v1.jpg";
-        String contents = "스파이더맨과 미슽테리우스";
-
-        Article article = new Article();
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
-
-        articleRepository.save(article);
-
         webTestClient.get().uri("/articles/0/edit")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void 게시글_수정_응답() {
-        String title = "스파이더맨 보고싶다";
-        String coverUrl = "https://pgnqdrjultom1827145.cdn.ntruss.com/img/bc/30/bc30f170793e5342c4ca6cca771da57f922f8a9a25fa09eb2b672962cda1ea92_v1.jpg";
-        String contents = "스파이더맨과 미슽테리우스";
-
-        Article article = new Article();
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
-
-        articleRepository.save(article);
-
+    void 게시글_수정_완료_후_응답() {
         webTestClient.put().uri("/articles/0")
                 .exchange()
                 .expectStatus().isFound();
@@ -133,6 +105,11 @@ public class ArticleControllerTests {
 
     @Test
     void 게시글_삭제_응답() {
+        articleRepository.deleteAll();
+
+        webTestClient.get().uri("/articles/0")
+                .exchange()
+                .expectStatus().is5xxServerError();
 
     }
 
