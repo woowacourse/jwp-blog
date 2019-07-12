@@ -22,7 +22,7 @@ public class ArticleControllerTests {
     private static final String ROOT_URL = "/";
     private static final String EDIT_URL = "/articles/1/edit";
     private static final String WRITING_URL = "/writing";
-    private static final String ARTICLE_URL = "/write";
+    private static final String ARTICLE_URL = "/articles";
     private static final String SPECIFIC_ARTICLE_URL = "/articles/1";
 
     private static final String ARTICLE_DELIMITER

@@ -12,7 +12,7 @@
 <div>
     <th:block th:include="/fragment/login-header"></th:block>
 
-    <form th:action="(${article} == null) ? '/write' : '/articles/' + ${article.id}" name="article"
+    <form th:action="(${article} == null) ? '/articles' : '/articles/' + ${article.id}" name="article"
           th:method="${article} == null ? 'post' : 'put'" accept-charset="utf-8">
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg"
