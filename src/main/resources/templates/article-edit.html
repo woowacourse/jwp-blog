@@ -8,9 +8,10 @@
 <body>
 <div>
     <th:block th:include="fragments/header :: header"/>
-    <form th:action="${article}?  '/articles/' + ${article.id} : '/articles'" name="article" method="post" accept-charset="utf-8">
+    <form th:action="${article}?  '/articles/' + ${article.id} : '/articles'" name="article" method="post"
+          accept-charset="utf-8">
         <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
+            <div class="cover-img overlay-dark bg" th:style="'background-image:url('+ ${article?.coverUrl}+')'">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
                         <input type="hidden" name="_method" th:value="${method}">
