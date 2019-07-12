@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public class ArticleRepository {
-    private static final int INITIAL_ID = 1;
+    private static final int INITIAL_ID = 0;
 
     private List<Article> articles;
     private int lastArticleId;
@@ -23,7 +23,7 @@ public class ArticleRepository {
         containsDuplicate(article);
 
         articles.add(article);
-        lastArticleId++;
+        lastArticleId = article.getArticleId();
     }
 
     private void containsDuplicate(Article article) {

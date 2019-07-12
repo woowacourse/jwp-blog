@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
-import java.util.List;
-
 @Controller
 public class ArticleController {
+    public static final int INCREMENT_AMOUNT = 1;
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -37,12 +36,12 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public String createNewArticle(String title, String coverUrl, String contents, Model model) {
-        Article article = new Article(articleRepository.getLastArticleId(), title, coverUrl, contents);
+    public String createNewArticle(String title, String coverUrl, String contents) {
+        int newArticleId = articleRepository.getLastArticleId() + INCREMENT_AMOUNT;
+        Article article = new Article(newArticleId, title, coverUrl, contents);
 
         articleRepository.save(article);
-        model.addAttribute("article", article);
-        return "article";
+        return "redirect:/articles/" + newArticleId;
     }
 
     @GetMapping("/articles/{articleId}")
