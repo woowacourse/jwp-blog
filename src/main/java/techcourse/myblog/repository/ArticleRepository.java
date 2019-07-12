@@ -3,6 +3,7 @@ package techcourse.myblog.repository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import techcourse.myblog.domain.Article;
@@ -13,7 +14,7 @@ public class ArticleRepository {
     private List<Article> articles = new ArrayList<>();
 
     public List<Article> findAll() {
-        return articles;
+        return Collections.unmodifiableList(articles);
     }
 
     public Article save(Article article) {
