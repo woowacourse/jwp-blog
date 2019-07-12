@@ -2,17 +2,17 @@ package techcourse.myblog.domain;
 
 
 public class Article {
-    static final String DEFAULT_BACKGROUND = "/images/default/bg.jpg";
+    static final String DEFAULT_COVER_URL = "/images/default/bg.jpg";
     private String title;
     private String contents;
-    private String background;
+    private String coverUrl;
 
-    public Article(String title, String contents, String background) {
+    public Article(String title, String contents, String coverUrl) {
         this.title = title;
         this.contents = contents;
-        this.background = background;
-        if (this.background.isEmpty()) {
-            this.background = DEFAULT_BACKGROUND;
+        this.coverUrl = coverUrl;
+        if (this.coverUrl.isEmpty()) {
+            this.coverUrl = DEFAULT_COVER_URL;
         }
     }
 
@@ -32,12 +32,12 @@ public class Article {
         this.contents = contents;
     }
 
-    public String getBackground() {
-        return background;
+    public String getCoverUrl() {
+        return coverUrl;
     }
 
-    public void setBackground(String background) {
-        this.background = background;
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Article {
         return "Article{" +
                 "title='" + title + '\'' +
                 ", contents='" + contents + '\'' +
-                ", background='" + background + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
                 '}';
     }
 }

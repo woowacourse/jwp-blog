@@ -74,11 +74,11 @@ public class ArticleControllerTests {
                         .with("contents", contents))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location",".*articles.*");
+                .expectHeader().valueMatches("location", ".*articles.*");
         Article article = articleRepository.find(expectedIndex);
         assertThat(article.getTitle()).isEqualTo(title);
         assertThat(article.getContents()).isEqualTo(contents);
-        assertThat(article.getBackground()).isEqualTo(coverUrl);
+        assertThat(article.getCoverUrl()).isEqualTo(coverUrl);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class ArticleControllerTests {
                     String body = new String(response.getResponseBody());
                     assertThat(body.contains(target.getTitle())).isTrue();
                     assertThat(body.contains(target.getContents())).isTrue();
-                    assertThat(body.contains(target.getBackground())).isTrue();
+                    assertThat(body.contains(target.getCoverUrl())).isTrue();
                 });
     }
 
@@ -110,7 +110,7 @@ public class ArticleControllerTests {
                     System.out.println(body);
                     assertThat(body.contains(target.getTitle())).isTrue();
                     assertThat(body.contains(target.getContents())).isTrue();
-                    assertThat(body.contains(target.getBackground())).isTrue();
+                    assertThat(body.contains(target.getCoverUrl())).isTrue();
                 });
     }
 
@@ -130,7 +130,7 @@ public class ArticleControllerTests {
         Article target = articleRepository.find(0);
         assertThat(target.getTitle()).isEqualTo(postTitle);
         assertThat(target.getContents()).isEqualTo(postContents);
-        assertThat(target.getBackground()).isEqualTo(postCoverUrl);
+        assertThat(target.getCoverUrl()).isEqualTo(postCoverUrl);
     }
 
     @Test

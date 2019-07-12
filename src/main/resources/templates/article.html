@@ -13,7 +13,7 @@
     <header th:replace="fragment/common_navbar :: navbar">
     </header>
     <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg" th:style="'background:url(' + ${background} + ');'">
+        <div class="cover-img overlay-dark bg" th:style="'background:url(' + ${coverUrl} + ');'">
             <div class="padding-30">
                 <h1 class="text-center cover-title" th:text="${title}"></h1>
             </div>

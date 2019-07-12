@@ -21,6 +21,6 @@ class ArticleTest {
     @Test
     void default_background_테스트() {
         Article article = new Article("andole", "ABC", "");
-        assertEquals(article.getBackground(), Article.DEFAULT_BACKGROUND);
+        assertEquals(article.getCoverUrl(), Article.DEFAULT_COVER_URL);
     }
 }

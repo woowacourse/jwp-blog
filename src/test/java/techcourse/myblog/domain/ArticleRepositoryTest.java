@@ -35,6 +35,6 @@ public class ArticleRepositoryTest {
         Article article = repository.find(0);
         assertThat(article.getTitle()).isEqualTo(expetedArticle.getTitle());
         assertThat(article.getContents()).isEqualTo(expetedArticle.getContents());
-        assertThat(article.getBackground()).isEqualTo(expetedArticle.getBackground());
+        assertThat(article.getCoverUrl()).isEqualTo(expetedArticle.getCoverUrl());
     }
 }

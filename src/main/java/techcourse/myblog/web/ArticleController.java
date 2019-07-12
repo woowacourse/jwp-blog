@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +28,7 @@ public class ArticleController {
         Article article = articleRepository.find(id);
         model.addAttribute("id", id);
         model.addAttribute("title", article.getTitle());
-        model.addAttribute("background", article.getBackground());
+        model.addAttribute("coverUrl", article.getCoverUrl());
         model.addAttribute("contents", article.getContents());
         return "article";
     }
@@ -57,7 +56,7 @@ public class ArticleController {
         Article article = articleRepository.find(id);
         model.addAttribute("id", id);
         model.addAttribute("title", article.getTitle());
-        model.addAttribute("background", article.getBackground());
+        model.addAttribute("coverUrl", article.getCoverUrl());
         model.addAttribute("contents", article.getContents());
         return "article-edit";
     }
@@ -73,7 +72,7 @@ public class ArticleController {
         Article article = articleRepository.find(id);
         article.setTitle(title);
         article.setContents(contents);
-        article.setBackground(coverUrl);
+        article.setCoverUrl(coverUrl);
 
         return "redirect:/articles/" + id;
     }
