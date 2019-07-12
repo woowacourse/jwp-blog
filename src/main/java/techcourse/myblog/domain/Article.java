@@ -31,4 +31,16 @@ public class Article {
     public Article copyArticles() {
         return new Article(id, title, contents, coverUrl);
     }
+
+    public boolean isEqualId(int articleId) {
+        return articleId == id;
+    }
+
+    public int getCurrentId() {
+        return currentId++;
+    }
+
+    public static void initCurrentId() {
+        currentId = 1;
+    }
 }

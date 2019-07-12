@@ -21,22 +21,15 @@ public class ArticleRepository {
     }
 
     public void save(Article article) {
-        int nextId = articles.stream()
-                .mapToInt(Article::getId)
-                .max()
-                .orElse(0) + 1;
-
-        article.setId(nextId);
+        article.setId(article.getCurrentId());
         articles.add(article);
     }
 
     public Article findById(int articleId) {
-        for (Article article : articles) {
-            if (articleId == article.getId()) {
-                return article;
-            }
-        }
-        throw new ArticleNotFoundException();
+        return articles
+                .stream()
+                .filter(article -> article.isEqualId(articleId))
+                .findAny().orElseThrow(ArticleNotFoundException::new);
     }
 
     public int getSize() {
@@ -57,7 +50,7 @@ public class ArticleRepository {
 
     public void delete(int articleId) {
         for (Article article : articles) {
-            if (articleId == article.getId()) {
+            if (article.isEqualId(articleId)) {
                 articles.remove(article);
                 return;
             }

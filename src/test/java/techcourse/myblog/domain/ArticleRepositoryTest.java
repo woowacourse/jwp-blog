@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -61,5 +62,10 @@ class ArticleRepositoryTest {
         articleRepository.delete(1);
 
         assertThat(articleRepository.getSize()).isEqualTo(0);
+    }
+
+    @AfterEach
+    void tearDown() {
+        Article.initCurrentId();
     }
 }
