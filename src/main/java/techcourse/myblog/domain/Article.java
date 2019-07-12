@@ -5,6 +5,7 @@ public class Article {
     private String title;
     private String coverUrl;
     private String contents;
+    private long categoryId;
 
     public Article() {
     }
@@ -41,6 +42,14 @@ public class Article {
         this.contents = contents;
     }
 
+    public long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
+    }
+
     @Override
     public String toString() {
         return "Article{" +
@@ -48,6 +57,7 @@ public class Article {
                 ", title='" + title + '\'' +
                 ", coverUrl='" + coverUrl + '\'' +
                 ", contents='" + contents + '\'' +
+                ", categoryId=" + categoryId +
                 '}';
     }
 }

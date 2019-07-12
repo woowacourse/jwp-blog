@@ -28,11 +28,13 @@
                         <li class="nav-item">
                             <a href="#tab-centered-1" class="nav-link active" role="tab" data-toggle="tab">All</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#tab-centered-2" class="nav-link" role="tab" data-toggle="tab">Java</a>
+
+                        <li class="nav-item" th:each="category : ${categories}">
+                            <a th:href="@{/{categoryId}(categoryId=${category.categoryId})}" class="nav-link" role="tab" data-toggle="tab" th:text="${category.categoryName}"></a>
                         </li>
+
                         <li class="nav-item">
-                            <a href="#tab-centered-3" class="nav-link" role="tab" data-toggle="tab">Learning</a>
+                            <a class="nav-link " role="tab" data-toggle="modal" data-target="#default-modal">카테고리 추가</a>
                         </li>
                     </ul>
                     <div class="width-100 absolute left-0 border bottom"></div>
@@ -51,6 +53,28 @@
             <i class="ti-plus"></i>
         </a>
 
+    </div>
+</div>
+
+<!-- Modal START-->
+<div class="modal fade" id="default-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Modal Template</h4>
+            </div>
+            <div class="modal-body">
+                <form action="/categories/add" method="post">
+                    <input type="text" name="categoryName" placeholder="카테고리 이름" required/>
+                    <input type="submit" value="추가"/>
+                </form>
+            </div>
+            <div class="modal-footer no-border">
+                <div class="text-right">
+                    <button class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

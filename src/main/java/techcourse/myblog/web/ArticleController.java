@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.CategoryRepository;
 
 import java.util.List;
 
@@ -16,9 +17,13 @@ public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @GetMapping("/")
     public String index(Model model) {
         List<Article> articles = articleRepository.findAll();
+        model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("articles", articles);
         return "index";
     }
