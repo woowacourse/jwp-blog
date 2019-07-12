@@ -18,14 +18,14 @@ public class ArticleControllerTests {
     private WebTestClient webTestClient;
 
     @Test
-    void articleFormPageStatus() {
+    void article_form_page_status() {
         webTestClient.get().uri("/writing")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void createArticle(){
+    void create_Article_redirect() {
         String title = "titleTest";
         String coverUrl = "urlTest";
         String contents = "contentsTest";
@@ -36,11 +36,11 @@ public class ArticleControllerTests {
                         .with("contents", contents))
                 .exchange()
                 .expectStatus().isFound()
-                .expectHeader().valueMatches("location",".*articles.*")
+                .expectHeader().valueMatches("location", ".*articles.*");
     }
 
     @Test
-    void articleViewPageStatus() {
+    void article_view_page_status() {
         String title = "titleTest";
         String coverUrl = "urlTest";
         String contents = "contentsTest";
@@ -61,7 +61,7 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void articleEditPageStatus() {
+    void article_edit_page_status() {
         String title = "titleTest";
         String coverUrl = "urlTest";
         String contents = "contentsTest";
@@ -110,7 +110,4 @@ public class ArticleControllerTests {
                             });
                 });
     }
-
-
-
 }
