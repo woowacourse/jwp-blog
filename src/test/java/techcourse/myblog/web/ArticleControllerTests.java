@@ -26,6 +26,11 @@ public class ArticleControllerTests {
         article.setTitle("제목");
         article.setCoverUrl("http");
         article.setContents("내용");
+
+        webTestClient.post().uri("/articles")
+                .body(Mono.just(article), Article.class)
+                .exchange()
+        ;
     }
 
     @Test
@@ -39,14 +44,18 @@ public class ArticleControllerTests {
     void articleForm() {
         webTestClient.get().uri("/articles/new")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk()
+                ;
     }
 
     @Test
     void writeArticleForm() {
         webTestClient.get().uri("/writing")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk()
+                ;
     }
 
     @Test
@@ -54,55 +63,50 @@ public class ArticleControllerTests {
         webTestClient.post().uri("/articles")
                 .body(Mono.just(article), Article.class)
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus()
+                .isFound()
+                ;
     }
 
     @Test
     void fetchArticle() {
-        webTestClient.post().uri("/articles")
-                .body(Mono.just(article), Article.class)
-                .exchange();
-
         webTestClient.get().uri("/articles/1")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk()
+                ;
     }
 
     @Test
     void editArticle() {
-        webTestClient.post().uri("/articles")
-                .body(Mono.just(article), Article.class)
-                .exchange();
-
         webTestClient.get().uri("/articles/1/edit")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk()
+                ;
     }
 
     @Test
     void saveEditedArticle() {
-        webTestClient.post().uri("/articles")
-                .body(Mono.just(article), Article.class)
-                .exchange();
-
         webTestClient.put().uri("/articles/1")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk()
+                ;
     }
 
     @Test
     void deleteArticle() {
         webTestClient.post().uri("/articles")
                 .body(Mono.just(article), Article.class)
-                .exchange();
-
-        webTestClient.post().uri("/articles")
-                .body(Mono.just(article), Article.class)
-                .exchange();
+                .exchange()
+                ;
 
         webTestClient.delete().uri("/articles/2")
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus()
+                .isFound()
+                ;
     }
 
     @AfterEach
