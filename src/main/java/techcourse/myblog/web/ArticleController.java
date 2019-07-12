@@ -13,12 +13,12 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-    @GetMapping("writing")
+    @GetMapping("/writing")
     public String createArticle() {
         return "article-edit";
     }
 
-    @PostMapping("articles")
+    @PostMapping("/articles")
     public String saveArticle(Article article, Model model) {
         model.addAttribute(article);
         articleService.save(article);
@@ -37,13 +37,13 @@ public class ArticleController {
         return "article";
     }
 
-    @GetMapping("articles/{articleId}/edit")
+    @GetMapping("/articles/{articleId}/edit")
     public String editArticle(@PathVariable int articleId, Model model) {
         model.addAttribute("article", articleService.findById(articleId));
         return "article-edit";
     }
 
-    @PutMapping("articles/{articleId}")
+    @PutMapping("/articles/{articleId}")
     public String getModifiedArticle(@PathVariable int articleId, Article article, Model model) {
         article.setId(articleId);
         articleService.update(article);
@@ -51,7 +51,7 @@ public class ArticleController {
         return "article";
     }
 
-    @DeleteMapping("articles/{articleId}")
+    @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable int articleId) {
         articleService.deleteById(articleId);
         return "redirect:/";
