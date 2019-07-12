@@ -56,7 +56,7 @@
 									<div class="card-horizon">
 										<div class="image-container col-md-4">
 											<div class="background-holder has-content" th:if="${article.isCoverUrl()}"
-											     th:style="'background-image: url(' + ${article.coverUrl} + ')'"></div>
+											     th:style="'background-image: url(' + ${article.coverUrl} + '), url(\'/images/pages/index/study.jpg\')'"></div>
 											<div class="background-holder has-content" th:unless="${article.isCoverUrl()}"
 											     style="background-image: url('/images/pages/index/study.jpg')"></div>
 										</div>
