@@ -44,9 +44,9 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/new")
-    public RedirectView addArticle(Article articleParam) {
+    public String addArticle(Article articleParam) {
         Long latestId = articleRepository.add(articleParam);
-        return new RedirectView("/articles/" + latestId);
+        return "redirect:/articles/" + latestId;
     }
 
     @GetMapping("/articles/{articleId}")
@@ -57,15 +57,15 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public RedirectView updateArticle(@PathVariable long articleId, Article articleParam) {
+    public String updateArticle(@PathVariable long articleId, Article articleParam) {
         long updateId = articleRepository.updateById(articleParam, articleId);
-        return new RedirectView("/articles/" + updateId);
+        return "redirect:/articles/" + updateId;
     }
 
     @DeleteMapping("articles/{articleId}")
-    public RedirectView deleteArticle(@PathVariable long articleId) {
+    public String deleteArticle(@PathVariable long articleId) {
         articleRepository.deleteById(articleId);
-        return new RedirectView("/");
+        return "redirect:/";
     }
 
     @GetMapping("/articles/{articleId}/edit")
