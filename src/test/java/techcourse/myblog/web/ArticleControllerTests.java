@@ -11,6 +11,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
@@ -19,13 +21,6 @@ public class ArticleControllerTests {
 
     @Autowired
     private ArticleRepository articleRepository;
-
-    @Test
-    void index() {
-        webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
-    }
 
     @Test
     void create_article() {
@@ -43,46 +38,83 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isFound()
+                .expectHeader()
+                .valueMatches("location", ".*/articles/.*");
     }
 
     @Test
     void read_article() {
-        Article article = Article.of("title", "url", "contents");
+        String title = "blogTitle";
+        String coverUrl = "blogCoverUrl";
+        String contents = "blogContents";
+
+        Article article = Article.of(title, coverUrl, contents);
         int articleId = articleRepository.insertArticle(article);
+
 
         webTestClient.get()
                 .uri("/articles/" + articleId)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(title)).isTrue();
+                    assertThat(body.contains(coverUrl)).isTrue();
+                    assertThat(body.contains(contents)).isTrue();
+                });
     }
 
     @Test
     void read_article_edit_page() {
-        Article article = Article.of("title", "url", "contents");
+        String title = "blogTitle";
+        String coverUrl = "blogCoverUrl";
+        String contents = "blogContents";
+
+        Article article = Article.of(title, coverUrl, contents);
         int articleId = articleRepository.insertArticle(article);
 
         webTestClient.get()
                 .uri("/articles/" + articleId + "/edit")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(title)).isTrue();
+                    assertThat(body.contains(coverUrl)).isTrue();
+                    assertThat(body.contains(contents)).isTrue();
+                });
     }
 
     @Test
     void update_article() {
-        Article article = Article.of("title", "url", "contents");
+        String title = "blogTitle";
+        String coverUrl = "blogCoverUrl";
+        String contents = "blogContents";
+
+        Article article = Article.of(title, coverUrl, contents);
         int articleId = articleRepository.insertArticle(article);
 
         webTestClient.put()
                 .uri("/articles/" + articleId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("id",  Integer.toString(article.getId()))
+                        .fromFormData("id", Integer.toString(article.getId()))
                         .with("title", article.getTitle())
                         .with("coverUrl", article.getCoverUrl())
                         .with("contents", article.getContents()))
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(title)).isTrue();
+                    assertThat(body.contains(coverUrl)).isTrue();
+                    assertThat(body.contains(contents)).isTrue();
+                });
     }
 
     @Test
@@ -93,6 +125,8 @@ public class ArticleControllerTests {
         webTestClient.delete()
                 .uri("/articles/" + articleId)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isFound()
+                .expectHeader()
+                .valueMatches("location", "[^/]*//[^/]*/");
     }
 }
