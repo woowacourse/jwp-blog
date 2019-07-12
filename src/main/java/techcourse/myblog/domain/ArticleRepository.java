@@ -28,4 +28,9 @@ public class ArticleRepository {
         Article oldArticle = findArticleById(id);
         oldArticle.update(article);
     }
+
+    public void deleteArticle(int id) {
+        Article article = findArticleById(id);
+        articles.remove(article);
+    }
 }
