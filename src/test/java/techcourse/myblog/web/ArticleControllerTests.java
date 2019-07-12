@@ -18,6 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+    private static final String SAMPLE_TITLE = "test title";
+    private static final String SAMPLE_COVER_URL = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
+    private static final String SAMPLE_CONTENTS = "test contents";
+
     @Autowired
     private WebTestClient webTestClient;
 
@@ -48,7 +52,7 @@ public class ArticleControllerTests {
     @Test
     void createArticle() {
         String title = "목적의식 있는 연습을 통한 효과적인 학습";
-        String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
+        String coverUrl = "https://techcourse.woowahan.com/images/default/default-cover.jpeg";
         String contents = "helloWould";
 
         webTestClient.post()
@@ -78,72 +82,50 @@ public class ArticleControllerTests {
 
     @Test
     void showArticle() {
-        String title = "test";
-        String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-        String contents = "Hi";
-
-        Article article = new Article();
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
-        articleRepository.add(article);
+        long id = addSampleArticle();
 
         webTestClient.get()
-                .uri("/articles/" + article.getId())
+                .uri("/articles/" + id)
                 .exchange()
                 .expectBody()
                 .consumeWith(res -> {
                     String body = new String(res.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
+                    assertThat(body.contains(SAMPLE_TITLE)).isTrue();
+                    assertThat(body.contains(SAMPLE_COVER_URL)).isTrue();
+                    assertThat(body.contains(SAMPLE_CONTENTS)).isTrue();
                 });
     }
 
     @Test
     void showEditPage() {
-        String title = "test";
-        String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-        String contents = "Hi";
-
-        Article article = new Article();
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
-        articleRepository.add(article);
+        long id = addSampleArticle();
 
         webTestClient.get()
-                .uri("/articles/" + article.getId() + "/edit")
+                .uri("/articles/" + id + "/edit")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
+                    assertThat(body.contains(SAMPLE_TITLE)).isTrue();
+                    assertThat(body.contains(SAMPLE_COVER_URL)).isTrue();
+                    assertThat(body.contains(SAMPLE_CONTENTS)).isTrue();
                 });
     }
 
     @Test
     void editArticle() {
-        String title = "test";
-        String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-        String contents = "Hi";
-        String newContents = "Bye";
-
-        Article article = new Article();
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
-        articleRepository.add(article);
+        String newTitle = "test";
+        String newCoverUrl = "newCorverUrl";
+        String newContents = "newContents";
+        long id = addSampleArticle();
 
         webTestClient.put()
-                .uri("/articles/" + article.getId())
+                .uri("/articles/" + id)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
+                        .fromFormData("title", newTitle)
+                        .with("coverUrl", newCoverUrl)
                         .with("contents", newContents))
                 .exchange()
                 .expectStatus().is3xxRedirection()
@@ -156,8 +138,8 @@ public class ArticleControllerTests {
                             .expectBody()
                             .consumeWith(res -> {
                                 String body = new String(res.getResponseBody());
-                                assertThat(body.contains(title)).isTrue();
-                                assertThat(body.contains(coverUrl)).isTrue();
+                                assertThat(body.contains(newTitle)).isTrue();
+                                assertThat(body.contains(newCoverUrl)).isTrue();
                                 assertThat(body.contains(newContents)).isTrue();
                             });
                 });
@@ -165,24 +147,25 @@ public class ArticleControllerTests {
 
     @Test
     void deleteArticle() {
-        String title = "test";
-        String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-        String contents = "Hi";
-
-        Article article = new Article();
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
-        articleRepository.add(article);
+        long id = addSampleArticle();
 
         webTestClient.delete()
-                .uri("/articles/" + article.getId())
+                .uri("/articles/" + id)
                 .exchange()
                 .expectStatus().is3xxRedirection();
 
         webTestClient.get()
-                .uri("/articles/" + article.getId())
+                .uri("/articles/" + id)
                 .exchange()
                 .expectStatus().is5xxServerError();
+    }
+
+    private long addSampleArticle() {
+        Article article = new Article();
+        article.setTitle(SAMPLE_TITLE);
+        article.setCoverUrl(SAMPLE_COVER_URL);
+        article.setContents(SAMPLE_CONTENTS);
+        articleRepository.add(article);
+        return article.getId();
     }
 }

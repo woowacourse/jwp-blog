@@ -13,55 +13,56 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleRepositoryTests {
+    private static final String SAMPLE_TITLE = "test title";
+    private static final String SAMPLE_COVER_URL = "https://techcourse.woowahan.com/images/default/default-cover.jpeg";
+    private static final String SAMPLE_CONTENTS = "test contents";
+
     @Autowired
     private ArticleRepository articleRepository;
 
     @Test
     void add() {
-        Article article = new Article();
-        article.setContents("Contents");
-        article.setCoverUrl("https://www.woowa.com");
-        article.setTitle("Hi");
-        articleRepository.add(article);
+        addSampleArticle();
 
         Article addedArticle = articleRepository.findAll().get(0);
-        assertThat(addedArticle.getContents()).isEqualTo("Contents");
-        assertThat(addedArticle.getCoverUrl()).isEqualTo("https://www.woowa.com");
-        assertThat(addedArticle.getTitle()).isEqualTo("Hi");
+        assertThat(addedArticle.getTitle()).isEqualTo(SAMPLE_TITLE);
+        assertThat(addedArticle.getCoverUrl()).isEqualTo(SAMPLE_COVER_URL);
+        assertThat(addedArticle.getContents()).isEqualTo(SAMPLE_CONTENTS);
     }
 
     @Test
     void findById() {
-        Article article = new Article();
-        article.setContents("Contents");
-        article.setCoverUrl("https://www.woowa.com");
-        article.setTitle("Hi");
         articleRepository.add(new Article());
         articleRepository.add(new Article());
-        articleRepository.add(article);
+        long id = addSampleArticle();
 
-        Article foundArticle = articleRepository.findById(article.getId());
-        assertThat(foundArticle.getContents()).isEqualTo("Contents");
-        assertThat(foundArticle.getCoverUrl()).isEqualTo("https://www.woowa.com");
-        assertThat(foundArticle.getTitle()).isEqualTo("Hi");
+        Article foundArticle = articleRepository.findById(id);
+        assertThat(foundArticle.getTitle()).isEqualTo(SAMPLE_TITLE);
+        assertThat(foundArticle.getCoverUrl()).isEqualTo(SAMPLE_COVER_URL);
+        assertThat(foundArticle.getContents()).isEqualTo(SAMPLE_CONTENTS);
     }
 
     @Test
     void deleteById() {
-        Article article = new Article();
-        article.setContents("Contents");
-        article.setCoverUrl("https://www.woowa.com");
-        article.setTitle("Hi");
         articleRepository.add(new Article());
         articleRepository.add(new Article());
-        articleRepository.add(article);
+        long id = addSampleArticle();
 
-        articleRepository.deleteById(article.getId());
-        assertThrows(IllegalArgumentException.class, () -> articleRepository.findById(3));
+        articleRepository.deleteById(id);
+        assertThrows(IllegalArgumentException.class, () -> articleRepository.findById(id));
     }
 
     @AfterEach
     void tearDown() {
         articleRepository.clear();
+    }
+
+    private long addSampleArticle() {
+        Article article = new Article();
+        article.setTitle(SAMPLE_TITLE);
+        article.setCoverUrl(SAMPLE_COVER_URL);
+        article.setContents(SAMPLE_CONTENTS);
+        articleRepository.add(article);
+        return article.getId();
     }
 }
