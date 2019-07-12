@@ -13,6 +13,12 @@ public class ArticleController {
 	@Autowired
 	private ArticleService articleService;
 
+	@GetMapping("/")
+	public String index(Model model) {
+		model.addAttribute("articles", articleService.findAll());
+		return "index";
+	}
+
 	@GetMapping("writing")
 	public String createArticle() {
 		return "article-edit";
@@ -23,12 +29,6 @@ public class ArticleController {
 		model.addAttribute(article);
 		articleService.save(article);
 		return "article";
-	}
-
-	@GetMapping("/")
-	public String index(Model model) {
-		model.addAttribute("articles", articleService.findAll());
-		return "index";
 	}
 
 	@GetMapping("article/{articleId}")
@@ -44,7 +44,7 @@ public class ArticleController {
 	}
 
 	@PutMapping("articles/{articleId}")
-	public String getModifiedArticle(@PathVariable int articleId, Article article, Model model) {
+	public String modifyArticle(@PathVariable int articleId, Article article, Model model) {
 		article.setId(articleId);
 		articleService.update(article);
 		model.addAttribute(articleService.findById(articleId));
