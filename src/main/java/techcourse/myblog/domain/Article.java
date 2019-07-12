@@ -43,4 +43,10 @@ public class Article {
     public static void initCurrentId() {
         currentId = 1;
     }
+
+    public void editArticle(Article article) {
+        this.title = article.getTitle();
+        this.contents = article.getContents();
+        this.coverUrl = article.getCoverUrl();
+    }
 }

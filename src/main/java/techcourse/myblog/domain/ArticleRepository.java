@@ -43,9 +43,7 @@ public class ArticleRepository {
     public void update(int articleId, Article article) {
         Article originalArticle = findById(articleId);
 
-        originalArticle.setTitle(article.getTitle());
-        originalArticle.setContents(article.getContents());
-        originalArticle.setCoverUrl(article.getCoverUrl());
+        originalArticle.editArticle(article);
     }
 
     public void delete(int articleId) {
