@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="commonHead"></th:block>
-    <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/article-edit.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
+    <link href="/css/index.css" rel="stylesheet">
+    <link href="/css/article-edit.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+    <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css" rel="stylesheet">
+    <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css" rel="stylesheet">
 </head>
 <body>
 <div>
@@ -16,16 +16,19 @@
             <ul class="nav-left mrg-left-0">
                 <li>
                     <a href="/">
-                        <div class="logo logo-dark d-none" style="background-image: url('../static/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white" style="background-image: url('../static/images/logo/logo_full_white.png')"></div>
+                        <div class="logo logo-dark d-none"
+                             style="background-image: url('../static/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white"
+                             style="background-image: url('../static/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
             <ul class="nav-right">
                 s
-                <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
+                <li class="user-profile dropdown no-border pointer" id="header-user-dropdown-btn">
                     <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
-                        <img class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
+                        <img alt="Brown"
+                             class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
                         <div class="user-info text-white">
                             <span class="name pdd-right-5">Brown</span>
                             <i class="ti-angle-down font-size-10"></i>
@@ -38,7 +41,7 @@
                                 <span class="text-dark">마이페이지</span>
                             </a>
                         </li>
-                        <li role="separator" class="divider"></li>
+                        <li class="divider" role="separator"></li>
                         <li class="text-dark">
                             <a href="index.html">
                                 <i class="ti-power-off pdd-right-10"></i>
@@ -51,14 +54,21 @@
         </div>
     </div>
 
-    <form th:action="${article!=null} ? '/articles/'+ ${article.id} : '/articles'" name="article" method="post" accept-charset="utf-8" >
-        <input th:if="${article!=null}" type="hidden" name="_method" value="put" />
+    <form accept-charset="utf-8" method="post" name="article"
+          th:action="${article!=null} ? '/articles/'+ ${article.id} : '/articles'">
+        <input name="_method" th:if="${article!=null}" type="hidden" value="put"/>
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-ho rizon-50">
                     <div class="width-80">
-                        <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" th:value="${article!=null} ? ${article.getTitle() } : ''"  autocomplete="off">
-                        <input type="text" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"  placeholder="배경 url을 입력해주세요" th:value="${article!=null} ? ${article.getCoverUrl() } : ''" autocomplete="off">
+                        <input autocomplete="off" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
+                               name="title"
+                               placeholder="제목을 입력해주세요" th:value="${article!=null} ? ${article.getTitle() } : ''"
+                               type="text">
+                        <input autocomplete="off" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
+                               name="coverUrl"
+                               placeholder="배경 url을 입력해주세요" th:value="${article!=null} ? ${article.getCoverUrl() } : ''"
+                               type="text">
                     </div>
                 </div>
             </div>
@@ -73,10 +83,10 @@
                 </div>
                 <div class="col-lg-1 col-md-1">
                     <div class="btn-group btn-group-vertical">
-                        <button id="save-btn" type="submit" class="btn btn-default">
+                        <button class="btn btn-default" id="save-btn" type="submit">
                             <i class="ti-save"></i>
                         </button>
-                        <a href="/index.html" class="btn btn-default">
+                        <a class="btn btn-default" href="/index.html">
                             <i class="ti-close"></i>
                         </a>
                     </div>
@@ -87,12 +97,14 @@
 </div>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <th:block th:replace="commonScript"></th:block>
-<script type="text/javascript"  th:inline="javascript">
-    var initValue = ""
+<script th:inline="javascript" type="text/javascript">
+    var initValue = "";
         /* <![CDATA[ */
-        [# th:if= "${article}"]
+        [;
+    #
+    if= "${article}"]
     initValue =  /*[[${article.contents}]]*/
-        [/]
+        [/];
     /*]]>*/
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
