@@ -60,10 +60,10 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a th:href="@{'/articles/'+${articleId}+'/edit'}" class="float-right pointer btn btn-icon">
+                <a th:href="@{'/articles/'+${article.id}+'/edit'}" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
-                <form name="question" method="post" th:action="@{'/articles/'+${articleId}}">
+                <form name="question" method="post" th:action="@{'/articles/'+${article.id}}">
                     <input type="hidden" name="_method" value="delete"/>
                     <button class="link-delete-article" type="submit">삭제</button>
                 </form>

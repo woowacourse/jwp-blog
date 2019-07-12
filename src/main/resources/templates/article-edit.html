@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <form th:action="${article!=null} ? '/articles/'+ ${articleId} : '/articles'" name="article" method="post" accept-charset="utf-8" >
+    <form th:action="${article!=null} ? '/articles/'+ ${article.id} : '/articles'" name="article" method="post" accept-charset="utf-8" >
         <input th:if="${article!=null}" type="hidden" name="_method" value="put" />
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('../static/images/pages/index/study.jpg')">

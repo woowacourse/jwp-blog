@@ -22,30 +22,31 @@ public class ArticleController {
     public ModelAndView writeArticle(Article article, Model model) {
         articleRepository.add(article);
         model.addAttribute("article", articleRepository.findLastest());
-        return new ModelAndView("redirect:/articles/" + articleRepository.lastestIndex());
+        return new ModelAndView("redirect:/articles/" + article.getId());
     }
 
     @GetMapping("/articles/{articleId}")
     public String viewArticle(@PathVariable int articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId));
-        model.addAttribute("articleId", articleId);
+        if (articleRepository.findById(articleId).isPresent()) {
+            model.addAttribute("article", articleRepository.findById(articleId).get());
+        }
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String editArticle(@PathVariable int articleId, Model model) {
         model.addAttribute("article", articleRepository.findById(articleId));
-        model.addAttribute("articleId", articleId);
         return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
     public ModelAndView editArticle(@PathVariable int articleId, Article article, Model model) {
-        articleRepository.modify(article,articleId);
+        articleRepository.modify(article, articleId);
         return new ModelAndView("redirect:/articles/" + articleRepository.lastestIndex());
     }
+
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId){
+    public String deleteArticle(@PathVariable int articleId) {
         articleRepository.delete(articleId);
         return "redirect:/";
     }

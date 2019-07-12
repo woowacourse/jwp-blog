@@ -25,6 +25,21 @@ public class ArticleControllerTests {
     }
 
     @Test
+    void createArticle(){
+        String title = "titleTest";
+        String coverUrl = "urlTest";
+        String contents = "contentsTest";
+        webTestClient.post().uri("/articles")
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location",".*articles.*")
+    }
+
+    @Test
     void articleViewPageStatus() {
         String title = "titleTest";
         String coverUrl = "urlTest";
@@ -95,6 +110,7 @@ public class ArticleControllerTests {
                             });
                 });
     }
+
 
 
 }
