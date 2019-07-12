@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class ArticleRepository {
@@ -36,6 +37,7 @@ public class ArticleRepository {
         article.setTitle(articleParam.getTitle());
         article.setCoverUrl(articleParam.getCoverUrl());
         article.setContents(articleParam.getContents());
+        article.setCategoryId(articleParam.getCategoryId());
         return articleId;
     }
 
@@ -47,5 +49,11 @@ public class ArticleRepository {
     public void deleteAll() {
         latestId = 0;
         articles = new ArrayList<>();
+    }
+
+    public List<Article> findByCategoryId(long categoryId) {
+        return articles.stream()
+                .filter(article -> article.getCategoryId() == categoryId)
+                .collect(Collectors.toList());
     }
 }

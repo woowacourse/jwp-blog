@@ -25,6 +25,7 @@ public class ArticleControllerTests {
     private static String title = "TEST";
     private static String coverUrl = "https://img.com";
     private static String contents = "testtest";
+    private static String categoryId = "1";
 
     static {
         ARTICLE_SAMPLE = new Article();
@@ -63,6 +64,23 @@ public class ArticleControllerTests {
     }
 
     @Test
+    public void indexTestByCategory() {
+        final int count = 2;
+        addArticle();
+        addArticle();
+
+        webTestClient.get()
+                .uri("/1")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertEquals(count, StringUtils.countOccurrencesOf(body, ARTICLE_DELIMITER));
+                });
+    }
+
+    @Test
     public void showArticleById() {
        addArticle();
 
@@ -84,6 +102,7 @@ public class ArticleControllerTests {
                     assertThat(body.contains(title)).isTrue();
                     assertThat(body.contains(coverUrl)).isTrue();
                     assertThat(body.contains(contents)).isTrue();
+                    assertThat(body.contains(categoryId)).isTrue();
                 });
     }
 
@@ -101,7 +120,8 @@ public class ArticleControllerTests {
                 .body(BodyInserters
                         .fromFormData("title", title)
                         .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+                        .with("contents", contents)
+                        .with("categoryId", categoryId))
                 .exchange()
                 .expectStatus().isFound();
     }

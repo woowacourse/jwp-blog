@@ -11,7 +11,7 @@
 <div>
     <th:block th:include="/fragment/login-header"></th:block>
 
-    <form th:action="(${article} == null) ? '/write' : '/articles/' + ${article.id}" name="article"
+    <form th:action="(${article} == null) ? '/articles/new' : '/articles/' + ${article.id}" name="article"
           th:method="${article} == null ? 'post' : 'put'" accept-charset="utf-8">
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg"
@@ -39,11 +39,8 @@
                     <i class="ti-angle-down font-size-9"></i>
                 </button>
                 <ul class="dropdown-menu" id="categories">
-                    <li>
-                        <a data-categoryId = "1">Java</a>
-                    </li>
-                    <li>
-                        <a data-categoryId = "2">Learning</a>
+                    <li class="nav-item" th:each="category : ${categories}">
+                        <a th:data-categoryId = "${category.categoryId}" th:text="${category.categoryName}"></a>
                     </li>
                 </ul>
             </div>
@@ -99,7 +96,8 @@
 <script src="/static/js/index.js"></script>
 <script type="text/javascript">
 
-    const contents = "[[ ((${article} != null)? ${article.contents} : '') ]]"
+    const contents = "[[ ((${article} != null)? ${article.contents} : '') ]]";
+    const categoryId = "[[ ((${article} != null)? ${article.categoryId} : '') ]]";
 
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),

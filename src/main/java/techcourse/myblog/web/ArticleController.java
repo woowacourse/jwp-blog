@@ -28,8 +28,18 @@ public class ArticleController {
         return "index";
     }
 
+    @GetMapping("/{categoryId}")
+    public String index(@PathVariable final long categoryId, Model model) {
+        List<Article> articles = articleRepository.findByCategoryId(categoryId);
+        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("articles", articles);
+        System.out.println(articles);
+        return "index";
+    }
+
     @GetMapping("/writing")
-    public String showWritingPage() {
+    public String showWritingPage(Model model) {
+        model.addAttribute("categories", categoryRepository.findAll());
         return "article-edit";
     }
 
@@ -61,6 +71,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}/edit")
     public String updateArticle(@PathVariable long articleId, Model model) {
         Article article = articleRepository.findById(articleId);
+        model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("article", article);
         return "article-edit";
     }
