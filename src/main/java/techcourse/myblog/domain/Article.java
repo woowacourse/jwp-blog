@@ -50,6 +50,12 @@ public class Article {
 		return this.id == articleId;
 	}
 
+	public void update(Article article) {
+		this.title = article.title;
+		this.contents = article.contents;
+		this.coverUrl = article.coverUrl;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
