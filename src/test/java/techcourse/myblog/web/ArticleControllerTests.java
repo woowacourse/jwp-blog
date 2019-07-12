@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ArticleControllerTests {
 
     private ArticleRepository articleRepository;
-
+    private String title;
+    private String coverUrl;
+    private String contents;
     @Autowired
     private WebTestClient webTestClient;
 
     @Autowired
     ArticleControllerTests(ArticleRepository articleRepository){
         this.articleRepository = articleRepository;
+    }
+    @BeforeEach
+    void setUp(){
+        title="title";
+        coverUrl="coverUrl";
+        contents="contents";
     }
 
     @Test
@@ -49,10 +58,6 @@ public class ArticleControllerTests {
 
     @Test
     void create_article() {
-        String title = "sss";
-        String coverUrl = "some-cover-image-url";
-        String contents = "contents";
-
         webTestClient.post()
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -79,25 +84,22 @@ public class ArticleControllerTests {
 
     @Test
     void create_update(){
-        String title = "title";
-        String coverUrl = "coverUrl";
-        String contents = "contents";
         articleRepository.save(new Article(title, coverUrl, contents));
         webTestClient.get().uri("articles/1/edit").exchange().expectStatus().isOk();
     }
 
     @Test
     void submit_update() {
-        String title = "update title";
-        String coverUrl = "update coverUrl";
-        String contents = "update contents";
-        articleRepository.save(new Article("title", "coverUrl", "contents"));
+        String newTitle = "update title";
+        String newCoverUrl = "update coverUrl";
+        String newContents = "update contents";
+        articleRepository.save(new Article(title, coverUrl, contents));
         webTestClient.put().uri("/articles/1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                .fromFormData("title",title)
-                .with("coverUrl",coverUrl)
-                .with("contents",contents))
+                .fromFormData("title",newTitle)
+                .with("coverUrl",newCoverUrl)
+                .with("contents",newContents))
                 .exchange()
                 .expectStatus().isFound()
                 .expectBody()
@@ -108,9 +110,9 @@ public class ArticleControllerTests {
                             .expectBody()
                             .consumeWith(res -> {
                                 String body = new String(Objects.requireNonNull(res.getResponseBody()));
-                                assertThat(body.contains(title)).isTrue();
-                                assertThat(body.contains(coverUrl)).isTrue();
-                                assertThat(body.contains(contents)).isTrue();
+                                assertThat(body.contains(newTitle)).isTrue();
+                                assertThat(body.contains(newCoverUrl)).isTrue();
+                                assertThat(body.contains(newContents)).isTrue();
                             });
 
                 });
@@ -119,9 +121,6 @@ public class ArticleControllerTests {
 
     @Test
     void create_delete(){
-        String title = "title";
-        String coverUrl = "coverUrl";
-        String contents = "contents";
         articleRepository.save(new Article(title,coverUrl,contents));
         webTestClient.delete().uri("delete/articles/1").exchange().expectStatus().is3xxRedirection();
     }
