@@ -9,6 +9,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.Arrays;
@@ -75,15 +76,15 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*articles.*");
-        Article article = articleRepository.find(expectedIndex);
-        assertThat(article.getTitle()).isEqualTo(title);
-        assertThat(article.getContents()).isEqualTo(contents);
-        assertThat(article.getCoverUrl()).isEqualTo(coverUrl);
+        ArticleDto articleDto = articleRepository.find(expectedIndex);
+        assertThat(articleDto.getTitle()).isEqualTo(title);
+        assertThat(articleDto.getContents()).isEqualTo(contents);
+        assertThat(articleDto.getCoverUrl()).isEqualTo(coverUrl);
     }
 
     @Test
     void Article_조회_테스트() {
-        Article target = articleRepository.find(0);
+        ArticleDto target = articleRepository.find(0);
         webTestClient.get()
                 .uri("/articles/0")
                 .exchange()
@@ -99,7 +100,7 @@ public class ArticleControllerTests {
 
     @Test
     void Article_수정_Form_테스트() {
-        Article target = articleRepository.find(0);
+        ArticleDto target = articleRepository.find(0);
         webTestClient.get()
                 .uri("/articles/0/edit")
                 .exchange()
@@ -127,7 +128,7 @@ public class ArticleControllerTests {
                         .with("contents", postContents))
                 .exchange()
                 .expectStatus().is3xxRedirection();
-        Article target = articleRepository.find(0);
+        ArticleDto target = articleRepository.find(0);
         assertThat(target.getTitle()).isEqualTo(postTitle);
         assertThat(target.getContents()).isEqualTo(postContents);
         assertThat(target.getCoverUrl()).isEqualTo(postCoverUrl);

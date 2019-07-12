@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.List;
@@ -18,16 +19,16 @@ public class ArticleController {
 
     @GetMapping("/")
     private String index(Model model) {
-        List<Article> articles = articleRepository.findAll();
+        List<ArticleDto> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
     }
 
     @GetMapping("/articles/{id}")
     private String show(@PathVariable int id, Model model) {
-        Article article = articleRepository.find(id);
+        ArticleDto articleDto = articleRepository.find(id);
         model.addAttribute("id", id);
-        model.addAttribute("article", article);
+        model.addAttribute("article", articleDto);
         return "article";
     }
 
@@ -46,18 +47,15 @@ public class ArticleController {
 
     @GetMapping("/articles/{id}/edit")
     private String updateForm(@PathVariable int id, Model model) {
-        Article article = articleRepository.find(id);
+        ArticleDto articleDto = articleRepository.find(id);
         model.addAttribute("id", id);
-        model.addAttribute("article", article);
+        model.addAttribute("article", articleDto);
         return "article-edit";
     }
 
     @PutMapping("/articles/{id}")
     private String update(@ModelAttribute Article article, @PathVariable int id, Model model) {
-        Article target = articleRepository.find(id);
-        target.setTitle(article.getTitle());
-        target.setContents(article.getContents());
-        target.setCoverUrl(article.getCoverUrl());
+        articleRepository.replace(id, article);
         return "redirect:/articles/" + id;
     }
 
