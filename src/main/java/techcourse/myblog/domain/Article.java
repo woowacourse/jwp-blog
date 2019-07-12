@@ -3,17 +3,18 @@ package techcourse.myblog.domain;
 
 public class Article implements Cloneable {
     private static final String DEFAULT_COVER_URL = "/images/default/bg.jpg";
-    private String title;
-    private String contents;
-    private String coverUrl;
+    private final String title;
+    private final String contents;
+    private final String coverUrl;
 
     public Article(String title, String contents, String coverUrl) {
         this.title = title;
         this.contents = contents;
-        this.coverUrl = coverUrl;
-        if (this.coverUrl.isEmpty()) {
+        if (coverUrl.isEmpty()) {
             this.coverUrl = DEFAULT_COVER_URL;
+            return;
         }
+        this.coverUrl = coverUrl;
     }
 
     ArticleDto createDto() {
