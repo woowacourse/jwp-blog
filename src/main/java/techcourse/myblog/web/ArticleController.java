@@ -28,7 +28,7 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PostMapping("/write")
+    @PostMapping("/articles/new")
     public RedirectView addArticle(Article articleParam) {
         Long latestId = articleRepository.add(articleParam);
         return new RedirectView("/articles/" + latestId);
