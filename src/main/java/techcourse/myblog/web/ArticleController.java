@@ -13,7 +13,7 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 
     @Autowired
-    ArticleController(){
+    ArticleController() {
         articleRepository = new ArticleRepository();
     }
 
