@@ -13,11 +13,11 @@ import java.util.List;
 public class IndexController {
     @Autowired
     private ArticleRepository articleRepository;
+
     @GetMapping("/")
     public String index(Model model) {
         List<Article> articles = articleRepository.findAll();
-        model.addAttribute("articles",articles);
+        model.addAttribute("articles", articles);
         return "index";
     }
-
 }

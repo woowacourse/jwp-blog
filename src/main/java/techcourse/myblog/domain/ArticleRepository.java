@@ -4,12 +4,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class ArticleRepository {
     private List<Article> articles = new ArrayList<>();
-    private long index = 0L;
+    private int index;
+
     public List<Article> findAll() {
         return articles;
     }
@@ -19,10 +19,11 @@ public class ArticleRepository {
         articles.add(article);
     }
 
-    public Optional<Article> findById(final long articleId) {
+    public Article findById(final int articleId) {
         return articles.stream()
-                .filter(article-> article.isSameId(articleId))
-                .findFirst();
+                .filter(article -> article.isSameId(articleId))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public Article findLastest() {
@@ -33,11 +34,13 @@ public class ArticleRepository {
         return articles.size() - 1;
     }
 
-    public void delete(final int articleId) {
-        articles.remove(articleId);
+    public void delete(int articleId) {
+        Article article = findById(articleId);
+        articles.remove(article);
     }
 
-    public void modify(final Article article, final int articleId) {
-        articles.set(articleId, article);
+    public void modify(final Article article) {
+        delete(article.getId());
+        articles.add(article);
     }
 }

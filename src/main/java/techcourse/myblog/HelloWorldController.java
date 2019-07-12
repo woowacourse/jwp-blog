@@ -1,7 +1,6 @@
 package techcourse.myblog;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,9 +13,10 @@ public class HelloWorldController {
     public String helloGet(String blogName) {
         return blogName;
     }
+
     @ResponseBody
     @PostMapping("/helloworld")
-    public String helloPost(@RequestBody String blogName){
+    public String helloPost(@RequestBody String blogName) {
         return blogName;
     }
 

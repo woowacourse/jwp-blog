@@ -3,16 +3,22 @@ package techcourse.myblog.domain;
 import java.util.Objects;
 
 public class Article {
-    private long id;
+    private int id;
     private String title;
     private String coverUrl;
     private String contents;
 
-    public long getId() {
+    public Article(final String title, final String coverUrl, final String contents) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(final long id) {
+    public void setId(final int id) {
         this.id = id;
     }
 
@@ -40,7 +46,7 @@ public class Article {
         this.contents = contents;
     }
 
-    public boolean isSameId(Long id){
+    public boolean isSameId(int id) {
         return this.id == id;
     }
 

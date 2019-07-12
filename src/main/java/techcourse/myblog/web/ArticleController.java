@@ -27,9 +27,7 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String viewArticle(@PathVariable int articleId, Model model) {
-        if (articleRepository.findById(articleId).isPresent()) {
-            model.addAttribute("article", articleRepository.findById(articleId).get());
-        }
+        model.addAttribute("article", articleRepository.findById(articleId));
         return "article";
     }
 
@@ -40,8 +38,8 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public ModelAndView editArticle(@PathVariable int articleId, Article article, Model model) {
-        articleRepository.modify(article, articleId);
+    public ModelAndView editArticle(@PathVariable int articleId, Article article) {
+        articleRepository.modify(article);
         return new ModelAndView("redirect:/articles/" + articleRepository.lastestIndex());
     }
 
