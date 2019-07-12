@@ -14,25 +14,25 @@ class ArticleTest {
 
     @Test
     void 제목이_비어있는_경우_에러_발생() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(InvalidArticleException.class,
                 () -> new Article(0, "", "testUrl", "testContents"));
     }
 
     @Test
     void 제목이_null인_경우_에러_발생() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(InvalidArticleException.class,
                 () -> new Article(0, null, "testUrl", "testContents"));
     }
 
     @Test
     void 내용이_비어있는_경우_에러_발생() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(InvalidArticleException.class,
                 () -> new Article(0, "testTitle", "testUrl", ""));
     }
 
     @Test
     void 내용이_null인_경우_에러_발생() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(InvalidArticleException.class,
                 () -> new Article(0, "testTitle", "testUrl", null));
     }
 

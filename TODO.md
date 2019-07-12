@@ -30,6 +30,6 @@
 - [X] class 파일 수정 시 자동으로 재시작하기
 
 ### 기타
-- [ ] 커스텀 익셉션 만들기
+- [X] 커스텀 익셉션 만들기
 - [ ] article-edit.html  title, coverUrl 부분 리팩터링
 - [ ] index.html에서 마크다운 적용안되는 부분 해결하기

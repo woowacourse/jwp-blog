@@ -19,13 +19,13 @@ public class Article {
 
     private void validateTitle(String title) {
         if (isBlank(title)) {
-            throw new IllegalArgumentException("제목을 입력해주세요!");
+            throw new InvalidArticleException("제목을 입력해주세요!");
         }
     }
 
     private void validateContents(String contents) {
         if (isBlank(contents)) {
-            throw new IllegalArgumentException("내용을 입력해주세요!");
+            throw new InvalidArticleException("내용을 입력해주세요!");
         }
     }
 
