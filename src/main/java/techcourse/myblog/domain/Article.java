@@ -5,6 +5,12 @@ public class Article {
     private String title;
     private String coverUrl;
     private String contents;
+    
+    public Article(String title, String coverUrl, String contents) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+    }
 
     public boolean matchId(int id) {
         return this.id == id;
@@ -22,23 +28,11 @@ public class Article {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getCoverUrl() {
         return coverUrl;
     }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
+    
     public String getContents() {
         return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
     }
 }
