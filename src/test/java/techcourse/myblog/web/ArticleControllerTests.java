@@ -32,7 +32,6 @@ public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
 
-    @Autowired
     ArticleControllerTests(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
@@ -58,7 +57,6 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().isOk();
     }
-
 
     @Test
     void create_article() {

@@ -61,7 +61,10 @@ public class ArticleRepositoryTest {
         ArticleVO article2 = new ArticleVO("update title", "update coverUrl", "update contents");
         articleRepository.save(article);
         articleRepository.update(article.getArticleId(), article2);
-        assertThat(articleRepository.findAll()).isEqualTo(Arrays.asList(article2));
+
+        assertThat(article.getTitle().equals(article2.getTitle()));
+        assertThat(article.getCoverUrl().equals(article2.getCoverUrl()));
+        assertThat(article.getContents().equals(article2.getContents()));
     }
 
     @Test
