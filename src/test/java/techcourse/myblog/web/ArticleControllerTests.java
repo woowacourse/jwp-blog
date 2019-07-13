@@ -16,7 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
-    private static Article article = new Article("jaemok", "yuarel", "naeyong");
+    private static Article article = Article.builder()
+            .title("jaemok").coverUrl("yuarel").contents("naeyong").build();
 
     @Autowired
     private WebTestClient webTestClient;

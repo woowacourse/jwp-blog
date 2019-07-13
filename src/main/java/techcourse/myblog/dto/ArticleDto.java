@@ -1,6 +1,7 @@
 package techcourse.myblog.dto;
 
 import lombok.Data;
+import techcourse.myblog.domain.Article;
 
 public class ArticleDto {
 
@@ -9,6 +10,14 @@ public class ArticleDto {
         private String title;
         private String coverUrl;
         private String contents;
+
+        public Article toArticle() {
+            return Article.builder()
+                    .title(title)
+                    .coverUrl(coverUrl)
+                    .contents(contents)
+                    .build();
+        }
     }
 
     @Data
@@ -16,5 +25,14 @@ public class ArticleDto {
         private String title;
         private String coverUrl;
         private String contents;
+
+        public Article toArticle(long articleId) {
+            return Article.builder()
+                    .id(articleId)
+                    .title(title)
+                    .coverUrl(coverUrl)
+                    .contents(contents)
+                    .build();
+        }
     }
 }

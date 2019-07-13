@@ -8,15 +8,7 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public Article(String title, String coverUrl, String contents) {
-        this(articleId++, title, coverUrl, contents);
-    }
-
-    public Article(long id, String title, String coverUrl, String contents) {
-        this.id = id;
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
+    private Article() {
     }
 
     public Long getId() {
@@ -37,5 +29,46 @@ public class Article {
 
     public boolean equals(long articleId) {
         return this.id == articleId;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private long id;
+        private String title;
+        private String coverUrl;
+        private String contents;
+
+        public Builder id(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder coverUrl(String coverUrl) {
+            this.coverUrl = coverUrl;
+            return this;
+        }
+
+        public Builder contents(String contents) {
+            this.contents = contents;
+            return this;
+        }
+
+        public Article build() {
+            Article article = new Article();
+            article.id = this.id == 0 ? articleId++ : this.id;
+            article.title = this.title;
+            article.coverUrl = this.coverUrl;
+            article.contents = this.contents;
+
+            return article;
+        }
     }
 }

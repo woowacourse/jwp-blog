@@ -12,9 +12,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ArticleRepositoryTest {
     private ArticleRepository articleRepository;
-    private static Article articleFirst = new Article(1, "타이틀1", "유알엘1", "컨텐트1");
-    private static Article articleSecond = new Article(2, "타이틀2", "유알엘2", "컨텐트2");
-    private static Article articleThird = new Article(3, "타이틀3", "유알엘3", "컨텐트4");
+    private static Article articleFirst = Article.builder()
+            .id(1).title("타이틀1").coverUrl("유알엘1").contents("컨텐츠1").build();
+    private static Article articleSecond = Article.builder()
+            .id(2).title("타이틀2").coverUrl("유알엘2").contents("컨텐츠2").build();
+    private static Article articleThird = Article.builder()
+            .id(3).title("타이틀3").coverUrl("유알엘3").contents("컨텐츠3").build();
 
     @BeforeEach
     void setUp() {
@@ -47,7 +50,8 @@ public class ArticleRepositoryTest {
 
     @Test
     void 게시물_수정_테스트() {
-        Article updatedArticle = new Article(1, "제목", "이미지경로", "내용");
+        Article updatedArticle = Article.builder()
+                .id(1).title("수정타이틀1").coverUrl("수정유알엘1").contents("수정컨텐츠1").build();
         long updatedArticleId = articleRepository.update(updatedArticle);
 
         assertThat(articleRepository.findById(updatedArticleId)).isEqualTo(updatedArticle);

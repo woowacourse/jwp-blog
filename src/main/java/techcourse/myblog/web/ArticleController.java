@@ -30,8 +30,8 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String createArticle(ArticleDto.Create articleDto) {
-        Article article = new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
-        long articleId = articleRepository.save(article);
+        Article newArticle = articleDto.toArticle();
+        long articleId = articleRepository.save(newArticle);
         return "redirect:/articles/" + articleId;
     }
 
@@ -51,8 +51,8 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String updateArticle(@PathVariable long articleId, ArticleDto.Update articleDto) {
-        Article article = new Article(articleId, articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
-        articleRepository.update(article);
+        Article updatedArticle = articleDto.toArticle(articleId);
+        articleRepository.update(updatedArticle);
         return "redirect:/articles/" + articleId;
     }
 
