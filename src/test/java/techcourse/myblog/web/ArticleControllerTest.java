@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleDTO;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.exception.CouldNotFindArticleIdException;
@@ -102,6 +103,30 @@ public class ArticleControllerTest {
                     assertThat(body.contains(articleDTO.getCoverUrl())).isTrue();
                     assertThat(body.contains(articleDTO.getContents())).isTrue();
                 });
+    }
+
+    @Test
+    @DisplayName("게시글 수정 페이지에서 데이터들을 받아 게시글을 수정한다")
+    void articleEditTest() {
+        String changedTitle = "changed title";
+        String changedCoverUrl = "changed coverUrl";
+        String changedContents = "changed contents";
+
+        webTestClient.put()
+                .uri("/articles/" + savedArticleIdBeforeTest)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", changedTitle)
+                        .with("coverUrl", changedCoverUrl)
+                        .with("contents", changedContents))
+                .exchange()
+                .expectStatus().isFound();
+
+        Article article = articleRepository.findBy(savedArticleIdBeforeTest);
+
+        assertThat(article.getTitle()).isEqualTo(changedTitle);
+        assertThat(article.getCoverUrl()).isEqualTo(changedCoverUrl);
+        assertThat(article.getContents()).isEqualTo(changedContents);
     }
 
     @Test
