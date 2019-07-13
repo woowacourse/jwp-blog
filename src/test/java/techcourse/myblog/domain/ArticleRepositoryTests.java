@@ -10,7 +10,7 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ArticleRepositoryTest {
+public class ArticleRepositoryTests {
     private ArticleRepository articleRepository;
     private static Article articleFirst = Article.builder()
             .id(1).title("타이틀1").coverUrl("유알엘1").contents("컨텐츠1").build();
