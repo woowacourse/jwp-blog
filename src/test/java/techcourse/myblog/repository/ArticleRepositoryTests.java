@@ -1,7 +1,7 @@
 package techcourse.myblog.repository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,17 +33,15 @@ public class ArticleRepositoryTests {
 
 	@Test
 	void findAll() {
-		List<Article> articles = new ArrayList<>();
-		for (int i = 0; i < 3; i++) {
-			articles.add(new Article("title" + i, "contents" + i, "www.coverUrl.com" + i));
-		}
-		articles.forEach(article -> articleRepository.save(article));
-
+		IntStream.range(0, 3)
+				.mapToObj(i -> new Article("title" + i, "contents" + i, "www.coverUrl.com" + i))
+				.forEach(articleRepository::save);
 		List<Article> savedArticles = articleRepository.findAll();
+
 		for (int i = 0; i < 3; i++) {
-			assertThat(articles.get(i).getTitle()).isEqualTo(savedArticles.get(i).getTitle());
-			assertThat(articles.get(i).getContents()).isEqualTo(savedArticles.get(i).getContents());
-			assertThat(articles.get(i).getCoverUrl()).isEqualTo(savedArticles.get(i).getCoverUrl());
+			assertThat("title" + i).isEqualTo(savedArticles.get(i).getTitle());
+			assertThat("contents" + i).isEqualTo(savedArticles.get(i).getContents());
+			assertThat("www.coverUrl.com" + i).isEqualTo(savedArticles.get(i).getCoverUrl());
 		}
 	}
 
