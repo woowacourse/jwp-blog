@@ -24,9 +24,8 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String createArticle(ArticleDto articleDto) {
-        Article article = new Article(articleDto);
-        articleRepository.add(article);
-        return "redirect:/articles/" + article.getId();
+        Article addedArticle = articleRepository.add(articleDto);
+        return "redirect:/articles/" + addedArticle.getId();
     }
 
     @GetMapping("/articles/new")

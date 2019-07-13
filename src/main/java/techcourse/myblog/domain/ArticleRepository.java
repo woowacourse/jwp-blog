@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
+import techcourse.myblog.dto.ArticleDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,12 @@ public class ArticleRepository {
 
     public List<Article> findAll() {
         return articles;
+    }
+
+    public Article add(ArticleDto articleDto) {
+        Article newArticle = new Article(articleDto);
+        articles.add(newArticle);
+        return newArticle;
     }
 
     public void add(Article article) {
