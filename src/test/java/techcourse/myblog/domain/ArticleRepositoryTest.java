@@ -4,8 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ArticleRepositoryTest {
     private ArticleRepository articleRepository;
@@ -36,8 +35,9 @@ class ArticleRepositoryTest {
 
     @Test
     void 존재하는_게시글_정상_수정() {
-        assertDoesNotThrow(() ->
-                articleRepository.update(new Article(0, "title2", "url2", "contents2")));
+        Article targetArticle = new Article(0, "tilte2", "url2", "contents2");
+        articleRepository.update(targetArticle);
+        assertEquals(articleRepository.findById(0), targetArticle);
     }
 
     @Test
