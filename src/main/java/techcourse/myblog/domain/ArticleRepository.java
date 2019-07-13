@@ -23,20 +23,19 @@ public class ArticleRepository {
         articles.add(article);
     }
 
-    public Article getArticleById(int index) {
+    public Optional<Article> getArticleById(int index) {
         return articles.stream()
                 .filter(article -> article.isSameId(index))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .findFirst();
     }
 
     public void removeArticleById(int id) {
-        Optional.of(getArticleById(id)).orElseThrow(IllegalArgumentException::new);
-        articles.removeIf(article -> article.isSameId(id));
+        articles.remove(getArticleById(id).orElseThrow(IllegalArgumentException::new));
     }
 
     public void updateArticle(Article updatedArticle) {
-        articles.set(articles.indexOf(getArticleById(updatedArticle.getId())), updatedArticle);
+        articles.set(articles.indexOf(getArticleById(updatedArticle.getId())
+                .orElseThrow(IllegalArgumentException::new)), updatedArticle);
     }
 
 
