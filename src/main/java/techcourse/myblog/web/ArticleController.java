@@ -31,7 +31,7 @@ public class ArticleController {
 		return "article";
 	}
 
-	@GetMapping("article/{articleId}")
+	@GetMapping("articles/{articleId}")
 	public String getArticle(@PathVariable int articleId, Model model) {
 		model.addAttribute("article", articleService.findById(articleId));
 		return "article";
