@@ -28,9 +28,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(Article article, Model model) {
+    public String createArticle(Article article) {
         this.articleRepository.add(article);
-        model.addAttribute("article", article);
         return "redirect:/articles/" + article.getId();
     }
 
@@ -47,9 +46,8 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable int articleId, Article article, Model model) {
+    public String updateArticle(@PathVariable int articleId, Article article) {
         articleRepository.update(articleId, article);
-        model.addAttribute("article", this.articleRepository.findById(articleId));
         return "redirect:/articles/" + articleId;
     }
 
