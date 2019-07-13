@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
+import techcourse.myblog.excerption.ArticleNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +23,7 @@ public class ArticleRepository {
         return articles.stream()
                 .filter(article -> article.getId() == articleId)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                .orElseThrow(ArticleNotFoundException::new);
     }
 
     public void editArticle(final int id, final Article article) {
