@@ -27,18 +27,22 @@ public class ArticleControllerTests {
     private String title;
     private String coverUrl;
     private String contents;
+    private Article article;
+
     @Autowired
     private WebTestClient webTestClient;
 
     @Autowired
-    ArticleControllerTests(ArticleRepository articleRepository){
+    ArticleControllerTests(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
+
     @BeforeEach
-    void setUp(){
-        title="title";
-        coverUrl="coverUrl";
-        contents="contents";
+    void setUp() {
+        title = "title";
+        coverUrl = "coverUrl";
+        contents = "contents";
+        article = new Article(title, coverUrl, contents);
     }
 
     @Test
@@ -83,8 +87,8 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void create_update(){
-        articleRepository.save(new Article(title, coverUrl, contents));
+    void create_update() {
+        articleRepository.save(article);
         webTestClient.get().uri("articles/1/edit").exchange().expectStatus().isOk();
     }
 
@@ -93,13 +97,13 @@ public class ArticleControllerTests {
         String newTitle = "update title";
         String newCoverUrl = "update coverUrl";
         String newContents = "update contents";
-        articleRepository.save(new Article(title, coverUrl, contents));
+        articleRepository.save(article);
         webTestClient.put().uri("/articles/1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                .fromFormData("title",newTitle)
-                .with("coverUrl",newCoverUrl)
-                .with("contents",newContents))
+                        .fromFormData("title", newTitle)
+                        .with("coverUrl", newCoverUrl)
+                        .with("contents", newContents))
                 .exchange()
                 .expectStatus().isFound()
                 .expectBody()
@@ -120,8 +124,8 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void create_delete(){
-        articleRepository.save(new Article(title,coverUrl,contents));
+    void create_delete() {
+        articleRepository.save(article);
         webTestClient.delete().uri("delete/articles/1").exchange().expectStatus().is3xxRedirection();
     }
 

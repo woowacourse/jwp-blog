@@ -19,18 +19,17 @@ public class ArticleRepository {
 
     public Article findById(Long articleId) {
         return articles.stream()
-                .filter(article -> article.getArticleId().equals(articleId))
-                .findAny()
-                .get();
+                .filter(article -> article.isEqualToArticleId(articleId))
+                .findAny().orElseThrow(()->new IllegalArgumentException("해당 인스턴스가 없습니다."));
     }
 
-    public int size() {
+    public int count() {
         return articles.size();
     }
 
-    public void update(Article originArticle, Article updatedArticle) {
-        articles.remove(originArticle);
-        save(updatedArticle);
+    public void update(Long articleId, ArticleVO articleVO) {
+        Article article = findById(articleId);
+        article.update(articleVO);
     }
 
     public void delete(Long articleId) {

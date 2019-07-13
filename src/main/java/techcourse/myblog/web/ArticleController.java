@@ -1,18 +1,17 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.ArticleVO;
 
 @Controller
 public class ArticleController {
 
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
-    @Autowired
     ArticleController(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
@@ -29,7 +28,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(@ModelAttribute Article article, Model model) {
+    public String createArticle(ArticleVO articleVO, Model model) {
+        Article article = new Article(articleVO.getTitle(), articleVO.getCoverUrl(), articleVO.getContents());
         articleRepository.save(article);
         model.addAttribute("article", article);
         return "redirect:/articles/" + article.getArticleId();
@@ -50,9 +50,8 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String showUpdatedArticle(@PathVariable Long articleId, Article updatedArticle, Model model) {
-        Article originArticle = articleRepository.findById(articleId);
-        articleRepository.update(originArticle, updatedArticle);
+    public String showUpdatedArticle(@PathVariable Long articleId, ArticleVO updatedArticle, Model model) {
+        articleRepository.update(articleId, updatedArticle);
         model.addAttribute("article", updatedArticle);
         return "redirect:/articles/" + articleId;
     }
