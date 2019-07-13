@@ -22,10 +22,6 @@ public class Article {
         this.id = id;
     }
 
-    public static void initCurrentId() {
-        currentId = 1;
-    }
-
     public Article getCopy() {
         return new Article(id, title, contents, coverUrl);
     }

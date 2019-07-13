@@ -32,7 +32,6 @@ public class ArticleRepository {
     }
 
     public Article findById(int articleId) {
-        System.out.println(articles);
         for (Article article : articles) {
             if (articleId == article.getId()) {
                 return article;
@@ -50,6 +49,7 @@ public class ArticleRepository {
     }
 
     public void update(int articleId, Article article) {
+        System.out.println(articles);
         Article originalArticle = findById(articleId);
 
         originalArticle.update(article);
@@ -63,15 +63,5 @@ public class ArticleRepository {
             }
         }
         throw new ArticleNotFoundException();
-    }
-
-    public int getLatestArticleId() {
-        int maxId = 0;
-        for (Article article : articles) {
-            if (article.getId() > maxId) {
-                maxId = article.getId();
-            }
-        }
-        return maxId;
     }
 }

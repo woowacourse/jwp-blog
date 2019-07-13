@@ -22,13 +22,13 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String writeArticle(Article article, Model model) {
+    public String saveArticlePage(Article article, Model model) {
         articleRepository.save(article);
         return "redirect:/articles/" + article.getId();
     }
 
     @GetMapping("/")
-    public String showArticles(Model model) {
+    public String showArticlesPage(Model model) {
         List<Article> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
@@ -41,19 +41,19 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}")
-    public String showArticleById(@PathVariable int articleId, Model model) {
+    public String showArticleByIdPage(@PathVariable int articleId, Model model) {
         model.addAttribute("article", articleRepository.findById(articleId));
         return "article";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable int articleId, Article article, Model model) {
+    public String updateArticleByIdPage(@PathVariable int articleId, Article article, Model model) {
         articleRepository.update(articleId, article);
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId) {
+    public String deleteArticleByIdPage(@PathVariable int articleId) {
         articleRepository.delete(articleId);
         return "redirect:/";
     }

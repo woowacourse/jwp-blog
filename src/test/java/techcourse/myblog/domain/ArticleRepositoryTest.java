@@ -47,9 +47,4 @@ class ArticleRepositoryTest {
         assertThat(articleRepository.findAll().contains(article)).isFalse();
         articleRepository.save(article);
     }
-
-    @Test
-    void getLatestArticleIdTest() {
-        assertThat(articleRepository.getLatestArticleId()).isEqualTo(article.getId());
-    }
 }
