@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleNotFoundException;
 import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
@@ -36,7 +37,7 @@ public class ArticleController {
     @GetMapping("/articles/{id}")
     public String showArticle(@PathVariable("id") long id, Model model) {
         Article foundArticle = articleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 입니다."));
+                .orElseThrow(ArticleNotFoundException::new);
         model.addAttribute("article", foundArticle);
         return "article";
     }
@@ -44,7 +45,7 @@ public class ArticleController {
     @GetMapping("/articles/{id}/edit")
     public String showEditPage(@PathVariable("id") long id, Model model) {
         Article foundArticle = articleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 입니다."));
+                .orElseThrow(ArticleNotFoundException::new);
         model.addAttribute("article", foundArticle);
         return "article-edit";
     }
