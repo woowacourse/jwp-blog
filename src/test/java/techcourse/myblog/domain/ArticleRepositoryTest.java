@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,6 @@ public class ArticleRepositoryTest {
     void setUp() {
         this.articleRepository = new ArticleRepository();
         this.testArticle = new Article("2", "3",  "4");
-        this.testArticle.setId(1);
         this.articleRepository.add(this.testArticle);
     }
 
@@ -31,20 +31,15 @@ public class ArticleRepositoryTest {
     }
 
     @Test
-    void 다음_아이디값_생성_테스트() {
-        assertThat(this.articleRepository.newArticleId()).isEqualTo(2);
-    }
-
-    @Test
     void article_업데이트_테스트() {
-        Article articleToCompare = new Article("3", "4", "5");
-        articleToCompare.setId(1);
-        this.articleRepository.update(1, articleToCompare);
-        assertThat(this.articleRepository.findById(1)).isEqualTo(articleToCompare);
+        Article article = new Article("3", "4", "5");
+        article.setId(1);
+        this.articleRepository.update(1, article);
+        assertThat(this.articleRepository.findById(1)).isEqualTo(article);
     }
 
-    @Test
-    void article_삭제_테스트() {
+    @AfterEach
+    void tearDown() {
         this.articleRepository.remove(1);
         assertThrows(IllegalArgumentException.class, () -> this.articleRepository.findById(1));
     }
