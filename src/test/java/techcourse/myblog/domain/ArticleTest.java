@@ -32,7 +32,6 @@ public class ArticleTest {
 
     @Test
     void idIncrementTest() {
-        assertThat(article.getId()).isEqualTo(1);
         assertThat((new Article("new title", "new contents", "new cover url")).getId()).isGreaterThan(article.getId());
     }
 

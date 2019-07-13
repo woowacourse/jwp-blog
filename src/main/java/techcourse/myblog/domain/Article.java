@@ -1,8 +1,10 @@
 package techcourse.myblog.domain;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
-@Data
+@Getter
+@EqualsAndHashCode
 public class Article {
     private static int currentId = 1;
 
