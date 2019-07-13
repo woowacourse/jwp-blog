@@ -13,12 +13,14 @@ public class ArticleRepository {
     private static final int INCREMENT_VALUE = 1;
 
     private List<Article> articles = new ArrayList<>();
+    private static int articleId = 0;
 
     public List<Article> findAll() {
         return unmodifiableList(this.articles);
     }
 
     public void add(Article article) {
+        article.setId(++articleId);
         this.articles.add(article);
     }
 
