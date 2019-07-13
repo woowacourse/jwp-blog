@@ -1,6 +1,6 @@
 package techcourse.myblog.web;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +11,10 @@ import techcourse.myblog.dto.ArticleDto;
 import java.util.List;
 
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ArticleController {
 
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
     @GetMapping("/")
     public String index(Model model) {
