@@ -10,8 +10,13 @@ import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
 public class ArticleController {
+
+    private final ArticleRepository articleRepository;
+
     @Autowired
-    private ArticleRepository articleRepository;
+    public ArticleController(ArticleRepository articleRepository){
+        this.articleRepository = articleRepository;
+    }
 
     @GetMapping("/writing")
     public String createArticleForm() {
