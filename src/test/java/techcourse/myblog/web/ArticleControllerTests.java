@@ -84,10 +84,7 @@ public class ArticleControllerTests {
         String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
         String contents = "Hi";
 
-        Article article = new Article();
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
+        Article article = new Article(title, coverUrl, contents);
         articleRepository.add(article);
 
         webTestClient.get()
@@ -108,10 +105,7 @@ public class ArticleControllerTests {
         String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
         String contents = "Hi";
 
-        Article article = new Article();
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
+        Article article = new Article(title, coverUrl, contents);
         articleRepository.add(article);
 
         webTestClient.get()
@@ -134,10 +128,8 @@ public class ArticleControllerTests {
         String contents = "Hi";
         String newContents = "Bye";
 
-        Article article = new Article();
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
+        Article article = new Article(title, coverUrl, contents);
+
         articleRepository.add(article);
 
         webTestClient.put()
@@ -171,10 +163,8 @@ public class ArticleControllerTests {
         String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
         String contents = "Hi";
 
-        Article article = new Article();
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
+        Article article = new Article(title, coverUrl, contents);
+
         articleRepository.add(article);
 
         webTestClient.delete()

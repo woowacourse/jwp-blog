@@ -17,42 +17,35 @@ public class ArticleRepositoryTests {
 
     @Test
     void add() {
-        Article article = new Article();
-        article.setContents("Contents");
-        article.setCoverUrl("https://www.woowa.com");
-        article.setTitle("Hi");
+        Article article = new Article("Title", "https://www.woowa.com", "Contents");
         articleRepository.add(article);
 
-        Article addedArticle = articleRepository.findAll().get(0);
-        assertThat(addedArticle.getContents()).isEqualTo("Contents");
+        Article addedArticle = articleRepository.findById(article.getId()).orElseThrow(ArticleNotFoundException::new);
+        assertThat(addedArticle.getTitle()).isEqualTo("Title");
         assertThat(addedArticle.getCoverUrl()).isEqualTo("https://www.woowa.com");
-        assertThat(addedArticle.getTitle()).isEqualTo("Hi");
+        assertThat(addedArticle.getContents()).isEqualTo("Contents");
     }
 
     @Test
     void findById() {
-        Article article = new Article();
-        article.setContents("Contents");
-        article.setCoverUrl("https://www.woowa.com");
-        article.setTitle("Hi");
-        articleRepository.add(new Article());
-        articleRepository.add(new Article());
+        Article article = new Article("Title", "https://www.woowa.com", "Contents");
+
+        articleRepository.add(new Article("", "", ""));
+        articleRepository.add(new Article("", "", ""));
         articleRepository.add(article);
 
         Article foundArticle = articleRepository.findById(article.getId()).orElseThrow(ArticleNotFoundException::new);
-        assertThat(foundArticle.getContents()).isEqualTo("Contents");
+        assertThat(foundArticle.getTitle()).isEqualTo("Title");
         assertThat(foundArticle.getCoverUrl()).isEqualTo("https://www.woowa.com");
-        assertThat(foundArticle.getTitle()).isEqualTo("Hi");
+        assertThat(foundArticle.getContents()).isEqualTo("Contents");
     }
 
     @Test
     void deleteById() {
-        Article article = new Article();
-        article.setContents("Contents");
-        article.setCoverUrl("https://www.woowa.com");
-        article.setTitle("Hi");
-        articleRepository.add(new Article());
-        articleRepository.add(new Article());
+        Article article = new Article("Title", "https://www.woowa.com", "Contents");
+
+        articleRepository.add(new Article("", "", ""));
+        articleRepository.add(new Article("", "", ""));
         articleRepository.add(article);
 
         articleRepository.deleteById(article.getId());
