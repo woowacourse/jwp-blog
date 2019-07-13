@@ -31,7 +31,7 @@ class ArticleRepositoryTest {
 
     @Test
     void 존재하지_않는_게시글_검색_에러() {
-        assertThrows(InvalidArticleException.class, () ->
+        assertThrows(ArticleNotFoundException.class, () ->
                 articleRepository.find(0));
     }
 
@@ -45,7 +45,7 @@ class ArticleRepositoryTest {
 
     @Test
     void 존재하지않는_게시글_수정_시도_에러() {
-        assertThrows(InvalidArticleException.class, () ->
+        assertThrows(ArticleNotFoundException.class, () ->
                 articleRepository.update(new Article(articleRepository.nextId(), "a", "a", "a")));
     }
 
@@ -58,6 +58,6 @@ class ArticleRepositoryTest {
 
     @Test
     void 존재하지않는_게시글_삭제_시도_에러() {
-        assertThrows(InvalidArticleException.class, () -> articleRepository.remove(0));
+        assertThrows(ArticleNotFoundException.class, () -> articleRepository.remove(0));
     }
 }

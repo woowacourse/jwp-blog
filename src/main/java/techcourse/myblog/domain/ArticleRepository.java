@@ -23,7 +23,7 @@ public class ArticleRepository {
         return articles.stream()
                 .filter(article -> article.matchId(articleId))
                 .findAny()
-                .orElseThrow(() -> new InvalidArticleException("존재하지 않는 게시물입니다."))
+                .orElseThrow(() -> new ArticleNotFoundException("존재하지 않는 게시물입니다."))
                 ;
     }
 
