@@ -35,7 +35,7 @@ public class ArticleRepositoryTest {
 
     @Test
     void article_업데이트_테스트() {
-        Article articleToCompare = new Article("1","2","3");
+        Article articleToCompare = new Article("this is a test","yes this is","hello test");
         articleToCompare = articleToCompare.edit(1, articleToCompare);
         this.articleRepository.update(1, articleToCompare);
         assertThat(this.articleRepository.findById(1)).isEqualTo(articleToCompare);
