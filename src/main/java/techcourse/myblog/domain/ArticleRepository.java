@@ -9,18 +9,17 @@ import static java.util.Collections.unmodifiableList;
 
 @Repository
 public class ArticleRepository {
-    private static final int INITIAL_VALUE = -1;
+    private static final int INITIAL_VALUE = 0;
     private static final int INCREMENT_VALUE = 1;
 
     private List<Article> articles = new ArrayList<>();
-    private static int articleId = 0;
 
     public List<Article> findAll() {
         return unmodifiableList(this.articles);
     }
 
     public void add(Article article) {
-        article.setId(++articleId);
+        article.setId(autoIncrement());
         this.articles.add(article);
     }
 
@@ -31,7 +30,7 @@ public class ArticleRepository {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
     }
 
-    public int newArticleId() {
+    public int autoIncrement() {
         return this.articles.stream()
                 .mapToInt(Article::getId)
                 .max()
