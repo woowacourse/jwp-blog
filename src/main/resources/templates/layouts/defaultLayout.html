@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:include="fragments/defaultHead"/>
+</head>
+<body>
+<th:block th:include="fragments/defaultNav :: login"/>
+
+<th:block layout:fragment="content"/>
+
+<th:block th:include="fragments/defaultFooter"/>
+<th:block th:include="fragments/defaultScript"/>
+
+</body>
+</html>
