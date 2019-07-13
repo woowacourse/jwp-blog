@@ -11,9 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleDTO;
 import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.validator.CouldNotFindArticleIdException;
+import techcourse.myblog.domain.exception.CouldNotFindArticleIdException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -21,10 +21,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest {
-    private static final int TEST_ARTICLE_ID = 1;
-    private static final int DELETE_TEST_ARTICLE_ID = 0;
-
-    private Article article;
+    private ArticleDTO articleDTO;
+    private int savedArticleIdBeforeTest;
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -34,14 +32,14 @@ public class ArticleControllerTest {
 
     @BeforeEach
     void setUp() {
-        article = new Article(
-                TEST_ARTICLE_ID,
+        articleDTO = new ArticleDTO(
                 "test title",
                 "test coverUrl",
                 "test contents"
         );
 
-        articleRepository.save(article);
+        articleRepository.save(articleDTO);
+        savedArticleIdBeforeTest = articleRepository.getLastGeneratedId();
     }
 
     @Test
@@ -56,12 +54,11 @@ public class ArticleControllerTest {
     @DisplayName("게시글을 작성한 뒤 생성 버튼을 눌렀을 때 생성된 게시글을 보여준다.")
     void createNewArticleTest() {
         // Given
-        int expectedIdGeneratedByServer = TEST_ARTICLE_ID + 1;
         String inputTitle = "test title";
         String inputCoverUrl = "test coverUrl";
         String inputContents = "test contents";
 
-        // When, Then
+        // When
         webTestClient.post()
                 .uri("/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -72,11 +69,14 @@ public class ArticleControllerTest {
                 .exchange()
                 .expectStatus().isFound();
 
-        assertThat(articleRepository.find(expectedIdGeneratedByServer).getTitle())
+        // Then
+        int lastSavedId = articleRepository.getLastGeneratedId();
+
+        assertThat(articleRepository.findBy(lastSavedId).getTitle())
                 .isEqualTo(inputTitle);
-        assertThat(articleRepository.find(expectedIdGeneratedByServer).getCoverUrl())
+        assertThat(articleRepository.findBy(lastSavedId).getCoverUrl())
                 .isEqualTo(inputCoverUrl);
-        assertThat(articleRepository.find(expectedIdGeneratedByServer).getContents())
+        assertThat(articleRepository.findBy(lastSavedId).getContents())
                 .isEqualTo(inputContents);
     }
 
@@ -92,15 +92,15 @@ public class ArticleControllerTest {
     @DisplayName("게시글에서 수정 버튼을 누르는 경우 id에 해당하는 edit 페이지를 되돌려준다.")
     void articleEditPageTest() {
         webTestClient.get()
-                .uri("/articles/" + TEST_ARTICLE_ID + "/edit")
+                .uri("/articles/" + savedArticleIdBeforeTest + "/edit")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains(article.getTitle())).isTrue();
-                    assertThat(body.contains(article.getCoverUrl())).isTrue();
-                    assertThat(body.contains(article.getContents())).isTrue();
+                    assertThat(body.contains(articleDTO.getTitle())).isTrue();
+                    assertThat(body.contains(articleDTO.getCoverUrl())).isTrue();
+                    assertThat(body.contains(articleDTO.getContents())).isTrue();
                 });
     }
 
@@ -108,27 +108,28 @@ public class ArticleControllerTest {
     @DisplayName("게시글을 삭제한다.")
     void deleteArticleTest() {
         // Given
-        Article deleteArticle = new Article(
-                DELETE_TEST_ARTICLE_ID,
+        ArticleDTO testArticleDTO = new ArticleDTO(
                 "deleting title",
                 "deleting coverUrl",
                 "deleting contents"
         );
 
-        articleRepository.save(deleteArticle);
+        articleRepository.save(testArticleDTO);
 
         // When, Then
+        int lastSavedId = articleRepository.getLastGeneratedId();
+
         webTestClient.delete()
-                .uri("/articles/" + DELETE_TEST_ARTICLE_ID)
+                .uri("/articles/" + lastSavedId)
                 .exchange()
                 .expectStatus().isFound();
 
-        assertThatThrownBy(() -> articleRepository.find(DELETE_TEST_ARTICLE_ID))
+        assertThatThrownBy(() -> articleRepository.findBy(lastSavedId))
                 .isInstanceOf(CouldNotFindArticleIdException.class);
     }
 
     @AfterEach
     void tearDown() {
-        articleRepository.delete(TEST_ARTICLE_ID);
+        articleRepository.deleteBy(savedArticleIdBeforeTest);
     }
 }

@@ -4,12 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleDTO;
 import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
 public class ArticleController {
-    private static final int INCREMENT_AMOUNT = 1;
-
     private final ArticleRepository articleRepository;
 
     public ArticleController(ArticleRepository articleRepository) {
@@ -28,7 +27,7 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}/edit")
     public String articleEditPage(@PathVariable int articleId, Model model) {
-        Article article = articleRepository.find(articleId);
+        Article article = articleRepository.findBy(articleId);
         String actionRoute = "/articles/" + articleId;
         String formMethod = "put";
 
@@ -40,16 +39,15 @@ public class ArticleController {
 
     @PostMapping("/write")
     public String createNewArticle(String title, String coverUrl, String contents) {
-        int newArticleId = articleRepository.getLastArticleId() + INCREMENT_AMOUNT;
-        Article article = new Article(newArticleId, title, coverUrl, contents);
+        ArticleDTO articleDTO = new ArticleDTO(title, coverUrl, contents);
 
-        articleRepository.save(article);
-        return "redirect:/articles/" + newArticleId;
+        articleRepository.save(articleDTO);
+        return "redirect:/articles/" + articleRepository.getLastGeneratedId();
     }
 
     @GetMapping("/articles/{articleId}")
-    public String searchArticle(@PathVariable int articleId, Model model) {
-        Article article = articleRepository.find(articleId);
+    public String getArticle(@PathVariable int articleId, Model model) {
+        Article article = articleRepository.findBy(articleId);
 
         model.addAttribute("article", article);
         return "article";
@@ -66,7 +64,7 @@ public class ArticleController {
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable int articleId) {
-        articleRepository.delete(articleId);
+        articleRepository.deleteBy(articleId);
 
         return "redirect:/";
     }

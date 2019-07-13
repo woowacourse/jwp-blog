@@ -1,20 +1,14 @@
 package techcourse.myblog.domain;
 
-public class Article {
-    private final int articleId;
+public class ArticleDTO {
     private String title;
     private String coverUrl;
     private String contents;
 
-    Article(int articleId, String title, String coverUrl, String contents) {
-        this.articleId = articleId;
+    public ArticleDTO(String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-    }
-
-    public int getArticleId() {
-        return articleId;
     }
 
     public String getTitle() {

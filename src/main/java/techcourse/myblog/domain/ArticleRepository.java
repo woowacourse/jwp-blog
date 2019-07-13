@@ -1,8 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
-import techcourse.myblog.domain.validator.CouldNotFindArticleIdException;
-import techcourse.myblog.domain.validator.DuplicateArticleIdException;
+import techcourse.myblog.domain.exception.CouldNotFindArticleIdException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,57 +9,62 @@ import java.util.List;
 @Repository
 public class ArticleRepository {
     private static final int INITIAL_ID = 0;
+    private static final int INCREMENT_AMOUNT = 1;
 
     private List<Article> articles;
-    private int lastAddedId;
+    private int lastGeneratedId;
 
     public ArticleRepository() {
-        this.articles = new ArrayList<>();
-        this.lastAddedId = INITIAL_ID;
+        articles = new ArrayList<>();
+        lastGeneratedId = INITIAL_ID;
     }
 
-    public void save(Article article) {
-        containsDuplicate(article);
+    public void save(ArticleDTO articleDTO) {
+        int articleId = generateNewId();
+        String title = articleDTO.getTitle();
+        String coverUrl = articleDTO.getCoverUrl();
+        String contents = articleDTO.getContents();
 
+        Article article = new Article(articleId, title, coverUrl, contents);
         articles.add(article);
-        lastAddedId = article.getArticleId();
     }
 
-    private void containsDuplicate(Article article) {
-        if (articles.contains(article)) {
-            throw new DuplicateArticleIdException();
-        }
+    private int generateNewId() {
+        int generatedId = lastGeneratedId + INCREMENT_AMOUNT;
+        lastGeneratedId = generatedId;
+
+        return generatedId;
     }
 
-    public Article find(int articleId) {
+    public Article findBy(int articleId) {
         return articles.stream()
                 .filter(article -> article.getArticleId() == articleId)
                 .findAny()
                 .orElseThrow(CouldNotFindArticleIdException::new);
     }
 
-    public void delete(int articleId) {
-        Article article = find(articleId);
+    public void deleteBy(int articleId) {
+        Article article = findBy(articleId);
         articles.remove(article);
     }
 
     public void updateTitle(int articleId, String updatedTitle) {
-        Article article = find(articleId);
+        Article article = findBy(articleId);
         article.setTitle(updatedTitle);
     }
 
     public void updateCoverUrl(int articleId, String updateCoverUrl) {
-        Article article = find(articleId);
+        Article article = findBy(articleId);
         article.setCoverUrl(updateCoverUrl);
     }
 
     public void updateContents(int articleId, String updateContents) {
-        Article article = find(articleId);
+        Article article = findBy(articleId);
         article.setContents(updateContents);
     }
 
-    public int getLastArticleId() {
-        return lastAddedId;
+    public int getLastGeneratedId() {
+        return lastGeneratedId;
     }
 
     public List<Article> findAll() {
