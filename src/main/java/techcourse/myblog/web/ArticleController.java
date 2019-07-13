@@ -29,8 +29,8 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String createArticle(Article article, Model model) {
-        model.addAttribute("article", article);
         this.articleRepository.add(article);
+        model.addAttribute("article", article);
         return "redirect:/articles/" + article.getId();
     }
 
