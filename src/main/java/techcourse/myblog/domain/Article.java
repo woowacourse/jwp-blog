@@ -1,12 +1,14 @@
 package techcourse.myblog.domain;
 
+import java.util.Objects;
+
 public class Article {
     private static final String EMPTY_TEXT = "NULL";
 
     private final int id;
-    private final String title;
-    private final String coverUrl;
-    private final String contents;
+    private String title;
+    private String coverUrl;
+    private String contents;
 
     public Article(int id, String title, String coverUrl, String contents) {
         validateTitle(title);
@@ -33,6 +35,20 @@ public class Article {
         return text == null || "".equals(text);
     }
 
+    public boolean matchId(int articleId) {
+        return this.id == articleId;
+    }
+
+    public void update(Article article) {
+        this.title = article.title;
+        this.contents = article.contents;
+        this.coverUrl = article.coverUrl;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -45,11 +61,19 @@ public class Article {
         return contents;
     }
 
-    public boolean matchId(int articleId) {
-        return this.id == articleId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return id == article.id &&
+                Objects.equals(title, article.title) &&
+                Objects.equals(coverUrl, article.coverUrl) &&
+                Objects.equals(contents, article.contents);
     }
 
-    public int getId() {
-        return id;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, coverUrl, contents);
     }
 }

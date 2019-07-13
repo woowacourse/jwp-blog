@@ -28,8 +28,8 @@ public class ArticleRepository {
     }
 
     public void update(Article article) {
-        int index = articles.indexOf(find(article.getId()));
-        articles.set(index, article);
+        Article updateArticle = find(article.getId());
+        updateArticle.update(article);
     }
 
     public int nextId() {

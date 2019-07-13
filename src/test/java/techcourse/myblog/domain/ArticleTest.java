@@ -2,8 +2,7 @@ package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ArticleTest {
 
@@ -44,5 +43,14 @@ class ArticleTest {
     @Test
     void 배경url이_null인_경우_게시글_정상_생성() {
         assertDoesNotThrow(() -> new Article(0, "testTitle", null, "testContents"));
+    }
+
+    @Test
+    void 게시글_정상_수정() {
+        Article sourceArticle = new Article(0, "title0", "url0", "contents0");
+        Article targetArticle = new Article(0, "title1", "url1", "contents1");
+
+        sourceArticle.update(targetArticle);
+        assertEquals(sourceArticle, targetArticle);
     }
 }
