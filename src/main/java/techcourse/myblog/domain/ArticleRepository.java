@@ -1,7 +1,9 @@
 package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ServerErrorException;
 
+import java.rmi.ServerError;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +12,7 @@ import java.util.Optional;
 public class ArticleRepository {
     private static final String defaultBackgroundImageUrl = "images/pages/index/study.jpg";
 
-    private static int nextArticleNumber = 0;
+    private static int articleId = 0;
 
     private final List<Article> articles = new ArrayList<>();
 
@@ -18,23 +20,23 @@ public class ArticleRepository {
         if (article.getCoverUrl().length() == 0) {
             article.setCoverUrl(defaultBackgroundImageUrl);
         }
-        article.setNumber(++nextArticleNumber);
+        article.setId(++articleId);
         this.articles.add(article);
     }
 
     public int findIndexOfArticleById(final int articleId) {
         int index = Math.min(articleId, this.articles.size()) - 1;
         for (; index >= 0; index--) {
-            if (this.articles.get(index).getNumber() == articleId) {
-                break;
+            if (this.articles.get(index).getId() == articleId) {
+                return index;
             }
         }
-        return index;
+        throw new IllegalArgumentException("none articleId server error");
     }
 
     public Optional<Article> find(final int articleId) {
         final int index = findIndexOfArticleById(articleId);
-        return (index != -1) ? Optional.of(this.articles.get(index)) : Optional.empty();
+        return Optional.of(this.articles.get(index));
     }
 
     public List<Article> findAll() {
@@ -50,5 +52,13 @@ public class ArticleRepository {
         if (index != -1) {
             articles.remove(index);
         }
+    }
+
+    public void deleteAll(){
+        articles.clear();
+    }
+
+    public int getArticleId() {
+        return articleId;
     }
 }

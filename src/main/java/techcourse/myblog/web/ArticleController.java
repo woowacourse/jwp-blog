@@ -27,11 +27,10 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @ResponseBody
     @PostMapping("/articles")
     public ModelAndView confirmWrite(final Article article) {
         articleRepository.write(article);
-        return new ModelAndView("redirect:/articles/" + article.getNumber() + "/");
+        return new ModelAndView("redirect:/articles/" + article.getId() + "/");
     }
 
     @GetMapping("/articles/{articleId}/")

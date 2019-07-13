@@ -1,17 +1,26 @@
 package techcourse.myblog.domain;
 
 public class Article implements Comparable<Article> {
-    private int number;
+    private int id;
     private String title;
     private String coverUrl = "";
     private String contents;
 
-    public int getNumber() {
-        return this.number;
+    public Article() {
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public Article(String title, String coverUrl, String contents) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setTo(Article rhs) {
@@ -45,6 +54,6 @@ public class Article implements Comparable<Article> {
     }
 
     public int compareTo(Article rhs) {
-        return this.number - rhs.number;
+        return this.id - rhs.id;
     }
 }
