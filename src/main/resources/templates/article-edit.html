@@ -98,14 +98,13 @@
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <th:block th:replace="commonScript"></th:block>
 <script th:inline="javascript" type="text/javascript">
-    var initValue = "";
+    var initValue = ""
         /* <![CDATA[ */
-        [;
-    #
-    if= "${article}"]
+        [# th:if= "${article}"]
     initValue =  /*[[${article.contents}]]*/
-        [/];
+        [/]
     /*]]>*/
+
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',

@@ -19,7 +19,7 @@ public class ArticleControllerTests {
 
     @Test
     void article_form_page_status() {
-        webTestClient.get().uri("/writing")
+        webTestClient.get().uri("/articles/writing")
                 .exchange()
                 .expectStatus().isOk();
     }
