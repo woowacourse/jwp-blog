@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.exception.NotFoundArticleException;
-import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.repository.ArticleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -29,7 +29,7 @@ public class ArticleControllerTests {
 	private WebTestClient webTestClient;
 
 	@Autowired
-	private ArticleService articleService;
+	private ArticleRepository articleRepository;
 
 	@Test
 	void index() {
@@ -69,7 +69,7 @@ public class ArticleControllerTests {
 
 	@Test
 	void lookUpArticle() {
-		articleService.save(new Article(title, contents, coverUrl));
+		articleRepository.save(new Article(title, contents, coverUrl));
 
 		webTestClient.get()
 				.uri("/")
@@ -87,7 +87,7 @@ public class ArticleControllerTests {
 
 	@Test
 	void findByIndex() {
-		long articleId = articleService.save(new Article(title, contents, coverUrl)).getId();
+		long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
 
 		webTestClient.get()
 				.uri("/articles/" + articleId)
@@ -105,7 +105,7 @@ public class ArticleControllerTests {
 
 	@Test
 	void updateArticle() {
-		long articleId = articleService.save(new Article(title, contents, coverUrl)).getId();
+		long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
 
 		webTestClient.put()
 				.uri("/articles/" + articleId)
@@ -127,7 +127,7 @@ public class ArticleControllerTests {
 
 	@Test
 	void deleteArticle() {
-		long articleId = articleService.save(new Article(title, contents, coverUrl)).getId();
+		long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
 
 		webTestClient.delete()
 				.uri("/articles/" + articleId)
@@ -137,6 +137,6 @@ public class ArticleControllerTests {
 				.expectHeader()
 				.valueMatches("Location", ".+/");
 
-		assertThrows(NotFoundArticleException.class, () -> articleService.findById(articleId));
+		assertThrows(NotFoundArticleException.class, () -> articleRepository.findById(articleId));
 	}
 }
