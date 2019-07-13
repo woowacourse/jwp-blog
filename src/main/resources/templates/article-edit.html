@@ -44,7 +44,7 @@
     <form th:action="${#strings.isEmpty(article)? '/articles': #strings.concat('/articles/', article.id)}" name="article" method="post" accept-charset="utf-8" >
         <input th:if="not ${#strings.isEmpty(article)}" type="hidden" name="_method" value="PUT">
         <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
+            <div class="cover-img overlay-dark bg" th:style="'background:url('+ ${#strings.isEmpty(article)? '' : article.coverUrl} +');'">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
                         <input type="hidden" th:value="${#strings.isEmpty(article) ? '' : article.id}">
