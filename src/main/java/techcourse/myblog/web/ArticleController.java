@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class ArticleController {
-	@Autowired
-	private ArticleRepository articleRepository;
+	private final ArticleRepository articleRepository;
+
+	public ArticleController(final ArticleRepository articleRepository) {
+		this.articleRepository = articleRepository;
+	}
 
 	@GetMapping("/")
 	public String index(Model model) {
