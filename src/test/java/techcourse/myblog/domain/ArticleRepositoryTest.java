@@ -26,13 +26,13 @@ class ArticleRepositoryTest {
     void 게시글_정상_검색() {
         Article article = new Article(0, "title", "url", "contents");
         articleRepository.insert(article);
-        assertThat(articleRepository.find(0)).isEqualTo(article);
+        assertThat(articleRepository.findById(0)).isEqualTo(article);
     }
 
     @Test
     void 존재하지_않는_게시글_검색_에러() {
         assertThrows(ArticleNotFoundException.class, () ->
-                articleRepository.find(0));
+                articleRepository.findById(0));
     }
 
     @Test

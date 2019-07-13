@@ -19,7 +19,7 @@ public class ArticleRepository {
         id++;
     }
 
-    public Article find(int articleId) {
+    public Article findById(int articleId) {
         return articles.stream()
                 .filter(article -> article.matchId(articleId))
                 .findAny()
@@ -28,7 +28,7 @@ public class ArticleRepository {
     }
 
     public void update(Article article) {
-        Article updateArticle = find(article.getId());
+        Article updateArticle = findById(article.getId());
         updateArticle.update(article);
     }
 
@@ -37,7 +37,7 @@ public class ArticleRepository {
     }
 
     public void remove(int articleId) {
-        Article removeArticle = find(articleId);
+        Article removeArticle = findById(articleId);
         articles.remove(removeArticle);
     }
 }

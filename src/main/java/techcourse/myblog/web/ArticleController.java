@@ -38,13 +38,13 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String showArticle(@PathVariable Integer articleId, Model model) {
-        model.addAttribute("article", articleRepository.find(articleId));
+        model.addAttribute("article", articleRepository.findById(articleId));
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String editArticleForm(@PathVariable Integer articleId, Model model) {
-        model.addAttribute("article", articleRepository.find(articleId));
+        model.addAttribute("article", articleRepository.findById(articleId));
         return "article-edit";
     }
 
