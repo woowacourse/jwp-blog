@@ -1,4 +1,4 @@
-package techcourse.myblog.domain.validator;
+package techcourse.myblog.domain.exception;
 
 public class CouldNotFindArticleIdException extends RuntimeException {
     public CouldNotFindArticleIdException() {
