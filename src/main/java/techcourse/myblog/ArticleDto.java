@@ -1,10 +1,16 @@
 package techcourse.myblog;
 
+import techcourse.myblog.domain.Article;
+
 public class ArticleDto {
     private String title;
     private String coverUrl;
     private String contents;
 
+    public Article toArticle(int id) {
+        return new Article(id, title, coverUrl, contents);
+    }
+    
     public String getTitle() {
         return title;
     }
@@ -28,4 +34,5 @@ public class ArticleDto {
     public void setContents(String contents) {
         this.contents = contents;
     }
+
 }

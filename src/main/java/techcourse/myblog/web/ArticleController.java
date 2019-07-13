@@ -26,12 +26,7 @@ public class ArticleController {
     @PostMapping("/write")
     public String createArticle(ArticleDto articleDto) {
         int id = articleRepository.nextId();
-        Article article = new Article(
-                id,
-                articleDto.getTitle(),
-                articleDto.getCoverUrl(),
-                articleDto.getContents());
-        articleRepository.insert(article);
+        articleRepository.insert(articleDto.toArticle(id));
         return "redirect:/articles/" + id;
     }
 
@@ -55,11 +50,7 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String editArticle(@PathVariable Integer articleId, ArticleDto articleDto, Model model) {
-        Article article = new Article(
-                articleId,
-                articleDto.getTitle(),
-                articleDto.getCoverUrl(),
-                articleDto.getContents());
+        Article article = articleDto.toArticle(articleId);
         articleRepository.update(article);
         model.addAttribute("article", article);
         return "article";
