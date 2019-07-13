@@ -31,20 +31,24 @@ public class ArticleController {
 
     @GetMapping("/articles/{id}")
     public String showArticle(@PathVariable("id") long id, Model model) {
-        model.addAttribute("article", articleRepository.findById(id));
+        Article foundArticle = articleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 입니다."));
+        model.addAttribute("article", foundArticle);
         return "article";
     }
 
     @GetMapping("/articles/{id}/edit")
     public String showEditPage(@PathVariable("id") long id, Model model) {
-        model.addAttribute("article", articleRepository.findById(id));
+        Article foundArticle = articleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 입니다."));
+        model.addAttribute("article", foundArticle);
         return "article-edit";
     }
 
     @PutMapping("/articles/{id}")
     public String editArticle(@PathVariable("id") long id, Article newArticle) {
-        Article article = articleRepository.findById(id);
-        article.updateArticle(newArticle);
+        articleRepository.findById(id)
+                .ifPresent(article -> article.updateArticle(newArticle));
         return "redirect:/articles/" + id;
     }
 

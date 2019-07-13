@@ -40,7 +40,7 @@ public class ArticleRepositoryTests {
         articleRepository.add(new Article());
         articleRepository.add(article);
 
-        Article foundArticle = articleRepository.findById(article.getId());
+        Article foundArticle = articleRepository.findById(article.getId()).orElseThrow(IllegalArgumentException::new);
         assertThat(foundArticle.getContents()).isEqualTo("Contents");
         assertThat(foundArticle.getCoverUrl()).isEqualTo("https://www.woowa.com");
         assertThat(foundArticle.getTitle()).isEqualTo("Hi");

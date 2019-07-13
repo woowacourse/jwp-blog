@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ArticleRepository {
@@ -19,11 +20,10 @@ public class ArticleRepository {
         articles.add(article);
     }
 
-    public Article findById(long id) {
+    public Optional<Article> findById(long id) {
         return articles.stream()
                 .filter(article -> article.isSameId(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+                .findFirst();
     }
 
     public void clear() {
