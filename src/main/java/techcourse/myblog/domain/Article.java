@@ -8,15 +8,6 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public Article() {
-    }
-
-    public Article(final String title, final String coverUrl, final String contents) {
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
-    }
-
     public Article(final Long id, final String title, final String coverUrl, final String contents) {
         this.id = id;
         this.title = title;
@@ -28,36 +19,24 @@ public class Article {
         return id;
     }
 
-    public void setId(final long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
     }
 
     public String getCoverUrl() {
         return coverUrl;
     }
 
-    public void setCoverUrl(final String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
     public String getContents() {
         return contents;
     }
 
-    public void setContents(final String contents) {
-        this.contents = contents;
-    }
-
     public boolean isSameId(final Long other) {
         return this.id.equals(other);
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
     }
 
     @Override

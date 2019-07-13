@@ -16,13 +16,13 @@ class ArticleRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        Article article = new Article("title", "coverUrl", "contents");
+        Article article = new Article(null, "title", "coverUrl", "contents");
         articleRepository.save(article);
     }
 
     @Test
     void saveTest() {
-        Article article = new Article("title", "coverUrl", "contents");
+        Article article = new Article(null, "title", "coverUrl", "contents");
         assertNotNull(articleRepository.save(article));
     }
 
@@ -50,7 +50,7 @@ class ArticleRepositoryTest {
 
     @Test
     void updateTest() {
-        Article article = new Article("update foo", "update foo", "update foo");
+        Article article = new Article(null, "update foo", "update foo", "update foo");
         Long id = articleRepository.save(article).get();
 
         Article editedArticle = new Article(id, "new foo", "foo new", "new foo contents");
