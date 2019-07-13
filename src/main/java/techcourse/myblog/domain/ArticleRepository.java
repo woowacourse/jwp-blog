@@ -21,15 +21,14 @@ public class ArticleRepository {
 
     public Article findById(long articleId) {
         return articles.stream()
-                .filter(article -> article.equals(articleId))
+                .filter(article -> article.isEqualTo(articleId))
                 .findFirst()
                 .orElseThrow(NotFoundArticleException::new);
     }
 
     public long update(Article updatedArticle) {
         Article article = findById(updatedArticle.getId());
-        int atUpdateIndex = articles.indexOf(article);
-        articles.set(atUpdateIndex, updatedArticle);
+        article.updateArticle(updatedArticle);
 
         return article.getId();
     }
