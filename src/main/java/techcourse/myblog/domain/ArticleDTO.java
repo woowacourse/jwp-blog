@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import java.util.Objects;
+
 public class ArticleDTO {
     private int id;
     private String title;
@@ -10,6 +12,10 @@ public class ArticleDTO {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+    }
+
+    public Article toConvertEntity() {
+        return new Article(id, title, coverUrl, contents);
     }
 
     public int getId() {
@@ -44,7 +50,19 @@ public class ArticleDTO {
         this.contents = contents;
     }
 
-    public Article toConvertEntity() {
-        return new Article(id, title, coverUrl, contents);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ArticleDTO that = (ArticleDTO) o;
+        return id == that.id &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(coverUrl, that.coverUrl) &&
+                Objects.equals(contents, that.contents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, coverUrl, contents);
     }
 }
