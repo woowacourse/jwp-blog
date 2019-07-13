@@ -18,7 +18,7 @@ public class ArticleRepository {
         return Collections.unmodifiableList(reverseArticles);
     }
 
-    public void saveArticle(Article article) {
+    public synchronized void saveArticle(Article article) {
         article.setId(++lastId);
         articles.add(article);
     }
@@ -36,9 +36,8 @@ public class ArticleRepository {
     }
 
     public void updateArticle(Article updatedArticle) {
-        Article article = getArticleById(updatedArticle.getId());
-        article.setTitle(updatedArticle.getTitle());
-        article.setContents(updatedArticle.getContents());
-        article.setCoverUrl(updatedArticle.getCoverUrl());
+        articles.set(articles.indexOf(getArticleById(updatedArticle.getId())), updatedArticle);
     }
+
+
 }

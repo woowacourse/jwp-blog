@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.domain;
 
 public enum MethodType {
     GET,
