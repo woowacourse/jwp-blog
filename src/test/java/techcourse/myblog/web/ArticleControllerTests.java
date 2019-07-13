@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.apache.commons.lang3.StringEscapeUtils;
 import techcourse.myblog.domain.Article;
 
 import java.util.Objects;
@@ -47,6 +47,7 @@ public class ArticleControllerTests {
     @Test
     void showArticleWritingPages() {
         checkGetStatus("/writing");
+
     }
 
     @Test
@@ -58,7 +59,6 @@ public class ArticleControllerTests {
         checkGetStatus("/")
                 .expectBody()
                 .consumeWith(this::checkBodyResponse);
-
         deleteMethod();
     }
 
@@ -114,13 +114,6 @@ public class ArticleControllerTests {
         Article.initCurrentId();
     }
 
-    private void checkBodyResponse(EntityExchangeResult<byte[]> response) {
-        String body = new String(Objects.requireNonNull(response.getResponseBody()));
-        assertThat(body.contains(title)).isTrue();
-        assertThat(body.contains(coverUrl)).isTrue();
-        assertThat(body.contains(uniContents)).isTrue();
-    }
-
     private WebTestClient.ResponseSpec checkStatus(WebTestClient.RequestBodyUriSpec requestMethod, String uri) {
         return requestMethod
                 .uri(uri)
@@ -140,9 +133,19 @@ public class ArticleControllerTests {
                 .expectStatus().is3xxRedirection();
     }
 
+
+    private void checkBodyResponse(EntityExchangeResult<byte[]> response) {
+        String body = new String(Objects.requireNonNull(response.getResponseBody()));
+        assertThat(body.contains(title)).isTrue();
+        assertThat(body.contains(coverUrl)).isTrue();
+        assertThat(body.contains(uniContents)).isTrue();
+    }
+
     private WebTestClient.ResponseSpec checkGetStatus(String uri) {
         return webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isOk();
     }
 }
+
+
