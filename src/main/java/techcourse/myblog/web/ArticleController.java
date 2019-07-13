@@ -50,7 +50,7 @@ public class ArticleController {
     public String updateArticle(@PathVariable int articleId, Article article, Model model) {
         articleRepository.update(articleId, article);
         model.addAttribute("article", this.articleRepository.findById(articleId));
-        return "redirect:/articles/" + article.getId();
+        return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}")
