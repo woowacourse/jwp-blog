@@ -35,4 +35,12 @@ public class ArticleDto {
                     .build();
         }
     }
+
+    @Data
+    public static class Response {
+        private long id;
+        private String title;
+        private String coverUrl;
+        private String contents;
+    }
 }

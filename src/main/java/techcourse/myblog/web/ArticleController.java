@@ -1,6 +1,7 @@
 package techcourse.myblog.web;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -16,10 +18,14 @@ public class ArticleController {
 
     private final ArticleRepository articleRepository;
 
+    private final ModelMapper modelMapper;
+
     @GetMapping("/")
     public String index(Model model) {
         List<Article> articles = articleRepository.findAll();
-        model.addAttribute("articles", articles);
+        model.addAttribute("articles", articles.stream()
+                .map(article -> modelMapper.map(article, ArticleDto.Response.class))
+                .collect(Collectors.toList()));
         return "index";
     }
 
@@ -38,14 +44,14 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}")
     public String readArticle(@PathVariable long articleId, Model model) {
         Article article = articleRepository.findById(articleId);
-        model.addAttribute("article", article);
+        model.addAttribute("article", modelMapper.map(article, ArticleDto.Response.class));
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String renderUpdatePage(@PathVariable long articleId, Model model) {
         Article article = articleRepository.findById(articleId);
-        model.addAttribute("article", article);
+        model.addAttribute("article", modelMapper.map(article, ArticleDto.Response.class));
         return "article-edit";
     }
 
