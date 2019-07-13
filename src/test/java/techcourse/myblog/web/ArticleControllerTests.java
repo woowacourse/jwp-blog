@@ -18,7 +18,7 @@ import static org.springframework.test.web.reactive.server.WebTestClient.Respons
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
-    private static final int ARTICLE_ID = 0;
+    private static final int ARTICLE_ID = 1;
     private static final String LOCATION = "location";
     
     @Autowired
@@ -26,52 +26,56 @@ public class ArticleControllerTests {
     
     @BeforeEach
     void 게시글_작성_확인() {
-        checkRedirect(HttpMethod.POST, "/articles", HttpStatus.FOUND,
+        checkResponseHeaderLocation(HttpMethod.POST, "/articles", HttpStatus.FOUND,
                 LOCATION, ".*articles.*");
     }
     
     @Test
     void index_페이지_조회() {
-        check(HttpMethod.GET, "/", HttpStatus.OK);
+        checkResponseStatus(HttpMethod.GET, "/", HttpStatus.OK);
     }
     
     @Test
     void 게시글_작성_페이지_확인() {
-        check(HttpMethod.GET, "/writing", HttpStatus.OK);
+        checkResponseStatus(HttpMethod.GET, "/writing", HttpStatus.OK);
     }
     
     @Test
     void 게시글_조회() {
-        check(HttpMethod.GET, "/articles/" + ARTICLE_ID, HttpStatus.OK);
+        checkResponseStatus(HttpMethod.GET, "/articles/" + ARTICLE_ID, HttpStatus.OK);
     }
     
     @Test
     void 게시글_수정_페이지_확인() {
-        check(HttpMethod.GET, "/articles/" + ARTICLE_ID + "/edit", HttpStatus.OK);
+        checkResponseStatus(HttpMethod.GET, "/articles/" + ARTICLE_ID + "/edit", HttpStatus.OK);
     }
     
     @Test
     void 게시글_수정_확인() {
-        checkRedirect(HttpMethod.PUT, "/articles/" + ARTICLE_ID, HttpStatus.FOUND,
+        checkResponseHeaderLocation(HttpMethod.PUT, "/articles/" + ARTICLE_ID, HttpStatus.FOUND,
                 LOCATION, ".*articles.*");
     }
     
     @AfterEach
     void 게시글_삭제_확인() {
-        checkRedirect(HttpMethod.DELETE, "/articles/" + ARTICLE_ID, HttpStatus.FOUND,
+        checkResponseHeaderLocation(HttpMethod.DELETE, "/articles/" + ARTICLE_ID, HttpStatus.FOUND,
                 LOCATION, ".*/");
     }
     
-    private ResponseSpec check(HttpMethod httpMethod, String uri, HttpStatus httpStatus) {
+    private ResponseSpec check(HttpMethod httpMethod, String uri) {
         return webTestClient.method(httpMethod)
                 .uri(uri)
-                .exchange()
+                .exchange();
+    }
+    
+    private ResponseSpec checkResponseStatus(HttpMethod httpMethod, String uri, HttpStatus httpStatus) {
+        return check(httpMethod, uri)
                 .expectStatus().isEqualTo(httpStatus);
     }
     
-    private ResponseSpec checkRedirect(HttpMethod httpMethod, String uri,
-                                       HttpStatus httpStatus, String name, String pattern) {
-        return check(httpMethod, uri, httpStatus)
+    private ResponseSpec checkResponseHeaderLocation(HttpMethod httpMethod, String uri,
+                                                     HttpStatus httpStatus, String name, String pattern) {
+        return checkResponseStatus(httpMethod, uri, httpStatus)
                 .expectHeader().valueMatches(name, pattern);
     }
 }
