@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import techcourse.myblog.domain.ArticleRepository;
 
 import java.io.UnsupportedEncodingException;
 
@@ -27,9 +26,6 @@ public class ArticleControllerTests {
 
     @Autowired
     private WebTestClient webTestClient;
-
-    @Autowired
-    private ArticleRepository articleRepository;
 
     @Test
     void index() {
@@ -129,7 +125,9 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection();
 
-        assertThat(articleRepository.size()).isEqualTo(0);
+        webTestClient.get().uri("/article/0")
+                .exchange()
+                .expectStatus().is4xxClientError();
     }
 
 }
