@@ -5,7 +5,7 @@
 
 - Setter Injection
 
-- Constructor Injection
+- Constructor Injection(추천)
 
 
 ## Thymeleaf
@@ -38,16 +38,20 @@ reflection 때문에 private으로 선언해도 주입 가능
 
 ### Component Scan
 @ComponentScan은 basePacakge attribute를 지정하지 않을 경우 자신의 하위 패키지 전체를 scan한다.
-(외부 빈이 필요한 경우 Component Scan을 쓴다)
+(외부 빈이 필요한 경우에도 Component Scan을 쓴다)
 
 ### debug
 문서를 보는 것도 좋지만 디버깅을 통해 알아보는 것도 좋다.
 
 ### 궁금한 점
 - html에서 thymeleaf 쓸 때, thymeleaf들의 위치는 어디가 맞는건지?
- 태그 바로 다음? 아니면 마지막?
+ 태그 바로 다음? 아니면 일반 속성들 먼저 적고 마지막에?
  ex) <div th:text="~~~" id="~" placeholder="~"...> or <div id="~" ~~~" placeholder="~" th:text="~"> 
  
- jun's answer : 보통 태그 다음에 바로 thymeleaf를 씀 
+ jun's answer : 보통 태그 다음에 바로 thymeleaf를 쓰고 다른 속성을 씀
  
-- redirect vs forward 차이
+- redirect vs forward 차이(찾아보기)
+
+
+### 볼 것
+https://ooz.co.kr/260

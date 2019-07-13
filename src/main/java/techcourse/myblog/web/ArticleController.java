@@ -12,7 +12,6 @@ public class ArticleController {
 
     private final ArticleRepository articleRepository;
 
-    @Autowired
     public ArticleController(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
@@ -56,7 +55,7 @@ public class ArticleController {
         return "redirect:/articles/" + article.getId();
     }
 
-    @DeleteMapping("/articles/delete/{articleId}")
+    @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable Long articleId){
         articleRepository.deleteById(articleId);
         return "redirect:/";

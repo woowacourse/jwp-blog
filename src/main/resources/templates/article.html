@@ -104,7 +104,7 @@
                    class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
-                <form th:action="'/articles/delete/' + ${article.id}" method="post">
+                <form th:action="'/articles/' + ${article.id}" method="post">
                     <input name="_method" type="hidden" value="DELETE"/>
                     <button class="btn btn-icon float-right pointer" id="delete-button" type="submit">
                         <i class="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
