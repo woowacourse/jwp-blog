@@ -28,8 +28,7 @@ public class ArticleRepository {
 		return articles.stream()
 				.filter(article -> article.matchId(id))
 				.findFirst()
-				.orElseThrow(NotFoundArticleException::new)
-				;
+				.orElseThrow(NotFoundArticleException::new);
 	}
 
 	public void update(Article modifiedArticle) {

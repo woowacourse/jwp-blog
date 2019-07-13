@@ -27,8 +27,7 @@ public class HelloWorldControllerTests {
 				.expectStatus().isOk()
 				.expectBody()
 				.consumeWith(response ->
-						Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName))
-		;
+						Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
 	}
 
 	@Test
@@ -42,7 +41,6 @@ public class HelloWorldControllerTests {
 				.expectStatus().isOk()
 				.expectBody()
 				.consumeWith(response ->
-						Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName))
-		;
+						Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
 	}
 }
