@@ -21,7 +21,7 @@ public class ArticleRepository {
 
     public Article findById(long id) {
         return articles.stream()
-                .filter(article -> article.getId() == id)
+                .filter(article -> article.isSameId(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
     }

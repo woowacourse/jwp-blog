@@ -43,4 +43,8 @@ public class Article {
         this.coverUrl = article.coverUrl;
         this.contents = article.contents;
     }
+
+    public boolean isSameId(long id) {
+        return this.id == id;
+    }
 }
