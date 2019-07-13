@@ -90,7 +90,7 @@ public class ArticleControllerTests {
 		long articleId = articleService.save(new Article(title, contents, coverUrl)).getId();
 
 		webTestClient.get()
-				.uri("/article/" + articleId)
+				.uri("/articles/" + articleId)
 				.exchange()
 				.expectStatus()
 				.isOk()
