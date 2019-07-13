@@ -62,8 +62,8 @@
                                 <a href="article.html" th:href="@{/articles/{id}(id=${article.id})}" class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
-                                            <div class="background-holder has-content"
-                                                 style="background-image: url('/images/pages/index/study.jpg')"></div>
+                                            <div class="background-holder has-content" style="background-image: url('/images/pages/index/study.jpg');"
+                                                 th:styleappend="${article.coverUrl} != '' ? 'background-image: url(' + ${article.coverUrl} + ');' : ''"></div>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
