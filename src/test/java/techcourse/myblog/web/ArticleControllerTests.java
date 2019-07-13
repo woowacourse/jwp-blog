@@ -20,6 +20,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+    private static final String SAMPLE_TITLE = "목적의식 있는 연습을 통한 효과적인 학습";
+    private static final String SAMPLE_COVER_URL = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
+    private static final String SAMPLE_CONTENTS = "Test Contents";
+    private static final Article sampleArticle;
+
+    static {
+        sampleArticle = new Article(SAMPLE_TITLE, SAMPLE_COVER_URL, SAMPLE_CONTENTS);
+    }
+
     @Autowired
     private WebTestClient webTestClient;
 
@@ -28,154 +37,116 @@ public class ArticleControllerTests {
 
     @Test
     void index() {
-        webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
+        check200("/");
     }
 
     @Test
     void showArticles() {
-        webTestClient.get().uri("/articles")
-                .exchange()
-                .expectStatus().isOk();
+        check200("/articles");
     }
 
     @Test
     void showCreatePage() {
-        webTestClient.get().uri("/articles/new")
-                .exchange()
-                .expectStatus().isOk();
+        check200("/articles/new");
     }
 
     @Test
     void createArticle() {
-        String title = "목적의식 있는 연습을 통한 효과적인 학습";
-        String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-        String contents = "helloWould";
-
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().is3xxRedirection()
+        postArticle("/articles", sampleArticle)
                 .expectBody()
                 .consumeWith(response -> {
                     URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get()
-                            .uri(location)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                String body = new String(res.getResponseBody());
-                                assertThat(body.contains(title)).isTrue();
-                                assertThat(body.contains(coverUrl)).isTrue();
-                                assertThat(body.contains(contents)).isTrue();
-                            });
+                    check200WithBody(String.valueOf(location), sampleArticle);
                 });
     }
 
     @Test
     void showArticle() {
-        String title = "test";
-        String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-        String contents = "Hi";
-
-        Article article = new Article(title, coverUrl, contents);
-        articleRepository.add(article);
-
-        webTestClient.get()
-                .uri("/articles/" + article.getId())
-                .exchange()
-                .expectBody()
-                .consumeWith(res -> {
-                    String body = new String(res.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
+        articleRepository.add(sampleArticle);
+        check200WithBody("/articles/" + sampleArticle.getId(), sampleArticle);
     }
 
     @Test
     void showEditPage() {
-        String title = "test";
-        String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-        String contents = "Hi";
-
-        Article article = new Article(title, coverUrl, contents);
-        articleRepository.add(article);
-
-        webTestClient.get()
-                .uri("/articles/" + article.getId() + "/edit")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
+        articleRepository.add(sampleArticle);
+        check200WithBody("/articles/" + sampleArticle.getId() + "/edit", sampleArticle);
     }
 
     @Test
     void editArticle() {
-        String title = "test";
-        String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-        String contents = "Hi";
         String newContents = "Bye";
+        Article newArticle = new Article(SAMPLE_TITLE, SAMPLE_COVER_URL, newContents);
 
-        Article article = new Article(title, coverUrl, contents);
-
-        articleRepository.add(article);
-
-        webTestClient.put()
-                .uri("/articles/" + article.getId())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", newContents))
-                .exchange()
-                .expectStatus().is3xxRedirection()
+        articleRepository.add(sampleArticle);
+        updateArticle("/articles/" + sampleArticle.getId(), newArticle)
                 .expectBody()
                 .consumeWith(response -> {
                     URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get()
-                            .uri(location)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                String body = new String(res.getResponseBody());
-                                assertThat(body.contains(title)).isTrue();
-                                assertThat(body.contains(coverUrl)).isTrue();
-                                assertThat(body.contains(newContents)).isTrue();
-                            });
+                    check200WithBody(String.valueOf(location), newArticle);
                 });
     }
 
     @Test
     void deleteArticle() {
-        String title = "test";
-        String coverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-        String contents = "Hi";
-
-        Article article = new Article(title, coverUrl, contents);
-
-        articleRepository.add(article);
-
-        webTestClient.delete()
-                .uri("/articles/" + article.getId())
-                .exchange()
-                .expectStatus().is3xxRedirection();
-
+        articleRepository.add(sampleArticle);
+        deleteArticle("/articles/" + sampleArticle.getId(), sampleArticle);
 
         webTestClient.get()
-                .uri("/articles/" + article.getId())
+                .uri("/articles/" + sampleArticle.getId())
                 .exchange()
                 .expectStatus().is5xxServerError();
     }
+
+    private WebTestClient.ResponseSpec check200(String uri) {
+        return webTestClient.get()
+                .uri(uri)
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
+
+    private void check200WithBody(String uri, Article article) {
+        check200(uri)
+                .expectBody()
+                .consumeWith(res -> {
+                    String body = new String(res.getResponseBody());
+                    assertThat(body.contains(article.getTitle())).isTrue();
+                    assertThat(body.contains(article.getCoverUrl())).isTrue();
+                    assertThat(body.contains(article.getContents())).isTrue();
+                });
+
+    }
+
+    private WebTestClient.ResponseSpec postArticle(String uri, Article article) {
+        return webTestClient.post()
+                .uri(uri)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", article.getTitle())
+                        .with("coverUrl", article.getCoverUrl())
+                        .with("contents", article.getContents()))
+                .exchange()
+                .expectStatus()
+                .isFound();
+    }
+
+    private WebTestClient.ResponseSpec updateArticle(String uri, Article newArticle) {
+        return webTestClient.put()
+                .uri(uri)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", newArticle.getTitle())
+                        .with("coverUrl", newArticle.getCoverUrl())
+                        .with("contents", newArticle.getContents()))
+                .exchange()
+                .expectStatus().isFound();
+    }
+
+    private WebTestClient.ResponseSpec deleteArticle(String uri, Article article) {
+        return webTestClient.delete()
+                .uri(uri)
+                .exchange()
+                .expectStatus().isFound();
+    }
+
 }
