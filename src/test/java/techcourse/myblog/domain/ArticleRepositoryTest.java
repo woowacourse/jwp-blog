@@ -10,12 +10,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class ArticleRepositoryTest {
     private ArticleRepository articleRepository;
     private Article testArticle;
-
+    
     @BeforeEach
     void setUp() {
         this.articleRepository = new ArticleRepository();
-        this.testArticle = new Article("2", "3",  "4");
-        this.articleRepository.add(this.testArticle);
+        testArticle = this.articleRepository.add(new ArticleDto("2", "3", "4"));
     }
 
     @Test
@@ -32,10 +31,9 @@ public class ArticleRepositoryTest {
 
     @Test
     void article_업데이트_테스트() {
-        Article article = new Article("3", "4", "5");
-        article.setId(1);
+        ArticleDto article = new ArticleDto("3", "4", "5");
         this.articleRepository.update(1, article);
-        assertThat(this.articleRepository.findById(1)).isEqualTo(article);
+        assertThat(this.articleRepository.findById(1)).isEqualTo(testArticle);
     }
 
     @AfterEach

@@ -18,9 +18,10 @@ public class ArticleRepository {
         return unmodifiableList(this.articles);
     }
 
-    public void add(Article article) {
-        article.setId(autoIncrement());
+    public Article add(ArticleDto articleDto) {
+        Article article = Article.to(autoIncrement(), articleDto);
         this.articles.add(article);
+        return article;
     }
 
     public Article findById(int id) {
@@ -37,9 +38,9 @@ public class ArticleRepository {
                 .orElse(INITIAL_VALUE) + INCREMENT_VALUE;
     }
 
-    public void update(int id, Article article) {
+    public void update(int id, ArticleDto articleDto) {
         Article articleToUpdate = findById(id);
-        articleToUpdate.edit(article);
+        articleToUpdate.edit(articleDto);
     }
 
     public void remove(int id) {
