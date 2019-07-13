@@ -46,16 +46,15 @@
 		</div>
 	</div>
 	
-	<form id="article-write-form" action="/articles" name="article" method="post" accept-charset="utf-8">
-		<input id="article-write" type="hidden" name="_method" value="post"/>
+	<form id="article-write-form" th:action="${article == null ? '/articles' : '/articles/' + article.id}" th:method="${article == null ? 'post' : 'put'}" th:name="article" accept-charset="utf-8">
 		<div class="about-cover card no-border">
 			<div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
 				<div class="height-300px vertical-center pdd-horizon-50">
 					<div class="width-80">
-						<input type="text" id="title" name="title"
+						<input th:value="${article == null ? '' : article.title}" type="text" id="title" name="title"
 						       class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
 						       placeholder="제목을 입력해주세요" autocomplete="off">
-						<input type="text" id="coverUrl" name="coverUrl"
+						<input th:value="${article == null ? '' : article.coverUrl}" type="text" id="coverUrl" name="coverUrl"
 						       class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
 						       placeholder="배경 url을 입력해주세요" autocomplete="off">
 					</div>
@@ -68,15 +67,12 @@
 				<div class="col-lg-1 col-md-1"></div>
 				<div class="col-lg-10 col-md-10 col-sm-10">
 					<input id="article-contents" name="contents" type="hidden">
-					<div id="editSection"></div>
+					<div id="editSection" th:text="${article == null ? '' : article.contents}"></div>
 				</div>
 				<div class="col-lg-1 col-md-1">
 					<div class="btn-group btn-group-vertical">
 						<button id="save-btn" type="submit" class="btn btn-default">
 							<i class="ti-save"></i>
-						</button>
-						<button id="delete-btn" class="btn btn-default" onclick="deleteArticle(event)" style="display:none">
-							<i class="ti-close"></i>
 						</button>
 					</div>
 				</div>
@@ -107,12 +103,7 @@
     });
 
     if ([[${article}]]) {
-        document.getElementById("title").value = [[${article?.title}]]
-        document.getElementById("coverUrl").value = [[${article?.coverUrl}]]
         editor.setValue([[${article?.contents}]])
-        document.getElementById("article-write").setAttribute("value", "put")
-        document.getElementById("article-write-form").setAttribute("action", "/articles/" + [[${article?.id}]])
-        document.getElementById("delete-btn").style.display = "block"
     }
 
     function deleteArticle(event) {

@@ -45,9 +45,9 @@
 	
 	<div class="about-cover card no-border ">
 		<div id="cover-img" class="cover-img overlay-dark bg"
-		     style="background-image: url('/images/pages/index/study.jpg')">
+		     th:style="'background-image: url('+ ${article.coverUrl}+'), url(\'/images/pages/index/study.jpg\')'">
 			<div class="padding-30">
-				<h1 class="text-center cover-title" id="title">제</h1>
+				<h1 th:text="${article.title}" class="text-center cover-title" id="title">제목</h1>
 			</div>
 		</div>
 	</div>
@@ -55,10 +55,15 @@
 	<div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
 		<div class="row">
 			<div class="col-lg-10 mx-auto">
-				<a th:href="@{/articles/{id}/edit(id=${article.id})}" href="article-edit.html"
-				   class="float-right pointer btn btn-icon">
-					<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-				</a>
+				<form th:action="${'/articles/' + article.id}" th:method="delete">
+					<button id="delete-btn" class="float-right pointer btn btn-default no-border" type="submit" style="background: none">
+						<i class="ti-trash"></i>
+					</button>
+					<a th:href="@{/articles/{id}/edit(id=${article.id})}" href="article-edit.html"
+					   class="float-right pointer btn btn-icon">
+						<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+					</a>
+				</form>
 				<div id="viewerSection"></div>
 			</div>
 			<div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
@@ -152,11 +157,6 @@
         "우리는 최초 무엇인가를 배울 때 책, 인터넷, 교육 기관을 통해 전반적인 개념, 기술을 익히고 배운다. 일정 수준에 도달할 때까지 반복 연습을 한다. 연습을 반복하다 보면 의식하지 않아도 기계적으로 할 수 있는 수준에 도달한다. 만족해하며 자신이 연습한 일을 즐기며 기계적으로 반복한다. 이렇게 5년, 10년을 반복해 경험을 쌓으면 자연스럽게 역량이 향상되리라 믿는다. 우리가 학습과 관련해 흔히 잘못 알고 있는 오해이다. 운전을 하고, 피아노를 연주하고, 테니스를 치는 것이 연습이라 생각하고 반복한다. 하지만 기계적으로 같은 연습을 반복한다고 해서 역량이 좋아지지 않는다.\n" +
         "자신이 새로운 무엇인가를 배울 때를 떠올려 보자. 시작하는 단계는 익숙하지 않기 때문에 상당히 의식적으로 노력해야 한다. 긴장감 때문에 몸이 굳어지거나 부자연스러운 경험을 한다. 하지만 반복 연습을 하다 보면 의식하지 않아도 기계적으로 할 수 있는 단계가 된다. 이와 같이 몸이 굳어지고, 부자연스러운 상태를 벗어나기 위해 의식적으로 노력하는 순간이 진정한 배움과 학습이 일어나는 순간이다. 내가 현재 수준에 만족하고 더 이상의 의식적인 노력을 하지 않는다면 그 순간 성장이 멈추는 단계이다. 무작정 반복하고 경력을 쌓는다고 해서 성장하지 않는다. 20년 경력의 의사가 5년 경력의 의사보다 환자의 병을 잘 진단한다고 볼 수 없다. 경력을 쌓는 과정에서 의식적인 노력을 통해 다음 단계로 성장하기 위해 노력했느냐에 따라 달라지는 것이다.\n" +
         "3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로 살다 보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄 수 있는 계기가 되었다."
-
-
-    document.getElementById('title').innerText = [[${article.title}]]
-
-    document.getElementById('cover-img').style.backgroundImage = "url('" + [[${article.coverUrl}]] + "'), url('/images/pages/index/study.jpg')";
 
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
