@@ -8,6 +8,16 @@ public class Article {
     private String coverUrl;
     private String contents;
 
+    public void update(Article article) {
+        this.title = article.getTitle();
+        this.coverUrl = article.getCoverUrl();
+        this.contents = article.getContents();
+    }
+
+    public boolean hasSameIdWith(int id) {
+        return this.id == id;
+    }
+
     public int getId() {
         return id;
     }
@@ -38,11 +48,5 @@ public class Article {
 
     public void setContents(String contents) {
         this.contents = contents;
-    }
-
-    public void update(Article article) {
-        this.title = article.getTitle();
-        this.coverUrl = article.getCoverUrl();
-        this.contents = article.getContents();
     }
 }
