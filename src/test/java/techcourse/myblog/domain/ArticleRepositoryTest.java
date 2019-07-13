@@ -41,11 +41,13 @@ class ArticleRepositoryTest {
         Article updatedArticle = new Article("title1", "content1", "coverUrl1");
 
         articleRepository.save(article);
-        articleRepository.update(1, updatedArticle);
+        int createdArticleId = articleRepository.getLatestArticleId();
 
-        assertThat(articleRepository.findById(1).getTitle()).isEqualTo(updatedArticle.getTitle());
-        assertThat(articleRepository.findById(1).getContents()).isEqualTo(updatedArticle.getContents());
-        assertThat(articleRepository.findById(1).getCoverUrl()).isEqualTo(updatedArticle.getCoverUrl());
+        articleRepository.update(createdArticleId, updatedArticle);
+
+        assertThat(articleRepository.findById(createdArticleId).getTitle()).isEqualTo(updatedArticle.getTitle());
+        assertThat(articleRepository.findById(createdArticleId).getContents()).isEqualTo(updatedArticle.getContents());
+        assertThat(articleRepository.findById(createdArticleId).getCoverUrl()).isEqualTo(updatedArticle.getCoverUrl());
     }
 
     @Test
@@ -61,7 +63,7 @@ class ArticleRepositoryTest {
 
         articleRepository.delete(1);
 
-        assertThat(articleRepository.getSize()).isEqualTo(0);
+        assertThat(articleRepository.findAll().contains(article)).isFalse();
     }
 
     @AfterEach

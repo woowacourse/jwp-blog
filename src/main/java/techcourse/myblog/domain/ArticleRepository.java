@@ -11,7 +11,12 @@ public class ArticleRepository {
     private List<Article> articles = new ArrayList<>();
 
     public List<Article> findAll() {
-        return articles;
+        List<Article> copiedArticles = new ArrayList<>();
+
+        for (Article article : articles) {
+            copiedArticles.add(article.getCopy());
+        }
+        return copiedArticles;
     }
 
     public void save(Article article) {
@@ -38,9 +43,7 @@ public class ArticleRepository {
     public void update(int articleId, Article article) {
         Article originalArticle = findById(articleId);
 
-        originalArticle.setTitle(article.getTitle());
-        originalArticle.setContents(article.getContents());
-        originalArticle.setCoverUrl(article.getCoverUrl());
+        originalArticle.update(article);
     }
 
     public void delete(int articleId) {
@@ -51,5 +54,15 @@ public class ArticleRepository {
             }
         }
         throw new ArticleNotFoundException();
+    }
+
+    public int getLatestArticleId() {
+        int maxId = 0;
+        for (Article article : articles) {
+            if (article.getId() > maxId) {
+                maxId = article.getId();
+            }
+        }
+        return maxId;
     }
 }

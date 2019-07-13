@@ -12,7 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.apache.commons.lang3.StringEscapeUtils;
-import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,6 +22,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private ArticleRepository articleRepository;
 
     private String title;
     private String coverUrl;
@@ -70,11 +73,6 @@ public class ArticleControllerTests {
                     assertThat(body.contains(coverUrl)).isTrue();
                     //assertThat(body.contains(contents)).isTrue();
                 });
-
-        webTestClient.delete()
-                .uri("/articles/1")
-                .exchange()
-                .expectStatus().is3xxRedirection();
     }
 
     @Test
@@ -91,7 +89,7 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().isOk();
 
-        webTestClient.get().uri("/articles/1")
+        webTestClient.get().uri("/articles/" + articleRepository.getLatestArticleId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -101,11 +99,6 @@ public class ArticleControllerTests {
                     assertThat(body.contains(coverUrl)).isTrue();
                     assertThat(body.contains(uniContents)).isTrue();
                 });
-
-        webTestClient.delete()
-                .uri("/articles/1")
-                .exchange()
-                .expectStatus().is3xxRedirection();
     }
 
     @Test
@@ -128,11 +121,6 @@ public class ArticleControllerTests {
                     assertThat(body.contains(coverUrl)).isTrue();
                     assertThat(body.contains(uniContents)).isTrue();
                 });
-
-        webTestClient.delete()
-                .uri("/articles/1")
-                .exchange()
-                .expectStatus().is3xxRedirection();
     }
 
     @Test
@@ -153,7 +141,7 @@ public class ArticleControllerTests {
                 .expectStatus().isOk();
 
         webTestClient.put()
-                .uri("/articles/1")
+                .uri("/articles/" + articleRepository.getLatestArticleId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", updatedTitle)
@@ -168,11 +156,6 @@ public class ArticleControllerTests {
                     assertThat(body.contains(updatedCoverUrl)).isTrue();
                     assertThat(body.contains(updatedUniContents)).isTrue();
                 });
-
-        webTestClient.delete()
-                .uri("/articles/1")
-                .exchange()
-                .expectStatus().is3xxRedirection();
     }
 
     @Test
@@ -187,18 +170,15 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().isOk();
 
+        int createdArticleId = articleRepository.getLatestArticleId();
+
         webTestClient.delete()
-                .uri("/articles/1")
+                .uri("/articles/" + createdArticleId)
                 .exchange()
                 .expectStatus().is3xxRedirection();
 
-        webTestClient.get().uri("/articles/1")
+        webTestClient.get().uri("/articles/" + createdArticleId)
                 .exchange()
                 .expectStatus().is4xxClientError();
-    }
-
-    @AfterEach
-    void tearDown() {
-        Article.initCurrentId();
     }
 }

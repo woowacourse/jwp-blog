@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +10,11 @@ import java.util.List;
 
 @Controller
 public class ArticleController {
-    @Autowired
     private ArticleRepository articleRepository;
+
+    public ArticleController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @GetMapping("/writing")
     public String showArticleWritingPage() {
@@ -22,8 +24,7 @@ public class ArticleController {
     @PostMapping("/articles")
     public String writeArticle(Article article, Model model) {
         articleRepository.save(article);
-        model.addAttribute("article", articleRepository.getLatestArticle());
-        return "article";
+        return "redirect:/articles/" + article.getId();
     }
 
     @GetMapping("/")
@@ -48,8 +49,7 @@ public class ArticleController {
     @PutMapping("/articles/{articleId}")
     public String updateArticle(@PathVariable int articleId, Article article, Model model) {
         articleRepository.update(articleId, article);
-        model.addAttribute("article", article);
-        return "article";
+        return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}")
