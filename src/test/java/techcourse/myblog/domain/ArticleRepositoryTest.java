@@ -49,6 +49,14 @@ public class ArticleRepositoryTest {
     }
 
     @Test
+    void 게시물_추가_테스트() {
+        Article newArticle = Article.builder()
+                .id(4).title("타이틀4").coverUrl("유알엘4").contents("컨텐츠4").build();
+        articleRepository.save(newArticle);
+        assertThat(articleRepository.findById(4)).isEqualTo(newArticle);
+    }
+
+    @Test
     void 게시물_수정_테스트() {
         Article updatedArticle = Article.builder()
                 .id(1).title("수정타이틀1").coverUrl("수정유알엘1").contents("수정컨텐츠1").build();
