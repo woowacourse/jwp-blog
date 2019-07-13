@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -57,7 +57,7 @@ public class ArticleRepositoryTests {
         articleRepository.add(article);
 
         articleRepository.deleteById(article.getId());
-        assertThrows(IllegalArgumentException.class, () -> articleRepository.findById(3));
+        assertFalse(articleRepository.findById(3).isPresent());
     }
 
     @AfterEach
