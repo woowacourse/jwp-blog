@@ -3,7 +3,7 @@ package techcourse.myblog.domain;
 import java.util.Objects;
 
 public class Article {
-	private long id;
+	private Long id;
 	private String title;
 	private String contents;
 	private String coverUrl;
@@ -26,16 +26,16 @@ public class Article {
 		return contents;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public boolean matchId(long articleId) {
-		return this.id == articleId;
+	public boolean matchId(Long articleId) {
+		return this.id.equals(articleId);
 	}
 
 	public void update(Article article) {
@@ -53,7 +53,7 @@ public class Article {
 			return false;
 		}
 		final Article article = (Article) o;
-		return getId() == article.getId() &&
+		return Objects.equals(getId(), article.getId()) &&
 				Objects.equals(getTitle(), article.getTitle()) &&
 				Objects.equals(getContents(), article.getContents()) &&
 				Objects.equals(getCoverUrl(), article.getCoverUrl());

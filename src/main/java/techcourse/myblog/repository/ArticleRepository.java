@@ -10,7 +10,7 @@ import techcourse.myblog.exception.NotFoundArticleException;
 
 @Repository
 public class ArticleRepository {
-	private static int articleCount = 0;
+	private static Long articleCount = 0L;
 
 	private List<Article> articles = new ArrayList<>();
 
@@ -24,7 +24,7 @@ public class ArticleRepository {
 		return findById(articleCount);
 	}
 
-	public Article findById(long id) {
+	public Article findById(Long id) {
 		return articles.stream()
 				.filter(article -> article.matchId(id))
 				.findFirst()
@@ -36,7 +36,7 @@ public class ArticleRepository {
 		originArticle.update(modifiedArticle);
 	}
 
-	public void deleteById(long articleId) {
+	public void deleteById(Long articleId) {
 		Article article = findById(articleId);
 		articles.remove(article);
 	}
