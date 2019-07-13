@@ -10,7 +10,7 @@ import techcourse.myblog.domain.ArticleRepository;
 public class ArticleController {
     private static final int INCREMENT_AMOUNT = 1;
 
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
     public ArticleController(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
