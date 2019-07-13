@@ -133,7 +133,9 @@ public class ArticleControllerTests {
 				.uri("/articles/" + articleId)
 				.exchange()
 				.expectStatus()
-				.isFound();
+				.isFound()
+				.expectHeader()
+				.valueMatches("Location", ".+/");
 
 		assertThrows(NotFoundArticleException.class, () -> articleService.findById(articleId));
 	}
