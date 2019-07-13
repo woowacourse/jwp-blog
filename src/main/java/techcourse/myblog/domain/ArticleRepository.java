@@ -8,7 +8,15 @@ import java.util.List;
 
 @Repository
 public class ArticleRepository {
-    private List<Article> articles = new ArrayList<>();
+    private List<Article> articles;
+
+    public ArticleRepository() {
+        this(new ArrayList<>());
+    }
+
+    public ArticleRepository(List<Article> articles) {
+        this.articles = articles;
+    }
 
     public List<Article> findAll() {
         List<Article> copiedArticles = new ArrayList<>();
@@ -24,6 +32,7 @@ public class ArticleRepository {
     }
 
     public Article findById(int articleId) {
+        System.out.println(articles);
         for (Article article : articles) {
             if (articleId == article.getId()) {
                 return article;

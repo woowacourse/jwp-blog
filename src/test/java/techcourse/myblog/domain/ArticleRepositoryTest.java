@@ -1,73 +1,55 @@
 package techcourse.myblog.domain;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ArticleRepositoryTest {
-    private ArticleRepository articleRepository;
-    private Article article;
+    private static Article article = new Article("test title", "test contents", "test cover url");
+    private static ArticleRepository articleRepository = new ArticleRepository(new ArrayList<>(Collections.singletonList(article)));
 
-    @BeforeEach
-    void setUp() {
-        articleRepository = new ArticleRepository();
-        article = new Article("title", "contents", "coverUrl");
+    @Test
+    void saveTest() {
+        assertThat(articleRepository.findAll())
+                .isEqualTo(new ArrayList<>(Collections.singletonList(article)));
     }
 
     @Test
-    void save() {
-        List<Article> articles = new ArrayList<>();
-        articles.add(article);
-
-        articleRepository.save(article);
-
-        assertThat(articleRepository.findAll()).isEqualTo(articles);
-    }
-
-    @Test
-    void findById() {
-        articleRepository.save(article);
-
+    void findByIdTest() {
         assertThat(articleRepository.findById(1)).isEqualTo(article);
     }
 
     @Test
-    void update() {
-        Article updatedArticle = new Article("title1", "content1", "coverUrl1");
-
-        articleRepository.save(article);
-        int createdArticleId = articleRepository.getLatestArticleId();
-
-        articleRepository.update(createdArticleId, updatedArticle);
-
-        assertThat(articleRepository.findById(createdArticleId).getTitle()).isEqualTo(updatedArticle.getTitle());
-        assertThat(articleRepository.findById(createdArticleId).getContents()).isEqualTo(updatedArticle.getContents());
-        assertThat(articleRepository.findById(createdArticleId).getCoverUrl()).isEqualTo(updatedArticle.getCoverUrl());
+    void getSizeTest() {
+        assertThat(articleRepository.getSize()).isEqualTo(1);
     }
 
     @Test
-    void getLatestArticle() {
-        articleRepository.save(article);
+    void updateTest() {
+        Article updatedArticle = new Article("updated title", "updated contents", "updated cover url");
+        articleRepository.update(1, updatedArticle);
+        assertThat(articleRepository.findById(1).getTitle()).isEqualTo(updatedArticle.getTitle());
+        assertThat(articleRepository.findById(1).getContents()).isEqualTo(updatedArticle.getContents());
+        assertThat(articleRepository.findById(1).getCoverUrl()).isEqualTo(updatedArticle.getCoverUrl());
+    }
 
+    @Test
+    void getLatestArticleTest() {
         assertThat(articleRepository.getLatestArticle()).isEqualTo(article);
     }
 
     @Test
-    void delete() {
-        articleRepository.save(article);
-
+    void deleteTest() {
         articleRepository.delete(1);
-
         assertThat(articleRepository.findAll().contains(article)).isFalse();
+        articleRepository.save(article);
     }
 
-    @AfterEach
-    void tearDown() {
-        Article.initCurrentId();
+    @Test
+    void getLatestArticleIdTest() {
+        assertThat(articleRepository.getLatestArticleId()).isEqualTo(article.getId());
     }
 }
