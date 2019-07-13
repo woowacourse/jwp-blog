@@ -29,10 +29,10 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String createArticle(Article article, Model model) {
-        Article editedArticle = article.edit(articleRepository.newArticleId(), article);
-        model.addAttribute("article", editedArticle);
-        this.articleRepository.add(editedArticle);
-        return "redirect:/articles/" + editedArticle.getId();
+        Article insertedArticle = article.insertId(articleRepository.newArticleId(), article);
+        model.addAttribute("article", insertedArticle);
+        this.articleRepository.add(insertedArticle);
+        return "redirect:/articles/" + insertedArticle.getId();
     }
 
     @GetMapping("/articles/{articleId}")
@@ -49,7 +49,7 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String updateArticle(@PathVariable int articleId, Article article, Model model) {
-        Article editedArticle = article.edit(articleId, article);
+        Article editedArticle = article.insertId(articleId, article);
         articleRepository.update(articleId, editedArticle);
         model.addAttribute("article", this.articleRepository.findById(articleId));
         return "redirect:/articles/" + editedArticle.getId();

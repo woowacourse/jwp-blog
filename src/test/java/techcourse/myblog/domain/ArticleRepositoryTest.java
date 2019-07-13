@@ -14,7 +14,7 @@ public class ArticleRepositoryTest {
     void setUp() {
         this.articleRepository = new ArticleRepository();
         this.testArticle = new Article("2","3","4");
-        this.testArticle = testArticle.edit(1,testArticle);
+        this.testArticle = testArticle.insertId(1,testArticle);
         this.articleRepository.add(this.testArticle);
     }
 
@@ -36,9 +36,10 @@ public class ArticleRepositoryTest {
     @Test
     void article_업데이트_테스트() {
         Article articleToCompare = new Article("this is a test","yes this is","hello test");
-        articleToCompare = articleToCompare.edit(1, articleToCompare);
+        articleToCompare = articleToCompare.insertId(1, articleToCompare);
         this.articleRepository.update(1, articleToCompare);
-        assertThat(this.articleRepository.findById(1)).isEqualTo(articleToCompare);
+        Article testArticle = articleRepository.findById(1);
+        assertThat(testArticle).isEqualTo(articleToCompare);
     }
 
     @Test
