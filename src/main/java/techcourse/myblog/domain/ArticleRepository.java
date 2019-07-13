@@ -39,7 +39,7 @@ public class ArticleRepository {
 
     public void update(int id, Article article) {
         Article articleToUpdate = findById(id);
-        this.articles.set(this.articles.indexOf(articleToUpdate), article);
+        articleToUpdate.edit(article);
     }
 
     public void remove(int id) {
