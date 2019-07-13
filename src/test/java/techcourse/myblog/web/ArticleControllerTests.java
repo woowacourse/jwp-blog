@@ -132,8 +132,7 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
-
-
+    
     private void checkBodyResponse(EntityExchangeResult<byte[]> response) {
         String body = new String(Objects.requireNonNull(response.getResponseBody()));
         assertThat(body.contains(title)).isTrue();
