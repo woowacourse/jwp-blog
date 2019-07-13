@@ -8,8 +8,8 @@ import java.util.Optional;
 
 @Repository
 public class ArticleRepository {
+    public static final int INITIAL_ID = 0;
     private List<Article> articles = new ArrayList<>();
-    private Article article;
 
     public List<Article> findAll() {
         return articles;
@@ -17,12 +17,18 @@ public class ArticleRepository {
 
     public void save(final Article article) {
         if (articles.isEmpty()) {
-            article.setId(0);
+            article.setId(INITIAL_ID);
             articles.add(article);
             return;
         }
-        article.setId(articles.get(articles.size() - 1).getId() + 1);
+
+        article.setId(getMaxId() + 1);
         articles.add(article);
+    }
+
+    private long getMaxId() {
+        return articles.stream().mapToLong(article -> article.getId()).max().getAsLong();
+
     }
 
     public Optional<Article> findById(final Long id) {
