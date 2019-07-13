@@ -50,9 +50,9 @@
     </header>
 
     <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg" th:style="'background:url(' + @{${article.coverUrl}} + ');'">
+        <div class="cover-img overlay-dark bg" th:style="'background:url(' + @{${articleDTO.coverUrl}} + ');'">
             <div class="padding-30">
-                <h1 class="text-center cover-title" th:text="${article.title}">-</h1>
+                <h1 class="text-center cover-title" th:text="${articleDTO.title}">-</h1>
             </div>
         </div>
     </div>
@@ -60,10 +60,10 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a th:href="@{/articles/{id}/edit(id=${article.id})}" class="float-right pointer btn btn-icon">
+                <a th:href="@{/articles/{id}/edit(id=${articleDTO.id})}" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
-                <form th:action="'/articles/' + ${article.id}" th:method="delete">
+                <form th:action="'/articles/' + ${articleDTO.id}" th:method="delete">
                     <button type="submit" class="btn btn-icon">
                         <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
                     </button>
@@ -139,7 +139,7 @@
 <th:block th:include="includes/common-js"></th:block>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script type="text/javascript" th:inline="javascript">
-    const initValue = /*[[${article.contents}]]*/;
+    const initValue = /*[[${articleDTO.contents}]]*/;
 
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
