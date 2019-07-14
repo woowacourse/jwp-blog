@@ -43,12 +43,16 @@ public class Article {
         this.coverUrl = (coverUrl.length() != NO_COVER_URL) ? coverUrl : DEFAULT_COVER_URL;
     }
 
+    public boolean matchId(long articleId) {
+        return this.articleId == articleId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return Objects.equals(articleId, article.articleId) &&
+        return articleId == article.articleId &&
                 Objects.equals(title, article.title) &&
                 Objects.equals(contents, article.contents) &&
                 Objects.equals(coverUrl, article.coverUrl);
@@ -68,4 +72,5 @@ public class Article {
                 ", coverUrl='" + coverUrl + '\'' +
                 '}';
     }
+
 }

@@ -1,6 +1,5 @@
 package techcourse.myblog.domain;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class ArticleRepository {
         this.articles.add(article);
     }
 
-    public Optional<Article> findArticleById(final Long articleId) {
+    public Optional<Article> findArticleById(final long articleId) {
         return articles.stream()
                 .filter(article -> article.getArticleId().equals(articleId))
                 .findAny();
