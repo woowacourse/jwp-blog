@@ -8,14 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -34,90 +33,27 @@ public class ArticleControllerTests {
 
     @Test
     void show_Article_Test() {
-        webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    void writing_Article_Test() {
-        webTestClient.get().uri("/writing")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    void articleForm_Test() {
-        webTestClient.get().uri("/articles/new")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    void create_article_Test() {
-        String title = "title";
-        String coverUrl = "url";
-        String contents = "abcde";
-
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().is3xxRedirection();
+        getStatusAssertionsInGetWay("/").isOk();
     }
 
     @Test
     void writing_Test() {
-        webTestClient.get()
-                .uri("/writing")
-                .exchange()
-                .expectStatus()
-                .isOk();
+        getStatusAssertionsInGetWay("/writing").isOk();
     }
 
     @Test
-    void add_Article_Test(){
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8)
-                .body(BodyInserters
-                        .fromFormData("title",basicArticle.getTitle())
-                        .with("coverUrl",basicArticle.getCoverUrl())
-                        .with("contents",basicArticle.getContents()))
-                .exchange()
-                .expectStatus()
-                .is3xxRedirection().expectBody().consumeWith(redirectResponse -> {
-                    webTestClient.get()
-                            .uri(redirectResponse.getResponseHeaders().get("location").get(0))
-                            .exchange()
-                            .expectBody().consumeWith(response -> {
-                                String body = new String(response.getResponseBody());
-                        assertThat(body.contains("title")).isTrue();
-                        assertThat(body.contains("url")).isTrue();
-                        assertThat(body.contains("contents")).isTrue();
-                    });
-        });
+    void add_Article_Test() {
+        redirect3xxTest(getRequestBodySpec("post", "/articles"), basicArticle);
     }
 
     @Test
     void save_Article_Test() {
-        webTestClient.get()
-                .uri("/articles/" + basicArticle.getId())
-                .exchange()
-                .expectStatus()
-                .isOk();
+        getStatusAssertionsInGetWay("articles/" + basicArticle.getId()).isOk();
     }
 
     @Test
     void edit_Article_Test() {
-        webTestClient.get()
-                .uri("/articles/" + basicArticle.getId()+"/edit")
-                .exchange()
-                .expectStatus()
-                .isOk();
+        getStatusAssertionsInGetWay("articles/" + basicArticle.getId() + "/edit").isOk();
     }
 
     @Test
@@ -125,13 +61,35 @@ public class ArticleControllerTests {
         Article updatedArticle = new Article("b", "b", "b");
         articleRepository.updateArticleById(updatedArticle, 1);
 
-        webTestClient.put()
-                .uri("/articles/1")
-                .contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8)
+        redirect3xxTest(getRequestBodySpec("put", "/articles/1"), updatedArticle);
+    }
+
+    @Test
+    void delete_Article_Test() {
+        articleRepository.deleteAll();
+        getStatusAssertionsInGetWay("articles/1").is5xxServerError();
+    }
+
+    @AfterEach
+    void tearDown() {
+        articleRepository.deleteAll();
+    }
+
+    //StatusAssertion을 get방식으로 가져오겠다는 뜻입니다.
+    private StatusAssertions getStatusAssertionsInGetWay(String uri) {
+        return webTestClient
+                .get()
+                .uri(uri)
+                .exchange()
+                .expectStatus();
+    }
+
+    private void redirect3xxTest(WebTestClient.RequestBodySpec requestBodySpec, Article requestArticle) {
+        requestBodySpec.contentType(MediaType.APPLICATION_PROBLEM_JSON_UTF8)
                 .body(BodyInserters
-                        .fromFormData("title",updatedArticle.getTitle())
-                        .with("coverUrl",updatedArticle.getCoverUrl())
-                        .with("contents",updatedArticle.getContents()))
+                        .fromFormData("title", requestArticle.getTitle())
+                        .with("coverUrl", requestArticle.getCoverUrl())
+                        .with("contents", requestArticle.getContents()))
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection().expectBody().consumeWith(redirectResponse -> {
@@ -140,26 +98,18 @@ public class ArticleControllerTests {
                     .exchange()
                     .expectBody().consumeWith(response -> {
                 String body = new String(response.getResponseBody());
-                assertThat(body.contains("b")).isTrue();
-                assertThat(body.contains("b")).isTrue();
-                assertThat(body.contains("b")).isTrue();
+                assertThat(body.contains(requestArticle.getTitle())).isTrue();
+                assertThat(body.contains(requestArticle.getCoverUrl())).isTrue();
+                assertThat(body.contains(requestArticle.getContents())).isTrue();
             });
         });
-    }
-
-    @Test
-    void delete_Article_Test() {
-        articleRepository.deleteAll();
-        webTestClient.get()
-                .uri("articles/1")
-                .exchange()
-                .expectStatus()
-                .is5xxServerError();
 
     }
 
-    @AfterEach
-    void tearDown() {
-        articleRepository.deleteAll();
+    private WebTestClient.RequestBodySpec getRequestBodySpec(String requestMethod, String uri) {
+        if (requestMethod.equals("put")) {
+            return webTestClient.put().uri(uri);
+        }
+        return webTestClient.post().uri(uri);
     }
 }

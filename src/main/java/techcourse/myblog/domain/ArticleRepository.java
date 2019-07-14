@@ -59,7 +59,7 @@ public class ArticleRepository {
         return articles;
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         articles.clear();
     }
 
