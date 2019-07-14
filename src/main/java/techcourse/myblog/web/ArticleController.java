@@ -25,12 +25,12 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public ModelAndView writeArticle(final Article article) {
+    public String writeArticle(final Article article) {
         Long latestId = articleRepository.generateNewId();
         article.setArticleId(latestId);
         articleRepository.addArticle(article);
 
-        return new ModelAndView("redirect:/articles/" + latestId);
+        return "redirect:/articles/" + latestId;
     }
 
     @PutMapping("/articles/{articleId}")
