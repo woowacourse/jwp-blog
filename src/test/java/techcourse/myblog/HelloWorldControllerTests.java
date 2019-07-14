@@ -25,7 +25,6 @@ public class HelloWorldControllerTests {
                 .expectBody()
                 .consumeWith(response ->
                         Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
-
     }
 
     @Test
