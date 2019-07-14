@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +18,9 @@ public class ArticleController {
     @GetMapping("/articles/new")
     public String articleCreationPage(Model model) {
         String actionRoute = "/write";
-        String formMethod = "post";
 
         model.addAttribute("actionRoute", actionRoute);
-        model.addAttribute("formMethod", formMethod);
+        model.addAttribute("formMethod", HttpMethod.POST);
         return "article-edit";
     }
 
@@ -28,11 +28,10 @@ public class ArticleController {
     public String articleEditPage(@PathVariable int articleId, Model model) {
         Article article = articleRepository.findBy(articleId);
         String actionRoute = "/articles/" + articleId;
-        String formMethod = "put";
 
-        model.addAttribute("actionRoute", actionRoute);
-        model.addAttribute("formMethod", formMethod);
         model.addAttribute("article", article);
+        model.addAttribute("actionRoute", actionRoute);
+        model.addAttribute("formMethod", HttpMethod.PUT);
         return "article-edit";
     }
 
