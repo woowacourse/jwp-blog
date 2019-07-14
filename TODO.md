@@ -31,5 +31,9 @@
 
 ### 기타
 - [X] 커스텀 익셉션 만들기
-- [ ] article-edit.html  title, coverUrl 부분 리팩터링
-- [ ] index.html에서 마크다운 적용안되는 부분 해결하기
+
+### 피드백
+- [X] Article 클래스에 update구현
+- [X] 테스트 코드 중복 제거
+- [X] 필드 인젝션 -> 생성자 인젝션
+- [X] PathVariable 자료형 통일 (Integer/int)

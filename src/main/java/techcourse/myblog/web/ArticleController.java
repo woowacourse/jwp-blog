@@ -10,8 +10,12 @@ import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
 public class ArticleController {
+    private final ArticleRepository articleRepository;
+
     @Autowired
-    private ArticleRepository articleRepository;
+    public ArticleController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @GetMapping("/writing")
     public String createArticleForm() {
@@ -37,19 +41,19 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}")
-    public String showArticle(@PathVariable Integer articleId, Model model) {
+    public String showArticle(@PathVariable int articleId, Model model) {
         model.addAttribute("article", articleRepository.find(articleId));
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String editArticleForm(@PathVariable Integer articleId, Model model) {
+    public String editArticleForm(@PathVariable int articleId, Model model) {
         model.addAttribute("article", articleRepository.find(articleId));
         return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable Integer articleId, ArticleDto articleDto, Model model) {
+    public String editArticle(@PathVariable int articleId, ArticleDto articleDto, Model model) {
         Article article = new Article(
                 articleId,
                 articleDto.getTitle(),

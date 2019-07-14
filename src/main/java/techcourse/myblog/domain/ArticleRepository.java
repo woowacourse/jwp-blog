@@ -27,9 +27,9 @@ public class ArticleRepository {
                 ;
     }
 
-    public void update(Article article) {
-        int index = articles.indexOf(find(article.getId()));
-        articles.set(index, article);
+    public void update(Article editedArticle) {
+        Article article = find(editedArticle.getId());
+        article.update(editedArticle);
     }
 
     public int nextId() {

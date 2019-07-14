@@ -4,9 +4,9 @@ public class Article {
     private static final String EMPTY_TEXT = "NULL";
 
     private final int id;
-    private final String title;
-    private final String coverUrl;
-    private final String contents;
+    private String title;
+    private String coverUrl;
+    private String contents;
 
     public Article(int id, String title, String coverUrl, String contents) {
         validateTitle(title);
@@ -33,6 +33,16 @@ public class Article {
         return text == null || "".equals(text);
     }
 
+    public boolean matchId(int articleId) {
+        return this.id == articleId;
+    }
+
+    public void update(Article article) {
+        title = article.getTitle();
+        coverUrl = article.getCoverUrl();
+        contents = article.getContents();
+    }
+
     public String getTitle() {
         return title;
     }
@@ -43,10 +53,6 @@ public class Article {
 
     public String getContents() {
         return contents;
-    }
-
-    public boolean matchId(int articleId) {
-        return this.id == articleId;
     }
 
     public int getId() {
