@@ -35,16 +35,21 @@ public class ArticleControllerTests {
 
     @Test
     void index() {
-        webTestClient.get().uri(BASE_URL)
-                .exchange()
-                .expectStatus().isOk();
+        get_요청_결과(BASE_URL)
+                .expectStatus()
+                .isOk();
+    }
+
+    private WebTestClient.ResponseSpec get_요청_결과(String uri) {
+        return webTestClient.get().uri(uri)
+                .exchange();
     }
 
     @Test
     void 게시물_작성_페이지_이동_테스트() {
-        webTestClient.get().uri(BASE_URL + "writing")
-                .exchange()
-                .expectStatus().isOk();
+        get_요청_결과(BASE_URL + "writing")
+                .expectStatus()
+                .isOk();
     }
 
     @Test
@@ -60,8 +65,7 @@ public class ArticleControllerTests {
         String coverUrl = "유알엘";
         String contents = "컨텐츠";
 
-        webTestClient.get().uri(BASE_URL + ARTICLE_URL + TARGET_ARTICLE_ID)
-                .exchange()
+        get_요청_결과(BASE_URL + ARTICLE_URL + TARGET_ARTICLE_ID)
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
@@ -74,9 +78,9 @@ public class ArticleControllerTests {
 
     @Test
     void 게시물_수정_페이지_이동_테스트() {
-        webTestClient.get().uri(BASE_URL + ARTICLE_URL + TARGET_ARTICLE_ID + "/edit")
-                .exchange()
-                .expectStatus().isOk();
+        get_요청_결과(BASE_URL + ARTICLE_URL + TARGET_ARTICLE_ID + "/edit")
+                .expectStatus()
+                .isOk();
     }
 
     @Test
