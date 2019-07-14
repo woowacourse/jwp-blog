@@ -55,7 +55,9 @@ public class ArticleControllerTest {
                         .fromFormData("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
-                .exchange();
+                .exchange()
+                .expectStatus()
+                .isFound();
 
         Long latestId = articleRepository.generateNewId() - PRE_ARTICLE_ID;
 
