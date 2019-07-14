@@ -8,10 +8,10 @@ import java.util.Optional;
 
 @Repository
 public class ArticleRepository {
-    private static final int NEXT_ID = 1;
     private static final int DEFAULT_ARTICLE_INDEX = 0;
 
     private List<Article> articles = new ArrayList<>();
+    private Long nextArticleId = 1L;
 
     public void addArticle(Article article) {
         this.articles.add(article);
@@ -28,13 +28,7 @@ public class ArticleRepository {
     }
 
     public Long generateNewId() {
-        long maxId = 0L;
-
-        for (Article article : articles) {
-            maxId = Math.max(article.getArticleId(), maxId);
-        }
-
-        return maxId + NEXT_ID;
+        return nextArticleId++;
     }
 
     public void deleteArticle(Long articleId) {
