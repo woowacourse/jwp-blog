@@ -3,20 +3,22 @@ package techcourse.myblog.domain;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class ArticleRepository {
     private List<Article> articles = new ArrayList<>();
-    private int id;
+    private final AtomicInteger id = new AtomicInteger();
 
     public List<Article> findAll() {
-        return articles;
+        return Collections.unmodifiableList(articles);
     }
 
     public void insert(Article article) {
         articles.add(article);
-        id++;
+        id.getAndIncrement();
     }
 
     public Article findById(int articleId) {
@@ -33,7 +35,7 @@ public class ArticleRepository {
     }
 
     public int nextId() {
-        return id;
+        return id.get();
     }
 
     public void remove(int articleId) {
