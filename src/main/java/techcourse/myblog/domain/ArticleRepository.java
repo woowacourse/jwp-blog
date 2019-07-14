@@ -22,14 +22,14 @@ public class ArticleRepository {
     }
 
     public int lastIndex() {
-        return size() - 1;
+        return count() - 1;
     }
 
     public void update(int articleId, Article article) {
         articles.set(articleId, article);
     }
 
-    public int size() {
+    public int count() {
         return articles.size();
     }
 
