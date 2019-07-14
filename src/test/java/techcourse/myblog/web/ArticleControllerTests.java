@@ -65,7 +65,7 @@ public class ArticleControllerTests {
     @Test
     void create_update() {
         articleRepository.save(article);
-        System.out.println(articleRepository.findAll());
+
         checkIsOk(getResponse("articles/" + article.getArticleId() + "/edit"));
     }
 
