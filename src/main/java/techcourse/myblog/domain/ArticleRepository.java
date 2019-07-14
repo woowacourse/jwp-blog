@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
+import techcourse.myblog.web.dto.ArticleDto;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,9 +19,8 @@ public class ArticleRepository {
         return Collections.unmodifiableList(reverseArticles);
     }
 
-    public long saveArticle(Article article) {
-        article.setId(++lastId);
-        articles.add(article);
+    public long saveArticle(ArticleDto articleDto) {
+        articles.add(new Article(++lastId, articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents()));
         return lastId;
     }
 

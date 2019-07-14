@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.web.dto.ArticleDto;
 
 import java.util.Objects;
 
@@ -23,16 +24,14 @@ public class ArticleControllerTests {
     @Autowired
     private ArticleRepository articleRepository;
 
-    private Article article;
-    private Article deleteArticle;
+    private ArticleDto article;
+    private long savedId;
 
     @BeforeEach
     void setUp() {
-        article = new Article("title1", "url1", "content1");
-        deleteArticle = new Article("title2", "url2", "content2");
-        articleRepository.saveArticle(article);
-        articleRepository.saveArticle(deleteArticle);
-        articleRepository.saveArticle(new Article("title3", "url3", "content3"));
+        article = new ArticleDto("title1", "url1", "content1");
+        savedId = articleRepository.saveArticle(article);
+        articleRepository.saveArticle(new ArticleDto("title3", "url3", "content3"));
     }
 
     @Test
@@ -46,7 +45,7 @@ public class ArticleControllerTests {
 
     @Test
     void goDetailArticle() {
-        webTestClient.get().uri("/articles/" + article.getId())
+        webTestClient.get().uri("/articles/" + savedId)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -60,7 +59,7 @@ public class ArticleControllerTests {
 
     @Test
     void deleteArticle() {
-        webTestClient.delete().uri("/articles/" + article.getId())
+        webTestClient.delete().uri("/articles/" + savedId)
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
@@ -74,15 +73,15 @@ public class ArticleControllerTests {
 
     @Test
     void updateArticle() {
-        Article updateArticle = new Article("update title", "update url", "update content");
-        webTestClient.put().uri("/articles/" + article.getId())
+        ArticleDto updateArticle = new ArticleDto("update title", "update url", "update content");
+        webTestClient.put().uri("/articles/" + savedId)
                 .body(fromFormData("title", updateArticle.getTitle())
                         .with("coverUrl", updateArticle.getCoverUrl())
                         .with("contents", updateArticle.getContents()))
                 .exchange()
                 .expectStatus().is3xxRedirection();
 
-        Article updated = articleRepository.getArticleById(article.getId())
+        Article updated = articleRepository.getArticleById(savedId)
                 .orElseThrow(IllegalArgumentException::new);
         assertThat(updateArticle.getTitle()).isEqualTo(updated.getTitle());
         assertThat(updateArticle.getCoverUrl()).isEqualTo(updated.getCoverUrl());
@@ -91,7 +90,7 @@ public class ArticleControllerTests {
 
     @Test
     void editArticle() {
-        webTestClient.get().uri("/articles/" + article.getId() + "/edit")
+        webTestClient.get().uri("/articles/" + savedId + "/edit")
                 .exchange()
                 .expectStatus().isOk();
     }

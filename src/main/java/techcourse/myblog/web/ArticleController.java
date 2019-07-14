@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.web.dto.ArticleDto;
 
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
@@ -19,7 +20,7 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String createArticle(Article article) {
+    public String createArticle(ArticleDto article) {
         return "redirect:/articles/" + articleRepository.saveArticle(article);
     }
 
