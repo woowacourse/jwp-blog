@@ -28,4 +28,22 @@ class ArticleRepositoryTest {
         assertThat(articleRepository.findAll().size()).isEqualTo(2);
     }
 
+    @Test
+    void 수정() {
+        Article originalArticle = new Article();
+        originalArticle.setTitle("hello");
+
+        articleRepository.save(new Article());
+        articleRepository.save(originalArticle);
+
+        Article newArticle = new Article();
+        newArticle.setId(1);
+        newArticle.setTitle("bye");
+
+        articleRepository.update(newArticle);
+
+        assertThat(articleRepository.findById(1).get().getTitle()).isEqualTo("bye");
+
+    }
+
 }

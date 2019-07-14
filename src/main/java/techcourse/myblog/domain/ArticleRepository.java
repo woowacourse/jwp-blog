@@ -40,10 +40,11 @@ public class ArticleRepository {
         return Optional.empty();
     }
 
-    public void update(final Article article) {
-        int id = article.getId();
+    public void update(final Article newArticle) {
+        int id = newArticle.getId();
+        Article originalArticle = findById(id).get();
 
-        articles.set(id, article);
+        articles.set(articles.indexOf(originalArticle), newArticle);
     }
 
     public void deleteById(final int id) {
