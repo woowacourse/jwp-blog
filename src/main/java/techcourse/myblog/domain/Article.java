@@ -5,16 +5,10 @@ import techcourse.myblog.domain.dto.ArticleDto;
 import java.util.Objects;
 
 public class Article {
-    private int id;
+    private final int id;
     private String title;
     private String coverUrl;
     private String contents;
-
-//    public Article(String title, String coverUrl, String contents) {
-//        this.title = title;
-//        this.coverUrl = coverUrl;
-//        this.contents = contents;
-//    }
 
     public Article(int id, ArticleDto articleDto) {
         this.id = id;
@@ -25,6 +19,12 @@ public class Article {
 
     public boolean matchId(int id) {
         return this.id == id;
+    }
+
+    public void update(ArticleDto articleDto) {
+        this.title = articleDto.getTitle();
+        this.coverUrl = articleDto.getCoverUrl();
+        this.contents = articleDto.getContents();
     }
 
     public int getId() {
@@ -41,16 +41,6 @@ public class Article {
 
     public String getContents() {
         return contents;
-    }
-
-//    public Article insertId(int id, Article article) {
-//        return new Article(id, article.getTitle(), article.getCoverUrl(), article.getContents());
-//    }
-
-    public void update(ArticleDto articleDto) {
-        this.title = articleDto.getTitle();
-        this.coverUrl = articleDto.getCoverUrl();
-        this.contents = articleDto.getContents();
     }
 
     @Override

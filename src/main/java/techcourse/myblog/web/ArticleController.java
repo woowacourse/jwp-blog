@@ -50,7 +50,6 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String updateArticle(@PathVariable int articleId, ArticleDto articleDto, Model model) {
-        //Article editedArticle = article.insertId(articleId, article);
         articleRepository.update(articleId, articleDto);
         Article updatedArticle = articleRepository.findById(articleId);
         model.addAttribute("article", updatedArticle);
