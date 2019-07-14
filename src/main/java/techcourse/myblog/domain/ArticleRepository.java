@@ -13,8 +13,13 @@ public class ArticleRepository {
     private List<Article> articles = new ArrayList<>();
     private Long nextArticleId = 1L;
 
-    public void addArticle(Article article) {
+    public Long addArticle(Article article) {
+        Long latestId = generateNewId();
+
+        article.setArticleId(latestId);
         this.articles.add(article);
+
+        return latestId;
     }
 
     public Optional<Article> findArticleById(final Long articleId) {
@@ -38,7 +43,9 @@ public class ArticleRepository {
 
     public void updateArticle(Article updatedArticle) {
         int targetArticleIndex = findArticleIndexByArticle(updatedArticle);
-        articles.set(targetArticleIndex, updatedArticle);
+
+        articles.remove(targetArticleIndex);
+        articles.add(targetArticleIndex, updatedArticle);
     }
 
     private int findArticleIndexByArticle(Article article) {

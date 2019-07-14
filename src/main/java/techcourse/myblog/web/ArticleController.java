@@ -26,17 +26,13 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String writeArticle(final Article article) {
-        Long latestId = articleRepository.generateNewId();
-        article.setArticleId(latestId);
-        articleRepository.addArticle(article);
-
+        Long latestId = articleRepository.addArticle(article);
         return "redirect:/articles/" + latestId;
     }
 
     @PutMapping("/articles/{articleId}")
     public String updateArticle(@PathVariable Long articleId, final Article article) {
         articleRepository.updateArticle(article);
-
         return "redirect:/articles/" + articleId;
     }
 
