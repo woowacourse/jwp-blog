@@ -2,10 +2,9 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
@@ -15,7 +14,7 @@ import java.util.Objects;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
-@ExtendWith(SpringExtension.class)
+@AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
     @Autowired
@@ -37,26 +36,12 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void index() {
-        webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    void articleForm() {
-        webTestClient.get().uri("/writing")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
     void createArticle() {
         webTestClient.post().uri("/articles")
                 .body(fromFormData("", "").with("", "").with("", ""))
                 .exchange()
                 .expectStatus().isFound()
-                .expectHeader().valueMatches("location", ".*/articles/(\\d)*");
+                .expectHeader().valueMatches("location", ".*/articles/[0-9]{0,}");
     }
 
     @Test
@@ -70,21 +55,26 @@ public class ArticleControllerTests {
                     assertThat(body.contains(article.getTitle())).isTrue();
                     assertThat(body.contains(article.getCoverUrl())).isTrue();
                     assertThat(body.contains(article.getContents())).isTrue();
-
                 });
     }
 
     @Test
     void deleteArticle() {
-        webTestClient.delete().uri("/articles/" + deleteArticle.getId())
+        webTestClient.delete().uri("/articles/" + article.getId())
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
 
     @Test
+    void deleteArticle_존재하지_않는_글_삭제_fail() {
+        webTestClient.delete().uri("/articles/" + 999)
+                .exchange()
+                .expectStatus().is5xxServerError();
+    }
+
+    @Test
     void updateArticle() {
         Article updateArticle = new Article("update title", "update url", "update content");
-        updateArticle.setId(article.getId());
         webTestClient.put().uri("/articles/" + article.getId())
                 .body(fromFormData("title", updateArticle.getTitle())
                         .with("coverUrl", updateArticle.getCoverUrl())
@@ -92,9 +82,11 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection();
 
-        assertThat(updateArticle.getTitle()).isEqualTo(articleRepository.getArticleById(article.getId()).getTitle());
-        assertThat(updateArticle.getCoverUrl()).isEqualTo(articleRepository.getArticleById(article.getId()).getCoverUrl());
-        assertThat(updateArticle.getContents()).isEqualTo(articleRepository.getArticleById(article.getId()).getContents());
+        Article updated = articleRepository.getArticleById(article.getId())
+                .orElseThrow(IllegalArgumentException::new);
+        assertThat(updateArticle.getTitle()).isEqualTo(updated.getTitle());
+        assertThat(updateArticle.getCoverUrl()).isEqualTo(updated.getCoverUrl());
+        assertThat(updateArticle.getContents()).isEqualTo(updated.getContents());
     }
 
     @Test
