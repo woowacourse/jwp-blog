@@ -33,78 +33,78 @@ public class ArticleControllerTests {
 
     @Test
     void index() {
-        getExchange("/");
-        isStatusOk();
+        responseSpec = getExchange("/");
+        isStatusOk(responseSpec);
     }
 
     @Test
     void articleForm() {
-        getExchange("/articles/new");
-        isStatusOk();
+        responseSpec = getExchange("/articles/new");
+        isStatusOk(responseSpec);
     }
 
     @Test
     void writeArticleForm() {
-        getExchange("/writing");
-        isStatusOk();
+        responseSpec = getExchange("/writing");
+        isStatusOk(responseSpec);
     }
 
     @Test
     void saveArticle() {
-        postDefaultArticleExchange();
-        isStatusFound();
+        responseSpec = postDefaultArticleExchange();
+        isStatusFound(responseSpec);
     }
 
     @Test
     void fetchArticle() {
-        getExchange("/articles/1");
-        isStatusOk();
+        responseSpec = getExchange("/articles/1");
+        isStatusOk(responseSpec);
     }
 
     @Test
     void editArticle() {
-        getExchange("/articles/1/edit");
-        isStatusOk();
+        responseSpec = getExchange("/articles/1/edit");
+        isStatusOk(responseSpec);
     }
 
     @Test
     void saveEditedArticle() {
-        putExchange("/articles/1");
-        isStatusOk();
+        responseSpec = putExchange("/articles/1");
+        isStatusOk(responseSpec);
     }
 
     @Test
     void deleteArticle() {
         postDefaultArticleExchange();
 
-        deleteExchange("/articles/2");
-        isStatusFound();
+        responseSpec = deleteExchange("/articles/2");
+        isStatusFound(responseSpec);
     }
 
-    private void getExchange(String uri) {
-        responseSpec = webTestClient.get().uri(uri).exchange();
+    private WebTestClient.ResponseSpec getExchange(String uri) {
+        return webTestClient.get().uri(uri).exchange();
     }
 
-    private void putExchange(String uri) {
-        responseSpec =  webTestClient.put().uri(uri).exchange();
+    private WebTestClient.ResponseSpec putExchange(String uri) {
+        return webTestClient.put().uri(uri).exchange();
     }
 
-    private void deleteExchange(String uri) {
-        responseSpec =  webTestClient.delete().uri(uri).exchange();
+    private WebTestClient.ResponseSpec deleteExchange(String uri) {
+        return webTestClient.delete().uri(uri).exchange();
     }
 
-    private void postDefaultArticleExchange() {
-        responseSpec =  webTestClient.post().uri("/articles")
+    private WebTestClient.ResponseSpec postDefaultArticleExchange() {
+        return webTestClient.post().uri("/articles")
                 .body(Mono.just(article), Article.class)
                 .exchange();
     }
 
-    private void isStatusOk() {
-        responseSpec.expectStatus().isOk();
+    private WebTestClient.ResponseSpec isStatusOk(WebTestClient.ResponseSpec responseSpec) {
+        return responseSpec.expectStatus().isOk();
     }
 
-    private void isStatusFound() {
-        responseSpec.expectStatus().isFound();
+    private WebTestClient.ResponseSpec isStatusFound(WebTestClient.ResponseSpec responseSpec) {
+        return responseSpec.expectStatus().isFound();
     }
 
     @AfterEach
