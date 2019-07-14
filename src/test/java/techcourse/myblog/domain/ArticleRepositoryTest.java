@@ -15,30 +15,28 @@ class ArticleRepositoryTest {
 
     @Test
     void 한_개_저장() {
-        Article article = new Article();
+        Article article = new Article("title", "url", "contents");
         articleRepository.save(article);
         assertThat(articleRepository.findAll().size()).isEqualTo(1);
     }
 
     @Test
     void 두_개_저장() {
-        articleRepository.save(new Article());
-        articleRepository.save(new Article());
+        articleRepository.save(new Article("title", "url", "contents"));
+        articleRepository.save(new Article("title", "url", "contents"));
 
         assertThat(articleRepository.findAll().size()).isEqualTo(2);
     }
 
     @Test
     void 수정() {
-        Article originalArticle = new Article();
-        originalArticle.setTitle("hello");
+        Article originalArticle = new Article("hello", "url", "contents");
 
-        articleRepository.save(new Article());
+        articleRepository.save(new Article("hello", "url", "contents"));
         articleRepository.save(originalArticle);
 
-        Article newArticle = new Article();
+        Article newArticle = new Article("bye", "url", "contents");
         newArticle.setId(1);
-        newArticle.setTitle("bye");
 
         articleRepository.update(newArticle);
 

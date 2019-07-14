@@ -6,11 +6,17 @@ public class Article {
     private String coverUrl;
     private String contents;
 
+    public Article(String title, String coverUrl, String contents) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+    }
+
     public int getId() {
         return id;
     }
 
-    public void setId(final int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -18,24 +24,12 @@ public class Article {
         return title;
     }
 
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
     public String getCoverUrl() {
         return coverUrl;
     }
 
-    public void setCoverUrl(final String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
     public String getContents() {
         return contents;
-    }
-
-    public void setContents(final String contents) {
-        this.contents = contents;
     }
 
     @Override

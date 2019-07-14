@@ -33,11 +33,7 @@ public class ArticleControllerTests {
         String coverUrl = "https://pgnqdrjultom1827145.cdn.ntruss.com/img/bc/30/bc30f170793e5342c4ca6cca771da57f922f8a9a25fa09eb2b672962cda1ea92_v1.jpg";
         String contents = "스파이더맨과 미슽테리우스";
 
-        Article article = new Article();
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-        article.setContents(contents);
-
+        Article article = new Article(title, coverUrl, contents);
         articleRepository.save(article);
 
     }
