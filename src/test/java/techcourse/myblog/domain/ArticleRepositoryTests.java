@@ -10,15 +10,12 @@ public class ArticleRepositoryTests {
 
     private ArticleRepository articleRepository;
     private Article article;
-    private Article deletedArticle;
 
     @BeforeEach
     void setUp() {
         articleRepository = new ArticleRepository();
         article = new Article("", "", "");
-        deletedArticle = new Article("", "", "");
         articleRepository.saveArticle(article);
-        articleRepository.saveArticle(deletedArticle);
     }
 
     @Test
@@ -34,12 +31,14 @@ public class ArticleRepositoryTests {
 
     @Test
     void getArticleById() {
-        assertThat(articleRepository.getArticleById(1)).isEqualTo(article);
+        assertThat(articleRepository.getArticleById(1)
+                .orElseThrow(IllegalArgumentException::new)).isEqualTo(article);
     }
 
     @Test
     void getArticleById_찾았는데_없는거() {
-        assertThatThrownBy(() -> articleRepository.getArticleById(5))
+        assertThatThrownBy(
+                () -> articleRepository.getArticleById(5).orElseThrow(IllegalArgumentException::new))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

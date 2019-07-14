@@ -1,7 +1,7 @@
 package techcourse.myblog.domain;
 
 public class Article {
-    private int id;
+    private Long id;
     private String title;
     private String coverUrl;
     private String contents;
@@ -12,11 +12,11 @@ public class Article {
         this.contents = contents;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -32,7 +32,7 @@ public class Article {
         return contents;
     }
 
-    public boolean isSameId(int id) {
+    public boolean isSameId(long id) {
         return this.id == id;
     }
 }

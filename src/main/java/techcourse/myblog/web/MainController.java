@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import techcourse.myblog.domain.ArticleRepository;
 
-import static techcourse.myblog.domain.MethodType.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class MainController {
