@@ -69,13 +69,13 @@ class ArticleRepositoryTest {
                 "updated coverUrl",
                 "updated contents"
         );
-        Article updatedArticle = Article.of(TEST_ARTICLE_ID, updatedArticleDTO);
 
         // When
-        articleRepository.updateBy(updatedArticle);
+        articleRepository.updateBy(TEST_ARTICLE_ID, updatedArticleDTO);
 
         // Then
         Article resultArticle = articleRepository.findBy(TEST_ARTICLE_ID);
+
         assertThat(resultArticle.getTitle()).isEqualTo(updatedArticleDTO.getTitle());
         assertThat(resultArticle.getCoverUrl()).isEqualTo(updatedArticleDTO.getCoverUrl());
         assertThat(resultArticle.getContents()).isEqualTo(updatedArticleDTO.getContents());

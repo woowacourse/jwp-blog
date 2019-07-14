@@ -52,9 +52,8 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String editArticle(@PathVariable int articleId, ArticleDTO articleDTO) {
-        Article updatedArticle = Article.of(articleId, articleDTO);
+        articleRepository.updateBy(articleId, articleDTO);
 
-        articleRepository.updateBy(updatedArticle);
         return "redirect:/articles/" + articleId;
     }
 

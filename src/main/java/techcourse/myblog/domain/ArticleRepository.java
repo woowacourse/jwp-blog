@@ -44,9 +44,9 @@ public class ArticleRepository {
                 .orElseThrow(CouldNotFindArticleIdException::new);
     }
 
-    public void updateBy(Article updatedArticle) {
-        int updatingId = updatedArticle.getArticleId();
-        Article oldArticle = findBy(updatingId);
+    public void updateBy(int updatintId, ArticleDTO articleDTO) {
+        Article updatedArticle = Article.of(updatintId, articleDTO);
+        Article oldArticle = findBy(updatintId);
         int indexOfOld = articles.indexOf(oldArticle);
 
         articles.set(indexOfOld, updatedArticle);
