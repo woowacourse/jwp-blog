@@ -14,7 +14,7 @@ public class ArticleDTO {
         this.contents = contents;
     }
 
-    public Article toConvertEntity() {
+    public Article ConvertToEntity() {
         return new Article(id, title, coverUrl, contents);
     }
 

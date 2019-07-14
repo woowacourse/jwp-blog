@@ -26,13 +26,13 @@ public class ArticleService {
     public List<ArticleDTO> findAll() {
         List<Article> articles = articleRepository.findAll();
         return Collections.unmodifiableList(articles.stream()
-                .map(Article::toConvertDTO)
+                .map(Article::ConvertToDTO)
                 .collect(Collectors.toList()));
     }
 
     public ArticleDTO findArticleById(int id) {
         Article article = articleRepository.findArticleById(id);
-        return article.toConvertDTO();
+        return article.ConvertToDTO();
     }
 
     public int createArticle(ArticleDTO articleDTO) {
@@ -43,7 +43,7 @@ public class ArticleService {
 
     public void updateArticle(int id, ArticleDTO articleDTO) {
         checkNull(articleDTO);
-        Article article = articleDTO.toConvertEntity();
+        Article article = articleDTO.ConvertToEntity();
         articleRepository.updateArticle(id, article);
     }
 

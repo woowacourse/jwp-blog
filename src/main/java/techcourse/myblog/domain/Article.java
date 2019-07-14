@@ -49,7 +49,7 @@ public class Article {
         this.contents = article.getContents();
     }
 
-    public ArticleDTO toConvertDTO() {
+    public ArticleDTO ConvertToDTO() {
         ArticleDTO articleDTO = new ArticleDTO(title, coverUrl, contents);
         articleDTO.setId(id);
         return articleDTO;

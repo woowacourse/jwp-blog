@@ -68,6 +68,6 @@ public class ArticleTest {
         Article article = new Article(1, "title", "", "content");
         ArticleDTO articleDTO = new ArticleDTO("title", "", "content");
         articleDTO.setId(1);
-        assertThat(article.toConvertDTO()).isEqualTo(articleDTO);
+        assertThat(article.ConvertToDTO()).isEqualTo(articleDTO);
     }
 }
