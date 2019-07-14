@@ -37,8 +37,8 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public String createNewArticle(ArticleDTO articleDTO) {
-        articleRepository.save(articleDTO);
+    public String createNewArticle(ArticleDto articleDto) {
+        articleRepository.save(articleDto);
         return "redirect:/articles/" + articleRepository.getLastGeneratedId();
     }
 
@@ -51,8 +51,8 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable int articleId, ArticleDTO articleDTO) {
-        articleRepository.updateBy(articleId, articleDTO);
+    public String editArticle(@PathVariable int articleId, ArticleDto articleDto) {
+        articleRepository.updateBy(articleId, articleDto);
 
         return "redirect:/articles/" + articleId;
     }

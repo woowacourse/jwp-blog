@@ -3,18 +3,18 @@ package techcourse.myblog.domain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.exception.IllegalArticleArgumentsException;
-import techcourse.myblog.web.ArticleDTO;
+import techcourse.myblog.web.ArticleDto;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ArticleTest {
     private static final int TEST_ARTICLE_ID = 1;
-    private ArticleDTO articleDTO;
+    private ArticleDto articleDTO;
 
     @Test
     @DisplayName("Article의 title이 null인 경우 예외를 던진다.")
     void checkNullTitleTest() {
-        articleDTO = new ArticleDTO(
+        articleDTO = new ArticleDto(
                 null,
                 "not null",
                 "not null"
@@ -27,7 +27,7 @@ class ArticleTest {
     @Test
     @DisplayName("Article의 coverUrl이 null인 경우 예외를 던진다.")
     void checkNullConverUrlTest() {
-        articleDTO = new ArticleDTO(
+        articleDTO = new ArticleDto(
                 "not null",
                 null,
                 "not null"
@@ -40,7 +40,7 @@ class ArticleTest {
     @Test
     @DisplayName("Article의 contents가 null인 경우 예외를 던진다.")
     void checkNullContentsTest() {
-        articleDTO = new ArticleDTO(
+        articleDTO = new ArticleDto(
                 "not null",
                 "not null",
                 null

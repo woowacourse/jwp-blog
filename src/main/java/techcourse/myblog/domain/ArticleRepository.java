@@ -2,7 +2,7 @@ package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
 import techcourse.myblog.domain.exception.CouldNotFindArticleIdException;
-import techcourse.myblog.web.ArticleDTO;
+import techcourse.myblog.web.ArticleDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class ArticleRepository {
         lastGeneratedId = INITIAL_ID;
     }
 
-    public void save(ArticleDTO articleDTO) {
+    public void save(ArticleDto articleDTO) {
         int articleId = generateNewId();
         String title = articleDTO.getTitle();
         String coverUrl = articleDTO.getCoverUrl();
@@ -44,7 +44,7 @@ public class ArticleRepository {
                 .orElseThrow(CouldNotFindArticleIdException::new);
     }
 
-    public void updateBy(int updatintId, ArticleDTO articleDTO) {
+    public void updateBy(int updatintId, ArticleDto articleDTO) {
         Article updatedArticle = Article.of(updatintId, articleDTO);
         Article oldArticle = findBy(updatintId);
         int indexOfOld = articles.indexOf(oldArticle);

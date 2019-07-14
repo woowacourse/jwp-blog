@@ -1,11 +1,11 @@
 package techcourse.myblog.web;
 
-public class ArticleDTO {
+public class ArticleDto {
     private String title;
     private String coverUrl;
     private String contents;
 
-    public ArticleDTO(String title, String coverUrl, String contents) {
+    public ArticleDto(String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
