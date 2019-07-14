@@ -1,8 +1,16 @@
 package techcourse.myblog;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 public class HelloWorldController {
+    @GetMapping("/helloworld")
+    public String blogNameByGet(String blogName) {
+        return blogName;
+    }
 
+    @PostMapping("/helloworld")
+    public String blogNameByPost(@RequestBody String blogName) {
+        return blogName;
+    }
 }
