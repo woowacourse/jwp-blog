@@ -1,7 +1,7 @@
 package techcourse.myblog.domain;
 
 public class Article {
-    private int id;
+    private long id;
     private String title;
     private String coverUrl;
     private String contents;
@@ -24,20 +24,16 @@ public class Article {
         this.contents = updatedArticle.contents;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getCoverUrl() {
@@ -46,13 +42,5 @@ public class Article {
 
     public String getContents() {
         return contents;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
     }
 }

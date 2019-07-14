@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
+import java.util.Optional;
+
 @Controller
 public class ArticleController {
     @Autowired
@@ -31,27 +33,33 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}")
-    public String showArticle(@PathVariable int id, Model model) {
-        model.addAttribute("article", articleRepository.getArticleById(id));
+    public String showArticle(@PathVariable long id, Model model) {
+        addAttributeArticleModel(id, model);
         return "article";
     }
 
     @GetMapping("/articles/{id}/edit")
-    public String editArticle(@PathVariable int id, Model model) {
-        model.addAttribute("article", articleRepository.getArticleById(id));
+    public String editArticle(@PathVariable long id, Model model) {
+        addAttributeArticleModel(id, model);
         model.addAttribute("method", "PUT");
         return "article-edit";
     }
 
     @PutMapping("/articles/{id}")
-    public String putArticle(@PathVariable int id, Article article) {
+    public String putArticle(@PathVariable long id, Article article) {
         articleRepository.updateArticleById(article, id);
         return "redirect:/articles/" + id;
     }
 
     @DeleteMapping("/articles/{id}")
-    public String deleteArticle(@PathVariable int id) {
+    public String deleteArticle(@PathVariable long id) {
         articleRepository.removeArticleById(id);
         return "redirect:/";
+    }
+
+    private void addAttributeArticleModel(@PathVariable long id, Model model) {
+        Optional<Article> maybeArticle = articleRepository.getArticleById(id);
+        maybeArticle.ifPresent(ariticle -> model.addAttribute("article", ariticle));
+        maybeArticle.orElseThrow(IllegalArgumentException::new);
     }
 }
