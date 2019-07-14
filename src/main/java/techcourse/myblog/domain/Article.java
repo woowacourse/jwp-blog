@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import org.springframework.util.StringUtils;
+
 import java.util.Objects;
 
 public class Article {
@@ -9,11 +11,19 @@ public class Article {
     private String contents;
 
     public Article(final int id, final String title, final String coverUrl, final String contents) {
+        checkNull(title, coverUrl, contents);
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
+
+    private void checkNull(final String title, final String coverUrl, final String contents) {
+        if (StringUtils.isEmpty(title) || StringUtils.isEmpty(coverUrl) || StringUtils.isEmpty(contents)) {
+            throw new NullArticleElementException("빈 아티클 입력 요소가 존재합니다.");
+        }
+    }
+
 
     public boolean isSameId(int id) {
         return this.id == id;
