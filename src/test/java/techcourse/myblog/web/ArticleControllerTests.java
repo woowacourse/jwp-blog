@@ -18,6 +18,7 @@ import techcourse.myblog.domain.Article;
 public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
+    private WebTestClient.ResponseSpec responseSpec;
     private Article article;
 
     @BeforeEach
@@ -27,90 +28,88 @@ public class ArticleControllerTests {
         article.setCoverUrl("http");
         article.setContents("내용");
 
-        webTestClient.post().uri("/articles")
-                .body(Mono.just(article), Article.class)
-                .exchange()
-        ;
+        postDefaultArticleExchange();
     }
 
     @Test
     void index() {
-        webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
+        getExchange("/");
+        isStatusOk();
     }
 
     @Test
     void articleForm() {
-        webTestClient.get().uri("/articles/new")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                ;
+        getExchange("/articles/new");
+        isStatusOk();
     }
 
     @Test
     void writeArticleForm() {
-        webTestClient.get().uri("/writing")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                ;
+        getExchange("/writing");
+        isStatusOk();
     }
 
     @Test
     void saveArticle() {
-        webTestClient.post().uri("/articles")
-                .body(Mono.just(article), Article.class)
-                .exchange()
-                .expectStatus()
-                .isFound()
-                ;
+        postDefaultArticleExchange();
+        isStatusFound();
     }
 
     @Test
     void fetchArticle() {
-        webTestClient.get().uri("/articles/1")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                ;
+        getExchange("/articles/1");
+        isStatusOk();
     }
 
     @Test
     void editArticle() {
-        webTestClient.get().uri("/articles/1/edit")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                ;
+        getExchange("/articles/1/edit");
+        isStatusOk();
     }
 
     @Test
     void saveEditedArticle() {
-        webTestClient.put().uri("/articles/1")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                ;
+        putExchange("/articles/1");
+        isStatusOk();
     }
 
     @Test
     void deleteArticle() {
-        webTestClient.post().uri("/articles")
-                .body(Mono.just(article), Article.class)
-                .exchange()
-                ;
+        postDefaultArticleExchange();
 
-        webTestClient.delete().uri("/articles/2")
-                .exchange()
-                .expectStatus()
-                .isFound()
-                ;
+        deleteExchange("/articles/2");
+        isStatusFound();
+    }
+
+    private void getExchange(String uri) {
+        responseSpec = webTestClient.get().uri(uri).exchange();
+    }
+
+    private void putExchange(String uri) {
+        responseSpec =  webTestClient.put().uri(uri).exchange();
+    }
+
+    private void deleteExchange(String uri) {
+        responseSpec =  webTestClient.delete().uri(uri).exchange();
+    }
+
+    private void postDefaultArticleExchange() {
+        responseSpec =  webTestClient.post().uri("/articles")
+                .body(Mono.just(article), Article.class)
+                .exchange();
+    }
+
+    private void isStatusOk() {
+        responseSpec.expectStatus().isOk();
+    }
+
+    private void isStatusFound() {
+        responseSpec.expectStatus().isFound();
     }
 
     @AfterEach
     void tearDown() {
         article = null;
+        responseSpec = null;
     }
 }
