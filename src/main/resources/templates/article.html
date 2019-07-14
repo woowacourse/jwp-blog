@@ -29,13 +29,13 @@
                 <a th:href="'/articles/' + ${article.articleId}+ '/edit'" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
-                <form method="post" th:action="'/articles/' + ${article.articleId} + '/delete'">
+                <form method="post" th:action="'/articles/' + ${article.articleId}">
                     <input type="hidden" name="_method" value="delete" />
                     <button type="submit" class="float-right pointer btn btn-icon">
                         <i class="ti-na text-dark font-size-16 pdd-horizontal-5"></i>
                     </button>
                 </form>
-                <div id="viewerSection" th:if="${#strings.length(article.contents)} != 0" th:text="${article.contents}">뚱이자식아</div>
+                <div id="viewerSection" th:if="${#strings.length(article.contents)} != 0" th:text="${article.contents}">No Contents</div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
                 <div class="profile-container row mrg-top-30 mrg-btm-30">

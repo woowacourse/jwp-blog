@@ -35,7 +35,7 @@ public class ArticleController {
         return "redirect:/articles/" + newArticleId;
     }
 
-    @PutMapping("/update")
+    @PutMapping("/articles/{articleId}")
     public String updateArticle(final Article article) {
         articleRepository.updateArticle(article);
         return "redirect:/articles/" + article.getArticleId();
@@ -53,7 +53,7 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @DeleteMapping("/articles/{articleId}/delete")
+    @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable Long articleId) {
         articleRepository.deleteArticle(articleId);
         return "redirect:/";
