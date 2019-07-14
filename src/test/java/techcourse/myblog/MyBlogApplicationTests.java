@@ -9,7 +9,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class MyblogApplicationTests {
+public class MyBlogApplicationTests {
 
     @Test
     void contextLoads() {
