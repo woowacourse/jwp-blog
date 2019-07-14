@@ -43,8 +43,8 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
-    public ModelAndView editArticle(@PathVariable int articleId, Article article) {
-        articleRepository.modify(articleId, article);
+    public ModelAndView editArticle(@PathVariable int articleId, ArticleDto articleDto) {
+        articleRepository.update(articleId, articleDto.convertArticle(articleId));
         return new ModelAndView("redirect:/articles/" + articleId);
     }
 

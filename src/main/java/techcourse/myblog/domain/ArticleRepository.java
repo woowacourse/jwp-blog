@@ -24,11 +24,7 @@ public class ArticleRepository {
         return articles.stream()
                 .filter(article -> article.isSameId(articleId))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
-    }
-
-    public Article findLatest() {
-        return articles.get(index);
+                .orElseThrow(()->new NotFoundArticleIdException("해당 아이디의 게시물을 찾을 수 없습니다."));
     }
 
     public int getLatestIndex(){
@@ -40,8 +36,11 @@ public class ArticleRepository {
         articles.remove(article);
     }
 
-    public void modify(final int articleId, final Article article) {
-        delete(articleId);
-        articles.add(article);
+    public void update(final int articleId, final Article updatedArticle) {
+        articles.stream()
+                .filter(article -> article.isSameId(articleId))
+                .findFirst()
+                .map(article -> articles.set(articles.indexOf(article),updatedArticle))
+                .orElseThrow(()->new NotFoundArticleIdException("해당 아이디의 게시물을 찾을 수 없습니다."));
     }
 }
