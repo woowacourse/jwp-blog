@@ -32,9 +32,7 @@ public class ArticleRepositoryTest {
     void Article_find_테스트() {
         Article expetedArticle = new Article("title", "contents", "background");
         repository.addBlog(expetedArticle);
-        ArticleDto articleDto = repository.find(0);
-        assertThat(expetedArticle.isSameTitle(articleDto.getTitle())).isTrue();
-        assertThat(expetedArticle.isSameContents(articleDto.getContents())).isTrue();
-        assertThat(expetedArticle.isSameCoverUrl(articleDto.getCoverUrl())).isTrue();
+        Article article = repository.find(0);
+        assertThat(expetedArticle.toString()).isEqualTo(article.toString());
     }
 }

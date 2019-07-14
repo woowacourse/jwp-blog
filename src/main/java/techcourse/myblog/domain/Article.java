@@ -1,7 +1,7 @@
 package techcourse.myblog.domain;
 
 
-public class Article implements Cloneable {
+public class Article {
     private static final String DEFAULT_COVER_URL = "/images/default/bg.jpg";
     private final String title;
     private final String contents;
@@ -17,32 +17,36 @@ public class Article implements Cloneable {
         this.coverUrl = coverUrl;
     }
 
-    ArticleDto createDto() {
-        ArticleDto articleDto = new ArticleDto();
-        articleDto.setTitle(title);
-        articleDto.setContents(contents);
-        articleDto.setCoverUrl(coverUrl);
-        return articleDto;
-    }
-
-    boolean isSameTitle(String title) {
+    public boolean isSameTitle(String title) {
         return title.equals(this.title);
     }
 
-    boolean isSameContents(String contents) {
+    public boolean isSameContents(String contents) {
         return contents.equals(this.contents);
     }
 
-    boolean isSameCoverUrl(String coverUrl) {
+    public boolean isSameCoverUrl(String coverUrl) {
         return coverUrl.equals(this.coverUrl);
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContents() {
+        return contents;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
     }
 
     @Override
     public String toString() {
         return "Article{" +
-                "title='" + title + '\'' +
-                ", contents='" + contents + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                '}';
+                "title : \"" + title + "\"" +
+                ", contents : \"" + contents + "\"" +
+                ", coverUrl : \"" + coverUrl + "\"" +
+                "}";
     }
 }

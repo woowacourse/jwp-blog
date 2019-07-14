@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.List;
@@ -19,16 +18,16 @@ public class ArticleController {
 
     @GetMapping("/")
     private String index(Model model) {
-        List<ArticleDto> articles = articleRepository.findAll();
+        List<Article> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
     }
 
     @GetMapping("/articles/{id}")
     private String show(@PathVariable int id, Model model) {
-        ArticleDto articleDto = articleRepository.find(id);
+        Article article = articleRepository.find(id);
         model.addAttribute("id", id);
-        model.addAttribute("article", articleDto);
+        model.addAttribute("article", article);
         return "article";
     }
 
@@ -47,9 +46,9 @@ public class ArticleController {
 
     @GetMapping("/articles/{id}/edit")
     private String updateForm(@PathVariable int id, Model model) {
-        ArticleDto articleDto = articleRepository.find(id);
+        Article article = articleRepository.find(id);
         model.addAttribute("id", id);
-        model.addAttribute("article", articleDto);
+        model.addAttribute("article", article);
         return "article-edit";
     }
 

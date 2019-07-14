@@ -9,7 +9,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.Arrays;
@@ -76,15 +75,15 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*articles.*");
-        ArticleDto articleDto = articleRepository.find(expectedIndex);
-        assertThat(articleDto.getTitle()).isEqualTo(title);
-        assertThat(articleDto.getContents()).isEqualTo(contents);
-        assertThat(articleDto.getCoverUrl()).isEqualTo(coverUrl);
+        Article article = articleRepository.find(expectedIndex);
+        assertThat(article.isSameTitle(title)).isTrue();
+        assertThat(article.isSameContents(contents)).isTrue();
+        assertThat(article.isSameCoverUrl(coverUrl)).isTrue();
     }
 
     @Test
     void Article_조회_테스트() {
-        ArticleDto target = articleRepository.find(0);
+        Article target = articleRepository.find(0);
         webTestClient.get()
                 .uri("/articles/0")
                 .exchange()
@@ -100,7 +99,8 @@ public class ArticleControllerTests {
 
     @Test
     void Article_수정_Form_테스트() {
-        ArticleDto target = articleRepository.find(0);
+        Article target = articleRepository.find(0);
+        System.out.println(target.toString());
         webTestClient.get()
                 .uri("/articles/0/edit")
                 .exchange()
@@ -108,7 +108,6 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    System.out.println(body);
                     assertThat(body.contains(target.getTitle())).isTrue();
                     assertThat(body.contains(target.getContents())).isTrue();
                     assertThat(body.contains(target.getCoverUrl())).isTrue();
@@ -128,10 +127,10 @@ public class ArticleControllerTests {
                         .with("contents", postContents))
                 .exchange()
                 .expectStatus().is3xxRedirection();
-        ArticleDto target = articleRepository.find(0);
-        assertThat(target.getTitle()).isEqualTo(postTitle);
-        assertThat(target.getContents()).isEqualTo(postContents);
-        assertThat(target.getCoverUrl()).isEqualTo(postCoverUrl);
+        Article target = articleRepository.find(0);
+        assertThat(target.isSameTitle(postTitle)).isTrue();
+        assertThat(target.isSameContents(postContents)).isTrue();
+        assertThat(target.isSameCoverUrl(postCoverUrl)).isTrue();
     }
 
     @Test
