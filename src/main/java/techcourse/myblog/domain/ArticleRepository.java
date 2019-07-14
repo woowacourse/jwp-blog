@@ -2,12 +2,7 @@ package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
@@ -17,18 +12,10 @@ public class ArticleRepository {
     private List<Article> articles = new ArrayList<>();
     private final AtomicLong lastId = new AtomicLong(START_ID);
 
-    private ArticleRepository() {
-
-    }
-
-    public void add(Article article) {
-        articles.add(article);
-    }
-
     public void save(Article article) {
         lastId.set(lastId.get() + ID_INCREASE_RANGE);
         article.setId(lastId.get());
-        this.add(article);
+        this.articles.add(article);
     }
 
     public void deleteAll() {
@@ -54,12 +41,26 @@ public class ArticleRepository {
 
     public void removeArticleById(long id) {
         Optional<Article> maybeArticle = getArticleById(id);
-        maybeArticle.ifPresent( a -> articles.removeIf(b -> b.getId() == id));
+        maybeArticle.ifPresent(a -> articles.removeIf(b -> b.getId() == id));
         maybeArticle.orElseThrow(IllegalArgumentException::new);
         articles.removeIf(a -> a.getId() == id);
     }
 
     public List<Article> findAll() {
         return Collections.unmodifiableList(new ArrayList<>(articles));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ArticleRepository that = (ArticleRepository) o;
+        return Objects.equals(articles, that.articles) &&
+                Objects.equals(lastId, that.lastId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(articles, lastId);
     }
 }
