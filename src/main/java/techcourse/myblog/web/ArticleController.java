@@ -21,7 +21,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable Long id, Model model) {
+    public String show(@PathVariable int id, Model model) {
         //TODO 에러처리
         Article article = articleRepository.findById(id).get();
         model.addAttribute("article", article);
@@ -29,7 +29,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Long id, Model model) {
+    public String editForm(@PathVariable int id, Model model) {
         Article article = articleRepository.findById(id).get();
         model.addAttribute("article", article);
         return "article-edit";
@@ -48,7 +48,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable int id) {
         articleRepository.deleteById(id);
         return "redirect:/";
 

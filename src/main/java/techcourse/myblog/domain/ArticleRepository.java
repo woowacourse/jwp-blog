@@ -26,12 +26,12 @@ public class ArticleRepository {
         articles.add(article);
     }
 
-    private long getMaxId() {
-        return articles.stream().mapToLong(article -> article.getId()).max().getAsLong();
+    private int getMaxId() {
+        return articles.stream().mapToInt(article -> article.getId()).max().getAsInt();
 
     }
 
-    public Optional<Article> findById(final Long id) {
+    public Optional<Article> findById(final int id) {
         for (Article article : articles) {
             if (article.hasSameId(id)) {
                 return Optional.of(article);
@@ -41,11 +41,12 @@ public class ArticleRepository {
     }
 
     public void update(final Article article) {
-        Long id = article.getId();
-        articles.set(id.intValue(), article);
+        int id = article.getId();
+
+        articles.set(id, article);
     }
 
-    public void deleteById(final Long id) {
+    public void deleteById(final int id) {
         //TODO OPTIONAL ERROR SHOULD BE HANDLED
         Article article = findById(id).get();
         articles.remove(article);

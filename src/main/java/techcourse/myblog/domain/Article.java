@@ -1,16 +1,16 @@
 package techcourse.myblog.domain;
 
 public class Article {
-    private Long id;
+    private int id;
     private String title;
     private String coverUrl;
     private String contents;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(final long id) {
+    public void setId(final int id) {
         this.id = id;
     }
 
@@ -48,7 +48,7 @@ public class Article {
                 '}';
     }
 
-    public boolean hasSameId(Long id) {
+    public boolean hasSameId(int id) {
         return this.id == id;
     }
 }
