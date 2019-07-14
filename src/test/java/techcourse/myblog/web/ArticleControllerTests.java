@@ -12,17 +12,18 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.ArticleVO;
 
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 public class ArticleControllerTests {
 
+    @Autowired
     private ArticleRepository articleRepository;
     private String title;
     private String coverUrl;
@@ -31,10 +32,6 @@ public class ArticleControllerTests {
 
     @Autowired
     private WebTestClient webTestClient;
-
-    ArticleControllerTests(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
 
     @BeforeEach
     void setUp() {
@@ -46,85 +43,92 @@ public class ArticleControllerTests {
 
     @Test
     void index() {
-        webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
+        checkIsOk(getResponse("/"));
     }
 
     @Test
     void writeArticle() {
-        webTestClient.get().uri("/writing")
-                .exchange()
-                .expectStatus().isOk();
+        checkIsOk(getResponse("/writing"));
     }
+
 
     @Test
     void create_article() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get().uri(Objects.requireNonNull(response.getResponseHeaders().get("Location")).get(0))
-                            .exchange()
-                            .expectStatus().isOk()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                String body = new String(Objects.requireNonNull(res.getResponseBody()));
-                                assertThat(body.contains(title)).isTrue();
-                                assertThat(body.contains(coverUrl)).isTrue();
-                                assertThat(body.contains(contents)).isTrue();
-                            });
-                });
+        ArticleVO articleVO = new ArticleVO(title, coverUrl, contents);
+        WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.post()
+                .uri("/articles"), articleVO)
+                .expectStatus().isFound();
+        checkBody(responseSpec, articleVO);
     }
+
 
     @Test
     void create_update() {
         articleRepository.save(article);
-        webTestClient.get().uri("articles/1/edit").exchange().expectStatus().isOk();
+        System.out.println(articleRepository.findAll());
+        checkIsOk(getResponse("articles/" + article.getArticleId() + "/edit"));
     }
+
 
     @Test
     void submit_update() {
-        String newTitle = "update title";
-        String newCoverUrl = "update coverUrl";
-        String newContents = "update contents";
+        ArticleVO articleVO = new ArticleVO("update title", "update coverUrl", "update contents");
         articleRepository.save(article);
-        webTestClient.put().uri("/articles/1")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", newTitle)
-                        .with("coverUrl", newCoverUrl)
-                        .with("contents", newContents))
-                .exchange()
-                .expectStatus().isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get().uri(Objects.requireNonNull(response.getResponseHeaders().get("Location")).get(0))
-                            .exchange()
-                            .expectStatus().isOk()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                String body = new String(Objects.requireNonNull(res.getResponseBody()));
-                                assertThat(body.contains(newTitle)).isTrue();
-                                assertThat(body.contains(newCoverUrl)).isTrue();
-                                assertThat(body.contains(newContents)).isTrue();
-                            });
 
-                });
+        WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/" + article.getArticleId()), articleVO);
+        checkIsFound(responseSpec);
+        checkBody(responseSpec, articleVO);
 
     }
 
     @Test
     void create_delete() {
         articleRepository.save(article);
-        webTestClient.delete().uri("delete/articles/1").exchange().expectStatus().is3xxRedirection();
+
+        webTestClient.delete().uri("delete/articles/" + article.getArticleId())
+                .exchange()
+                .expectStatus()
+                .is3xxRedirection();
     }
+
+    private void checkIsFound(WebTestClient.ResponseSpec responseSpec) {
+        responseSpec.expectStatus().isFound();
+    }
+
+    private void checkIsOk(WebTestClient.ResponseSpec responseSpec) {
+        responseSpec.expectStatus().isOk();
+    }
+
+    private WebTestClient.ResponseSpec getResponse(String uri) {
+        return webTestClient.get().uri(uri)
+                .exchange();
+    }
+
+    private WebTestClient.ResponseSpec getResponse(WebTestClient.RequestBodySpec requestBodySpec, ArticleVO articleVO) {
+        return requestBodySpec
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", articleVO.getTitle())
+                        .with("coverUrl", articleVO.getCoverUrl())
+                        .with("contents", articleVO.getContents()))
+                .exchange();
+    }
+
+    private void checkBody(WebTestClient.ResponseSpec responseSpec, ArticleVO articleVO) {
+        responseSpec.expectBody()
+                .consumeWith(response -> {
+                    webTestClient.get().uri(Objects.requireNonNull(response.getResponseHeaders().get("Location")).get(0))
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody()
+                            .consumeWith(res -> {
+                                String body = new String(Objects.requireNonNull(res.getResponseBody()));
+                                assertThat(body.contains(articleVO.getTitle())).isTrue();
+                                assertThat(body.contains(articleVO.getCoverUrl())).isTrue();
+                                assertThat(body.contains(articleVO.getContents())).isTrue();
+                            });
+                });
+    }
+
 
 }

@@ -1,10 +1,12 @@
 package techcourse.myblog.domain;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 
-public class Article{
+public class Article {
 
-    private static long incrementNumber = 1;    //TODO
+    private static AtomicLong incrementNumber = new AtomicLong();
+
     private Long articleId;
     private String title;
     private String coverUrl;
@@ -15,10 +17,10 @@ public class Article{
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-        this.articleId = incrementNumber++;
+        this.articleId = incrementNumber.incrementAndGet();
     }
 
-    public void update(ArticleVO articleVO){
+    public void update(ArticleVO articleVO) {
         this.title = articleVO.getTitle();
         this.contents = articleVO.getContents();
         this.coverUrl = articleVO.getCoverUrl();
@@ -58,4 +60,13 @@ public class Article{
         return Objects.hash(articleId);
     }
 
+    @Override
+    public String toString() {
+        return "Article{" +
+                "articleId=" + articleId +
+                ", title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                '}';
+    }
 }

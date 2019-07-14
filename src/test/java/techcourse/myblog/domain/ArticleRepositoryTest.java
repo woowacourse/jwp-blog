@@ -45,6 +45,7 @@ public class ArticleRepositoryTest {
         articleRepository.save(article);
         articleRepository.save(article2);
         articleRepository.save(article3);
+
         assertThat(articleRepository.findAll()).isEqualTo(Arrays.asList(article, article2, article3));
     }
 
@@ -71,6 +72,7 @@ public class ArticleRepositoryTest {
     void deleteArticle() {
         articleRepository.save(article);
         articleRepository.delete(article.getArticleId());
+
         assertThat(articleRepository.findAll()).isEqualTo(Arrays.asList());
     }
 }

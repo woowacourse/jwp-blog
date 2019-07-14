@@ -18,9 +18,11 @@ public class ArticleRepository {
     }
 
     public Article findById(Long articleId) {
+        System.out.println(articles.toString());
+
         return articles.stream()
                 .filter(article -> article.isEqualToArticleId(articleId))
-                .findAny().orElseThrow(()->new IllegalArgumentException("해당 인스턴스가 없습니다."));
+                .findAny().orElseThrow(() -> new IllegalArgumentException("해당 인스턴스가 없습니다."));
     }
 
     public int count() {
