@@ -51,10 +51,7 @@ public class ArticleControllerTests {
 
         webTestClient.post().uri("/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+                .body(insertBody(title, coverUrl, contents))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectBody()
@@ -72,14 +69,18 @@ public class ArticleControllerTests {
 
         webTestClient.put().uri("/articles/0")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+                .body(insertBody(title, coverUrl, contents))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectBody()
                 .consumeWith(testRedirectContains(title, coverUrl, contents));
+    }
+
+    private BodyInserters.FormInserter<String> insertBody(String title, String coverUrl, String contents) {
+        return BodyInserters
+                .fromFormData("title", title)
+                .with("coverUrl", coverUrl)
+                .with("contents", contents);
     }
 
     private Consumer<EntityExchangeResult<byte[]>> testRedirectContains(String title, String coverUrl, String contents) {
