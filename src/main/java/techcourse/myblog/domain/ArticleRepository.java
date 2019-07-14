@@ -13,7 +13,7 @@ public class ArticleRepository {
     private final AtomicLong lastId = new AtomicLong(START_ID);
 
     public void save(Article article) {
-        lastId.set(lastId.get() + ID_INCREASE_RANGE);
+        lastId.getAndSet(lastId.get() + ID_INCREASE_RANGE);
         article.setId(lastId.get());
         this.articles.add(article);
     }

@@ -34,13 +34,13 @@ public class ArticleController {
 
     @GetMapping("/articles/{id}")
     public String showArticle(@PathVariable long id, Model model) {
-        addAttributeArticleModel(id, model);
+        addAttributeArticleToModel(id, model);
         return "article";
     }
 
     @GetMapping("/articles/{id}/edit")
     public String editArticle(@PathVariable long id, Model model) {
-        addAttributeArticleModel(id, model);
+        addAttributeArticleToModel(id, model);
         model.addAttribute("method", "PUT");
         return "article-edit";
     }
@@ -57,7 +57,7 @@ public class ArticleController {
         return "redirect:/";
     }
 
-    private void addAttributeArticleModel(@PathVariable long id, Model model) {
+    private void addAttributeArticleToModel(@PathVariable long id, Model model) {
         Optional<Article> maybeArticle = articleRepository.getArticleById(id);
         maybeArticle.ifPresent(ariticle -> model.addAttribute("article", ariticle));
         maybeArticle.orElseThrow(IllegalArgumentException::new);
