@@ -1,5 +1,8 @@
 package techcourse.myblog.domain;
 
+import techcourse.myblog.domain.exception.IllegalArticleArgumentsException;
+import techcourse.myblog.web.ArticleDTO;
+
 public class Article {
     private final int articleId;
     private String title;
@@ -11,6 +14,25 @@ public class Article {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+    }
+
+    public static Article of(int articleId, ArticleDTO articleDTO) {
+        validateNotNull(articleDTO);
+
+        return new Article(
+                articleId,
+                articleDTO.getTitle(),
+                articleDTO.getCoverUrl(),
+                articleDTO.getContents()
+        );
+    }
+
+    private static void validateNotNull(ArticleDTO articleDTO) {
+        if (articleDTO.getTitle() == null
+                || articleDTO.getCoverUrl() == null
+                || articleDTO.getContents() == null) {
+            throw new IllegalArticleArgumentsException();
+        }
     }
 
     public int getArticleId() {
