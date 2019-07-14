@@ -19,7 +19,7 @@ public class ArticleRepository {
 
     public Optional<Article> findArticleById(final long articleId) {
         return articles.stream()
-                .filter(article -> article.getArticleId().equals(articleId))
+                .filter(article -> article.matchId(articleId))
                 .findAny();
     }
 

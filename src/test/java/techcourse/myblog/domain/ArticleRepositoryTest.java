@@ -118,4 +118,5 @@ public class ArticleRepositoryTest {
         articleRepository.findArticleById(article.getArticleId())
                 .ifPresent(a -> assertThat(a.equals(article)).isFalse());
     }
+
 }

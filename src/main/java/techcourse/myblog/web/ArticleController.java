@@ -42,19 +42,19 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}")
-    public String findArticleById(@PathVariable Long articleId, Model model) {
+    public String findArticleById(@PathVariable long articleId, Model model) {
         articleRepository.findArticleById(articleId).ifPresent(article -> model.addAttribute("article", article));
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String updateArticle(@PathVariable Long articleId, Model model) {
+    public String updateArticle(@PathVariable long articleId, Model model) {
         articleRepository.findArticleById(articleId).ifPresent(article -> model.addAttribute("article", article));
         return "article-edit";
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable Long articleId) {
+    public String deleteArticle(@PathVariable long articleId) {
         articleRepository.deleteArticle(articleId);
         return "redirect:/";
     }

@@ -6,16 +6,16 @@ public class Article {
     private static final String DEFAULT_COVER_URL = "/images/pages/index/study.jpg";
     private static final int NO_COVER_URL = 0;
 
-    private Long articleId;
+    private long articleId;
     private String title;
     private String contents;
     private String coverUrl;
 
-    public Long getArticleId() {
+    public long getArticleId() {
         return articleId;
     }
 
-    public void setArticleId(Long articleId) {
+    public void setArticleId(long articleId) {
         this.articleId = articleId;
     }
 
