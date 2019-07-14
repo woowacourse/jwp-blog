@@ -1,76 +1,90 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}"
-      lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:replace="fragments/head :: headFragment"></th:block>
+    <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/article-edit.css">
-    <th:block th:replace="fragment/article-head :: article-head"></th:block>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
 </head>
-<th:block layout:fragment="content">
-    <div>
-        <th:block th:replace="fragment/header :: header"></th:block>
-
-        <form th:object="${article}" th:action="${article == null ? '/articles' : '/articles/'+ article.id}"
-              name="article" th:method="${article == null ? 'post' : 'put'}" accept-charset="utf-8">
-            <div class="about-cover card no-border">
-                <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
-                    <div class="height-300px vertical-center pdd-horizon-50">
-                        <div class="width-80">
-
-                            <input type="text" name="title"
-                                   class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
-                                   placeholder="제목을 입력해주세요" th:value="${article == null ? '' : article.title}"
-                                   autocomplete="off">
-
-                            <input type="text" name="coverUrl"
-                                   class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
-                                   placeholder="배경 url을 입력해주세요" th:value="${article == null ? '' : article.coverUrl}"
-                                   autocomplete="off">
-                        </div>
+<body>
+<div>
+    <header th:replace="fragments/login-header :: loginHeaderFragment"></header>
+    <form th:action="${article}? '/articles/' + ${article.id} : '/articles'" name="article" method="post"
+          accept-charset="utf-8">
+        <input th:if="${article}" type="hidden" name="_method" value="put"/>
+        <div class="about-cover card no-border">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
+                <div class="height-300px vertical-center pdd-horizon-50">
+                    <div class="width-80">
+                        <input th:value="${article}? ${article.title} : ''" type="text" name="title"
+                               class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
+                               placeholder="제목을 입력해주세요" autocomplete="off">
+                        <input th:value="${article}? ${article.coverUrl} : ''" type="text" name="coverUrl"
+                               class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
+                               placeholder="배경 url을 입력해주세요" autocomplete="off">
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
-                <div class="row">
-                    <div class="col-lg-1 col-md-1"></div>
-                    <div class="col-lg-10 col-md-10 col-sm-10">
-                        <input id="article-contents" name="contents" type="hidden">
-                        <div id="editSection"></div>
-                    </div>
-                    <div class="col-lg-1 col-md-1">
-                        <div class="btn-group btn-group-vertical">
-                            <button id="save-btn" type="submit" class="btn btn-default">
-                                <i class="ti-save"></i>
+        <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
+            <div class="row">
+                <div class="col-lg-1 col-md-1"></div>
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                    <input id="article-contents" name="contents" type="hidden">
+                    <div id="editSection"></div>
+                </div>
+                <div class="col-lg-1 col-md-1">
+                    <div class="btn-group btn-group-vertical">
+                        <button id="save-btn" type="submit" class="btn btn-default">
+                            <i class="ti-save"></i>
+                        </button>
+                        <th:block th:if="${article}">
+                            <button id="delete-btn" type="submit" class="btn btn-default" onclick="deleteArticle()">
+                                <i class="ti-close"></i>
                             </button>
+                        </th:block>
+                        <th:block th:unless="${article}">
                             <a href="/" class="btn btn-default">
                                 <i class="ti-close"></i>
                             </a>
-                        </div>
+                        </th:block>
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
-</th:block>
+        </div>
+    </form>
+</div>
 
-<th:block layout:fragment="custom-js">
-    <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<th:block th:replace="fragments/script :: scriptFragment"></th:block>
+<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<script th:inline="javascript" type="text/javascript">
+    const editor = new tui.Editor({
+        el: document.querySelector('#editSection'),
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        events: {
+            change: function () {
+                document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
+            }
+        },
+        height: 'calc(100vh - 360px)'
+    });
 
-    <script type="text/javascript" th:inline="javascript">
-        const editor = new tui.Editor({
-            el: document.querySelector('#editSection'),
-            initialEditType: 'markdown',
-            previewStyle: 'vertical',
-            events: {
-                change: function () {
-                    document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
-                }
-            },
-            initialValue: [[ ${article == null ? '' : article.contents}]],
-            height: 'calc(100vh - 360px)'
-        });
-    </script>
-</th:block>
+    if ([[${article}]]) {
+        editor.setValue([[${article?.contents}]]);
+    }
+
+    function deleteArticle() {
+        document.getElementsByName("_method")[0].value = "delete";
+    }
+</script>
+</body>
 </html>
