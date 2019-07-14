@@ -44,11 +44,6 @@ public class ArticleRepository {
     }
 
     public void remove(int id) {
-        int indexToRemove = this.articles.stream()
-                .filter(article -> article.matchId(id))
-                .map(article -> this.articles.indexOf(article))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
-        this.articles.remove(indexToRemove);
+        this.articles.remove(findById(id));
     }
 }
