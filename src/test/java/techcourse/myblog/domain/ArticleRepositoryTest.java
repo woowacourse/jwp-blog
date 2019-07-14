@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.exception.CouldNotFindArticleIdException;
+import techcourse.myblog.web.ArticleDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -60,36 +61,24 @@ class ArticleRepositoryTest {
     }
 
     @Test
-    @DisplayName("게시물의 title을 업데이트 한다.")
-    void updateTitleTest() {
-        String updatedTitle = "updated title";
+    @DisplayName("수정된 Article을 넘겨받아 해당 update 한다.")
+    void updateTest() {
+        // Given
+        ArticleDTO updatedArticleDTO = new ArticleDTO(
+                "updated title",
+                "updated coverUrl",
+                "updated contents"
+        );
+        Article updatedArticle = Article.of(TEST_ARTICLE_ID, updatedArticleDTO);
 
-        articleRepository.updateTitle(TEST_ARTICLE_ID, updatedTitle);
+        // When
+        articleRepository.updateBy(updatedArticle);
 
-        Article updatedArticle = articleRepository.findBy(TEST_ARTICLE_ID);
-        assertThat(updatedArticle.getTitle()).isEqualTo(updatedTitle);
-    }
-
-    @Test
-    @DisplayName("게시물의 coverUrl을 업데이트 한다.")
-    void updateCoverUrlTest() {
-        String updateCoverUrl = "updated coverUrl";
-
-        articleRepository.updateCoverUrl(TEST_ARTICLE_ID, updateCoverUrl);
-
-        Article updatedArticle = articleRepository.findBy(TEST_ARTICLE_ID);
-        assertThat(updatedArticle.getCoverUrl()).isEqualTo(updateCoverUrl);
-    }
-
-    @Test
-    @DisplayName("게시물의 contents를 업데이트 한다.")
-    void updateContentsTest() {
-        String updateContents = "updated contents";
-
-        articleRepository.updateContents(TEST_ARTICLE_ID, updateContents);
-
-        Article updatedArticle = articleRepository.findBy(TEST_ARTICLE_ID);
-        assertThat(updatedArticle.getContents()).isEqualTo(updateContents);
+        // Then
+        Article resultArticle = articleRepository.findBy(TEST_ARTICLE_ID);
+        assertThat(resultArticle.getTitle()).isEqualTo(updatedArticleDTO.getTitle());
+        assertThat(resultArticle.getCoverUrl()).isEqualTo(updatedArticleDTO.getCoverUrl());
+        assertThat(resultArticle.getContents()).isEqualTo(updatedArticleDTO.getContents());
     }
 
     @Test
@@ -103,30 +92,6 @@ class ArticleRepositoryTest {
     @DisplayName("Repository에 없는 id를 조회하는 경우 예외를 던져준다.")
     void findFailTest() {
         assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository.findBy(TEST_ARTICLE_ID_NOT_IN_REPO));
-    }
-
-    @Test
-    @DisplayName("Repository에 없는 id의 title을 수정 시도하는 경우 예외를 던져준다.")
-    void updateTitleFailTest() {
-        assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository.updateContents(
-                TEST_ARTICLE_ID_NOT_IN_REPO, "new contents"
-        ));
-    }
-
-    @Test
-    @DisplayName("Repository에 없는 id의 coverUrl을 수정 시도하는 경우 예외를 던져준다.")
-    void updateCoverUrlFailTest() {
-        assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository.updateContents(
-                TEST_ARTICLE_ID_NOT_IN_REPO, "new contents"
-        ));
-    }
-
-    @Test
-    @DisplayName("Repository에 없는 id의 contents를 수정 시도하는 경우 예외를 던져준다.")
-    void updateContentsFailTest() {
-        assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository.updateContents(
-                TEST_ARTICLE_ID_NOT_IN_REPO, "new contents"
-        ));
     }
 
     @Test

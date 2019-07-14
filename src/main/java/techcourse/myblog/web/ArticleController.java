@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleDTO;
 import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
@@ -53,10 +52,9 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String editArticle(@PathVariable int articleId, ArticleDTO articleDTO) {
-        articleRepository.updateTitle(articleId, articleDTO.getTitle());
-        articleRepository.updateCoverUrl(articleId, articleDTO.getCoverUrl());
-        articleRepository.updateContents(articleId, articleDTO.getContents());
+        Article updatedArticle = Article.of(articleId, articleDTO);
 
+        articleRepository.updateBy(updatedArticle);
         return "redirect:/articles/" + articleId;
     }
 

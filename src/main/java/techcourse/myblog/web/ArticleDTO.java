@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.web;
 
 public class ArticleDTO {
     private String title;

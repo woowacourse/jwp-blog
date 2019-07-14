@@ -12,7 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleDTO;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.exception.CouldNotFindArticleIdException;
 
