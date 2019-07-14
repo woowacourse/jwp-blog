@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import techcourse.myblog.ArticleDto;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
@@ -22,10 +23,11 @@ public class ArticleController {
     }
 
     @PostMapping
-    public ModelAndView writeArticle(Article article, Model model) {
-        articleRepository.create(article);
-        model.addAttribute("article", articleRepository.findLastest());
-        return new ModelAndView("redirect:/articles/" + article.getId());
+    public ModelAndView writeArticle(ArticleDto articleDto, Model model) {
+        int newId = articleRepository.getLatestIndex();
+        Article persistArticle = articleRepository.create(articleDto.convertArticle(newId));
+        model.addAttribute("article", persistArticle);
+        return new ModelAndView("redirect:/articles/" + newId);
     }
 
     @GetMapping("/{articleId}")

@@ -14,9 +14,10 @@ public class ArticleRepository {
         return articles;
     }
 
-    public void create(Article article) {
-        article.setId(index++);
+    public Article create(Article article) {
         articles.add(article);
+        index++;
+        return article;
     }
 
     public Article findById(final int articleId) {
@@ -26,12 +27,12 @@ public class ArticleRepository {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    public Article findLastest() {
-        return articles.get(lastestIndex());
+    public Article findLatest() {
+        return articles.get(index);
     }
 
-    public int lastestIndex() {
-        return articles.size() - 1;
+    public int getLatestIndex(){
+        return index;
     }
 
     public void delete(int articleId) {

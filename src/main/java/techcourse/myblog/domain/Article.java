@@ -8,47 +8,33 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public Article(final String title, final String coverUrl, final String contents) {
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(final int id) {
+    public Article(final int id, final String title, final String coverUrl, final String contents) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(final String title) {
         this.title = title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public void setCoverUrl(final String coverUrl) {
         this.coverUrl = coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public void setContents(final String contents) {
         this.contents = contents;
     }
 
     public boolean isSameId(int id) {
         return this.id == id;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public String getContents() {
+        return contents;
+    }
+
 
     @Override
     public boolean equals(final Object o) {
