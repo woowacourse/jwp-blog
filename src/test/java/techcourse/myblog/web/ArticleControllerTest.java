@@ -49,7 +49,7 @@ public class ArticleControllerTest {
     @Test
     void 작성된_게시글을_리스트에_등록하는지_테스트() {
         webTestClient.post()
-                .uri("/write")
+                .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", title)
@@ -71,7 +71,7 @@ public class ArticleControllerTest {
     @Test
     void 게시물_작성_테스트() {
         webTestClient.post()
-                .uri("/write")
+                .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", title)
@@ -98,7 +98,7 @@ public class ArticleControllerTest {
     @Test
     void 수정할_게시물의_내용_출력_확인_테스트() {
         webTestClient.post()
-                .uri("/write")
+                .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", title)
@@ -125,7 +125,7 @@ public class ArticleControllerTest {
     @Test
     void 게시글_삭제_테스트() {
         webTestClient.post()
-                .uri("/write")
+                .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", title)
@@ -135,7 +135,7 @@ public class ArticleControllerTest {
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response -> {
-                    webTestClient.delete().uri(response.getResponseHeaders().getLocation() + "/delete")
+                    webTestClient.delete().uri(response.getResponseHeaders().getLocation())
                             .exchange()
                             .expectStatus()
                             .isFound();

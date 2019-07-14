@@ -24,7 +24,7 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PostMapping("/write")
+    @PostMapping("/articles")
     public ModelAndView writeArticle(final Article article) {
         Long latestId = articleRepository.generateNewId();
         article.setArticleId(latestId);
@@ -33,28 +33,30 @@ public class ArticleController {
         return new ModelAndView("redirect:/articles/" + latestId);
     }
 
-    @PutMapping("/update")
-    public String updateArticle(final Article article) {
+    @PutMapping("/articles/{articleId}")
+    public String updateArticle(@PathVariable Long articleId, final Article article) {
         articleRepository.updateArticle(article);
 
-        return "redirect:/articles/" + article.getArticleId();
+        return "redirect:/articles/" + articleId;
     }
 
     @GetMapping("/articles/{articleId}")
     public String findArticleById(@PathVariable Long articleId, Model model) {
-        articleRepository.findArticleById(articleId).ifPresent(a -> model.addAttribute("article", a));
+        articleRepository.findArticleById(articleId)
+                .ifPresent(a -> model.addAttribute("article", a));
 
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String updateArticle(@PathVariable Long articleId, Model model) {
-        articleRepository.findArticleById(articleId).ifPresent(a -> model.addAttribute("article", a));
+        articleRepository.findArticleById(articleId)
+                .ifPresent(a -> model.addAttribute("article", a));
 
         return "article-edit";
     }
 
-    @DeleteMapping("/articles/{articleId}/delete")
+    @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable Long articleId) {
         articleRepository.deleteArticle(articleId);
         return "redirect:/";
