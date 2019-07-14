@@ -33,24 +33,24 @@ public class ArticleRepository {
     }
 
     public boolean update(Article editedArticle) {
-//        for (int i = 0; i < this.size(); i++) {
-//            if (articles.get(i).isSameId(editedArticle)) {
-//                articles.set(i, editedArticle);
-//                return true;
-//            }
-//        }
-//        return false;
+        for (int i = 0; i < this.size(); i++) {
+            if (articles.get(i).isSameId(editedArticle)) {
+                articles.set(i, editedArticle);
+                return true;
+            }
+        }
+        return false;
 //        위가 좋은지 아래가 좋은지 궁금해요 json :D
 
-        articles.stream()
-                .filter(editedArticle::isSameId)
-                .findFirst()
-                .ifPresentOrElse(article -> {
-                    article.setTitle(editedArticle.getTitle());
-                    article.setCoverUrl(editedArticle.getCoverUrl());
-                    article.setContents(editedArticle.getContents());
-                },()-> new IllegalArgumentException("오류"));
-        return true;
+//        articles.stream()
+//                .filter(editedArticle::isSameId)
+//                .findFirst()
+//                .ifPresentOrElse(article -> {
+//                    article.setTitle(editedArticle.getTitle());
+//                    article.setCoverUrl(editedArticle.getCoverUrl());
+//                    article.setContents(editedArticle.getContents());
+//                },()-> new IllegalArgumentException("오류"));
+//        return true;
     }
 
     public boolean deleteById(Long articleId) {
