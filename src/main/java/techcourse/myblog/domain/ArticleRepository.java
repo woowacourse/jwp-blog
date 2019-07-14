@@ -19,16 +19,16 @@ public class ArticleRepository {
         id++;
     }
 
-    public Article find(int articleId) {
+    public Article findById(int articleId) {
         return articles.stream()
                 .filter(article -> article.matchId(articleId))
                 .findAny()
-                .orElseThrow(() -> new InvalidArticleException("존재하지 않는 게시물입니다."))
+                .orElseThrow(() -> new ArticleNotFoundException("존재하지 않는 게시물입니다."))
                 ;
     }
 
     public void update(Article editedArticle) {
-        Article article = find(editedArticle.getId());
+        Article article = findById(editedArticle.getId());
         article.update(editedArticle);
     }
 
@@ -37,7 +37,7 @@ public class ArticleRepository {
     }
 
     public void remove(int articleId) {
-        Article removeArticle = find(articleId);
+        Article removeArticle = findById(articleId);
         articles.remove(removeArticle);
     }
 }

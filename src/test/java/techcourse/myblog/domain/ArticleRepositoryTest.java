@@ -9,58 +9,61 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ArticleRepositoryTest {
     private ArticleRepository articleRepository;
-    private int articleId;
     private Article article;
-    private Article editedArticle;
 
     @BeforeEach
     void setUp() {
         articleRepository = new ArticleRepository();
-        articleId = articleRepository.nextId();
-        article = new Article(articleId, "title", "url", "contents");
-        editedArticle = new Article(articleId, "a", "a", "a");
+        article = new Article(articleRepository.nextId(), "title", "url", "contents");
+        articleRepository.insert(article);
     }
 
     @Test
     void 게시글_정상_추가() {
-        articleRepository.insert(article);
         assertThat(articleRepository.findAll()).contains(article);
     }
 
     @Test
     void 게시글_정상_검색() {
-        articleRepository.insert(article);
-        assertThat(articleRepository.find(articleId)).isEqualTo(article);
+        assertThat(articleRepository.findById(article.getId())).isEqualTo(article);
     }
 
     @Test
     void 존재하지_않는_게시글_검색_에러() {
-        assertThrows(InvalidArticleException.class, () ->
-                articleRepository.find(articleId));
+        assertThrows(ArticleNotFoundException.class, () ->
+                articleRepository.findById(articleRepository.nextId()));
     }
 
     @Test
     void 존재하는_게시글_정상_수정() {
-        articleRepository.insert(article);
-        assertDoesNotThrow(() ->
-                articleRepository.update(editedArticle));
+        int id = article.getId();
+        Article editedArticle = new Article(id, "a", "a", "a");
+        assertDoesNotThrow(() -> articleRepository.update(editedArticle));
+        assertThat(checkSameCondition(editedArticle, articleRepository.findById(id))).isTrue();
     }
 
     @Test
     void 존재하지않는_게시글_수정_시도_에러() {
-        assertThrows(InvalidArticleException.class, () ->
+        Article editedArticle = new Article(articleRepository.nextId(), "a", "a", "a");
+        assertThrows(ArticleNotFoundException.class, () ->
                 articleRepository.update(editedArticle));
     }
 
     @Test
     void 존재하는_게시글_정상_삭제() {
-        articleRepository.insert(article);
-        assertDoesNotThrow(() -> articleRepository.remove(articleId));
+        assertDoesNotThrow(() -> articleRepository.remove(article.getId()));
     }
 
     @Test
     void 존재하지않는_게시글_삭제_시도_에러() {
-        assertThrows(InvalidArticleException.class, () ->
-                articleRepository.remove(articleId));
+        assertThrows(ArticleNotFoundException.class, () ->
+                articleRepository.remove(articleRepository.nextId()));
+    }
+
+    private boolean checkSameCondition(Article newArticle, Article article) {
+        return article.getId() == newArticle.getId()
+                && article.getTitle().equals(newArticle.getTitle())
+                && article.getCoverUrl().equals(newArticle.getCoverUrl())
+                && article.getContents().equals(newArticle.getContents());
     }
 }

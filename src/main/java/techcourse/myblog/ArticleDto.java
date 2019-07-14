@@ -1,5 +1,7 @@
 package techcourse.myblog;
 
+import techcourse.myblog.domain.Article;
+
 public class ArticleDto {
     private String title;
     private String coverUrl;
@@ -27,5 +29,9 @@ public class ArticleDto {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    public Article toArticle(int id) {
+        return new Article(id, title, coverUrl, contents);
     }
 }
