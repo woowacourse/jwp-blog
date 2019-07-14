@@ -66,7 +66,7 @@ public class ArticleControllerTests {
     @Test
     void 게시글_수정_페이지_확인() {
         webTestClient.get()
-                .uri("/articles/" + ARTICLE_ID + "/insertId")
+                .uri("/articles/" + ARTICLE_ID)
                 .exchange()
                 .expectStatus().isOk();
     }

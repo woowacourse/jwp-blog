@@ -2,6 +2,7 @@ package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.domain.dto.ArticleDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,18 +10,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class ArticleRepositoryTest {
     private ArticleRepository articleRepository;
     private Article testArticle;
+    private ArticleDto articleDto;
 
     @BeforeEach
     void setUp() {
         this.articleRepository = new ArticleRepository();
-        this.testArticle = new Article("2","3","4");
-        this.testArticle = testArticle.insertId(1,testArticle);
+        this.articleDto = new ArticleDto("2","3","4");
+        this.testArticle = new Article(1,articleDto);
         this.articleRepository.add(this.testArticle);
     }
 
     @Test
     void findAll_호출후_값_조작시_에러_테스트() {
-        assertThrows(UnsupportedOperationException.class, () -> this.articleRepository.findAll().add(new Article("1","2","3")));
+        assertThrows(UnsupportedOperationException.class, () -> this.articleRepository.findAll().add(new Article(1, new ArticleDto("1","2","3"))));
     }
 
     @Test
@@ -35,9 +37,9 @@ public class ArticleRepositoryTest {
 
     @Test
     void article_업데이트_테스트() {
-        Article articleToCompare = new Article("this is a test","yes this is","hello test");
-        articleToCompare = articleToCompare.insertId(1, articleToCompare);
-        this.articleRepository.update(1, articleToCompare);
+        ArticleDto testArticleDto = new ArticleDto("this is a test", "yes this is", "hello test");
+        Article articleToCompare = new Article(1, testArticleDto);
+        this.articleRepository.update(1, testArticleDto);
         Article testArticle = articleRepository.findById(1);
         assertThat(testArticle).isEqualTo(articleToCompare);
     }

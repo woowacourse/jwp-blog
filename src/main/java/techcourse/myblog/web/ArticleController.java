@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.dto.ArticleDto;
 
 @Controller
 public class ArticleController {
@@ -28,11 +29,11 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(Article article, Model model) {
-        Article insertedArticle = article.insertId(articleRepository.newArticleId(), article);
-        model.addAttribute("article", insertedArticle);
-        this.articleRepository.add(insertedArticle);
-        return "redirect:/articles/" + insertedArticle.getId();
+    public String createArticle(ArticleDto articleDto, Model model) {
+        Article article = new Article(articleRepository.newArticleId(), articleDto);
+        model.addAttribute("article", article);
+        articleRepository.add(article);
+        return "redirect:/articles/" + article.getId();
     }
 
     @GetMapping("/articles/{articleId}")
@@ -48,11 +49,12 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable int articleId, Article article, Model model) {
-        Article editedArticle = article.insertId(articleId, article);
-        articleRepository.update(articleId, editedArticle);
-        model.addAttribute("article", this.articleRepository.findById(articleId));
-        return "redirect:/articles/" + editedArticle.getId();
+    public String updateArticle(@PathVariable int articleId, ArticleDto articleDto, Model model) {
+        //Article editedArticle = article.insertId(articleId, article);
+        articleRepository.update(articleId, articleDto);
+        Article updatedArticle = articleRepository.findById(articleId);
+        model.addAttribute("article", updatedArticle);
+        return "redirect:/articles/" + updatedArticle.getId();
     }
 
     @DeleteMapping("/articles/{articleId}")

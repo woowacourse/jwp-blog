@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
+import techcourse.myblog.domain.dto.ArticleDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,9 @@ public class ArticleRepository {
                 .orElse(INITIAL_VALUE) + INCREMENT_VALUE;
     }
 
-    public void update(int id, Article article) {
+    public void update(int id, ArticleDto articleDto) {
         Article articleToUpdate = findById(id);
-        articleToUpdate.updateInfo(article);
+        articleToUpdate.update(articleDto);
     }
 
     public void remove(int id) {

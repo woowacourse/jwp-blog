@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import techcourse.myblog.domain.dto.ArticleDto;
+
 import java.util.Objects;
 
 public class Article {
@@ -8,17 +10,17 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public Article(String title, String coverUrl, String contents) {
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
-    }
+//    public Article(String title, String coverUrl, String contents) {
+//        this.title = title;
+//        this.coverUrl = coverUrl;
+//        this.contents = contents;
+//    }
 
-    private Article(int id, String title, String coverUrl, String contents) {
+    public Article(int id, ArticleDto articleDto) {
         this.id = id;
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
+        this.title = articleDto.getTitle();
+        this.coverUrl = articleDto.getCoverUrl();
+        this.contents = articleDto.getContents();
     }
 
     public boolean matchId(int id) {
@@ -41,15 +43,14 @@ public class Article {
         return contents;
     }
 
-    public Article insertId(int id, Article article) {
-        return new Article(id, article.getTitle(), article.getCoverUrl(), article.getContents());
-    }
+//    public Article insertId(int id, Article article) {
+//        return new Article(id, article.getTitle(), article.getCoverUrl(), article.getContents());
+//    }
 
-    public void updateInfo(Article article) {
-        this.id = article.id;
-        this.title = article.title;
-        this.coverUrl = article.coverUrl;
-        this.contents = article.contents;
+    public void update(ArticleDto articleDto) {
+        this.title = articleDto.getTitle();
+        this.coverUrl = articleDto.getCoverUrl();
+        this.contents = articleDto.getContents();
     }
 
     @Override
