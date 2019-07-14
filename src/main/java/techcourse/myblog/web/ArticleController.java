@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.ArticleDto;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
@@ -23,11 +24,11 @@ public class ArticleController {
     }
 
     @PostMapping
-    public ModelAndView writeArticle(ArticleDto articleDto, Model model) {
+    public RedirectView writeArticle(ArticleDto articleDto, Model model) {
         int newId = articleRepository.getLatestIndex();
         Article persistArticle = articleRepository.create(articleDto.convertArticle(newId));
         model.addAttribute("article", persistArticle);
-        return new ModelAndView("redirect:/articles/" + newId);
+        return new RedirectView("redirect:/articles/" + newId);
     }
 
     @GetMapping("/{articleId}")
@@ -43,9 +44,9 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
-    public ModelAndView editArticle(@PathVariable int articleId, ArticleDto articleDto) {
+    public RedirectView editArticle(@PathVariable int articleId, ArticleDto articleDto) {
         articleRepository.update(articleId, articleDto.convertArticle(articleId));
-        return new ModelAndView("redirect:/articles/" + articleId);
+        return new RedirectView("redirect:/articles/" + articleId);
     }
 
     @DeleteMapping("/{articleId}")
