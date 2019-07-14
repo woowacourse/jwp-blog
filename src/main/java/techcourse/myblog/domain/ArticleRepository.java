@@ -20,13 +20,10 @@ public class ArticleRepository {
         lastGeneratedId = INITIAL_ID;
     }
 
-    public void save(ArticleDto articleDTO) {
+    public void save(ArticleDto articleDto) {
         int articleId = generateNewId();
-        String title = articleDTO.getTitle();
-        String coverUrl = articleDTO.getCoverUrl();
-        String contents = articleDTO.getContents();
+        Article article = Article.of(articleId, articleDto);
 
-        Article article = new Article(articleId, title, coverUrl, contents);
         articles.add(article);
     }
 
@@ -44,9 +41,14 @@ public class ArticleRepository {
                 .orElseThrow(CouldNotFindArticleIdException::new);
     }
 
-    public void updateBy(int updatintId, ArticleDto articleDTO) {
-        Article updatedArticle = Article.of(updatintId, articleDTO);
-        Article oldArticle = findBy(updatintId);
+    public List<Article> findAll() {
+        return articles;
+    }
+
+    public void updateBy(int articleId, ArticleDto updatedArticleDto) {
+        Article updatedArticle = Article.of(articleId, updatedArticleDto);
+
+        Article oldArticle = findBy(articleId);
         int indexOfOld = articles.indexOf(oldArticle);
 
         articles.set(indexOfOld, updatedArticle);
@@ -59,9 +61,5 @@ public class ArticleRepository {
 
     public int getLastGeneratedId() {
         return lastGeneratedId;
-    }
-
-    public List<Article> findAll() {
-        return articles;
     }
 }

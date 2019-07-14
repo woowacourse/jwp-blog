@@ -9,7 +9,7 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    Article(int articleId, String title, String coverUrl, String contents) {
+    private Article(int articleId, String title, String coverUrl, String contents) {
         this.articleId = articleId;
         this.title = title;
         this.coverUrl = coverUrl;
