@@ -1,11 +1,14 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.dto;
 
-public class Article {
+import techcourse.myblog.validator.TitleConstraint;
+
+public class ArticleDto {
+    @TitleConstraint
     private String title;
     private String coverUrl;
     private String contents;
 
-    public Article(String title, String coverUrl, String contents) {
+    public ArticleDto(String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
@@ -21,9 +24,5 @@ public class Article {
 
     public String getContents() {
         return contents;
-    }
-
-    public boolean isTitleMath(String title) {
-        return this.title.equals(title);
     }
 }
