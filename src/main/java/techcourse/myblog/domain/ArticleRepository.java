@@ -11,7 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class ArticleRepository {
-    private AtomicInteger newArticleId = new AtomicInteger(1);
+    private static final int AUTO_INCREMENT_START_ID = 1;
+
+    private AtomicInteger newArticleId = new AtomicInteger(AUTO_INCREMENT_START_ID);
 
     private Map<Integer, Article> articles = new TreeMap<>();
 
