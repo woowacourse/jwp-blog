@@ -27,20 +27,14 @@ public class ArticleControllerTests {
 
     private static final String ARTICLE_DELIMITER
             = "<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tab-centered-1\">";
+
     private static final String TITLE_NAME = "title";
     private static final String COVER_URL_NAME = "coverUrl";
     private static final String CONTENTS_NAME = "contents";
+
     private static final String TITLE_VALUE = "TEST";
     private static final String COVER_URL_VALUE = "https://img.com";
-    private static final String CONTENTS_VALUE = "testtest";
-    private static final Article ARTICLE_SAMPLE;
-
-    static {
-        ARTICLE_SAMPLE = new Article();
-        ARTICLE_SAMPLE.setTitle(TITLE_VALUE);
-        ARTICLE_SAMPLE.setCoverUrl(COVER_URL_VALUE);
-        ARTICLE_SAMPLE.setContents(CONTENTS_VALUE);
-    }
+    private static final String CONTENTS_VALUE = "TEST_CONTENTS";
 
     @Autowired
     private ArticleRepository articleRepository;

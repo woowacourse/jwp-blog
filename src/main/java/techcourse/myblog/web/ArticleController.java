@@ -32,14 +32,12 @@ public class ArticleController {
         return "article-edit";
     }
 
-    //TODO
     @PostMapping("/articles")
     public RedirectView addArticle(ArticleDto articleParam) {
         long latestId = articleRepository.add(articleParam);
         return new RedirectView("/articles/" + latestId);
     }
 
-    //TODO
     @GetMapping("/articles/{articleId}")
     public String showArticleById(@PathVariable long articleId, Model model) {
         ArticleDto article = articleRepository.findById(articleId);
@@ -47,21 +45,18 @@ public class ArticleController {
         return "article";
     }
 
-    //TODO
     @PutMapping("/articles/{articleId}")
     public RedirectView updateArticle(@PathVariable long articleId, ArticleDto articleParam) {
         long updateId = articleRepository.updateById(articleParam, articleId);
         return new RedirectView("/articles/" + updateId);
     }
 
-    //TODO
     @DeleteMapping("articles/{articleId}")
     public RedirectView deleteArticle(@PathVariable long articleId) {
         articleRepository.deleteById(articleId);
         return new RedirectView("/");
     }
 
-    //TODO
     @GetMapping("/articles/{articleId}/edit")
     public String updateArticle(@PathVariable long articleId, Model model) {
         ArticleDto article = articleRepository.findById(articleId);
