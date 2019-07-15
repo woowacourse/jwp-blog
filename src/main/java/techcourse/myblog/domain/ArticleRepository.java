@@ -24,9 +24,9 @@ public class ArticleRepository {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
     }
 
-    public void editArticle(int id, Article article) {
+    public void editArticle(int id, String newTitle, String newCoverUrl, String newContents) {
         Article oldArticle = findArticleById(id);
-        oldArticle.update(article);
+        oldArticle.update(newTitle, newCoverUrl, newContents);
     }
 
     public void deleteArticle(int id) {

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleAssembler;
+import techcourse.myblog.domain.ArticleDTO;
 import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.List;
@@ -21,7 +23,8 @@ public class ArticleController {
     @GetMapping("/")
     public String showMain(Model model) {
         List<Article> articles = articleRepository.findAll();
-        model.addAttribute("articles", articles);
+        List<ArticleDTO> articleDTOs = new ArticleAssembler().writeDTOs(articles);
+        model.addAttribute("articleDTOs", articleDTOs);
         return "index";
     }
 
@@ -31,8 +34,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(Article article) {
-        article.setId();
+    public String createArticle(ArticleDTO articleDTO) {
+        Article article = new ArticleAssembler().writeArticle(articleDTO);
         articleRepository.addArticle(article);
         return "redirect:/articles/" + article.getId();
     }
@@ -40,19 +43,22 @@ public class ArticleController {
     @GetMapping("/articles/{id}")
     public String showArticle(@PathVariable int id, Model model) {
         Article article = articleRepository.findArticleById(id);
-        model.addAttribute("article", article);
+        ArticleDTO articleDTO = new ArticleAssembler().writeDTO(article);
+        model.addAttribute("articleDTO", articleDTO);
         return "article";
     }
 
     @GetMapping("/articles/{id}/edit")
     public String showEditPage(@PathVariable int id, Model model) {
-        model.addAttribute("article", articleRepository.findArticleById(id));
+        Article article = articleRepository.findArticleById(id);
+        ArticleDTO articleDTO = new ArticleAssembler().writeDTO(article);
+        model.addAttribute("articleDTO", articleDTO);
         return "article-edit";
     }
 
     @PutMapping("/articles/{id}")
-    public String editArticle(@PathVariable int id, Article article) {
-        articleRepository.editArticle(id, article);
+    public String editArticle(@PathVariable int id, ArticleDTO articleDTO) {
+        articleRepository.editArticle(id, articleDTO.getTitle(), articleDTO.getCoverUrl(), articleDTO.getContents());
         return "redirect:/articles/" + id;
     }
 

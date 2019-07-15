@@ -1,35 +1,16 @@
 package techcourse.myblog.domain;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ArticleRepositoryTest {
-    private static final int TEST_ARTICLE_ID = 1;
-
-    private ArticleRepository articleRepository;
-    private Article article;
-
-    @BeforeEach
-    public void setUp() {
-        articleRepository = new ArticleRepository();
-        article = new Article();
-        article.setId();
-        article.setTitle("title");
-        article.setCoverUrl("coverUrl");
-        article.setContents("contents");
-        articleRepository.addArticle(article);
-    }
+    private ArticleRepository articleRepository = new ArticleRepository();
 
     @Test
     public void 게시글을_저장한다() {
-        Article newArticle = new Article();
-        article.setId();
-        article.setTitle("title");
-        article.setCoverUrl("coverUrl");
-        article.setContents("contents");
+        Article newArticle = new Article("newTitle", "newCoverUrl", "newContents");
         articleRepository.addArticle(newArticle);
 
         assertThat(articleRepository.findAll()).contains(newArticle);
@@ -37,35 +18,38 @@ class ArticleRepositoryTest {
 
     @Test
     public void 게시글을_조회한다() {
-        assertThat(articleRepository.findArticleById(TEST_ARTICLE_ID)).isEqualTo(article);
+        Article article = new Article("title", "coverUrl", "contents");
+        articleRepository.addArticle(article);
+
+        assertThat(articleRepository.findArticleById(article.getId())).isEqualTo(article);
     }
 
     @Test
     public void 게시글을_수정한다() {
-        Article editedArticle = new Article();
-        article.setTitle("newTitle");
-        article.setCoverUrl("newCoverUrl");
-        article.setContents("newContents");
-        articleRepository.editArticle(TEST_ARTICLE_ID, editedArticle);
+        Article article = new Article("title", "coverUrl", "contents");
+        articleRepository.addArticle(article);
+        articleRepository.editArticle(article.getId(), "newTitle", "newCoverUrl", "newContents");
 
-        assertThat(articleRepository.findArticleById(TEST_ARTICLE_ID).getTitle()).isEqualTo(editedArticle.getTitle());
-        assertThat(articleRepository.findArticleById(TEST_ARTICLE_ID).getCoverUrl()).isEqualTo(editedArticle.getCoverUrl());
-        assertThat(articleRepository.findArticleById(TEST_ARTICLE_ID).getContents()).isEqualTo(editedArticle.getContents());
+        assertThat(articleRepository.findArticleById(article.getId()).getTitle()).isEqualTo("newTitle");
+        assertThat(articleRepository.findArticleById(article.getId()).getCoverUrl()).isEqualTo("newCoverUrl");
+        assertThat(articleRepository.findArticleById(article.getId()).getContents()).isEqualTo("newContents");
     }
 
     @Test
     public void 게시글을_삭제한다() {
-        articleRepository.deleteArticle(TEST_ARTICLE_ID);
+        Article article = new Article("title", "coverUrl", "contents");
+        articleRepository.addArticle(article);
+        articleRepository.deleteArticle(article.getId());
 
         assertThatThrownBy(() -> {
-            articleRepository.findArticleById(TEST_ARTICLE_ID);
+            articleRepository.findArticleById(article.getId());
         }).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     public void 존재하지_않는_게시글을_수정하려_시도하면_예외를_던진다() {
         assertThatThrownBy(() -> {
-            articleRepository.editArticle(2, article);
+            articleRepository.editArticle(100, "newTitle", "newCoverUrl", "newContents");
         }).isInstanceOf(IllegalArgumentException.class);
     }
 }

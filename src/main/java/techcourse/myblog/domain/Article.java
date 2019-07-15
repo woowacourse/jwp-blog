@@ -8,10 +8,17 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public void update(Article article) {
-        this.title = article.getTitle();
-        this.coverUrl = article.getCoverUrl();
-        this.contents = article.getContents();
+    public Article(String title, String coverUrl, String contents) {
+        this.id = nextId++;
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+    }
+
+    public void update(String newTitle, String newCoverUrl, String newContents) {
+        this.title = newTitle;
+        this.coverUrl = newCoverUrl;
+        this.contents = newContents;
     }
 
     public boolean hasSameIdWith(int id) {
@@ -22,31 +29,15 @@ public class Article {
         return id;
     }
 
-    public void setId() {
-        this.id = nextId++;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getCoverUrl() {
         return coverUrl;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
     public String getContents() {
         return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
     }
 }
