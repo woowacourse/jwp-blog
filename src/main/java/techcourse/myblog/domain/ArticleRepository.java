@@ -10,7 +10,7 @@ import java.util.TreeMap;
 
 @Repository
 public class ArticleRepository {
-    private int newArticleId = 0;
+    private int newArticleId = 1;
 
     private Map<Integer, Article> articles = new TreeMap<>();
 
