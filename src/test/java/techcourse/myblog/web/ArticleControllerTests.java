@@ -23,12 +23,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 public class ArticleControllerTests {
 
-    @Autowired
     private ArticleRepository articleRepository;
     private String title;
     private String coverUrl;
     private String contents;
     private Article article;
+
+    @Autowired
+    public ArticleControllerTests(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @Autowired
     private WebTestClient webTestClient;
