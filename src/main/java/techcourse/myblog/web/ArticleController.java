@@ -18,7 +18,7 @@ public class ArticleController {
 //    @Autowired
 //    void setArticleRepository(final ArticleRepository articleRepository) {
 //        this.articleRepository = articleRepository;
-//    } // 생성자 주입 필드 주입
+//    } // TODO: 검색 - 생성자 주입 필드 주입
 
     @GetMapping("/writing")
     public String getNewArticlePage() {
@@ -43,13 +43,13 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PutMapping("/articles/{articleId}/")
+    @PutMapping("/articles/{articleId}")
     public RedirectView editArticle(@PathVariable final int articleId, @ModelAttribute("article") final ArticleDTO articleDTO) {
         articleRepository.updateById(articleId, articleDTO);
         return new RedirectView("/articles/" + articleId);
     }
 
-    @DeleteMapping("/articles/{articleId}/")
+    @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable final int articleId) {
         articleRepository.deleteById(articleId);
         return "redirect:/";

@@ -38,13 +38,13 @@
         </div>
     </div>
 
-    <form action="/articles" name="article" method="post" accept-charset="utf-8" >
+    <form th:action="@{/articles/{id}(id = ${article} ? ${article.id} : '')}" name="article" th:method="${article} == null ? POST : PUT" th:object="${article}" accept-charset="utf-8" >
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" autocomplete="off">
-                        <input type="text" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"  placeholder="배경 url을 입력해주세요" autocomplete="off">
+                        <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom" placeholder="제목을 입력해주세요" autocomplete="off">
+                        <input type="text" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20" placeholder="배경 url을 입력해주세요" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -62,7 +62,7 @@
                         <button id="save-btn" type="submit" class="btn btn-default">
                             <i class="ti-save"></i>
                         </button>
-                        <a href="/" class="btn btn-default">
+                        <a href="/" class="btn btn-default" th:if="${article}" th:href="@{/articles/{id}(id = ${article.id})}">
                             <i class="ti-close"></i>
                         </a>
                     </div>
