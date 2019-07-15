@@ -7,6 +7,12 @@ public class ArticleDto {
     private String coverUrl;
     private String contents;
 
+    public ArticleDto(String title, String url, String contents) {
+        this.title = title;
+        this.coverUrl = url;
+        this.contents = contents;
+    }
+
     public String getTitle() {
         return title;
     }

@@ -25,10 +25,8 @@ public class ArticleController {
 
     @PostMapping("/write")
     public RedirectView createArticle(ArticleDto articleDto) {
-        int id = articleRepository.nextId();
-        Article article = articleDto.toArticle(id);
-        articleRepository.insert(article);
-        return new RedirectView("/articles/" + id);
+        Article article = articleRepository.save(articleDto);
+        return new RedirectView("/articles/" + article.getId());
     }
 
     @GetMapping("/")
@@ -58,7 +56,7 @@ public class ArticleController {
     @PutMapping("/articles/{articleId}")
     public RedirectView editArticle(@PathVariable int articleId, ArticleDto articleDto) {
         Article article = articleDto.toArticle(articleId);
-        articleRepository.update(article);
+        articleRepository.modify(article);
         return new RedirectView("/articles/" + articleId);
     }
 

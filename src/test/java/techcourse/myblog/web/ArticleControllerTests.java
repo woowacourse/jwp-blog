@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.ArticleDto;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
@@ -25,9 +26,7 @@ public class ArticleControllerTests {
     @Autowired
     private ArticleRepository articleRepository;
 
-    private String title = "title";
-    private String coverUrl = "coverUrl";
-    private String contents = "contents";
+    private ArticleDto articleDto = new ArticleDto("title", "coverUrl", "contents");
 
     @Test
     void index() {
@@ -44,10 +43,10 @@ public class ArticleControllerTests {
         String titleKo = "목적의식 있는 연습을 통한 효과적인 학습";
         String coverUrlKo = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
         String contentsKo = "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 '선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?'였다.";
-        Article article = new Article(articleRepository.nextId(), titleKo, coverUrlKo, contentsKo);
-        Article articleApplyEscape = new Article(articleRepository.nextId(), titleKo, coverUrlKo, StringEscapeUtils.escapeJava(contentsKo));
+        ArticleDto articleKoDto = new ArticleDto(titleKo, coverUrlKo, contentsKo);
+        ArticleDto articleApplyEscape = new ArticleDto(titleKo, coverUrlKo, StringEscapeUtils.escapeJava(contentsKo));
 
-        requestHttpMethod(POST, "/write", createArticleForm(article))
+        requestHttpMethod(POST, "/write", createArticleForm(articleKoDto))
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response ->
@@ -58,42 +57,40 @@ public class ArticleControllerTests {
 
     @Test
     void create_article_en() {
-        Article article = new Article(articleRepository.nextId(), title, coverUrl, contents);
-
-        requestHttpMethod(POST, "/write", createArticleForm(article))
+        requestHttpMethod(POST, "/write", createArticleForm(articleDto))
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response ->
                         checkContainArticle(
                                 requestHttpMethod(GET, response.getResponseHeaders().get("Location").get(0), null),
-                                article));
+                                articleDto));
     }
 
     @Test
     void 게시글_페이지_정상_조회() {
-        Article article = insertArticle(title, coverUrl, contents);
+        Article article = articleRepository.save(articleDto);
         checkContainArticle(
                 requestHttpMethod(GET, "/articles/" + article.getId(), null),
-                article);
+                articleDto);
     }
 
     @Test
     void 존재하지_않는_게시글_조회_에러() {
-        requestHttpMethod(GET, "/articles/" + articleRepository.nextId(), null)
+        requestHttpMethod(GET, "/articles/" + getNotPresentId(), null)
                 .expectStatus().is5xxServerError();
     }
 
     @Test
     void 게시글_수정페이지_이동() {
-        Article article = insertArticle(title, coverUrl, contents);
+        Article article = articleRepository.save(articleDto);
         requestHttpMethod(GET, "/articles/" + article.getId() + "/edit", null)
                 .expectStatus().isOk();
     }
 
     @Test
     void 게시글_수정() {
-        Article article = insertArticle(title, coverUrl, contents);
-        Article editedArticle = new Article(article.getId(), "new title", coverUrl, contents);
+        Article article = articleRepository.save(articleDto);
+        ArticleDto editedArticle = new ArticleDto("new title", "new url", "new contents");
 
         requestHttpMethod(PUT, "/articles/" + article.getId(), createArticleForm(editedArticle))
                 .expectStatus().isFound()
@@ -106,35 +103,10 @@ public class ArticleControllerTests {
 
     @Test
     void 게시글_삭제() {
-        Article article = insertArticle(title, coverUrl, contents);
+        Article article = articleRepository.save(articleDto);
 
         requestHttpMethod(DELETE, "/articles/" + article.getId(), null)
                 .expectStatus().isFound();
-    }
-
-    private Article insertArticle(String title, String url, String contents) {
-        Article article = new Article(articleRepository.nextId(), title, url, contents);
-        articleRepository.insert(article);
-        return article;
-    }
-
-    private void checkContainArticle(WebTestClient.ResponseSpec responseSpec, Article article) {
-        responseSpec
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(article.getTitle())).isTrue();
-                    assertThat(body.contains(article.getCoverUrl())).isTrue();
-                    assertThat(body.contains(article.getContents())).isTrue();
-                });
-    }
-
-    private BodyInserters.FormInserter<String> createArticleForm(Article article) {
-        return BodyInserters
-                .fromFormData("title", article.getTitle())
-                .with("coverUrl", article.getCoverUrl())
-                .with("contents", article.getContents());
     }
 
     private WebTestClient.ResponseSpec requestHttpMethod(HttpMethod method, String uri,
@@ -145,5 +117,31 @@ public class ArticleControllerTests {
                 .body(form)
                 .exchange()
                 ;
+    }
+
+    private BodyInserters.FormInserter<String> createArticleForm(ArticleDto articleDto) {
+        return BodyInserters
+                .fromFormData("title", articleDto.getTitle())
+                .with("coverUrl", articleDto.getCoverUrl())
+                .with("contents", articleDto.getContents());
+    }
+
+    private int getNotPresentId() {
+        return 1 + articleRepository.findAll().stream()
+                .map(Article::getId)
+                .max(Integer::compare)
+                .orElse(-1);
+    }
+
+    private void checkContainArticle(WebTestClient.ResponseSpec responseSpec, ArticleDto articleDto) {
+        responseSpec
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(articleDto.getTitle())).isTrue();
+                    assertThat(body.contains(articleDto.getCoverUrl())).isTrue();
+                    assertThat(body.contains(articleDto.getContents())).isTrue();
+                });
     }
 }
