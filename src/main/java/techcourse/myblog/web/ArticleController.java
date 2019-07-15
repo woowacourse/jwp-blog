@@ -18,7 +18,7 @@ public class ArticleController {
 
     private final ArticleRepository articleRepository;
 
-    public ArticleController(final ArticleRepository articleRepository){
+    public ArticleController(final ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
 
