@@ -22,15 +22,6 @@ class ArticleRepositoryTest {
     }
 
     @Test
-    void 업데이트_확인() {
-        Article article = new Article("title", "Url", "contents");
-        articleRepository.save(article);
-        Article editedArticle = new Article("newTitle", "newUrl", "newContent");
-        articleRepository.updateArticle(0, editedArticle);
-        assertThat(articleRepository.findArticleById(0)).isEqualTo(editedArticle);
-    }
-
-    @Test
     void 삭제_확인() {
         Article article = new Article("title", "Url", "contents");
         articleRepository.save(article);
