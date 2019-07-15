@@ -51,7 +51,7 @@ public class ArticleControllerTests {
     void 게시물_작성_요청_후_리다이렉팅_테스트() {
         webTestClient.post().uri("/articles")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
@@ -85,13 +85,18 @@ public class ArticleControllerTests {
                         .with("coverUrl", newCoverUrl)
                         .with("contents", newContents))
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().is3xxRedirection()
                 .expectBody()
                 .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(newTitle)).isTrue();
-                    //assertThat(body.contains(updatedCoverUrl)).isTrue();
-                    assertThat(body.contains(newContents)).isTrue();
+                    webTestClient.get().uri(response.getResponseHeaders().getLocation())
+                            .exchange()
+                            .expectBody()
+                            .consumeWith(res -> {
+                                String body = new String(res.getResponseBody());
+                                assertThat(body.contains(newTitle)).isTrue();
+                                //assertThat(body.contains(updatedCoverUrl)).isTrue();
+                                assertThat(body.contains(newContents)).isTrue();
+                            });
                 });
     }
 
@@ -108,6 +113,22 @@ public class ArticleControllerTests {
         String updatedCoverUrl = "updatedCoverUrl";
         String updatedContents = "updatedContents";
 
+//        webTestClient.put().uri("/articles/" + currentArticleId)
+//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//                .body(BodyInserters
+//                        .fromFormData("title", updatedTitle)
+//                        .with("coverUrl", updatedCoverUrl)
+//                        .with("contents", updatedContents))
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectBody()
+//                .consumeWith(response -> {
+//                    String body = new String(response.getResponseBody());
+//                    assertThat(body.contains(updatedTitle)).isTrue();
+//                    //assertThat(body.contains(updatedCoverUrl)).isTrue();
+//                    assertThat(body.contains(updatedContents)).isTrue();
+//                });
+
         webTestClient.put().uri("/articles/" + currentArticleId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -115,13 +136,18 @@ public class ArticleControllerTests {
                         .with("coverUrl", updatedCoverUrl)
                         .with("contents", updatedContents))
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().is3xxRedirection()
                 .expectBody()
                 .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(updatedTitle)).isTrue();
-                    //assertThat(body.contains(updatedCoverUrl)).isTrue();
-                    assertThat(body.contains(updatedContents)).isTrue();
+                    webTestClient.get().uri(response.getResponseHeaders().getLocation())
+                            .exchange()
+                            .expectBody()
+                            .consumeWith(res -> {
+                                String body = new String(res.getResponseBody());
+                                assertThat(body.contains(updatedTitle)).isTrue();
+                                //assertThat(body.contains(updatedCoverUrl)).isTrue();
+                                assertThat(body.contains(updatedContents)).isTrue();
+                            });
                 });
     }
 

@@ -35,11 +35,10 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(ArticleDto.Create articleDto, Model model) {
+    public String createArticle(ArticleDto.Create articleDto) {
         Article newArticle = articleDto.toArticle();
-        articleRepository.save(newArticle);
-        model.addAttribute("article", modelMapper.map(newArticle, ArticleDto.Response.class));
-        return "article";
+        long newArticleId = articleRepository.save(newArticle);
+        return "redirect:/articles/" + newArticleId;
     }
 
     @GetMapping("/articles/{articleId}")
@@ -57,11 +56,10 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable long articleId, ArticleDto.Update articleDto, Model model) {
+    public String updateArticle(@PathVariable long articleId, ArticleDto.Update articleDto) {
         Article updatedArticle = articleDto.toArticle(articleId);
-        articleRepository.update(updatedArticle);
-        model.addAttribute("article", modelMapper.map(updatedArticle, ArticleDto.Response.class));
-        return "article";
+        long updatedArticleId = articleRepository.update(updatedArticle);
+        return "redirect:/articles/" + updatedArticleId;
     }
 
     @DeleteMapping("/articles/{articleId}")
