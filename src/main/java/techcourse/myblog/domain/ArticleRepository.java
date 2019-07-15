@@ -16,14 +16,15 @@ public class ArticleRepository {
     }
 
     public void save(final Article article) {
-        if (articles.isEmpty()) {
-            article.setId(INITIAL_ID);
-            articles.add(article);
-            return;
-        }
-
-        article.setId(getMaxId() + 1);
+        article.setId(createId());
         articles.add(article);
+    }
+
+    private int createId() {
+        if (articles.isEmpty()) {
+            return INITIAL_ID;
+        }
+        return getMaxId() + 1;
     }
 
     private int getMaxId() {
