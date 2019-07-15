@@ -18,7 +18,7 @@ public class ArticleRepository {
         return new ArrayList<>(articles.values());
     }
 
-    public int insertArticle(Article article) {
+    public int saveArticle(Article article) {
         int id = newArticleId++;
         article.setId(id);
 
@@ -32,7 +32,7 @@ public class ArticleRepository {
         return articles.get(articleId);
     }
 
-    public void updateArticle(Article article) {
+    public void modifyArticle(Article article) {
         int articleId = article.getId();
 
         checkExistArticleId(articleId);
@@ -40,7 +40,7 @@ public class ArticleRepository {
         articles.put(articleId, article);
     }
 
-    public void deleteArticle(int articleId) {
+    public void removeArticle(int articleId) {
         checkExistArticleId(articleId);
 
         articles.remove(articleId);

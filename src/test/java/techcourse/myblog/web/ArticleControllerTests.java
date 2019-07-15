@@ -51,7 +51,7 @@ public class ArticleControllerTests {
         String contents = "blogContents";
 
         Article article = Article.of(title, coverUrl, contents);
-        int articleId = articleRepository.insertArticle(article);
+        int articleId = articleRepository.saveArticle(article);
 
 
         webTestClient.get()
@@ -74,7 +74,7 @@ public class ArticleControllerTests {
         String contents = "blogContents";
 
         Article article = Article.of(title, coverUrl, contents);
-        int articleId = articleRepository.insertArticle(article);
+        int articleId = articleRepository.saveArticle(article);
 
         webTestClient.get()
                 .uri("/articles/" + articleId + "/edit")
@@ -96,7 +96,7 @@ public class ArticleControllerTests {
         String contents = "blogContents";
 
         Article article = Article.of(title, coverUrl, contents);
-        int articleId = articleRepository.insertArticle(article);
+        int articleId = articleRepository.saveArticle(article);
 
         webTestClient.put()
                 .uri("/articles/" + articleId)
@@ -120,7 +120,7 @@ public class ArticleControllerTests {
     @Test
     void delete_article() {
         Article article = Article.of("title", "url", "contents");
-        int articleId = articleRepository.insertArticle(article);
+        int articleId = articleRepository.saveArticle(article);
 
         webTestClient.delete()
                 .uri("/articles/" + articleId)

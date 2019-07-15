@@ -24,7 +24,7 @@ public class ArticleRepositoryTest {
                 , Article.of("t2", "u2", "c2")
                 , Article.of("t3", "u3", "c3")
         );
-        articles.forEach(article -> articleRepository.insertArticle(article));
+        articles.forEach(article -> articleRepository.saveArticle(article));
 
         assertThat(articleRepository.findAll()).isEqualTo(articles);
     }
@@ -35,7 +35,7 @@ public class ArticleRepositoryTest {
                 Article.of("t1", "u1", "c1")
                 , Article.of("t2", "u2", "c2")
         );
-        articles.forEach(article -> articleRepository.insertArticle(article));
+        articles.forEach(article -> articleRepository.saveArticle(article));
         int idx = 1;
         Article article = articles.get(idx);
         int id = article.getId();
@@ -51,7 +51,7 @@ public class ArticleRepositoryTest {
                 Article.of("t1", "u1", "c1")
                 , Article.of("t2", "u2", "c2")
         );
-        articles.forEach(article -> articleRepository.insertArticle(article));
+        articles.forEach(article -> articleRepository.saveArticle(article));
 
         assertThat(articleRepository.findById(notExistId)).isNull();
     }
@@ -59,7 +59,7 @@ public class ArticleRepositoryTest {
     @Test
     void insertArticle_insert테스트() {
         Article article = Article.of("t", "u", "c");
-        int id = articleRepository.insertArticle(article);
+        int id = articleRepository.saveArticle(article);
         article.setId(id);
 
         assertThat(articleRepository.findById(id)).isEqualTo(article);
@@ -68,12 +68,12 @@ public class ArticleRepositoryTest {
     @Test
     void updateArticle_update테스트() {
         Article previousArticle = Article.of("t1", "u1", "c1");
-        int id = articleRepository.insertArticle(previousArticle);
+        int id = articleRepository.saveArticle(previousArticle);
 
         Article newArticle = Article.of("t2", "u2", "c2");
         newArticle.setId(id);
 
-        articleRepository.updateArticle(newArticle);
+        articleRepository.modifyArticle(newArticle);
 
         assertThat(articleRepository.findById(id)).isEqualTo(newArticle);
     }
@@ -81,9 +81,9 @@ public class ArticleRepositoryTest {
     @Test
     void deleteArticle_delete테스트() {
         Article article = Article.of("t", "u", "c");
-        int id = articleRepository.insertArticle(article);
+        int id = articleRepository.saveArticle(article);
 
-        articleRepository.deleteArticle(id);
+        articleRepository.removeArticle(id);
         assertThat(articleRepository.findById(id)).isNull();
     }
 

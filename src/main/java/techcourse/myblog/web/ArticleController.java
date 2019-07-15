@@ -22,7 +22,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String createArticles(Article article, Model model) {
-        int id = articleRepository.insertArticle(article);
+        int id = articleRepository.saveArticle(article);
 
         model.addAttribute("article", article);
         return "redirect:/articles/" + id;
@@ -70,7 +70,7 @@ public class ArticleController {
             return sendErrorPage(ERROR_PAGE, model, new BadRequestError(articleId));
         }
         try {
-            articleRepository.updateArticle(article);
+            articleRepository.modifyArticle(article);
             model.addAttribute("article", article);
             return "/article";
         } catch (NotExistEntityException e) {
@@ -86,7 +86,7 @@ public class ArticleController {
             return sendErrorPage(ERROR_PAGE, model, new BadRequestError(articleId));
         }
         try {
-            articleRepository.deleteArticle(articleId);
+            articleRepository.removeArticle(articleId);
             return "redirect:/";
         } catch (NotExistEntityException e) {
             return sendErrorPage(ERROR_PAGE, model, new NotExistEntityError(articleId));
