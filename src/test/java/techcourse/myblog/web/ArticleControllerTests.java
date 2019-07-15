@@ -161,11 +161,7 @@ public class ArticleControllerTests {
     }
 
     private long addSampleArticle() {
-        Article article = new Article();
-        article.setTitle(SAMPLE_TITLE);
-        article.setCoverUrl(SAMPLE_COVER_URL);
-        article.setContents(SAMPLE_CONTENTS);
-        articleRepository.add(article);
-        return article.getId();
+        Article article = new Article(SAMPLE_TITLE, SAMPLE_COVER_URL, SAMPLE_CONTENTS);
+        return articleRepository.save(article);
     }
 }

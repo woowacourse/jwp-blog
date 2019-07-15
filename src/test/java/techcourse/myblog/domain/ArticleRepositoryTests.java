@@ -30,8 +30,6 @@ public class ArticleRepositoryTests {
 
     @Test
     void findById() {
-        articleRepository.add(new Article());
-        articleRepository.add(new Article());
         long id = addSampleArticle();
 
         Article foundArticle = articleRepository.findById(id);
@@ -42,20 +40,14 @@ public class ArticleRepositoryTests {
 
     @Test
     void deleteById() {
-        articleRepository.add(new Article());
-        articleRepository.add(new Article());
         long id = addSampleArticle();
 
         articleRepository.deleteById(id);
         assertThrows(IllegalArgumentException.class, () -> articleRepository.findById(id));
     }
-
+    
     private long addSampleArticle() {
-        Article article = new Article();
-        article.setTitle(SAMPLE_TITLE);
-        article.setCoverUrl(SAMPLE_COVER_URL);
-        article.setContents(SAMPLE_CONTENTS);
-        articleRepository.add(article);
-        return article.getId();
+        Article article = new Article(SAMPLE_TITLE, SAMPLE_COVER_URL, SAMPLE_CONTENTS);
+        return articleRepository.save(article);
     }
 }
