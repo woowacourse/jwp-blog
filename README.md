@@ -20,3 +20,8 @@
 - `/articles/{articleId}/edit`: 게시글 수정 페이지(`article-edit.html`)
     - [x] 수정을 완료하면 `/articles/{articleId}`로 PUT 요청을 보낸다.
     - [x] 요청이 처리되면 게시글 페이지(`/article/{articleId}`)로 리다이렉트한다.
+
+
+- Article 리팩토링
+    - Serivce Layer에서 Dto처리
+    - Respository에서 ResponseDto생성
