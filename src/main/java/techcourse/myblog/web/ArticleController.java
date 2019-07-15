@@ -18,7 +18,7 @@ public class ArticleController {
 //    @Autowired
 //    void setArticleRepository(final ArticleRepository articleRepository) {
 //        this.articleRepository = articleRepository;
-//    }
+//    } // 생성자 주입 필드 주입
 
     @GetMapping("/writing")
     public String getNewArticlePage() {

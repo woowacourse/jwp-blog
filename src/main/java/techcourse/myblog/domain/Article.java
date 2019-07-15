@@ -15,7 +15,7 @@ public class Article {
     public Article(final int id, final String title, final String coverUrl, final String contents) {
         this.id = id;
         this.title = trim(title);
-        this.coverUrl = trim(coverUrl);
+        this.coverUrl = coverUrl;
         this.contents = trim(contents);
     }
 
