@@ -68,19 +68,6 @@ public class ArticleRepositoryTest {
     }
 
     @Test
-    void updateArticle_update테스트() {
-        Article previousArticle = new Article(1, "t1", "u1", "c1");
-        int id = articleRepository.saveArticle(previousArticle);
-
-        Article newArticle = new Article(1, "t2", "u2", "c2");
-        newArticle.changeId(id);
-
-        articleRepository.modifyArticle(newArticle);
-
-        assertThat(articleRepository.findById(id)).isEqualTo(newArticle);
-    }
-
-    @Test
     void deleteArticle_delete테스트() {
         Article article = new Article(1, "t", "u", "c");
         int id = articleRepository.saveArticle(article);

@@ -72,7 +72,8 @@ public class ArticleController {
             return sendErrorPage(ERROR_PAGE, model, new BadRequestError(articleId));
         }
         try {
-            articleRepository.modifyArticle(article);
+            articleRepository.removeArticle(articleId);
+            articleRepository.saveArticle(article);
             model.addAttribute("article", article);
             return "/article";
         } catch (NotExistEntityException e) {

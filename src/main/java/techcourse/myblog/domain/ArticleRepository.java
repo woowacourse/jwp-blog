@@ -35,14 +35,6 @@ public class ArticleRepository {
         return articles.get(articleId);
     }
 
-    public void modifyArticle(Article article) {
-        int articleId = article.getId();
-
-        checkExistArticleId(articleId);
-
-        articles.put(articleId, article);
-    }
-
     public void removeArticle(int articleId) {
         checkExistArticleId(articleId);
 
