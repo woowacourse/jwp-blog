@@ -1,10 +1,20 @@
 package techcourse.myblog.domain;
 
+import java.util.Optional;
+
 public class Article implements Comparable<Article> {
     private int number;
     private String title;
     private String coverUrl = "";
     private String contents;
+
+    public Article(String title, String coverUrl, String contents) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+    }
+
+    public Article() {}
 
     public int getNumber() {
         return this.number;
@@ -14,10 +24,11 @@ public class Article implements Comparable<Article> {
         this.number = number;
     }
 
-    public void setTo(Article rhs) {
-        this.title = rhs.title;
-        this.coverUrl = rhs.coverUrl;
-        this.contents = rhs.contents;
+    public Article updateTo(Article newContent) {
+        this.title = newContent.title;
+        this.coverUrl = newContent.coverUrl;
+        this.contents = newContent.contents;
+        return this;
     }
 
     public String getTitle() {
@@ -42,6 +53,12 @@ public class Article implements Comparable<Article> {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    public boolean validateCoverUrl() {
+        return Optional.ofNullable(this.coverUrl).filter(x -> x.length() > 0)
+                                                .map(x -> true)
+                                                .orElse(false);
     }
 
     public int compareTo(Article rhs) {
