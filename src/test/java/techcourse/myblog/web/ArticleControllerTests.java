@@ -6,10 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,17 +56,17 @@ public class ArticleControllerTests {
         int articleId = articleRepository.insertArticle(article);
 
 
-        webTestClient.get()
+        ResponseSpec rs = webTestClient.get()
                 .uri("/articles/" + articleId)
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
+                .expectStatus().isOk();
+
+        assertResponse(rs, response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(title)).isTrue();
+            assertThat(body.contains(coverUrl)).isTrue();
+            assertThat(body.contains(contents)).isTrue();
+        });
     }
 
     @Test
@@ -74,17 +78,17 @@ public class ArticleControllerTests {
         Article article = Article.of(title, coverUrl, contents);
         int articleId = articleRepository.insertArticle(article);
 
-        webTestClient.get()
+        ResponseSpec rs = webTestClient.get()
                 .uri("/articles/" + articleId + "/edit")
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
+                .expectStatus().isOk();
+
+        assertResponse(rs, response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(title)).isTrue();
+            assertThat(body.contains(coverUrl)).isTrue();
+            assertThat(body.contains(contents)).isTrue();
+        });
     }
 
     @Test
@@ -96,7 +100,7 @@ public class ArticleControllerTests {
         Article article = Article.of(title, coverUrl, contents);
         int articleId = articleRepository.insertArticle(article);
 
-        webTestClient.put()
+        ResponseSpec rs = webTestClient.put()
                 .uri("/articles/" + articleId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -104,15 +108,18 @@ public class ArticleControllerTests {
                         .with("coverUrl", article.getCoverUrl())
                         .with("contents", article.getContents()))
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    // 또다시 get 을 하지 않고 이런 식으로 테스트를 해도 괜찮을까요?
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
+                .expectStatus().isOk();
+
+        assertResponse(rs, response -> {
+            // redirect 의 경우 이 안에서 다시 get 을 요청하는 코드를 보았습니다.
+            // 또 다시 get 을 하지 않고 이런 식으로 테스트를 해도 괜찮을까요?
+            //
+            // 둘이 어떤 차이가 있는지 잘 이해가 안됩니다..
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(title)).isTrue();
+            assertThat(body.contains(coverUrl)).isTrue();
+            assertThat(body.contains(contents)).isTrue();
+        });
     }
 
     @Test
@@ -126,5 +133,10 @@ public class ArticleControllerTests {
                 .expectStatus().isFound()
                 .expectHeader()
                 .valueMatches("location", "[^/]*//[^/]*/");
+    }
+
+    private void assertResponse(ResponseSpec rs, Consumer<EntityExchangeResult<byte[]>> assertBody) {
+        rs.expectBody()
+                .consumeWith(assertBody);
     }
 }
