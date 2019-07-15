@@ -18,16 +18,10 @@ public class Article {
         return this.id == id;
     }
 
-    public void changeTitle(String title) {
-        this.title = title;
-    }
-
-    public void changeCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
-    public void changeContents(String contents) {
-        this.contents = contents;
+    public void update(Article article) {
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
     }
 
     public void setId(int id) {
