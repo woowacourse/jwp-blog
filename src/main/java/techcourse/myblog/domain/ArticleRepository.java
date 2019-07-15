@@ -37,7 +37,7 @@ public class ArticleRepository {
         Optional<Article> optional = articles.stream()
                 .filter(article -> article.hasSameId(id)).findAny();
 
-        if (optional.isEmpty()) {
+        if (optional.isPresent() == false) {
             throw new IllegalIdException("입력받은 id를 조회할 수 없습니다.");
         }
 

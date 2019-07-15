@@ -1,21 +1,20 @@
 package techcourse.myblog.web;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techcourse.myblog.domain.ArticleRepository;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController("/helloworld")
 public class HelloWorldController {
-    private final ArticleRepository articleRepository;
-
-    public HelloWorldController(final ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    @GetMapping
+    public String get(String blogName) {
+        return blogName;
     }
 
-    @GetMapping("/")
-    public String passParamWithGet(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
-        return "index";
+    @PostMapping
+    public String post(@RequestBody String blogName) {
+        return blogName;
     }
+
 }

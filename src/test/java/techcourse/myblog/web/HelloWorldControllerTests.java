@@ -1,4 +1,4 @@
-package techcourse.myblog;
+package techcourse.myblog.web;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ public class HelloWorldControllerTests {
 
     @Test
     void passParamWithGet() {
-        String blogName = "helloWrold";
+        String blogName = "helloWorld";
         webTestClient.get().uri("/helloworld?blogName=" + blogName)
                 .exchange()
                 .expectStatus().isOk()
@@ -30,7 +30,7 @@ public class HelloWorldControllerTests {
 
     @Test
     void passParamWithPost() {
-        String blogName = "helloWrold";
+        String blogName = "helloWorld";
         webTestClient.post()
                 .uri("/helloworld")
                 .body(Mono.just(blogName), String.class)

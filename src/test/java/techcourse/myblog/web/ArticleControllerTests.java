@@ -62,7 +62,6 @@ public class ArticleControllerTests {
                             .expectBody()
                             .consumeWith(response -> {
                                 String body = new String(response.getResponseBody());
-                                System.out.println(body);
                                 assertThat(body.contains(title)).isTrue();
                                 assertThat(body.contains(coverUrl)).isTrue();
                                 assertThat(body.contains(contents)).isTrue();
@@ -102,7 +101,6 @@ public class ArticleControllerTests {
     @Test
     void 게시글_삭제() {
         articleRepository.deleteAll();
-
         webTestClient.get().uri("/articles/0")
                 .exchange()
                 .expectStatus().is5xxServerError();
