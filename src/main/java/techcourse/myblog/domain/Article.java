@@ -17,7 +17,17 @@ public class Article {
 
     public Article(int articleId, ArticleDto articleDto) {
         this.articleId = articleId;
-        this.title= articleDto.getTitle();
+        this.title = articleDto.getTitle();
+        this.coverUrl = articleDto.getCoverUrl();
+        this.contents = articleDto.getContents();
+    }
+
+    public boolean isSameId(int articleId) {
+        return this.articleId == articleId;
+    }
+
+    public void updateArticle(ArticleDto articleDto) {
+        this.title = articleDto.getTitle();
         this.coverUrl = articleDto.getCoverUrl();
         this.contents = articleDto.getContents();
     }
@@ -30,27 +40,11 @@ public class Article {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getCoverUrl() {
         return coverUrl;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
     public String getContents() {
         return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
-    public boolean isSameId(int articleId) {
-        return this.articleId == articleId;
     }
 }

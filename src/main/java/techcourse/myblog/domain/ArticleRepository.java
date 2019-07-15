@@ -47,24 +47,6 @@ public class ArticleRepository {
         articles.remove(article);
     }
 
-    public void updateTitle(int articleId, String updatedTitle) {
-        find(articleId)
-                .orElseThrow(CouldNotFindArticleIdException::new)
-                .setTitle(updatedTitle);
-    }
-
-    public void updateCoverUrl(int articleId, String updateCoverUrl) {
-        find(articleId)
-                .orElseThrow(CouldNotFindArticleIdException::new)
-                .setCoverUrl(updateCoverUrl);
-    }
-
-    public void updateContents(int articleId, String updateContents) {
-        find(articleId)
-                .orElseThrow(CouldNotFindArticleIdException::new)
-                .setContents(updateContents);
-    }
-
     public List<Article> findAll() {
         return articles;
     }

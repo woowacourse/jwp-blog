@@ -51,45 +51,6 @@ class ArticleRepositoryTest {
     }
 
     @Test
-    @DisplayName("게시물의 title을 업데이트 한다.")
-    void updateTitleTest() {
-        String updatedTitle = "updated title";
-
-        articleRepository.updateTitle(TEST_ARTICLE_ID, updatedTitle);
-
-        Article updatedArticle = articleRepository
-                .find(TEST_ARTICLE_ID)
-                .orElseThrow(CouldNotFindArticleIdException::new);
-        assertThat(updatedArticle.getTitle()).isEqualTo(updatedTitle);
-    }
-
-    @Test
-    @DisplayName("게시물의 coverUrl을 업데이트 한다.")
-    void updateCoverUrlTest() {
-        String updateCoverUrl = "updated coverUrl";
-
-        articleRepository.updateCoverUrl(TEST_ARTICLE_ID, updateCoverUrl);
-
-        Article updatedArticle = articleRepository
-                .find(TEST_ARTICLE_ID)
-                .orElseThrow(CouldNotFindArticleIdException::new);
-        assertThat(updatedArticle.getCoverUrl()).isEqualTo(updateCoverUrl);
-    }
-
-    @Test
-    @DisplayName("게시물의 contents를 업데이트 한다.")
-    void updateContentsTest() {
-        String updateContents = "updated contents";
-
-        articleRepository.updateContents(TEST_ARTICLE_ID, updateContents);
-
-        Article updatedArticle = articleRepository
-                .find(TEST_ARTICLE_ID)
-                .orElseThrow(CouldNotFindArticleIdException::new);
-        assertThat(updatedArticle.getContents()).isEqualTo(updateContents);
-    }
-
-    @Test
     @DisplayName("게시물 id를 이용해 해당 게시물을 지운다.")
     void deleteByIdTest() {
         articleRepository.delete(TEST_ARTICLE_ID);
@@ -106,30 +67,6 @@ class ArticleRepositoryTest {
                 .find(TEST_ARTICLE_ID_NOT_IN_REPO)
                 .orElseThrow(CouldNotFindArticleIdException::new)
         );
-    }
-
-    @Test
-    @DisplayName("Repository에 없는 id의 title을 수정 시도하는 경우 예외를 던져준다.")
-    void updateTitleFailTest() {
-        assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository.updateContents(
-                TEST_ARTICLE_ID_NOT_IN_REPO, "new contents"
-        ));
-    }
-
-    @Test
-    @DisplayName("Repository에 없는 id의 coverUrl을 수정 시도하는 경우 예외를 던져준다.")
-    void updateCoverUrlFailTest() {
-        assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository.updateContents(
-                TEST_ARTICLE_ID_NOT_IN_REPO, "new contents"
-        ));
-    }
-
-    @Test
-    @DisplayName("Repository에 없는 id의 contents를 수정 시도하는 경우 예외를 던져준다.")
-    void updateContentsFailTest() {
-        assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository.updateContents(
-                TEST_ARTICLE_ID_NOT_IN_REPO, "new contents"
-        ));
     }
 
     @Test

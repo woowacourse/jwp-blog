@@ -60,10 +60,10 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable int articleId, String title, String coverUrl, String contents) {
-        articleRepository.updateTitle(articleId, title);
-        articleRepository.updateCoverUrl(articleId, coverUrl);
-        articleRepository.updateContents(articleId, contents);
+    public String editArticle(@PathVariable int articleId, ArticleDto articleDto) {
+        articleRepository.find(articleId)
+                .orElseThrow(CouldNotFindArticleIdException::new)
+                .updateArticle(articleDto);
 
         return "redirect:/articles/" + articleId;
     }
