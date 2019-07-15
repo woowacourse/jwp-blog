@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
@@ -27,29 +28,28 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public String writeArticle(final Article article) {
-        Long newArticleId = articleRepository.generateNewId();
-        article.setArticleId(newArticleId);
-        articleRepository.addArticle(article);
+    public String writeArticle(final ArticleDto articleDto) {
+        Article newArticle = articleDto.toArticle();
+        articleRepository.addArticle(newArticle);
 
-        return "redirect:/articles/" + newArticleId;
+        return "redirect:/articles/" + newArticle.getArticleId();
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(final Article article) {
-        articleRepository.updateArticle(article);
-        return "redirect:/articles/" + article.getArticleId();
+    public String updateArticle(final ArticleDto articleDto) {
+        articleRepository.updateArticle(articleDto.toArticle());
+        return "redirect:/articles/" + articleDto.getArticleId();
     }
 
     @GetMapping("/articles/{articleId}")
     public String findArticleById(@PathVariable long articleId, Model model) {
-        articleRepository.findArticleById(articleId).ifPresent(article -> model.addAttribute("article", article));
+        model.addAttribute("article", articleRepository.findArticleById2(articleId));
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String updateArticle(@PathVariable long articleId, Model model) {
-        articleRepository.findArticleById(articleId).ifPresent(article -> model.addAttribute("article", article));
+        model.addAttribute("article", articleRepository.findArticleById2(articleId));
         return "article-edit";
     }
 
