@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
 @ExtendWith(SpringExtension.class)
@@ -46,15 +45,29 @@ public class ArticleControllerTests {
 
     @Test
     void update_test() {
-        articleRepository.save(new Article("title", "url", "content"));
-        webTestClient.put().uri("/articles/0")
+        webTestClient.post().uri("/articles")
+                .body(BodyInserters.fromFormData("title", "title")
+                        .with("coverUrl", "coverUrl").with("contents", "contents"))
+                .exchange();
+
+        webTestClient.put().uri("/articles/1")
                 .body(BodyInserters.fromFormData("title", "title")
                         .with("coverUrl", "coverUrl").with("contents", "contents"))
                 .exchange()
+                .expectHeader().valueMatches("Location","http://localhost:[0-9]+/")
                 .expectStatus().is3xxRedirection();
     }
-    //delete에 대한 test도 추가하자.
-    //취향 차이지만 repo에 바로 넣지 말고 webtestCLient를 활용해서 추가하는건 어떨까?
 
-    //리다이렉션 테스트는 리다이렉션의 헤더에 값이 내가 원했던 주소의 값이 들어가는걸 테스트 해보는건 어떨까?
+    @Test
+    void delete_test() {
+        webTestClient.post().uri("/articles")
+                .body(BodyInserters.fromFormData("title", "title")
+                        .with("coverUrl", "coverUrl").with("contents", "contents"))
+                .exchange();
+
+        webTestClient.post().uri("/articles")
+                .body(BodyInserters.fromFormData("title", "title")
+                        .with("coverUrl", "coverUrl").with("contents", "contents"))
+                .exchange();
+    }
 }
