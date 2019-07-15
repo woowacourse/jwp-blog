@@ -14,9 +14,8 @@ public class ArticleRepository {
         return articles;
     }
 
-    public long save(Article article) {
+    public void save(Article article) {
         articles.add(article);
-        return article.getId();
     }
 
     public Article findById(long articleId) {
@@ -26,11 +25,9 @@ public class ArticleRepository {
                 .orElseThrow(NotFoundArticleException::new);
     }
 
-    public long update(Article updatedArticle) {
+    public void update(Article updatedArticle) {
         Article article = findById(updatedArticle.getId());
         article.updateArticle(updatedArticle);
-
-        return article.getId();
     }
 
     public void delete(long articleId) {

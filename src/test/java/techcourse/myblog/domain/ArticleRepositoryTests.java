@@ -60,9 +60,9 @@ public class ArticleRepositoryTests {
     void 게시물_수정_테스트() {
         Article updatedArticle = Article.builder()
                 .id(1).title("수정타이틀1").coverUrl("수정유알엘1").contents("수정컨텐츠1").build();
-        long updatedArticleId = articleRepository.update(updatedArticle);
+        articleRepository.update(updatedArticle);
 
-        assertThat(articleRepository.findById(updatedArticleId)).isEqualTo(updatedArticle);
+        assertThat(articleRepository.findById(1)).isEqualTo(updatedArticle);
     }
 
     @Test
