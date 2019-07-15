@@ -16,18 +16,10 @@ class ArticleRepositoryTest {
     }
 
     @Test
-    void 한_개_저장() {
+    void 저장() {
         Article article = new Article("title", "url", "contents");
         articleRepository.save(article);
-        assertThat(articleRepository.findAll().size()).isEqualTo(1);
-    }
-
-    @Test
-    void 두_개_저장() {
-        articleRepository.save(new Article("title", "url", "contents"));
-        articleRepository.save(new Article("title", "url", "contents"));
-
-        assertThat(articleRepository.findAll().size()).isEqualTo(2);
+        assertThat(articleRepository.findById(0).get()).isEqualTo(article);
     }
 
     @Test
