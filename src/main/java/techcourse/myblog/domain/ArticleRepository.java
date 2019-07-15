@@ -48,6 +48,7 @@ public class ArticleRepository {
     }
 
     public void deleteById(final int articleId) {
-        articles.remove(articleId);
+        final Article article = findById(articleId);
+        articles.remove(article);
     }
 }
