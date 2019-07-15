@@ -12,4 +12,16 @@ public class ArticleRepository {
     public List<Article> findAll() {
         return articles;
     }
+
+    public Article getArticleById(final int id) {
+        return articles.get(id);
+    }
+
+    public void addArticle(final Article article) {
+        articles.add(article);
+        for (Article articleData : articles) { // TODO: delete
+            System.err.println(articleData);
+        }
+        System.out.println();
+    }
 }
