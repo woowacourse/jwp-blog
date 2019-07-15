@@ -1,9 +1,9 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
@@ -12,7 +12,6 @@ public class ArticleController {
 
     private ArticleRepository articleRepository;
 
-    @Autowired
     public ArticleController(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
@@ -62,15 +61,19 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String update(@PathVariable String articleId, Article newArticle) {
+    public RedirectView update(@PathVariable String articleId, Article newArticle) {
+        RedirectView redirectView = new RedirectView();
         Article article = articleRepository.findArticleById(Integer.parseInt(articleId));
         article.update(newArticle);
-        return "redirect:/";
+        redirectView.setUrl("/");
+        return redirectView;
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String delete(@PathVariable String articleId) {
+    public RedirectView delete(@PathVariable String articleId) {
+        RedirectView redirectView = new RedirectView();
         articleRepository.removeById(Integer.parseInt(articleId));
-        return "redirect:/";
+        redirectView.setUrl("/");
+        return redirectView;
     }
 }
