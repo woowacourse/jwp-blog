@@ -37,7 +37,7 @@
         </div>
     </header>
 
-    <div class="about-cover card no-border ">
+    <div class="about-cover card no-border">
         <div class="cover-img overlay-dark bg" th:if="${article.coverUrl}" th:style="|background-image: url('${article.coverUrl?: '/images/pages/index/study.jpg'}')|">
             <div class="padding-30">
                 <h1 class="text-center cover-title" th:text="${article.title}">아티클 제목</h1>
