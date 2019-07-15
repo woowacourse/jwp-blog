@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
+import techcourse.myblog.domain.exception.IllegalIdException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,14 @@ public class ArticleRepository {
     }
 
     public Optional<Article> findById(final int id) {
-        return articles.stream().filter(article -> article.hasSameId(id)).findAny();
+        Optional<Article> optional = articles.stream()
+                .filter(article -> article.hasSameId(id)).findAny();
+
+        if (optional.isEmpty()) {
+            throw new IllegalIdException("입력받은 id를 조회할 수 없습니다.");
+        }
+
+        return optional;
     }
 
     public void update(final Article newArticle) {
