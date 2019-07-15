@@ -113,22 +113,6 @@ public class ArticleControllerTests {
         String updatedCoverUrl = "updatedCoverUrl";
         String updatedContents = "updatedContents";
 
-//        webTestClient.put().uri("/articles/" + currentArticleId)
-//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//                .body(BodyInserters
-//                        .fromFormData("title", updatedTitle)
-//                        .with("coverUrl", updatedCoverUrl)
-//                        .with("contents", updatedContents))
-//                .exchange()
-//                .expectStatus().isOk()
-//                .expectBody()
-//                .consumeWith(response -> {
-//                    String body = new String(response.getResponseBody());
-//                    assertThat(body.contains(updatedTitle)).isTrue();
-//                    //assertThat(body.contains(updatedCoverUrl)).isTrue();
-//                    assertThat(body.contains(updatedContents)).isTrue();
-//                });
-
         webTestClient.put().uri("/articles/" + currentArticleId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
