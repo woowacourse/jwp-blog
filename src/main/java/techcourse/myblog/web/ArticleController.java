@@ -35,10 +35,11 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(ArticleDto.Create articleDto) {
+    public String createArticle(ArticleDto.Create articleDto, Model model) {
         Article newArticle = articleDto.toArticle();
-        long articleId = articleRepository.save(newArticle);
-        return "redirect:/articles/" + articleId;
+        articleRepository.save(newArticle);
+        model.addAttribute("article", modelMapper.map(newArticle, ArticleDto.Response.class));
+        return "article";
     }
 
     @GetMapping("/articles/{articleId}")
