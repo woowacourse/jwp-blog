@@ -6,17 +6,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.CategoryService;
 
 @Controller
 public class ArticleController {
     private final ArticleService articleService;
-    private final CategoryService categoryService;
 
     @Autowired
-    public ArticleController(ArticleService articleService, CategoryService categoryService) {
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
-        this.categoryService = categoryService;
     }
 
     @GetMapping("/")
@@ -27,7 +24,6 @@ public class ArticleController {
 
     @GetMapping("/writing")
     public String writeArticleView(Model model) {
-        model.addAttribute("categories", categoryService.findAll());
         return "article-edit";
     }
 

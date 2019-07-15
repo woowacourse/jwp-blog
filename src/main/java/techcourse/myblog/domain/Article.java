@@ -9,7 +9,6 @@ public class Article {
     private String title;
     private String coverUrl;
     private String contents;
-    private String category;
 
     private Article() {
 
@@ -22,7 +21,6 @@ public class Article {
         newArticle.title = articleRequestDto.getTitle();
         newArticle.coverUrl = articleRequestDto.getCoverUrl();
         newArticle.contents = articleRequestDto.getContents();
-        newArticle.category = articleRequestDto.getCategory();
 
         return newArticle;
     }
@@ -43,18 +41,9 @@ public class Article {
         return contents;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
     public void update(ArticleRequestDto articleRequestDto) {
         this.title = articleRequestDto.getTitle();
         this.coverUrl = articleRequestDto.getCoverUrl();
         this.contents = articleRequestDto.getContents();
-        this.category = articleRequestDto.getCategory();
-    }
-
-    public boolean hasCategory(String category) {
-        return this.category.equals(category);
     }
 }

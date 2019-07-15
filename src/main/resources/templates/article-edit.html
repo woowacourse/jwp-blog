@@ -75,7 +75,8 @@
                                class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
                                placeholder="배경 url을 입력해주세요" autocomplete="off">
                         <select name="category">
-                            <option th:each="category: ${categories}" th:value="${category}" th:text="${category}"></option>
+                            <option th:each="category: ${categories}" th:value="${category}"
+                                    th:text="${category}"></option>
                         </select>
                     </div>
                 </div>
@@ -118,7 +119,8 @@
                                class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
                                placeholder="배경 url을 입력해주세요" autocomplete="off">
                         <select name="category">
-                            <option th:each="category: ${categories}" th:value="${category}" th:text="${category}"></option>
+                            <option th:each="category: ${categories}" th:value="${category}"
+                                    th:text="${category}"></option>
                         </select>
                     </div>
                 </div>
@@ -156,7 +158,7 @@
     }
 </script>
 <script th:if="${article != null}" th:inline="javascript">
-    const initValue = [[${article.contents}]]
+    const initValue = [[${article.contents}]];
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',

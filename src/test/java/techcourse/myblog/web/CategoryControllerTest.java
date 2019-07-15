@@ -26,4 +26,11 @@ public class CategoryControllerTest {
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
+
+    @Test
+    void categoryDelete() {
+        webTestClient.delete().uri("/category/4")
+                .exchange()
+                .expectStatus().is3xxRedirection();
+    }
 }
