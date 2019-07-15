@@ -60,7 +60,7 @@ public class ArticleRepositoryTest {
     void insertArticle_insert테스트() {
         Article article = Article.of("t", "u", "c");
         int id = articleRepository.saveArticle(article);
-        article.setId(id);
+        article.changeId(id);
 
         assertThat(articleRepository.findById(id)).isEqualTo(article);
     }
@@ -71,7 +71,7 @@ public class ArticleRepositoryTest {
         int id = articleRepository.saveArticle(previousArticle);
 
         Article newArticle = Article.of("t2", "u2", "c2");
-        newArticle.setId(id);
+        newArticle.changeId(id);
 
         articleRepository.modifyArticle(newArticle);
 

@@ -1,7 +1,10 @@
 package techcourse.myblog.domain;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Objects;
 
+@Component
 public class Article {
     private static final int EMPTY_ID = -1;
 
@@ -10,6 +13,10 @@ public class Article {
     private String coverUrl;
     private String contents;
 
+    private Article(){
+
+    }
+
     private Article(int id, String title, String coverUrl, String contents) {
         this.id = id;
         this.title = title;
@@ -17,42 +24,28 @@ public class Article {
         this.contents = contents;
     }
 
-    public Article(){}
-
     public static Article of(String title, String coverUrl, String contents) {
         return new Article(EMPTY_ID, title, coverUrl, contents);
+    }
+
+    public void changeId(int id) {
+        this.id = id;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getCoverUrl() {
         return coverUrl;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
     public String getContents() {
         return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
     }
 
     @Override
