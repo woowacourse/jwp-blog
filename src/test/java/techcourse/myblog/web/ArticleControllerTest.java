@@ -21,8 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest {
-    private static final int PRE_ARTICLE_ID = 1;
-
     @Autowired
     private WebTestClient webTestClient;
     @Autowired
@@ -59,13 +57,16 @@ public class ArticleControllerTest {
                 .expectStatus()
                 .isFound();
 
-        Long latestId = articleRepository.generateNewId() - PRE_ARTICLE_ID;
 
         Article article = new Article();
         article.setTitle(title);
         article.setContents(contents);
         article.setCoverUrl(coverUrl);
-        article.setArticleId(latestId);
+        articleRepository.findAll()
+                .stream()
+                .mapToLong(Article::getArticleId)
+                .max()
+                .ifPresent(article::setArticleId);
 
         assertThat(articleRepository.findAll().contains(article)).isTrue();
     }
@@ -137,12 +138,12 @@ public class ArticleControllerTest {
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response -> {
-                    webTestClient.delete().uri(response.getResponseHeaders().getLocation())
+                    Long latestId = articleRepository.findAll().get(0).getArticleId();
+                    webTestClient.delete()
+                            .uri(response.getResponseHeaders().getLocation())
                             .exchange()
                             .expectStatus()
                             .isFound();
-
-                    Long latestId = articleRepository.generateNewId() - PRE_ARTICLE_ID;
 
                     assertThat(articleRepository.findArticleById(latestId)).isEqualTo(Optional.empty());
                 });

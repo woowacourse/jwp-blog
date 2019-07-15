@@ -13,15 +13,11 @@ import java.util.stream.Stream;
 @Repository
 public class ArticleRepository {
     private List<Article> articles = new ArrayList<>();
-    private Long nextArticleId = 1L;
 
     public Long addArticle(Article article) {
-        Long latestId = generateNewId();
-
-        article.setArticleId(latestId);
         this.articles.add(article);
 
-        return latestId;
+        return article.getArticleId();
     }
 
     public Optional<Article> findArticleById(final Long articleId) {
@@ -32,10 +28,6 @@ public class ArticleRepository {
 
     public List<Article> findAll() {
         return articles;
-    }
-
-    public Long generateNewId() {
-        return nextArticleId++;
     }
 
     public void deleteArticle(Long articleId) {

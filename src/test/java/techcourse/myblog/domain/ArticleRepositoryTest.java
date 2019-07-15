@@ -12,13 +12,12 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class ArticleRepositoryTest {
     private static final String UPDATED_TITLE = "sloth is the best!";
-    private static final int NEXT_ARTICLE_ID = 1;
-    private static final long NOT_EXIST_ARTICLE_ID = 0l;
+    private static final Long NOT_EXIST_ARTICLE_ID = 0L;
+    private static final Long UPDATED_ARTICLE_ID = 1L;
 
     private ArticleRepository articleRepository;
     private Article article;
 
-    private final Long articleId = 1L;
     private final String title = "슬로헴";
     private final String contents = "live like sloth, ehem!";
     private final String coverUrl = "/image/sloth.jpg";
@@ -26,19 +25,13 @@ public class ArticleRepositoryTest {
     @BeforeEach
     void setUp() {
         articleRepository = new ArticleRepository();
-
-        article = new Article();
-        article.setArticleId(articleId);
-        article.setTitle(title);
-        article.setContents(contents);
-        article.setCoverUrl(coverUrl);
+        article = Article.of(title, contents, coverUrl);
 
         articleRepository.addArticle(article);
     }
 
     @Test
     void 게시글_등록_성공_테스트() {
-
         assertThat(articleRepository.findAll().contains(article)).isTrue();
     }
 
@@ -56,24 +49,13 @@ public class ArticleRepositoryTest {
 
     @Test
     void 전체글_조회_성공_테스트() {
-        Article article2 = new Article();
-        article2.setArticleId(articleRepository.generateNewId());
-        article2.setTitle(title);
-        article2.setContents(contents);
-        article2.setCoverUrl(coverUrl);
+        Article article2 = Article.of(title, contents, coverUrl);
 
         articleRepository.addArticle(article2);
 
         List<Article> expected = Arrays.asList(article, article2);
         List<Article> actual = articleRepository.findAll();
 
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void 새로운_articleId_생성_확인_테스트() {
-        Long expected = articleRepository.generateNewId() + NEXT_ARTICLE_ID;
-        Long actual = articleRepository.generateNewId();
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -87,14 +69,14 @@ public class ArticleRepositoryTest {
     @Test
     void 게시글_수정_성공_테스트() {
         Article updatedArticle = new Article();
-        updatedArticle.setArticleId(articleId);
+        updatedArticle.setArticleId(UPDATED_ARTICLE_ID);
         updatedArticle.setTitle(UPDATED_TITLE);
         updatedArticle.setContents(contents);
         updatedArticle.setCoverUrl(coverUrl);
 
-        articleRepository.updateArticle(articleId, updatedArticle);
+        articleRepository.updateArticle(UPDATED_ARTICLE_ID, updatedArticle);
 
-        articleRepository.findArticleById(articleId)
+        articleRepository.findArticleById(UPDATED_ARTICLE_ID)
                 .ifPresent(a -> assertThat(a.equals(updatedArticle)).isTrue());
     }
 
