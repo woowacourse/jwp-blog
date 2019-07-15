@@ -15,7 +15,7 @@ public class Article {
         this.contents = contents;
     }
 
-    public void changeId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -23,7 +23,7 @@ public class ArticleRepository {
 
     public int saveArticle(Article article) {
         int id = newArticleId.getAndIncrement();
-        article.changeId(id);
+        article.setId(id);
 
         articles.put(id, article);
         return id;
