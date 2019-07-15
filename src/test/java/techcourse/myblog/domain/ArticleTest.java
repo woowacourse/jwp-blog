@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import techcourse.myblog.web.dto.ArticleDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ArticleTest {
     private static final int TEST_ARTICLE_ID = 1;
@@ -31,15 +31,18 @@ class ArticleTest {
     @Test
     @DisplayName("업데이트하는 테스트")
     void updateArticleTest() {
+        // Given
         ArticleDto articleDto = new ArticleDto();
         articleDto.setTitle("update title");
         articleDto.setCoverUrl("update coverUrl");
         articleDto.setContents("update contents");
+
+        // When
         article.updateArticle(articleDto);
 
+        // Then
         assertThat(article.getTitle()).isEqualTo("update title");
         assertThat(article.getCoverUrl()).isEqualTo("update coverUrl");
         assertThat(article.getContents()).isEqualTo("update contents");
-
     }
 }

@@ -44,11 +44,23 @@ public class ArticleControllerTest {
         articleRepository.save(article);
     }
 
-    private WebTestClient.ResponseSpec requestTest(String testUrl) {
+    private WebTestClient.ResponseSpec requestGetTest(String testUrl) {
         return webTestClient.get()
                 .uri(testUrl)
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+
+    private WebTestClient.ResponseSpec requestPostTest(String inputTitle, String inputCoverUrl, String inputContents) {
+        return webTestClient.post()
+                .uri("/write")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", inputTitle)
+                        .with("coverUrl", inputCoverUrl)
+                        .with("contents", inputContents))
+                .exchange();
     }
 
     @Test
@@ -60,41 +72,30 @@ public class ArticleControllerTest {
         String inputCoverUrl = "test coverUrl";
         String inputContents = "test contents";
 
-        // When, Then
-        webTestClient.post()
-                .uri("/write")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", inputTitle)
-                        .with("coverUrl", inputCoverUrl)
-                        .with("contents", inputContents))
-                .exchange()
-                .expectStatus().isFound();
+        // When
+        WebTestClient.ResponseSpec responseSpec = requestPostTest(inputTitle, inputCoverUrl, inputContents);
 
-        assertThat(articleRepository.find(expectedIdGeneratedByServer)
-                .orElseThrow(CouldNotFindArticleIdException::new)
-                .getTitle())
-                .isEqualTo(inputTitle);
-        assertThat(articleRepository.find(expectedIdGeneratedByServer)
-                .orElseThrow(CouldNotFindArticleIdException::new)
-                .getCoverUrl())
-                .isEqualTo(inputCoverUrl);
-        assertThat(articleRepository.find(expectedIdGeneratedByServer)
-                .orElseThrow(CouldNotFindArticleIdException::new)
-                .getContents())
-                .isEqualTo(inputContents);
+        // Then
+        responseSpec
+                .expectStatus().isFound();
+        Article article = articleRepository.find(expectedIdGeneratedByServer)
+                .orElseThrow(CouldNotFindArticleIdException::new);
+
+        assertThat(article.getTitle()).isEqualTo(inputTitle);
+        assertThat(article.getCoverUrl()).isEqualTo(inputCoverUrl);
+        assertThat(article.getContents()).isEqualTo(inputContents);
     }
 
     @Test
     @DisplayName("새로운 Article 생성시 article-edit 페이지를 되돌려준다.")
     void articleCreationPageTest() {
-        requestTest("/articles/new");
+        requestGetTest("/articles/new");
     }
 
     @Test
     @DisplayName("게시글에서 수정 버튼을 누르는 경우 id에 해당하는 edit 페이지를 되돌려준다.")
     void articleEditPageTest() {
-        requestTest("/articles/" + TEST_ARTICLE_ID + "/edit")
+        requestGetTest("/articles/" + TEST_ARTICLE_ID + "/edit")
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
