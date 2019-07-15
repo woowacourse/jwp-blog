@@ -1,4 +1,4 @@
-package techcourse.myblog;
+package techcourse.myblog.web;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,19 +18,20 @@ public class HelloWorldControllerTests {
 
     @Test
     void passParamWithGet() {
-        String blogName = "helloWrold";
+        String blogName = "helloWorld";
         webTestClient.get().uri("/helloworld?blogName=" + blogName)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response ->
-                        Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
-
+                        Assertions
+                                .assertThat(new String(response.getResponseBody()))
+                                .isEqualTo(blogName));
     }
 
     @Test
     void passParamWithPost() {
-        String blogName = "helloWrold";
+        String blogName = "helloWorld";
 
         webTestClient.post()
                 .uri("/helloworld")
@@ -39,7 +40,8 @@ public class HelloWorldControllerTests {
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response ->
-                        Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
-
+                        Assertions
+                                .assertThat(new String(response.getResponseBody()))
+                                .isEqualTo(blogName));
     }
 }

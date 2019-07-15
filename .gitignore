@@ -20,6 +20,7 @@ build/
 *.iml
 *.ipr
 out/
+bin/
 
 ### NetBeans ###
 /nbproject/private/
@@ -28,5 +29,39 @@ out/
 /nbdist/
 /.nb-gradle/
 
+# Package Files #
+*.jar
+
 ### VS Code ###
 .vscode/
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows shortcuts
+*.lnk
+
+# Folder config file
+[Dd]esktop.ini
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# Log file
+*.log
