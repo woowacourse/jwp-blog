@@ -19,7 +19,7 @@ public class ArticleController {
     }
 
     @GetMapping("/new")
-    public String articleForm() {
+    public String createForm() {
         return "article-edit";
     }
 
@@ -32,14 +32,14 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable int id, Model model) {
+    public String updateForm(@PathVariable int id, Model model) {
         Article article = articleRepository.findById(id).get();
         model.addAttribute("article", article);
         return "article-edit";
     }
 
     @PostMapping
-    public ModelAndView write(Article article) {
+    public ModelAndView create(Article article) {
         articleRepository.save(article);
         RedirectView redirectView = new RedirectView(ARTICLE_URL + "/" + article.getId());
 
@@ -50,7 +50,7 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public ModelAndView edit(Article article) {
+    public ModelAndView update(Article article) {
         articleRepository.update(article);
 
         RedirectView redirectView = new RedirectView(ARTICLE_URL + "/" + article.getId());
