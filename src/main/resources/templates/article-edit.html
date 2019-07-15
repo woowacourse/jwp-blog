@@ -4,7 +4,7 @@
     <th:block th:include="head"></th:block>
 </head>
 <body>
-<div th:if="${article} != null" th:object="${article}">
+<div></div>
     <div class="header navbar bg-transparent no-border">
         <div class="header-container">
             <ul class="nav-left mrg-left-0">
@@ -49,9 +49,11 @@
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input th:if="${method} == put" type="hidden" name="_method" value="put">
-                        <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" autocomplete="off" th:value="*{title}">
-                        <input type="text" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"  placeholder="배경 url을 입력해주세요" autocomplete="off" th:value="*{coverUrl}">
+                        <input th:if="${article} != null" type="hidden" name="_method" value="put">
+                        <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" autocomplete="off" th:if="${article} != null" th:value="${article.title}">
+                        <input type="text" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"  placeholder="배경 url을 입력해주세요" autocomplete="off" th:if="${article} != null" th:value="${article.coverUrl}">
+                        <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" autocomplete="off" th:unless="${article} != null">
+                        <input type="text" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"  placeholder="배경 url을 입력해주세요" autocomplete="off" th:unless="${article} != null">
                     </div>
                 </div>
             </div>
@@ -62,7 +64,8 @@
                 <div class="col-lg-1 col-md-1"></div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input id="article-contents" name="contents" type="hidden">
-                    <div id="editSection" th:text="*{contents}"></div>
+                    <div id="editSection" th:if="${article} != null" th:text="${article.contents}"></div>
+                    <div id="editSection" th:unless="${article} != null"></div>
                 </div>
                 <div class="col-lg-1 col-md-1">
                     <div class="btn-group btn-group-vertical">

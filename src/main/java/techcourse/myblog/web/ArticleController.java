@@ -21,9 +21,7 @@ public class ArticleController {
 
     @GetMapping("/writing")
     public String writeArticle(final Model model) {
-        model.addAttribute("article", new Article());
         model.addAttribute("url", "/articles");
-        model.addAttribute("method", "post");
         return "article-edit";
     }
 
@@ -44,7 +42,6 @@ public class ArticleController {
     public String editArticle(@PathVariable final int articleId, final Model model) {
         model.addAttribute("article", articleRepository.find(articleId));
         model.addAttribute("url", "../");
-        model.addAttribute("method", "put");
         return "article-edit";
     }
 
