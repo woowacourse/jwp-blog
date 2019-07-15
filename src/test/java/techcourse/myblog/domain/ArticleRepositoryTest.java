@@ -19,37 +19,40 @@ class ArticleRepositoryTest {
     @Autowired
     private ArticleRepository articleRepository;
 
-    Article testArticle = new Article();
+    Article testArticle;
 
     @BeforeEach
     void setUp() {
-        testArticle.setTitle(title);
-        testArticle.setCoverUrl(coverUrl);
-        testArticle.setContents(contents);
+        testArticle = new Article(title, coverUrl, contents);
     }
 
     @Test
     void write() {
-        articleRepository.write(testArticle);
-        assertThat(
-                articleRepository.findAll().isEmpty()
-        ).isFalse();
+        Article persistentArticle = articleRepository.write(testArticle);
+        assertThat(persistentArticle).isEqualTo(testArticle);
+        Article retrievedArticle = articleRepository.find(persistentArticle.getNumber());
+        assertThat(retrievedArticle).isEqualTo(testArticle);
+        assertThat(articleRepository.findAll().isEmpty()).isFalse();
     }
 
     @Test
     void find() {
-        articleRepository.write(testArticle);
-        assertThat(
-                articleRepository.find(2).map(x -> x == testArticle).orElse(false)
-        ).isTrue();
+        Article persistentArticle = articleRepository.write(testArticle);
+        assertThat(articleRepository.find(persistentArticle.getNumber())).isEqualTo(testArticle);
     }
 
     @Test
     void edit() {
-        articleRepository.write(testArticle);
-        articleRepository.edit(new Article(), 1);
+        String newTitle = "새 제목";
+        String newCoverUrl = "새 링크";
+        String newContents = "새 내용";
+        Article persistentArticle = articleRepository.write(testArticle);
+        articleRepository.edit(new Article(newTitle, newCoverUrl, newContents), persistentArticle.getNumber());
+        Article editedArticle = articleRepository.find(persistentArticle.getNumber());
         assertThat(
-                articleRepository.find(1).map(x -> x.getCoverUrl() == "").orElse(false)
-        ).isTrue();
+            editedArticle.getTitle() == newTitle
+                && editedArticle.getCoverUrl() == newCoverUrl
+                && editedArticle.getContents() == newContents
+        );
     }
 }
