@@ -4,7 +4,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class ArticleRepository {
@@ -17,41 +16,34 @@ public class ArticleRepository {
         this.articles.add(article);
     }
 
-    public Optional<Article> findArticleById(final long articleId) {
-        return articles.stream()
-                .filter(article -> article.matchId(articleId))
-                .findAny();
+    public Article findArticleById2(final long articleId) {
+        Article target = null;
+
+        for (Article article : articles) {
+            target = article.matchId(articleId) ? article : target;
+        }
+
+        return target;
     }
 
     public List<Article> findAll() {
         return articles;
     }
 
-    public Long generateNewId() {
-        long maxId = 0L;
-
-        for (Article article : articles) {
-            maxId = Math.max(article.getArticleId(), maxId);
-        }
-
-        return maxId + NEXT_ID;
-    }
-
     public void deleteArticle(Long articleId) {
-        findArticleById(articleId)
-                .ifPresent(article -> articles.remove(findArticleIndexByArticle(article)));
+        articles.remove(findArticleIndexByArticle(findArticleById2(articleId)));
     }
 
     public void updateArticle(Article updatedArticle) {
-        int targetArticleIndex = findArticleIndexByArticle(updatedArticle);
-        articles.set(targetArticleIndex, updatedArticle);
+        Article original = findArticleById2(updatedArticle.getArticleId());
+        original.update(updatedArticle);
     }
 
     private int findArticleIndexByArticle(Article article) {
         int targetArticleIndex = DEFAULT_ARTICLE_INDEX;
 
         for (int i = 0; i < articles.size(); i++) {
-            targetArticleIndex = articles.get(i).getArticleId().equals(article.getArticleId()) ? i : targetArticleIndex;
+            targetArticleIndex = articles.get(i).getArticleId() == article.getArticleId() ? i : targetArticleIndex;
         }
 
         return targetArticleIndex;
