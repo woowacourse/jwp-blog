@@ -124,4 +124,18 @@ public class ArticleControllerTests {
                 });
     }
 
+    @Test
+    void edit_data_not_found() {
+        final String editValue = "edit";
+        final int editId = 0;
+        webTestClient.put()
+                .uri(mappingUrl + "/" + 100)
+                .body(BodyInserters
+                        .fromFormData("title", editValue)
+                        .with("coverUrl", editValue)
+                        .with("contents", editValue))
+                .exchange()
+                .expectStatus().is5xxServerError();
+    }
+
 }
