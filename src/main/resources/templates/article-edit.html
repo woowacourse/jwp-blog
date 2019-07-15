@@ -79,7 +79,7 @@
                 <div class="col-lg-1 col-md-1"></div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input id="article-contents" name="contents" type="hidden">
-                    <input name="id" type="hidden"  value="0">
+                    <input name="id" type="hidden"  value="{id}">
                     <div id="editSection"></div>
                 </div>
                 <div class="col-lg-1 col-md-1">
@@ -99,6 +99,7 @@
 <script type="text/javascript" th:inline="javascript">
     let putTag = "";
     let path = "";
+    let id = "0";
     let title = "";
     let coverUrl = "";
     let contents = "";
@@ -107,7 +108,8 @@
 
     /* <![CDATA[ */
     [# th:if="${method} == 'put'"]
-        path = /*[[${article.id}]]*/;
+        id = /*[[${article.id}]]*/;
+        path = "/" + id;
         putTag = "<input type=\"hidden\" name=\"_method\" value=\"put\"/>";
         title = /*[[${article.title}]]*/;
         coverUrl = /*[[${article.coverUrl}]]*/;
@@ -118,6 +120,7 @@
     let inputTemplate = document.querySelector("#input-template").innerText;
     document.querySelector("#input-section").innerHTML += inputTemplate
         .replace("{path}", path)
+        .replace("{id}", id)
         .replace("{putTag}", putTag)
         .replace("{title}", title)
         .replace("{coverUrl}", coverUrl);
