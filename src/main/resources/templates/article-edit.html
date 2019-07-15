@@ -64,7 +64,7 @@
                         <button id="save-btn" type="submit" class="btn btn-default">
                             <i class="ti-save"></i>
                         </button>
-                        <a href="/" class="btn btn-default" th:if="${article}" th:onclick="sendDelete([[@{/articles/{id}(id = ${article.id})}]])">
+                        <a href="/" class="btn btn-default" th:if="${article}" th:onclick="sendDelete()">
                             <i class="ti-close"></i>
                         </a>
                     </div>
@@ -92,8 +92,9 @@
         initialValue: contents
     });
 
-    function sendDelete(url) {
-        fetch(url, { method: "DELETE" });
+    function sendDelete() {
+        document.querySelector("input[name='_method']").value = "DELETE";
+        document.querySelector("form[name='article']").submit();
     };
 </script>
 </body>
