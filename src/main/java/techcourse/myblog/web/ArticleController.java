@@ -56,10 +56,12 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable long articleId, ArticleDto.Update articleDto) {
+    public String updateArticle(@PathVariable long articleId, ArticleDto.Update articleDto, Model model) {
         Article updatedArticle = articleDto.toArticle(articleId);
         articleRepository.update(updatedArticle);
-        return "redirect:/articles/" + articleId;
+        //return "redirect:/articles/" + articleId;
+        model.addAttribute("article", modelMapper.map(updatedArticle, ArticleDto.Response.class));
+        return "article";
     }
 
     @DeleteMapping("/articles/{articleId}")

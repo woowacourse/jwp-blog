@@ -92,9 +92,25 @@ public class ArticleControllerTests {
 
     @Test
     void 게시물_수정_요청_테스트() {
+        String updatedTitle = "updatedTitle";
+        String updatedCoverUrl = "updatedCoverUrl";
+        String updatedContents = "updatedContents";
+
         webTestClient.put().uri("/articles/1")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", updatedTitle)
+                        .with("coverUrl", updatedCoverUrl)
+                        .with("contents", updatedContents))
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(updatedTitle)).isTrue();
+                    //assertThat(body.contains(updatedCoverUrl)).isTrue();
+                    assertThat(body.contains(updatedContents)).isTrue();
+                });
     }
 
     @Test
