@@ -10,12 +10,14 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public Article(int id, String title, String coverUrl, String contents) {
+    private Article(int id, String title, String coverUrl, String contents) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
+
+    public Article(){}
 
     public static Article of(String title, String coverUrl, String contents) {
         return new Article(EMPTY_ID, title, coverUrl, contents);

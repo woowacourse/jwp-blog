@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +16,11 @@ public class ArticleController {
     private static final int MIN_ARTICLE_ID = 0;
     private static final String ERROR_PAGE = "/error/error-page";
 
-    @Autowired
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
+
+    public ArticleController(final ArticleRepository articleRepository){
+        this.articleRepository = articleRepository;
+    }
 
     @PostMapping("/articles")
     public String createArticles(Article article, Model model) {
