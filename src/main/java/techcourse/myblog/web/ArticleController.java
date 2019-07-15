@@ -24,14 +24,14 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String createArticles(Article article, Model model) {
-        int id = articleRepository.saveArticle(article);
+        Long id = articleRepository.saveArticle(article);
 
         model.addAttribute("article", article);
         return "redirect:/articles/" + id;
     }
 
     @GetMapping("/articles/{articleId}")
-    public String readArticlePageByArticleId(@PathVariable int articleId, Model model) {
+    public String readArticlePageByArticleId(@PathVariable Long articleId, Model model) {
         try {
             checkArticleId(articleId);
         } catch (BadRequestException e) {
@@ -48,7 +48,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String readArticleEditPage(@PathVariable int articleId, Model model) {
+    public String readArticleEditPage(@PathVariable Long articleId, Model model) {
         try {
             checkArticleId(articleId);
         } catch (BadRequestException e) {
@@ -65,7 +65,7 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable int articleId, Article article, Model model) {
+    public String updateArticle(@PathVariable Long articleId, Article article, Model model) {
         try {
             checkArticleId(articleId);
         } catch (BadRequestException e) {
@@ -81,7 +81,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId, Model model) {
+    public String deleteArticle(@PathVariable Long articleId, Model model) {
         try {
             checkArticleId(articleId);
         } catch (BadRequestException e) {
@@ -95,13 +95,13 @@ public class ArticleController {
         }
     }
 
-    private void checkArticleId(int articleId) {
+    private void checkArticleId(Long articleId) {
         if (isLowerThanMinArticleId(articleId)) {
             throw new BadRequestException();
         }
     }
 
-    private boolean isLowerThanMinArticleId(int articleId) {
+    private boolean isLowerThanMinArticleId(Long articleId) {
         return articleId < MIN_ARTICLE_ID;
     }
 

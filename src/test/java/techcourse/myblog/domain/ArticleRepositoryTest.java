@@ -22,9 +22,9 @@ public class ArticleRepositoryTest {
     @Test
     public void findAll_모든_article을_잘_가져오는지() {
         List<Article> articles = Arrays.asList(
-                new Article(1, "t1", "u1", "c1")
-                , new Article(1, "t2", "u2", "c2")
-                , new Article(1, "t3", "u3", "c3")
+                new Article(1L, "t1L", "u1L", "c1L")
+                , new Article(1L, "t2", "u2", "c2")
+                , new Article(1L, "t3", "u3", "c3")
         );
         articles.forEach(article -> articleRepository.saveArticle(article));
 
@@ -34,24 +34,24 @@ public class ArticleRepositoryTest {
     @Test
     public void findById_id에_해당하는_article을_잘_가져오는지() {
         List<Article> articles = Arrays.asList(
-                new Article(1, "t1", "u1", "c1")
-                , new Article(1, "t2", "u2", "c2")
+                new Article(1L, "t1L", "u1L", "c1L")
+                , new Article(1L, "t2", "u2", "c2")
         );
         articles.forEach(article -> articleRepository.saveArticle(article));
         int idx = 1;
         Article article = articles.get(idx);
-        int id = article.getId();
+        Long id = article.getId();
 
         assertThat(articleRepository.findById(id)).isEqualTo(article);
     }
 
     @Test
     public void findById_존재하지않는_id의_article을_가져올경우() {
-        int notExistId = 5;
+        Long notExistId = 5L;
 
         List<Article> articles = Arrays.asList(
-                new Article(1, "t1", "u1", "c1")
-                , new Article(1, "t2", "u2", "c2")
+                new Article(1L, "t1L", "u1L", "c1L")
+                , new Article(1L, "t2", "u2", "c2")
         );
         articles.forEach(article -> articleRepository.saveArticle(article));
 
@@ -60,8 +60,8 @@ public class ArticleRepositoryTest {
 
     @Test
     void insertArticle_insert테스트() {
-        Article article = new Article(1, "t", "u", "c");
-        int id = articleRepository.saveArticle(article);
+        Article article = new Article(1L, "t", "u", "c");
+        Long id = articleRepository.saveArticle(article);
         article.setId(id);
 
         assertThat(articleRepository.findById(id)).isEqualTo(article);
@@ -69,8 +69,8 @@ public class ArticleRepositoryTest {
 
     @Test
     void deleteArticle_delete테스트() {
-        Article article = new Article(1, "t", "u", "c");
-        int id = articleRepository.saveArticle(article);
+        Article article = new Article(1L, "t", "u", "c");
+        Long id = articleRepository.saveArticle(article);
 
         articleRepository.removeArticle(id);
         assertThrows(NotExistEntityException.class, () -> articleRepository.findById(id));

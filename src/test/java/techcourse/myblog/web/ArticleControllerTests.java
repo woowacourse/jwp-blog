@@ -50,8 +50,8 @@ public class ArticleControllerTests {
         String coverUrl = "blogCoverUrl";
         String contents = "blogContents";
 
-        Article article = new Article(1, title, coverUrl, contents);
-        int articleId = articleRepository.saveArticle(article);
+        Article article = new Article(1L, title, coverUrl, contents);
+        Long articleId = articleRepository.saveArticle(article);
 
 
         webTestClient.get()
@@ -73,8 +73,8 @@ public class ArticleControllerTests {
         String coverUrl = "blogCoverUrl";
         String contents = "blogContents";
 
-        Article article = new Article(1, title, coverUrl, contents);
-        int articleId = articleRepository.saveArticle(article);
+        Article article = new Article(1L, title, coverUrl, contents);
+        Long articleId = articleRepository.saveArticle(article);
 
         webTestClient.get()
                 .uri("/articles/" + articleId + "/edit")
@@ -95,14 +95,14 @@ public class ArticleControllerTests {
         String coverUrl = "blogCoverUrl";
         String contents = "blogContents";
 
-        Article article = new Article(1, title, coverUrl, contents);
-        int articleId = articleRepository.saveArticle(article);
+        Article article = new Article(1L, title, coverUrl, contents);
+        Long articleId = articleRepository.saveArticle(article);
 
         webTestClient.put()
                 .uri("/articles/" + articleId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("id", Integer.toString(article.getId()))
+                        .fromFormData("id", Long.toString(article.getId()))
                         .with("title", article.getTitle())
                         .with("coverUrl", article.getCoverUrl())
                         .with("contents", article.getContents()))
@@ -119,8 +119,8 @@ public class ArticleControllerTests {
 
     @Test
     void delete_article() {
-        Article article = new Article(1, "title", "url", "contents");
-        int articleId = articleRepository.saveArticle(article);
+        Article article = new Article(1L, "title", "url", "contents");
+        Long articleId = articleRepository.saveArticle(article);
 
         webTestClient.delete()
                 .uri("/articles/" + articleId)
