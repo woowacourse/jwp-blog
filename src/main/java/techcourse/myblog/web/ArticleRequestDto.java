@@ -11,9 +11,9 @@ public class ArticleRequestDto {
 
     public static ArticleRequestDto of(String title, String coverUrl, String contents) {
         ArticleRequestDto dto = new ArticleRequestDto();
-        dto.setTitle(title);
-        dto.setCoverUrl(coverUrl);
-        dto.setContents(contents);
+        dto.title = title;
+        dto.coverUrl = coverUrl;
+        dto.contents = contents;
         return dto;
     }
 
