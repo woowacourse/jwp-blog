@@ -7,31 +7,40 @@ import org.springframework.web.servlet.ModelAndView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
+import java.util.List;
+
 //TODO 메서드명에 대해서 알아보기 메서드 명에 Article과 같은게 들어가는게 더 나은지
 //아니면 이 상태로 괜찮은지?
 @Controller
 public class ArticleController {
-
-    private final ArticleRepository articleRepository;
-
     @Autowired
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
+    private ArticleRepository articleRepository;
 
+//
+//    public ArticleController(ArticleRepository articleRepository) {
+//        this.articleRepository = articleRepository;
+//    }
+
+    //TODO ModelAndView와 Model로 하고 String을 넘길때는 어떤 차이가 있나?
     @GetMapping("/")
-    public ModelAndView getIndex(String blogName, ModelAndView modelAndView) {
+    public ModelAndView index(String blogName, ModelAndView modelAndView) {
         if (blogName == null) {
             blogName = "누구게?";
         }
+        //아래와 같이 하지말고 findAll()을 한 뒤에 던져주자.
+//        modelAndView.setViewName("index");
+//        modelAndView.addObject("blogName", blogName);
+//        modelAndView.addObject("articleRepository", articleRepository);
+        List<Article> articles = articleRepository.findAll();
+
         modelAndView.setViewName("index");
         modelAndView.addObject("blogName", blogName);
-        modelAndView.addObject("articleRepository", articleRepository);
+        modelAndView.addObject("articles", articles);
         return modelAndView;
     }
 
     @GetMapping("/writing")
-    public String edit() {
+    public String writeForm() {
         return "article-edit";
     }
 
@@ -53,7 +62,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public ModelAndView edit(@PathVariable String articleId, ModelAndView modelAndView) {
+    public ModelAndView writeForm(@PathVariable String articleId, ModelAndView modelAndView) {
         modelAndView.setViewName("article-edit");
         Article article = articleRepository.findArticleById(Integer.parseInt(articleId));
         modelAndView.addObject("article", article);
