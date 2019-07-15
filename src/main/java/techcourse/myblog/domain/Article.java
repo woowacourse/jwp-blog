@@ -5,10 +5,10 @@ import java.util.Objects;
 public class Article {
     private static final int EMPTY_ID = -1;
 
-    private int id;
-    private String title;
-    private String coverUrl;
-    private String contents;
+    private final int id;
+    private final String title;
+    private final String coverUrl;
+    private final String contents;
 
     public Article(int id, String title, String coverUrl, String contents) {
         this.id = id;
@@ -25,32 +25,16 @@ public class Article {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getCoverUrl() {
         return coverUrl;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
     public String getContents() {
         return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
     }
 
     @Override
@@ -77,5 +61,15 @@ public class Article {
                 ", coverUrl='" + coverUrl + '\'' +
                 ", contents='" + contents + '\'' +
                 '}';
+    }
+
+    public Article replaceId(int id) {
+        return new Article(id, title, coverUrl, contents);
+    }
+
+    public boolean isEqualToExceptId(Article article) {
+        return Objects.equals(title, article.title) &&
+                Objects.equals(coverUrl, article.coverUrl) &&
+                Objects.equals(contents, article.contents);
     }
 }

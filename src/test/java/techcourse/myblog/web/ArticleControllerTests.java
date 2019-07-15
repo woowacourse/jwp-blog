@@ -24,7 +24,6 @@ public class ArticleControllerTests {
 
     @Test
     void create_article() {
-        String id = "0";
         String title = "title";
         String coverUrl = "coverUrl";
         String contents = "contents";
@@ -33,8 +32,7 @@ public class ArticleControllerTests {
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("id", id)
-                        .with("title", title)
+                        .fromFormData("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
@@ -102,14 +100,14 @@ public class ArticleControllerTests {
                 .uri("/articles/" + articleId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("id", Integer.toString(article.getId()))
-                        .with("title", article.getTitle())
+                        .fromFormData("title", article.getTitle())
                         .with("coverUrl", article.getCoverUrl())
                         .with("contents", article.getContents()))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
+                    // 또다시 get 을 하지 않고 이런 식으로 테스트를 해도 괜찮을까요?
                     String body = new String(response.getResponseBody());
                     assertThat(body.contains(title)).isTrue();
                     assertThat(body.contains(coverUrl)).isTrue();
