@@ -20,8 +20,8 @@ public class Article implements Comparable<Article> {
         return this.number;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void numbering(ArticleRepository repo) {
+        this.number = repo.nextArticleNumber();
     }
 
     public Article update(Article toUpdate) {

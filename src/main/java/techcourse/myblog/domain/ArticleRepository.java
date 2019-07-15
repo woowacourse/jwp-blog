@@ -16,7 +16,7 @@ public class ArticleRepository {
         if (!article.validateCoverUrl()) {
             article.setCoverUrl(defaultCoverUrl);
         }
-        article.setNumber(++this.nextArticleNumber);
+        article.numbering(this);
         this.articles.add(article);
         return article;
     }
@@ -40,6 +40,10 @@ public class ArticleRepository {
 
     public List<Article> findAll() {
         return this.articles;
+    }
+
+    public int nextArticleNumber() {
+        return ++nextArticleNumber;
     }
 
     public Article edit(final Article edited, final int articleId) {
