@@ -19,6 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+
+    public static final String DEFAULT_TITLE = "스파이더맨 보고싶다";
+    public static final String DEFAULT_URL = "https://pgnqdrjultom1827145.cdn.ntruss.com/img/bc/30/bc30f170793e5342c4ca6cca771da57f922f8a9a25fa09eb2b672962cda1ea92_v1.jpg";
+    public static final String DEFAULT_CONTENTS = "스파이더맨과 미슽테리우스";
     @Autowired
     private WebTestClient webTestClient;
 
@@ -29,9 +33,9 @@ public class ArticleControllerTests {
     void resetArticleRepository() {
         articleRepository.deleteAll();
 
-        String title = "스파이더맨 보고싶다";
-        String coverUrl = "https://pgnqdrjultom1827145.cdn.ntruss.com/img/bc/30/bc30f170793e5342c4ca6cca771da57f922f8a9a25fa09eb2b672962cda1ea92_v1.jpg";
-        String contents = "스파이더맨과 미슽테리우스";
+        String title = DEFAULT_TITLE;
+        String coverUrl = DEFAULT_URL;
+        String contents = DEFAULT_CONTENTS;
 
         Article article = new Article(title, coverUrl, contents);
         articleRepository.save(article);
@@ -40,9 +44,9 @@ public class ArticleControllerTests {
 
     @Test
     void 게시글_생성_내용() {
-        String title = "스파이더맨 보고싶다";
-        String coverUrl = "https://pgnqdrjultom1827145.cdn.ntruss.com/img/bc/30/bc30f170793e5342c4ca6cca771da57f922f8a9a25fa09eb2b672962cda1ea92_v1.jpg";
-        String contents = "스파이더맨과 미슽테리우스";
+        String title = DEFAULT_TITLE;
+        String coverUrl = DEFAULT_URL;
+        String contents = DEFAULT_CONTENTS;
 
         webTestClient.post()
                 .uri("/articles")
@@ -86,16 +90,23 @@ public class ArticleControllerTests {
 
     @Test
     void 게시글_수정_시작() {
-        webTestClient.get().uri("/articles/0/update")
+        webTestClient.get().uri("/articles/0/edit")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void 게시글_수정_완료() {
+        String edittedTitle = "스파이더맨 노잼";
+
         webTestClient.put().uri("/articles/0")
-                .exchange()
-                .expectStatus().isFound();
+                .body(BodyInserters
+                        .fromFormData("title", edittedTitle)
+                        .with("coverUrl", DEFAULT_URL)
+                        .with("contents", DEFAULT_CONTENTS))
+                .exchange();
+
+        assertThat(articleRepository.findById(0).get().getTitle()).isEqualTo(edittedTitle);
 
     }
 

@@ -29,8 +29,8 @@ public class ArticleRepository {
     }
 
     private int getMaxId() {
-        return articles.stream().mapToInt(article -> article.getId()).max().getAsInt();
-
+        return articles.stream()
+                .mapToInt(Article::getId).max().getAsInt();
     }
 
     public Optional<Article> findById(final int id) {
