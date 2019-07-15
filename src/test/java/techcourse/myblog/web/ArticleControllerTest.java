@@ -13,15 +13,12 @@ import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest {
-    private static final int PRE_ARTICLE_ID = 1;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -52,20 +49,13 @@ public class ArticleControllerTest {
                 .uri("/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", title)
+                        .fromFormData("articleId", "1")
+                        .with("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange();
-
-        Long latestId = articleRepository.generateNewId() - PRE_ARTICLE_ID;
-
-        Article article = new Article();
-        article.setTitle(title);
-        article.setContents(contents);
-        article.setCoverUrl(coverUrl);
-        article.setArticleId(latestId);
-
-        assertThat(articleRepository.findAll().contains(article)).isTrue();
+        Article expected = new Article(1L, title, contents, coverUrl);
+        assertThat(articleRepository.findArticleById2(1L)).isEqualTo(expected);
     }
 
     @Test
@@ -128,21 +118,20 @@ public class ArticleControllerTest {
                 .uri("/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", title)
+                        .fromFormData("articleId", "1")
+                        .with("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response -> {
-                    webTestClient.delete().uri(response.getResponseHeaders().getLocation() + "/delete")
+                    webTestClient.delete().uri(response.getResponseHeaders().getLocation())
                             .exchange()
                             .expectStatus()
                             .isFound();
 
-                    Long latestId = articleRepository.generateNewId() - PRE_ARTICLE_ID;
-
-                    assertThat(articleRepository.findArticleById(latestId)).isEqualTo(Optional.empty());
+                    assertThat(articleRepository.findArticleById2(1L)).isNull();
                 });
     }
 
