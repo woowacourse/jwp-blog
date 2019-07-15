@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+
+    String title;
+    String coverUrl;
+    String contents;
+
     @Autowired
     private WebTestClient webTestClient;
+
+    @BeforeEach
+    void setUp() {
+        title = "titleTest";
+        coverUrl = "urlTest";
+        contents = "contentsTest";
+    }
 
     @Test
     void article_form_page_status() {
@@ -26,9 +39,6 @@ public class ArticleControllerTests {
 
     @Test
     void create_Article_redirect() {
-        String title = "titleTest";
-        String coverUrl = "urlTest";
-        String contents = "contentsTest";
         webTestClient.post().uri("/articles")
                 .body(BodyInserters
                         .fromFormData("title", title)
@@ -41,9 +51,6 @@ public class ArticleControllerTests {
 
     @Test
     void article_view_page_status() {
-        String title = "titleTest";
-        String coverUrl = "urlTest";
-        String contents = "contentsTest";
         webTestClient.post()
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -62,9 +69,6 @@ public class ArticleControllerTests {
 
     @Test
     void article_edit_page_status() {
-        String title = "titleTest";
-        String coverUrl = "urlTest";
-        String contents = "contentsTest";
         webTestClient.post()
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -83,9 +87,6 @@ public class ArticleControllerTests {
 
     @Test
     void create_article_en() {
-        String title = "titleTest";
-        String coverUrl = "urlTest";
-        String contents = "contentsTest";
         webTestClient.post()
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

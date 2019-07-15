@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.assertj.core.api.Java6Assertions.assertThatThrownBy;
 
 public class ArticleRepositoryTest {
     ArticleRepository articleRepository;
@@ -25,6 +26,12 @@ public class ArticleRepositoryTest {
     @Test
     public void add_article() {
         articleRepository.create(article);
+        assertThat(articleRepository.findAll().contains(article)).isTrue();
+    }
+
+    @Test
+    public void add_multiple_article() {
+        articleRepository.create(article);
         articleRepository.create(article);
         assertThat(articleRepository.findAll().size()).isEqualTo(2);
     }
@@ -42,4 +49,19 @@ public class ArticleRepositoryTest {
         assertThat(articleRepository.findById(0)).isEqualTo(article);
     }
 
+    @Test
+    public void find_article_by_id_not_found(){
+        articleRepository.create(article);
+        assertThatThrownBy(()->{
+            articleRepository.findById(1);
+        }).isInstanceOf(NotFoundArticleIdException.class);
+    }
+
+    @Test
+    public void delete_article(){
+        articleRepository.create(article);
+        articleRepository.delete(0);
+        assertThat(articleRepository.findAll().contains(article)).isFalse();
+
+    }
 }

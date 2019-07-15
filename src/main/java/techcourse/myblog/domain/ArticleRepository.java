@@ -24,10 +24,10 @@ public class ArticleRepository {
         return articles.stream()
                 .filter(article -> article.isSameId(articleId))
                 .findFirst()
-                .orElseThrow(()->   new NotFoundArticleIdException("해당 아이디의 게시물을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundArticleIdException("해당 아이디의 게시물을 찾을 수 없습니다."));
     }
 
-    public int getLatestIndex(){
+    public int getLatestIndex() {
         return index;
     }
 
@@ -40,7 +40,7 @@ public class ArticleRepository {
         articles.stream()
                 .filter(article -> article.isSameId(articleId))
                 .findFirst()
-                .map(article -> articles.set(articles.indexOf(article),updatedArticle))
-                .orElseThrow(()->new NotFoundArticleIdException("해당 아이디의 게시물을 찾을 수 없습니다."));
+                .map(article -> articles.set(articles.indexOf(article), updatedArticle))
+                .orElseThrow(() -> new NotFoundArticleIdException("해당 아이디의 게시물을 찾을 수 없습니다."));
     }
 }
