@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
@@ -29,9 +29,9 @@ public class ArticleController {
 
     @ResponseBody
     @PostMapping("/articles")
-    public ModelAndView confirmWrite(final Article article) {
+    public RedirectView confirmWrite(final Article article) {
         articleRepository.write(article);
-        return new ModelAndView("redirect:/articles/" + article.getNumber() + "/");
+        return new RedirectView("/articles/" + article.getNumber() + "/");
     }
 
     @GetMapping("/articles/{articleId}/")
@@ -50,15 +50,15 @@ public class ArticleController {
 
     @ResponseBody
     @PutMapping("/articles/{articleId}/")
-    public ModelAndView confirmEdit(@PathVariable final int articleId, final Article article) {
+    public RedirectView confirmEdit(@PathVariable final int articleId, final Article article) {
         articleRepository.edit(article, articleId);
-        return new ModelAndView("redirect:/articles/" + articleId + "/");
+        return new RedirectView("/articles/" + articleId + "/");
     }
 
     @ResponseBody
     @DeleteMapping("/articles/{articleId}/")
-    public ModelAndView deleteArticle(@PathVariable final int articleId) {
+    public RedirectView deleteArticle(@PathVariable final int articleId) {
         articleRepository.delete(articleId);
-        return new ModelAndView("redirect:/");
+        return new RedirectView("/");
     }
 }
