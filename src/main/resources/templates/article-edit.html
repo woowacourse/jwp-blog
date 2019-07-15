@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+
+<th:block layout:fragment="content">
+    <div>
+        <div class="header navbar bg-transparent no-border">
+            <div class="header-container">
+                <ul class="nav-left mrg-left-0">
+                    <li>
+                        <a href="/">
+                            <div class="logo logo-dark d-none"
+                                 style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                            <div class="logo logo-white"
+                                 style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav-right">
+                    <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
+                        <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
+                            <img class="profile-img img-fluid"
+                                 src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
+                            <div class="user-info text-white">
+                                <span class="name pdd-right-5">Brown</span>
+                                <i class="ti-angle-down font-size-10"></i>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="text-dark">
+                                <a href="/mypage.html">
+                                    <i class="ti-user pdd-right-10"></i>
+                                    <span class="text-dark">마이 페이지</span>
+                                </a>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li class="text-dark">
+                                <a href="index.html">
+                                    <i class="ti-power-off pdd-right-10"></i>
+                                    <span class="text-dark">로그아웃</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <form th:object="${article}" th:action="${article == null ? '/articles' : '/articles/' + article.articleId}"
+              name="article" th:method="${article == null ? 'post' : 'put'}" accept-charset="utf-8">
+            <div class="about-cover card no-border">
+                <div class="cover-img A]overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
+                    <div class="height-300px vertical-center pdd-horizon-50">
+                        <div class="width-80">
+                            <input type="text" name="title"
+                                   class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
+                                   th:value="${article == null ? '' : article.title}" placeholder="제목을 입력해주세요"
+                                   autocomplete="off">
+                            <input type="text" name="coverUrl"
+                                   class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
+                                   th:value="${article == null ? '' : article.coverUrl}" placeholder="배경 url을 입력해주세요"
+                                   autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
+                <div class="row">
+                    <div class="col-lg-1 col-md-1"></div>
+                    <div class="col-lg-10 col-md-10 col-sm-10">
+                        <input id="article-contents" name="contents" type="hidden">
+                        <div id="editSection" th:text="${article == null ? '' : article.contents}"></div>
+                    </div>
+                    <div class="col-lg-1 col-md-1">
+                        <div class="btn-group btn-group-vertical">
+                            <button id="save-btn" type="submit" class="btn btn-default">
+                                <i class="ti-save"></i>
+                            </button>
+                            <a href="/index.html" class="btn btn-default">
+                                <i class="ti-close"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+    <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+    <script src="/js/index.js"></script>
+    <script type="text/javascript">
+        const editor = new tui.Editor({
+            el: document.querySelector('#editSection'),
+            initialEditType: 'markdown',
+            previewStyle: 'vertical',
+            events: {
+                change: function () {
+                    document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
+                }
+            },
+            initialValue: document.getElementById('editSection').innerHTML,
+            height: 'calc(100vh - 360px)',
+        });
+    </script>
+</th:block>
+</html>
