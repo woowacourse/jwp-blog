@@ -44,10 +44,9 @@ public class ArticleControllerTest {
         articleRepository.save(article);
     }
 
-    @Test
-    @DisplayName("index 페이지를 되돌려준다.")
-    void indexTest() {
-        webTestClient.get().uri("/")
+    private WebTestClient.ResponseSpec requestTest(String testUrl) {
+        return webTestClient.get()
+                .uri(testUrl)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -89,18 +88,13 @@ public class ArticleControllerTest {
     @Test
     @DisplayName("새로운 Article 생성시 article-edit 페이지를 되돌려준다.")
     void articleCreationPageTest() {
-        webTestClient.get().uri("/articles/new")
-                .exchange()
-                .expectStatus().isOk();
+        requestTest("/articles/new");
     }
 
     @Test
     @DisplayName("게시글에서 수정 버튼을 누르는 경우 id에 해당하는 edit 페이지를 되돌려준다.")
     void articleEditPageTest() {
-        webTestClient.get()
-                .uri("/articles/" + TEST_ARTICLE_ID + "/edit")
-                .exchange()
-                .expectStatus().isOk()
+        requestTest("/articles/" + TEST_ARTICLE_ID + "/edit")
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
