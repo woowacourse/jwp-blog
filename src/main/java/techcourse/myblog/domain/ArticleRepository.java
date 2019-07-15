@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class ArticleRepository {
     private List<Article> articles = new ArrayList<>();
-    private long lastId = 0L;
+    private static final AtomicLong lastId = new AtomicLong();
 
     public List<Article> findAll() {
         List<Article> reverseArticles = new ArrayList<>(articles);
@@ -20,8 +21,9 @@ public class ArticleRepository {
     }
 
     public long saveArticle(ArticleDto articleDto) {
-        articles.add(new Article(++lastId, articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents()));
-        return lastId;
+        long id = lastId.incrementAndGet();
+        articles.add(new Article(id, articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents()));
+        return id;
     }
 
     public Optional<Article> getArticleById(long id) {
