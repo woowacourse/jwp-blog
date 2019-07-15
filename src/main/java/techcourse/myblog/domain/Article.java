@@ -40,6 +40,10 @@ public class Article {
         this.coverUrl = (coverUrl.length() != 0) ? coverUrl : "/images/pages/index/study.jpg";
     }
 
+    boolean hasSameArticleId(Article article) {
+        return this.articleId.equals(article.articleId);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

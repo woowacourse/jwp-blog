@@ -5,6 +5,10 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Repository
 public class ArticleRepository {
@@ -38,23 +42,20 @@ public class ArticleRepository {
 
     public void deleteArticle(Long articleId) {
         findArticleById(articleId)
-                .ifPresent(a -> articles.remove(findArticleIndexByArticle(a)));
+                .ifPresent(a -> findArticleIndexByArticle(a)
+                        .ifPresent(i -> articles.remove(i)));
     }
 
     public void updateArticle(Article updatedArticle) {
-        int targetArticleIndex = findArticleIndexByArticle(updatedArticle);
+        int targetArticleIndex = findArticleIndexByArticle(updatedArticle).getAsInt();
 
         articles.remove(targetArticleIndex);
         articles.add(targetArticleIndex, updatedArticle);
     }
 
-    private int findArticleIndexByArticle(Article article) {
-        int targetArticleIndex = DEFAULT_ARTICLE_INDEX;
-
-        for (int i = 0; i < articles.size(); i++) {
-            targetArticleIndex = articles.get(i).getArticleId().equals(article.getArticleId()) ? i : targetArticleIndex;
-        }
-
-        return targetArticleIndex;
+    private OptionalInt findArticleIndexByArticle(Article article) {
+        return IntStream.range(0, articles.size())
+                .filter(i -> articles.get(i).hasSameArticleId(article))
+                .findFirst();
     }
 }
