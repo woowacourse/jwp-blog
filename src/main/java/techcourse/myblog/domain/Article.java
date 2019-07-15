@@ -5,46 +5,49 @@ import java.util.Objects;
 public class Article {
     private static final String DEFAULT_COVER_URL = "/images/pages/index/study.jpg";
     private static final int NO_COVER_URL = 0;
+    private static long NEXT_ID = 1L;
 
     private long articleId;
     private String title;
     private String contents;
     private String coverUrl;
 
-    public long getArticleId() {
-        return articleId;
+    public Article() {
     }
 
-    public void setArticleId(long articleId) {
-        this.articleId = articleId;
+    public Article(final long articleId, final String title, final String contents, final String coverUrl) {
+        this.articleId = articleId == 0 ? NEXT_ID++ : articleId;
+        this.title = title;
+        this.contents = contents;
+        this.coverUrl = (coverUrl.length() != NO_COVER_URL) ? coverUrl : DEFAULT_COVER_URL;
+    }
+
+    public boolean matchId(long articleId) {
+        return this.articleId == articleId;
+    }
+
+    public void update(Article updatedArticle) {
+        this.articleId = updatedArticle.getArticleId();
+        this.title = updatedArticle.getTitle();
+        this.contents = updatedArticle.getContents();
+        this.coverUrl = updatedArticle.getCoverUrl();
+    }
+
+    public long getArticleId() {
+        return articleId;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getContents() {
         return contents;
     }
 
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
 
     public String getCoverUrl() {
         return coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = (coverUrl.length() != NO_COVER_URL) ? coverUrl : DEFAULT_COVER_URL;
-    }
-
-    public boolean matchId(long articleId) {
-        return this.articleId == articleId;
     }
 
     @Override
