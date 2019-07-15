@@ -45,6 +45,20 @@ public class ArticleControllerTest {
     }
 
     @Test
+    void 새로운_게시글_추가_테스트() {
+        webTestClient.post()
+                .uri("/articles")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange()
+                .expectStatus()
+                .isFound();
+    }
+
+    @Test
     void 작성된_게시글을_리스트에_등록하는지_테스트() {
         webTestClient.post()
                 .uri("/articles")
@@ -56,7 +70,6 @@ public class ArticleControllerTest {
                 .exchange()
                 .expectStatus()
                 .isFound();
-
 
         Article article = new Article();
         article.setTitle(title);
