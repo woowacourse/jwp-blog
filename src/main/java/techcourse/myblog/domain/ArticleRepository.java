@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class ArticleRepository {
-    private int newArticleId = 1;
+    private AtomicInteger newArticleId = new AtomicInteger(1);
 
     private Map<Integer, Article> articles = new TreeMap<>();
 
@@ -19,7 +20,7 @@ public class ArticleRepository {
     }
 
     public int saveArticle(Article article) {
-        int id = newArticleId++;
+        int id = newArticleId.getAndIncrement();
         article.setId(id);
 
         articles.put(id, article);
