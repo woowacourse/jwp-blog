@@ -6,6 +6,9 @@ public class ArticleRequestDto {
     private String contents;
     private String category;
 
+    public ArticleRequestDto() {
+    }
+
     public String getTitle() {
         return title;
     }
