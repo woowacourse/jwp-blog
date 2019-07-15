@@ -47,8 +47,8 @@ public class ArticleRepository {
         articles.remove(articleId);
     }
 
-    private void checkExistArticleId(int articleId){
-        if(!articles.containsKey(articleId)){
+    private void checkExistArticleId(int articleId) {
+        if (!articles.containsKey(articleId)) {
             throw new NotExistEntityException();
         }
     }
