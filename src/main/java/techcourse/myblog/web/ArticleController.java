@@ -5,12 +5,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.validator.CouldNotFindArticleIdException;
 import techcourse.myblog.web.dto.ArticleDto;
 
 @Controller
 public class ArticleController {
-    private static final int INCREMENT_AMOUNT = 1;
-
     private ArticleRepository articleRepository;
 
     public ArticleController(ArticleRepository articleRepository) {
@@ -29,7 +28,9 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}/edit")
     public String articleEditPage(@PathVariable int articleId, Model model) {
-        Article article = articleRepository.find(articleId);
+        Article article = articleRepository
+                .find(articleId)
+                .orElseThrow(CouldNotFindArticleIdException::new);
         String actionRoute = "/articles/" + articleId;
         String formMethod = "put";
 
@@ -50,7 +51,9 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String searchArticle(@PathVariable int articleId, Model model) {
-        Article article = articleRepository.find(articleId);
+        Article article = articleRepository
+                .find(articleId)
+                .orElseThrow(CouldNotFindArticleIdException::new);
 
         model.addAttribute("article", article);
         return "article";

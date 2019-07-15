@@ -45,7 +45,9 @@ class ArticleRepositoryTest {
     @Test
     @DisplayName("게시물 id로 게시물을 조회한다.")
     void findTest() {
-        assertThat(articleRepository.find(TEST_ARTICLE_ID)).isEqualTo(article);
+        assertThat(articleRepository
+                .find(TEST_ARTICLE_ID)
+                .orElseThrow(CouldNotFindArticleIdException::new)).isEqualTo(article);
     }
 
     @Test
@@ -55,7 +57,9 @@ class ArticleRepositoryTest {
 
         articleRepository.updateTitle(TEST_ARTICLE_ID, updatedTitle);
 
-        Article updatedArticle = articleRepository.find(TEST_ARTICLE_ID);
+        Article updatedArticle = articleRepository
+                .find(TEST_ARTICLE_ID)
+                .orElseThrow(CouldNotFindArticleIdException::new);
         assertThat(updatedArticle.getTitle()).isEqualTo(updatedTitle);
     }
 
@@ -66,7 +70,9 @@ class ArticleRepositoryTest {
 
         articleRepository.updateCoverUrl(TEST_ARTICLE_ID, updateCoverUrl);
 
-        Article updatedArticle = articleRepository.find(TEST_ARTICLE_ID);
+        Article updatedArticle = articleRepository
+                .find(TEST_ARTICLE_ID)
+                .orElseThrow(CouldNotFindArticleIdException::new);
         assertThat(updatedArticle.getCoverUrl()).isEqualTo(updateCoverUrl);
     }
 
@@ -77,7 +83,9 @@ class ArticleRepositoryTest {
 
         articleRepository.updateContents(TEST_ARTICLE_ID, updateContents);
 
-        Article updatedArticle = articleRepository.find(TEST_ARTICLE_ID);
+        Article updatedArticle = articleRepository
+                .find(TEST_ARTICLE_ID)
+                .orElseThrow(CouldNotFindArticleIdException::new);
         assertThat(updatedArticle.getContents()).isEqualTo(updateContents);
     }
 
@@ -85,13 +93,19 @@ class ArticleRepositoryTest {
     @DisplayName("게시물 id를 이용해 해당 게시물을 지운다.")
     void deleteByIdTest() {
         articleRepository.delete(TEST_ARTICLE_ID);
-        assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository.find(TEST_ARTICLE_ID));
+        assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository
+                .find(TEST_ARTICLE_ID)
+                .orElseThrow(CouldNotFindArticleIdException::new)
+        );
     }
 
     @Test
     @DisplayName("Repository에 없는 id를 조회하는 경우 예외를 던져준다.")
     void findFailTest() {
-        assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository.find(TEST_ARTICLE_ID_NOT_IN_REPO));
+        assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository
+                .find(TEST_ARTICLE_ID_NOT_IN_REPO)
+                .orElseThrow(CouldNotFindArticleIdException::new)
+        );
     }
 
     @Test

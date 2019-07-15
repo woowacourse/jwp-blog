@@ -72,11 +72,17 @@ public class ArticleControllerTest {
                 .exchange()
                 .expectStatus().isFound();
 
-        assertThat(articleRepository.find(expectedIdGeneratedByServer).getTitle())
+        assertThat(articleRepository.find(expectedIdGeneratedByServer)
+                .orElseThrow(CouldNotFindArticleIdException::new)
+                .getTitle())
                 .isEqualTo(inputTitle);
-        assertThat(articleRepository.find(expectedIdGeneratedByServer).getCoverUrl())
+        assertThat(articleRepository.find(expectedIdGeneratedByServer)
+                .orElseThrow(CouldNotFindArticleIdException::new)
+                .getCoverUrl())
                 .isEqualTo(inputCoverUrl);
-        assertThat(articleRepository.find(expectedIdGeneratedByServer).getContents())
+        assertThat(articleRepository.find(expectedIdGeneratedByServer)
+                .orElseThrow(CouldNotFindArticleIdException::new)
+                .getContents())
                 .isEqualTo(inputContents);
     }
 
@@ -123,7 +129,9 @@ public class ArticleControllerTest {
                 .exchange()
                 .expectStatus().isFound();
 
-        assertThatThrownBy(() -> articleRepository.find(DELETE_TEST_ARTICLE_ID))
+        assertThatThrownBy(() -> articleRepository
+                .find(DELETE_TEST_ARTICLE_ID)
+                .orElseThrow(CouldNotFindArticleIdException::new))
                 .isInstanceOf(CouldNotFindArticleIdException.class);
     }
 
