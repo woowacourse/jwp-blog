@@ -12,8 +12,13 @@ public class ArticleRepository {
     private static final long INITIAL_ID = 0;
     private static final long ADD_COUNT = 1;
 
-    private List<Article> articles = new ArrayList<>();
-    private long latestId = 0;
+    private List<Article> articles;
+    private long latestId;
+
+    public ArticleRepository() {
+        articles = new ArrayList<>();
+        latestId = INITIAL_ID;
+    }
 
     public long add(final ArticleDto articleDto) {
         Article article = articleDto.toArticle(latestId());
