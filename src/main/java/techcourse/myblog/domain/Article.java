@@ -8,9 +8,6 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public Article() {
-    }
-
     public Article(long id, String title, String coverUrl, String contents) {
         this.id = id;
         this.title = title;

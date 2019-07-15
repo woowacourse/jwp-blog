@@ -15,14 +15,11 @@ public class ArticleRepositoryTest {
     private static final String COVER_URL = "http://article.com";
     private static final String CONTENTS = "This is Test";
 
-    private ArticleRepository articleRepository;
-
     static {
-        SAMPLE_ARTICLE_DTO = new ArticleDto();
-        SAMPLE_ARTICLE_DTO.setTitle(TITLE);
-        SAMPLE_ARTICLE_DTO.setCoverUrl(COVER_URL);
-        SAMPLE_ARTICLE_DTO.setContents(CONTENTS);
+        SAMPLE_ARTICLE_DTO = new ArticleDto(TITLE, COVER_URL, CONTENTS);
     }
+
+    private ArticleRepository articleRepository;
 
     @BeforeEach
     public void setUp() {

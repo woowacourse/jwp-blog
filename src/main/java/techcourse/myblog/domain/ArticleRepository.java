@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -26,25 +27,25 @@ public class ArticleRepository {
     }
 
     public ArticleDto findById(final long id) {
-        Article article = findArticleById(id);
+        Article article = findArticleById(id).orElseThrow(IllegalArgumentException::new);
         return article.toDto();
     }
 
     public long updateById(final ArticleDto articleDto, final long id) {
-        Article article = findArticleById(id);
+        Article article = findArticleById(id).orElseThrow(IllegalArgumentException::new);
         article.update(articleDto.toArticle(id));
         return id;
     }
 
     public boolean deleteById(final long id) {
-        Article article = findArticleById(id);
+        Article article = findArticleById(id).orElseThrow(IllegalArgumentException::new);
         return articles.remove(article);
     }
 
-    private Article findArticleById(final long id) {
+    private Optional<Article> findArticleById(final long id) {
         return articles.stream()
                 .filter(article -> article.isSameId(id))
-                .findFirst().orElseThrow(IllegalArgumentException::new);
+                .findFirst();
     }
 
     public List<ArticleDto> findAll() {
