@@ -17,6 +17,10 @@ public class Article {
         this.contents = contents;
     }
 
+    public static void initializeNextId() {
+        NEXT_ID.set(0);
+    }
+
     public boolean matchId(long id) {
         return this.id == id;
     }
