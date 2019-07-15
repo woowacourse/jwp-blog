@@ -3,18 +3,17 @@ package techcourse.myblog.domain;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Repository
 public class ArticleRepository {
+    private static final long ADD_COUNT = 1;
+
     private List<Article> articles = new ArrayList<>();
     private long latestId = 0;
-
-    public List<Article> findAll() {
-        return articles.stream()
-                .collect(Collectors.toList());
-    }
 
     public long add(final Article article) {
         article.setId(latestId());
@@ -22,27 +21,29 @@ public class ArticleRepository {
         return latestId;
     }
 
-    private long latestId() {
-        latestId = latestId + 1;
+    private synchronized long latestId() {
+        latestId = latestId + ADD_COUNT;
         return latestId;
     }
 
-    public Article findById(final long latestId) {
+    public List<Article> findAll() {
+        return Collections.unmodifiableList(articles);
+    }
+
+    public Article findById(final long articleId) {
         return articles.stream()
-                .filter(article -> article.getId() == latestId)
+                .filter(article -> article.isSameId(articleId))
                 .findFirst().orElseThrow(IllegalArgumentException::new);
     }
 
-    public long updateById(Article articleParam, long articleId) {
+    public long updateById(final Article articleParam, final long articleId) {
         Article article = findById(articleId);
-        article.setTitle(articleParam.getTitle());
-        article.setCoverUrl(articleParam.getCoverUrl());
-        article.setContents(articleParam.getContents());
+        article.setArticle(articleParam);
         return articleId;
     }
 
-    public boolean deleteById(final long articleIdParam) {
-        Article article = findById(articleIdParam);
+    public boolean deleteById(final long articleId) {
+        Article article = findById(articleId);
         return articles.remove(article);
     }
 

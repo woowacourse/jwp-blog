@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import java.util.Objects;
+
 public class Article {
     private long id;
     private String title;
@@ -7,6 +9,23 @@ public class Article {
     private String contents;
 
     public Article() {
+    }
+
+    public Article(long id, String title, String coverUrl, String contents) {
+        this.id = id;
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+    }
+
+    public void setArticle(final Article article) {
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
+    }
+
+    public boolean isSameId(final long id) {
+        return (this.id == id);
     }
 
     public long getId() {
@@ -49,5 +68,21 @@ public class Article {
                 ", coverUrl='" + coverUrl + '\'' +
                 ", contents='" + contents + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Article)) return false;
+        Article article = (Article) o;
+        return id == article.id &&
+                Objects.equals(title, article.title) &&
+                Objects.equals(coverUrl, article.coverUrl) &&
+                Objects.equals(contents, article.contents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, coverUrl, contents);
     }
 }

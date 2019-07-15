@@ -13,8 +13,12 @@ import java.util.List;
 @Controller
 public class ArticleController {
 
+    private final ArticleRepository articleRepository;
+
     @Autowired
-    private ArticleRepository articleRepository;
+    public ArticleController(final ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @GetMapping("/")
     public String index(Model model) {
@@ -43,6 +47,7 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public RedirectView updateArticle(@PathVariable long articleId, Article articleParam) {
+        System.out.println("인자 테스트: " + articleParam);
         long updateId = articleRepository.updateById(articleParam, articleId);
         return new RedirectView("/articles/" + updateId);
     }

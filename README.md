@@ -11,3 +11,19 @@
     * 게시글 페이지 이동 (article.html)
 * 게시글 삭제 - DELETE /articles/{articleId} 
     * 삭제 후 게시글 조회 페이지로 이동
+    
+# feedback TODO
+
+1. Test
+    - ~~@DisplayName~~
+    - Article Test 작성
+    - ArticleRepository 테스트 작성
+    - ~~Before 삭제~~ 
+    
+2. Getter -> Message 처리
+    - setter 변경
+    - ~~article.getId -> 메시지~~
+    - ~~Constructor Injection~~
+    
+3. 동기화 사용
+    - latestId

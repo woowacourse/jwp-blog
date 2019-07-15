@@ -2,6 +2,7 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,17 @@ public class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("새로운글을_쓸때_테스트")
+    public void showWritingPage() {
+        webTestClient.get()
+                .uri(WRITING_URL)
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
+
+    @Test
+    @DisplayName("Article을_추가할때_redirect하는지_테스트")
     public void addArticleTest() {
         webTestClient.post()
                 .uri(ARTICLE_URL)
@@ -67,6 +79,7 @@ public class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("Article의_목록을_조회하는지_테스트")
     public void indexTest() {
         final int count = 3;
         addArticleTest();
@@ -85,6 +98,7 @@ public class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("ArticleId에_맞는_Article을_조회할때_테스트")
     public void showArticleById() {
         addArticleTest();
 
@@ -96,6 +110,7 @@ public class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("ArticleId에_맞는_Article을_변경하는지_테스트")
     public void updateArticleById() {
         addArticleTest();
 
@@ -113,15 +128,7 @@ public class ArticleControllerTests {
     }
 
     @Test
-    public void showWritingPage() {
-        webTestClient.get()
-                .uri(WRITING_URL)
-                .exchange()
-                .expectStatus()
-                .isOk();
-    }
-
-    @Test
+    @DisplayName("Article을_삭제할때_redirect하는지_테스트")
     public void deleteArticle() {
         addArticleTest();
 
@@ -130,10 +137,5 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus()
                 .isFound();
-    }
-
-    @AfterEach
-    public void tearDown() {
-        articleRepository.deleteAll();
     }
 }
