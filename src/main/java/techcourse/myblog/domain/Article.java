@@ -14,16 +14,16 @@ public class Article {
         this.contents = contents;
     }
 
+    public boolean checkId(int id) {
+        return this.id == id;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
 
     public int getId() {
         return id;
-    }
-
-    public boolean checkId(int id) {
-        return this.id == id;
     }
 
     public String getTitle() {
