@@ -96,6 +96,7 @@ public class ArticleControllerTests {
         webTestClient.put().uri("/articles/0")
                 .exchange()
                 .expectStatus().isFound();
+
     }
 
     @Test

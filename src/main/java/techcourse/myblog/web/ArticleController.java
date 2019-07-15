@@ -39,9 +39,10 @@ public class ArticleController {
     }
 
     @PostMapping
-    public ModelAndView write(@ModelAttribute Article article) {
+    public ModelAndView write(Article article) {
         articleRepository.save(article);
         RedirectView redirectView = new RedirectView(ARTICLE_URL + "/" + article.getId());
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(redirectView);
 
@@ -49,7 +50,7 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public ModelAndView edit(@ModelAttribute Article article) {
+    public ModelAndView edit(Article article) {
         articleRepository.update(article);
 
         RedirectView redirectView = new RedirectView(ARTICLE_URL + "/" + article.getId());
