@@ -29,4 +29,9 @@ public class ArticleRepository {
         Article toDelete = findById(id).orElseThrow(() -> new IllegalArgumentException("Article not found " + id));
         articles.remove(toDelete);
     }
+
+    public boolean hasCategory(String category) {
+        return articles.stream()
+                .anyMatch(article -> article.hasCategory(category));
+    }
 }

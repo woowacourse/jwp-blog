@@ -20,6 +20,7 @@ public class ArticleRepositoryTest {
         articleRequestDto.setTitle("1");
         articleRequestDto.setCoverUrl("2");
         articleRequestDto.setContents("3");
+        articleRequestDto.setCategory("4");
         newArticle = Article.of(articleRequestDto);
 
     }
@@ -61,5 +62,11 @@ public class ArticleRepositoryTest {
         articleRepository.deleteById(newArticle.getId());
 
         assertThat(articleRepository.findAll()).hasSize(0);
+    }
+
+    @Test
+    void Article중에_해당_카테고리가_있는지_테스트() {
+        articleRepository.addArticle(newArticle);
+        assertThat(articleRepository.hasCategory("4")).isTrue();
     }
 }

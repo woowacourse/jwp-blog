@@ -11,7 +11,7 @@ public class Article {
     private String contents;
     private String category;
 
-    private Article(){
+    private Article() {
 
     }
 
@@ -52,5 +52,9 @@ public class Article {
         this.coverUrl = articleRequestDto.getCoverUrl();
         this.contents = articleRequestDto.getContents();
         this.category = articleRequestDto.getCategory();
+    }
+
+    public boolean hasCategory(String category) {
+        return this.category.equals(category);
     }
 }
