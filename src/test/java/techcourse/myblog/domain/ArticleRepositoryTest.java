@@ -10,95 +10,96 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ArticleRepositoryTest {
-    private static final long ID = 1L;
+    private static final ArticleDto SAMPLE_ARTICLE_DTO;
     private static final String TITLE = "TEST";
     private static final String COVER_URL = "http://article.com";
     private static final String CONTENTS = "This is Test";
 
     private ArticleRepository articleRepository;
-    private Article sampleArticle;
+
+    static {
+        SAMPLE_ARTICLE_DTO = new ArticleDto();
+        SAMPLE_ARTICLE_DTO.setTitle(TITLE);
+        SAMPLE_ARTICLE_DTO.setCoverUrl(COVER_URL);
+        SAMPLE_ARTICLE_DTO.setContents(CONTENTS);
+    }
 
     @BeforeEach
     public void setUp() {
         articleRepository = new ArticleRepository();
-        sampleArticle = new Article();
-        sampleArticle.setId(ID);
-        sampleArticle.setTitle(TITLE);
-        sampleArticle.setCoverUrl(COVER_URL);
-        sampleArticle.setContents(CONTENTS);
     }
 
     @Test
     @DisplayName("Article_추가_테스트")
     public void addTest() {
-        articleRepository.add(sampleArticle);
-        assertEquals(sampleArticle, articleRepository.findById(ID));
+        long id = articleRepository.add(SAMPLE_ARTICLE_DTO);
+        assertEquals(SAMPLE_ARTICLE_DTO, articleRepository.findById(id));
     }
 
     @Test
     @DisplayName("모든_Article_조회_테스트")
-    public void findAllTest() {
-        articleRepository.add(sampleArticle);
-        articleRepository.add(sampleArticle);
-        articleRepository.add(sampleArticle);
+    public void findAllTest1() {
+        articleRepository.add(SAMPLE_ARTICLE_DTO);
+        articleRepository.add(SAMPLE_ARTICLE_DTO);
+        articleRepository.add(SAMPLE_ARTICLE_DTO);
 
-        List<Article> actual = articleRepository.findAll();
-        List<Article> expected = Arrays.asList(
-                sampleArticle,
-                sampleArticle,
-                sampleArticle);
+        List<ArticleDto> actual = articleRepository.findAll();
+        List<ArticleDto> expected = Arrays.asList(
+                SAMPLE_ARTICLE_DTO,
+                SAMPLE_ARTICLE_DTO,
+                SAMPLE_ARTICLE_DTO);
 
         assertEquals(expected, actual);
     }
 
     @Test
     @DisplayName("ID로_Article_조회")
-    public void findById() {
-        final long expectId = 2L;
-        articleRepository.add(sampleArticle);
-        articleRepository.add(sampleArticle);
+    public void findById1() {
+        final long expectId;
+        articleRepository.add(SAMPLE_ARTICLE_DTO);
+        expectId = articleRepository.add(SAMPLE_ARTICLE_DTO);
 
-        Article expected = new Article(expectId, TITLE, COVER_URL, CONTENTS);
-        Article actual = articleRepository.findById(expectId);
+        ArticleDto expected = SAMPLE_ARTICLE_DTO;
+        ArticleDto actual = articleRepository.findById(expectId);
 
         assertEquals(expected, actual);
     }
 
     @Test
     @DisplayName("ID로_Article_갱신")
-    public void updateById() {
+    public void updateById1() {
         long updateId;
-        Article expected = new Article(2L, "UPDATE", "https://update.com", "UPDATECON");
-        articleRepository.add(sampleArticle);
-        articleRepository.add(sampleArticle);
-        updateId = articleRepository.add(sampleArticle);
-        expected.setId(updateId);
+        articleRepository.add(SAMPLE_ARTICLE_DTO);
+        articleRepository.add(SAMPLE_ARTICLE_DTO);
+        updateId = articleRepository.add(SAMPLE_ARTICLE_DTO);
+
+        ArticleDto expected = new ArticleDto("UPDATE", COVER_URL, "UPDATE CONTENTS");
 
         long actualId = articleRepository.updateById(expected, updateId);
-        assertEquals(expected, articleRepository.findById(actualId));
+        ArticleDto actual = articleRepository.findById(actualId);
+        assertEquals(expected, actual);
     }
 
     @Test
     @DisplayName("ID로_Article_삭제")
-    public void deleteById() {
-//        long deleteId;
-//
-//        articleRepository.add(sampleArticle);
-//        deleteId = articleRepository.add(sampleArticle);
-//        articleRepository.add(sampleArticle);
-//
-//        articleRepository.deleteById(deleteId);
-//        long actual = articleRepository.findAll().size();
-//
-//        assertEquals(2, actual);
+    public void deleteById1() {
+        int expected = 2;
+        long deleteId;
+
+        articleRepository.add(SAMPLE_ARTICLE_DTO);
+        deleteId = articleRepository.add(SAMPLE_ARTICLE_DTO);
+        articleRepository.add(SAMPLE_ARTICLE_DTO);
+
+        articleRepository.deleteById(deleteId);
+        assertEquals(expected, articleRepository.findAll().size());
     }
 
     @Test
     @DisplayName("Repository내의_모든_Article_삭제")
     public void deleteAll() {
         int expected = 0;
-        articleRepository.add(sampleArticle);
-        articleRepository.add(sampleArticle);
+        articleRepository.add(SAMPLE_ARTICLE_DTO);
+        articleRepository.add(SAMPLE_ARTICLE_DTO);
         articleRepository.deleteAll();
         assertEquals(expected, articleRepository.findAll().size());
     }

@@ -3,9 +3,7 @@ package techcourse.myblog.domain;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Repository
@@ -15,8 +13,8 @@ public class ArticleRepository {
     private List<Article> articles = new ArrayList<>();
     private long latestId = 0;
 
-    public long add(final Article article) {
-        article.setId(latestId());
+    public long add(ArticleDto articleDto) {
+        Article article = articleDto.toArticle(latestId());
         articles.add(article);
         return latestId;
     }
@@ -26,29 +24,40 @@ public class ArticleRepository {
         return latestId;
     }
 
-    public List<Article> findAll() {
-        return Collections.unmodifiableList(articles);
-    }
-
-    public Article findById(final long articleId) {
-        return articles.stream()
-                .filter(article -> article.isSameId(articleId))
+    public ArticleDto findById(long expectId) {
+        Article temp = articles.stream()
+                .filter(article -> article.isSameId(expectId))
                 .findFirst().orElseThrow(IllegalArgumentException::new);
+        return temp.toDto();
     }
 
-    public long updateById(final Article articleParam, final long articleId) {
-        Article article = findById(articleId);
-        article.setArticle(articleParam);
-        return articleId;
+    public long updateById(ArticleDto expected, long updateId) {
+        Article temp = articles.stream()
+                .filter(article -> article.isSameId(updateId))
+                .findFirst().orElseThrow(IllegalAccessError::new);
+
+        temp.setTitle(expected.getTitle());
+        temp.setCoverUrl(expected.getCoverUrl());
+        temp.setContents(expected.getContents());
+        return updateId;
     }
 
     public boolean deleteById(final long articleId) {
-        Article article = findById(articleId);
-        return articles.remove(article);
+        Article temp = articles.stream()
+                .filter(article -> article.isSameId(articleId))
+                .findFirst().orElseThrow(IllegalAccessError::new);
+
+        return articles.remove(temp);
+    }
+
+    public List<ArticleDto> findAll() {
+        return articles.stream()
+                .map(article -> article.toDto())
+                .collect(Collectors.toList());
     }
 
     public void deleteAll() {
         latestId = 0;
-        articles = new ArrayList<>();
+        articles.clear();
     }
 }

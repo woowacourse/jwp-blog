@@ -60,6 +60,10 @@ public class Article {
         this.contents = contents;
     }
 
+    public ArticleDto toDto() {
+        return new ArticleDto(id, title, coverUrl, contents);
+    }
+
     @Override
     public String toString() {
         return "Article{" +

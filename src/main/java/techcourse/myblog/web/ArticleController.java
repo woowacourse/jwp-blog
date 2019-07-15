@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String index(Model model) {
-        List<Article> articles = articleRepository.findAll();
+        List<ArticleDto> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
     }
@@ -32,35 +32,39 @@ public class ArticleController {
         return "article-edit";
     }
 
+    //TODO
     @PostMapping("/articles")
-    public RedirectView addArticle(Article articleParam) {
-        Long latestId = articleRepository.add(articleParam);
+    public RedirectView addArticle(ArticleDto articleParam) {
+        long latestId = articleRepository.add(articleParam);
         return new RedirectView("/articles/" + latestId);
     }
 
+    //TODO
     @GetMapping("/articles/{articleId}")
     public String showArticleById(@PathVariable long articleId, Model model) {
-        Article article = articleRepository.findById(articleId);
+        ArticleDto article = articleRepository.findById(articleId);
         model.addAttribute("article", article);
         return "article";
     }
 
+    //TODO
     @PutMapping("/articles/{articleId}")
-    public RedirectView updateArticle(@PathVariable long articleId, Article articleParam) {
-        System.out.println("인자 테스트: " + articleParam);
+    public RedirectView updateArticle(@PathVariable long articleId, ArticleDto articleParam) {
         long updateId = articleRepository.updateById(articleParam, articleId);
         return new RedirectView("/articles/" + updateId);
     }
 
+    //TODO
     @DeleteMapping("articles/{articleId}")
     public RedirectView deleteArticle(@PathVariable long articleId) {
         articleRepository.deleteById(articleId);
         return new RedirectView("/");
     }
 
+    //TODO
     @GetMapping("/articles/{articleId}/edit")
     public String updateArticle(@PathVariable long articleId, Model model) {
-        Article article = articleRepository.findById(articleId);
+        ArticleDto article = articleRepository.findById(articleId);
         model.addAttribute("article", article);
         return "article-edit";
     }
