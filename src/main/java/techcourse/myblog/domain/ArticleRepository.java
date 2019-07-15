@@ -33,12 +33,7 @@ public class ArticleRepository {
     }
 
     public Optional<Article> findById(final int id) {
-        for (Article article : articles) {
-            if (article.hasSameId(id)) {
-                return Optional.of(article);
-            }
-        }
-        return Optional.empty();
+        return articles.stream().filter(article -> article.hasSameId(id)).findAny();
     }
 
     public void update(final Article newArticle) {
