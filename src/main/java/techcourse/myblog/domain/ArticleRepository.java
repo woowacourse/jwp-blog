@@ -36,6 +36,7 @@ public class ArticleRepository {
     public void modifyArticle(Article article) {
         int articleId = article.getId();
 
+        System.out.println(articleId);
         checkExistArticleId(articleId);
 
         articles.put(articleId, article);
