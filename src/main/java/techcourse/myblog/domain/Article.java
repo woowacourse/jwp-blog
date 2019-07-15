@@ -19,7 +19,7 @@ public class Article {
     }
 
     private void checkNull(final String title, final String coverUrl, final String contents) {
-        if (StringUtils.isEmpty(title) || StringUtils.isEmpty(coverUrl) || StringUtils.isEmpty(contents)) {
+        if (Objects.isNull(title) || Objects.isNull(coverUrl) || Objects.isNull(contents)) {
             throw new NullArticleElementException("빈 아티클 입력 요소가 존재합니다.");
         }
     }

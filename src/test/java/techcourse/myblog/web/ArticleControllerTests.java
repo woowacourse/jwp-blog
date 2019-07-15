@@ -5,91 +5,62 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.ArticleRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
-
-    String title;
-    String coverUrl;
-    String contents;
-
+    private final String mappingUrl = "/article";
+    private String title;
+    private String coverUrl;
+    private String contents;
     @Autowired
     private WebTestClient webTestClient;
 
+    @Autowired
+    private ArticleRepository articleRepository;
+
     @BeforeEach
     void setUp() {
-        title = "titleTest";
-        coverUrl = "urlTest";
-        contents = "contentsTest";
+        title = "title";
+        coverUrl = "coverUrl";
+        contents = "contents";
+        webTestClient.post().uri(mappingUrl)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange();
     }
 
     @Test
-    void article_form_page_status() {
-        webTestClient.get().uri("/articles/writing")
+    void create_form_page_status() {
+        webTestClient.get().uri(mappingUrl + "/writing")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void create_Article_redirect() {
-        webTestClient.post().uri("/articles")
+    void create_redirect() {
+        webTestClient.post().uri(mappingUrl)
                 .body(BodyInserters
                         .fromFormData("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
                 .expectStatus().isFound()
-                .expectHeader().valueMatches("location", ".*articles.*");
+                .expectHeader().valueMatches("location", ".*article.*");
     }
 
     @Test
-    void article_view_page_status() {
+    void create_data() {
         webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get().uri("/articles/0")
-                            .exchange()
-                            .expectStatus().isOk();
-                });
-    }
-
-    @Test
-    void article_edit_page_status() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get().uri("/articles/0/edit")
-                            .exchange()
-                            .expectStatus().isOk();
-                });
-    }
-
-    @Test
-    void create_article_en() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .uri(mappingUrl)
                 .body(BodyInserters
                         .fromFormData("title", title)
                         .with("coverUrl", coverUrl)
@@ -111,4 +82,46 @@ public class ArticleControllerTests {
                             });
                 });
     }
+
+    @Test
+    void not_found_article() {
+        webTestClient.get()
+                .uri(mappingUrl + articleRepository.getNextIndex())
+                .exchange()
+                .expectStatus().is4xxClientError();
+    }
+
+    @Test
+    void edit_form_status() {
+        webTestClient.get()
+                .uri(mappingUrl + "/0/edit")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void edit_data() {
+        final String editValue = "edit";
+        final int editId = 0;
+        webTestClient.put()
+                .uri(mappingUrl + "/" + editId)
+                .body(BodyInserters
+                        .fromFormData("title", editValue)
+                        .with("coverUrl", editValue)
+                        .with("contents", editValue))
+                .exchange();
+
+        webTestClient.get()
+                .uri(mappingUrl + "/" + editId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(editValue)).isTrue();
+                    assertThat(body.contains(editValue)).isTrue();
+                    assertThat(body.contains(editValue)).isTrue();
+                });
+    }
+
 }

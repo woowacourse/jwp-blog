@@ -24,10 +24,10 @@ public class ArticleController {
 
     @PostMapping
     public RedirectView create(ArticleDto articleDto, Model model) {
-        int newId = articleRepository.getLatestIndex();
+        int newId = articleRepository.getNextIndex();
         Article persistArticle = articleRepository.create(articleDto.convertArticle(newId));
         model.addAttribute("article", persistArticle);
-        return new RedirectView("redirect:/article/" + newId);
+        return new RedirectView("/article/" + newId);
     }
 
     @GetMapping("/{articleId}")
@@ -45,7 +45,7 @@ public class ArticleController {
     @PutMapping("/{articleId}")
     public RedirectView update(@PathVariable int articleId, ArticleDto articleDto) {
         articleRepository.update(articleId, articleDto.convertArticle(articleId));
-        return new RedirectView("redirect:/article/" + articleId);
+        return new RedirectView("/article/" + articleId);
     }
 
     @DeleteMapping("/{articleId}")
