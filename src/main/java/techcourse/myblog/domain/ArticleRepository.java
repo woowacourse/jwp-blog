@@ -19,12 +19,7 @@ public class ArticleRepository {
     }
 
     public List<Article> findAll() {
-        List<Article> copiedArticles = new ArrayList<>();
-
-        for (Article article : articles) {
-            copiedArticles.add(article.getCopy());
-        }
-        return copiedArticles;
+        return articles;
     }
 
     public void save(Article article) {
