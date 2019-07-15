@@ -33,7 +33,7 @@ public class ArticleRepository {
             }
         }
         if (index < 0) {
-            throw new NoArticleException();
+            throw new NoArticleFoundException();
         }
         return index;
     }

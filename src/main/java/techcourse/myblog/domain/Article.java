@@ -5,7 +5,7 @@ import java.util.Optional;
 public class Article implements Comparable<Article> {
     private int number;
     private String title;
-    private String coverUrl = "";
+    private String coverUrl;
     private String contents;
 
     public Article(String title, String coverUrl, String contents) {
