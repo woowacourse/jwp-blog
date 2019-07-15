@@ -35,7 +35,7 @@ public class ArticleRepository {
 
     public Article find(int articleId) {
         return articles.stream()
-                .filter(article -> article.getArticleId() == articleId)
+                .filter(article -> article.isSameId(articleId))
                 .findAny()
                 .orElseThrow(CouldNotFindArticleIdException::new);
     }

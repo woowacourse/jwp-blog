@@ -56,7 +56,7 @@ public class ArticleControllerTest {
     @DisplayName("게시글을 작성한 뒤 생성 버튼을 눌렀을 때 생성된 게시글을 보여준다.")
     void createNewArticleTest() {
         // Given
-        int expectedIdGeneratedByServer = TEST_ARTICLE_ID + 1;
+        int expectedIdGeneratedByServer = TEST_ARTICLE_ID;
         String inputTitle = "test title";
         String inputCoverUrl = "test coverUrl";
         String inputContents = "test contents";
