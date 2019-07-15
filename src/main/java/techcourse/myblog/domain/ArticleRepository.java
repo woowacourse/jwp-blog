@@ -12,7 +12,6 @@ import java.util.concurrent.atomic.AtomicLong;
 @Repository
 public class ArticleRepository {
     private static final Long AUTO_INCREMENT_START_ID = 1L;
-    private static final Long MIN_ARTICLE_ID = 1L;
 
     private AtomicLong newArticleId = new AtomicLong(AUTO_INCREMENT_START_ID);
 
@@ -23,12 +22,8 @@ public class ArticleRepository {
     }
 
     public Long saveArticle(Article article) {
-        Long id = article.getId();
-
-        if (isNewArticle(id)) {
-            id = newArticleId.getAndIncrement();
-            article.setId(id);
-        }
+        Long id = newArticleId.getAndIncrement();
+        article.setId(id);
 
         articles.put(id, article);
         return id;
@@ -50,9 +45,5 @@ public class ArticleRepository {
         if (!articles.containsKey(articleId)) {
             throw new NotExistEntityException();
         }
-    }
-
-    private boolean isNewArticle(Long id) {
-        return id < MIN_ARTICLE_ID;
     }
 }

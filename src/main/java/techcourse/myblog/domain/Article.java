@@ -19,6 +19,18 @@ public class Article {
         this.id = id;
     }
 
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
+    public void changeContents(String contents) {
+        this.contents = contents;
+    }
+
     public Long getId() {
         return id;
     }
