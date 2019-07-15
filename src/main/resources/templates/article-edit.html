@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="commonHead"></th:block>
+    <link href="/css/index.css" rel="stylesheet">
+    <link href="/css/article-edit.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+    <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css" rel="stylesheet">
+    <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css" rel="stylesheet">
+</head>
+<body>
+<div>
+    <div class="header navbar bg-transparent no-border">
+        <div class="header-container">
+            <ul class="nav-left mrg-left-0">
+                <li>
+                    <a href="/">
+                        <div class="logo logo-dark d-none"
+                             style="background-image: url('../static/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white"
+                             style="background-image: url('../static/images/logo/logo_full_white.png')"></div>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav-right">
+                s
+                <li class="user-profile dropdown no-border pointer" id="header-user-dropdown-btn">
+                    <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
+                        <img alt="Brown"
+                             class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
+                        <div class="user-info text-white">
+                            <span class="name pdd-right-5">Brown</span>
+                            <i class="ti-angle-down font-size-10"></i>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="text-dark">
+                            <a href="mypage.html">
+                                <i class="ti-user pdd-right-10"></i>
+                                <span class="text-dark">마이페이지</span>
+                            </a>
+                        </li>
+                        <li class="divider" role="separator"></li>
+                        <li class="text-dark">
+                            <a href="index.html">
+                                <i class="ti-power-off pdd-right-10"></i>
+                                <span class="text-dark">로그아웃</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <form accept-charset="utf-8" method="post" name="article"
+          th:action="${article!=null} ? '/article/'+ ${article.id} : '/article'">
+        <input name="_method" th:if="${article!=null}" type="hidden" value="put"/>
+        <div class="about-cover card no-border">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
+                <div class="height-300px vertical-center pdd-ho rizon-50">
+                    <div class="width-80">
+                        <input autocomplete="off" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
+                               name="title"
+                               placeholder="제목을 입력해주세요" th:value="${article!=null} ? ${article.getTitle() } : ''"
+                               type="text">
+                        <input autocomplete="off" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
+                               name="coverUrl"
+                               placeholder="배경 url을 입력해주세요" th:value="${article!=null} ? ${article.getCoverUrl() } : ''"
+                               type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
+            <div class="row">
+                <div class="col-lg-1 col-md-1"></div>
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                    <input id="article-contents" name="contents" type="hidden">
+                    <div id="editSection"></div>
+                </div>
+                <div class="col-lg-1 col-md-1">
+                    <div class="btn-group btn-group-vertical">
+                        <button class="btn btn-default" id="save-btn" type="submit">
+                            <i class="ti-save"></i>
+                        </button>
+                        <a class="btn btn-default" href="/index.html">
+                            <i class="ti-close"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<th:block th:replace="commonScript"></th:block>
+<script th:inline="javascript" type="text/javascript">
+    var initValue = ""
+        /* <![CDATA[ */
+        [# th:if= "${article}"]
+    initValue =  /*[[${article.contents}]]*/
+        [/]
+    /*]]>*/
+
+    const editor = new tui.Editor({
+        el: document.querySelector('#editSection'),
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        events: {
+            change: function () {
+                document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
+            }
+        },
+        height: 'calc(100vh - 360px)',
+        initialValue: initValue
+
+    });
+</script>
+</body>
+</html>
