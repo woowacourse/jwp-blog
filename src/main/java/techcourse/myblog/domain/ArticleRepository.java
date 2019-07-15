@@ -19,9 +19,5 @@ public class ArticleRepository {
 
     public void addArticle(final Article article) {
         articles.add(article);
-        for (Article articleData : articles) { // TODO: delete
-            System.err.println(articleData);
-        }
-        System.out.println();
     }
 }
