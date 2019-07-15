@@ -86,31 +86,16 @@ public class ArticleRepositoryTest {
 
     @Test
     void 게시글_수정_성공_테스트() {
-        String updatedTitle = UPDATED_TITLE;
-        Article updatedArticle = new Article();
-        updatedArticle.setArticleId(articleId);
-        updatedArticle.setTitle(updatedTitle);
-        updatedArticle.setContents(contents);
-        updatedArticle.setCoverUrl(coverUrl);
-
-        articleRepository.updateArticle(updatedArticle);
-
-        articleRepository.findArticleById(updatedArticle.getArticleId())
-                .ifPresent(a -> assertThat(a).isEqualTo(updatedArticle));
-    }
-
-    @Test
-    void 게시물_수정후_이전의_게시물_없는지_확인_테스트() {
         Article updatedArticle = new Article();
         updatedArticle.setArticleId(articleId);
         updatedArticle.setTitle(UPDATED_TITLE);
         updatedArticle.setContents(contents);
         updatedArticle.setCoverUrl(coverUrl);
 
-        articleRepository.updateArticle(updatedArticle);
+        articleRepository.updateArticle(articleId, updatedArticle);
 
-        articleRepository.findArticleById(article.getArticleId())
-                .ifPresent(a -> assertThat(a.equals(article)).isFalse());
+        articleRepository.findArticleById(articleId)
+                .ifPresent(a -> assertThat(a.equals(updatedArticle)).isTrue());
     }
 
     @AfterEach

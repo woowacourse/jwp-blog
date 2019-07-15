@@ -12,8 +12,6 @@ import java.util.stream.Stream;
 
 @Repository
 public class ArticleRepository {
-    private static final int DEFAULT_ARTICLE_INDEX = 0;
-
     private List<Article> articles = new ArrayList<>();
     private Long nextArticleId = 1L;
 
@@ -46,11 +44,9 @@ public class ArticleRepository {
                         .ifPresent(i -> articles.remove(i)));
     }
 
-    public void updateArticle(Article updatedArticle) {
-        int targetArticleIndex = findArticleIndexByArticle(updatedArticle).getAsInt();
-
-        articles.remove(targetArticleIndex);
-        articles.add(targetArticleIndex, updatedArticle);
+    public void updateArticle(Long articleId, Article updatedArticle) {
+        findArticleById(articleId)
+                .ifPresent(a -> a.update(updatedArticle));
     }
 
     private OptionalInt findArticleIndexByArticle(Article article) {
