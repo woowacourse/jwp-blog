@@ -53,4 +53,8 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
+    //delete에 대한 test도 추가하자.
+    //취향 차이지만 repo에 바로 넣지 말고 webtestCLient를 활용해서 추가하는건 어떨까?
+
+    //리다이렉션 테스트는 리다이렉션의 헤더에 값이 내가 원했던 주소의 값이 들어가는걸 테스트 해보는건 어떨까?
 }

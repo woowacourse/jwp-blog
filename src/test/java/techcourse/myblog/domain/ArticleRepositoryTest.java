@@ -34,7 +34,7 @@ class ArticleRepositoryTest {
     void 삭제_확인() {
         Article article = new Article("title", "Url", "contents");
         articleRepository.save(article);
-        articleRepository.deleteById(0);
+        articleRepository.removeById(0);
         assertThrows(IllegalArgumentException.class, () -> articleRepository.findArticleById(0));
     }
 }
