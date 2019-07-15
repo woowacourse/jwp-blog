@@ -4,7 +4,6 @@ public class ArticleRequestDto {
     private String title;
     private String coverUrl;
     private String contents;
-    private String category;
 
     public ArticleRequestDto() {
     }
@@ -31,13 +30,5 @@ public class ArticleRequestDto {
 
     public void setContents(String contents) {
         this.contents = contents;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 }
