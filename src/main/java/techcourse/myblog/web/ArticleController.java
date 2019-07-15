@@ -10,7 +10,7 @@ import techcourse.myblog.web.dto.ArticleDto;
 
 @Controller
 public class ArticleController {
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
     public ArticleController(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
