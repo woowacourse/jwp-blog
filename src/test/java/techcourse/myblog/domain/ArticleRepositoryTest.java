@@ -34,7 +34,7 @@ public class ArticleRepositoryTest {
     @Test
     public void findById_id에_해당하는_article을_잘_가져오는지() {
         List<Article> articles = Arrays.asList(
-                new Article(1L, "t1L", "u1L", "c1L")
+                new Article(1L, "t1", "u1", "c1")
                 , new Article(1L, "t2", "u2", "c2")
         );
         articles.forEach(article -> articleRepository.saveArticle(article));
