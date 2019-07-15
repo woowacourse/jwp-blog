@@ -72,7 +72,6 @@ public class ArticleController {
     @DeleteMapping("/articles/{articleId}")
     public RedirectView delete(@PathVariable String articleId) {
         articleRepository.removeById(Integer.parseInt(articleId));
-        System.out.println("삭제 된 이후에 사이즈 : " + articleRepository.findAll().size());
         return new RedirectView("/");
     }
 }
