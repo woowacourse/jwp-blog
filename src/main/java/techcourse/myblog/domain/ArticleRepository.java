@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Repository
 public class ArticleRepository {
     private static final int AUTO_INCREMENT_START_ID = 1;
+    private static final int MIN_ARTICLE_ID = 1;
 
     private AtomicInteger newArticleId = new AtomicInteger(AUTO_INCREMENT_START_ID);
 
@@ -22,8 +23,12 @@ public class ArticleRepository {
     }
 
     public int saveArticle(Article article) {
-        int id = newArticleId.getAndIncrement();
-        article.setId(id);
+        int id = article.getId();
+
+        if (isNewArticle(id)) {
+            id = newArticleId.getAndIncrement();
+            article.setId(id);
+        }
 
         articles.put(id, article);
         return id;
@@ -45,5 +50,9 @@ public class ArticleRepository {
         if (!articles.containsKey(articleId)) {
             throw new NotExistEntityException();
         }
+    }
+
+    private boolean isNewArticle(int id) {
+        return id < MIN_ARTICLE_ID;
     }
 }

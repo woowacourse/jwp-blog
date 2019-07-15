@@ -13,7 +13,7 @@ import techcourse.myblog.web.exception.NotExistEntityException;
 
 @Controller
 public class ArticleController {
-    private static final int MIN_ARTICLE_ID = 0;
+    private static final int MIN_ARTICLE_ID = 1;
     private static final String ERROR_PAGE = "/error/error-page";
 
     private final ArticleRepository articleRepository;
@@ -72,7 +72,6 @@ public class ArticleController {
             return sendErrorPage(ERROR_PAGE, model, new BadRequestError(articleId));
         }
         try {
-            articleRepository.removeArticle(articleId);
             articleRepository.saveArticle(article);
             model.addAttribute("article", article);
             return "/article";

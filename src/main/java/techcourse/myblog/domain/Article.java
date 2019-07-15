@@ -3,23 +3,23 @@ package techcourse.myblog.domain;
 import java.util.Objects;
 
 public class Article {
-    private int id;
+    private Integer id;
     private String title;
     private String coverUrl;
     private String contents;
 
-    public Article(int id, String title, String coverUrl, String contents) {
+    public Article(Integer id, String title, String coverUrl, String contents) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
