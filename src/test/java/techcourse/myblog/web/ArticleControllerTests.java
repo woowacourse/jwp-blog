@@ -73,7 +73,7 @@ public class ArticleControllerTests {
 
     @Test
     void 게시글_생성() {
-        webTestClient.post().uri("/articles")
+        webTestClient.post().uri(ArticleController.ARTICLE_URL)
                 .exchange()
                 .expectStatus().isFound();
     }

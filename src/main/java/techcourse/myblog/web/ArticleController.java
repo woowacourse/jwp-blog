@@ -7,8 +7,9 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
-@RequestMapping("/articles")
+@RequestMapping(ArticleController.ARTICLE_URL)
 public class ArticleController {
+    public static final String ARTICLE_URL = "/articles";
     private final ArticleRepository articleRepository;
 
     public ArticleController(final ArticleRepository articleRepository) {
