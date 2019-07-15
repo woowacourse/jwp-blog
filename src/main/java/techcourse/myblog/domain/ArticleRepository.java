@@ -12,4 +12,28 @@ public class ArticleRepository {
     public List<Article> findAll() {
         return articles;
     }
+
+    public void add(Article article) {
+        articles.add(article);
+    }
+
+    public Article get(int articleId) {
+        return articles.get(articleId);
+    }
+
+    public int lastIndex() {
+        return count() - 1;
+    }
+
+    public void update(int articleId, Article article) {
+        articles.set(articleId, article);
+    }
+
+    public int count() {
+        return articles.size();
+    }
+
+    public void remove(int articleId) {
+        articles.remove(articleId);
+    }
 }
