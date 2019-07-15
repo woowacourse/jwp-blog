@@ -36,13 +36,13 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}/")
     public String viewArticle(@PathVariable final int articleId, final Model model) {
-        model.addAttribute("article", articleRepository.find(articleId).orElseThrow(IllegalArgumentException::new));
+        model.addAttribute("article", articleRepository.find(articleId));
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit/")
     public String editArticle(@PathVariable final int articleId, final Model model) {
-        model.addAttribute("article", articleRepository.find(articleId).orElseThrow(IllegalArgumentException::new));
+        model.addAttribute("article", articleRepository.find(articleId));
         model.addAttribute("url", "../");
         model.addAttribute("method", "put");
         return "article-edit";

@@ -8,14 +8,6 @@ public class Article implements Comparable<Article> {
     private String coverUrl = "";
     private String contents;
 
-    public Article(String title, String coverUrl, String contents) {
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
-    }
-
-    public Article() {}
-
     public int getNumber() {
         return this.number;
     }
@@ -24,10 +16,10 @@ public class Article implements Comparable<Article> {
         this.number = number;
     }
 
-    public Article updateTo(Article newContent) {
-        this.title = newContent.title;
-        this.coverUrl = newContent.coverUrl;
-        this.contents = newContent.contents;
+    public Article update(Article toUpdate) {
+        this.title = toUpdate.title;
+        this.coverUrl = toUpdate.coverUrl;
+        this.contents = toUpdate.contents;
         return this;
     }
 
@@ -60,7 +52,6 @@ public class Article implements Comparable<Article> {
                                                 .map(x -> true)
                                                 .orElse(false);
     }
-
     public int compareTo(Article rhs) {
         return this.number - rhs.number;
     }

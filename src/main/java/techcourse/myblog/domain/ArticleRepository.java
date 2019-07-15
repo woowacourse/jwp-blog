@@ -4,51 +4,49 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class ArticleRepository {
-    private static final String defaultBackgroundImageUrl = "images/pages/index/study.jpg";
-
-    private static int nextArticleNumber = 0;
+    private static final String defaultCoverUrl = "images/pages/index/study.jpg";
 
     private final List<Article> articles = new ArrayList<>();
+    private int nextArticleNumber = 0;
 
-    public void write(final Article article) {
-        if (article.getCoverUrl().length() == 0) {
-            article.setCoverUrl(defaultBackgroundImageUrl);
+    public Article write(final Article article) {
+        if (!article.validateCoverUrl()) {
+            article.setCoverUrl(defaultCoverUrl);
         }
-        article.setNumber(++nextArticleNumber);
+        article.setNumber(++this.nextArticleNumber);
         this.articles.add(article);
+        return article;
     }
 
-    public int findIndexOfArticleById(final int articleId) {
+    public Article find(final int articleId) {
+        return this.articles.get(findIndexOfArticleById(articleId));
+    }
+
+    private int findIndexOfArticleById(final int articleId) {
         int index = Math.min(articleId, this.articles.size()) - 1;
         for (; index >= 0; index--) {
             if (this.articles.get(index).getNumber() == articleId) {
                 break;
             }
         }
+        if (index < 0) {
+            throw new NoArticleException();
+        }
         return index;
-    }
-
-    public Optional<Article> find(final int articleId) {
-        final int index = findIndexOfArticleById(articleId);
-        return (index != -1) ? Optional.of(this.articles.get(index)) : Optional.empty();
     }
 
     public List<Article> findAll() {
         return this.articles;
     }
 
-    public void edit(final Article edited, final int articleId) {
-        find(articleId).ifPresent(x -> x.setTo(edited));
+    public Article edit(final Article edited, final int articleId) {
+        return find(articleId).update(edited);
     }
 
     public void delete(final int articleId) {
-        final int index = findIndexOfArticleById(articleId);
-        if (index != -1) {
-            articles.remove(index);
-        }
+        this.articles.remove(findIndexOfArticleById(articleId));
     }
 }
