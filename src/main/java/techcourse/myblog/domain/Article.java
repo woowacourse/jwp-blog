@@ -23,10 +23,10 @@ public class Article implements Comparable<Article> {
         this.id = id;
     }
 
-    public void setTo(Article rhs) {
-        this.title = rhs.title;
-        this.coverUrl = rhs.coverUrl;
-        this.contents = rhs.contents;
+    public void updateTo(Article article) {
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
     }
 
     public String getTitle() {

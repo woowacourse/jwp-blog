@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -23,6 +24,7 @@ class ArticleRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        articleRepository.deleteAll();
         testArticle.setTitle(title);
         testArticle.setCoverUrl(coverUrl);
         testArticle.setContents(contents);
@@ -39,17 +41,26 @@ class ArticleRepositoryTest {
     @Test
     void find() {
         articleRepository.write(testArticle);
-        assertThat(
-                articleRepository.find(2).map(x -> x == testArticle).orElse(false)
-        ).isTrue();
+        assertThrows(IllegalArgumentException.class, () -> {
+           articleRepository.find(2);
+        });
     }
 
     @Test
     void edit() {
         articleRepository.write(testArticle);
-        articleRepository.edit(new Article(), 1);
+        articleRepository.edit(new Article(), articleRepository.getLastArticleId());
         assertThat(
-                articleRepository.find(1).map(x -> x.getCoverUrl() == "").orElse(false)
-        ).isTrue();
+                articleRepository.find(articleRepository.getLastArticleId()).getCoverUrl()
+        ).isEqualTo("");
+    }
+
+    @Test
+    void delete() {
+        articleRepository.write(testArticle);
+        articleRepository.delete(1);
+        assertThat(
+            articleRepository.findAll().size()
+        ).isZero();
     }
 }

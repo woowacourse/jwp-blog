@@ -52,7 +52,7 @@ public class ArticleControllerTests {
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .body(BodyInserters.fromFormData("title", title).with("coverUrl", coverUrl).with("contents", contents))
                     .exchange()
-                    .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*(/articles/)" + articleRepository.getArticleId() + "*(/)")
+                    .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*(/articles/)" + articleRepository.getLastArticleId() + "*(/)")
                     .expectBody()
                     .consumeWith(response -> {
                             webTestClient.get().uri(response.getResponseHeaders().getLocation())
@@ -71,7 +71,7 @@ public class ArticleControllerTests {
         @Test
         void viewArticleTest() {
                 articleRepository.write(new Article());
-                webTestClient.get().uri("/articles/" + articleRepository.getArticleId() + "/")
+                webTestClient.get().uri("/articles/" + articleRepository.getLastArticleId() + "/")
                     .exchange()
                     .expectStatus().isOk();
         }
@@ -79,7 +79,7 @@ public class ArticleControllerTests {
         @Test
         void editArticleTest() {
                 articleRepository.write(new Article());
-                webTestClient.get().uri("/articles/" + articleRepository.getArticleId() + "/edit/")
+                webTestClient.get().uri("/articles/" + articleRepository.getLastArticleId() + "/edit/")
                     .exchange()
                     .expectStatus().isOk();
         }
@@ -92,13 +92,13 @@ public class ArticleControllerTests {
 
                 Article article = new Article(title, coverUrl, contents);
                 articleRepository.write(article);
-                webTestClient.put().uri("/articles/" + articleRepository.getArticleId() + "/")
+                webTestClient.put().uri("/articles/" + articleRepository.getLastArticleId() + "/")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .body(BodyInserters.fromFormData("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                     .exchange()
-                    .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*/articles/" + articleRepository.getArticleId() + "/")
+                    .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*/articles/" + articleRepository.getLastArticleId() + "/")
                     .expectBody()
                     .consumeWith(response -> {
                             webTestClient.get().uri(response.getResponseHeaders().getLocation())
@@ -117,10 +117,10 @@ public class ArticleControllerTests {
         @Test
         void deleteArticleTest() {
                 articleRepository.write(new Article());
-                webTestClient.delete().uri("/articles/" + articleRepository.getArticleId() + "/")
+                webTestClient.delete().uri("/articles/" + articleRepository.getLastArticleId() + "/")
                     .exchange()
                     .expectStatus().is3xxRedirection();
-                webTestClient.get().uri("/articles/" + articleRepository.getArticleId() + "/")
+                webTestClient.get().uri("/articles/" + articleRepository.getLastArticleId() + "/")
                     .exchange()
                     .expectStatus().is5xxServerError();
         }

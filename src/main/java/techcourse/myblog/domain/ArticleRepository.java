@@ -1,50 +1,47 @@
 package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.web.server.ServerErrorException;
 
-import java.rmi.ServerError;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class ArticleRepository {
     private static final String defaultBackgroundImageUrl = "images/pages/index/study.jpg";
 
-    private static int articleId = 0;
+    private static int LAST_ARTICLE_ID = 0;
 
     private final List<Article> articles = new ArrayList<>();
-
-    public void write(final Article article) {
-        if (article.getCoverUrl().length() == 0) {
-            article.setCoverUrl(defaultBackgroundImageUrl);
-        }
-        article.setId(++articleId);
-        this.articles.add(article);
-    }
-
-    public int findIndexOfArticleById(final int articleId) {
-        int index = Math.min(articleId, this.articles.size()) - 1;
-        for (; index >= 0; index--) {
-            if (this.articles.get(index).getId() == articleId) {
-                return index;
-            }
-        }
-        throw new IllegalArgumentException("none articleId server error");
-    }
-
-    public Optional<Article> find(final int articleId) {
-        final int index = findIndexOfArticleById(articleId);
-        return Optional.of(this.articles.get(index));
-    }
 
     public List<Article> findAll() {
         return this.articles;
     }
 
+    public void write(final Article article) {
+        if (article.getCoverUrl().length() == 0) {
+            article.setCoverUrl(defaultBackgroundImageUrl);
+        }
+        article.setId(++LAST_ARTICLE_ID);
+        this.articles.add(article);
+    }
+
+    public Article find(final int articleId) {
+        final int index = findIndexOfArticleById(articleId);
+        return this.articles.get(index);
+    }
+
+    private int findIndexOfArticleById(final int articleId) {
+        int index = articleId - 1;
+        for (; index < articles.size() && index >= 0; index--) {
+            if (this.articles.get(index).getId() == articleId) {
+                return index;
+            }
+        }
+        throw new IllegalArgumentException("none LAST_ARTICLE_ID server error");
+    }
+
     public void edit(final Article edited, final int articleId) {
-        find(articleId).ifPresent(x -> x.setTo(edited));
+        find(articleId).updateTo(edited);
     }
 
     public void delete(final int articleId) {
@@ -58,7 +55,7 @@ public class ArticleRepository {
         articles.clear();
     }
 
-    public int getArticleId() {
-        return articleId;
+    public int getLastArticleId() {
+        return LAST_ARTICLE_ID;
     }
 }
