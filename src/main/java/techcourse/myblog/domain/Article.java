@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import techcourse.myblog.web.dto.ArticleDto;
+
 public class Article {
     private final int articleId;
     private String title;
@@ -11,6 +13,13 @@ public class Article {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+    }
+
+    public Article(int articleId, ArticleDto articleDto) {
+        this.articleId = articleId;
+        this.title= articleDto.getTitle();
+        this.coverUrl = articleDto.getCoverUrl();
+        this.contents = articleDto.getContents();
     }
 
     public int getArticleId() {
