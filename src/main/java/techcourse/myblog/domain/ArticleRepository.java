@@ -5,10 +5,11 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class ArticleRepository {
-    private long nextId = 1;
+    private AtomicLong nextId = new AtomicLong(1);
     private List<Article> articles = new ArrayList<>();
 
     public List<Article> findAll() {
@@ -23,7 +24,7 @@ public class ArticleRepository {
     }
 
     public void add(Article article) {
-        article.setId(nextId++);
+        article.setId(nextId.getAndIncrement());
         articles.add(article);
     }
 
