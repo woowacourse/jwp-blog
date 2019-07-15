@@ -29,7 +29,7 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_생성_확인() {
-        assertThat(service.createArticle(article.ConvertToDTO())).isEqualTo(1);
+        assertThat(service.createArticle(article.convertToDTO())).isEqualTo(1);
     }
 
     @Test
@@ -40,35 +40,35 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_조회_확인() {
-        service.createArticle(article.ConvertToDTO());
-        assertThat(service.findArticleById(1)).isEqualTo(article.ConvertToDTO());
+        service.createArticle(article.convertToDTO());
+        assertThat(service.findArticleById(1)).isEqualTo(article.convertToDTO());
     }
 
     @Test
     void 모든_게시글_조회_확인() {
-        service.createArticle(article.ConvertToDTO());
-        assertThat(service.findAll()).isEqualTo(Arrays.asList(article.ConvertToDTO()));
+        service.createArticle(article.convertToDTO());
+        assertThat(service.findAll()).isEqualTo(Arrays.asList(article.convertToDTO()));
     }
 
     @Test
     void 게시글_수정_확인() {
-        service.createArticle(article.ConvertToDTO());
+        service.createArticle(article.convertToDTO());
         Article newArticle = new Article(1, "newTitle", "", "newContent");
-        service.updateArticle(1, newArticle.ConvertToDTO());
-        assertThat(service.findArticleById(1)).isEqualTo(newArticle.ConvertToDTO());
+        service.updateArticle(1, newArticle.convertToDTO());
+        assertThat(service.findArticleById(1)).isEqualTo(newArticle.convertToDTO());
     }
 
     @Test
     void 게시글_수정_오류확인_게시글이_null일_경우() {
-        service.createArticle(article.ConvertToDTO());
+        service.createArticle(article.convertToDTO());
         assertThatExceptionOfType(NullPointerException.class)
                 .isThrownBy(() -> service.updateArticle(1, null));
     }
 
     @Test
     void 게시글_삭제_확인() {
-        service.createArticle(article.ConvertToDTO());
+        service.createArticle(article.convertToDTO());
         service.deleteArticle(1);
-        assertThat(service.findAll().contains(article.ConvertToDTO())).isFalse();
+        assertThat(service.findAll().contains(article.convertToDTO())).isFalse();
     }
 }

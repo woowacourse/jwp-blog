@@ -17,22 +17,19 @@ public class ArticleService {
 
     @Autowired
     public ArticleService(ArticleRepository articleRepository) {
-        if (Objects.isNull(articleRepository)) {
-            throw new NullPointerException();
-        }
         this.articleRepository = articleRepository;
     }
 
     public List<ArticleDTO> findAll() {
         List<Article> articles = articleRepository.findAll();
         return Collections.unmodifiableList(articles.stream()
-                .map(Article::ConvertToDTO)
+                .map(Article::convertToDTO)
                 .collect(Collectors.toList()));
     }
 
     public ArticleDTO findArticleById(int id) {
         Article article = articleRepository.findArticleById(id);
-        return article.ConvertToDTO();
+        return article.convertToDTO();
     }
 
     public int createArticle(ArticleDTO articleDTO) {
@@ -43,7 +40,7 @@ public class ArticleService {
 
     public void updateArticle(int id, ArticleDTO articleDTO) {
         checkNull(articleDTO);
-        Article article = articleDTO.ConvertToEntity();
+        Article article = articleDTO.convertToEntity();
         articleRepository.updateArticle(id, article);
     }
 

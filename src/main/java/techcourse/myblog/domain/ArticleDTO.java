@@ -14,7 +14,7 @@ public class ArticleDTO {
         this.contents = contents;
     }
 
-    public Article ConvertToEntity() {
+    public Article convertToEntity() {
         return new Article(id, title, coverUrl, contents);
     }
 
@@ -30,24 +30,12 @@ public class ArticleDTO {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getCoverUrl() {
         return coverUrl;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
     public String getContents() {
         return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
     }
 
     @Override

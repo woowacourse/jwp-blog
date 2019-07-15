@@ -21,7 +21,7 @@ public class Article {
 
     public Article(final int id, final String title, final String coverUrl, final String contents) {
         checkNull(title, coverUrl, contents);
-        if(id < INIT_ARTICLE_ID) {
+        if (id < INIT_ARTICLE_ID) {
             throw new IllegalArgumentException("적절한 ID가 아닙니다.");
         }
         this.id = id;
@@ -49,7 +49,7 @@ public class Article {
         this.contents = article.getContents();
     }
 
-    public ArticleDTO ConvertToDTO() {
+    public ArticleDTO convertToDTO() {
         ArticleDTO articleDTO = new ArticleDTO(title, coverUrl, contents);
         articleDTO.setId(id);
         return articleDTO;
