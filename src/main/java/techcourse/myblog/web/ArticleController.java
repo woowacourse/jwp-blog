@@ -2,8 +2,9 @@ package techcourse.myblog.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.ArticleDto;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
@@ -18,47 +19,52 @@ public class ArticleController {
     }
 
     @GetMapping("/writing")
-    public String createArticleForm() {
-        return "article-edit";
+    public ModelAndView createArticleForm() {
+        return new ModelAndView("article-edit");
     }
 
     @PostMapping("/write")
-    public String createArticle(ArticleDto articleDto) {
+    public RedirectView createArticle(ArticleDto articleDto) {
         int id = articleRepository.nextId();
         Article article = articleDto.toArticle(id);
         articleRepository.insert(article);
-        return "redirect:/articles/" + id;
+        return new RedirectView("/articles/" + id);
     }
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
-        return "index";
+    public ModelAndView index() {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("index");
+        mav.addObject("articles", articleRepository.findAll());
+        return mav;
     }
 
     @GetMapping("/articles/{articleId}")
-    public String showArticle(@PathVariable int articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId));
-        return "article";
+    public ModelAndView showArticle(@PathVariable int articleId) {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("article");
+        mav.addObject("article", articleRepository.findById(articleId));
+        return mav;
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String editArticleForm(@PathVariable int articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId));
-        return "article-edit";
+    public ModelAndView editArticleForm(@PathVariable int articleId) {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("article-edit");
+        mav.addObject("article", articleRepository.findById(articleId));
+        return mav;
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable int articleId, ArticleDto articleDto, Model model) {
+    public RedirectView editArticle(@PathVariable int articleId, ArticleDto articleDto) {
         Article article = articleDto.toArticle(articleId);
         articleRepository.update(article);
-        model.addAttribute("article", article);
-        return "article";
+        return new RedirectView("/articles/" + articleId);
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId) {
+    public RedirectView deleteArticle(@PathVariable int articleId) {
         articleRepository.remove(articleId);
-        return "redirect:/";
+        return new RedirectView("/");
     }
 }

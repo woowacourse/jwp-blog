@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -13,6 +14,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.springframework.http.HttpMethod.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -29,12 +31,12 @@ public class ArticleControllerTests {
 
     @Test
     void index() {
-        requestGet("/").expectStatus().isOk();
+        requestHttpMethod(GET, "/", null).expectStatus().isOk();
     }
 
     @Test
     void articleForm() {
-        requestGet("/writing").expectStatus().isOk();
+        requestHttpMethod(GET, "/writing", null).expectStatus().isOk();
     }
 
     @Test
@@ -45,42 +47,46 @@ public class ArticleControllerTests {
         Article article = new Article(articleRepository.nextId(), titleKo, coverUrlKo, contentsKo);
         Article articleApplyEscape = new Article(articleRepository.nextId(), titleKo, coverUrlKo, StringEscapeUtils.escapeJava(contentsKo));
 
-        requestPost("/write", createArticleForm(article))
+        requestHttpMethod(POST, "/write", createArticleForm(article))
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response ->
-                    checkContainArticle(requestGet(response.getResponseHeaders().get("Location").get(0)), articleApplyEscape)
-                );
+                        checkContainArticle(
+                                requestHttpMethod(GET, response.getResponseHeaders().get("Location").get(0), null),
+                                articleApplyEscape));
     }
 
     @Test
     void create_article_en() {
         Article article = new Article(articleRepository.nextId(), title, coverUrl, contents);
 
-        requestPost("/write", createArticleForm(article))
+        requestHttpMethod(POST, "/write", createArticleForm(article))
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response ->
-                    checkContainArticle(requestGet(response.getResponseHeaders().get("Location").get(0)), article)
-                );
+                        checkContainArticle(
+                                requestHttpMethod(GET, response.getResponseHeaders().get("Location").get(0), null),
+                                article));
     }
 
     @Test
     void 게시글_페이지_정상_조회() {
         Article article = insertArticle(title, coverUrl, contents);
-        checkContainArticle(requestGet("/articles/" + article.getId()), article);
+        checkContainArticle(
+                requestHttpMethod(GET, "/articles/" + article.getId(), null),
+                article);
     }
 
     @Test
     void 존재하지_않는_게시글_조회_에러() {
-        requestGet("/articles/" + articleRepository.nextId())
+        requestHttpMethod(GET, "/articles/" + articleRepository.nextId(), null)
                 .expectStatus().is5xxServerError();
     }
 
     @Test
     void 게시글_수정페이지_이동() {
         Article article = insertArticle(title, coverUrl, contents);
-        requestGet("/articles/" + article.getId() + "/edit")
+        requestHttpMethod(GET, "/articles/" + article.getId() + "/edit", null)
                 .expectStatus().isOk();
     }
 
@@ -89,20 +95,21 @@ public class ArticleControllerTests {
         Article article = insertArticle(title, coverUrl, contents);
         Article editedArticle = new Article(article.getId(), "new title", coverUrl, contents);
 
-        checkContainArticle(
-                requestPut("/articles/" + article.getId(), createArticleForm(editedArticle)),
-                editedArticle);
+        requestHttpMethod(PUT, "/articles/" + article.getId(), createArticleForm(editedArticle))
+                .expectStatus().isFound()
+                .expectBody()
+                .consumeWith(response ->
+                        checkContainArticle(
+                                requestHttpMethod(GET, response.getResponseHeaders().get("Location").get(0), null),
+                                editedArticle));
     }
 
     @Test
     void 게시글_삭제() {
         Article article = insertArticle(title, coverUrl, contents);
 
-        webTestClient.delete()
-                .uri("/articles/" + article.getId())
-                .exchange()
-                .expectStatus().isFound()
-        ;
+        requestHttpMethod(DELETE, "/articles/" + article.getId(), null)
+                .expectStatus().isFound();
     }
 
     private Article insertArticle(String title, String url, String contents) {
@@ -130,24 +137,9 @@ public class ArticleControllerTests {
                 .with("contents", article.getContents());
     }
 
-    private WebTestClient.ResponseSpec requestGet(String uri) {
-        return webTestClient.get()
-                .uri(uri)
-                .exchange()
-                ;
-    }
-
-    private WebTestClient.ResponseSpec requestPost(String uri, BodyInserters.FormInserter<String> form) {
-        return webTestClient.post()
-                .uri(uri)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(form)
-                .exchange()
-                ;
-    }
-
-    private WebTestClient.ResponseSpec requestPut(String uri, BodyInserters.FormInserter<String> form) {
-        return webTestClient.put()
+    private WebTestClient.ResponseSpec requestHttpMethod(HttpMethod method, String uri,
+                                                         BodyInserters.FormInserter<String> form) {
+        return webTestClient.method(method)
                 .uri(uri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(form)

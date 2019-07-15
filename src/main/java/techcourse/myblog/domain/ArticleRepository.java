@@ -3,6 +3,7 @@ package techcourse.myblog.domain;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -11,7 +12,7 @@ public class ArticleRepository {
     private int id;
 
     public List<Article> findAll() {
-        return articles;
+        return Collections.unmodifiableList(articles);
     }
 
     public void insert(Article article) {
