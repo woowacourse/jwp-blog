@@ -28,7 +28,7 @@ public class ArticleRepository {
 
     public ArticleDto findById(final long id) {
         Article article = findArticleById(id).orElseThrow(IllegalArgumentException::new);
-        return article.toDto();
+        return ArticleDto.toDto(article);
     }
 
     public long updateById(final ArticleDto articleDto, final long id) {
@@ -50,7 +50,7 @@ public class ArticleRepository {
 
     public List<ArticleDto> findAll() {
         return articles.stream()
-                .map(Article::toDto)
+                .map(ArticleDto::toDto)
                 .collect(Collectors.toList());
     }
 

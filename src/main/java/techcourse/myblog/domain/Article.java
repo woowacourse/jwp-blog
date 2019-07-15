@@ -26,8 +26,20 @@ public class Article {
         this.contents = article.contents;
     }
 
-    public ArticleDto toDto() {
-        return new ArticleDto(id, title, coverUrl, contents);
+    public long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public String getContents() {
+        return contents;
     }
 
     @Override

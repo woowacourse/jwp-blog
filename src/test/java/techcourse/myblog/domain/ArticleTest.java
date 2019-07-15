@@ -49,13 +49,4 @@ public class ArticleTest {
 
         assertEquals(expected, actual);
     }
-
-    @Test
-    @DisplayName("Dto_변환_테스트")
-    public void toDto() {
-        ArticleDto expected = new ArticleDto(ID, TITLE, COVER_URL, CONTENTS);
-        ArticleDto actual = SAMPLE_ARTICLE.toDto();
-
-        assertEquals(expected, actual);
-    }
 }
