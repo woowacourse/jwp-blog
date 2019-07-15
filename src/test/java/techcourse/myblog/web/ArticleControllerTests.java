@@ -6,8 +6,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.ArticleDto;
@@ -16,6 +18,7 @@ import techcourse.myblog.domain.ArticleRepository;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpStatus.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -30,12 +33,12 @@ public class ArticleControllerTests {
 
     @Test
     void index() {
-        requestHttpMethod(GET, "/", null).expectStatus().isOk();
+        httpRequestAndExpectStatus(GET, "/", OK);
     }
 
     @Test
     void articleForm() {
-        requestHttpMethod(GET, "/writing", null).expectStatus().isOk();
+        httpRequestAndExpectStatus(GET, "/writing", OK);
     }
 
     @Test
@@ -46,23 +49,21 @@ public class ArticleControllerTests {
         ArticleDto articleKoDto = new ArticleDto(titleKo, coverUrlKo, contentsKo);
         ArticleDto articleApplyEscape = new ArticleDto(titleKo, coverUrlKo, StringEscapeUtils.escapeJava(contentsKo));
 
-        requestHttpMethod(POST, "/write", createArticleForm(articleKoDto))
-                .expectStatus().isFound()
+        httpRequestAndExpectStatus(POST, "/write", createArticleForm(articleKoDto), FOUND)
                 .expectBody()
                 .consumeWith(response ->
                         checkContainArticle(
-                                requestHttpMethod(GET, response.getResponseHeaders().get("Location").get(0), null),
+                                httpRequestAndExpectStatus(GET, getRedirectedUri(response), OK),
                                 articleApplyEscape));
     }
 
     @Test
     void create_article_en() {
-        requestHttpMethod(POST, "/write", createArticleForm(articleDto))
-                .expectStatus().isFound()
+        httpRequestAndExpectStatus(POST, "/write", createArticleForm(articleDto), FOUND)
                 .expectBody()
                 .consumeWith(response ->
                         checkContainArticle(
-                                requestHttpMethod(GET, response.getResponseHeaders().get("Location").get(0), null),
+                                httpRequestAndExpectStatus(GET, getRedirectedUri(response), OK),
                                 articleDto));
     }
 
@@ -70,21 +71,19 @@ public class ArticleControllerTests {
     void 게시글_페이지_정상_조회() {
         Article article = articleRepository.save(articleDto);
         checkContainArticle(
-                requestHttpMethod(GET, "/articles/" + article.getId(), null),
+                httpRequestAndExpectStatus(GET, "/articles/" + article.getId(), OK),
                 articleDto);
     }
 
     @Test
     void 존재하지_않는_게시글_조회_에러() {
-        requestHttpMethod(GET, "/articles/" + getNotPresentId(), null)
-                .expectStatus().is5xxServerError();
+        httpRequestAndExpectStatus(GET, "/articles/" + getNotPresentId(), INTERNAL_SERVER_ERROR);
     }
 
     @Test
     void 게시글_수정페이지_이동() {
         Article article = articleRepository.save(articleDto);
-        requestHttpMethod(GET, "/articles/" + article.getId() + "/edit", null)
-                .expectStatus().isOk();
+        httpRequestAndExpectStatus(GET, "/articles/" + article.getId(), OK);
     }
 
     @Test
@@ -92,12 +91,11 @@ public class ArticleControllerTests {
         Article article = articleRepository.save(articleDto);
         ArticleDto editedArticle = new ArticleDto("new title", "new url", "new contents");
 
-        requestHttpMethod(PUT, "/articles/" + article.getId(), createArticleForm(editedArticle))
-                .expectStatus().isFound()
+        httpRequestAndExpectStatus(PUT, "/articles/" + article.getId(), createArticleForm(editedArticle), FOUND)
                 .expectBody()
                 .consumeWith(response ->
                         checkContainArticle(
-                                requestHttpMethod(GET, response.getResponseHeaders().get("Location").get(0), null),
+                                httpRequestAndExpectStatus(GET, getRedirectedUri(response), OK),
                                 editedArticle));
     }
 
@@ -105,17 +103,21 @@ public class ArticleControllerTests {
     void 게시글_삭제() {
         Article article = articleRepository.save(articleDto);
 
-        requestHttpMethod(DELETE, "/articles/" + article.getId(), null)
-                .expectStatus().isFound();
+        httpRequestAndExpectStatus(DELETE, "/articles/" + article.getId(), FOUND);
     }
 
-    private WebTestClient.ResponseSpec requestHttpMethod(HttpMethod method, String uri,
-                                                         BodyInserters.FormInserter<String> form) {
+    private WebTestClient.ResponseSpec httpRequestAndExpectStatus(HttpMethod method, String uri, HttpStatus status) {
+        return httpRequestAndExpectStatus(method, uri, null, status);
+    }
+
+    private WebTestClient.ResponseSpec httpRequestAndExpectStatus(HttpMethod method, String uri,
+                                                                  BodyInserters.FormInserter<String> form, HttpStatus status) {
         return webTestClient.method(method)
                 .uri(uri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(form)
                 .exchange()
+                .expectStatus().isEqualTo(status)
                 ;
     }
 
@@ -124,6 +126,10 @@ public class ArticleControllerTests {
                 .fromFormData("title", articleDto.getTitle())
                 .with("coverUrl", articleDto.getCoverUrl())
                 .with("contents", articleDto.getContents());
+    }
+
+    private String getRedirectedUri(EntityExchangeResult<byte[]> response) {
+        return response.getResponseHeaders().get("Location").get(0);
     }
 
     private int getNotPresentId() {
@@ -135,7 +141,6 @@ public class ArticleControllerTests {
 
     private void checkContainArticle(WebTestClient.ResponseSpec responseSpec, ArticleDto articleDto) {
         responseSpec
-                .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
