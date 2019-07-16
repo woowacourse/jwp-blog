@@ -4,14 +4,15 @@
 
 (AritlcleRepository를 데이터베이스 이용하도록 변경)
 
-- [ ] gradle에 jpa + h2 + mysql 종속성 추가
-- [ ] properties에 mysql 종속성 추가
-- [ ] mysql database 생성
-- [ ] extends CrudRepository 로 변경
-- [ ] Article 객체 @Entity로 변경
-- [ ] insert 되는지 확인
-- [ ] delete 확인
-- [ ] select 확인
+- [x] ~~gradle에 jpa + h2 + mysql 종속성 추가~~
+- [x] ~~properties에 mysql 종속성 추가~~
+- [x] ~~mysql database 생성~~
+- [x] ~~extends CrudRepository 로 변경~~
+- [x] ~~Article 객체 @Entity로 변경~~
+- [x] ~~insert 되는지 확인~~
+- [x] ~~delete 확인~~
+- [x] ~~select 확인~~
+- [x] ~~테스트 코드 성공으로 바꾸기~~
 
 (회원 등록)
 
