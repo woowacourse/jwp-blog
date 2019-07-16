@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -76,15 +74,7 @@ public class ArticleControllerTests {
     @Test
     void find_article_by_Id() {
 
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().is3xxRedirection();
+        create_article();
 
         webTestClient.get()
                 .uri("/articles/1")
