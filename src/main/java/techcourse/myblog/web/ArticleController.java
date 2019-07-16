@@ -1,6 +1,7 @@
 package techcourse.myblog.web;
 
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
 
 import org.springframework.stereotype.Controller;
@@ -27,29 +28,29 @@ public class ArticleController {
 	}
 
 	@PostMapping("articles")
-	public String saveArticle(Article article, Model model) {
-		model.addAttribute(article);
-		articleRepository.save(article);
-		return "article";
+	public String saveArticle(ArticleDto articleDto, Model model) {
+		Article article = new Article(articleDto.getTitle(), articleDto.getContents(), articleDto.getCoverUrl());
+		Long id = articleRepository.save(article).getId();
+		return "redirect:/articles/"+id;
 	}
 
 	@GetMapping("articles/{articleId}")
 	public String getArticle(@PathVariable Long articleId, Model model) {
-		model.addAttribute("article", articleRepository.findById(articleId));
+		model.addAttribute("article", articleRepository.findById(articleId).get());
 		return "article";
 	}
 
 	@GetMapping("articles/{articleId}/edit")
 	public String editArticle(@PathVariable Long articleId, Model model) {
-		model.addAttribute("article", articleRepository.findById(articleId));
+		model.addAttribute("article", articleRepository.findById(articleId).get());
 		return "article-edit";
 	}
 
 	@PutMapping("articles/{articleId}")
-	public String modifyArticle(@PathVariable Long articleId, Article article, Model model) {
-		article.setId(articleId);
-		articleRepository.update(article);
-		model.addAttribute(articleRepository.findById(articleId));
+	public String modifyArticle(@PathVariable Long articleId, ArticleDto articleDto, Model model) {
+		Article article = new Article(articleId, articleDto.getTitle(), articleDto.getContents(), articleDto.getCoverUrl());
+		articleRepository.save(article);
+		model.addAttribute("article", articleRepository.findById(articleId).get());
 		return "article";
 	}
 

@@ -3,7 +3,6 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.repository.ArticleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
@@ -57,14 +55,10 @@ public class ArticleControllerTests {
 						.with("coverUrl", coverUrl)
 						.with("contents", contents))
 				.exchange()
-				.expectStatus().isOk()
-				.expectBody()
-				.consumeWith(response -> {
-					String body = new String(response.getResponseBody());
-					assertThat(body.contains(title)).isTrue();
-					assertThat(body.contains(coverUrl)).isTrue();
-					assertThat(body.contains(contents)).isTrue();
-				});
+				.expectStatus()
+				.isFound()
+				.expectHeader()
+				.valueMatches("Location", ".+/articles/[0-9]+");
 	}
 
 	@Test
@@ -137,6 +131,6 @@ public class ArticleControllerTests {
 				.expectHeader()
 				.valueMatches("Location", ".+/");
 
-		assertThrows(NotFoundArticleException.class, () -> articleRepository.findById(articleId));
+		assertThat(articleRepository.findById(articleId)).isEmpty();
 	}
 }

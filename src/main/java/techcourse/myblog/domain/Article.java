@@ -1,14 +1,31 @@
 package techcourse.myblog.domain;
 
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class Article {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String title;
 	private String contents;
 	private String coverUrl;
 
+	public Article() {
+	}
+
 	public Article(String title, String contents, String coverUrl) {
+		this.title = title;
+		this.contents = contents;
+		this.coverUrl = coverUrl;
+	}
+
+	public Article(Long id, String title, String contents, String coverUrl) {
+		this.id = id;
 		this.title = title;
 		this.contents = contents;
 		this.coverUrl = coverUrl;
@@ -63,4 +80,26 @@ public class Article {
 	public int hashCode() {
 		return Objects.hash(getId(), getTitle(), getContents(), getCoverUrl());
 	}
+
+	@Override
+	public String toString() {
+		return "Article{" +
+				"id=" + id +
+				", title='" + title + '\'' +
+				", contents='" + contents + '\'' +
+				", coverUrl='" + coverUrl + '\'' +
+				'}';
+	}
+
+//	public void setTitle(String title) {
+//		this.title = title;
+//	}
+//
+//	public void setContents(String contents) {
+//		this.contents = contents;
+//	}
+//
+//	public void setCoverUrl(String coverUrl) {
+//		this.coverUrl = coverUrl;
+//	}
 }
