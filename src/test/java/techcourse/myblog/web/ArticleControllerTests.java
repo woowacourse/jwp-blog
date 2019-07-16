@@ -12,8 +12,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
@@ -52,26 +50,13 @@ public class ArticleControllerTests {
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .body(BodyInserters.fromFormData("title", title).with("coverUrl", coverUrl).with("contents", contents))
                     .exchange()
-                    .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*(/articles/)" + articleRepository.getLastArticleId() + "*(/)")
-                    .expectBody()
-                    .consumeWith(response -> {
-                            webTestClient.get().uri(response.getResponseHeaders().getLocation())
-                                .exchange()
-                                .expectStatus().isOk()
-                                .expectBody()
-                                .consumeWith(_response -> {
-                                        String body = new String(_response.getResponseBody());
-                                        assertThat(body.contains(title)).isTrue();
-                                        assertThat(body.contains(coverUrl)).isTrue();
-                                        assertThat(body.contains(contents)).isTrue();
-                                });
-                    });
+                    .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*(/articles/)" + articleRepository.getLastArticleId());
         }
 
         @Test
         void viewArticleTest() {
                 articleRepository.write(new Article());
-                webTestClient.get().uri("/articles/" + articleRepository.getLastArticleId() + "/")
+                webTestClient.get().uri("/articles/" + articleRepository.getLastArticleId())
                     .exchange()
                     .expectStatus().isOk();
         }
@@ -79,7 +64,7 @@ public class ArticleControllerTests {
         @Test
         void editArticleTest() {
                 articleRepository.write(new Article());
-                webTestClient.get().uri("/articles/" + articleRepository.getLastArticleId() + "/edit/")
+                webTestClient.get().uri("/articles/" + articleRepository.getLastArticleId() + "/edit")
                     .exchange()
                     .expectStatus().isOk();
         }
@@ -92,35 +77,20 @@ public class ArticleControllerTests {
 
                 Article article = new Article(title, coverUrl, contents);
                 articleRepository.write(article);
-                webTestClient.put().uri("/articles/" + articleRepository.getLastArticleId() + "/")
+                webTestClient.put().uri("/articles/" + articleRepository.getLastArticleId())
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .body(BodyInserters.fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+                    .body(BodyInserters.fromFormData("title", title).with("coverUrl", coverUrl).with("contents", contents))
                     .exchange()
-                    .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*/articles/" + articleRepository.getLastArticleId() + "/")
-                    .expectBody()
-                    .consumeWith(response -> {
-                            webTestClient.get().uri(response.getResponseHeaders().getLocation())
-                                .exchange()
-                                .expectStatus().isOk()
-                                .expectBody()
-                                .consumeWith(_response -> {
-                                        String body = new String(_response.getResponseBody());
-                                        assertThat(body.contains(title)).isTrue();
-                                        assertThat(body.contains(coverUrl)).isTrue();
-                                        assertThat(body.contains(contents)).isTrue();
-                                });
-                    });
+                    .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*(/articles/)" + articleRepository.getLastArticleId());
         }
 
         @Test
         void deleteArticleTest() {
                 articleRepository.write(new Article());
-                webTestClient.delete().uri("/articles/" + articleRepository.getLastArticleId() + "/")
+                webTestClient.delete().uri("/articles/" + articleRepository.getLastArticleId())
                     .exchange()
                     .expectStatus().is3xxRedirection();
-                webTestClient.get().uri("/articles/" + articleRepository.getLastArticleId() + "/")
+                webTestClient.get().uri("/articles/" + articleRepository.getLastArticleId())
                     .exchange()
                     .expectStatus().is5xxServerError();
         }
