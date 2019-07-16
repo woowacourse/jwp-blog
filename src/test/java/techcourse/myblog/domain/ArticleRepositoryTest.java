@@ -2,10 +2,10 @@ package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.excerption.ArticleNotFoundException;
-import techcourse.myblog.excerption.ArticleToSaveNotFoundException;
-import techcourse.myblog.excerption.ArticleToUpdateNotFoundException;
-import techcourse.myblog.excerption.InvalidArticleIdException;
+import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.exception.ArticleToSaveNotFoundException;
+import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
+import techcourse.myblog.exception.InvalidArticleIdException;
 
 import java.util.Arrays;
 import java.util.List;

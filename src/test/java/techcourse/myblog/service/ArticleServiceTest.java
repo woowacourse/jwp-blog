@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.excerption.ArticleDtoNotFoundException;
+import techcourse.myblog.exception.ArticleDtoNotFoundException;
 
 import java.util.Arrays;
 import java.util.List;

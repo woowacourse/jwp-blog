@@ -1,7 +1,7 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.excerption.ArticleToUpdateNotFoundException;
-import techcourse.myblog.excerption.InvalidArticleIdException;
+import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
+import techcourse.myblog.exception.InvalidArticleIdException;
 
 import java.util.Objects;
 
