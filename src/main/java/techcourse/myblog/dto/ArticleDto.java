@@ -3,7 +3,6 @@ package techcourse.myblog.dto;
 import lombok.Data;
 
 public class ArticleDto {
-
     @Data
     public static class Create {
         private String title;
