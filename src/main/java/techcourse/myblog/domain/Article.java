@@ -23,7 +23,6 @@ public class Article {
     public Article(String title, String coverUrl, String contents) {
         validateTitle(title);
         validateContents(contents);
-        //this.id = id;
         this.title = title;
         this.contents = contents;
         this.coverUrl = (isBlank(coverUrl)) ? EMPTY_TEXT : coverUrl;
@@ -44,10 +43,6 @@ public class Article {
     private boolean isBlank(String text) {
         return text == null || "".equals(text);
     }
-
-//    public boolean matchId(int articleId) {
-//        return this.id == articleId;
-//    }
 
     public void update(Article article) {
         title = article.getTitle();

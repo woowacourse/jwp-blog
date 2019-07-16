@@ -20,8 +20,7 @@ import techcourse.myblog.domain.ArticleRepository;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.springframework.http.HttpMethod.*;
-import static org.springframework.http.HttpStatus.FOUND;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
@@ -44,13 +43,8 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void index() {
-        httpRequestAndExpectStatus(GET, "/", OK);
-    }
-
-    @Test
     void articleForm() {
-        httpRequestAndExpectStatus(GET, "/writing", OK);
+        httpRequestAndExpectStatus(GET, "/articles/writing", OK);
     }
 
     @Test
@@ -61,7 +55,7 @@ public class ArticleControllerTests {
         Article articleKo = new Article(titleKo, coverUrlKo, contentsKo);
         Article articleApplyEscape = new Article(titleKo, coverUrlKo, StringEscapeUtils.escapeJava(contentsKo));
 
-        httpRequestAndExpectStatus(POST, "/write", createArticleForm(articleKo), FOUND)
+        httpRequestAndExpectStatus(POST, "/articles/write", createArticleForm(articleKo), FOUND)
                 .expectBody()
                 .consumeWith(response ->
                         checkContainArticle(
@@ -71,7 +65,7 @@ public class ArticleControllerTests {
 
     @Test
     void create_article_en() {
-        httpRequestAndExpectStatus(POST, "/write", createArticleForm(articleDto.toArticle()), FOUND)
+        httpRequestAndExpectStatus(POST, "/articles/write", createArticleForm(articleDto.toArticle()), FOUND)
                 .expectBody()
                 .consumeWith(response ->
                         checkContainArticle(
@@ -88,7 +82,7 @@ public class ArticleControllerTests {
 
     @Test
     void 존재하지_않는_게시글_조회_에러() {
-//        httpRequestAndExpectStatus(GET, "/articles/" + getNotPresentId(), INTERNAL_SERVER_ERROR);
+        httpRequestAndExpectStatus(GET, "/articles/0", INTERNAL_SERVER_ERROR);
     }
 
     @Test
@@ -127,8 +121,7 @@ public class ArticleControllerTests {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(form)
                 .exchange()
-                .expectStatus().isEqualTo(status)
-                ;
+                .expectStatus().isEqualTo(status);
     }
 
     private BodyInserters.FormInserter<String> createArticleForm(Article article) {

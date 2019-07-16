@@ -50,7 +50,7 @@
             </ul>
         </div>
     </div>
-    <form th:action="${article} ? '/articles/' + ${article.id} : '/write'" name="article" method="post"
+    <form th:action="${article} ? '/articles/' + ${article.id} : '/articles/write'" name="article" method="post"
           accept-charset="utf-8">
         <input th:if="${article!=null}" type="hidden" name="_method" value="put"/>
         <div class="about-cover card no-border">

@@ -12,6 +12,7 @@ import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.Optional;
 
+@RequestMapping("/articles")
 @Controller
 public class ArticleController {
     private final ArticleRepository articleRepository;
@@ -22,8 +23,8 @@ public class ArticleController {
     }
 
     @GetMapping("/writing")
-    public ModelAndView createArticleForm() {
-        return new ModelAndView("article-edit");
+    public String createArticleForm() {
+        return "article-edit";
     }
 
     @PostMapping("/write")
@@ -32,45 +33,34 @@ public class ArticleController {
         return new RedirectView("/articles/" + savedArticle.getId());
     }
 
-    @GetMapping("/")
-    public ModelAndView index() {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("index");
-        mav.addObject("articles", articleRepository.findAll());
-        return mav;
-    }
-
-
-    @GetMapping("/articles/{articleId}")
+    @GetMapping("/{articleId}")
     public String showArticle(@PathVariable long articleId, Model model) {
         Optional<Article> article = articleRepository.findById(articleId);
         article.ifPresent(value -> model.addAttribute("article", value));
         return "article";
     }
 
-    @GetMapping("/articles/{articleId}/edit")
-    public ModelAndView editArticleForm(@PathVariable long articleId) {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("article-edit");
-        mav.addObject("article", articleRepository.findById(articleId));
-        return mav;
+    @GetMapping("/{articleId}/edit")
+    public String editArticleForm(@PathVariable long articleId, Model model) {
+        model.addAttribute("article", articleRepository.findById(articleId));
+        return "article-edit";
     }
 
-    @PutMapping("/articles/{articleId}")
+    @PutMapping("/{articleId}")
     public RedirectView editArticle(@PathVariable long articleId, ArticleDto editedArticle) {
         Optional<Article> articleOpt = articleRepository.findById(articleId);
-        if (articleOpt.isPresent()) {
-            Article article = articleOpt.get();
-            article.update(editedArticle.toArticle());
-            articleRepository.save(article);
-        }
+        articleOpt.ifPresent(value -> {
+            value.update(editedArticle.toArticle());
+            articleRepository.save(value);
+        });
 
         return new RedirectView("/articles/" + articleId);
     }
 
-    @DeleteMapping("/articles/{articleId}")
+    @DeleteMapping("/{articleId}")
     public RedirectView deleteArticle(@PathVariable long articleId) {
-        //articleRepository.delete(articleRepository.findById(articleId));
+        Optional<Article> articleOpt = articleRepository.findById(articleId);
+        articleOpt.ifPresent(articleRepository::delete);
         return new RedirectView("/");
     }
 }
