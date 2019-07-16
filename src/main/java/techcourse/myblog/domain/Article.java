@@ -11,7 +11,7 @@ public class Article {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String title;
     private String coverUrl;
     private String contents;
@@ -34,7 +34,7 @@ public class Article {
         this.contents = article.contents;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 

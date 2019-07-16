@@ -1,12 +1,11 @@
 package techcourse.myblog.domain;
 
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.transaction.annotation.Transactional;
 
-public interface ArticleRepository extends CrudRepository<Article, Integer> {
-    @Transactional
-    default void update(int id, ArticleDto articleDto) {
+public interface ArticleRepository extends CrudRepository<Article, Long> {
+    default void update(Long id, ArticleDto articleDto) {
         Article article = findById(id).get();
         article.update(articleDto.toArticle());
+        save(article);
     }
 }
