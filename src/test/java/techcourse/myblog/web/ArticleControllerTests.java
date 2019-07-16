@@ -40,11 +40,7 @@ public class ArticleControllerTests {
 
     @Test
     void delete_test() {
-        webTestClient.post().uri("/articles")
-                .body(BodyInserters.fromFormData("title", "title")
-                        .with("coverUrl", "coverUrl").with("contents", "contents"))
-                .exchange();
-
+        addArticle();
         webTestClient.delete().uri("/articles/1")
                 .exchange()
                 .expectStatus().is3xxRedirection();
@@ -52,16 +48,19 @@ public class ArticleControllerTests {
 
     @Test
     void modify_test() {
-        webTestClient.post().uri("/articles")
-                .body(BodyInserters.fromFormData("title", "title")
-                        .with("coverUrl", "coverUrl").with("contents", "contents"))
-                .exchange();
-
-        webTestClient.put().uri("/articles/2")
+        addArticle();
+        webTestClient.put().uri("/articles/1")
                 .body(BodyInserters.fromFormData("title", "title")
                         .with("coverUrl", "coverUrl").with("contents", "contents"))
                 .exchange()
                 .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/$")
                 .expectStatus().is3xxRedirection();
+    }
+
+    private void addArticle() {
+        webTestClient.post().uri("/articles")
+                .body(BodyInserters.fromFormData("title", "title")
+                        .with("coverUrl", "coverUrl").with("contents", "contents"))
+                .exchange();
     }
 }
