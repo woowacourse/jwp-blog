@@ -1,5 +1,6 @@
 package techcourse.myblog.articles;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
@@ -19,6 +20,22 @@ class ArticleControllerTest {
     @Autowired
     ArticleService articleService;
 
+    Article newArticle;
+
+    @BeforeEach
+    void setUp() {
+        String title = "title";
+        String coverUrl = "coverUrl";
+        String contents = "contents";
+        Article article = Article.builder()
+                .title(title)
+                .coverUrl(coverUrl)
+                .contents(contents)
+                .build();
+
+        newArticle = articleService.save(article);
+    }
+
     @Test
     void writeTest() {
         String title = "title";
@@ -37,25 +54,29 @@ class ArticleControllerTest {
 
     @Test
     void showTest() {
-        String title = "title";
-        String coverUrl = "coverUrl";
-        String contents = "contents";
-        Article article = Article.builder()
-                .title(title)
-                .coverUrl(coverUrl)
-                .contents(contents)
-                .build();
-
-        Article newArticle = articleService.save(article);
-
         webTestClient.get().uri("/articles/" + newArticle.getId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(newArticle.getTitle())).isTrue();
-                    assertThat(body.contains(newArticle.getCoverUrl())).isTrue();
-                    assertThat(body.contains(newArticle.getContents())).isTrue();
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(newArticle.getTitle())).isTrue();
+            assertThat(body.contains(newArticle.getCoverUrl())).isTrue();
+            assertThat(body.contains(newArticle.getContents())).isTrue();
         });
     }
+
+    @Test
+    void editFormTest() {
+        webTestClient.get().uri("/articles/" + newArticle.getId() + "/edit")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(newArticle.getTitle())).isTrue();
+            assertThat(body.contains(newArticle.getCoverUrl())).isTrue();
+            assertThat(body.contains(newArticle.getContents())).isTrue();
+        });
+    }
+
+
 }

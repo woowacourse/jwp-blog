@@ -27,4 +27,11 @@ public class ArticleController {
         model.addAttribute(article);
         return "article";
     }
+
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model) {
+        Article article = articleService.findById(id);
+        model.addAttribute(article);
+        return "article-edit";
+    }
 }
