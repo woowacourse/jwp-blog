@@ -68,28 +68,30 @@
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
-                                                    <form method="post" action="/users">
+                                                    <form method="post" action="/users" id="user-form">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input type="text" name="name" class="form-control">
+                                                            <input type="text" name="name" class="form-control" id="user-name-input"
+                                                                   required pattern="^[가-힣|a-zA-Z]+$" minlength="2" maxlength="8">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
-                                                            <input type="email" name="email" class="form-control">
+                                                            <input type="email" name="email" class="form-control" id="user-email-input"
+                                                            required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
                                                             <input type="password" name="password" class="form-control"
-                                                                   placeholder="Password">
+                                                                   placeholder="Password" id="user-password-input" required minlength="8">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm
                                                                 Password</label>
                                                             <input type="password" class="form-control"
-                                                                   placeholder="Password">
+                                                                   placeholder="Password" id="user-password-confirm-input" required>
                                                         </div>
                                                         <div class="form-group">
-                                                            <button type="submit"
+                                                            <button type="submit" onclick="checkPassword()"
                                                                     class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
                                                                 가입하기
                                                             </button>
@@ -113,17 +115,29 @@
         </div>
     </div>
 </div>
-
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
+crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"
         integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl"
-        crossorigin="anonymous"></script>
+crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 <script src="../static/js/index.js"></script>
+<script>
+
+    function checkPassword() {
+        const password = document.getElementById("user-password-input").value;
+        const passwordConfirm = document.getElementById("user-password-confirm-input").value;
+        if(password !== passwordConfirm) {
+            alert("비밀번호가 다릅니다");
+            return;
+        }
+    }
+
+
+</script>
 </body>
 </html>
