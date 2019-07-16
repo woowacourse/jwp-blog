@@ -11,8 +11,10 @@ import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.repository.ArticleRepository;
 
+import java.util.Iterator;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 //@AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
@@ -56,50 +58,22 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
+                .expectStatus().is3xxRedirection();
+
+        Iterator<Article> articles = articleRepository.findAll().iterator();
+        Article article = articles.next();
+        assertThat(article.getTitle()).isEqualTo(title);
     }
 
     @Test
-    void lookUpArticle() {
-        articleRepository.save(new Article(title, contents, coverUrl));
-
-        webTestClient.get()
-                .uri("/")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
-    }
-
-    @Test
-    void findByIndex() {
+    void findById() {
         long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
 
         webTestClient.get()
-                .uri("/article/" + articleId)
+                .uri("/articles/" + articleId)
                 .exchange()
                 .expectStatus()
-                .isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
+                .isOk();
     }
 
     @Test
@@ -114,14 +88,7 @@ public class ArticleControllerTests {
                         .with("coverUrl", "updatedCoverUrl")
                         .with("contents", "updatedContents"))
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains("updatedTitle")).isTrue();
-                    assertThat(body.contains("updatedCoverUrl")).isTrue();
-                    assertThat(body.contains("updatedContents")).isTrue();
-                });
+                .expectStatus().isOk();
     }
 
     @Test
@@ -132,8 +99,9 @@ public class ArticleControllerTests {
                 .uri("/articles/" + articleId)
                 .exchange()
                 .expectStatus()
-                .isFound();
+                .is3xxRedirection();
 
-        assertThrows(IllegalArgumentException.class, () -> articleRepository.findById(articleId));
+        assertThatThrownBy(() -> articleRepository.findById(articleId).orElseThrow(IllegalAccessError::new))
+                .isInstanceOf(IllegalAccessError.class);
     }
 }
