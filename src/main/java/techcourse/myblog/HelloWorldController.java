@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class HelloWorldController {
+    @ResponseBody
+    @GetMapping("/helloworld")
+    public String helloworldGet(@RequestParam String blogName) {
+        return blogName;
+    }
 
     @ResponseBody
     @GetMapping("/helloworld")
