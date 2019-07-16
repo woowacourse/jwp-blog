@@ -1,7 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.springframework.stereotype.Repository;
-import techcourse.myblog.dto.ArticleDTO;
+import techcourse.myblog.dto.ArticleDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class ArticleRepository {
         return articles;
     }
 
-    public int addArticle(final ArticleDTO articleDTO) {
+    public int addArticle(final ArticleDto articleDTO) {
         final Article article = new Article(
                 this.index,
                 articleDTO.getTitle(),
@@ -36,13 +36,13 @@ public class ArticleRepository {
                 .orElseThrow(() -> new RuntimeException(NO_SUCH_ARTICLE));
     }
 
-    public void updateById(final int articleId, final ArticleDTO newArticleDTO) {
+    public void updateById(final int articleId, final ArticleDto newArticleDto) {
         final int index = articles.indexOf(findById(articleId));
         final Article newArticle = new Article(
                 articleId,
-                newArticleDTO.getTitle(),
-                newArticleDTO.getCoverUrl(),
-                newArticleDTO.getContents()
+                newArticleDto.getTitle(),
+                newArticleDto.getCoverUrl(),
+                newArticleDto.getContents()
         );
         articles.set(index, newArticle);
     }

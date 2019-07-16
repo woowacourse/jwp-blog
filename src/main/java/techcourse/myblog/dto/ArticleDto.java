@@ -1,6 +1,6 @@
 package techcourse.myblog.dto;
 
-public class ArticleDTO {
+public class ArticleDto {
     private String title;
     private String coverUrl;
     private String contents;

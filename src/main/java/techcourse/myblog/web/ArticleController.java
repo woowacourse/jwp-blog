@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.dto.ArticleDTO;
+import techcourse.myblog.dto.ArticleDto;
 
 @Controller
 public class ArticleController {
@@ -26,7 +26,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public RedirectView writeNewArticle(@ModelAttribute("article") final ArticleDTO articleDTO) {
+    public RedirectView writeNewArticle(@ModelAttribute("article") final ArticleDto articleDTO) {
         final int index = articleRepository.addArticle(articleDTO);
         return new RedirectView("/articles/" + index);
     }
@@ -44,7 +44,7 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public RedirectView editArticle(@PathVariable final int articleId, @ModelAttribute("article") final ArticleDTO articleDTO) {
+    public RedirectView editArticle(@PathVariable final int articleId, @ModelAttribute("article") final ArticleDto articleDTO) {
         articleRepository.updateById(articleId, articleDTO);
         return new RedirectView("/articles/" + articleId);
     }
