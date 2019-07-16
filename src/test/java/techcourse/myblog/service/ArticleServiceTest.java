@@ -3,72 +3,71 @@ package techcourse.myblog.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class ArticleServiceTest {
     private ArticleService service;
-    private Article article;
+    private ArticleAssembler assembler;
+    private ArticleDto articleDto;
+    private ArticleDto persistArticleDto;
 
     @BeforeEach
     void setUp() {
-        ArticleRepository repository = new ArticleRepository();
-        service = new ArticleService(repository);
-        article = new Article(1, "title", "", "content");
-    }
-
-    @Test
-    void 생성자_오류_확인_repository가_null인_경우() {
-        assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> new ArticleService(null));
+        service = new ArticleService(new ArticleRepository());
+        assembler = new ArticleAssembler();
+        articleDto = assembler.convertToDto(new Article(1, "title", "", "content"));
+        persistArticleDto = service.save(articleDto);
     }
 
     @Test
     void 게시글_생성_확인() {
-        assertThat(service.createArticle(article.convertToDTO())).isEqualTo(1);
+        assertThat(persistArticleDto).isEqualTo(articleDto);
     }
 
     @Test
     void 게시글_생성_오류확인_게시글이_null인_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> service.createArticle(null));
+                .isThrownBy(() -> service.save(null));
     }
 
     @Test
     void 게시글_조회_확인() {
-        service.createArticle(article.convertToDTO());
-        assertThat(service.findArticleById(1)).isEqualTo(article.convertToDTO());
+        ArticleDto retrieveArticleDto = service.findById(1);
+        assertThat(retrieveArticleDto).isEqualTo(persistArticleDto);
     }
 
     @Test
     void 모든_게시글_조회_확인() {
-        service.createArticle(article.convertToDTO());
-        assertThat(service.findAll()).isEqualTo(Arrays.asList(article.convertToDTO()));
+        List<ArticleDto> articleDtos = service.findAll();
+        assertThat(articleDtos).isEqualTo(Arrays.asList(persistArticleDto));
     }
 
     @Test
     void 게시글_수정_확인() {
-        service.createArticle(article.convertToDTO());
-        Article newArticle = new Article(1, "newTitle", "", "newContent");
-        service.updateArticle(1, newArticle.convertToDTO());
-        assertThat(service.findArticleById(1)).isEqualTo(newArticle.convertToDTO());
+        ArticleDto updatedArticleDto = assembler.convertToDto(
+                new Article(1, "newTitle", "", "newContent"));
+        service.update(1, updatedArticleDto);
+        ArticleDto persistArticleDto = service.findById(1);
+        assertThat(persistArticleDto).isEqualTo(updatedArticleDto);
     }
 
     @Test
     void 게시글_수정_오류확인_게시글이_null일_경우() {
-        service.createArticle(article.convertToDTO());
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> service.updateArticle(1, null));
+                .isThrownBy(() -> service.update(1, null));
     }
 
     @Test
     void 게시글_삭제_확인() {
-        service.createArticle(article.convertToDTO());
-        service.deleteArticle(1);
-        assertThat(service.findAll().contains(article.convertToDTO())).isFalse();
+        service.delete(1);
+        List<ArticleDto> articleDtos = service.findAll();
+        assertThat(articleDtos.contains(persistArticleDto)).isFalse();
     }
 }

@@ -10,28 +10,32 @@ import java.util.Objects;
 
 @Repository
 public class ArticleRepository {
+    public static final int INIT_ARTICLE_ID = 1;
+
     private List<Article> articles = new ArrayList<>();
+    private int latestId = INIT_ARTICLE_ID;
 
     public List<Article> findAll() {
         return Collections.unmodifiableList(articles);
     }
 
-    public Article findArticleById(final int id) {
+    public Article findById(final int id) {
         return articles.stream()
                 .filter(article -> article.match(id))
                 .findFirst()
                 .orElseThrow(ArticleNotFoundException::new);
     }
 
-    public int addArticle(final Article article) {
+    public Article save(final Article article) {
         checkNull(article);
         articles.add(article);
-        return article.getId();
+        latestId++;
+        return articles.get(articles.size() - 1);
     }
 
-    public void updateArticle(final int id, final Article article) {
+    public void update(final int id, final Article article) {
         checkNull(article);
-        Article oldArticle = findArticleById(id);
+        Article oldArticle = findById(id);
         oldArticle.update(article);
     }
 
@@ -41,8 +45,12 @@ public class ArticleRepository {
         }
     }
 
-    public void deleteArticle(final int id) {
-        Article article = findArticleById(id);
+    public void delete(final int id) {
+        Article article = findById(id);
         articles.remove(article);
+    }
+
+    public int getLatedId() {
+        return latestId;
     }
 }

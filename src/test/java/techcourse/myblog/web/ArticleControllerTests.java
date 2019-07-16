@@ -17,12 +17,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
+    private String title;
+    private String coverUrl;
+    private String contents;
 
     @BeforeEach
     void setUp() {
-        String title = "title";
-        String coverUrl = "";
-        String contents = "contents";
+        title = "title";
+        coverUrl = "";
+        contents = "contents";
 
         webTestClient.post().uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -50,10 +53,6 @@ public class ArticleControllerTests {
 
     @Test
     void 게시글_생성() {
-        String title = "title";
-        String coverUrl = "";
-        String contents = "contents";
-
         webTestClient.post().uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -66,7 +65,7 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     webTestClient.get()
-                            .uri(response.getRequestHeaders().getLocation())
+                            .uri("/articles/2")
                             .exchange()
                             .expectStatus().isOk()
                             .expectBody()
@@ -111,7 +110,7 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     webTestClient.get()
-                            .uri(response.getRequestHeaders().getLocation())
+                            .uri("/articles/1")
                             .exchange()
                             .expectStatus().isOk()
                             .expectBody()
