@@ -9,6 +9,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @AutoConfigureWebTestClient
@@ -51,4 +52,22 @@ public class UserControllerTest {
                     assertThat(body.contains("martin@gmail.com")).isTrue();
         });
     }
+
+    @Test
+    void check_same_email(){
+        create_user();
+
+        webTestClient.post().uri("/users/new")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("userName","Martin")
+                        .with("email","martin@gmail.com")
+                        .with("password","123456")
+                ).exchange()
+                .expectStatus().isOk()
+        .expectBody().consumeWith(res -> {
+            String body = new String(res.getResponseBody());
+            assertThat(body.contains("중복")).isTrue();
+        });
+    }
+
 }

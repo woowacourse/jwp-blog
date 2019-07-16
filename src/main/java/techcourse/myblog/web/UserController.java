@@ -27,11 +27,14 @@ public class UserController {
     }
 
     @PostMapping("/new")
-    public String createUser(User user){
+    public String createUser(User user,Model model){
         //TODO 규칙
-
+        if(userRepository.existsByEmail(user.getEmail())) {
+            model.addAttribute("error","중복");
+            return "signup";
+        }
         userRepository.save(user);
-        return "redirect:/login";
+        return "redirect:/users/login";
     }
 
     @GetMapping("/login")
@@ -44,9 +47,6 @@ public class UserController {
         model.addAttribute("users",userRepository.findAll());
         return "user-list";
     }
-
-
-
 
 
 }
