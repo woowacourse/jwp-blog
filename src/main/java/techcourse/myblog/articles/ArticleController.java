@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleController {
     private final ArticleService articleService;
 
+    @GetMapping("/new")
+    public String writeForm() {
+        return "article-edit";
+    }
+
     @PostMapping
     public String write(Article article) {
         Article savedArticle = articleService.save(article);
@@ -39,7 +44,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id){
+    public String delete(@PathVariable Long id) {
         articleService.deleteById(id);
         return "redirect:/";
     }

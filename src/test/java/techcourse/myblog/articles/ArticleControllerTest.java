@@ -38,6 +38,13 @@ class ArticleControllerTest {
     }
 
     @Test
+    void writeForm() {
+        webTestClient.get().uri("/articles/new")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
     void writeTest() {
         String title = "title";
         String coverUrl = "coverUrl";
