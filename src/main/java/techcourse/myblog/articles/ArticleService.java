@@ -3,6 +3,8 @@ package techcourse.myblog.articles;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
@@ -27,5 +29,9 @@ public class ArticleService {
 
     public void deleteById(Long id) {
         articleRepository.deleteById(id);
+    }
+
+    public List<Article> findAll() {
+        return articleRepository.findAll();
     }
 }
