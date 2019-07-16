@@ -13,6 +13,11 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping("/signup")
+    public String registerView() {
+        return "signup";
+    }
+    
     @PostMapping("/users")
     public String register(UserRequestDto userRequestDto, Model model){
         try {
@@ -20,7 +25,7 @@ public class UserController {
                 throw new User.UserCreationConstraintException("비밀번호가 같지 않습니다.");
             }
 
-            User user = User.of(userRequestDto.getUserName(), userRequestDto.getEmail(), userRequestDto.getPassword(),
+            User user = User.of(userRequestDto.getName(), userRequestDto.getEmail(), userRequestDto.getPassword(),
                 email -> userRepository.findByEmail(email).isPresent());
             userRepository.save(user);
             return "redirect:/login";
@@ -34,5 +39,11 @@ public class UserController {
     @GetMapping("/login")
     public String loginView() {
         return "login";
+    }
+
+    @GetMapping("/users")
+    public String userListView(Model model) {
+        model.addAttribute("users", userRepository.findAll());
+        return "user-list";
     }
 }
