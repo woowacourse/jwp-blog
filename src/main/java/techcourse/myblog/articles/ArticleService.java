@@ -16,4 +16,12 @@ public class ArticleService {
         return articleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Can't find Article : " + id));
     }
+
+    public Article edit(Article editedArticle) {
+        Article article = findById(editedArticle.getId());
+
+        article.update(editedArticle.getTitle(), editedArticle.getCoverUrl(), editedArticle.getContents());
+
+        return articleRepository.save(article);
+    }
 }

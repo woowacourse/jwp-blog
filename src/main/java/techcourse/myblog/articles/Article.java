@@ -22,6 +22,12 @@ public class Article {
     private String contents;
     @Column
     private String coverUrl;
+
+    public void update(String title, String coverUrl, String contents) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+    }
 }
 
 

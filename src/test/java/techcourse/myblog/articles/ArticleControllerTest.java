@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebCl
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -78,5 +79,22 @@ class ArticleControllerTest {
         });
     }
 
+    @Test
+    void editTest() {
+        String title = "1";
+        String coverUrl = "2";
+        String contents = "3";
+        Article editedArticle = Article.builder()
+                .id(newArticle.getId())
+                .title(title)
+                .coverUrl(coverUrl)
+                .contents(contents)
+                .build();
 
+        webTestClient.put().uri("/articles/" + editedArticle.getId())
+                .body(Mono.just(editedArticle), Article.class)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles/" + editedArticle.getId());
+    }
 }
