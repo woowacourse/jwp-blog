@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,8 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ArticleControllerTest {
     @Autowired
     private WebTestClient webTestClient;
-    @Autowired
-    private ArticleRepository articleRepository;
 
     private final String title = "안녕슬로스";
     private final String contents = "쩌싀워더펑여우";
@@ -56,32 +49,6 @@ public class ArticleControllerTest {
                 .exchange()
                 .expectStatus()
                 .isFound();
-    }
-
-    @Test
-    void 작성된_게시글을_리스트에_등록하는지_테스트() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus()
-                .isFound();
-
-        Article article = new Article();
-        article.setTitle(title);
-        article.setContents(contents);
-        article.setCoverUrl(coverUrl);
-        articleRepository.findAll()
-                .stream()
-                .mapToLong(Article::getArticleId)
-                .max()
-                .ifPresent(article::setArticleId);
-
-        assertThat(articleRepository.findAll().contains(article)).isTrue();
     }
 
     @Test
@@ -124,7 +91,8 @@ public class ArticleControllerTest {
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response -> {
-                    webTestClient.get().uri(response.getResponseHeaders().getLocation() + "/edit")
+                    webTestClient.get()
+                            .uri(response.getResponseHeaders().getLocation() + "/edit")
                             .exchange()
                             .expectStatus()
                             .isOk()
@@ -151,19 +119,27 @@ public class ArticleControllerTest {
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response -> {
-                    Long latestId = articleRepository.findAll().get(0).getArticleId();
                     webTestClient.delete()
                             .uri(response.getResponseHeaders().getLocation())
                             .exchange()
                             .expectStatus()
-                            .isFound();
-
-                    assertThat(articleRepository.findArticleById(latestId)).isEqualTo(Optional.empty());
+                            .isFound()
+                            .expectBody()
+                            .consumeWith(
+                                    res -> {
+                                        webTestClient.get()
+                                                .uri(res.getResponseHeaders().getLocation())
+                                                .exchange()
+                                                .expectStatus()
+                                                .isOk()
+                                                .expectBody()
+                                                .consumeWith(r -> {
+                                                    String body = new String(r.getResponseBody());
+                                                    assertThat(body.contains(title)).isFalse();
+                                                    assertThat(body.contains(contents)).isFalse();
+                                                    assertThat(body.contains(coverUrl)).isFalse();
+                                                });
+                                    });
                 });
-    }
-
-    @AfterEach
-    void tearDown() {
-        articleRepository.findAll().clear();
     }
 }

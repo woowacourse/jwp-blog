@@ -31,19 +31,12 @@ public class ArticleRepository {
     }
 
     public void deleteArticle(Long articleId) {
-        findArticleById(articleId)
-                .ifPresent(a -> findArticleIndexByArticle(a)
-                        .ifPresent(i -> articles.remove(i)));
+        Article targetArticle = findArticleById(articleId).get();
+        articles.remove(targetArticle);
     }
 
     public void updateArticle(Long articleId, Article updatedArticle) {
         findArticleById(articleId)
                 .ifPresent(a -> a.update(updatedArticle));
-    }
-
-    private OptionalInt findArticleIndexByArticle(Article article) {
-        return IntStream.range(0, articles.size())
-                .filter(i -> articles.get(i).hasSameArticleId(article))
-                .findFirst();
     }
 }
