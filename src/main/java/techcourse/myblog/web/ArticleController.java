@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
 
@@ -31,9 +33,11 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(ArticleDto articleDTO) {
+    public ModelAndView createArticle(ArticleDto articleDTO) {
         ArticleDto persistArticle = articleService.save(articleDTO);
-        return "redirect:/articles/" + persistArticle.getId();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setView(new RedirectView("/articles/" + persistArticle.getId()));
+        return modelAndView;
     }
 
     @GetMapping("/articles/{id}")
@@ -43,15 +47,19 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{id}")
-    public String updateArticle(@PathVariable int id, ArticleDto articleDTO) {
+    public ModelAndView updateArticle(@PathVariable int id, ArticleDto articleDTO) {
         articleService.update(id, articleDTO);
-        return "redirect:/articles/" + id;
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setView(new RedirectView("/articles/" + id));
+        return modelAndView;
     }
 
     @DeleteMapping("/articles/{id}")
-    public String deleteArticle(@PathVariable int id) {
+    public ModelAndView deleteArticle(@PathVariable int id) {
         articleService.delete(id);
-        return "redirect:/";
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setView(new RedirectView("/"));
+        return modelAndView;
     }
 
     @GetMapping("/articles/{id}/edit")
