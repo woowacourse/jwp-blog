@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-public class ArticleControllerTests {
+public class ArticleControllerTest {
     private static final String ROOT_URL = "/";
     private static final String EDIT_URL = "/articles/1/edit";
     private static final String WRITING_URL = "/writing";
