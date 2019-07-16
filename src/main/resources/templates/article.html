@@ -54,16 +54,16 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <form th:action="'/articles/' + *{id} + '/'" method="post">
-                    <a href="edit/" class="float-right pointer btn btn-icon">
-                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                    </a>
+                <a class="float-right pointer btn btn-icon" th:href="'/articles/' + *{id} + '/edit'">
+                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                </a>
+                <form method="post" th:action="'/articles/' + *{id}">
                     <button id="delete-btn" type="submit" class="float-right pointer btn btn-icon">
                         <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
                     </button>
                     <input type="hidden" name="_method" value="delete">
-                    <div id="viewerSection" th:text="*{contents}"></div>
                 </form>
+                <div id="viewerSection" th:text="*{contents}"></div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
                 <div class="profile-container row mrg-top-30 mrg-btm-30">

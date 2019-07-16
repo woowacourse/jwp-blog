@@ -1,6 +1,10 @@
 package techcourse.myblog.domain;
 
+import org.thymeleaf.util.StringUtils;
+
 public class Article implements Comparable<Article> {
+    private static final String DEFAULT_BACKGROUND_IMAGE_URL = "images/pages/index/study.jpg";
+
     private int id;
     private String title;
     private String coverUrl = "";
@@ -53,7 +57,18 @@ public class Article implements Comparable<Article> {
         this.contents = contents;
     }
 
-    public int compareTo(Article rhs) {
-        return this.id - rhs.id;
+    public int compareTo(Article article) {
+        return this.id - article.id;
+    }
+
+    public boolean existsCoverUrl() {
+        return !StringUtils.isEmpty(coverUrl);
+    }
+
+    public void defaultSetting(int id) {
+        if (existsCoverUrl()) {
+            coverUrl = DEFAULT_BACKGROUND_IMAGE_URL;
+        }
+        this.id = id;
     }
 }
