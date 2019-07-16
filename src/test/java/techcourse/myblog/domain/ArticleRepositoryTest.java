@@ -25,7 +25,7 @@ public class ArticleRepositoryTest {
     @BeforeEach
     void setUp() {
         articleRepository = new ArticleRepository();
-        article = Article.of(title, contents, coverUrl);
+        article = new Article(title, contents, coverUrl);
 
         articleRepository.addArticle(article);
     }
@@ -49,7 +49,7 @@ public class ArticleRepositoryTest {
 
     @Test
     void 전체글_조회_성공_테스트() {
-        Article article2 = Article.of(title, contents, coverUrl);
+        Article article2 = new Article(title, contents, coverUrl);
 
         articleRepository.addArticle(article2);
 
@@ -68,11 +68,7 @@ public class ArticleRepositoryTest {
 
     @Test
     void 게시글_수정_성공_테스트() {
-        Article updatedArticle = new Article();
-        updatedArticle.setArticleId(UPDATED_ARTICLE_ID);
-        updatedArticle.setTitle(UPDATED_TITLE);
-        updatedArticle.setContents(contents);
-        updatedArticle.setCoverUrl(coverUrl);
+        Article updatedArticle = new Article(UPDATED_TITLE, contents, coverUrl);
 
         articleRepository.updateArticle(UPDATED_ARTICLE_ID, updatedArticle);
 

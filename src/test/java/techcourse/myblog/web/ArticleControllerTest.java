@@ -16,6 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest {
+    private static final String APPENDING_DELETE_MESSAGE = "will be deleted";
+
     @Autowired
     private WebTestClient webTestClient;
 
@@ -112,9 +114,9 @@ public class ArticleControllerTest {
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+                        .fromFormData("title", title + APPENDING_DELETE_MESSAGE)
+                        .with("coverUrl", coverUrl + APPENDING_DELETE_MESSAGE)
+                        .with("contents", contents + APPENDING_DELETE_MESSAGE))
                 .exchange()
                 .expectStatus().isFound()
                 .expectBody()
@@ -135,9 +137,9 @@ public class ArticleControllerTest {
                                                 .expectBody()
                                                 .consumeWith(r -> {
                                                     String body = new String(r.getResponseBody());
-                                                    assertThat(body.contains(title)).isFalse();
-                                                    assertThat(body.contains(contents)).isFalse();
-                                                    assertThat(body.contains(coverUrl)).isFalse();
+                                                    assertThat(body.contains(title + APPENDING_DELETE_MESSAGE)).isFalse();
+                                                    assertThat(body.contains(contents + APPENDING_DELETE_MESSAGE)).isFalse();
+                                                    assertThat(body.contains(coverUrl + APPENDING_DELETE_MESSAGE)).isFalse();
                                                 });
                                     });
                 });

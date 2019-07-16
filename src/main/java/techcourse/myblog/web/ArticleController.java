@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
@@ -29,14 +28,14 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String writeArticle(final ArticleDto article) {
-        Long latestId = articleRepository.addArticle(Article.from(article));
+    public String writeArticle(final Article article) {
+        Long latestId = articleRepository.addArticle(article);
         return "redirect:/articles/" + latestId;
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable Long articleId, final ArticleDto article) {
-        articleRepository.updateArticle(articleId, Article.from(article));
+    public String updateArticle(@PathVariable Long articleId, final Article article) {
+        articleRepository.updateArticle(articleId, article);
         return "redirect:/articles/" + articleId;
     }
 
