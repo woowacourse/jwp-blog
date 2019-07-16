@@ -24,8 +24,16 @@ public class ArticleControllerTests {
     private static final String coverUrl = "https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4";
     private static final String contents = "나는 우아한형제들에서 우아한테크코스(이하 우테코) 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 ‘선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?’였다.";
 
+//    private Model model;
+
+//    @Mock
+//    ArticleRepositoryTest articleRepository;
+
     @Autowired
     private WebTestClient webTestClient;
+
+//    @InjectMocks
+//    ArticleController articleController;
 
     @Test
     void index() {
@@ -43,7 +51,7 @@ public class ArticleControllerTests {
 
     @Test
     void articleAddTest() {
-        webTestClient.post().uri("/write")
+        webTestClient.post().uri("/articles/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("id", id)
                         .with("title", title)
@@ -65,6 +73,26 @@ public class ArticleControllerTests {
                                 assertThat(body.contains(coverUrl)).isTrue();
                             });
                 });
+    }
+
+    @Test
+    void findArticleByIdTest() {
+//        given(articleRepository.get(Integer.parseInt(id))).willReturn(new Article(0, title, contents, coverUrl));
+//        articleController.showArticle(0, model);
+//
+//        verify(articleRepository, atLeastOnce()).get(anyInt());
+        webTestClient.post().uri("/write")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("id", "0")
+                        .with("title", "title")
+                        .with("coverUrl", "coverUrl")
+                        .with("contents", "contents"))
+                .exchange()
+                .expectStatus().is3xxRedirection();
+
+        webTestClient.get().uri("/articles/0")
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @Test
@@ -129,5 +157,4 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is4xxClientError();
     }
-
 }
