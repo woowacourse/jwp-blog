@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +15,6 @@ public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
     private WebTestClient.ResponseSpec responseSpec;
-
-    @BeforeEach
-    void setUp() {
-        responseSpec = webTestClient.post().uri("/articles")
-                .body(BodyInserters.fromFormData("title", "title")
-                        .with("coverUrl", "coverUrl").with("contents", "contents"))
-                .exchange();
-    }
 
     @Test
     void index() {
@@ -41,6 +32,8 @@ public class ArticleControllerTests {
 
     @Test
     void save_test() {
+        insertArticle();
+
         responseSpec
                 .expectStatus()
                 .isOk();
@@ -48,19 +41,30 @@ public class ArticleControllerTests {
 
     @Test
     void update_test() {
+        insertArticle();
+
         webTestClient.put().uri("/articles/1")
                 .body(BodyInserters.fromFormData("title", "title")
                         .with("coverUrl", "coverUrl").with("contents", "contents"))
                 .exchange()
-                .expectHeader().valueMatches("Location","http://localhost:[0-9]+/")
+                .expectHeader().valueMatches("Location","http://localhost:[0-9]+/$")
                 .expectStatus().is3xxRedirection();
     }
 
     @Test
     void delete_test() {
+        insertArticle();
+
         webTestClient.delete().uri("/articles/1")
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection();
+    }
+
+    private void insertArticle() {
+        responseSpec = webTestClient.post().uri("/articles")
+                .body(BodyInserters.fromFormData("title", "title")
+                        .with("coverUrl", "coverUrl").with("contents", "contents"))
+                .exchange();
     }
 }
