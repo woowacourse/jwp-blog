@@ -1,35 +1,37 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.web.dto;
 
-public class Article {
-    private Long id;
+public class ArticleDto {
     private String title;
     private String coverUrl;
     private String contents;
 
-    public Article(Long id, String title, String coverUrl, String contents) {
-        this.id = id;
+    public ArticleDto(String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getCoverUrl() {
         return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 
     public String getContents() {
         return contents;
     }
 
-    public boolean isSameId(long id) {
-        return this.id == id;
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 }
