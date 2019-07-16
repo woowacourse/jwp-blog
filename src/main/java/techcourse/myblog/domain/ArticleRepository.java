@@ -1,66 +1,16 @@
 package techcourse.myblog.domain;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 
-@Repository
-public class ArticleRepository {
-    private static final long INITIAL_ID = 0;
-    private static final long ADD_COUNT = 1;
-
-    private List<Article> articles;
-    private long latestId;
-
-    public ArticleRepository() {
-        articles = new ArrayList<>();
-        latestId = INITIAL_ID;
-    }
-
-    public long add(final ArticleDto articleDto) {
-        Article article = articleDto.toArticle(latestId());
-        articles.add(article);
-        return latestId;
-    }
-
-    private synchronized long latestId() {
-        latestId = latestId + ADD_COUNT;
-        return latestId;
-    }
-
-    public ArticleDto findById(final long id) {
-        Article article = findArticleById(id).orElseThrow(IllegalArgumentException::new);
-        return ArticleDto.toDto(article);
-    }
-
-    public long updateById(final ArticleDto articleDto, final long id) {
-        Article article = findArticleById(id).orElseThrow(IllegalArgumentException::new);
-        article.update(articleDto.toArticle(id));
-        return id;
-    }
-
-    public boolean deleteById(final long id) {
-        Article article = findArticleById(id).orElseThrow(IllegalArgumentException::new);
-        return articles.remove(article);
-    }
-
-    private Optional<Article> findArticleById(final long id) {
-        return articles.stream()
-                .filter(article -> article.isSameId(id))
-                .findFirst();
-    }
-
-    public List<ArticleDto> findAll() {
-        return articles.stream()
-                .map(ArticleDto::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public void deleteAll() {
-        latestId = INITIAL_ID;
-        articles.clear();
-    }
+public interface ArticleRepository extends CrudRepository<Article, Long> {
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE Article as a set a.title = :#{#article.title}, a.coverUrl = :#{#article.coverUrl}"
+            + ", a.contents = :#{#article.contents} where a.id = :#{#article.id}")
+    Integer update(@Param("article") Article article);
 }
