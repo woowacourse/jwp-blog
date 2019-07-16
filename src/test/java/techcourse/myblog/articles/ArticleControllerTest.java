@@ -21,7 +21,7 @@ class ArticleControllerTest {
     @Autowired
     ArticleService articleService;
 
-    Article newArticle;
+    Article article;
 
     @BeforeEach
     void setUp() {
@@ -34,7 +34,7 @@ class ArticleControllerTest {
                 .contents(contents)
                 .build();
 
-        newArticle = articleService.save(article);
+        this.article = articleService.save(article);
     }
 
     @Test
@@ -55,27 +55,27 @@ class ArticleControllerTest {
 
     @Test
     void showTest() {
-        webTestClient.get().uri("/articles/" + newArticle.getId())
+        webTestClient.get().uri("/articles/" + article.getId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(response -> {
             String body = new String(response.getResponseBody());
-            assertThat(body.contains(newArticle.getTitle())).isTrue();
-            assertThat(body.contains(newArticle.getCoverUrl())).isTrue();
-            assertThat(body.contains(newArticle.getContents())).isTrue();
+            assertThat(body.contains(article.getTitle())).isTrue();
+            assertThat(body.contains(article.getCoverUrl())).isTrue();
+            assertThat(body.contains(article.getContents())).isTrue();
         });
     }
 
     @Test
     void editFormTest() {
-        webTestClient.get().uri("/articles/" + newArticle.getId() + "/edit")
+        webTestClient.get().uri("/articles/" + article.getId() + "/edit")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(response -> {
             String body = new String(response.getResponseBody());
-            assertThat(body.contains(newArticle.getTitle())).isTrue();
-            assertThat(body.contains(newArticle.getCoverUrl())).isTrue();
-            assertThat(body.contains(newArticle.getContents())).isTrue();
+            assertThat(body.contains(article.getTitle())).isTrue();
+            assertThat(body.contains(article.getCoverUrl())).isTrue();
+            assertThat(body.contains(article.getContents())).isTrue();
         });
     }
 
@@ -85,7 +85,7 @@ class ArticleControllerTest {
         String coverUrl = "2";
         String contents = "3";
         Article editedArticle = Article.builder()
-                .id(newArticle.getId())
+                .id(article.getId())
                 .title(title)
                 .coverUrl(coverUrl)
                 .contents(contents)
@@ -96,5 +96,13 @@ class ArticleControllerTest {
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*/articles/" + editedArticle.getId());
+    }
+
+    @Test
+    void deleteTest() {
+        webTestClient.delete().uri("/articles/" + article.getId())
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/");
     }
 }
