@@ -81,6 +81,7 @@
                                                         <div class="form-group">
                                                             <button type="submit" class="btn btn-info btn-block border-radius-6 font-size-16 text-white">가입하기</button>
                                                         </div>
+                                                        <div th:if="${error}" th:text="${message}" class="alert alert-danger" role="alert" ></div>
                                                     </form>
                                                     <div class="text-dark">
                                                         <span>이미 회원이신가요?</span>

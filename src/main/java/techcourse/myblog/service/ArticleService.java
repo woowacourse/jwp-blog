@@ -16,8 +16,8 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public Article addArticle(Article article) {
-        return articleRepository.save(Article.of(article.getTitle(), article.getCoverUrl(), article.getContents()));
+    public Article save(Article article) {
+        return articleRepository.save(article);
     }
 
     public Article findById(Long id) {
@@ -27,10 +27,6 @@ public class ArticleService {
 
     public Iterable<Article> findAll() {
         return articleRepository.findAll();
-    }
-
-    public Article update(Article article) {
-        return articleRepository.save(article);
     }
 
     public void deleteById(Long id) {

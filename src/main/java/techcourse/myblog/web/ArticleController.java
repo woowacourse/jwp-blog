@@ -35,7 +35,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String publishArticle(ArticleRequestDto article) {
-        Article saved = articleService.addArticle(Article.from(article));
+        Article saved = articleService.save(Article.from(article));
         return "redirect:/articles/" + saved.getId();
     }
 
@@ -60,7 +60,7 @@ public class ArticleController {
     @PutMapping("/articles/{articleId}")
     public String editArticle(@PathVariable Long articleId, ArticleRequestDto reqArticle, Model model) {
         Article article = Article.of(articleId, reqArticle.getTitle(), reqArticle.getCoverUrl(), reqArticle.getContents());
-        articleService.update(article);
+        articleService.save(article);
         Article articleToShow = articleService.findById(articleId);
         model.addAttribute("article", articleToShow);
         return "article";
