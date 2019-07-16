@@ -4,6 +4,7 @@ package techcourse.myblog.domain;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import techcourse.myblog.repo.ArticleRepository;
 
 import java.util.Arrays;
 

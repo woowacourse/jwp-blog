@@ -1,9 +1,8 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.repo.ArticleRepository;
 
 public class HomeController {
 
