@@ -5,9 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.repository.ArticleRepository;
 
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
@@ -18,13 +19,13 @@ public class ArticleController {
         return "index";
     }
 
-    @GetMapping("/articles/{articleId}")
+    @GetMapping("/{articleId}")
     public String showArticle(@PathVariable int articleId, Model model) {
         model.addAttribute("article", articleRepository.get(articleId));
         return "article";
     }
 
-    @GetMapping("/articles/new")
+    @GetMapping("/new")
     public String articleCreateForm() {
         return "article-edit";
     }
@@ -35,19 +36,19 @@ public class ArticleController {
         return "redirect:/articles/" + articleRepository.lastIndex();
     }
 
-    @GetMapping("/articles/{articleId}/edit")
+    @GetMapping("/{articleId}/edit")
     public String articleUpdateForm(@PathVariable int articleId, Model model) {
         model.addAttribute("article", articleRepository.get(articleId));
         return "article-edit";
     }
 
-    @PutMapping("/articles/{articleId}")
+    @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable int articleId, Article article) {
         articleRepository.update(articleId, article);
         return "redirect:/articles/" + articleId;
     }
 
-    @DeleteMapping("/articles/{articleId}")
+    @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable int articleId) {
         articleRepository.remove(articleId);
         return "redirect:/";
