@@ -3,6 +3,7 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -15,6 +16,7 @@ import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
 
@@ -37,13 +39,8 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void index() {
-        checkIsOk(getResponse("/"));
-    }
-
-    @Test
     void writeArticle() {
-        checkIsOk(getResponse("/writing"));
+        checkIsOk(getResponse("/articles/writing"));
     }
 
 
@@ -69,8 +66,6 @@ public class ArticleControllerTests {
     void submit_update() {
         articleRepository.save(article);
         ArticleVO articleVO = new ArticleVO("update title", "update coverUrl", "update contents");
-        article.update(articleVO);
-        articleRepository.save(article);
 
         WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/" + article.getArticleId()), articleVO);
         checkIsFound(responseSpec);
@@ -82,7 +77,7 @@ public class ArticleControllerTests {
     void create_delete() {
         articleRepository.save(article);
 
-        webTestClient.delete().uri("delete/articles/" + article.getArticleId())
+        webTestClient.delete().uri("/articles/" + article.getArticleId())
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection();

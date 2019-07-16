@@ -8,6 +8,7 @@ import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.ArticleVO;
 
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
 
     private final ArticleRepository articleRepository;
@@ -16,18 +17,12 @@ public class ArticleController {
         this.articleRepository = articleRepository;
     }
 
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
-        return "index";
-    }
-
     @GetMapping("/writing")
     public String writeArticle() {
         return "article-edit";
     }
 
-    @PostMapping("/articles")
+    @PostMapping
     public String createArticle(ArticleVO articleVO, Model model) {
         Article article = new Article(articleVO.getTitle(), articleVO.getCoverUrl(), articleVO.getContents());
         articleRepository.save(article);
@@ -35,29 +30,30 @@ public class ArticleController {
         return "redirect:/articles/" + article.getArticleId();
     }
 
-    @GetMapping("/articles/{articleId}")
+    @GetMapping("/{articleId}")
     public String showArticle(@PathVariable Long articleId, Model model) {
         Article article = articleRepository.findById(articleId).get();
         model.addAttribute("article", article);
         return "article";
     }
 
-    @GetMapping("/articles/{articleId}/edit")
+    @GetMapping("/{articleId}/edit")
     public String updateArticle(@PathVariable Long articleId, Model model) {
         Article article = articleRepository.findById(articleId).get();
         model.addAttribute("article", article);
         return "article-edit";
     }
 
-    @PutMapping("/articles/{articleId}")
+    @PutMapping("/{articleId}")
     public String showUpdatedArticle(@PathVariable Long articleId, ArticleVO updatedArticle, Model model) {
         Article article = articleRepository.findById(articleId).get();
         article.update(updatedArticle);
+        articleRepository.save(article);
         model.addAttribute("article", updatedArticle);
         return "redirect:/articles/" + articleId;
     }
 
-    @DeleteMapping("delete/articles/{articleId}")
+    @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable Long articleId) {
         Article article = articleRepository.findById(articleId).get();
         articleRepository.delete(article);
