@@ -14,7 +14,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("Articles", articleRepository.findAll());
+        model.addAttribute("articles", articleRepository.findAll());
         return "index";
     }
 
@@ -31,13 +31,14 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String readArticle(@PathVariable long articleId, Model model) {
-        model.addAttribute("Article", articleRepository.findById(articleId).get());
+        Iterable<Article> all = articleRepository.findAll();
+        model.addAttribute("article", articleRepository.findById(articleId).get());
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String renderUpdatePage(@PathVariable long articleId, Model model) {
-        model.addAttribute("Article", articleRepository.findById(articleId).get());
+        model.addAttribute("article", articleRepository.findById(articleId).get());
         return "article-edit";
     }
 

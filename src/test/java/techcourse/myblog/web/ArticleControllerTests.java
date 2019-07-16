@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,19 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
 public class ArticleControllerTests {
     private static final String BASE_URL = "/";
     private static final String ARTICLE_URL = "articles/";
-    private static final long TARGET_ARTICLE_ID = 1;
-
-    private static Article article = new Article("제목", "유알엘", "컨텐츠");
+    private static long TARGET_ARTICLE_ID = 1;
+    private static final String title = "제목";
+    private static final String coverUrl = "유알엘";
+    private static final String contents = "컨텐츠";
+    private Article article;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -30,7 +31,7 @@ public class ArticleControllerTests {
 
     @BeforeEach
     void setUp() {
-        articleRepository.save(article);
+        article = new Article(title, coverUrl, contents);
     }
 
     @Test
@@ -61,23 +62,16 @@ public class ArticleControllerTests {
 
     @Test
     void 게시물_조회_테스트() {
-        String title = "제목";
-        String coverUrl = "유알엘";
-        String contents = "컨텐츠";
-
+        articleRepository.save(article);
+        Iterable<Article> all = articleRepository.findAll();
+        System.out.println();
         get_요청_결과(BASE_URL + ARTICLE_URL + TARGET_ARTICLE_ID)
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
+                .expectBody().consumeWith(res -> System.out.println(res.getResponseBody()));
     }
 
     @Test
     void 게시물_수정_페이지_이동_테스트() {
+        articleRepository.save(article);
         get_요청_결과(BASE_URL + ARTICLE_URL + TARGET_ARTICLE_ID + "/edit")
                 .expectStatus()
                 .isOk();
@@ -85,6 +79,7 @@ public class ArticleControllerTests {
 
     @Test
     void 게시물_수정_요청_테스트() {
+        articleRepository.save(article);
         webTestClient.put().uri(BASE_URL + ARTICLE_URL + TARGET_ARTICLE_ID)
                 .exchange()
                 .expectStatus().is3xxRedirection();
@@ -92,13 +87,9 @@ public class ArticleControllerTests {
 
     @Test
     void 게시물_삭제_요청_테스트() {
+        articleRepository.save(article);
         webTestClient.delete().uri(BASE_URL + ARTICLE_URL + TARGET_ARTICLE_ID)
                 .exchange()
                 .expectStatus().is3xxRedirection();
-    }
-
-    @AfterEach
-    void tearDown() {
-        articleRepository = null;
     }
 }
