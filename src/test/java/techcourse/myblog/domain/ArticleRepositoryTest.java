@@ -13,54 +13,58 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ArticleRepositoryTest {
-    String title = "제목";
-    String coverUrl = "링크";
-    String contents = "내용";
+        String title = "제목";
+        String coverUrl = "링크";
+        String contents = "내용";
+        Article testArticle;
+        @Autowired
+        private ArticleRepository articleRepository;
 
-    @Autowired
-    private ArticleRepository articleRepository;
+        @BeforeEach
+        void setUp() {
+                articleRepository.deleteAll();
+                testArticle = new Article(title, coverUrl, contents);
+        }
 
-    Article testArticle = new Article();
+        @Test
+        void write() {
+                articleRepository.write(testArticle);
+                assertThat(
+                    articleRepository.findAll().isEmpty()
+                ).isFalse();
+        }
 
-    @BeforeEach
-    void setUp() {
-        articleRepository.deleteAll();
-        testArticle.setTitle(title);
-        testArticle.setCoverUrl(coverUrl);
-        testArticle.setContents(contents);
-    }
+        @Test
+        void find1() {
+                articleRepository.write(testArticle);
+                assertThat(
+                    articleRepository.find(articleRepository.getLastArticleId())
+                ).isEqualTo(testArticle);
+        }
 
-    @Test
-    void write() {
-        articleRepository.write(testArticle);
-        assertThat(
-                articleRepository.findAll().isEmpty()
-        ).isFalse();
-    }
+        @Test
+        void find2() {
+                articleRepository.write(testArticle);
+                assertThrows(IllegalArgumentException.class, () -> {
+                        articleRepository.find(articleRepository.getLastArticleId() + 1);
+                });
+        }
 
-    @Test
-    void find() {
-        articleRepository.write(testArticle);
-        assertThrows(IllegalArgumentException.class, () -> {
-           articleRepository.find(2);
-        });
-    }
+        @Test
+        void edit() {
+                articleRepository.write(testArticle);
+                articleRepository.edit(new Article(), articleRepository.getLastArticleId());
+                assertThat(
+                    articleRepository.find(articleRepository.getLastArticleId()).getCoverUrl()
+                ).isEqualTo("");
+        }
 
-    @Test
-    void edit() {
-        articleRepository.write(testArticle);
-        articleRepository.edit(new Article(), articleRepository.getLastArticleId());
-        assertThat(
-                articleRepository.find(articleRepository.getLastArticleId()).getCoverUrl()
-        ).isEqualTo("");
-    }
-
-    @Test
-    void delete() {
-        articleRepository.write(testArticle);
-        articleRepository.delete(1);
-        assertThat(
-            articleRepository.findAll().size()
-        ).isZero();
-    }
+        @Test
+        void delete() {
+                articleRepository.write(testArticle);
+                articleRepository.delete(articleRepository.getLastArticleId());
+                assertThat(
+                    articleRepository.findAll().size()
+                ).isZero();
+        }
 }
