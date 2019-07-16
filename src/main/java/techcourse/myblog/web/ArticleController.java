@@ -52,8 +52,7 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String editArticle(@PathVariable Long articleId, ArticleRequestDto reqArticle, Model model) {
-        Article article = Article.from(reqArticle);
-        article.setId(articleId);
+        Article article = Article.of(articleId, reqArticle.getTitle(), reqArticle.getCoverUrl(), reqArticle.getContents());
         articleService.update(article);
         Article articleToShow = articleService.findById(articleId);
         model.addAttribute("article", articleToShow);
