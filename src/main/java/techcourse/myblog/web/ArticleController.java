@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.ArticleService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 public class ArticleController {
@@ -20,7 +22,8 @@ public class ArticleController {
 
     @GetMapping("/")
     public String indexView(Model model) {
-        List<Article> articles = articleService.findAll();
+        List<Article> articles = new ArrayList<>();
+        articleService.findAll().forEach(articles::add);
         model.addAttribute("articles", articles);
         return "index";
     }
@@ -32,15 +35,19 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String publishArticle(ArticleRequestDto article) {
-        articleService.addArticle(Article.from(article));
-        return "redirect:/";
+        Article saved = articleService.addArticle(Article.from(article));
+        return "redirect:/articles/" + saved.getId();
     }
 
     @GetMapping("/articles/{articleId}")
     public String articleView(@PathVariable Long articleId, Model model) {
-        Article article = articleService.findById(articleId);
-        model.addAttribute("article", article);
-        return "article";
+        try {
+            Article article = articleService.findById(articleId);
+            model.addAttribute("article", article);
+            return "article";
+        } catch (NoSuchElementException e) {
+            return "redirect:/";
+        }
     }
 
     @GetMapping("/articles/{articleId}/edit")

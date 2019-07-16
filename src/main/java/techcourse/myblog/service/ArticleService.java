@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -17,8 +16,8 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public Long addArticle(Article article) {
-        return articleRepository.addArticle(Article.of(article.getTitle(), article.getCoverUrl(), article.getContents()));
+    public Article addArticle(Article article) {
+        return articleRepository.save(Article.of(article.getTitle(), article.getCoverUrl(), article.getContents()));
     }
 
     public Article findById(Long id) {
@@ -26,12 +25,12 @@ public class ArticleService {
             .orElseThrow(() -> createNotFoundException(id));
     }
 
-    public List<Article> findAll() {
+    public Iterable<Article> findAll() {
         return articleRepository.findAll();
     }
 
     public Article update(Article article) {
-        return articleRepository.update(article);
+        return articleRepository.save(article);
     }
 
     public void deleteById(Long id) {

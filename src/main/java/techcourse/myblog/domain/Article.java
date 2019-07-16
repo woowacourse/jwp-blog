@@ -2,11 +2,17 @@ package techcourse.myblog.domain;
 
 import techcourse.myblog.web.ArticleRequestDto;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Objects;
 
+@Entity
 public class Article {
     private static long NEXT_ID = 1;
 
+    @Id
+    @GeneratedValue
     private Long id;
     private String title;
     private String coverUrl;
