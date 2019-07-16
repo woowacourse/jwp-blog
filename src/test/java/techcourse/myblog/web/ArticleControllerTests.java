@@ -2,21 +2,19 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.repository.ArticleRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.repository.ArticleRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@AutoConfigureWebTestClient
+//@AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
@@ -88,7 +86,7 @@ public class ArticleControllerTests {
 
     @Test
     void findByIndex() {
-        int articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+        long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
 
         webTestClient.get()
                 .uri("/article/" + articleId)
@@ -106,7 +104,7 @@ public class ArticleControllerTests {
 
     @Test
     void updateArticle() {
-        int articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+        long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
 
         webTestClient.put()
                 .uri("/articles/" + articleId)
@@ -128,7 +126,7 @@ public class ArticleControllerTests {
 
     @Test
     void deleteArticle() {
-        int articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+        long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
 
         webTestClient.delete()
                 .uri("/articles/" + articleId)

@@ -9,11 +9,36 @@ import techcourse.myblog.repository.ArticleRepository;
 
 @Controller
 public class ArticleController {
-    @Autowired
     private ArticleRepository articleRepository;
 
+    @Autowired
+    public ArticleController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
+
+
+    @GetMapping("/")
+    public String index(Model model) {
+        model.addAttribute("articles", articleRepository.findAll());
+        return "index";
+    }
+
     @GetMapping("/writing")
-    public String createArticle() {
+    public String getArticleEditForm() {
+        return "article-edit";
+    }
+
+    @GetMapping("/articles/{articleId}")
+    public String getArticle(@PathVariable long articleId, Model model) {
+        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+        model.addAttribute("article", article);
+        return "article";
+    }
+
+    @GetMapping("/articles/{articleId}/edit")
+    public String getEditArticle(@PathVariable long articleId, Model model) {
+        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+        model.addAttribute("article", article);
         return "article-edit";
     }
 
@@ -24,34 +49,17 @@ public class ArticleController {
         return "article";
     }
 
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
-        return "index";
-    }
-
-    @GetMapping("/article/{articleId}")
-    public String getArticle(@PathVariable int articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId));
-        return "article";
-    }
-
-    @GetMapping("/articles/{articleId}/edit")
-    public String editArticle(@PathVariable int articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId));
-        return "article-edit";
-    }
-
     @PutMapping("/articles/{articleId}")
-    public String getModifiedArticle(@PathVariable int articleId, Article article, Model model) {
-        article.setId(articleId);
-        articleRepository.update(article);
-        model.addAttribute(articleRepository.findById(articleId));
+    public String getModifiedArticle(@PathVariable long articleId, Article article, Model model) {
+        Article originArticle = articleRepository.findById(articleId).orElseThrow(IllegalAccessError::new);
+        originArticle.update(article);
+        articleRepository.save(originArticle);
+        model.addAttribute(originArticle);
         return "article";
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId) {
+    public String deleteArticle(@PathVariable long articleId) {
         articleRepository.deleteById(articleId);
         return "redirect:/";
     }
