@@ -44,8 +44,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String saveArticle(ArticleDto dto, Model model) {
-        model.addAttribute(dto);
+    public String saveArticle(ArticleDto dto) {
         Article article = articleRepository.save(dto.toEntity());
         return "redirect:/articles/" + article.getId();
     }
