@@ -11,4 +11,9 @@ public class ArticleService {
     public Article save(Article article) {
         return articleRepository.save(article);
     }
+
+    public Article findById(Long id) {
+        return articleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Can't find Article : " + id));
+    }
 }
