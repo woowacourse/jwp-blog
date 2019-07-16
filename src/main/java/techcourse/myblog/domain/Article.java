@@ -1,23 +1,28 @@
 package techcourse.myblog.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
-
+@Entity
 public class Article {
 
-    private static AtomicLong incrementNumber = new AtomicLong();
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long articleId;
     private String title;
     private String coverUrl;
     private String contents;
 
+    public Article() {
+    }
 
     public Article(String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-        this.articleId = incrementNumber.incrementAndGet();
     }
 
     public void update(ArticleVO articleVO) {

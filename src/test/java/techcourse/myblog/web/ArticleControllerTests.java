@@ -2,12 +2,9 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
@@ -19,20 +16,14 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 public class ArticleControllerTests {
 
+    @Autowired
     private ArticleRepository articleRepository;
     private String title;
     private String coverUrl;
     private String contents;
     private Article article;
-
-    @Autowired
-    public ArticleControllerTests(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
 
     @Autowired
     private WebTestClient webTestClient;
@@ -76,7 +67,9 @@ public class ArticleControllerTests {
 
     @Test
     void submit_update() {
+        articleRepository.save(article);
         ArticleVO articleVO = new ArticleVO("update title", "update coverUrl", "update contents");
+        article.update(articleVO);
         articleRepository.save(article);
 
         WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/" + article.getArticleId()), articleVO);

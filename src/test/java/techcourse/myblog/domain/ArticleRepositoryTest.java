@@ -1,40 +1,29 @@
 package techcourse.myblog.domain;
 
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleRepositoryTest {
 
+    @Autowired
     private ArticleRepository articleRepository;
-    private String title;
-    private String coverUrl;
-    private String contents;
-    private Article article;
-
-    @BeforeEach
-    void setup() {
-        articleRepository = new ArticleRepository();
-        title = "title";
-        coverUrl = "coverUrl";
-        contents = "contents";
-        article = new Article(title, coverUrl, contents);
-    }
-
+    private String title = "title";
+    private String coverUrl = "coverUrl";
+    private String contents = "contents";
+    private Article article = new Article(title,coverUrl,contents);
 
     @Test
     void saveArticle() {
         articleRepository.save(article);
-        assertThat(articleRepository.count()).isEqualTo(1);
+        assertThat(articleRepository.existsById(article.getArticleId())).isTrue();
+        articleRepository.delete(article);
     }
 
 
@@ -53,26 +42,30 @@ public class ArticleRepositoryTest {
     @Test
     void findArticleById() {
         articleRepository.save(article);
-        assertThat(articleRepository.findById(article.getArticleId())).isEqualTo(article);
+
+        assertThat(articleRepository.findById(article.getArticleId()).get()).isEqualTo(article);
+
+        articleRepository.delete(article);
     }
 
 
     @Test
     void updateArticle() {
         ArticleVO article2 = new ArticleVO("update title", "update coverUrl", "update contents");
-        articleRepository.save(article);
-        articleRepository.update(article.getArticleId(), article2);
+        article.update(article2);
 
         assertThat(article.getTitle().equals(article2.getTitle()));
         assertThat(article.getCoverUrl().equals(article2.getCoverUrl()));
         assertThat(article.getContents().equals(article2.getContents()));
+
+        articleRepository.delete(article);
     }
 
     @Test
     void deleteArticle() {
         articleRepository.save(article);
-        articleRepository.delete(article.getArticleId());
+        articleRepository.delete(article);
 
-        assertThat(articleRepository.findAll()).isEqualTo(Arrays.asList());
+        assertThat(articleRepository.existsById(article.getArticleId())).isFalse();
     }
 }
