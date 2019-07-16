@@ -1,29 +1,25 @@
 package techcourse.myblog.domain;
 
-public class Article {
-    private static long articleId = 1;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
+public class Article {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String title;
     private String coverUrl;
     private String contents;
-
-    public Article(String title, String coverUrl, String contents) {
-        this(articleId++, title, coverUrl, contents);
-    }
-
-    public Article(long id, String title, String coverUrl, String contents) {
-        this.id = id;
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
-    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -49,9 +45,5 @@ public class Article {
 
     public void setContents(String contents) {
         this.contents = contents;
-    }
-
-    public boolean equals(long articleId) {
-        return this.id == articleId;
     }
 }
