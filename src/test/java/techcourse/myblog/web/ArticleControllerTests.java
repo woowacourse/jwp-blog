@@ -9,7 +9,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.repository.ArticleRepository;
 
 import java.net.URI;
 
@@ -51,8 +51,8 @@ public class ArticleControllerTests {
 
     @Test
     void createArticle() {
-        String title = "목적의식 있는 연습을 통한 효과적인 학습";
-        String coverUrl = "https://techcourse.woowahan.com/images/default/default-cover.jpeg";
+        String title = "title";
+        String coverUrl = "url";
         String contents = "helloWould";
 
         webTestClient.post()
@@ -63,7 +63,7 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().is3xxRedirection()
+                .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response -> {
                     URI location = response.getResponseHeaders().getLocation();
@@ -162,6 +162,8 @@ public class ArticleControllerTests {
 
     private long addSampleArticle() {
         Article article = new Article(SAMPLE_TITLE, SAMPLE_COVER_URL, SAMPLE_CONTENTS);
-        return articleRepository.save(article);
+        articleRepository.save(article);
+
+        return article.getId();
     }
 }

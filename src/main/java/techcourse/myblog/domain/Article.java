@@ -1,37 +1,41 @@
 package techcourse.myblog.domain;
 
-import java.util.concurrent.atomic.AtomicLong;
+import techcourse.myblog.dto.ArticleDto;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Article {
-    private static final AtomicLong NEXT_ID = new AtomicLong();
-
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String title;
     private String coverUrl;
     private String contents;
 
+    public Article() {
+    }
+
     public Article(String title, String coverUrl, String contents) {
-        this.id = NEXT_ID.getAndIncrement();
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
 
-    public static void initializeNextId() {
-        NEXT_ID.set(0);
+    public boolean matchId(Long id) {
+        return this.id.equals(id);
     }
 
-    public boolean matchId(long id) {
-        return this.id == id;
+    public void updateArticle(ArticleDto articleDto) {
+        this.title = articleDto.getTitle();
+        this.coverUrl = articleDto.getCoverUrl();
+        this.contents = articleDto.getContents();
     }
 
-    public void updateArticle(String newTitle, String newCoverUrl, String newContents) {
-        this.title = newTitle;
-        this.coverUrl = newCoverUrl;
-        this.contents = newContents;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
