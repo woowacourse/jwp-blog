@@ -90,12 +90,7 @@
 <div th:include="fragments/main/js :: js"></div>
 <script src="/js/index.js"></script>
 <script th:inline="javascript">
-    /*<![CDATA[*/
     var initValue = "";
-
-    [# th:if= "${article} != null" ]
-    initValue = /*[[${article.contents}]]*/ 'default';
-    [/]
 
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
@@ -109,7 +104,10 @@
         height: 'calc(100vh - 360px)',
         initialValue: initValue
     });
-    /*]]>*/
+
+    if([[${article}]]) {
+        editor.setValue([[${article?.contents}]]);
+    }
 </script>
 </body>
 </html>
