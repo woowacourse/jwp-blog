@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureWebClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ArticleControllerTest {
+class ArticleControllerTests {
 
     @Autowired
     WebTestClient webTestClient;
@@ -91,18 +91,14 @@ class ArticleControllerTest {
         String title = "1";
         String coverUrl = "2";
         String contents = "3";
-        Article editedArticle = Article.builder()
-                .id(article.getId())
-                .title(title)
-                .coverUrl(coverUrl)
-                .contents(contents)
-                .build();
 
-        webTestClient.put().uri("/articles/" + editedArticle.getId())
-                .body(Mono.just(editedArticle), Article.class)
+        webTestClient.put().uri("/articles/1")
+                .body(BodyInserters.fromFormData("title",title)
+                .with("coverUrl",coverUrl)
+                .with("contents",contents))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/articles/" + editedArticle.getId());
+                .expectHeader().valueMatches("location", ".*/articles/1");
     }
 
     @Test
