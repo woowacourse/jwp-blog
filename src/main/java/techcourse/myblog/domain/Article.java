@@ -1,17 +1,29 @@
 package techcourse.myblog.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Article {
     private static final String EMPTY_TEXT = "NULL";
 
-    private final int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String title;
     private String coverUrl;
     private String contents;
 
-    public Article(int id, String title, String coverUrl, String contents) {
+    public Article() {
+    }
+
+    public Article(String title, String coverUrl, String contents) {
         validateTitle(title);
         validateContents(contents);
-        this.id = id;
+        //this.id = id;
         this.title = title;
         this.contents = contents;
         this.coverUrl = (isBlank(coverUrl)) ? EMPTY_TEXT : coverUrl;
@@ -33,9 +45,9 @@ public class Article {
         return text == null || "".equals(text);
     }
 
-    public boolean matchId(int articleId) {
-        return this.id == articleId;
-    }
+//    public boolean matchId(int articleId) {
+//        return this.id == articleId;
+//    }
 
     public void update(Article article) {
         title = article.getTitle();
@@ -55,7 +67,17 @@ public class Article {
         return contents;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                '}';
     }
 }

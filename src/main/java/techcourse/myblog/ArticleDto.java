@@ -37,7 +37,8 @@ public class ArticleDto {
         this.contents = contents;
     }
 
-    public Article toArticle(int id) {
-        return new Article(id, title, coverUrl, contents);
+
+    public Article toArticle() {
+        return new Article(title, coverUrl, contents);
     }
 }
