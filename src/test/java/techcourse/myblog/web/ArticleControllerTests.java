@@ -47,7 +47,7 @@ public class ArticleControllerTests {
     
     @Test
     void 게시글_수정_페이지_확인() {
-        checkResponseStatus(HttpMethod.GET, "/articles/" + ARTICLE_ID + "/edit", HttpStatus.OK);
+        checkResponseStatus(HttpMethod.GET, "/articles/" + ARTICLE_ID + "/update", HttpStatus.OK);
     }
     
     @Test

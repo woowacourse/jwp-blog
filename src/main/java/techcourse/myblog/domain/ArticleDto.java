@@ -10,6 +10,10 @@ public class ArticleDto {
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
+
+    public Article toArticle() {
+        return Article.to(title, coverUrl, contents);
+    }
     
     public String getTitle() {
         return title;

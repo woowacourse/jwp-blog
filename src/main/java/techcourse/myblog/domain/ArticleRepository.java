@@ -1,49 +1,12 @@
 package techcourse.myblog.domain;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.util.Collections.unmodifiableList;
-
-@Repository
-public class ArticleRepository {
-    private static final int INITIAL_VALUE = 0;
-    private static final int INCREMENT_VALUE = 1;
-
-    private List<Article> articles = new ArrayList<>();
-
-    public List<Article> findAll() {
-        return unmodifiableList(this.articles);
-    }
-
-    public Article add(ArticleDto articleDto) {
-        Article article = Article.to(autoIncrement(), articleDto);
-        this.articles.add(article);
-        return article;
-    }
-
-    public Article findById(int id) {
-        return this.articles.stream()
-                .filter(article -> article.matchId(id))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
-    }
-    
-    public int autoIncrement() {
-        return this.articles.stream()
-                .mapToInt(Article::getId)
-                .max()
-                .orElse(INITIAL_VALUE) + INCREMENT_VALUE;
-    }
-
-    public void update(int id, ArticleDto articleDto) {
-        Article articleToUpdate = findById(id);
-        articleToUpdate.edit(articleDto);
-    }
-
-    public void remove(int id) {
-        this.articles.remove(findById(id));
+public interface ArticleRepository extends CrudRepository<Article, Integer> {
+    @Transactional
+    default void update(int id, ArticleDto articleDto) {
+        Article article = findById(id).get();
+        article.update(articleDto.toArticle());
     }
 }

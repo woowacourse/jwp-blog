@@ -1,30 +1,37 @@
 package techcourse.myblog.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 
+@Entity
 public class Article {
-    private final int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private String title;
     private String coverUrl;
     private String contents;
+
+    public Article() {}
     
-    private Article(int id, ArticleDto articleDto) {
-        this.id = id;
-        edit(articleDto);
+    private Article(String title, String coverUrl, String contents) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
     }
     
-    public static Article to(int id, ArticleDto articleDto) {
-        return new Article(id, articleDto);
+    public static Article to(String title, String coverUrl, String contents) {
+        return new Article(title, coverUrl, contents);
     }
     
-    public boolean matchId(int id) {
-        return this.id == id;
-    }
-    
-    public void edit(ArticleDto articleDto) {
-        this.title = articleDto.getTitle();
-        this.coverUrl = articleDto.getCoverUrl();
-        this.contents = articleDto.getContents();
+    public void update(Article article) {
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
     }
 
     public int getId() {
