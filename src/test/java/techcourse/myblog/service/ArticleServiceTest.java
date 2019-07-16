@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.excerption.ArticleDtoNotFoundException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,13 +34,13 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_생성_오류확인_게시글이_null인_경우() {
-        assertThatExceptionOfType(NullPointerException.class)
+        assertThatExceptionOfType(ArticleDtoNotFoundException.class)
                 .isThrownBy(() -> service.save(null));
     }
 
     @Test
     void 게시글_조회_확인() {
-        ArticleDto retrieveArticleDto = service.findById(1);
+        ArticleDto retrieveArticleDto = service.findById(persistArticleDto.getId());
         assertThat(retrieveArticleDto).isEqualTo(persistArticleDto);
     }
 
@@ -52,21 +53,20 @@ public class ArticleServiceTest {
     @Test
     void 게시글_수정_확인() {
         ArticleDto updatedArticleDto = assembler.convertToDto(
-                new Article(1, "newTitle", "", "newContent"));
-        service.update(1, updatedArticleDto);
-        ArticleDto persistArticleDto = service.findById(1);
-        assertThat(persistArticleDto).isEqualTo(updatedArticleDto);
+                new Article(persistArticleDto.getId(), "newTitle", "", "newContent"));
+        service.update(persistArticleDto.getId(), updatedArticleDto);
+        assertThat(service.findById(persistArticleDto.getId())).isEqualTo(updatedArticleDto);
     }
 
     @Test
     void 게시글_수정_오류확인_게시글이_null일_경우() {
-        assertThatExceptionOfType(NullPointerException.class)
+        assertThatExceptionOfType(ArticleDtoNotFoundException.class)
                 .isThrownBy(() -> service.update(1, null));
     }
 
     @Test
     void 게시글_삭제_확인() {
-        service.delete(1);
+        service.delete(persistArticleDto.getId());
         List<ArticleDto> articleDtos = service.findAll();
         assertThat(articleDtos.contains(persistArticleDto)).isFalse();
     }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.excerption.ArticleDtoNotFoundException;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,22 +36,22 @@ public class ArticleService {
     }
 
     public ArticleDto save(ArticleDto articleDTO) {
-        checkNull(articleDTO);
-        articleDTO.setId(articleRepository.getLatedId());
+        checkDto(articleDTO);
+        articleDTO.setId(articleRepository.getLatestId());
         Article article = assembler.convertToEntity(articleDTO);
         Article persistArticle = articleRepository.save(article);
         return assembler.convertToDto(persistArticle);
     }
 
     public void update(final int id, final ArticleDto articleDTO) {
-        checkNull(articleDTO);
+        checkDto(articleDTO);
         Article article = assembler.convertToEntity(articleDTO);
         articleRepository.update(id, article);
     }
 
-    private void checkNull(ArticleDto articleDTO) {
+    private void checkDto(ArticleDto articleDTO) {
         if (Objects.isNull(articleDTO)) {
-            throw new NullPointerException();
+            throw new ArticleDtoNotFoundException();
         }
     }
 

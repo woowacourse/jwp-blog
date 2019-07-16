@@ -3,6 +3,9 @@ package techcourse.myblog.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.excerption.ArticleNotFoundException;
+import techcourse.myblog.excerption.ArticleToSaveNotFoundException;
+import techcourse.myblog.excerption.ArticleToUpdateNotFoundException;
+import techcourse.myblog.excerption.InvalidArticleIdException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,13 +33,14 @@ public class ArticleRepositoryTest {
 
     @Test
     void 게시글_추가_오류확인_게시글이_null인_경우() {
-        assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> repository.save(null));
+        assertThatExceptionOfType(ArticleToSaveNotFoundException.class)
+                .isThrownBy(() -> repository.save(null))
+                .withMessage("저장할 게시글이 없습니다.");
     }
 
     @Test
     void 게시글_조회_확인() {
-        Article retrieveArticle = repository.findById(1);
+        Article retrieveArticle = repository.findById(persistArticle.getId());
         assertThat(retrieveArticle).isEqualTo(persistArticle);
     }
 
@@ -54,16 +58,25 @@ public class ArticleRepositoryTest {
 
     @Test
     void 게시글_수정_확인() {
-        Article updateArticle = new Article(1, "newTitle", "", "newContent");
-        repository.update(1, updateArticle);
+        Article updateArticle = new Article(persistArticle.getId(), "newTitle", "", "newContent");
+        repository.update(persistArticle.getId(), updateArticle);
         Article retrieveArticle = repository.findById(1);
         assertThat(retrieveArticle).isEqualTo(updateArticle);
     }
 
     @Test
+    void 게시글_수정_오류확인_id가_자연수가_아닌_경우() {
+        Article updateArticle = new Article(persistArticle.getId(), "newTitle", "", "newContent");
+        assertThatExceptionOfType(InvalidArticleIdException.class)
+                .isThrownBy(() -> repository.update(0, updateArticle))
+                .withMessage("적절한 ID가 아닙니다.");
+    }
+
+    @Test
     void 게시글_수정_오류확인_게시글이_null인_경우() {
-        assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> repository.update(1, null));
+        assertThatExceptionOfType(ArticleToUpdateNotFoundException.class)
+                .isThrownBy(() -> repository.update(persistArticle.getId(), null))
+                .withMessage("업데이트 해야할 게시글이 없습니다.");
     }
 
     @Test

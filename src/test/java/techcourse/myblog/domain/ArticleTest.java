@@ -1,6 +1,8 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.excerption.ArticleToUpdateNotFoundException;
+import techcourse.myblog.excerption.InvalidArticleIdException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -13,7 +15,7 @@ public class ArticleTest {
 
     @Test
     void 생성자_오류확인_id가_양수가_아닐_경우() {
-        assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatExceptionOfType(InvalidArticleIdException.class)
                 .isThrownBy(() -> new Article(0, "title", "", "content"))
                 .withMessage("적절한 ID가 아닙니다.");
     }
@@ -59,7 +61,8 @@ public class ArticleTest {
     @Test
     void 게시글_수정_오류확인_인자가_null인_경우() {
         Article article = new Article(1, "title", "", "content");
-        assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> article.update(null));
+        assertThatExceptionOfType(ArticleToUpdateNotFoundException.class)
+                .isThrownBy(() -> article.update(null))
+                .withMessage("업데이트 해야할 게시글이 없습니다.");
     }
 }

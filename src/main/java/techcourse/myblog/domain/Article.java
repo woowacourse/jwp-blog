@@ -1,5 +1,8 @@
 package techcourse.myblog.domain;
 
+import techcourse.myblog.excerption.ArticleToUpdateNotFoundException;
+import techcourse.myblog.excerption.InvalidArticleIdException;
+
 import java.util.Objects;
 
 import static techcourse.myblog.domain.ArticleRepository.INIT_ARTICLE_ID;
@@ -13,7 +16,7 @@ public class Article {
     public Article(final int id, final String title, final String coverUrl, final String contents) {
         checkNull(title, coverUrl, contents);
         if (id < INIT_ARTICLE_ID) {
-            throw new IllegalArgumentException("적절한 ID가 아닙니다.");
+            throw new InvalidArticleIdException("적절한 ID가 아닙니다.");
         }
         this.id = id;
         this.title = title;
@@ -33,7 +36,7 @@ public class Article {
 
     public void update(final Article article) {
         if (Objects.isNull(article)) {
-            throw new NullPointerException();
+            throw new ArticleToUpdateNotFoundException("업데이트 해야할 게시글이 없습니다.");
         }
         this.title = article.getTitle();
         this.coverUrl = article.getCoverUrl();
