@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +9,11 @@ import techcourse.myblog.dto.ArticleUpdateDto;
 
 @Controller
 public class ArticleController {
-    @Autowired
     private ArticleRepository articleRepository;
+
+    public ArticleController(final ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @GetMapping(value = {"/", "/articles"})
     public String showArticles(Model model) {
