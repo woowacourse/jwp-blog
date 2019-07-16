@@ -52,4 +52,26 @@ class UserControllerTest {
                 });
     }
 
+    @Test
+    void 유저_조회_테스트() {
+        webTestClient.get().uri("/users")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = getResponseBody(response.getResponseBody());
+                    assertThat(body.contains(userName)).isTrue();
+                    assertThat(body.contains(email)).isTrue();
+                });
+    }
+
+    private String getResponseBody(byte[] responseBody) {
+        try {
+            return new String(responseBody, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException("ArticleControllerTest 에서 EncodingException 발생 : " + e.getMessage());
+        }
+    }
+
+
 }

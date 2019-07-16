@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" layout:decorator="~{layout/default-layout}"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"
@@ -51,12 +53,12 @@
                 </li>
             </ul>
             <ul class="nav-right">
-                <li class="user-profile dropdown no-border pointer" id="header-user-dropdown-btn">
+                <li   class="user-profile dropdown no-border pointer" id="header-user-dropdown-btn">
                     <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
                         <img alt="Brown"
                              class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
                         <div class="user-info text-white">
-                            <span class="name pdd-right-5">Brown</span>
+                            <span class="name pdd-right-5" >Brown</span>
                             <i class="ti-angle-down font-size-10"></i>
                         </div>
                     </a>
@@ -97,14 +99,14 @@
                     <div class="card-body">
                         <ul class="list-unstyled list-info">
                             <li>
-                                <div class="pdd-vertical-10">
+                                <div th:each="user, index:${users}" class="pdd-vertical-10">
                                     <img alt=""
                                          class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
                                     <div class="info">
                                         <a class="title no-pdd-vertical text-semibold inline-block lh-1"
-                                           href="">Brown</a>
+                                           th:value="${user.userName}">Brown</a>
                                         <span class="sub-title">
-                                            <span>gracefulBrown@woowahan.com</span>
+                                            <span th:value="${user.email}"></span>
                                         </span>
                                     </div>
                                 </div>

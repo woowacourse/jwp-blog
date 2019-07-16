@@ -81,7 +81,7 @@ public class ArticleControllerTests {
 //        articleController.showArticle(0, model);
 //
 //        verify(articleRepository, atLeastOnce()).get(anyInt());
-        webTestClient.post().uri("/write")
+        webTestClient.post().uri("/articles/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("id", "0")
                         .with("title", "title")
@@ -97,7 +97,7 @@ public class ArticleControllerTests {
 
     @Test
     void articleUpdate() {
-        webTestClient.post().uri("/write")
+        webTestClient.post().uri("/articles/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("id", "0")
                         .with("title", "title")
@@ -140,7 +140,7 @@ public class ArticleControllerTests {
 
     @Test
     void articleDelete() {
-        webTestClient.post().uri("/write")
+        webTestClient.post().uri("/articles/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("id", id)
                         .with("title", title)
