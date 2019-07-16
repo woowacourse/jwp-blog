@@ -77,18 +77,18 @@
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
                                                             <input type="email" name="email" class="form-control" id="user-email-input"
-                                                            required>
+                                                                    required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
                                                             <input type="password" name="password" class="form-control"
-                                                                   placeholder="Password" id="user-password-input" required minlength="8">
+                                                                   id="user-password-input" required minlength="8">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm
                                                                 Password</label>
                                                             <input type="password" class="form-control"
-                                                                   placeholder="Password" id="user-password-confirm-input" required>
+                                                                   id="user-password-confirm-input" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <button type="submit" onclick="checkPassword()"
@@ -132,12 +132,10 @@ crossorigin="anonymous"></script>
         const password = document.getElementById("user-password-input").value;
         const passwordConfirm = document.getElementById("user-password-confirm-input").value;
         if(password !== passwordConfirm) {
-            alert("비밀번호가 다릅니다");
+            alert('비밀번호가 다릅니다');
             return;
         }
     }
-
-
 </script>
 </body>
 </html>
