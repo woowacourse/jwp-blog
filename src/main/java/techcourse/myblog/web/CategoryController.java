@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.ArticleRepositoryImpl;
 import techcourse.myblog.domain.Category;
 import techcourse.myblog.domain.CategoryRepository;
 
@@ -13,7 +13,7 @@ import techcourse.myblog.domain.CategoryRepository;
 public class CategoryController {
 
     @Autowired
-    private ArticleRepository articleRepository;
+    private ArticleRepositoryImpl articleRepositoryImpl;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -30,7 +30,7 @@ public class CategoryController {
         Category category = new Category();
         category.setCategoryId(categoryId);
 
-        if (articleRepository.findByCategoryId(categoryId).isEmpty()) {
+        if (articleRepositoryImpl.findByCategoryId(categoryId).isEmpty()) {
             categoryRepository.delete(category);
         }
 
