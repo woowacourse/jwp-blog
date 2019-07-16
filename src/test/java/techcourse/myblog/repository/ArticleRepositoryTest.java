@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.dto.ArticleDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,16 @@ class ArticleRepositoryTest {
         assertThat(list.get(0).getTitle()).isEqualTo("a1");
         assertThat(list.get(1).getTitle()).isEqualTo("a2");
         assertThat(list.get(2).getTitle()).isEqualTo("a3");
+    }
+
+    @Test
+    void UpdateTest() {
+        ArticleDto articleDto = new ArticleDto("a100", "b", "c");
+        Article article = articleRepository.findById(1L).orElseThrow(IllegalAccessError::new);
+        article.update(articleDto.toEntity());
+        articleRepository.save(article);
+
+        assertThat(articleRepository.findById(1L).get().getTitle()).isEqualTo("a100");
     }
 
     @Test

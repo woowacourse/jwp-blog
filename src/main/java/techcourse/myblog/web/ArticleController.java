@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
 
 @Controller
@@ -43,16 +44,16 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String saveArticle(Article article, Model model) {
-        model.addAttribute(article);
-        articleRepository.save(article);
-        return "article";
+    public String saveArticle(ArticleDto dto, Model model) {
+        model.addAttribute(dto);
+        Article article = articleRepository.save(dto.toEntity());
+        return "redirect:/articles/" + article.getId();
     }
 
     @PutMapping("/articles/{articleId}")
-    public String getModifiedArticle(@PathVariable long articleId, Article article, Model model) {
+    public String getModifiedArticle(@PathVariable long articleId, ArticleDto dto, Model model) {
         Article originArticle = articleRepository.findById(articleId).orElseThrow(IllegalAccessError::new);
-        originArticle.update(article);
+        originArticle.update(dto.toEntity());
         articleRepository.save(originArticle);
         model.addAttribute(originArticle);
         return "article";

@@ -8,6 +8,7 @@ import java.util.Objects;
 
 @Entity
 public class Article {
+    private static final String DEFAULT_URL = "/images/default/bg.jpg";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +21,18 @@ public class Article {
     public Article(String title, String contents, String coverUrl) {
         this.title = title;
         this.contents = contents;
-        this.coverUrl = coverUrl;
+        this.coverUrl = getDefaultUrl(coverUrl);
     }
 
-    public Article() {
+    protected Article() {
+
+    }
+
+    private String getDefaultUrl(String coverUrl) {
+        if (coverUrl.isEmpty()) {
+            return DEFAULT_URL;
+        }
+        return coverUrl;
     }
 
     public String getTitle() {

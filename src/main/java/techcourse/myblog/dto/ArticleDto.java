@@ -42,6 +42,6 @@ public class ArticleDto {
     }
 
     public Article toEntity() {
-        return null;
+        return new Article(title, contents, coverUrl);
     }
 }
