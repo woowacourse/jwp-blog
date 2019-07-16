@@ -80,7 +80,15 @@
             </div>
         </div>
     </div>
-    <div th:if="${error}" th:value = "${error}"></div>
+    <div th:if="${error}" th:value= "${error}"></div>
 </div>
+    <script th:inline="javascript">
+        const err = [[${error}]]
+        if (err) {
+            alert("중복된 이메일 입니다.");
+        }
+
+    </script>
 </th:block>
+
 </html>
