@@ -21,7 +21,7 @@ public class ArticleController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("articles", articleRepository.findAll());
-        return "index";
+        return "index.html";
     }
 
     @GetMapping("/writing")

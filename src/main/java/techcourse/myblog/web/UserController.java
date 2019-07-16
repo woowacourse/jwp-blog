@@ -22,8 +22,13 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
     @GetMapping("/users")
-    public String getUsers(Model model) {
+    public String users(Model model) {
         List<User> users = new ArrayList<>();
         userRepository.findAll().forEach(users::add);
         model.addAttribute("users", users);
@@ -31,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String getSignupForm() {
+    public String signupForm() {
         return "signup";
     }
 
