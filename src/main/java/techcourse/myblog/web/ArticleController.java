@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.ArticleDTO;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
 
 import java.util.List;
@@ -20,8 +20,8 @@ public class ArticleController {
 
     @GetMapping("/")
     public String showMain(Model model) {
-        List<ArticleDTO> articleDTOs = articleService.findAll();
-        model.addAttribute("articleDTOs", articleDTOs);
+        List<ArticleDto> articleDtos = articleService.findAll();
+        model.addAttribute("articleDTOs", articleDtos);
         return "index";
     }
 
@@ -31,32 +31,32 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(ArticleDTO articleDTO) {
-        int id = articleService.createArticle(articleDTO);
-        return "redirect:/articles/" + id;
+    public String createArticle(ArticleDto articleDTO) {
+        ArticleDto persistArticle = articleService.save(articleDTO);
+        return "redirect:/articles/" + persistArticle.getId();
     }
 
     @GetMapping("/articles/{id}")
     public String showArticle(@PathVariable int id, Model model) {
-        model.addAttribute("articleDTO", articleService.findArticleById(id));
+        model.addAttribute("articleDTO", articleService.findById(id));
         return "article";
     }
 
     @PutMapping("/articles/{id}")
-    public String updateArticle(@PathVariable int id, ArticleDTO articleDTO) {
-        articleService.updateArticle(id, articleDTO);
+    public String updateArticle(@PathVariable int id, ArticleDto articleDTO) {
+        articleService.update(id, articleDTO);
         return "redirect:/articles/" + id;
     }
 
     @DeleteMapping("/articles/{id}")
     public String deleteArticle(@PathVariable int id) {
-        articleService.deleteArticle(id);
+        articleService.delete(id);
         return "redirect:/";
     }
 
     @GetMapping("/articles/{id}/edit")
     public String showEditPage(@PathVariable int id, Model model) {
-        model.addAttribute("articleDTO", articleService.findArticleById(id));
+        model.addAttribute("articleDTO", articleService.findById(id));
         return "article-edit";
     }
 }

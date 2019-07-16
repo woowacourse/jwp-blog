@@ -62,12 +62,4 @@ public class ArticleTest {
         assertThatExceptionOfType(NullPointerException.class)
                 .isThrownBy(() -> article.update(null));
     }
-
-    @Test
-    void DTO로_변환하는지_확인() {
-        Article article = new Article(1, "title", "", "content");
-        ArticleDTO articleDTO = new ArticleDTO("title", "", "content");
-        articleDTO.setId(1);
-        assertThat(article.convertToDTO()).isEqualTo(articleDTO);
-    }
 }

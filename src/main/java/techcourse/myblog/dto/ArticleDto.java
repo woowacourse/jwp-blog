@@ -1,21 +1,17 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.dto;
 
 import java.util.Objects;
 
-public class ArticleDTO {
+public class ArticleDto {
     private int id;
     private String title;
     private String coverUrl;
     private String contents;
 
-    public ArticleDTO(String title, String coverUrl, String contents) {
+    public ArticleDto(String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-    }
-
-    public Article convertToEntity() {
-        return new Article(id, title, coverUrl, contents);
     }
 
     public int getId() {
@@ -42,7 +38,7 @@ public class ArticleDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ArticleDTO that = (ArticleDTO) o;
+        ArticleDto that = (ArticleDto) o;
         return id == that.id &&
                 Objects.equals(title, that.title) &&
                 Objects.equals(coverUrl, that.coverUrl) &&

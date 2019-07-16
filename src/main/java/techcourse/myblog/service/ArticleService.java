@@ -3,7 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleDTO;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.Collections;
@@ -14,43 +14,47 @@ import java.util.stream.Collectors;
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final ArticleAssembler assembler;
 
     @Autowired
     public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
+        assembler = new ArticleAssembler();
     }
 
-    public List<ArticleDTO> findAll() {
+    public List<ArticleDto> findAll() {
         List<Article> articles = articleRepository.findAll();
         return Collections.unmodifiableList(articles.stream()
-                .map(Article::convertToDTO)
+                .map(assembler::convertToDto)
                 .collect(Collectors.toList()));
     }
 
-    public ArticleDTO findArticleById(int id) {
-        Article article = articleRepository.findArticleById(id);
-        return article.convertToDTO();
+    public ArticleDto findById(final int id) {
+        Article article = articleRepository.findById(id);
+        return assembler.convertToDto(article);
     }
 
-    public int createArticle(ArticleDTO articleDTO) {
+    public ArticleDto save(ArticleDto articleDTO) {
         checkNull(articleDTO);
-        Article article = new Article(articleDTO.getTitle(), articleDTO.getCoverUrl(), articleDTO.getContents());
-        return articleRepository.addArticle(article);
+        articleDTO.setId(articleRepository.getLatedId());
+        Article article = assembler.convertToEntity(articleDTO);
+        Article persistArticle = articleRepository.save(article);
+        return assembler.convertToDto(persistArticle);
     }
 
-    public void updateArticle(int id, ArticleDTO articleDTO) {
+    public void update(final int id, final ArticleDto articleDTO) {
         checkNull(articleDTO);
-        Article article = articleDTO.convertToEntity();
-        articleRepository.updateArticle(id, article);
+        Article article = assembler.convertToEntity(articleDTO);
+        articleRepository.update(id, article);
     }
 
-    private void checkNull(ArticleDTO articleDTO) {
+    private void checkNull(ArticleDto articleDTO) {
         if (Objects.isNull(articleDTO)) {
             throw new NullPointerException();
         }
     }
 
-    public void deleteArticle(int id) {
-        articleRepository.deleteArticle(id);
+    public void delete(final int id) {
+        articleRepository.delete(id);
     }
 }

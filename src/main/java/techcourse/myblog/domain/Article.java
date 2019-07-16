@@ -2,22 +2,13 @@ package techcourse.myblog.domain;
 
 import java.util.Objects;
 
-public class Article {
-    private static final int INIT_ARTICLE_ID = 1;
-    private static int latestId = INIT_ARTICLE_ID;
+import static techcourse.myblog.domain.ArticleRepository.INIT_ARTICLE_ID;
 
+public class Article {
     private final int id;
     private String title;
     private String coverUrl;
     private String contents;
-
-    public Article(final String title, final String coverUrl, final String contents) {
-        checkNull(title, coverUrl, contents);
-        this.id = latestId++;
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
-    }
 
     public Article(final int id, final String title, final String coverUrl, final String contents) {
         checkNull(title, coverUrl, contents);
@@ -47,12 +38,6 @@ public class Article {
         this.title = article.getTitle();
         this.coverUrl = article.getCoverUrl();
         this.contents = article.getContents();
-    }
-
-    public ArticleDTO convertToDTO() {
-        ArticleDTO articleDTO = new ArticleDTO(title, coverUrl, contents);
-        articleDTO.setId(id);
-        return articleDTO;
     }
 
     public int getId() {
