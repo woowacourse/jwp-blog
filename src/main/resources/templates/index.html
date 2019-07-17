@@ -4,12 +4,11 @@
     <th:block th:include="/fragment/head"></th:block>
 
     <link rel="stylesheet" href="/static/css/index.css">
-
 </head>
 
 <body>
 <div>
-    <th:block th:include="/fragment/header"></th:block>
+    <th:block th:include="/fragment/login-no-header"></th:block>
 
     <div class="about-cover card no-border mrg-btm-0">
         <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')"></div>
@@ -47,7 +46,7 @@
             <div class="col-lg-3"></div>
         </div>
 
-        <a href="article/article-edit.html" th:href="@{/writing}"
+        <a href="article-edit.html" th:href="@{/writing}"
            class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
             <i class="ti-plus"></i>
         </a>

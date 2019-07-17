@@ -10,7 +10,7 @@
 </head>
 <body>
 <div>
-    <th:block th:include="/fragment/login-header"></th:block>
+    <th:block th:include="/fragment/login-yes-header"></th:block>
 
     <form th:action="(${article} == null) ? '/articles' : '/articles/' + ${article.id}" name="article"
           th:method="${article} == null ? 'post' : 'put'" accept-charset="utf-8">

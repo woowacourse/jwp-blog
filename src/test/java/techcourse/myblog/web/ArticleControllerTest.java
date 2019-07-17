@@ -21,10 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureWebTestClient
 public class ArticleControllerTest {
     private static final String ROOT_URL = "/";
-    private static final String EDIT_URL = "/articles/1/edit";
+    private static final String EDIT_URL = "/articles/6/edit";
     private static final String WRITING_URL = "/writing";
     private static final String ARTICLE_URL = "/articles";
     private static final String SPECIFIC_ARTICLE_URL = "/articles/1";
+    private static final String SPECIFIC_ARTICLE_DELETE_URL = "/articles/2";
 
     private static final String ARTICLE_DELIMITER
             = "<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tab-centered-1\">";
@@ -127,7 +128,7 @@ public class ArticleControllerTest {
         addArticleTest();
 
         webTestClient.delete()
-                .uri(SPECIFIC_ARTICLE_URL)
+                .uri(SPECIFIC_ARTICLE_DELETE_URL)
                 .exchange()
                 .expectStatus()
                 .isFound();

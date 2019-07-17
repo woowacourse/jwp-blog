@@ -4,12 +4,12 @@
 
     <th:block th:include="/fragment/head"></th:block>
 
-    <link rel="stylesheet" href="../../static/css/article.css">
+    <link rel="stylesheet" href="../static/css/article.css">
     <th:block th:include="/fragment/tui"></th:block>
 </head>
 <body>
 <div>
-    <th:block th:include="/fragment/login-header"></th:block>
+    <th:block th:include="/fragment/login-yes-header"></th:block>
 
     <div class="about-cover card no-border ">
         <div class="cover-img overlay-dark bg"
@@ -117,7 +117,7 @@
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-<script src="../../static/js/index.js"></script>
+<script src="../static/js/index.js"></script>
 <script th:inline="javascript">
     const initValue = [[${article.contents}]];
 
