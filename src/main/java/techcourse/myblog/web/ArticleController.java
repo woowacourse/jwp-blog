@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -28,7 +29,7 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public String showArticlesPage(Model model) {
+    public String showArticlesPage(Model model, HttpSession httpSession) {
         List<Article> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
