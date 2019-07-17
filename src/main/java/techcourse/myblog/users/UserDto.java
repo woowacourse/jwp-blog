@@ -33,4 +33,7 @@ public class UserDto {
     @NotBlank(message = "패스워드 확인을 입력해주세요.")
     private String confirmPassword;
 
+    public boolean isValidPassword() {
+        return password.equals(confirmPassword);
+    }
 }

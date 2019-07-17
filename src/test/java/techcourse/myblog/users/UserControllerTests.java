@@ -1,8 +1,5 @@
 package techcourse.myblog.users;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
@@ -17,6 +14,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserControllerTests {
     @Autowired
     WebTestClient webTestClient;
+
+    @Autowired
+    UserService userService;
 
     @Test
     void signupFormTest() {
@@ -61,6 +61,54 @@ public class UserControllerTests {
                     assertThat(body.contains(UserDto.EMAIL_NOT_MATCH_MESSAGE)).isTrue();
                     assertThat(body.contains(UserDto.NAME_NOT_MATCH_MESSAGE)).isTrue();
                     assertThat(body.contains(UserDto.PASSWORD_NOT_MATCH_MESSAGE)).isTrue();
+        });
+    }
+
+    @Test
+    void signup_이메일_중복_테스트() {
+        String email = "email@google.co.kr";
+        String name = "name";
+        String password = "P@ssw0rd";
+        UserDto userDto = UserDto.builder()
+                .email(email)
+                .name(name)
+                .password(password)
+                .confirmPassword(password)
+                .build();
+
+        userService.save(userDto);
+
+
+        webTestClient.post().uri("/users")
+                .body(BodyInserters.fromFormData("name",name)
+                        .with("email",email)
+                        .with("password",password)
+                        .with("confirmPassword",password))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(UserService.EMAIL_DUPLICATE_MESSAGE)).isTrue();
+        });
+    }
+
+    @Test
+    void 비밀번호_불일치_테스트() {
+        String email = "email@google.co.kr";
+        String name = "name";
+        String password = "P@ssw0rd";
+        String confirmPassword = "P@ssw0rd+1";
+
+        webTestClient.post().uri("/users")
+                .body(BodyInserters.fromFormData("name",name)
+                        .with("email",email)
+                        .with("password",password)
+                        .with("confirmPassword",confirmPassword))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(UserService.PASSWORD_INVALID_MESSAGE)).isTrue();
         });
     }
 }
