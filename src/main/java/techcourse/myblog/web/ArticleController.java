@@ -24,8 +24,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/new")
-    public String addArticle(Article articleParam) {
-        Article article = articleRepository.save(articleParam);
+    public String addArticle(ArticleDto articleDto) {
+        Article article = articleRepository.save(articleDto.toArticle());
         long latestId = article.getId();
         return "redirect:/articles/" + latestId;
     }
