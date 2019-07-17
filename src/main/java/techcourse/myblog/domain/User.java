@@ -64,6 +64,10 @@ public class User {
         this.password = validatePassword(password);
     }
 
+    public boolean authenticate(String password) {
+        return this.password == password;
+    }
+
     private String validatePassword(String password) {
         return Optional.ofNullable(password).filter(x -> MIN_PASSWORD_LENGTH <= x.length())
                                             .filter(x -> passwordValidation.matcher(x).matches())

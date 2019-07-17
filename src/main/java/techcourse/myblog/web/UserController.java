@@ -11,6 +11,10 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
+import javax.servlet.http.HttpSession;
+import java.util.Objects;
+import java.util.Optional;
+
 @Controller
 public class UserController {
 
@@ -24,8 +28,29 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String showLoginForm(Model model) {
+    public String showLoginForm() {
         return "login";
+    }
+
+    @PostMapping("/login")
+    public RedirectView login(
+            HttpSession session,
+            @RequestParam String email,
+            @RequestParam String password,
+            RedirectAttributes redirectAttributes
+    ) {
+        return userRepository.findByEmail(email)
+                            .filter(u -> u.authenticate(password))
+                            .map(u -> {
+                                    session.setAttribute("loginhash", Objects.hash(email + password));
+                                    return new RedirectView("/");
+                            }).orElseGet(() -> {
+                                    redirectAttributes.addAttribute(
+                                            "errorMessage",
+                                            "존재하지 않는 사용자이거나 잘못된 비밀번호입니다."
+                                    );
+                                    return new RedirectView("/login");
+                            });
     }
 
     @GetMapping("/users")
