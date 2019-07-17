@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.jupiter.api.Test;

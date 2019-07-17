@@ -1,10 +1,11 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.controller.dto.UserDTO;
+import techcourse.myblog.model.User;
 import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
@@ -26,7 +27,8 @@ public class UserController {
     }
 
     @PostMapping
-    public String create(User user) {
+    public String create(@ModelAttribute UserDTO userDTO) {
+        User user = new User(userDTO.getUserName(), userDTO.getEmail(), userDTO.getPassword());
         userRepository.save(user);
         return "redirect:/users/login";
     }
