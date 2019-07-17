@@ -76,6 +76,12 @@ public class User {
         return !passwordPattern.matcher(password).matches();
     }
 
+    public void update(User user) {
+        this.userName = user.userName;
+        this.email = user.email;
+        this.password = user.password;
+    }
+
     public Long getId() {
         return id;
     }

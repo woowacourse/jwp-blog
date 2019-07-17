@@ -67,9 +67,9 @@ class UserControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(postResponse2 -> {
-                    assertThat(new String(postResponse2.getResponseBody()))
-                        .contains(userRequestDto.getName())
-                        .contains(userRequestDto.getEmail());
+                assertThat(new String(postResponse2.getResponseBody()))
+                    .contains(userRequestDto.getName())
+                    .contains(userRequestDto.getEmail());
             });
         });
     }
@@ -80,26 +80,69 @@ class UserControllerTest {
         postUser(userRequestDto, postResponse -> {
             webTestClient.post().uri("/login")
                 .body(BodyInserters.fromFormData("email", "login_test@example.com")
-                .with("password", "p@ssW0rd"))
+                    .with("password", "p@ssW0rd"))
                 .exchange().expectStatus().is3xxRedirection()
                 .expectBody().consumeWith(loginResponse -> {
-                    String uri = loginResponse.getResponseHeaders().get("Location").get(0);
-                    webTestClient.get().uri(uri)
-                        .exchange().expectStatus().isOk()
-                        .expectBody().consumeWith(indexResponse -> {
-                            assertThat(new String(indexResponse.getResponseBody())).contains("john");
-                            webTestClient.get().uri("/logout")
-                                .exchange().expectStatus().is3xxRedirection()
-                                .expectBody().consumeWith(logoutResponse -> {
-                                    String logoutUri = logoutResponse.getResponseHeaders().get("Location").get(0);
-                                    webTestClient.get().uri(logoutUri)
-                                        .exchange().expectStatus().isOk()
-                                        .expectBody().consumeWith(indexResponse2 -> {
-                                            assertThat(new String(indexResponse2.getResponseBody())).doesNotContain("john");
-                                    });
-                            });
+                String uri = loginResponse.getResponseHeaders().get("Location").get(0);
+                webTestClient.get().uri(uri)
+                    .exchange().expectStatus().isOk()
+                    .expectBody().consumeWith(indexResponse -> {
+                    assertThat(new String(indexResponse.getResponseBody())).contains("john");
+                    webTestClient.get().uri("/logout")
+                        .exchange().expectStatus().is3xxRedirection()
+                        .expectBody().consumeWith(logoutResponse -> {
+                        String logoutUri = logoutResponse.getResponseHeaders().get("Location").get(0);
+                        webTestClient.get().uri(logoutUri)
+                            .exchange().expectStatus().isOk()
+                            .expectBody().consumeWith(indexResponse2 -> {
+                            assertThat(new String(indexResponse2.getResponseBody())).doesNotContain("john");
+                        });
                     });
+                });
             });
+        });
+    }
+
+    @Test
+    void user_edit() {
+        UserRequestDto userRequestDto = UserRequestDto.of("john", "edit_test@example.com", "p@ssW0rd", "p@ssW0rd");
+        postUser(userRequestDto, postResponse -> {
+            webTestClient.post().uri("/login")
+                .body(BodyInserters.fromFormData("email", userRequestDto.getEmail())
+                    .with("password", userRequestDto.getPassword()))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody()
+                .consumeWith(loginResponse -> {
+                    webTestClient.get().uri(loginResponse.getResponseHeaders().get("Location").get(0))
+                        .exchange()
+                        .expectStatus().isOk()
+                        .expectBody()
+                        .consumeWith(loginRedirectResponse -> {
+                            webTestClient.put().uri("/users")
+                                .body(BodyInserters.fromFormData("name", "kim"))
+                                .exchange()
+                                .expectStatus().is3xxRedirection()
+                                .expectBody()
+                                .consumeWith(editResponse -> {
+                                    webTestClient.get().uri(editResponse.getResponseHeaders().get("Location").get(0))
+                                        .exchange()
+                                        .expectStatus().isOk()
+                                        .expectBody()
+                                        .consumeWith(editRedirectResponse -> {
+                                            webTestClient.get().uri("/mypage")
+                                                .exchange()
+                                                .expectStatus().isOk()
+                                                .expectBody()
+                                                .consumeWith(indexResponse -> {
+                                                    assertThat(new String(indexResponse.getResponseBody()))
+                                                        .contains("kim")
+                                                        .contains(userRequestDto.getEmail());
+                                                });
+                                        });
+                                });
+                        });
+                });
         });
     }
 }

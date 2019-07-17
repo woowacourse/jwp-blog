@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
@@ -71,11 +72,15 @@ public class UserController {
             model.addAttribute("error", true);
             model.addAttribute("message", "비밀번호를 확인해주세요");
             return "login";
-        } catch (Exception e) {
+        } catch (NoSuchElementException e) {
             model.addAttribute("error", true);
             model.addAttribute("message", e.getMessage());
-            return "login";
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("error", true);
+            model.addAttribute("message", "서버 에러입니다");
         }
+        return "login";
     }
 
     @GetMapping("/users")
@@ -110,6 +115,17 @@ public class UserController {
             return "mypage-edit";
         }
         return "redirect:login";
+    }
+
+    @PutMapping("/users")
+    public String updateUser(UserUpdateRequestDto updateRequestDto, HttpSession session) {
+        if (!isLoggedIn(session)) {
+            return "redirect:/login";
+        }
+        User user = (User) session.getAttribute(SESSION_USER_KEY);
+        user.update(User.of(updateRequestDto.getName(), user.getEmail(), user.getPassword()));
+        userRepository.save(user);
+        return "redirect:/mypage";
     }
 
     private boolean isLoggedIn(HttpSession session) {
