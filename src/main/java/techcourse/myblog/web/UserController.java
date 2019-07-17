@@ -103,6 +103,15 @@ public class UserController {
         return "redirect:/login";
     }
 
+    @GetMapping("/mypage-edit")
+    public String myPageEditView(Model model, HttpSession session) {
+        if (isLoggedIn(session)) {
+            model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
+            return "mypage-edit";
+        }
+        return "redirect:login";
+    }
+
     private boolean isLoggedIn(HttpSession session) {
         return session.getAttribute(SESSION_USER_KEY) != null;
     }
