@@ -9,4 +9,9 @@ public class UserController {
     public String showLoginPage() {
         return "login";
     }
+
+    @GetMapping("/users/sign-up")
+    public String showRegisterPage() {
+        return "sign-up";
+    }
 }

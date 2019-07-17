@@ -19,4 +19,14 @@ class UserControllerTest {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+    @Test
+    @DisplayName("회원가입 페이지를 보여준다.")
+    void showRegisterPage() {
+        webTestClient.get()
+                .uri("/users/sign-up")
+                .exchange()
+                .expectStatus().isOk();
+
+    }
 }
