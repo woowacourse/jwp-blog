@@ -35,7 +35,7 @@ public class ArticleControllerTests {
                 .body(BodyInserters.fromFormData("title", "title")
                         .with("coverUrl", "coverUrl").with("contents", "contents"))
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
