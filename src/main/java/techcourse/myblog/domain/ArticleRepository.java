@@ -1,9 +1,6 @@
 package techcourse.myblog.domain;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public interface ArticleRepository extends CrudRepository<Article, Long> {
-
+public interface ArticleRepository extends JpaRepository<Article, Long> {
 }

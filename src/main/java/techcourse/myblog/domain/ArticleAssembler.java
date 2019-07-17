@@ -2,10 +2,9 @@ package techcourse.myblog.domain;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class ArticleAssembler {
-    public ArticleDto writeDto(Article article) {
+    public static ArticleDto writeDto(Article article) {
         ArticleDto articleDto = new ArticleDto();
 
         articleDto.setArticleId(article.getArticleId());
@@ -16,13 +15,13 @@ public class ArticleAssembler {
         return articleDto;
     }
 
-    public List<ArticleDto> writeDtos(Iterable<Article> articles) {
-        return StreamSupport.stream(articles.spliterator(), false)
-                .map(this::writeDto)
+    public static List<ArticleDto> writeDtos(List<Article> articles) {
+        return articles.stream()
+                .map(ArticleAssembler::writeDto)
                 .collect(Collectors.toList());
     }
 
-    public Article writeArticle(ArticleDto articleDto) {
-        return new Article(articleDto.getArticleId(), articleDto.getTitle(), articleDto.getTitle(), articleDto.getContents());
+    public static Article writeArticle(ArticleDto articleDto) {
+        return new Article(articleDto.getArticleId(), articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
     }
 }
