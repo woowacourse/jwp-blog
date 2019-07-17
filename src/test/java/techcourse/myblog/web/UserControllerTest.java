@@ -9,7 +9,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @AutoConfigureWebTestClient
@@ -27,46 +26,92 @@ public class UserControllerTest {
     void create_user() {
         webTestClient.post().uri("/users/new")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName","Martin")
-                        .with("email","martin@gmail.com")
-                        .with("password","123456")
+                .body(BodyInserters.fromFormData("userName", "Martin")
+                        .with("email", "martin@gmail.com")
+                        .with("password", "Aa12345!")
                 ).exchange()
-        .expectStatus().isFound();
+                .expectStatus().isFound();
     }
 
     @Test
-    void show_login(){
+    void show_login() {
         webTestClient.get().uri("/users/login").exchange().expectStatus().isOk();
     }
 
     @Test
-    void show_all_users(){
+    void show_all_users() {
         create_user();
         webTestClient.get().uri("/users")
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBody().consumeWith(res -> {
-                    String body = new String(res.getResponseBody());
-                    assertThat(body.contains("Martin")).isTrue();
-                    assertThat(body.contains("martin@gmail.com")).isTrue();
+            String body = new String(res.getResponseBody());
+            assertThat(body.contains("Martin")).isTrue();
+            assertThat(body.contains("martin@gmail.com")).isTrue();
         });
     }
 
     @Test
-    void check_same_email(){
+    void check_same_email() {
         create_user();
 
         webTestClient.post().uri("/users/new")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName","Martin")
-                        .with("email","martin@gmail.com")
-                        .with("password","123456")
+                .body(BodyInserters.fromFormData("userName", "Martin")
+                        .with("email", "martin@gmail.com")
+                        .with("password", "123456")
                 ).exchange()
                 .expectStatus().isOk()
-        .expectBody().consumeWith(res -> {
+                .expectBody().consumeWith(res -> {
             String body = new String(res.getResponseBody());
-            assertThat(body.contains("중복")).isTrue();
+            assertThat(body.contains("중복된 이메일 입니다.")).isTrue();
+        });
+    }
+
+    @Test
+    void check_valid_name() {
+        webTestClient.post().uri("/users/new")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("userName", "M")
+                        .with("email", "martin@gmail.com")
+                        .with("password", "Aa12345!")
+                ).exchange()
+                .expectStatus().isOk()
+                .expectBody().consumeWith(res -> {
+            String body = new String(res.getResponseBody());
+            assertThat(body.contains("형식에 맞는 이름이 아닙니다.")).isTrue();
+        });
+    }
+
+    @Test
+    void check_valid_password() {
+        webTestClient.post().uri("/users/new")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("userName", "Martin")
+                        .with("email", "martin@gmail.com")
+                        .with("password", "A")
+                ).exchange()
+                .expectStatus().isOk()
+                .expectBody().consumeWith(res -> {
+            String body = new String(res.getResponseBody());
+            assertThat(body.contains("형식에 맞는 비밀번호가 아닙니다.")).isTrue();
+        });
+    }
+
+    @Test
+    void check_valid_confirm_password() {
+        webTestClient.post().uri("/users/new")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("userName", "Martin")
+                        .with("email", "martin@gmail.com")
+                        .with("password", "Aa12345!")
+                        .with("confirmPassword","Ss12345!")
+                ).exchange()
+                .expectStatus().isOk()
+                .expectBody().consumeWith(res -> {
+            String body = new String(res.getResponseBody());
+            assertThat(body.contains("비밀번호가 일치하지 않습니다.")).isTrue();
         });
     }
 

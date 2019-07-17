@@ -6,10 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.UserDto;
 import techcourse.myblog.repo.UserRepository;
-
-import javax.jws.WebParam;
-import javax.persistence.GeneratedValue;
 
 @Controller
 @RequestMapping("/users")
@@ -22,29 +20,34 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String showSignUpPage(){
+    public String showSignUpPage() {
         return "signup";
     }
 
     @PostMapping("/new")
-    public String createUser(User user,Model model){
-        //TODO 규칙
-        if(userRepository.existsByEmail(user.getEmail())) {
-            model.addAttribute("error","중복");
+    public String createUser(UserDto userDto, Model model) {
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            model.addAttribute("error", "중복된 이메일 입니다.");
             return "signup";
         }
-        userRepository.save(user);
-        return "redirect:/users/login";
+        try {
+            User user = new User(userDto);
+            userRepository.save(user);
+            return "redirect:/users/login";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "signup";
+        }
     }
 
     @GetMapping("/login")
-    public String showLoginPage(){
+    public String showLoginPage() {
         return "login";
     }
 
     @GetMapping
-    public String findAllUsers(Model model){
-        model.addAttribute("users",userRepository.findAll());
+    public String findAllUsers(Model model) {
+        model.addAttribute("users", userRepository.findAll());
         return "user-list";
     }
 

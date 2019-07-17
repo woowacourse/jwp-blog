@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
+
 @Entity
 public class Article {
 
@@ -25,7 +25,7 @@ public class Article {
         this.contents = contents;
     }
 
-    public void update(ArticleVO articleVO) {
+    public void update(ArticleVo articleVO) {
         this.title = articleVO.getTitle();
         this.contents = articleVO.getContents();
         this.coverUrl = articleVO.getCoverUrl();

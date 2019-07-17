@@ -10,7 +10,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.repo.ArticleRepository;
-import techcourse.myblog.domain.ArticleVO;
+import techcourse.myblog.domain.ArticleVo;
 
 import java.util.Objects;
 
@@ -46,7 +46,7 @@ public class ArticleControllerTests {
 
     @Test
     void create_article() {
-        ArticleVO articleVO = new ArticleVO(title, coverUrl, contents);
+        ArticleVo articleVO = new ArticleVo(title, coverUrl, contents);
         WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.post()
                 .uri("/articles"), articleVO)
                 .expectStatus().isFound();
@@ -65,7 +65,7 @@ public class ArticleControllerTests {
     @Test
     void submit_update() {
         articleRepository.save(article);
-        ArticleVO articleVO = new ArticleVO("update title", "update coverUrl", "update contents");
+        ArticleVo articleVO = new ArticleVo("update title", "update coverUrl", "update contents");
 
         WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/" + article.getArticleId()), articleVO);
         checkIsFound(responseSpec);
@@ -96,7 +96,7 @@ public class ArticleControllerTests {
                 .exchange();
     }
 
-    private WebTestClient.ResponseSpec getResponse(WebTestClient.RequestBodySpec requestBodySpec, ArticleVO articleVO) {
+    private WebTestClient.ResponseSpec getResponse(WebTestClient.RequestBodySpec requestBodySpec, ArticleVo articleVO) {
         return requestBodySpec
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -106,7 +106,7 @@ public class ArticleControllerTests {
                 .exchange();
     }
 
-    private void checkBody(WebTestClient.ResponseSpec responseSpec, ArticleVO articleVO) {
+    private void checkBody(WebTestClient.ResponseSpec responseSpec, ArticleVo articleVO) {
         responseSpec.expectBody()
                 .consumeWith(response -> {
                     webTestClient.get().uri(Objects.requireNonNull(response.getResponseHeaders().get("Location")).get(0))

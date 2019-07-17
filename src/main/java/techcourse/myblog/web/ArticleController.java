@@ -4,8 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleVo;
 import techcourse.myblog.repo.ArticleRepository;
-import techcourse.myblog.domain.ArticleVO;
 
 @Controller
 @RequestMapping("/articles")
@@ -23,7 +23,7 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String createArticle(ArticleVO articleVO, Model model) {
+    public String createArticle(ArticleVo articleVO, Model model) {
         Article article = new Article(articleVO.getTitle(), articleVO.getCoverUrl(), articleVO.getContents());
         articleRepository.save(article);
         model.addAttribute("article", article);
@@ -45,7 +45,7 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
-    public String showUpdatedArticle(@PathVariable Long articleId, ArticleVO updatedArticle, Model model) {
+    public String showUpdatedArticle(@PathVariable Long articleId, ArticleVo updatedArticle, Model model) {
         Article article = articleRepository.findById(articleId).get();
         article.update(updatedArticle);
         articleRepository.save(article);

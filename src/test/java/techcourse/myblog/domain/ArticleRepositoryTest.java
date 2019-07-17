@@ -52,7 +52,7 @@ public class ArticleRepositoryTest {
 
     @Test
     void updateArticle() {
-        ArticleVO article2 = new ArticleVO("update title", "update coverUrl", "update contents");
+        ArticleVo article2 = new ArticleVo("update title", "update coverUrl", "update contents");
         article.update(article2);
 
         assertThat(article.getTitle().equals(article2.getTitle()));

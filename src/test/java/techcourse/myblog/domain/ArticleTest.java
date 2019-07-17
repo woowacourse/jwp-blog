@@ -18,7 +18,7 @@ public class ArticleTest {
 
     @Test
     void update() {
-        ArticleVO articleVO = new ArticleVO("new title", "new coverUrl", "new contents");
+        ArticleVo articleVO = new ArticleVo("new title", "new coverUrl", "new contents");
         article.update(articleVO);
         assertThat(article.getTitle().equals(articleVO.getTitle()));
         assertThat(article.getCoverUrl().equals(articleVO.getCoverUrl()));

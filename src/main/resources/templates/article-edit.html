@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html layout:decorator="layout/default"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layout/default">
+      xmlns:th="http://www.thymeleaf.org">
 
 <th:block layout:fragment="content">
     <div>
@@ -19,10 +19,10 @@
                     </li>
                 </ul>
                 <ul class="nav-right">
-                    <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
+                    <li class="user-profile dropdown no-border pointer" id="header-user-dropdown-btn">
                         <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
-                            <img class="profile-img img-fluid"
-                                 src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
+                            <img alt="Brown"
+                                 class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
                             <div class="user-info text-white">
                                 <span class="name pdd-right-5">Brown</span>
                                 <i class="ti-angle-down font-size-10"></i>
@@ -35,7 +35,7 @@
                                     <span class="text-dark">마이 페이지</span>
                                 </a>
                             </li>
-                            <li role="separator" class="divider"></li>
+                            <li class="divider" role="separator"></li>
                             <li class="text-dark">
                                 <a href="index.html">
                                     <i class="ti-power-off pdd-right-10"></i>
@@ -48,20 +48,20 @@
             </div>
         </div>
 
-        <form th:object="${article}" th:action="${article == null ? '/articles' : '/articles/' + article.articleId}"
-              name="article" th:method="${article == null ? 'post' : 'put'}" accept-charset="utf-8">
+        <form accept-charset="utf-8" name="article"
+              th:action="${article == null ? '/articles' : '/articles/' + article.articleId}" th:method="${article == null ? 'post' : 'put'}" th:object="${article}">
             <div class="about-cover card no-border">
                 <div class="cover-img A]overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                     <div class="height-300px vertical-center pdd-horizon-50">
                         <div class="width-80">
-                            <input type="text" name="title"
-                                   class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
-                                   th:value="${article == null ? '' : article.title}" placeholder="제목을 입력해주세요"
-                                   autocomplete="off">
-                            <input type="text" name="coverUrl"
-                                   class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
-                                   th:value="${article == null ? '' : article.coverUrl}" placeholder="배경 url을 입력해주세요"
-                                   autocomplete="off">
+                            <input autocomplete="off" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
+                                   name="title"
+                                   placeholder="제목을 입력해주세요" th:value="${article == null ? '' : article.title}"
+                                   type="text">
+                            <input autocomplete="off" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
+                                   name="coverUrl"
+                                   placeholder="배경 url을 입력해주세요" th:value="${article == null ? '' : article.coverUrl}"
+                                   type="text">
                         </div>
                     </div>
                 </div>
@@ -76,10 +76,10 @@
                     </div>
                     <div class="col-lg-1 col-md-1">
                         <div class="btn-group btn-group-vertical">
-                            <button id="save-btn" type="submit" class="btn btn-default">
+                            <button class="btn btn-default" id="save-btn" type="submit">
                                 <i class="ti-save"></i>
                             </button>
-                            <a href="/index.html" class="btn btn-default">
+                            <a class="btn btn-default" href="/index.html">
                                 <i class="ti-close"></i>
                             </a>
                         </div>
