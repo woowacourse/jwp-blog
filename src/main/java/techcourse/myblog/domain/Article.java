@@ -1,8 +1,6 @@
 package techcourse.myblog.domain;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +9,7 @@ import javax.persistence.Id;
 
 @Entity
 @Data
+@ToString
 @EqualsAndHashCode
 public class Article {
     @Id
