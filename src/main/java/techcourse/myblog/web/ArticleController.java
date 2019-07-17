@@ -2,34 +2,55 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.web.dto.ArticleDto;
 
 @Controller
 public class ArticleController {
+    private final ArticleService articleService;
 
-    private final ArticleRepository articleRepository;
-
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     @GetMapping("/")
-    public String goIndex() {
+    public String goIndex(Model model) {
+        model.addAttribute("articles", articleService.findAll());
         return "index";
     }
 
     @GetMapping("/articles")
-    public String goArticles() {
+    public String createForm() {
+        return "article-edit";
+    }
+
+    @GetMapping("/articles/{articleId}")
+    public String show(@PathVariable Long articleId, Model model) {
+        model.addAttribute("article", articleService.findById(articleId));
+        return "article";
+    }
+
+    @GetMapping("/articles/{articleId}/edit")
+    public String updateForm(@PathVariable Long articleId, Model model) {
+        model.addAttribute("article", articleService.findById(articleId));
         return "article-edit";
     }
 
     @PostMapping("/articles")
-    public String saveArticle(Article article, Model model) {
-        articleRepository.save(article);
-        model.addAttribute("article", article);
-        return "article";
+    public String create(ArticleDto articleDto) {
+        return "redirect:/articles/" + articleService.save(articleDto).getId();
+    }
+
+    @PutMapping("/articles/{articleId}")
+    public String update(@PathVariable Long articleId, ArticleDto articleDto) {
+        articleService.update(articleId, articleDto);
+        return "redirect:/articles/" + articleId;
+    }
+
+    @DeleteMapping("/articles/{articleId}")
+    public String delete(@PathVariable Long articleId) {
+        articleService.delete(articleId);
+        return "redirect:/";
     }
 }
