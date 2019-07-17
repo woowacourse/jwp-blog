@@ -7,6 +7,14 @@ public class CategoryDto {
     public CategoryDto() {
     }
 
+    public static CategoryDto from(Category category) {
+        return new CategoryDto(category.getCategoryId(), category.getCategoryName());
+    }
+
+    public Category toCategory() {
+        return new Category(categoryId, categoryName);
+    }
+
     public CategoryDto(long categoryId, String categoryName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;

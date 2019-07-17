@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class CategoryRepository {
+public class CategoryRepositoryImpl {
     private final List<Category> categories = new ArrayList<>();
     private long latestId = 0;
 
