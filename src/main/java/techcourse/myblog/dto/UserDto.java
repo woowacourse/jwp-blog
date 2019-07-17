@@ -4,6 +4,7 @@ import lombok.Data;
 import techcourse.myblog.domain.User;
 
 public class UserDto {
+
     @Data
     public static class Create {
         private String email;
@@ -17,5 +18,11 @@ public class UserDto {
                     .name(name)
                     .build();
         }
+    }
+
+    @Data
+    public static class Response {
+        private String email;
+        private String name;
     }
 }

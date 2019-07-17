@@ -10,8 +10,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
@@ -68,5 +66,12 @@ public class UserControllerTests {
                 .exchange()
                 .expectStatus().isFound()
                 .expectHeader().valueMatches("location", "(.)*(/signup)");
+    }
+
+    @Test
+    void 회원_정보_전체_조회_테스트() {
+        webTestClient.get().uri("/users")
+                .exchange()
+                .expectStatus().isOk();
     }
 }

@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode
 @Builder
 public class User {
     @Id
