@@ -11,7 +11,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepositoryImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,15 +34,7 @@ public class ArticleControllerTests {
     }
 
     @Autowired
-    private ArticleRepositoryImpl articleRepositoryImpl;
-
-    @Autowired
     private WebTestClient webTestClient;
-
-    @BeforeEach
-    void setUp() {
-        articleRepositoryImpl.deleteAll();
-    }
 
     @Test
     public void index() {
@@ -136,8 +127,4 @@ public class ArticleControllerTests {
                 .expectStatus().isFound();
     }
 
-    @AfterEach
-    public void tearDown() {
-        articleRepositoryImpl.deleteAll();
-    }
 }
