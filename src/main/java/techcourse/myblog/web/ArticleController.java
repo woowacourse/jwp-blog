@@ -15,7 +15,7 @@ public class ArticleController {
         this.articleRepository = articleRepository;
     }
 
-    @GetMapping(value = {"/", "/articles"})
+    @GetMapping("/articles")
     public String showArticles(Model model) {
         model.addAttribute("articles", articleRepository.findAll());
         return "index";

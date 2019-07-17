@@ -25,10 +25,6 @@ public class Article {
         this.contents = contents;
     }
 
-    public boolean matchId(Long id) {
-        return this.id.equals(id);
-    }
-
     public void updateArticle(ArticleDto articleDto) {
         this.title = articleDto.getTitle();
         this.coverUrl = articleDto.getCoverUrl();

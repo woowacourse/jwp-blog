@@ -17,13 +17,8 @@
 
 ## Spring Data JPA/회원가입
 ### Todo
-0. 페어와 코드 동기화
-
 1. 회원 등록/조회 기능 구현하기
     - 회원 등록
-        - 회원가입페이지(signup.html)에서 POST /users 로 요청
-        - Spring Data JPA를 이용하여 DB에 user 정보를 저장
-        - 생성 후 로그인 화면으로 이동
         - 회원가입 시 아래의 회원가입 규칙을 지켜야 하고, 위반 시 사용자에게 알려준다.
     - 회원 조회
         - GET /users 로 요청하여 회원목록페이지(user-list.html) 이동
@@ -50,3 +45,14 @@
     - 회원 탈퇴
         - MyPage > profile 하단 > 탈퇴 버튼을 추가
         - DELETE 메소드를 이용하여 탈퇴 요청
+        
+### Done
+0. 페어와 코드 동기화
+
+1. 회원 등록/조회 기능 구현하기
+    - 회원 등록
+        - 로그인 페이지로 이동
+        - 회원가입 페이지로 이동
+        - 회원가입페이지(sign-up.html)에서 POST /users 로 요청
+        - Spring Data JPA를 이용하여 DB에 user 정보를 저장
+        - 생성 후 로그인 화면으로 이동

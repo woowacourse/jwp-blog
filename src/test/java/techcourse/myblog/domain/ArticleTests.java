@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import techcourse.myblog.dto.ArticleDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ArticleTests {
     private Article article;
@@ -13,18 +12,6 @@ public class ArticleTests {
     @BeforeEach
     void setUp() {
         article = new Article("title", "url", "contents");
-    }
-
-    @Test
-    public void ID_증가_확인() {
-        Article newArticle = new Article("title1", "url1", "contents1");
-
-        assertThat(newArticle.getId()).isEqualTo(1L);
-    }
-
-    @Test
-    void matchId() {
-        assertTrue(article.matchId(0L));
     }
 
     @Test
