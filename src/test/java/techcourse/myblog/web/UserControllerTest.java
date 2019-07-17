@@ -61,7 +61,7 @@ class UserControllerTest {
 
     @Test
     void user_list_view() {
-        UserRequestDto userRequestDto = UserRequestDto.of("john", "abcde@example.com", "p@ssW0rd", "p@ssW0rd");
+        UserRequestDto userRequestDto = UserRequestDto.of("john", "test_user_list_view@example.com", "p@ssW0rd", "p@ssW0rd");
         postUser(userRequestDto, postResponse -> {
             webTestClient.get().uri("/users")
                 .exchange()
