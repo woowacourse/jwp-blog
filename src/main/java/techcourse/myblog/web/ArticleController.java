@@ -7,12 +7,15 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.ArticleService;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Controller
 public class ArticleController {
+    private static final String SESSION_USER_KEY = "user";
+
     private final ArticleService articleService;
 
     @Autowired
@@ -21,15 +24,26 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public String indexView(Model model) {
+    public String indexView(Model model, HttpSession session) {
+        checkAndPutUser(model, session);
         List<Article> articles = new ArrayList<>();
         articleService.findAll().forEach(articles::add);
         model.addAttribute("articles", articles);
         return "index";
     }
 
+    private void checkAndPutUser(Model model, HttpSession session) {
+        if (session.getAttribute(SESSION_USER_KEY) != null) {
+            model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
+        }
+    }
+
     @GetMapping("/writing")
-    public String writeArticleView() {
+    public String writeArticleView(Model model, HttpSession session) {
+        if (session.getAttribute(SESSION_USER_KEY) == null) {
+            return "redirect:login";
+        }
+        model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
         return "article-edit";
     }
 

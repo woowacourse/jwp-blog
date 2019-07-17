@@ -108,6 +108,10 @@ public class User {
         return Objects.hash(id, userName, email, password);
     }
 
+    public boolean authentication(String email, String password) {
+        return this.email.equals(email) && this.password.equals(password);
+    }
+
     public static class UserCreationConstraintException extends IllegalArgumentException {
         public UserCreationConstraintException(String message) {
             super(message);

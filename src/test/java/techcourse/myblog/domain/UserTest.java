@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -49,5 +50,14 @@ public class UserTest {
             () -> User.of("haaaaa", "test2@example.com", "p@ssworddddd", this::checkEmailDuplicate));
         assertThrows(User.UserCreationConstraintException.class,
             () -> User.of("haaaaa", "test2@example.com", "P@SSW0RD", this::checkEmailDuplicate));
+    }
+
+    @Test
+    void authentication() {
+        User newUser = User.of("james", "authentication_test@email.com", "p@ssW0rd");
+        assertThat(newUser.authentication("authentication_test@email.com", "p@ssW0rd")).isTrue();
+        assertThat(newUser.authentication("authentication_test@email.com", "p@ssW0rd23")).isFalse();
+        assertThat(newUser.authentication("authentication_test123@email.com", "p@ssW0rd")).isFalse();
+        assertThat(newUser.authentication("auth_test@email.com", "p@ssW0rd")).isFalse();
     }
 }
