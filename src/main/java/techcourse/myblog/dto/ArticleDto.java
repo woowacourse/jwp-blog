@@ -1,10 +1,18 @@
-package techcourse.myblog;
+package techcourse.myblog.dto;
 
 import techcourse.myblog.domain.Article;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class ArticleDto {
+    @NotBlank(message = "제목을 입력해주세요.")
     private String title;
+
+    @NotNull
     private String coverUrl;
+
+    @NotBlank(message = "내용을 입력해주세요.")
     private String contents;
 
     public ArticleDto(String title, String url, String contents) {
