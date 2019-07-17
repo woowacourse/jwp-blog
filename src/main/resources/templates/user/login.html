@@ -36,12 +36,12 @@
                                                         <h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">
                                                             로그인</h2>
                                                     </div>
-                                                    <form>
+                                                    <form action="/login" method="post">
                                                         <div class="form-group">
-                                                            <input type="email" class="form-control" placeholder="Id">
+                                                            <input type="email" name="email" class="form-control" placeholder="Id">
                                                         </div>
                                                         <div class="form-group">
-                                                            <input type="password" class="form-control"
+                                                            <input type="password" name="password" class="form-control"
                                                                    placeholder="Password">
                                                         </div>
                                                         <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
@@ -52,7 +52,7 @@
                                                             <a href="">Forgot Password?</a>
                                                         </div>
                                                         <div class="mrg-top-20 text-right">
-                                                            <a href="user-list.html" class="btn btn-tumblr">로그인</a>
+                                                            <input type="submit" class="btn btn-tumblr" value="로그인">
                                                         </div>
                                                     </form>
                                                     <div class="text-dark">
