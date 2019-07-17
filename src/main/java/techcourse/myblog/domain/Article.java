@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+
 import java.util.Objects;
 
 public class Article {
