@@ -1,65 +1,58 @@
 package techcourse.myblog.web;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.service.ArticleService;
 
-import java.util.Optional;
+import static techcourse.myblog.web.ArticleController.ARTICLE_MAPPING_URL;
 
 @Controller
+@RequiredArgsConstructor
+@RequestMapping(ARTICLE_MAPPING_URL)
 public class ArticleController {
-    @Autowired
-    private ArticleRepository articleRepository;
-
-    @GetMapping("/")
-    public String showArticles(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
-        return "index";
-    }
+    public static final String ARTICLE_MAPPING_URL= "/article";
+    private final ArticleService articleService;
 
     @GetMapping("/writing")
-    public String writing(Model model) {
-        model.addAttribute("method", "POST");
+    public String createForm(){
         return "article-edit";
     }
 
-    @PostMapping("/articles")
-    public String addArticle(@ModelAttribute Article article) {
-        articleRepository.save(article);
-        return "redirect:/articles/" + article.getId();
+    @PostMapping
+    public RedirectView save(Article article){
+        articleService.save(article);
+        return new RedirectView("/article/"+ article.getId());
     }
 
-    @GetMapping("/articles/{id}")
-    public String showArticle(@PathVariable long id, Model model) {
-        addAttributeArticleToModel(id, model);
+    @GetMapping("/{id}")
+    public String show (@PathVariable long id, Model model){
+        model.addAttribute("article",articleService.findById(id));
         return "article";
     }
 
-    @GetMapping("/articles/{id}/edit")
-    public String editArticle(@PathVariable long id, Model model) {
-        addAttributeArticleToModel(id, model);
-        model.addAttribute("method", "PUT");
+    @PutMapping("/{id}")
+    public RedirectView update (Article article, Model model){
+        articleService.update(article);
+        return new RedirectView("/article/"+article.getId());
+    }
+
+    @GetMapping("/{id}/edit")
+    public String updateForm(@PathVariable long id, Model model){
+        model.addAttribute("article", articleService.findById(id));
         return "article-edit";
     }
 
-    @PutMapping("/articles/{id}")
-    public String putArticle(@PathVariable long id, Article article) {
-        articleRepository.updateArticleById(article, id);
-        return "redirect:/articles/" + id;
+    @DeleteMapping("/{id}")
+    public RedirectView delete(@PathVariable long id){
+        articleService.delete(id);
+        return new RedirectView("/");
     }
 
-    @DeleteMapping("/articles/{id}")
-    public String deleteArticle(@PathVariable long id) {
-        articleRepository.removeArticleById(id);
-        return "redirect:/";
-    }
 
-    private void addAttributeArticleToModel(@PathVariable long id, Model model) {
-        Optional<Article> maybeArticle = articleRepository.getArticleById(id);
-        maybeArticle.ifPresent(ariticle -> model.addAttribute("article", ariticle));
-        maybeArticle.orElseThrow(IllegalArgumentException::new);
-    }
 }
