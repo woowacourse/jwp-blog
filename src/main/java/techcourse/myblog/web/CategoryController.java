@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.ArticleRepositoryImpl;
 import techcourse.myblog.domain.Category;
-import techcourse.myblog.domain.CategoryRepositoryImpl;
+import techcourse.myblog.domain.CategoryRepository;
 
 @Controller
 public class CategoryController {
@@ -16,7 +16,7 @@ public class CategoryController {
     private ArticleRepositoryImpl articleRepositoryImpl;
 
     @Autowired
-    private CategoryRepositoryImpl categoryRepositoryImpl;
+    private CategoryRepository categoryRepositoryImpl;
 
     @PostMapping("/categories/add")
     public String addCategories(Category category) {
