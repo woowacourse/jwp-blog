@@ -2,16 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>    '
     <title>우아한테크코스 기술블로그</title>
-    <th:block th:include="common/common_meta"></th:block>
-    <th:block th:include="common/common_css"></th:block>
-    <th:block th:include="common/common_article_css"></th:block>
+    <th:block th:include="common/meta"></th:block>
+    <th:block th:include="common/css"></th:block>
+    <th:block th:include="common/article_css"></th:block>
     <link rel="stylesheet" href="/css/article.css">
 </head>
 <body>
 <div>
     <header id="header" class="header navbar bg-transparent no-border">
         <div class="header-container">
-            <th:block th:include="common/common_index_logo"></th:block>
+            <th:block th:include="common/index_logo"></th:block>
             <ul class="nav-right">
                 <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
                     <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
@@ -134,7 +134,7 @@
         </div>
     </div>
 </div>
-<th:block th:include="common/common_js"></th:block>
+<th:block th:include="common/js"></th:block>
 <script th:inline="javascript">
     const initValue = [[${article.contents}]];
 
@@ -143,7 +143,7 @@
         viewer: true,
         height: '100%',
         initialValue: initValue
-    })
+    });
 
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
