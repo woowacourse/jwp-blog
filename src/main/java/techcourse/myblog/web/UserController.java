@@ -11,8 +11,6 @@ import techcourse.myblog.domain.User;
 
 @Controller
 public class UserController {
-    @Autowired
-    private ArticleRepository articleRepository;
 
     @GetMapping("/signup")
     public String showSignupForm(Model model) {
@@ -22,6 +20,11 @@ public class UserController {
     @GetMapping("/login")
     public String showLoginForm(Model model) {
         return "login";
+    }
+
+    @GetMapping("/users")
+    public String showAllUsers() {
+        return "user-list";
     }
 
     @PostMapping("/users")

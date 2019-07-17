@@ -40,4 +40,12 @@ class UserControllerTest {
                             .expectStatus()
                             .isOk();
     }
+
+    @Test
+    void showUsersList() {
+        webTestClient.get().uri("/users")
+                            .exchange()
+                            .expectStatus()
+                            .isOk();
+    }
 }
