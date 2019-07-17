@@ -33,4 +33,11 @@ class UserControllerTest {
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
+
+    @Test
+    void 회원조회_테스트() {
+        webTestClient.get().uri("/users")
+                .exchange()
+                .expectStatus().isOk();
+    }
 }
