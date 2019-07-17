@@ -11,7 +11,7 @@ public class UsersController {
 	}
 
 //	@PostMapping("users")
-//	public String signUp(Model model) {
+//	public String signUp(User newUser, Model model) {
 //
 //	}
 }
