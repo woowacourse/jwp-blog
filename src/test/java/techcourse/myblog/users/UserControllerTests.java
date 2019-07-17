@@ -32,15 +32,15 @@ public class UserControllerTests {
         String password = "P@ssw0rd";
 
         webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name",name)
-                .with("email",email)
-                .with("password",password)
-                .with("confirmPassword",password))
+                .body(BodyInserters.fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password)
+                        .with("confirmPassword", password))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.matches("[0-9]+")).isTrue();
+            String body = new String(response.getResponseBody());
+            assertThat(body.matches("[0-9]+")).isTrue();
         });
     }
 
@@ -51,16 +51,16 @@ public class UserControllerTests {
         String password = "123";
 
         webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name",name)
-                .with("email",email)
-                .with("password",password)
-                .with("confirmPassword",password))
+                .body(BodyInserters.fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password)
+                        .with("confirmPassword", password))
                 .exchange()
                 .expectBody().consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(UserDto.EMAIL_NOT_MATCH_MESSAGE)).isTrue();
-                    assertThat(body.contains(UserDto.NAME_NOT_MATCH_MESSAGE)).isTrue();
-                    assertThat(body.contains(UserDto.PASSWORD_NOT_MATCH_MESSAGE)).isTrue();
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(UserDto.EMAIL_NOT_MATCH_MESSAGE)).isTrue();
+            assertThat(body.contains(UserDto.NAME_NOT_MATCH_MESSAGE)).isTrue();
+            assertThat(body.contains(UserDto.PASSWORD_NOT_MATCH_MESSAGE)).isTrue();
         });
     }
 
@@ -80,10 +80,10 @@ public class UserControllerTests {
 
 
         webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name",name)
-                        .with("email",email)
-                        .with("password",password)
-                        .with("confirmPassword",password))
+                .body(BodyInserters.fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password)
+                        .with("confirmPassword", password))
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody().consumeWith(response -> {
@@ -100,15 +100,47 @@ public class UserControllerTests {
         String confirmPassword = "P@ssw0rd+1";
 
         webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name",name)
-                        .with("email",email)
-                        .with("password",password)
-                        .with("confirmPassword",confirmPassword))
+                .body(BodyInserters.fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password)
+                        .with("confirmPassword", confirmPassword))
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody().consumeWith(response -> {
             String body = new String(response.getResponseBody());
             assertThat(body.contains(UserService.PASSWORD_INVALID_MESSAGE)).isTrue();
+        });
+    }
+
+    @Test
+    void loginFormTest() {
+        webTestClient.get().uri("/users/login")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void loginTest() {
+        String email = "email@google.co.kr";
+        String name = "name";
+        String password = "P@ssw0rd";
+        UserDto userDto = UserDto.builder()
+                .email(email)
+                .name(name)
+                .password(password)
+                .confirmPassword(password)
+                .build();
+
+        userService.save(userDto);
+
+        webTestClient.post().uri("/users/login")
+                .body(BodyInserters.fromFormData("email", email)
+                        .with("password", password))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(name)).isTrue();
         });
     }
 }

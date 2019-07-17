@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -24,5 +25,18 @@ public class UserController {
     @ResponseBody
     public Long signup(@Valid UserDto userDto) {
         return userService.save(userDto);
+    }
+
+    @GetMapping("/login")
+    public String loginForm() {
+        return "login";
+    }
+
+    @PostMapping("/login")
+    @ResponseBody
+    public String login(UserDto userDto, HttpSession session) {
+        String name = userService.login(userDto).getName();
+        session.setAttribute("username", name);
+        return name;
     }
 }

@@ -42,7 +42,7 @@
                                                         </form>
                                                         <div class="text-dark">
                                                             <span>이미 회원이신가요?</span>
-                                                            <a href="/users" class="text-info pointer mrg-left-5">로그인</a>
+                                                            <a href="/users/login" class="text-info pointer mrg-left-5">로그인</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -84,7 +84,7 @@
                     data: params,
                     success: function (response) {
                         alert("회원가입 성공");
-                        location.href = "/";
+                        location.href = "/users/login";
                     },
                     error: function (response) {
                         markingErrorField(response);
@@ -110,64 +110,4 @@
             ;
         };
     </script>
-
-<!--    <script type="application/javascript">-->
-<!--        var markingErrorField = function (response) {-->
-<!--            const errorFields = response.responseJSON.errors;-->
-
-<!--            if(!errorFields){-->
-<!--                alert(response.response.message);-->
-<!--                return;-->
-<!--            }-->
-
-<!--            var $field, error;-->
-<!--            for(var i=0, length = errorFields.length; i<length;i++){-->
-<!--                error = errorFields[i];-->
-<!--                $field = $('#'+error['field']);-->
-
-<!--                if($field && $field.length > 0){-->
-<!--                    $field.siblings('.error-message').remove();-->
-<!--                    $field.after('<span class="error-message text-muted taxt-small text-danger">'+error.defaultMessage+'</span>');-->
-<!--                }-->
-<!--            }-->
-<!--        };-->
-
-<!--        var $tbody = $('#tbody');-->
-
-<!--        var findAll = function () {-->
-<!--            $.ajax({-->
-<!--                url:'/users',-->
-<!--                method: 'GET',-->
-<!--                success: function (response) {-->
-<!--                    var source   = $("#table-template").html();-->
-<!--                    var template = Handlebars.compile(source);-->
-<!--                    var html = template({users:response});-->
-<!--                    $tbody.html('');-->
-<!--                    $tbody.html(html);-->
-<!--                }-->
-<!--            });-->
-<!--        };-->
-
-<!--        $('#btnSave').click(function () {-->
-<!--            var member = {-->
-<!--                name: $('#name').val(),-->
-<!--                phoneNumber: $('#phoneNumber').val(),-->
-<!--                email: $('#email').val()-->
-<!--            };-->
-<!--            $.ajax({-->
-<!--                url:'/users',-->
-<!--                method: 'POST',-->
-<!--                data: JSON.stringify(member),-->
-<!--                contentType: "application/json; charset=utf-8",-->
-<!--                success: function (response) {-->
-<!--                    findAll();-->
-<!--                },-->
-<!--                error: function (response) {-->
-<!--                    markingErrorField(response);-->
-<!--                }-->
-<!--            });-->
-<!--        });-->
-
-<!--        findAll();-->
-<!--    </script>-->
 </th:block>

@@ -25,15 +25,20 @@ public class UserService {
     }
 
     private void verifyPassword(UserDto userDto) {
-        if(!userDto.isValidPassword()) {
+        if (!userDto.isValidPassword()) {
             throw new ValidSingupException(PASSWORD_INVALID_MESSAGE, "password");
         }
     }
 
     private void verifyDuplicateEmail(String email) {
-        if(userRepository.existsByEmail(email)){
+        if (userRepository.existsByEmail(email)) {
             throw new ValidSingupException(EMAIL_DUPLICATE_MESSAGE, "email");
         }
+    }
+
+    public User login(UserDto userDto) {
+        return userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword())
+                .orElseThrow(() -> new ValidSingupException("존재하지 않는 이메일 또는 비밀번호가 틀립니다.", "password"));
     }
 }
 
