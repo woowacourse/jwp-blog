@@ -19,7 +19,7 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryRepositoryImpl categoryRepositoryImpl;
 
     @Autowired
     private UserRepository userRepository;
@@ -27,7 +27,7 @@ public class ArticleController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         List<Article> articles = articleRepositoryImpl.findAll();
-        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("categories", categoryRepositoryImpl.findAll());
         model.addAttribute("articles", articles);
 
         Object userId = session.getAttribute("userId");
@@ -47,7 +47,7 @@ public class ArticleController {
     @GetMapping("/{categoryId}")
     public String index(@PathVariable final long categoryId, Model model) {
         List<Article> articles = articleRepositoryImpl.findByCategoryId(categoryId);
-        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("categories", categoryRepositoryImpl.findAll());
         model.addAttribute("articles", articles);
         System.out.println(articles);
         return "index";
@@ -55,7 +55,7 @@ public class ArticleController {
 
     @GetMapping("/article/new")
     public String showWritingPage(Model model) {
-        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("categories", categoryRepositoryImpl.findAll());
         return "article-edit";
     }
 
@@ -89,7 +89,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}/edit")
     public String updateArticle(@PathVariable long articleId, Model model) {
         Article article = articleRepositoryImpl.findById(articleId);
-        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("categories", categoryRepositoryImpl.findAll());
         model.addAttribute("article", article);
         return "article-edit";
     }
