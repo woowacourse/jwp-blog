@@ -26,6 +26,10 @@ public class ArticleDto {
                 article.getCategoryId());
     }
 
+    public Article toArticle() {
+        return new Article(this.id, this.title, this.coverUrl, this.contents, this.categoryId);
+    }
+
     public long getId() {
         return id;
     }
