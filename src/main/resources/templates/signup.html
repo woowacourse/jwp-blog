@@ -12,9 +12,11 @@
             if (password !== confirm) {
                 area.innerHTML = "비밀번호가 일치하지 않습니다.";
                 area.style.color = "red";
+                document.getElementById("register-button").setAttribute("disabled", "true");
             } else {
                 area.innerHTML = "비밀번호가 일치합니다.";
                 area.style.color = "green";
+                document.getElementById("register-button").removeAttribute("disabled");
             }
         }
     </script>
@@ -86,7 +88,7 @@
 
                                                             <label id="confirm-area" class="text-normal"></label>
                                                             <div class="form-group">
-                                                                <button type="submit"
+                                                                <button id="register-button" type="submit"
                                                                         class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
                                                                     가입하기
                                                                 </button>
