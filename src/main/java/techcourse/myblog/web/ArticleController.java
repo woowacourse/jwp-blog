@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.ArticleDto;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.model.ArticleRepository;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RequestMapping("/articles")
@@ -28,8 +28,8 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public RedirectView createArticle(ArticleDto article) {
-        Article savedArticle = articleRepository.save(article.toArticle());
+    public RedirectView createArticle(@Valid ArticleDto articleDto) {
+        Article savedArticle = articleRepository.save(articleDto.toArticle());
         return new RedirectView("/articles/" + savedArticle.getId());
     }
 
@@ -42,15 +42,19 @@ public class ArticleController {
 
     @GetMapping("/{articleId}/edit")
     public String editArticleForm(@PathVariable long articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId));
+        Optional<Article> articleOpt = articleRepository.findById(articleId);
+        articleOpt.ifPresent(value -> {
+            model.addAttribute("article", value);
+        });
+
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
-    public RedirectView editArticle(@PathVariable long articleId, ArticleDto editedArticle) {
+    public RedirectView editArticle(@PathVariable long articleId, @Valid ArticleDto articleDto) {
         Optional<Article> articleOpt = articleRepository.findById(articleId);
         articleOpt.ifPresent(value -> {
-            value.update(editedArticle.toArticle());
+            value.update(articleDto.toArticle());
             articleRepository.save(value);
         });
 
