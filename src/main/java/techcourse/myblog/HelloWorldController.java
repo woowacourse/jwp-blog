@@ -12,12 +12,6 @@ public class HelloWorldController {
         return blogName;
     }
 
-    @ResponseBody
-    @GetMapping("/helloworld")
-    public String getBlogNameByGet(String blogName) {
-        return blogName;
-    }
-
     @GetMapping("/helloworld2")
     public String getBlogNameByGet2(String blogName, Model model) {
         model.addAttribute("blogName", blogName);
