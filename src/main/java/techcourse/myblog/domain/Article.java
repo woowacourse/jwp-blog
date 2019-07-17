@@ -9,7 +9,7 @@ import java.util.Objects;
 @Entity
 public class Article {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private long articleId;
 
     private String title;
@@ -19,14 +19,10 @@ public class Article {
     public Article() {
     }
 
-    public Article(String title, String coverUrl, String contents) {
+    public Article(long articleId, String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-    }
-
-    public Article(long articleId, String title, String coverUrl, String contents) {
-        this(title, coverUrl, contents);
         this.articleId = articleId;
     }
 
