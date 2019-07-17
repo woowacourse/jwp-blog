@@ -30,7 +30,7 @@ public class RootController {
         }
         List<CategoryDto> categories = new ArrayList<>();
         for (Category category : categoryRepository.findAll()) {
-            categories.add(Category.from(category));
+            categories.add(CategoryDto.from(category));
         }
 
         model.addAttribute("categories", categories);
@@ -58,7 +58,7 @@ public class RootController {
         }
         List<CategoryDto> categories = new ArrayList<>();
         for (Category category : categoryRepository.findAll()) {
-            categories.add(Category.from(category));
+            categories.add(CategoryDto.from(category));
         }
 
         model.addAttribute("categories", categories);

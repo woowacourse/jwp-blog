@@ -20,7 +20,8 @@ public class Article {
     public Article() {
     }
 
-    public Article(String title, String coverUrl, String contents, long categoryId) {
+    public Article(long id, String title, String coverUrl, String contents, long categoryId) {
+        this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;

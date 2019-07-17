@@ -5,33 +5,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import techcourse.myblog.domain.ArticleRepositoryImpl;
-import techcourse.myblog.domain.Category;
-import techcourse.myblog.domain.CategoryRepository;
+import techcourse.myblog.domain.*;
 
 @Controller
 public class CategoryController {
+    @Autowired
+    private ArticleRepository articleRepository;
 
     @Autowired
-    private ArticleRepositoryImpl articleRepositoryImpl;
-
-    @Autowired
-    private CategoryRepository categoryRepositoryImpl;
+    private CategoryRepository categoryRepository;
 
     @PostMapping("/categories/add")
-    public String addCategories(Category category) {
-        categoryRepositoryImpl.addCategory(category);
+    public String addCategories(CategoryDto categoryDto) {
+        categoryRepository.save(categoryDto.toCategory());
 
         return "redirect:/";
     }
 
     @GetMapping("categories/delete/{categoryId}")
     public String deleteCategories(@PathVariable long categoryId) {
-        Category category = new Category();
-        category.setCategoryId(categoryId);
-
-        if (articleRepositoryImpl.findByCategoryId(categoryId).isEmpty()) {
-            categoryRepositoryImpl.delete(category);
+        if (articleRepository.findByCategoryId(categoryId).isEmpty()) {
+            categoryRepository.deleteById(categoryId);
         }
 
         return "redirect:/";

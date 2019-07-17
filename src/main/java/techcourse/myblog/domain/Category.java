@@ -13,15 +13,8 @@ public class Category {
     public Category() {
     }
 
-    public static CategoryDto from(Category category) {
-        return new CategoryDto(category.getCategoryId(), category.getCategoryName());
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
+    public Category(long categoryId, String categoryName) {
+        this.categoryId = categoryId;
         this.categoryName = categoryName;
     }
 
@@ -29,8 +22,8 @@ public class Category {
         return categoryId;
     }
 
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
+    public String getCategoryName() {
+        return categoryName;
     }
 
     @Override
