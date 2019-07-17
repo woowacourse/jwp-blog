@@ -32,4 +32,12 @@ class UserControllerTest {
                             .expectStatus()
                             .is3xxRedirection();
     }
+
+    @Test
+    void showLoginFormTest() {
+        webTestClient.get().uri("/login")
+                            .exchange()
+                            .expectStatus()
+                            .isOk();
+    }
 }
