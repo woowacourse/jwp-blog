@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,5 +22,15 @@ public class HomeController {
     @GetMapping("/writing")
     public String createArticleForm() {
         return "article-edit";
+    }
+
+    @GetMapping("/login")
+    public String loginForm() {
+        return "login";
+    }
+
+    @GetMapping("/signup")
+    public String signUpForm() {
+        return "signup";
     }
 }
