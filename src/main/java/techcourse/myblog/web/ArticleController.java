@@ -17,7 +17,7 @@ public class ArticleController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/article/new")
+    @GetMapping("/articles/new")
     public String showWritingPage(Model model) {
         model.addAttribute("categories", categoryService.findAll());
         return "article-edit";

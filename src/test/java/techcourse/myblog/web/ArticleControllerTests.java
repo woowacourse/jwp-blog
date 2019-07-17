@@ -27,10 +27,7 @@ public class ArticleControllerTests {
     private static String categoryId = "1";
 
     static {
-        ARTICLE_SAMPLE = new Article();
-        ARTICLE_SAMPLE.setTitle(title);
-        ARTICLE_SAMPLE.setCoverUrl(coverUrl);
-        ARTICLE_SAMPLE.setContents(contents);
+        ARTICLE_SAMPLE = new Article(0, title, coverUrl, contents, 0);
     }
 
     @Autowired
@@ -99,7 +96,7 @@ public class ArticleControllerTests {
 
     @Test
     public void showWritingPage() {
-        webTestClient.get().uri("/writing")
+        webTestClient.get().uri("/articles/new")
                 .exchange()
                 .expectStatus().isOk();
     }
