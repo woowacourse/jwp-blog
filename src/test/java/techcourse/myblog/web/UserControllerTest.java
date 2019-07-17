@@ -43,6 +43,8 @@ class UserControllerTest {
 
     @Test
     public void 회원조회페이지_이동() {
+        회원추가();
+
         webTestClient.get()
                 .uri("/users")
                 .exchange()

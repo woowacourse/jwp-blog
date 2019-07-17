@@ -14,6 +14,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
+
 @Controller
 public class UserController {
 
@@ -25,12 +26,17 @@ public class UserController {
         return "signup";
     }
 
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "login";
+    }
+
     @PostMapping("/users")
     public String addUser(UserRequestDto userRequestDto) {
         User user = userRepository.save(userRequestDto.toUser());
         System.out.println(user);
 
-        return "redirect:/";
+        return "redirect:/login";
     }
 
     @GetMapping("/users")
@@ -43,6 +49,8 @@ public class UserController {
         model.addAttribute("users", users.stream()
                 .map(user -> UserRequestDto.from(user))
                 .collect(toList()));
+
+        System.out.println(users);
 
         return "user-list";
     }
