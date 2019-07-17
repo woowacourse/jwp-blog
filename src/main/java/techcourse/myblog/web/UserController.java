@@ -134,7 +134,7 @@ public class UserController {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isPresent()) {
-            user.get().setName(userDto.getName());
+            //user.get().setName(userDto.getName());
             userRepository.save(user.get());
         }
 

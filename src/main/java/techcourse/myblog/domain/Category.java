@@ -1,8 +1,14 @@
 package techcourse.myblog.domain;
 
+import javax.persistence.*;
+
+@Entity
 public class Category {
-    private String categoryName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long categoryId;
+    @Column(unique = true)
+    private String categoryName;
 
     public Category() {
     }
