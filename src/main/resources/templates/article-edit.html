@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="commonHeader"></th:block>
+    <th:block th:replace="common/header"></th:block>
     <link rel="stylesheet" href="/css/article-edit.css">
 </head>
 <body>
 <div>
     <div class="header navbar bg-transparent no-border">
         <div class="header-container">
-            <th:block th:replace="logo"></th:block>
+            <th:block th:replace="common/logo"></th:block>
             <ul class="nav-right">
                 <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
                     <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
@@ -74,8 +74,8 @@
     </form>
 </div>
 
-<th:block th:replace="commonJS"></th:block>
-<th:block th:replace="commonJSEditor"></th:block>
+<th:block th:replace="common/js"></th:block>
+<th:block th:replace="common/jsEditor"></th:block>
 <script type="text/javascript">
     const contents = document.getElementById("article-contents").value;
 

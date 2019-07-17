@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="commonHeader"></th:block>
+    <th:block th:replace="common/header"></th:block>
     <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
 <div>
     <header id="header" class="header navbar bg-transparent no-border">
         <div class="header-container">
-            <th:block th:replace="logo"></th:block>
+            <th:block th:replace="common/logo"></th:block>
             <ul class="nav-right">
                 <li class="user-profile">
                     <a href="login.html">
@@ -113,7 +113,7 @@
     </div>
 </footer>
 
-<th:block th:replace="commonJS"></th:block>
+<th:block th:replace="common/js"></th:block>
 <!-- TODO: https://elfinlas.github.io/2018/02/16/thymeleaf-layout-dialect_exam/ -->
 <!-- TODO: https://blog.hanumoka.net/2018/08/07/spring-20180807-spring-thymeleaf-layout-dialect2-head/ -->
 <!-- TODO: https://blog.outsider.ne.kr/1004 -->
