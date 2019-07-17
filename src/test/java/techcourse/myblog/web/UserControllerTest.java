@@ -73,4 +73,33 @@ class UserControllerTest {
             });
         });
     }
+
+    @Test
+    void login_logout() {
+        UserRequestDto userRequestDto = UserRequestDto.of("john", "login_test@example.com", "p@ssW0rd", "p@ssW0rd");
+        postUser(userRequestDto, postResponse -> {
+            webTestClient.post().uri("/login")
+                .body(BodyInserters.fromFormData("email", "login_test@example.com")
+                .with("password", "p@ssW0rd"))
+                .exchange().expectStatus().is3xxRedirection()
+                .expectBody().consumeWith(loginResponse -> {
+                    String uri = loginResponse.getResponseHeaders().get("Location").get(0);
+                    webTestClient.get().uri(uri)
+                        .exchange().expectStatus().isOk()
+                        .expectBody().consumeWith(indexResponse -> {
+                            assertThat(new String(indexResponse.getResponseBody())).contains("john");
+                            webTestClient.get().uri("/logout")
+                                .exchange().expectStatus().is3xxRedirection()
+                                .expectBody().consumeWith(logoutResponse -> {
+                                    String logoutUri = logoutResponse.getResponseHeaders().get("Location").get(0);
+                                    webTestClient.get().uri(logoutUri)
+                                        .exchange().expectStatus().isOk()
+                                        .expectBody().consumeWith(indexResponse2 -> {
+                                            assertThat(new String(indexResponse2.getResponseBody())).doesNotContain("john");
+                                    });
+                            });
+                    });
+            });
+        });
+    }
 }

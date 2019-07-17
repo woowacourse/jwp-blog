@@ -32,17 +32,8 @@ public class ArticleController {
         return "index";
     }
 
-    private void checkAndPutUser(Model model, HttpSession session) {
-        if (session.getAttribute(SESSION_USER_KEY) != null) {
-            model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
-        }
-    }
-
     @GetMapping("/writing")
     public String writeArticleView(Model model, HttpSession session) {
-        if (session.getAttribute(SESSION_USER_KEY) == null) {
-            return "redirect:login";
-        }
         model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
         return "article-edit";
     }
@@ -84,5 +75,15 @@ public class ArticleController {
     public String deleteArticle(@PathVariable Long articleId) {
         articleService.deleteById(articleId);
         return "redirect:/";
+    }
+
+    private boolean isLoggedIn(HttpSession session) {
+        return session.getAttribute(SESSION_USER_KEY) != null;
+    }
+
+    private void checkAndPutUser(Model model, HttpSession session) {
+        if (isLoggedIn(session)) {
+            model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
+        }
     }
 }

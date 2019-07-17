@@ -19,15 +19,19 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping("/signup")
-    public String registerView() {
-//        TODO: 로그인된 경우 처리 필요
+    public String registerView(HttpSession session) {
+        if (isLoggedIn(session)) {
+            return "redirect:/";
+        }
         return "signup";
     }
     
     @PostMapping("/users")
     public String register(UserRequestDto userRequestDto, Model model, HttpSession session){
         try {
-//             TODO: 로그인된 경우 처리 필요
+            if(isLoggedIn(session)) {
+                return "redirect:/";
+            }
             if (!userRequestDto.getPassword().equals(userRequestDto.getPasswordConfirm())) {
                 throw new User.UserCreationConstraintException("비밀번호가 같지 않습니다.");
             }
@@ -44,15 +48,19 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String loginView() {
-//        TODO: 로그인된 경우 처리 필요
+    public String loginView(HttpSession session) {
+        if(isLoggedIn(session)) {
+            return "redirect:/";
+        }
         return "login";
     }
 
     @PostMapping("/login")
     public String login(LoginRequestDto requestDto, Model model, HttpSession session) {
         try {
-//            TODO: 로그인된 경우 처리 필요
+            if(isLoggedIn(session)) {
+                return "redirect:/";
+            }
             User user = userRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 이메일입니다"));
             if (user.authentication(requestDto.getEmail(), requestDto.getPassword())) {
@@ -77,8 +85,21 @@ public class UserController {
         return "user-list";
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        if (isLoggedIn(session)) {
+            session.invalidate();
+            return "redirect:/";
+        }
+        return "redirect:/login";
+    }
+
+    private boolean isLoggedIn(HttpSession session) {
+        return session.getAttribute(SESSION_USER_KEY) != null;
+    }
+
     private void checkAndPutUser(Model model, HttpSession session) {
-        if (session.getAttribute(SESSION_USER_KEY) != null) {
+        if (isLoggedIn(session)) {
             model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
         }
     }
