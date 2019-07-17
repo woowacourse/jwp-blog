@@ -21,7 +21,7 @@ public class UserDto {
     }
 
     public User toUser() {
-        return new User(name, email, password);
+        return new User(id, name, email, password);
     }
 
     public long getId() {

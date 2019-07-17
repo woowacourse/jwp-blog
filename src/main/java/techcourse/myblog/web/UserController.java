@@ -131,11 +131,12 @@ public class UserController {
             return "redirect:/";
         }
 
-        Optional<User> user = userRepository.findById(id);
+        Optional<User> maybeUser = userRepository.findById(id);
+        if (maybeUser.isPresent()) {
+            UserDto findUserDto = UserDto.from(maybeUser.get());
+            findUserDto.setName(userDto.getName());
 
-        if (user.isPresent()) {
-            userDto.setId(id);
-            userRepository.save(userDto.toUser());
+            userRepository.save(findUserDto.toUser());
         }
 
         return "redirect:/users/" + id + "/mypage";
