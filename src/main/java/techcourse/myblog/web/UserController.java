@@ -6,9 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.UserException;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,22 @@ public class UserController {
     @GetMapping("/login")
     public String login() {
         return "login";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.removeAttribute("userName");
+        return "index";
+    }
+
+    @PostMapping("/login")
+    public String login(UserDto userDto, HttpSession session) {
+        User user = userRepository.findByEmail(userDto.getEmail()).orElseThrow(UserException::new);
+        if (!user.isEqualTo(userDto)) {
+            return "/login";
+        }
+        session.setAttribute("userName", user.getName());
+        return "redirect:/";
     }
 
     @GetMapping("/users")
