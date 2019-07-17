@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <head th:include="includes/common_meta :: common_meta"></head>
-    <head th:include="includes/common_css :: common_css"></head>
+    <head th:include="includes/meta :: common_meta"></head>
+    <head th:include="includes/css :: common_css"></head>
     <head th:include="includes/article_js :: article_js"></head>
     <link rel="stylesheet" href="/static/css/article.css">
 </head>
@@ -149,7 +149,7 @@
 </div>
 
 
-<body th:include="includes/common_js :: common_js"></body>
+<body th:include="includes/js :: common_js"></body>
 
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script type="text/javascript" th:inline="javascript">
