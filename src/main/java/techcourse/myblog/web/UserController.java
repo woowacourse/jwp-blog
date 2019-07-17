@@ -18,8 +18,12 @@ public class UserController {
     public String err(){
         return "errorpage";
     }
+
     @PostMapping("/users")
     public String signUp(User user) {
+        //TODO 여러개를 다 체크해야 되는 경우는 어떻게 해야 될까?
+        //여러개의 조건을 전부다 쿼리를 날리는게 과연 모범 답안일까 ?
+        //에러를 던지는건 어떨까? -> 공통적으로 묶어서..?
         if(userRepository.findUserByEmail(user.getEmail()) != null){
             return "redirect:/err";
         }
@@ -34,7 +38,7 @@ public class UserController {
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        model.addAttribute("user",);
+        model.addAttribute("user", userRepository.findAll());
         return "user-list";
     }
 }
