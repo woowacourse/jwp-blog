@@ -4,7 +4,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>우아한 크루의 블로그</title>
-    <link href="/css/index.css" rel="stylesheet" th:href="@{css/index.css}">
+    <link href="/css/index.css" rel="stylesheet">
 </head>
 <body>
 <div class="app">
@@ -25,7 +25,7 @@
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
-                                                    <form method="post" action="/users">
+                                                    <form method="post" action="/users" name="userForm">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
                                                             <input class="form-control" name="userName" type="text">
@@ -37,17 +37,22 @@
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
                                                             <input class="form-control" name="password" placeholder="Password"
+                                                                   onkeyup="check()"
                                                                    type="password">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm
                                                                 Password</label>
                                                             <input class="form-control" placeholder="Password"
+                                                                   name="confirmPassword"
+                                                                   onkeyup="check()"
                                                                    type="password">
+                                                            <span id="message"></span>
                                                         </div>
                                                         <div class="form-group">
                                                             <button class="btn btn-info btn-block border-radius-6 font-size-16 text-white"
-                                                                    type="submit">
+                                                                    type="button"
+                                                                    onclick="checkUserForm(document.userForm.userName.value, document.userForm.password.value)">
                                                                 가입하기
                                                             </button>
                                                         </div>
@@ -71,5 +76,35 @@
     </div>
     </th:block>
 </div>
+<th:block layout:fragment="addScript">
+    <script>
+        function checkUserForm(username, password) {
+            var idReg = /^[a-z]{2,10}$/i;
+            if( !idReg.test(username) ) {
+                alert("아이디는 2~10자의 영문자 이어야 합니다.");
+                document.querySelector('input[name="userName"]').value = "";
+                return;
+            }
+            var passwordPattern = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+            if (!passwordPattern.test(password)) {
+                alert("비밀번호는 8자이상의 소문자, 대문자, 숫자, 특수문자의 조합입니다.");
+                document.querySelector('input[name="password"]').value = "";
+                document.querySelector('input[name="confirmPassword"]').value = "";
+                return;
+            }
+            document.querySelector('form[name="userForm"]').submit();
+        }
+
+        var check = function() {
+            if (document.userForm.password.value === document.userForm.confirmPassword.value) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById('message').innerHTML = 'matching';
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerHTML = 'not matching';
+            }
+        }
+    </script>
+</th:block>
 </body>
 </html>
