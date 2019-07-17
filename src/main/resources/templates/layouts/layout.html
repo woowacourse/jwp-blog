@@ -3,15 +3,15 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <title>우아한테크코스 기술블로그</title>
-    <th:block th:include="fragments/defaultHead"/>
+    <th:block th:include="fragments/head"/>
 </head>
 <body>
-<th:block th:include="fragments/defaultNav :: login"/>
+<th:block th:include="fragments/nav :: login"/>
 
 <th:block layout:fragment="content"/>
 
-<th:block th:include="fragments/defaultFooter"/>
-<th:block th:include="fragments/defaultScript"/>
+<th:block th:include="fragments/footer"/>
+<th:block th:include="fragments/script"/>
 
 </body>
 </html>
