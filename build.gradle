@@ -30,5 +30,6 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
     }
+	testCompile 'io.rest-assured:rest-assured:3.3.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 }

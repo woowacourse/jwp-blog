@@ -1,32 +1,50 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.repository.ArticleRepository;
 
 import java.net.URI;
 
+import static io.restassured.RestAssured.delete;
+import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
-    private static final String SAMPLE_TITLE = "test title";
-    private static final String SAMPLE_COVER_URL = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-    private static final String SAMPLE_CONTENTS = "test contents";
+    private static final String SAMPLE_TITLE = "SAMPLE_TITLE";
+    private static final String SAMPLE_COVER_URL = "SAMPLE_COVER_URL";
+    private static final String SAMPLE_CONTENTS = "SAMPLE_CONTENTS";
+
+    private String baseUrl;
+    private String setUpArticleUrl;
+
+    @LocalServerPort
+    int randomServerPort;
 
     @Autowired
     private WebTestClient webTestClient;
 
-    @Autowired
-    private ArticleRepository articleRepository;
+    @BeforeEach
+    void setUp() {
+        baseUrl = "http://localhost:" + randomServerPort;
+
+        setUpArticleUrl = given()
+                .param("title", SAMPLE_TITLE)
+                .param("coverUrl", SAMPLE_COVER_URL)
+                .param("contents", SAMPLE_CONTENTS)
+                .post(baseUrl + "/articles")
+                .getHeader("Location");
+    }
 
     @Test
     void index() {
@@ -51,17 +69,17 @@ public class ArticleControllerTests {
 
     @Test
     void createArticle() {
-        String title = "title";
-        String coverUrl = "url";
-        String contents = "helloWould";
+        String newTitle = "New Title";
+        String newCoverUrl = "New Cover Url";
+        String newContents = "New Contents";
 
         webTestClient.post()
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+                        .fromFormData("title", newTitle)
+                        .with("coverUrl", newCoverUrl)
+                        .with("contents", newContents))
                 .exchange()
                 .expectStatus().isFound()
                 .expectBody()
@@ -73,19 +91,17 @@ public class ArticleControllerTests {
                             .expectBody()
                             .consumeWith(res -> {
                                 String body = new String(res.getResponseBody());
-                                assertThat(body.contains(title)).isTrue();
-                                assertThat(body.contains(coverUrl)).isTrue();
-                                assertThat(body.contains(contents)).isTrue();
+                                assertThat(body.contains(newTitle)).isTrue();
+                                assertThat(body.contains(newCoverUrl)).isTrue();
+                                assertThat(body.contains(newContents)).isTrue();
                             });
                 });
     }
 
     @Test
     void showArticle() {
-        long id = addSampleArticle();
-
         webTestClient.get()
-                .uri("/articles/" + id)
+                .uri(setUpArticleUrl)
                 .exchange()
                 .expectBody()
                 .consumeWith(res -> {
@@ -98,10 +114,8 @@ public class ArticleControllerTests {
 
     @Test
     void showEditPage() {
-        long id = addSampleArticle();
-
         webTestClient.get()
-                .uri("/articles/" + id + "/edit")
+                .uri(setUpArticleUrl + "/edit")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -118,10 +132,9 @@ public class ArticleControllerTests {
         String newTitle = "test";
         String newCoverUrl = "newCorverUrl";
         String newContents = "newContents";
-        long id = addSampleArticle();
 
         webTestClient.put()
-                .uri("/articles/" + id)
+                .uri(setUpArticleUrl)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", newTitle)
@@ -147,23 +160,19 @@ public class ArticleControllerTests {
 
     @Test
     void deleteArticle() {
-        long id = addSampleArticle();
-
         webTestClient.delete()
-                .uri("/articles/" + id)
+                .uri(setUpArticleUrl)
                 .exchange()
                 .expectStatus().is3xxRedirection();
 
         webTestClient.get()
-                .uri("/articles/" + id)
+                .uri(setUpArticleUrl)
                 .exchange()
                 .expectStatus().is5xxServerError();
     }
 
-    private long addSampleArticle() {
-        Article article = new Article(SAMPLE_TITLE, SAMPLE_COVER_URL, SAMPLE_CONTENTS);
-        articleRepository.save(article);
-
-        return article.getId();
+    @AfterEach
+    void tearDown() {
+        delete(setUpArticleUrl);
     }
 }
