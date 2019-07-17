@@ -27,9 +27,8 @@ class CategoryControllerTest {
     @Test
     void deleteCategories() {
         addCategory();
-        webTestClient.post()
-                .uri("/categories/delete")
-                .body(BodyInserters.fromFormData("categoryId", "1"))
+        webTestClient.get()
+                .uri("/categories/delete/1")
                 .exchange()
                 .expectStatus()
                 .isFound();
