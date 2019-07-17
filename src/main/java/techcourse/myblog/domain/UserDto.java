@@ -1,24 +1,27 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.*;
-
-@Entity
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UserDto {
     private long id;
-
     private String name;
-    //@Column(name = "email", unique = true)
     private String email;
     private String password;
 
-    public User() {}
+    public UserDto() {
+    }
 
-    public User(String name, String email, String password) {
+    public UserDto(long id, String name, String email, String password) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public static UserDto from(User user) {
+        return new UserDto(user.getId(), user.getName(), user.getEmail(), user.getPassword());
+    }
+
+    public User toUser() {
+        return new User(name, email, password);
     }
 
     public long getId() {
@@ -53,11 +56,12 @@ public class User {
         this.password = password;
     }
 
+
+
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+        return "UserDto{" +
+                "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';

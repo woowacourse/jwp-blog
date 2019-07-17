@@ -8,7 +8,9 @@
 
 <body>
 <div>
-    <th:block th:include="/fragment/header"></th:block>
+    <th:block th:if="${userInfo == null}" th:include="/fragment/header"></th:block>
+    <th:block th:unless="${userInfo == null}" th:include="/fragment/login-header"></th:block>
+
 
     <div class="about-cover card no-border mrg-btm-0">
         <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')"></div>
@@ -48,7 +50,7 @@
             <div class="col-lg-3"></div>
         </div>
 
-        <a href="article-edit.html" th:href="@{/writing}"
+        <a href="article-edit.html" th:href="@{/article/new}"
            class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
             <i class="ti-plus"></i>
         </a>
