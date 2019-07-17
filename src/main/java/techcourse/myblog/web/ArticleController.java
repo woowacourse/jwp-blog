@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.ArticleRepositoryImpl;
-import techcourse.myblog.domain.CategoryRepository;
+import techcourse.myblog.domain.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -23,11 +21,26 @@ public class ArticleController {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, HttpSession session) {
         List<Article> articles = articleRepositoryImpl.findAll();
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("articles", articles);
+
+        Object userId = session.getAttribute("userId");
+        if (userId != null) {
+            userRepository.findById((long) userId).ifPresent( user -> {
+                UserDto userDto = new UserDto();
+                userDto.setId(user.getId());
+                userDto.setName(user.getName());
+
+                model.addAttribute("userInfo", userDto);
+            });
+        }
+
         return "index";
     }
 
@@ -40,7 +53,7 @@ public class ArticleController {
         return "index";
     }
 
-    @GetMapping("/writing")
+    @GetMapping("/article/new")
     public String showWritingPage(Model model) {
         model.addAttribute("categories", categoryRepository.findAll());
         return "article-edit";
