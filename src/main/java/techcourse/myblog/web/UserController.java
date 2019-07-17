@@ -20,24 +20,32 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "user/login";
     }
 
     @GetMapping("/signup")
     public String signUp() {
-        return "signup";
+        return "user/signup";
     }
 
     @GetMapping("/users")
     public String findUsers(final Model model) {
         final Iterable<User> users = userRepository.findAll();
         model.addAttribute("users", users);
-        return "user-list";
+        return "user/user-list";
     }
 
     @PostMapping("/users")
-    public String saveUser(User user) {
+    public String saveUser(final User user, final Model model) {
+        if (alreadyHasEmail(user)) {
+            model.addAttribute("errorMessage", "이메일이 중복됩니다");
+            return "user/signup";
+        }
         userRepository.save(user);
-        return "login";
+        return "user/login";
+    }
+
+    private boolean alreadyHasEmail(User user) {
+        return userRepository.existsByEmail(user.getEmail());
     }
 }

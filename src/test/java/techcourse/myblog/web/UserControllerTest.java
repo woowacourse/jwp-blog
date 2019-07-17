@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.UserRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -20,6 +22,14 @@ public class UserControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @BeforeEach
+    public void setUp() {
+        userRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("회원가입")
@@ -34,10 +44,20 @@ public class UserControllerTest {
     }
 
     @Test
+    public void 이메일_중복_가입_테스트() {
+        webTestClient.post().uri("/users")
+                .body(BodyInserters
+                        .fromFormData("name", "other")
+                        .with("email", "test@naver.com")
+                        .with("password", "12345b@aA"))
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
     public void 회원조회() {
         addUserTest();
-        addUserTest();
-        final int count = 3;
+        final int count = 1;
 
         webTestClient.get().uri("/users")
                 .exchange()
