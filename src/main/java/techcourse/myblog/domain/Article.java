@@ -4,12 +4,18 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 @Getter
 @Setter
 @EqualsAndHashCode
+@Entity
 public class Article {
-    private static int currentId = 1;
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
     private String contents;
@@ -19,34 +25,5 @@ public class Article {
         this.title = title;
         this.contents = contents;
         this.coverUrl = coverUrl;
-    }
-
-    private Article(int id, String title, String contents, String coverUrl) {
-        this.id = id;
-        this.title = title;
-        this.contents = contents;
-        this.coverUrl = coverUrl;
-    }
-
-    public Article copyArticles() {
-        return new Article(id, title, contents, coverUrl);
-    }
-
-    public boolean isEqualId(int articleId) {
-        return articleId == id;
-    }
-
-    public int getCurrentId() {
-        return currentId++;
-    }
-
-    public static void initCurrentId() {
-        currentId = 1;
-    }
-
-    public void editArticle(Article article) {
-        this.title = article.getTitle();
-        this.contents = article.getContents();
-        this.coverUrl = article.getCoverUrl();
     }
 }
