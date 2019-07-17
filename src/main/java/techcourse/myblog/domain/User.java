@@ -1,11 +1,9 @@
 package techcourse.myblog.domain;
 
-import org.hibernate.validator.constraints.UniqueElements;
+import techcourse.myblog.dto.UserDto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 @Entity
@@ -18,7 +16,8 @@ public class User {
 
     private String name;
     private String password;
-    @UniqueElements
+
+    @Column(unique = true)
     private String email;
 
     public User() {
@@ -64,5 +63,23 @@ public class User {
         this.name = user.name;
         this.password = user.password;
         this.email = user.email;
+    }
+
+    public boolean isEqualTo(UserDto dto) {
+        return this.email.equals(dto.getEmail()) &&
+                this.password.equals(dto.getPassword());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
