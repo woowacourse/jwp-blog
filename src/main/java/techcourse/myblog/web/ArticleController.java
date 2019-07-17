@@ -1,15 +1,16 @@
 package techcourse.myblog.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.error.BadRequestError;
-import techcourse.myblog.error.NotExistEntityError;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.error.RequestError;
 import techcourse.myblog.web.exception.BadRequestException;
-import techcourse.myblog.web.exception.NotExistEntityException;
 
 @Controller
 public class ArticleController {
@@ -18,86 +19,63 @@ public class ArticleController {
 
     private final ArticleRepository articleRepository;
 
+    @Autowired
     public ArticleController(final ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
 
     @PostMapping("/articles")
-    public String createArticles(Article article, Model model) {
-        Long id = articleRepository.saveArticle(article);
+    public RedirectView createArticles(ArticleDto article) {
+        String title = article.getTitle();
+        String coverUrl = article.getCoverUrl();
+        String contents = article.getContents();
 
-        model.addAttribute("article", article);
-        return "redirect:/articles/" + id;
+        Long id = articleRepository.save(new Article(title, coverUrl, contents)).getId();
+
+        return new RedirectView("/articles/" + id);
     }
 
     @GetMapping("/articles/{articleId}")
-    public String readArticlePageByArticleId(@PathVariable Long articleId, Model model) {
-        try {
-            checkArticleId(articleId);
-        } catch (BadRequestException e) {
-            return sendErrorPage(ERROR_PAGE, model, new BadRequestError(articleId));
-        }
+    public ModelAndView readArticlePageByArticleId(@PathVariable Long articleId) {
+        Article article = articleRepository.findById(articleId).get();
 
-        try {
-            Article article = articleRepository.findById(articleId);
-            model.addAttribute("article", article);
-            return "article";
-        } catch (NotExistEntityException e) {
-            return sendErrorPage(ERROR_PAGE, model, new NotExistEntityError(articleId));
-        }
+        ModelAndView modelAndView = new ModelAndView("/article");
+        modelAndView.addObject("article", article);
+        return modelAndView;
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String readArticleEditPage(@PathVariable Long articleId, Model model) {
-        try {
-            checkArticleId(articleId);
-        } catch (BadRequestException e) {
-            return sendErrorPage(ERROR_PAGE, model, new BadRequestError(articleId));
-        }
-        try {
-            Article article = articleRepository.findById(articleId);
-            model.addAttribute("article", article);
-            model.addAttribute("method", "put");
-            return "/article-edit";
-        } catch (NotExistEntityException e) {
-            return sendErrorPage(ERROR_PAGE, model, new NotExistEntityError(articleId));
-        }
+    public ModelAndView readArticleEditPage(@PathVariable Long articleId) {
+        ModelAndView modelAndView = new ModelAndView("/article-edit");
+        Article article = articleRepository.findById(articleId).get();
+        ArticleDto articleDto = article.toDto();
+
+        modelAndView.addObject("article", article);
+        modelAndView.addObject("method", "put");
+        return modelAndView;
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable Long articleId, Article article, Model model) {
-        try {
-            checkArticleId(articleId);
-        } catch (BadRequestException e) {
-            return sendErrorPage(ERROR_PAGE, model, new BadRequestError(articleId));
-        }
-        try {
-            Article modifiedArticle = articleRepository.findById(articleId);
-            modifiedArticle.changeTitle(article.getTitle());
-            modifiedArticle.changeCoverUrl(article.getCoverUrl());
-            modifiedArticle.changeContents(article.getContents());
+    public RedirectView updateArticle(@PathVariable Long articleId, ArticleDto article) {
+        RedirectView redirectView = new RedirectView("/articles/" + articleId);
 
-            model.addAttribute("article", modifiedArticle);
-            return "/article";
-        } catch (NotExistEntityException e) {
-            return sendErrorPage(ERROR_PAGE, model, new NotExistEntityError(articleId));
-        }
+        Article modifiedArticle = articleRepository.findById(articleId).get();
+        modifiedArticle.update(new Article.ArticleBuilder().title(article.getTitle())
+                .coverUrl(article.getCoverUrl())
+                .contents(article.getContents())
+                .build());
+        articleRepository.save(modifiedArticle);
+
+        return redirectView;
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable Long articleId, Model model) {
-        try {
-            checkArticleId(articleId);
-        } catch (BadRequestException e) {
-            return sendErrorPage(ERROR_PAGE, model, new BadRequestError(articleId));
-        }
-        try {
-            articleRepository.removeArticle(articleId);
-            return "redirect:/";
-        } catch (NotExistEntityException e) {
-            return sendErrorPage(ERROR_PAGE, model, new NotExistEntityError(articleId));
-        }
+    public RedirectView deleteArticle(@PathVariable Long articleId) {
+        RedirectView redirectView = new RedirectView("/");
+        articleRepository.deleteById(articleId);
+        return redirectView;
     }
+
 
     private void checkArticleId(Long articleId) {
         if (isLowerThanMinArticleId(articleId)) {

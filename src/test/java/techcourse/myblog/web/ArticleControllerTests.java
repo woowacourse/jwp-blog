@@ -4,14 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -19,114 +14,73 @@ public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
 
-    @Autowired
-    private ArticleRepository articleRepository;
+    private Long id = 0L;
 
     @Test
-    void create_article() {
-        String id = "0";
-        String title = "title";
-        String coverUrl = "coverUrl";
-        String contents = "contents";
+    void index() {
+        webTestClient.get().uri("/")
+                .exchange()
+                .expectStatus().isOk();
+    }
 
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("id", id)
-                        .with("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+    @Test
+    void writeForm_test() {
+        webTestClient.get().uri("/writing")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void save_test() {
+        webTestClient.post().uri("/articles")
+                .body(BodyInserters.fromFormData("title", "title")
+                        .with("coverUrl", "coverUrl")
+                        .with("contents", "contents"))
                 .exchange()
                 .expectStatus()
-                .isFound()
-                .expectHeader()
-                .valueMatches("location", ".*/articles/.*");
+                .isFound();
+
+        ++id;
     }
 
     @Test
-    void read_article() {
-        String title = "blogTitle";
-        String coverUrl = "blogCoverUrl";
-        String contents = "blogContents";
+    void update_test() {
+        insertArticle();
 
-        Article article = new Article(1L, title, coverUrl, contents);
-        Long articleId = articleRepository.saveArticle(article);
-
-
-        webTestClient.get()
-                .uri("/articles/" + articleId)
+        webTestClient.put().uri("/articles/" + id)
+                .body(BodyInserters.fromFormData("title", "title")
+                        .with("coverUrl", "coverUrl")
+                        .with("contents", "contents"))
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
+                .expectHeader().valueMatches("location", "(http://localhost:)(.*)(/articles/" + id + ")")
+                .expectStatus()
+                .isFound();
+
+        deleteArticle();
     }
 
     @Test
-    void read_article_edit_page() {
-        String title = "blogTitle";
-        String coverUrl = "blogCoverUrl";
-        String contents = "blogContents";
+    void delete_test() {
+        insertArticle();
 
-        Article article = new Article(1L, title, coverUrl, contents);
-        Long articleId = articleRepository.saveArticle(article);
-
-        webTestClient.get()
-                .uri("/articles/" + articleId + "/edit")
+        webTestClient.delete().uri("/articles/" + id)
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
+                .expectStatus()
+                .isFound();
     }
 
-    @Test
-    void update_article() {
-        String title = "blogTitle";
-        String coverUrl = "blogCoverUrl";
-        String contents = "blogContents";
-
-        Article article = new Article(1L, title, coverUrl, contents);
-        Long articleId = articleRepository.saveArticle(article);
-
-        webTestClient.put()
-                .uri("/articles/" + articleId)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("id", Long.toString(article.getId()))
-                        .with("title", article.getTitle())
-                        .with("coverUrl", article.getCoverUrl())
-                        .with("contents", article.getContents()))
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
+    private void deleteArticle() {
+        webTestClient.delete().uri("/articles/" + id)
+                .exchange();
     }
 
-    @Test
-    void delete_article() {
-        Article article = new Article(1L, "title", "url", "contents");
-        Long articleId = articleRepository.saveArticle(article);
+    private void insertArticle() {
+        ++id;
 
-        webTestClient.delete()
-                .uri("/articles/" + articleId)
-                .exchange()
-                .expectStatus().isFound()
-                .expectHeader()
-                .valueMatches("location", "[^/]*//[^/]*/");
+        webTestClient.post().uri("/articles")
+                .body(BodyInserters.fromFormData("title", "title")
+                        .with("coverUrl", "coverUrl")
+                        .with("contents", "contents"))
+                .exchange();
     }
 }
