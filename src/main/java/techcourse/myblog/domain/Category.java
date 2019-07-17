@@ -13,6 +13,10 @@ public class Category {
     public Category() {
     }
 
+    public static CategoryDto from(Category category) {
+        return new CategoryDto(category.getCategoryId(), category.getCategoryName());
+    }
+
     public String getCategoryName() {
         return categoryName;
     }
