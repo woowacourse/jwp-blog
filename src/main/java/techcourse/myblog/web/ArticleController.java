@@ -6,9 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.*;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
-
 @Controller
 public class ArticleController {
 
@@ -19,39 +16,10 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 
     @Autowired
-    private CategoryRepositoryImpl categoryRepositoryImpl;
+    private CategoryRepository categoryRepositoryImpl;
 
     @Autowired
     private UserRepository userRepository;
-
-    @GetMapping("/")
-    public String index(Model model, HttpSession session) {
-        List<Article> articles = articleRepositoryImpl.findAll();
-        model.addAttribute("categories", categoryRepositoryImpl.findAll());
-        model.addAttribute("articles", articles);
-
-        Object userId = session.getAttribute("userId");
-        if (userId != null) {
-            userRepository.findById((long) userId).ifPresent( user -> {
-                UserDto userDto = new UserDto();
-                userDto.setId(user.getId());
-                userDto.setName(user.getName());
-
-                model.addAttribute("userInfo", userDto);
-            });
-        }
-
-        return "index";
-    }
-
-    @GetMapping("/{categoryId}")
-    public String index(@PathVariable final long categoryId, Model model) {
-        List<Article> articles = articleRepositoryImpl.findByCategoryId(categoryId);
-        model.addAttribute("categories", categoryRepositoryImpl.findAll());
-        model.addAttribute("articles", articles);
-        System.out.println(articles);
-        return "index";
-    }
 
     @GetMapping("/article/new")
     public String showWritingPage(Model model) {
