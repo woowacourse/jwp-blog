@@ -1,65 +1,64 @@
 package techcourse.myblog.web;
 
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.repository.ArticleRepository;
 
 @Controller
 public class ArticleController {
-    private final ArticleRepository articleRepository;
+    private ArticleRepository articleRepository;
 
-    public ArticleController(ArticleRepository articleRepository) {
+    public ArticleController(final ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
 
+    @GetMapping(value = {"/", "/articles"})
+    public String showArticles(Model model) {
+        model.addAttribute("articles", articleRepository.findAll());
+        return "index";
+    }
+
     @GetMapping("/articles/new")
-    public String articleCreationPage(Model model) {
-        String actionRoute = "/write";
-
-        model.addAttribute("actionRoute", actionRoute);
-        model.addAttribute("formMethod", HttpMethod.POST);
+    public String showCreatePage() {
         return "article-edit";
     }
 
-    @GetMapping("/articles/{articleId}/edit")
-    public String articleEditPage(@PathVariable int articleId, Model model) {
-        Article article = articleRepository.findBy(articleId);
-        String actionRoute = "/articles/" + articleId;
-
-        model.addAttribute("article", article);
-        model.addAttribute("actionRoute", actionRoute);
-        model.addAttribute("formMethod", HttpMethod.PUT);
-        return "article-edit";
-    }
-
-    @PostMapping("/write")
-    public String createNewArticle(ArticleDto articleDto) {
-        articleRepository.save(articleDto);
-        return "redirect:/articles/" + articleRepository.getLastGeneratedId();
-    }
-
-    @GetMapping("/articles/{articleId}")
-    public String getArticle(@PathVariable int articleId, Model model) {
-        Article article = articleRepository.findBy(articleId);
-
-        model.addAttribute("article", article);
+    @GetMapping("/articles/{id}")
+    public String showArticle(@PathVariable("id") Long id, Model model) {
+        Article article = articleRepository.findById(id).get();
+        ArticleDto articleDto = new ArticleDto(article.getId(), article.getTitle(), article.getCoverUrl(), article.getContents());
+        model.addAttribute("article", articleDto);
         return "article";
     }
 
-    @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable int articleId, ArticleDto articleDto) {
-        articleRepository.updateBy(articleId, articleDto);
-
-        return "redirect:/articles/" + articleId;
+    @GetMapping("/articles/{id}/edit")
+    public String showEditPage(@PathVariable("id") Long id, Model model) {
+        Article article = articleRepository.findById(id).get();
+        ArticleDto articleDto = new ArticleDto(article.getId(), article.getTitle(), article.getCoverUrl(), article.getContents());
+        model.addAttribute("article", articleDto);
+        return "article-edit";
     }
 
-    @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId) {
-        articleRepository.deleteBy(articleId);
+    @PostMapping("/articles")
+    public String createArticle(ArticleDto articleDto) {
+        Article persistArticle = articleRepository.save(articleDto.toEntity());
+        return "redirect:/articles/" + persistArticle.getId();
+    }
 
+    @PutMapping("/articles/{id}")
+    public String editArticle(@PathVariable("id") long id, ArticleDto articleDto) {
+        Article article = articleRepository.findById(id).get();
+        article.updateArticle(articleDto);
+        articleRepository.save(article);
+        return "redirect:/articles/" + id;
+    }
+
+    @DeleteMapping("/articles/{id}")
+    public String deleteArticle(@PathVariable("id") long id) {
+        articleRepository.deleteById(id);
         return "redirect:/";
     }
 }

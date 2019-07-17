@@ -13,14 +13,23 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+}
+
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	developmentOnly 'org.springframework.boot:spring-boot-starter-devtools'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'com.h2database:h2'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
     }
-    testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
-    testCompile 'io.rest-assured:rest-assured:3.3.0'
+	testCompile 'io.rest-assured:rest-assured:3.3.0'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
