@@ -19,6 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 public class UserControllerTest {
+    private static final String NAME = "yusi";
+    private static final String EMAIL = "test@naver.com";
+    private static final String PASSWORD = "12345b@aA";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -67,6 +70,32 @@ public class UserControllerTest {
                     String body = new String(response.getResponseBody());
                     assertEquals(count, StringUtils.countOccurrencesOf(body, "class=\"card-body\""));
                 });
+    }
+
+    @Test
+    public void 로그인() {
+
+        addUserTest();
+        webTestClient.post().uri("/login")
+                .body(BodyInserters
+                        .fromFormData("email", EMAIL)
+                        .with("name", NAME)
+                        .with("password", PASSWORD)
+                )
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    public void 로그인_실패() {
+        webTestClient.post().uri("/login")
+                .body(BodyInserters
+                        .fromFormData("email", EMAIL)
+                        .with("name", NAME)
+                        .with("password", PASSWORD)
+                )
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @Test

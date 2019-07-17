@@ -1,12 +1,16 @@
 package techcourse.myblog.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
+
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 @Controller
 public class UserController {
@@ -21,6 +25,16 @@ public class UserController {
     @GetMapping("/login")
     public String login() {
         return "user/login";
+    }
+
+    @PostMapping("/login")
+    public String login(final User user, final HttpServletRequest request) {
+        System.out.println(user);
+        if(alreadyHasEmail(user)) {
+            request.getSession().setAttribute("logInfo", user.getEmail());
+            return "/index";
+        }
+        return "/user/login";
     }
 
     @GetMapping("/signup")
