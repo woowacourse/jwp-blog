@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicatedUserException;
@@ -20,15 +21,20 @@ public class UserController {
         return "signup";
     }
 
+    @GetMapping("/login")
+    public String renderLoginPage() {
+        return "login";
+    }
+
     @PostMapping("/users")
-    public String createUser(UserDto.Create userDto, Model model) {
+    public RedirectView createUser(UserDto.Create userDto, Model model) {
         User newUser = userDto.toUser();
         try {
             userService.save(newUser);
         } catch (DuplicatedUserException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "signup";
+            return new RedirectView("/signup");
         }
-        return "login";
+        return new RedirectView("/login");
     }
 }

@@ -38,6 +38,13 @@ public class UserControllerTests {
     }
 
     @Test
+    void 로그인_페이지_이동_테스트() {
+        webTestClient.get().uri("/login")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
     void 회원가입_요청_성공_테스트() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -46,12 +53,8 @@ public class UserControllerTests {
                         .with("password", "newPassword")
                         .with("name", "newName"))
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains("errorMessage")).isFalse();
-                });
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location", "(.)*(/login)");
     }
 
     @Test
@@ -63,11 +66,7 @@ public class UserControllerTests {
                         .with("password", "password")
                         .with("name", "name"))
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains("errorMessage")).isTrue();
-                });
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location", "(.)*(/signup)");
     }
 }
