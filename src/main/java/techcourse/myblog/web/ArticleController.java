@@ -26,7 +26,7 @@ public class ArticleController {
 
     @GetMapping("/writing")
     public String showWritingPage() {
-        return "article-edit";
+        return "article/article-edit";
     }
 
     @PostMapping("/articles")
@@ -39,7 +39,7 @@ public class ArticleController {
     public String showArticleById(@PathVariable final long articleId, final Model model) {
         Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
         model.addAttribute("article", article);
-        return "article";
+        return "article/article";
     }
 
     @PutMapping("/articles/{articleId}")
@@ -62,6 +62,6 @@ public class ArticleController {
     public String updateArticle(@PathVariable final long articleId, final Model model) {
         Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
         model.addAttribute("article", article);
-        return "article-edit";
+        return "article/article-edit";
     }
 }
