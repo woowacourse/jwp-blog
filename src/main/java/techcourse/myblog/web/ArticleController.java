@@ -45,7 +45,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String saveArticle(ArticleDto dto) {
-        return "redirect:/";
+        return "redirect:/articles/" + articleService.save(dto);
     }
 
     @PutMapping("/articles/{articleId}")

@@ -28,14 +28,13 @@ class ArticleRepositoryTest {
         articleRepository.save(article1);
         articleRepository.save(article2);
         articleRepository.save(article3);
-
     }
 
     @Test
     void createTest() {
-        assertThat(articleRepository.count()).isEqualTo(3);
+        long count = articleRepository.count();
         articleRepository.save(new Article("title", "contents", "coverUrl"));
-        assertThat(articleRepository.count()).isEqualTo(4);
+        assertThat(articleRepository.count()).isNotEqualTo(count);
     }
 
     @Test

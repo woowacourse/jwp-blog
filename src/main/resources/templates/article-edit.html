@@ -20,7 +20,7 @@
         <input name="_method" th:if="not ${#strings.isEmpty(article)}" type="hidden" value="PUT">
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" th:style="
-            'background:url('+ ${#strings.isEmpty(article)? '' : article.coverUrl} + ');'">
+            'background:url('+ ${#strings.isEmpty(article)? '/images/pages/index/bg.jpg' : article.coverUrl} + ');'">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
                         <input th:value="${#strings.isEmpty(article) ? '' : article.id}" type="hidden">
@@ -72,6 +72,7 @@
         },
         height: 'calc(100vh - 360px)'
     });
+
 
 
 

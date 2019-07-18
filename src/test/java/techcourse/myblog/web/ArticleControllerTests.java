@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,7 +11,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.UserRepository;
 
 import java.util.Iterator;
 
@@ -26,17 +29,17 @@ public class ArticleControllerTests {
 
     private String cookie;
 
-    private WebTestClient webTestClient;
-    private ArticleRepository articleRepository;
-
     @Autowired
-    public ArticleControllerTests(WebTestClient webTestClient, ArticleRepository articleRepository) {
-        this.webTestClient = webTestClient;
-        this.articleRepository = articleRepository;
-    }
+    private WebTestClient webTestClient;
+    @Autowired
+    private ArticleRepository articleRepository;
+    @Autowired
+    private UserRepository userRepository;
+
 
     @BeforeEach
     void setUp() {
+        userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
         cookie = webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData("email", "andole@gmail.com")
@@ -46,7 +49,8 @@ public class ArticleControllerTests {
     }
 
     private WebTestClient.RequestBodySpec cookedPostRequest(String uri) {
-        return webTestClient.post()
+        return webTestClient
+                .post()
                 .uri(uri)
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -137,5 +141,10 @@ public class ArticleControllerTests {
 
         assertThatThrownBy(() -> articleRepository.findById(articleId).orElseThrow(IllegalAccessError::new))
                 .isInstanceOf(IllegalAccessError.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
     }
 }
