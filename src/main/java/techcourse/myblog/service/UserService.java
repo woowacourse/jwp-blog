@@ -7,6 +7,7 @@ import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -31,5 +32,9 @@ public class UserService {
     @Transactional
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public Optional<User> findByEmailAndPassword(UserDto userDto) {
+        return userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
     }
 }
