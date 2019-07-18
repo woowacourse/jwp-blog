@@ -9,10 +9,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.core.test.WebTestClientTemplate;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
+import java.net.URI;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureWebTestClient
@@ -48,6 +53,8 @@ public class ArticleControllerTest {
         webTestClient.post()
                 .uri("/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .header("Authorization", "Basic " + Base64Utils
+                        .encodeToString(("javajigi:password").getBytes(UTF_8)))
                 .body(BodyInserters
                         .fromFormData("articleId", "1")
                         .with("title", title)
@@ -60,29 +67,36 @@ public class ArticleControllerTest {
 
     @Test
     void 게시물_작성_테스트() {
-        webTestClient.post()
-                .uri("/write")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+            createResource()
+            .expectBody()
+            .consumeWith(response -> {
+                getResource(response.getResponseHeaders().getLocation())
+                        .expectBody()
+                        .consumeWith(
+                                res -> assertArticle(new String(res.getResponseBody()))
+                        );
+            });
+    }
+
+    private void assertArticle(String body) {
+        assertThat(body.contains(title)).isTrue();
+        assertThat(body.contains(coverUrl)).isTrue();
+        assertThat(body.contains(contents)).isTrue();
+    }
+
+    private WebTestClient.ResponseSpec createResource() {
+        return WebTestClientTemplate.urlEncodedForm(webTestClient)
+                    .addParam("title", title)
+                    .addParam("coverUrl", coverUrl)
+                    .addParam("contents", contents)
+                    .post("/write");
+    }
+
+    private WebTestClient.ResponseSpec getResource(URI location) {
+        return webTestClient.get().uri(location)
                 .exchange()
-                .expectStatus().isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get().uri(response.getResponseHeaders().getLocation())
-                            .exchange()
-                            .expectStatus()
-                            .isOk()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                String body = new String(res.getResponseBody());
-                                assertThat(body.contains(title)).isTrue();
-                                assertThat(body.contains(coverUrl)).isTrue();
-                                assertThat(body.contains(contents)).isTrue();
-                            });
-                });
+                .expectStatus()
+                .isOk();
     }
 
     @Test
