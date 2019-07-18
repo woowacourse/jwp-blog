@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.SignUpException;
 import techcourse.myblog.service.UserService;
 
@@ -26,6 +25,12 @@ public class UserController {
     @GetMapping("/users/sign-up")
     public String showRegisterPage() {
         return "sign-up";
+    }
+
+    @GetMapping("/users")
+    public String showUserList(Model model) {
+        model.addAttribute("users", userService.findAll());
+        return "user-list";
     }
 
     @PostMapping("/users")

@@ -26,7 +26,7 @@
                     <div class="card-heading border bottom">
                         <h4 class="card-title">User List</h4>
                     </div>
-                    <div class="card-body">
+                    <div th:each="user : ${users}" class="card-body">
                         <ul class="list-unstyled list-info">
                             <li>
                                 <div class="pdd-vertical-10">
@@ -34,9 +34,9 @@
                                          src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
                                     <div class="info">
                                         <a href=""
-                                           class="title no-pdd-vertical text-semibold inline-block lh-1">Brown</a>
+                                           class="title no-pdd-vertical text-semibold inline-block lh-1" th:text="${user.name}"></a>
                                         <span class="sub-title">
-                                            <span>gracefulBrown@woowahan.com</span>
+                                            <span th:text="${user.email}"></span>
                                         </span>
                                     </div>
                                 </div>

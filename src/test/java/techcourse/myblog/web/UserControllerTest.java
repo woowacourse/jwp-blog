@@ -42,6 +42,15 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("유저 목록을 보여준다.")
+    void showUserList() {
+        webTestClient.get()
+                .uri("/users")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
     @DisplayName("회원 가입 페이지에서 유저 정보를 넘겨받아 새로운 유저를 생성한다.")
     void createUser() {
         String name = "hibri";

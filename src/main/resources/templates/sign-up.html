@@ -51,13 +51,13 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
-                                                            <input required minlength="8" type="password" name="password" class="form-control"
+                                                            <input required minlength="8" type="password" id="password" name="password" class="form-control"
                                                                    placeholder="Password">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm
                                                                 Password</label>
-                                                            <input required minlength="8" type="password" name="passwordConfirm" class="form-control"
+                                                            <input required minlength="8" type="password" id="password-confirm" name="passwordConfirm" class="form-control"
                                                                    placeholder="Password">
                                                         </div>
                                                         <div class="form-group">
@@ -106,6 +106,9 @@
             nameInput.setCustomValidity('이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다.');
         }
     });
+
+
+
 </script>
 </body>
 </html>
