@@ -31,4 +31,12 @@ public class User {
     public String getPassword() {
         return password;
     }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    public void updateName(String name) {
+        this.name = name;
+    }
 }

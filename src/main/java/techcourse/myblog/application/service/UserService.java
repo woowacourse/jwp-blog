@@ -33,10 +33,8 @@ public class UserService {
         return userDtos;
     }
 
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = true)
     public UserDto findById(String email) {
-        System.out.println(email);
-        System.out.println(userRepository.findById(email));
         return new UserDto(userRepository.findById(email)
                 .orElseThrow(IllegalArgumentException::new));
     }
@@ -44,12 +42,17 @@ public class UserService {
     @Transactional
     public boolean login(@Valid UserDto userDto) {
         String password1 = userDto.getPassword();
-        System.out.println(userDto.getEmail());
-        System.out.println(userDto.getPassword());
-        System.out.println(userDto.getName());
         String password2 = findById(userDto.getEmail()).getPassword();
 
         return password1.equals(password2);
+    }
+
+    @Transactional
+    public void modify(@Valid UserDto userDto) {
+        User user = userRepository.findById(userDto.getEmail())
+                .orElseThrow(IllegalAccessError::new);
+        user.updateName(userDto.getName());
+        user.updatePassword(userDto.getPassword());
     }
 
 }
