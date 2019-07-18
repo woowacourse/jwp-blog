@@ -7,8 +7,8 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 
 public class UserDto {
-	private static final String BLANK_NAME = "이름을 입력해주세요.";
-	private static final String NOT_VALID_EMAIL = "올바른 이메일 주소를 입력해주세요.";
+	public static final String BLANK_NAME = "이름을 입력해주세요.";
+	public static final String NOT_VALID_EMAIL = "올바른 이메일 주소를 입력해주세요.";
 
 	@Length(min = 2, max = 10)
 	@NotBlank(message = BLANK_NAME)
