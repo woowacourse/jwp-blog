@@ -23,43 +23,28 @@ class UserControllerTest {
     private WebTestClient webTestClient;
 
     @Test
-    void register() {
-        UserRequestDto userRequestDto = UserRequestDto.of("test name", "test@test.com", "testPassword12!", "testPassword12!");
-        postUser(userRequestDto, response -> {
-        });
+    void duplicate_email_alert() {
+        postUser(UserRequestDto.of("john", "abcde@example.com", "p@ssW0rd", "p@ssW0rd"),
+            postResponse -> {
+                postUser(UserRequestDto.of("kim", "abcde@example.com", "p@ssW0rd123", "p@ssW0rd123"),
+                    anotherPostResponse -> {
+                        String body = new String(anotherPostResponse.getResponseBody());
+                        assertThat(body).contains("이미 등록된 이메일입니다.");
+                    });
+            });
     }
 
     private void postUser(UserRequestDto user, Consumer<EntityExchangeResult<byte[]>> consumer) {
         webTestClient.post()
             .uri("/users")
-            .body(BodyInserters.fromFormData("name", user.getName())
+            .body(BodyInserters
+                .fromFormData("name", user.getName())
                 .with("email", user.getEmail())
                 .with("password", user.getPassword())
                 .with("passwordConfirm", user.getPasswordConfirm()))
             .exchange()
-            .expectStatus().is3xxRedirection()
             .expectBody()
             .consumeWith(consumer);
-    }
-
-    @Test
-    void duplicate_email_alert() {
-        postUser(UserRequestDto.of("john", "abcde@example.com", "p@ssW0rd", "p@ssW0rd"),
-            postResponse -> {
-                webTestClient.post()
-                    .uri("/users")
-                    .body(BodyInserters.fromFormData("name", "james")
-                        .with("email", "abcde@example.com")
-                        .with("password", "p@ssW0rd123")
-                        .with("passwordConfirm", "p@ssW0rd123"))
-                    .exchange()
-                    .expectStatus().isOk()
-                    .expectBody()
-                    .consumeWith(postResponse2 -> {
-                        String body = new String(postResponse2.getResponseBody());
-                        assertThat(body).contains("이미 등록된 이메일입니다.");
-                    });
-            });
     }
 
     @Test
@@ -78,45 +63,108 @@ class UserControllerTest {
     }
 
     @Test
-    void mypage() {
-        UserRequestDto user = UserRequestDto.of("john", "logout_test@example.com", "p@ssW0rd", "p@ssW0rd");
+    void login_logout() {
+        UserRequestDto user = UserRequestDto.of("john", "login_logout_test@example.com", "p@ssW0rd", "p@ssW0rd");
         postUser(user, postUserResponse -> {
-            webTestClient.get().uri("/mypage")
-                .header("Authorization", createAuthHeaderString(user))
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(mypageResponse -> {
+            String sid = getSessionString(postUserResponse);
+
+            postLogin(user, sid, loginResponse -> {
+                getRedirection(loginResponse, loginRedirectResponse -> {
+                    assertThat(new String(loginRedirectResponse.getResponseBody()))
+                        .contains(user.getName());
+                    webTestClient.get().uri("/logout" + sid)
+                        .exchange()
+                        .expectStatus().is3xxRedirection()
+                        .expectBody()
+                        .consumeWith(logoutResponse -> {
+                            getRedirection(logoutResponse, logoutRedirectResponse -> {
+                                assertThat(new String(logoutRedirectResponse.getResponseBody()))
+                                    .doesNotContain(user.getName())
+                                    .contains("Welcome Brown!");
+                            });
+                        });
+                });
+            });
+        });
+    }
+
+    private void postLogin(UserRequestDto user, String sid, Consumer<EntityExchangeResult<byte[]>> consumer) {
+        webTestClient.post()
+            .uri("/login" + (sid != null ? sid : ""))
+            .body(BodyInserters
+                .fromFormData("email", user.getEmail())
+                .with("password", user.getPassword()))
+            .exchange()
+            .expectStatus().is3xxRedirection()
+            .expectBody()
+            .consumeWith(consumer);
+    }
+
+    private void getRedirection(EntityExchangeResult<byte[]> response, Consumer<EntityExchangeResult<byte[]>> consumer) {
+        webTestClient.get()
+            .uri(response.getResponseHeaders().getFirst("Location"))
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody()
+            .consumeWith(consumer);
+    }
+
+    @Test
+    void mypage() {
+        UserRequestDto user = UserRequestDto.of("john", "mypage_test@example.com", "p@ssW0rd", "p@ssW0rd");
+        postUser(user, postUserResponse -> {
+            String sid = getSessionString(postUserResponse);
+
+            postLogin(user, sid, loginResponse -> {
+                getMypage(sid, mypageResponse -> {
                     assertThat(new String(mypageResponse.getResponseBody()))
                         .contains(user.getEmail())
                         .contains(user.getName());
                 });
+            });
         });
+    }
+
+    private void getMypage(String sid, Consumer<EntityExchangeResult<byte[]>> consumer) {
+        webTestClient.get()
+            .uri("/mypage" + (sid != null ? sid : ""))
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody()
+            .consumeWith(consumer);
     }
 
     @Test
     void mypage_put() {
         UserRequestDto user = UserRequestDto.of("john", "user_put_test@example.com", "p@ssW0rd", "p@ssW0rd");
         postUser(user, postUserResponse -> {
-            webTestClient.put().uri("/users")
-                .header("Authorization", createAuthHeaderString(user))
-                .body(BodyInserters.fromFormData("name", "park"))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(mypagePutResponse -> {
-                    webTestClient.get().uri("/mypage")
-                        .header("Authorization", createAuthHeaderString(user))
-                        .exchange()
-                        .expectStatus().isOk()
-                        .expectBody()
-                        .consumeWith(mypageResponse -> {
+            String sid = getSessionString(postUserResponse);
+
+            postLogin(user, sid, loginResponse -> {
+                webTestClient.put().uri("/users" + sid)
+                    .body(BodyInserters.fromFormData("name", "park"))
+                    .exchange()
+                    .expectStatus().is3xxRedirection()
+                    .expectBody()
+                    .consumeWith(mypagePutResponse -> {
+                        getMypage(sid, mypageResponse -> {
                             assertThat(new String(mypageResponse.getResponseBody()))
                                 .contains("park")
                                 .contains(user.getEmail());
                         });
-                });
+                    });
+            });
         });
+    }
+
+    /**
+     * Creates string for holding session.
+     *
+     * @param postUserResponse The first response of the request in the test
+     * @return ex. response -> ;jsessionid=ED8F611EA32E4D7FB5CE60A3C1E0F54A
+     */
+    private String getSessionString(EntityExchangeResult<byte[]> postUserResponse) {
+        return ";jsessionid=" + postUserResponse.getResponseCookies().getFirst("JSESSIONID").getValue();
     }
 
     private String createAuthHeaderString(UserRequestDto user) {

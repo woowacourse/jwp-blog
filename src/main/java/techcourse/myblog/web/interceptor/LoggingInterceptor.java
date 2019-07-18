@@ -21,6 +21,7 @@ public class LoggingInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
         logger.info("{}: {}", request.getMethod(), request.getRequestURI());
+        logger.info("SID: {}", request.getSession().getId());
 
         return true;
     }

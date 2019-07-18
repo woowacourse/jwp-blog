@@ -92,8 +92,7 @@ public class ArticleControllerTests {
         Article newArticle = Article.of("title", "http://background.com", "가나다라마바사");
 
         postArticle(newArticle, postResponse -> {
-            String[] splitted = postResponse.getResponseHeaders().get("Location").get(0).split("/");
-            long id = Long.valueOf(splitted[splitted.length - 1]);
+            long id = getArticleIdFromUri(postResponse);
             webTestClient.get()
                 .uri("/articles/" + id + "/edit")
                 .exchange()
@@ -101,6 +100,14 @@ public class ArticleControllerTests {
         });
     }
 
+    private long getArticleIdFromUri(EntityExchangeResult<byte[]> response) {
+        String[] splitted = response.getResponseHeaders().get("Location").get(0).split("[\\/\\;]");
+        int idIndex = splitted.length - 1;
+        if (splitted[idIndex].startsWith("jsessionid")) {
+            idIndex -= 1;
+        }
+        return Long.valueOf(splitted[idIndex]);
+    }
 
     @Test
     void editArticlePut() {
@@ -108,8 +115,7 @@ public class ArticleControllerTests {
         ArticleRequestDto changedArticle = ArticleRequestDto.of("changed title", "backgroundURL", "changed contents");
 
         postArticle(newArticle, postResponse -> {
-            String[] splitted = postResponse.getResponseHeaders().get("Location").get(0).split("/");
-            long id = Long.valueOf(splitted[splitted.length - 1]);
+            long id = getArticleIdFromUri(postResponse);
 
             webTestClient.put()
                 .uri("/articles/" + id)
@@ -124,7 +130,6 @@ public class ArticleControllerTests {
                     String body = new String(retrieveResponse.getResponseBody());
                     assertThat(body)
                         .contains(changedArticle.getTitle())
-//                    .contains(newArticle.getCoverUrl())
                         .contains(changedArticle.getContents());
                 });
         });
@@ -135,8 +140,7 @@ public class ArticleControllerTests {
         Article newArticle = Article.of("my article", "http://image.com/", "origin contents");
 
         postArticle(newArticle, postResponse -> {
-            String[] splitted = postResponse.getResponseHeaders().get("Location").get(0).split("/");
-            long id = Long.valueOf(splitted[splitted.length - 1]);
+            long id = getArticleIdFromUri(postResponse);
             webTestClient.delete()
                 .uri("/articles/" + id)
                 .exchange()
