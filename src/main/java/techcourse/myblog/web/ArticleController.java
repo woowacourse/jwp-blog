@@ -5,8 +5,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import techcourse.myblog.domain.ArticleAssembler;
 import techcourse.myblog.domain.ArticleDto;
 import techcourse.myblog.domain.ArticleService;
+
+import java.util.List;
 
 @Controller
 public class ArticleController {
@@ -18,8 +21,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String showIndex(Model model) {
-        List<ArticleDto> articleDtos = new ArticleAssembler().writeDtos(articleRepository.findAll());
-        model.addAttribute("articles", articleDtos);
+        model.addAttribute("articles", articleService.getAllArticles());
         return "index";
     }
 

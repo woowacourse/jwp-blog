@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTests {
+public class ArticleControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
@@ -22,8 +22,15 @@ public class ArticleControllerTests {
     private String contents = "안녕안녕";
 
     @Test
-    void index() {
+    public void index() {
         webTestClient.get().uri("/")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    public void articleForm() {
+        webTestClient.get().uri("/articles/new")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -55,4 +62,5 @@ public class ArticleControllerTests {
                             });
                 });
     }
+
 }
