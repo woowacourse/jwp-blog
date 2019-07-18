@@ -48,8 +48,9 @@ public class UserController {
                             .map(user -> {
                                     session.setAttribute("key", Objects.hash(email));
                                     session.setAttribute("username", user.getName());
-                                    Cookie loginCookie = new Cookie("credential", Objects.hash(email) + "");
-                                    res.addCookie(loginCookie);
+                                    session.setAttribute("email", user.getEmail());
+//                                    Cookie loginCookie = new Cookie("credential", Objects.hash(email) + "");
+//                                    res.addCookie(loginCookie);
                                     return new RedirectView("/");
                             }).orElseGet(() -> {
                                     redirectAttributes.addAttribute(
@@ -75,5 +76,31 @@ public class UserController {
                 userRepository.save(user);
                 return new RedirectView("/login");
         });
+    }
+
+    @GetMapping("/logout")
+    public RedirectView logout(HttpSession session) {
+        session.invalidate();
+        return new RedirectView("/");
+    }
+
+    @GetMapping("/mypage")
+    public String mypage(HttpSession session, Model model) {
+        return userRepository.findByEmail((String) session.getAttribute("email"))
+                            .map(user -> {
+                                model.addAttribute("user", user);
+                                return "mypage";
+                            })
+                            .orElse("redirect:/");
+    }
+
+    @GetMapping("/mypageedit")
+    public String mypageedit(HttpSession session, Model model) {
+        return userRepository.findByEmail((String) session.getAttribute("email"))
+                .map(user -> {
+                    model.addAttribute("user", user);
+                    return "mypage-edit";
+                })
+                .orElse("redirect:/");
     }
 }
