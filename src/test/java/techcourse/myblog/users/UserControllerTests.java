@@ -46,7 +46,7 @@ public class UserControllerTests {
 
     @Test
     void signup_이름_실패_테스트() {
-        String email = "emailgoogle.co.kr";
+        String email = "9emailgoogle.co.kr";
         String name = "na213123me";
         String password = "123";
 
@@ -66,10 +66,10 @@ public class UserControllerTests {
 
     @Test
     void signup_이메일_중복_테스트() {
-        String email = "email@google.co.kr";
+        String email = "8email@google.co.kr";
         String name = "name";
         String password = "P@ssw0rd";
-        UserDto userDto = UserDto.builder()
+        UserDto.Register userDto = UserDto.Register.builder()
                 .email(email)
                 .name(name)
                 .password(password)
@@ -94,7 +94,7 @@ public class UserControllerTests {
 
     @Test
     void 비밀번호_불일치_테스트() {
-        String email = "email@google.co.kr";
+        String email = "7email@google.co.kr";
         String name = "name";
         String password = "P@ssw0rd";
         String confirmPassword = "P@ssw0rd+1";
@@ -121,10 +121,10 @@ public class UserControllerTests {
 
     @Test
     void loginTest() {
-        String email = "email@google.co.kr";
+        String email = "6email@google.co.kr";
         String name = "name";
         String password = "P@ssw0rd";
-        UserDto userDto = UserDto.builder()
+        UserDto.Register userDto = UserDto.Register.builder()
                 .email(email)
                 .name(name)
                 .password(password)
@@ -146,7 +146,7 @@ public class UserControllerTests {
 
     @Test
     void userListTest() {
-        String email = "email@google.co.kr";
+        String email = "5email@google.co.kr";
         String name = "name";
         String password = "P@ssw0rd";
 
@@ -154,7 +154,7 @@ public class UserControllerTests {
         String name1 = "asdfsadfasdf";
         String password1 = "!234Qwer";
 
-        UserDto userDto = UserDto.builder()
+        UserDto.Register userDto = UserDto.Register.builder()
                 .email(email)
                 .name(name)
                 .password(password)
@@ -163,7 +163,7 @@ public class UserControllerTests {
 
         userService.save(userDto);
 
-        userDto = UserDto.builder()
+        userDto = UserDto.Register.builder()
                 .email(email1)
                 .name(name1)
                 .password(password1)
@@ -185,10 +185,10 @@ public class UserControllerTests {
 
     @Test
     void editForm() {
-        String email = "email@google.co.kr";
+        String email = "4email@google.co.kr";
         String name = "name";
         String password = "P@ssw0rd";
-        UserDto userDto = UserDto.builder()
+        UserDto.Register userDto = UserDto.Register.builder()
                 .email(email)
                 .name(name)
                 .password(password)
@@ -209,10 +209,10 @@ public class UserControllerTests {
 
     @Test
     void show() {
-        String email = "email@google.co.kr";
+        String email = "3email@google.co.kr";
         String name = "name";
         String password = "P@ssw0rd";
-        UserDto userDto = UserDto.builder()
+        UserDto.Register userDto = UserDto.Register.builder()
                 .email(email)
                 .name(name)
                 .password(password)
@@ -233,10 +233,10 @@ public class UserControllerTests {
 
     @Test
     void edit() {
-        String email = "email@google.co.kr";
+        String email = "2email@google.co.kr";
         String name = "name";
         String password = "P@ssw0rd";
-        UserDto userDto = UserDto.builder()
+        UserDto.Register userDto = UserDto.Register.builder()
                 .email(email)
                 .name(name)
                 .password(password)
@@ -250,15 +250,15 @@ public class UserControllerTests {
                 .body(BodyInserters.fromFormData("name", changedName))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location",".*/users/[0-9]+");
+                .expectHeader().valueMatches("location", ".*/users/[0-9]+");
     }
 
     @Test
     void delete() {
-        String email = "email@google.co.kr";
+        String email = "1email@google.co.kr";
         String name = "name";
         String password = "P@ssw0rd";
-        UserDto userDto = UserDto.builder()
+        UserDto.Register userDto = UserDto.Register.builder()
                 .email(email)
                 .name(name)
                 .password(password)

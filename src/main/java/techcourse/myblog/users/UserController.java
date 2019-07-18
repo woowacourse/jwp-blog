@@ -22,7 +22,7 @@ public class UserController {
 
     @PostMapping
     @ResponseBody
-    public Long signup(@Valid UserDto userDto) {
+    public Long signup(@Valid UserDto.Register userDto) {
         return userService.save(userDto);
     }
 
@@ -33,8 +33,8 @@ public class UserController {
 
     @PostMapping("/login")
     @ResponseBody
-    public String login(UserDto userDto, HttpSession session) {
-        UserResponseDto userResponseDto = userService.login(userDto);
+    public String login(UserDto.Register userDto, HttpSession session) {
+        UserDto.Response userResponseDto = userService.login(userDto);
         session.setAttribute("user", userResponseDto);
         return userResponseDto.getName();
     }
@@ -47,28 +47,28 @@ public class UserController {
 
     @GetMapping
     public String userList(Model model) {
-        List<UserResponseDto> users = userService.findAllExceptPassword();
+        List<UserDto.Response> users = userService.findAllExceptPassword();
         model.addAttribute("users", users);
         return "user-list";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
-        UserResponseDto userResponseDto = userService.findById(id);
+        UserDto.Response userResponseDto = userService.findById(id);
         model.addAttribute("user", userResponseDto);
         return "mypage";
     }
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
-        UserResponseDto userResponseDto = userService.findById(id);
+        UserDto.Response userResponseDto = userService.findById(id);
         model.addAttribute("user", userResponseDto);
         return "mypage-edit";
     }
 
     @PutMapping("/{id}")
-    public String edit(@PathVariable Long id, UserDto userDto) {
-        UserResponseDto responseDto = userService.update(id, userDto);
+    public String edit(@PathVariable Long id, @Valid UserDto.Update userDto) {
+        UserDto.Response responseDto = userService.update(id, userDto);
         return "redirect:/users/" + id;
     }
 
