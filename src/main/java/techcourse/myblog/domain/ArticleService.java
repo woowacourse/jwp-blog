@@ -30,4 +30,8 @@ public class ArticleService {
     public void updateArticle(ArticleDto articleDto) {
         articleRepository.save(ArticleAssembler.writeArticle(articleDto));
     }
+
+    public void deleteArticleById(long articleId) {
+        articleRepository.deleteById(articleId);
+    }
 }

@@ -14,6 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest {
+    private static final String APPENDING_DELETE_MESSAGE = "will be deleted";
+
     @Autowired
     private WebTestClient webTestClient;
 
@@ -29,7 +31,7 @@ public class ArticleControllerTest {
     }
 
     @Test
-    public void articleForm() {
+    public void 게시글_작성_페이지_테스트() {
         webTestClient.get().uri("/writing")
                 .exchange()
                 .expectStatus().isOk();
@@ -132,4 +134,40 @@ public class ArticleControllerTest {
                 });
     }
 
+    @Test
+    public void 게시글_삭제_테스트() {
+        webTestClient.post()
+                .uri("/articles")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", title + APPENDING_DELETE_MESSAGE)
+                        .with("coverUrl", coverUrl + APPENDING_DELETE_MESSAGE)
+                        .with("contents", contents + APPENDING_DELETE_MESSAGE))
+                .exchange()
+                .expectStatus().isFound()
+                .expectBody()
+                .consumeWith(response -> {
+                    webTestClient.delete()
+                            .uri(response.getResponseHeaders().getLocation())
+                            .exchange()
+                            .expectStatus()
+                            .isFound()
+                            .expectBody()
+                            .consumeWith(
+                                    res -> {
+                                        webTestClient.get()
+                                                .uri(res.getResponseHeaders().getLocation())
+                                                .exchange()
+                                                .expectStatus()
+                                                .isOk()
+                                                .expectBody()
+                                                .consumeWith(r -> {
+                                                    String body = new String(r.getResponseBody());
+                                                    assertThat(body.contains(title + APPENDING_DELETE_MESSAGE)).isFalse();
+                                                    assertThat(body.contains(contents + APPENDING_DELETE_MESSAGE)).isFalse();
+                                                    assertThat(body.contains(coverUrl + APPENDING_DELETE_MESSAGE)).isFalse();
+                                                });
+                                    });
+                });
+    }
 }
