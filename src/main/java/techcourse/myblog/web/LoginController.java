@@ -22,7 +22,7 @@ public class LoginController {
         if (session == null) {
             return "login";
         }
-        return "index";
+        return "redirect:/";
     }
 
     @PostMapping("/login")
@@ -34,9 +34,9 @@ public class LoginController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
+    public RedirectView logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         session.invalidate();
-        return "index";
+        return new RedirectView("/");
     }
 }

@@ -27,7 +27,7 @@ public class UserController {
         if (session == null) {
             return "signup";
         }
-        return "index";
+        return "redirect:/";
     }
 
     @PostMapping("/users")
