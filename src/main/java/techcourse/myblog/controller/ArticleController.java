@@ -13,15 +13,10 @@ public class ArticleController {
     @Autowired
     private ArticleRepository articleRepository;
 
-    @GetMapping("/")
-    public String home(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
-        return "index";
-    }
-
     @GetMapping("/{articleId}")
-    public String showArticle(@PathVariable int articleId, Model model) {
+    public String showArticle(@PathVariable("articleId") int articleId, Model model) {
         model.addAttribute("article", articleRepository.get(articleId));
+        model.addAttribute("articleId", articleId);
         return "article";
     }
 
@@ -31,25 +26,26 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public String saveArticle(@ModelAttribute Article article) {
+    public String saveArticle(Article article) {
         articleRepository.add(article);
         return "redirect:/articles/" + articleRepository.lastIndex();
     }
 
     @GetMapping("/{articleId}/edit")
-    public String articleUpdateForm(@PathVariable int articleId, Model model) {
+    public String articleUpdateForm(@PathVariable("articleId") int articleId, Model model) {
         model.addAttribute("article", articleRepository.get(articleId));
+        model.addAttribute("articleId", articleId);
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
-    public String updateArticle(@PathVariable int articleId, Article article) {
+    public String updateArticle(@PathVariable("articleId") int articleId, Article article) {
         articleRepository.update(articleId, article);
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/{articleId}")
-    public String deleteArticle(@PathVariable int articleId) {
+    public String deleteArticle(@PathVariable("articleId") int articleId) {
         articleRepository.remove(articleId);
         return "redirect:/";
     }
