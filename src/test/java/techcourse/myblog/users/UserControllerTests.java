@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.BodyInserters;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,6 +20,11 @@ public class UserControllerTests {
     @Autowired
     UserService userService;
 
+    public static int count = 0;
+    String email = "email@google.co.kr";
+    String name = "name";
+    String password = "P@ssw0rd";
+
     @Test
     void signupFormTest() {
         webTestClient.get().uri("/users/new")
@@ -27,10 +34,6 @@ public class UserControllerTests {
 
     @Test
     void signup_성공_테스트() {
-        String email = "email@google.co.kr";
-        String name = "name";
-        String password = "P@ssw0rd";
-
         webTestClient.post().uri("/users")
                 .body(BodyInserters.fromFormData("name", name)
                         .with("email", email)
@@ -45,8 +48,8 @@ public class UserControllerTests {
     }
 
     @Test
-    void signup_이름_실패_테스트() {
-        String email = "9emailgoogle.co.kr";
+    void signup_valid_실패_테스트() {
+        String email = "emailgoogle.co.kr";
         String name = "na213123me";
         String password = "123";
 
@@ -66,18 +69,7 @@ public class UserControllerTests {
 
     @Test
     void signup_이메일_중복_테스트() {
-        String email = "8email@google.co.kr";
-        String name = "name";
-        String password = "P@ssw0rd";
-        UserDto.Register userDto = UserDto.Register.builder()
-                .email(email)
-                .name(name)
-                .password(password)
-                .confirmPassword(password)
-                .build();
-
-        userService.save(userDto);
-
+        Long id = saveUserWithEmail();
 
         webTestClient.post().uri("/users")
                 .body(BodyInserters.fromFormData("name", name)
@@ -94,7 +86,7 @@ public class UserControllerTests {
 
     @Test
     void 비밀번호_불일치_테스트() {
-        String email = "7email@google.co.kr";
+        String email = "email@google.co.kr";
         String name = "name";
         String password = "P@ssw0rd";
         String confirmPassword = "P@ssw0rd+1";
@@ -121,17 +113,7 @@ public class UserControllerTests {
 
     @Test
     void loginTest() {
-        String email = "6email@google.co.kr";
-        String name = "name";
-        String password = "P@ssw0rd";
-        UserDto.Register userDto = UserDto.Register.builder()
-                .email(email)
-                .name(name)
-                .password(password)
-                .confirmPassword(password)
-                .build();
-
-        userService.save(userDto);
+        Long id = saveUserWithEmail();
 
         webTestClient.post().uri("/users/login")
                 .body(BodyInserters.fromFormData("email", email)
@@ -146,24 +128,13 @@ public class UserControllerTests {
 
     @Test
     void userListTest() {
-        String email = "5email@google.co.kr";
-        String name = "name";
-        String password = "P@ssw0rd";
+        Long id = saveUserWithEmail();
 
         String email1 = "asdf@google.co.kr";
         String name1 = "asdfsadfasdf";
         String password1 = "!234Qwer";
 
         UserDto.Register userDto = UserDto.Register.builder()
-                .email(email)
-                .name(name)
-                .password(password)
-                .confirmPassword(password)
-                .build();
-
-        userService.save(userDto);
-
-        userDto = UserDto.Register.builder()
                 .email(email1)
                 .name(name1)
                 .password(password1)
@@ -185,19 +156,9 @@ public class UserControllerTests {
 
     @Test
     void editForm() {
-        String email = "4email@google.co.kr";
-        String name = "name";
-        String password = "P@ssw0rd";
-        UserDto.Register userDto = UserDto.Register.builder()
-                .email(email)
-                .name(name)
-                .password(password)
-                .confirmPassword(password)
-                .build();
+        Long id = saveUserWithEmail();
 
-        Long userId = userService.save(userDto);
-
-        webTestClient.get().uri("/users/{id}/edit", userId)
+        webTestClient.get().uri("/users/{id}/edit", id)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(response -> {
@@ -209,19 +170,9 @@ public class UserControllerTests {
 
     @Test
     void show() {
-        String email = "3email@google.co.kr";
-        String name = "name";
-        String password = "P@ssw0rd";
-        UserDto.Register userDto = UserDto.Register.builder()
-                .email(email)
-                .name(name)
-                .password(password)
-                .confirmPassword(password)
-                .build();
+        Long id = saveUserWithEmail();
 
-        Long userId = userService.save(userDto);
-
-        webTestClient.get().uri("/users/{id}", userId)
+        webTestClient.get().uri("/users/{id}", id)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(response -> {
@@ -233,20 +184,10 @@ public class UserControllerTests {
 
     @Test
     void edit() {
-        String email = "2email@google.co.kr";
-        String name = "name";
-        String password = "P@ssw0rd";
-        UserDto.Register userDto = UserDto.Register.builder()
-                .email(email)
-                .name(name)
-                .password(password)
-                .confirmPassword(password)
-                .build();
-
-        Long userId = userService.save(userDto);
+        Long id = saveUserWithEmail();
         String changedName = "asdf";
 
-        webTestClient.put().uri("/users/{id}", userId)
+        webTestClient.put().uri("/users/{id}", id)
                 .body(BodyInserters.fromFormData("name", changedName))
                 .exchange()
                 .expectStatus().is3xxRedirection()
@@ -255,21 +196,23 @@ public class UserControllerTests {
 
     @Test
     void delete() {
-        String email = "1email@google.co.kr";
-        String name = "name";
-        String password = "P@ssw0rd";
-        UserDto.Register userDto = UserDto.Register.builder()
+        Long id = saveUserWithEmail();
+
+        webTestClient.delete().uri("/users/{id}", id)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location",".*/");
+    }
+
+    private Long saveUserWithEmail() {
+        email += ++count;
+        UserDto.Register userDto =  UserDto.Register.builder()
                 .email(email)
                 .name(name)
                 .password(password)
                 .confirmPassword(password)
                 .build();
 
-        Long userId = userService.save(userDto);
-
-        webTestClient.delete().uri("/users/{id}", userId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location",".*/");
+        return userService.save(userDto);
     }
 }
