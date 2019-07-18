@@ -11,6 +11,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -20,13 +22,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/signup")
-    public String renderSignUpPage() {
-        return "signup";
-    }
-
-    @GetMapping("/login")
-    public String renderLoginPage() {
-        return "login";
+    public String renderSignUpPage(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return "signup";
+        }
+        return "index";
     }
 
     @PostMapping("/users")

@@ -36,13 +36,6 @@ public class UserControllerTests {
     }
 
     @Test
-    void 로그인_페이지_이동_테스트() {
-        webTestClient.get().uri("/login")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
     void 회원가입_요청_성공_테스트() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -57,54 +50,58 @@ public class UserControllerTests {
 
     @Test
     void 회원가입_요청_이메일_중복_실패_테스트() {
+        String duplicatedEmail = "email@gmail.com";
+
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
+                        .fromFormData("email", duplicatedEmail)
                         .with("password", "password1234!")
                         .with("name", "name"))
                 .exchange()
-                .expectStatus().isFound()
-                .expectHeader().valueMatches("location", "(.)*(/signup)(.)*");
+                .expectStatus().isBadRequest();
     }
 
     @Test
     void 회원가입_요청_이름_형식_실패_테스트() {
+        String wrongName = "a";
+
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("email", "email@gmail.com")
                         .with("password", "password")
-                        .with("name", "a"))
+                        .with("name", wrongName))
                 .exchange()
-                .expectStatus().isFound()
-                .expectHeader().valueMatches("location", "(.)*(/signup)(.)*");
+                .expectStatus().isBadRequest();
     }
 
     @Test
     void 회원가입_요청_패스워드_실패_테스트() {
+        String wrongPassword = "password";
+
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("email", "email@gmail.com")
-                        .with("password", "password")
+                        .with("password", wrongPassword)
                         .with("name", "name"))
                 .exchange()
-                .expectStatus().isFound()
-                .expectHeader().valueMatches("location", "(.)*(/signup)(.)*");
+                .expectStatus().isBadRequest();
     }
 
     @Test
     void 회원가입_요청_이메일_형식_실패_테스트() {
+        String wrongEmail = "email";
+
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("email", "email")
+                        .fromFormData("email", wrongEmail)
                         .with("password", "password1234!")
                         .with("name", "name"))
                 .exchange()
-                .expectStatus().isFound()
-                .expectHeader().valueMatches("location", "(.)*(/signup)(.)*");
+                .expectStatus().isBadRequest();
     }
 
     @Test
