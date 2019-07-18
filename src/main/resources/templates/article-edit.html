@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <th:block th:include="fragments/common-head :: commonHead"></th:block>
+    <th:block th:include="fragments/meta"></th:block>
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/article-edit.css">
-    <th:block th:include="fragments/article-head :: articleHead"></th:block>
+    <th:block th:include="fragments/styles"></th:block>
+    <th:block th:include="fragments/article/styles :: articleHead"></th:block>
 </head>
 <body>
 <div>
-    <th:block th:include="fragments/article-header :: articleHeader"></th:block>
+    <th:block th:include="fragments/header:: header"></th:block>
     <form th:action="${actionRoute}" method="post" name="article" accept-charset="utf-8" >
         <input type="hidden" name="_method" th:value="${formMethod}"/>
         <div class="about-cover card no-border">
@@ -45,7 +46,7 @@
         </div>
     </form>
 </div>
-<th:block th:include="fragments/common-script :: commonScript"></th:block>
+<th:block th:include="fragments/scripts"></th:block>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script th:inline="javascript" type="text/javascript">
     var initialValue = [[${article?.contents}]]
