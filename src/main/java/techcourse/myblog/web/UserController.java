@@ -3,6 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -126,6 +127,16 @@ public class UserController {
         user.update(User.of(updateRequestDto.getName(), user.getEmail(), user.getPassword()));
         userRepository.save(user);
         return "redirect:/mypage";
+    }
+
+    @DeleteMapping("/withdraw")
+    public String deleteUser(HttpSession session) {
+        if (!isLoggedIn(session)) {
+            return "redirect:/login";
+        }
+        userRepository.deleteById(((User) session.getAttribute(SESSION_USER_KEY)).getId());
+        session.removeAttribute(SESSION_USER_KEY);
+        return "redirect:/";
     }
 
     private boolean isLoggedIn(HttpSession session) {
