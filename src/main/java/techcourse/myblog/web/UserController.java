@@ -5,13 +5,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
@@ -95,12 +95,35 @@ public class UserController {
     }
 
     @GetMapping("/mypageedit")
-    public String mypageedit(HttpSession session, Model model) {
+    public String myPageEdit(HttpSession session, Model model) {
         return userRepository.findByEmail((String) session.getAttribute("email"))
                 .map(user -> {
                     model.addAttribute("user", user);
                     return "mypage-edit";
                 })
                 .orElse("redirect:/");
+    }
+
+    @PutMapping("/mypageedit")
+    public RedirectView myPageEditConfirm(HttpSession session, String email, String name) {
+        return userRepository.findByEmail((String) session.getAttribute("email")).map(user -> {
+                    if (email.equals(user.getEmail())) {
+                        user.setName(name);
+                        user.setEmail(email);
+                        userRepository.save(user);
+                        session.setAttribute("username", name);
+                        session.setAttribute("email", email);
+                        return new RedirectView("/mypage");
+                    }
+                    return userRepository.findByEmail(email).map(sameEmail -> new RedirectView("."))
+                                                            .orElseGet(() -> {
+                                                                    user.setName(name);
+                                                                    user.setEmail(email);
+                                                                    userRepository.save(user);
+                                                                    session.setAttribute("username", name);
+                                                                    session.setAttribute("email", email);
+                                                                    return new RedirectView("/mypage");
+                                                            });
+        }).orElse(new RedirectView("/"));
     }
 }
