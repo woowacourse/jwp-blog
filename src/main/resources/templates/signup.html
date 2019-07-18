@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" layout:decorator="~{layout/signup-layout}"
+<html lang="ko" layout:decorator="~{layout/login-layout}"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -83,6 +83,14 @@
     </th:block>
 </div>
 <th:block layout:fragment="addScript">
+    <script th:if="${signUpStatus != null}" th:inline="javascript">
+        /* <![CDATA[ */
+        const error = [[ ${signUpStatus}]];
+        alert(error)
+        /* ]]> */
+    </script>
+    <script th:unless="${signUpStatus != null}" th:inline="javascript">
+    </script>
     <script>
         function checkUserForm() {
             var namePattern = /^[a-z]{2,10}$/i;
@@ -93,14 +101,12 @@
 
             if (email.validity.typeMismatch) {
                 email.setCustomValidity("이메일 형식이 아닙니다.");
-                document.querySelector('input[name="email"]').value = "";
             } else {
                 email.setCustomValidity("");
             }
 
             if (!namePattern.test(username.value)) {
                 username.setCustomValidity("아이디는 2~10자의 영문자 이어야 합니다.");
-                document.querySelector('input[name="userName"]').value = "";
             } else {
                 username.setCustomValidity("");
             }
