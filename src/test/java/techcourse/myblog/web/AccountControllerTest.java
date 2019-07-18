@@ -168,6 +168,54 @@ public class AccountControllerTest {
                 .isOk();
     }
 
+    @Test
+    void 로그인_테스트() {
+        String email = "aa@login.com";
+        testSignupProcess(testName, testPassword, email)
+                .expectStatus()
+                .isFound();
+
+        testSuccessLogin(email, testPassword);
+    }
+
+    private void testSuccessLogin(String email, String password) {
+        webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", email)
+                        .with("password", password))
+                .exchange()
+                .expectStatus()
+                .isFound()
+        .expectBody()
+        .consumeWith(response -> {
+            assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
+        })
+        ;
+    }
+
+    @Test
+    void 로그인_테스트_실패_아이디_틀림() {
+        String email = "aa@loginfail1.com";
+        String wrongEmail = "aa";
+        testSignupProcess(testName, testPassword, email)
+                .expectStatus()
+                .isFound();
+
+        testFailLogin(testPassword, wrongEmail);
+    }
+
+    @Test
+    void 로그인_테스트_실패_비밀번호_틀림() {
+        String email = "aa@loginfail2.com";
+        String wrongPW = "aa";
+        testSignupProcess(testName, testPassword, email)
+                .expectStatus()
+                .isFound();
+
+        testFailLogin(wrongPW, email);
+    }
+
     private WebTestClient.ResponseSpec testSignupProcess(String name, String password, String email) {
         return webTestClient.post()
                 .uri("/accounts/users")
@@ -178,5 +226,21 @@ public class AccountControllerTest {
                         .with("email", email))
                 .exchange()
                 ;
+    }
+
+    private void testFailLogin(String wrongPW, String testEmail) {
+        webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", testEmail)
+                        .with("password", wrongPW))
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .expectBody()
+                .consumeWith(response -> {
+                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isTrue();
+                })
+        ;
     }
 }

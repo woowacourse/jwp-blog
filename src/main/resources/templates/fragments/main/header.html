@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
@@ -24,21 +25,30 @@
                     <img class="profile-img img-fluid"
                          src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
                     <div class="user-info text-white">
-                        <span class="name pdd-right-5" th:text="${session.id != null ? session.id : 'GUEST'}">Brown</span>
+                        <span class="name pdd-right-5" sec:authorize="isAnonymous()">GUEST</span>
+                        <span class="name pdd-right-5" sec:authorize="isAuthenticated()" th:text="${#authentication.getPrincipal().getName()}"></span>
                     </div>
                 </a>
                 <ul class="dropdown-menu">
                     <li class="text-dark">
-                        <a th:href="${session.id != null ? '/accounts/signup' : ''}">
+                        <a sec:authorize="isAnonymous()" href="/login">
                             <i class="ti-user pdd-right-10"></i>
-                            <span class="text-dark" th:text="${session.id != null ? '마이페이지' : '로그인'}">마이 페이지</span>
+                            <span class="text-dark">로그인</span>
+                        </a>
+                        <a sec:authorize="isAuthenticated()" href="">
+                            <i class="ti-user pdd-right-10"></i>
+                            <span class="text-dark">마이 페이지</span>
                         </a>
                     </li>
                     <li role="separator" class="divider"></li>
                     <li class="text-dark">
-                        <a th:href="${session.id != null ? '' : '/accounts/signup'}">
+                        <a sec:authorize="isAnonymous()" href="/accounts/signup">
                             <i class="ti-power-off pdd-right-10"></i>
-                            <span class="text-dark" th:text="${session.id != null ? '로그아웃' : '회원가입'}">로그아웃</span>
+                            <span class="text-dark">회원가입</span>
+                        </a>
+                        <a sec:authorize="isAuthenticated()" href="/logout">
+                            <i class="ti-power-off pdd-right-10"></i>
+                            <span class="text-dark">로그아웃</span>
                         </a>
                     </li>
                 </ul>
