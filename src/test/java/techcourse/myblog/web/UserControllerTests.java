@@ -22,8 +22,8 @@ public class UserControllerTests {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("email", "email")
-                        .with("password", "password")
+                        .fromFormData("email", "email@gmail.com")
+                        .with("password", "password1234!")
                         .with("name", "name"))
                 .exchange();
     }
@@ -47,25 +47,64 @@ public class UserControllerTests {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("email", "newEmail")
-                        .with("password", "newPassword")
+                        .fromFormData("email", "newEmail@gmail.com")
+                        .with("password", "newPassword1234!")
                         .with("name", "newName"))
                 .exchange()
                 .expectStatus().isFound()
-                .expectHeader().valueMatches("location", "(.)*(/login)");
+                .expectHeader().valueMatches("location", "(.)*(/login)(.)*");
     }
 
     @Test
-    void 회원가입_요청_실패_테스트() {
+    void 회원가입_요청_이메일_중복_실패_테스트() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("email", "email")
+                        .fromFormData("email", "email@gmail.com")
+                        .with("password", "password1234!")
+                        .with("name", "name"))
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location", "(.)*(/signup)(.)*");
+    }
+
+    @Test
+    void 회원가입_요청_이름_형식_실패_테스트() {
+        webTestClient.post().uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", "email@gmail.com")
+                        .with("password", "password")
+                        .with("name", "a"))
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location", "(.)*(/signup)(.)*");
+    }
+
+    @Test
+    void 회원가입_요청_패스워드_실패_테스트() {
+        webTestClient.post().uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", "email@gmail.com")
                         .with("password", "password")
                         .with("name", "name"))
                 .exchange()
                 .expectStatus().isFound()
-                .expectHeader().valueMatches("location", "(.)*(/signup)");
+                .expectHeader().valueMatches("location", "(.)*(/signup)(.)*");
+    }
+
+    @Test
+    void 회원가입_요청_이메일_형식_실패_테스트() {
+        webTestClient.post().uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", "email")
+                        .with("password", "password1234!")
+                        .with("name", "name"))
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location", "(.)*(/signup)(.)*");
     }
 
     @Test
