@@ -29,7 +29,7 @@ class UserControllerTest {
     public void 회원추가() {
         String name = "미스터코";
         String email = "test@test.com";
-        String password = "123123";
+        String password = "123123123";
 
         webTestClient.post()
                 .uri("/users")
