@@ -4,8 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
@@ -18,6 +21,14 @@ public class UserController {
     @GetMapping("/signup")
     public String showSignup() {
         return "signup";
+    }
+
+    @PostMapping("/login")
+    public String login(UserDto userDto, HttpSession httpSession) {
+        User user = userService.getUser(userDto);
+        httpSession.setAttribute("name", user.getName());
+        httpSession.setAttribute("email", user.getEmail());
+        return "redirect:/";
     }
 
     @GetMapping("/login")
