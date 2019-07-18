@@ -14,9 +14,12 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.dto.UserDto;
 
+import java.util.Objects;
+
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.FOUND;
+import static org.springframework.http.HttpStatus.OK;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
@@ -35,6 +38,21 @@ class UserControllerTests {
     }
 
     @Test
+    void 로그인_페이지_요청() {
+        httpRequestAndExpectStatus(GET, "/login", OK);
+    }
+
+    @Test
+    void 회원목록_페이지_요청() {
+        httpRequestAndExpectStatus(GET, "/users", OK);
+    }
+
+    @Test
+    void 회원가입_페이지_요청() {
+        httpRequestAndExpectStatus(GET, "/signup", OK);
+    }
+
+    @Test
     void 회원가입_성공() {
         UserDto userDto = new UserDto(name, email, password);
 
@@ -46,7 +64,12 @@ class UserControllerTests {
         name = "k";
         UserDto userDto = new UserDto(name, email, password);
 
-        httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), BAD_REQUEST);
+        httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), OK)
+                .expectBody()
+                .consumeWith(res -> {
+                    String body = new String(Objects.requireNonNull(res.getResponseBody()));
+                    body.contains("비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요.");
+                });
     }
 
     @Test
@@ -54,7 +77,12 @@ class UserControllerTests {
         email = "email";
         UserDto userDto = new UserDto(name, email, password);
 
-        httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), BAD_REQUEST);
+        httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), OK)
+                .expectBody()
+                .consumeWith(res -> {
+                    String body = new String(Objects.requireNonNull(res.getResponseBody()));
+                    body.contains("이메일 양식을 지켜주세요.");
+                });
     }
 
     @Test
@@ -62,7 +90,12 @@ class UserControllerTests {
         password = "1234567";
         UserDto userDto = new UserDto(name, email, password);
 
-        httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), BAD_REQUEST);
+        httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), OK)
+                .expectBody()
+                .consumeWith(res -> {
+                    String body = new String(Objects.requireNonNull(res.getResponseBody()));
+                    body.contains("비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요.");
+                });
     }
 
     @Test
@@ -71,7 +104,13 @@ class UserControllerTests {
         UserDto userDto = new UserDto(name, email, password);
 
         httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), FOUND);
-        httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), INTERNAL_SERVER_ERROR);
+
+        httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), OK)
+                .expectBody()
+                .consumeWith(res -> {
+                    String body = new String(Objects.requireNonNull(res.getResponseBody()));
+                    body.contains("이미 존재하는 email입니다.");
+                });
     }
 
     @Test
