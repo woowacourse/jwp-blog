@@ -2,11 +2,12 @@ package techcourse.myblog.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.model.ArticleRepository;
 
 import javax.validation.Valid;
@@ -43,20 +44,16 @@ public class ArticleController {
     @GetMapping("/{articleId}/edit")
     public String editArticleForm(@PathVariable long articleId, Model model) {
         Optional<Article> articleOpt = articleRepository.findById(articleId);
-        articleOpt.ifPresent(value -> {
-            model.addAttribute("article", value);
-        });
+        articleOpt.ifPresent(value -> model.addAttribute("article", value));
 
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
+    @Transactional
     public RedirectView editArticle(@PathVariable long articleId, @Valid ArticleDto articleDto) {
         Optional<Article> articleOpt = articleRepository.findById(articleId);
-        articleOpt.ifPresent(value -> {
-            value.update(articleDto.toArticle());
-            articleRepository.save(value);
-        });
+        articleOpt.ifPresent(value -> value.update(articleDto.toArticle()));
 
         return new RedirectView("/articles/" + articleId);
     }
