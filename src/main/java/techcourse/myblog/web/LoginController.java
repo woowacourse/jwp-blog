@@ -24,7 +24,7 @@ public class LoginController {
     }
 
     @PostMapping("/login/check")
-    public String createLogin(AuthenticationDto authenticationDto, Model model, HttpSession httpSession) {
+    public String login(AuthenticationDto authenticationDto, Model model, HttpSession httpSession) {
         try {
             User user = userRepository.findByEmail(authenticationDto.getEmail())
                     .orElseThrow(() -> new IllegalArgumentException("해당 이메일은 존재하지 않습니다."));
@@ -37,5 +37,11 @@ public class LoginController {
             model.addAttribute("error", e.getMessage());
             return "login";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession httpSession) {
+        httpSession.removeAttribute("user");
+        return "redirect:/";
     }
 }
