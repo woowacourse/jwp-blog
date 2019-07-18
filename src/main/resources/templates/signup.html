@@ -29,32 +29,36 @@
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
-                                                    <form action="/users" method="post" accept-charset="UTF-8">
+                                                    <form id="signup" action="/users" method="post"
+                                                          onsubmit="return validatePassword();" accept-charset="UTF-8">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input type="text" name="username" class="form-control" required autofocus minlength="2" maxlength="10">
+                                                            <input type="text" name="username" class="form-control"
+                                                                   required autofocus minlength="2" maxlength="10">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
-                                                            <input type="email" name="email" class="form-control" required autofocus>
+                                                            <input type="email" name="email" class="form-control"
+                                                                   required autofocus>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
-                                                            <input type="password" name="password" class="form-control"
-                                                                   placeholder="Password" required autofocus minlength="8"
-                                                                   pattern=passwordRule>
+                                                            <input type="password" id="password" name="password"
+                                                                   class="form-control"
+                                                                   placeholder="Password" required autofocus
+                                                                   minlength="8" pattern="">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm
                                                                 Password</label>
-                                                            <input type="password" class="form-control"
-                                                                   placeholder="Password" required autofocus minlength="8"
-                                                                   pattern=passwordRule>
+                                                            <input type="password" id="passwordConfirm"
+                                                                   name="passwordConfirm" class="form-control"
+                                                                   placeholder="Password" required autofocus
+                                                                   minlength="8">
                                                         </div>
                                                         <div class="form-group">
-                                                            <button type="submit"
-                                                                    class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
-                                                                가입하기
+                                                            <button type="submit" class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
+                                                            가입하기
                                                             </button>
                                                         </div>
                                                     </form>
@@ -78,7 +82,21 @@
 </div>
 <th:block th:include="common/js"></th:block>
 <script>
-    var passwordRule = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[\d])(?=.*[!-#%-*,-\/:;?@\[-\]_{}$+<->^`|~])[a-zA-Z\d!-#%-*,-\/:;?@\[-\]_{}$+<->^`|~]+$";
+    const passwordRule = document.getElementById("password");
+    passwordRule.setAttribute('pattern', '^(?=.*[a-z])(?=.*[A-Z])(?=.*[\\d])' +
+        '(?=.*[!-#%-*,-\\/:;?@\\[-\\]_{}$+<->^`|~])[a-zA-Z\\d!-#%-*,-\\/:;?@\\[-\\]_{}$+<->^`|~]+');
+
+    var password = document.getElementById("password");
+    var confirmPassword = document.getElementById("passwordConfirm");
+
+    function validatePassword() {
+        if (password.value !== confirmPassword.value) {
+            alert("패스워드가 일치하지 않습니다.");
+            return false;
+        }
+        return true;
+    }
+
 </script>
 </body>
 </html>
