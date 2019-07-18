@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import javax.validation.Valid;
+
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
@@ -23,7 +25,8 @@ public class UsersController {
 	}
 
 	@PostMapping("users")
-	public String signUp(UserDto newUser, Model model) {
+	public String signUp(@Valid UserDto newUser, Model model) {
+		System.out.println(newUser);
 		User user = new User(newUser);
 		userRepository.save(user);
 		return "login";
