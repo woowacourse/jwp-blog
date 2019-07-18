@@ -1,7 +1,9 @@
 package techcourse.myblog.domain;
 
-public class ArticleVo {
+import lombok.Getter;
 
+@Getter
+public class ArticleVo {
     private final String title;
     private final String coverUrl;
     private final String contents;
@@ -10,17 +12,5 @@ public class ArticleVo {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
     }
 }

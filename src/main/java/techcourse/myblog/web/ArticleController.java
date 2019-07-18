@@ -7,6 +7,8 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleVo;
 import techcourse.myblog.repo.ArticleRepository;
 
+import javax.transaction.Transactional;
+
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
@@ -24,7 +26,11 @@ public class ArticleController {
 
     @PostMapping
     public String createArticle(ArticleVo articleVO, Model model) {
-        Article article = new Article(articleVO.getTitle(), articleVO.getCoverUrl(), articleVO.getContents());
+        Article article = Article.builder()
+                .title(articleVO.getTitle())
+                .coverUrl(articleVO.getCoverUrl())
+                .contents(articleVO.getContents())
+                .build();
         articleRepository.save(article);
         model.addAttribute("article", article);
         return "redirect:/articles/" + article.getArticleId();
@@ -32,31 +38,30 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable Long articleId, Model model) {
-        Article article = articleRepository.findById(articleId).get();
+        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
         model.addAttribute("article", article);
         return "article";
     }
 
     @GetMapping("/{articleId}/edit")
     public String updateArticle(@PathVariable Long articleId, Model model) {
-        Article article = articleRepository.findById(articleId).get();
+        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
         model.addAttribute("article", article);
         return "article-edit";
     }
 
+    @Transactional
     @PutMapping("/{articleId}")
     public String showUpdatedArticle(@PathVariable Long articleId, ArticleVo updatedArticle, Model model) {
-        Article article = articleRepository.findById(articleId).get();
+        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
         article.update(updatedArticle);
-        articleRepository.save(article);
         model.addAttribute("article", updatedArticle);
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable Long articleId) {
-        Article article = articleRepository.findById(articleId).get();
-        articleRepository.delete(article);
+        articleRepository.deleteById(articleId);
         return "redirect:/";
     }
 }

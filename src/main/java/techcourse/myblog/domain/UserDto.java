@@ -1,5 +1,8 @@
 package techcourse.myblog.domain;
 
+import lombok.Getter;
+
+@Getter
 public class UserDto {
     private String userName;
     private String email;
@@ -11,21 +14,5 @@ public class UserDto {
         this.email = email;
         this.password = password;
         this.confirmPassword = confirmPassword;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
     }
 }

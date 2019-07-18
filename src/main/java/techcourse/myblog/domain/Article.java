@@ -1,12 +1,19 @@
 package techcourse.myblog.domain;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Article {
 
     @Id
@@ -16,9 +23,7 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public Article() {
-    }
-
+    @Builder
     public Article(String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
@@ -32,46 +37,4 @@ public class Article {
 
     }
 
-    public boolean isEqualToArticleId(Long articleId) {
-        return this.articleId == articleId;
-    }
-
-    public Long getArticleId() {
-        return articleId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return Objects.equals(articleId, article.articleId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(articleId);
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "articleId=" + articleId +
-                ", title='" + title + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", contents='" + contents + '\'' +
-                '}';
-    }
 }
