@@ -3,10 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserDto;
 import techcourse.myblog.domain.UserRepository;
@@ -140,5 +137,19 @@ public class UserController {
         }
 
         return "redirect:/users/" + id + "/mypage";
+    }
+
+    @DeleteMapping("/users/{id}/mypage-edit")
+    public String deleteUser(@PathVariable final long id, HttpSession session, UserDto userDto) {
+        // TODO: 로그인되었는지 확인 (아니면 메인으로)
+
+        Object userId = session.getAttribute("userId");
+        if (userId == null || id != (long) userId) {
+            return "redirect:/";
+        }
+
+        userRepository.deleteById(id);
+
+        return "redirect:/logout";
     }
 }

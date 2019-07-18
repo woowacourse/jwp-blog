@@ -23,9 +23,10 @@
         <div class="row">
             <div class="col-md-7 mx-auto">
                 <div class="card">
-                    <form action="" th:method="put">
+                    <form action="" th:method="put" name="user-info">
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
+                        <button type="button" onclick="submitDelete();" class="btn btn-info float-right mrg-btm-0 relative bottom-5">탈퇴</button>
                         <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정</button>
                     </div>
                     <div class="card-block">
@@ -118,5 +119,14 @@
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 <script src="/static/js/index.js"></script>
+<script>
+    function submitDelete(){
+        if (confirm('탈퇴 하시겠습니까?')) {
+            document.querySelector("form[name=user-info] input[name=_method]").setAttribute("value","delete");
+            document.querySelector("form[name=user-info]").submit();
+        }
+    }
+</script>
+
 </body>
 </html>
