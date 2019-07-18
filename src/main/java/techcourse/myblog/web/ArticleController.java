@@ -48,20 +48,22 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String searchArticle(@PathVariable Long articleId, Model model) {
-        Article article = articleRepository
-                .findById(articleId)
-                .orElseThrow(CouldNotFindArticleIdException::new);
-
-        model.addAttribute("article", article);
-        return "article";
+        try {
+            Article article = articleRepository.findById(articleId)
+                    .orElseThrow(CouldNotFindArticleIdException::new);
+            model.addAttribute("article", article);
+            return "article";
+        } catch (CouldNotFindArticleIdException e) {
+            return "redirect:/";
+        }
     }
 
     @PutMapping("/articles/{articleId}")
     public String editArticle(@PathVariable Long articleId, ArticleDto articleDto) {
-        articleRepository.findById(articleId)
-                .orElseThrow(CouldNotFindArticleIdException::new)
-                .updateArticle(articleDto);
-
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(CouldNotFindArticleIdException::new);
+        article.updateArticle(articleDto);
+        articleRepository.save(article);
         return "redirect:/articles/" + articleId;
     }
 
