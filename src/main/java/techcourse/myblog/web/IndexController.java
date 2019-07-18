@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import techcourse.myblog.model.ArticleRepository;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class IndexController {
     private final ArticleRepository articleRepository;
@@ -16,8 +18,10 @@ public class IndexController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, HttpSession httpSession) {
         model.addAttribute("articles", articleRepository.findAll());
+        model.addAttribute("user", httpSession.getAttribute("user"));
+
         return "index";
     }
 }

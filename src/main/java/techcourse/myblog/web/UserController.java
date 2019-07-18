@@ -66,7 +66,7 @@ public class UserController {
             return "login";
         }
 
-        if (loginUser.get().matchPassword(userDto.toUser())) {
+        if (!loginUser.get().matchPassword(userDto.toUser())) {
             bindingResult.addError(new FieldError("userDto", "password", "비밀번호를 확인해주세요."));
             return "login";
         }
