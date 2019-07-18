@@ -21,7 +21,8 @@
                     <li class="user-profile">
                         <a href="/login">
                             <div class="user-info login-btn pointer mrg-right-10">
-                                <span class="name pdd-right-5 text-white">Login</span>
+                                <span class="name pdd-right-5 text-white"
+                                      th:text ="${session.user == null} ? 'Login' : ${session.user.name}"></span>
                             </div>
                         </a>
                     </li>

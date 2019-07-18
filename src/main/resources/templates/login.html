@@ -38,11 +38,11 @@
                                                         </div>
                                                         <form method="post" action="/login">
                                                             <div class="form-group">
-                                                                <input type="email" class="form-control"
+                                                                <input name="email" type="email" class="form-control"
                                                                        placeholder="Id">
                                                             </div>
                                                             <div class="form-group">
-                                                                <input type="password" class="form-control"
+                                                                <input name="password" type="password" class="form-control"
                                                                        placeholder="Password">
                                                             </div>
                                                             <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
@@ -73,5 +73,11 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" th:inline="javascript">
+        const errorMessage = [[${errorMessage}]];
+        if (errorMessage !== null) {
+            alert(errorMessage);
+        }
+    </script>
 </th:block>
 </html>

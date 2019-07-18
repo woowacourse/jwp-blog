@@ -7,6 +7,8 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicatedUserException;
+import techcourse.myblog.exception.NotFoundUserException;
+import techcourse.myblog.exception.NotMatchPasswordException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,5 +32,15 @@ public class UserService {
         return users.stream()
                 .map(user -> modelMapper.map(user, UserDto.Response.class))
                 .collect(Collectors.toList());
+    }
+
+    public UserDto.Response login(UserDto.Login userDto) {
+        User user = userRepository.findByEmail(userDto.getEmail()).orElseThrow(NotFoundUserException::new);
+
+        if (!user.getPassword().equals(userDto.getPassword())) {
+            throw new NotMatchPasswordException();
+        }
+
+        return modelMapper.map(user, UserDto.Response.class);
     }
 }

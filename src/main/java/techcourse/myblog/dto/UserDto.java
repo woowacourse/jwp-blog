@@ -35,4 +35,10 @@ public class UserDto {
         private String email;
         private String name;
     }
+
+    @Data
+    public static class Login {
+        private String email;
+        private String password;
+    }
 }
