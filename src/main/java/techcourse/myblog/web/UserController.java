@@ -2,6 +2,7 @@ package techcourse.myblog.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,8 +32,12 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ModelAndView registerUsers(@Valid UserRequestDto userRequestDto) {
+    public ModelAndView registerUsers(@Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
+        if (bindingResult.hasErrors()) {
+            modelAndView.setView(new RedirectView("signup"));
+            return modelAndView;
+        }
         modelAndView.setView(new RedirectView("login"));
         userService.save(userRequestDto);
         return modelAndView;
