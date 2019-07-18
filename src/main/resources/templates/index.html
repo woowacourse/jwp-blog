@@ -22,9 +22,9 @@
             </ul>
             <ul class="nav-right">
                 <li class="user-profile">
-                    <a href="/login">
+                    <a th:href="${email} ? '/mypage' : '/login'">
                         <div class="user-info login-btn pointer mrg-right-10">
-                            <span class="name pdd-right-5 text-white">Login</span>
+                            <span th:text="${email} ? ${email} : 'Login'" class="name pdd-right-5 text-white"></span>
                         </div>
                     </a>
                 </li>

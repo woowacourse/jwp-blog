@@ -7,6 +7,7 @@ import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,4 +32,24 @@ public class UserService {
 
         return userDtos;
     }
+
+    @Transactional(readOnly = false)
+    public UserDto findById(String email) {
+        System.out.println(email);
+        System.out.println(userRepository.findById(email));
+        return new UserDto(userRepository.findById(email)
+                .orElseThrow(IllegalArgumentException::new));
+    }
+
+    @Transactional
+    public boolean login(@Valid UserDto userDto) {
+        String password1 = userDto.getPassword();
+        System.out.println(userDto.getEmail());
+        System.out.println(userDto.getPassword());
+        System.out.println(userDto.getName());
+        String password2 = findById(userDto.getEmail()).getPassword();
+
+        return password1.equals(password2);
+    }
+
 }

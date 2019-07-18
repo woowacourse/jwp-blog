@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.CategoryRepository;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class MainController {
     private final ArticleRepository articleRepository;
@@ -17,8 +19,12 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String readHomePage(Model model) {
+    public String readHomePage(HttpSession httpSession, Model model) {
         model.addAttribute("articles", articleRepository.findAll());
+
+        if (httpSession.getAttribute("email") != null) {
+            model.addAttribute("email", httpSession.getAttribute("email"));
+        }
 
         return "/index";
     }

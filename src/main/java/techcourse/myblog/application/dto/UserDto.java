@@ -19,13 +19,28 @@ public class UserDto {
     @Pattern(regexp = "^([a-zA-Z0-9!@#$%^&*]{8,})$", message = "8자리 이상의 글자, 숫자, 특수문자를 입력해야합니다.")
     private String password;
 
+    public UserDto(String email, String name, String password) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+    }
+
+    public UserDto() {
+    }
+
     public UserDto(User user) {
         this(user.getEmail(), user.getName(), user.getPassword());
     }
 
-    public UserDto(String email, String name, String password) {
+    public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
     }
 

@@ -9,6 +9,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.UserService;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -21,9 +22,9 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public RedirectView createUser(@Valid UserDto userDto) {
+    public RedirectView createUser(@Valid UserDto user) {
         RedirectView redirectView = new RedirectView("/login");
-        userService.save(userDto);
+        userService.save(user);
         return redirectView;
     }
 
@@ -32,5 +33,19 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView("user-list");
         modelAndView.addObject("users", userService.findAll());
         return modelAndView;
+    }
+
+    @PostMapping("/login")
+    public RedirectView login(HttpSession httpSession, UserDto user) {
+        RedirectView redirectView = new RedirectView();
+        if (userService.login(user)) {
+            redirectView.setUrl("/");
+            httpSession.setAttribute("email", user.getEmail());
+            httpSession.setMaxInactiveInterval(600);
+            return redirectView;
+        }
+
+        redirectView.setUrl("/login");
+        return redirectView;
     }
 }
