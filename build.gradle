@@ -34,4 +34,6 @@ dependencies {
 	implementation 'com.h2database:h2'
 
 	compile 'mysql:mysql-connector-java'
+
+	implementation 'org.projectlombok:lombok:1.18.8'
 }
