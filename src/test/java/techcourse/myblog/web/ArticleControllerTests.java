@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
@@ -80,7 +81,21 @@ public class ArticleControllerTests {
 
     @Test
     void 게시글_조회() {
-        webTestClient.get().uri("/articles/1")
+        title = "title";
+        coverUrl = "";
+        contents = "contents";
+
+        EntityExchangeResult result = webTestClient.post().uri("/articles")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody().returnResult();
+
+        webTestClient.get().uri(result.getResponseHeaders().getLocation())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -94,11 +109,22 @@ public class ArticleControllerTests {
 
     @Test
     void 게시글_수정() {
+
+        EntityExchangeResult result = webTestClient.post().uri("/articles")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody().returnResult();
+
         String title = "newTitle";
         String coverUrl = "";
         String contents = "contents";
 
-        webTestClient.put().uri("/articles/1")
+        webTestClient.put().uri(result.getResponseHeaders().getLocation())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", title)
@@ -110,7 +136,7 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     webTestClient.get()
-                            .uri("/articles/1")
+                            .uri(response.getResponseHeaders().getLocation())
                             .exchange()
                             .expectStatus().isOk()
                             .expectBody()
@@ -132,7 +158,7 @@ public class ArticleControllerTests {
 
         webTestClient.get().uri("/articles/1")
                 .exchange()
-                .expectStatus().is4xxClientError();
+                .expectStatus().isNoContent();
     }
 
     @Test

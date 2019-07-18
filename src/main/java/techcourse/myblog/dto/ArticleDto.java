@@ -39,14 +39,13 @@ public class ArticleDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ArticleDto that = (ArticleDto) o;
-        return id == that.id &&
-                Objects.equals(title, that.title) &&
+        return Objects.equals(title, that.title) &&
                 Objects.equals(coverUrl, that.coverUrl) &&
                 Objects.equals(contents, that.contents);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents);
+        return Objects.hash(title, coverUrl, contents);
     }
 }

@@ -2,10 +2,13 @@ package techcourse.myblog.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.exception.ArticleDtoNotFoundException;
+import techcourse.myblog.exception.ArticleNotFoundException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,23 +16,28 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleServiceTest {
     private ArticleService service;
     private ArticleAssembler assembler;
     private ArticleDto articleDto;
-    private ArticleDto persistArticleDto;
+    private int id;
+
+    @Autowired
+    private ArticleRepository repository;
 
     @BeforeEach
     void setUp() {
-        service = new ArticleService(new ArticleRepository());
+        service = new ArticleService(repository);
         assembler = new ArticleAssembler();
-        articleDto = assembler.convertToDto(new Article(1, "title", "", "content"));
-        persistArticleDto = service.save(articleDto);
+        articleDto = new ArticleDto("title", "", "content");
+        id = service.save(articleDto);
     }
 
+    // TODO: 2019-07-18 test 한번에 통과하기
     @Test
     void 게시글_생성_확인() {
-        assertThat(persistArticleDto).isEqualTo(articleDto);
+        assertThat(service.findById(id)).isEqualTo(articleDto);
     }
 
     @Test
@@ -40,22 +48,23 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_조회_확인() {
-        ArticleDto retrieveArticleDto = service.findById(persistArticleDto.getId());
-        assertThat(retrieveArticleDto).isEqualTo(persistArticleDto);
+        ArticleDto retrieveArticleDto = service.findById(id);
+        assertThat(retrieveArticleDto).isEqualTo(service.findById(id));
     }
 
     @Test
     void 모든_게시글_조회_확인() {
         List<ArticleDto> articleDtos = service.findAll();
-        assertThat(articleDtos).isEqualTo(Arrays.asList(persistArticleDto));
+        assertThat(articleDtos).isEqualTo(Arrays.asList(service.findById(id)));
     }
 
     @Test
     void 게시글_수정_확인() {
         ArticleDto updatedArticleDto = assembler.convertToDto(
-                new Article(persistArticleDto.getId(), "newTitle", "", "newContent"));
-        service.update(persistArticleDto.getId(), updatedArticleDto);
-        assertThat(service.findById(persistArticleDto.getId())).isEqualTo(updatedArticleDto);
+                new Article("newTitle", "", "newContent"));
+        service.update(1, updatedArticleDto);
+        ArticleDto retrievedArticleDto = service.findById(1);
+        assertThat(retrievedArticleDto).isEqualTo(updatedArticleDto);
     }
 
     @Test
@@ -66,8 +75,8 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_삭제_확인() {
-        service.delete(persistArticleDto.getId());
-        List<ArticleDto> articleDtos = service.findAll();
-        assertThat(articleDtos.contains(persistArticleDto)).isFalse();
+        service.delete(1);
+        assertThatExceptionOfType(ArticleNotFoundException.class)
+                .isThrownBy(() -> service.findById(id));
     }
 }
