@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.test.web.reactive.server.HeaderAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -43,7 +44,6 @@ public class UserControllerTest {
     @DisplayName("회원가입_테스트")
     public void addUserTest() {
         User user = new User(1L, NAME, EMAIL, PASSWORD);
-
         addUser(user);
     }
 
@@ -214,6 +214,13 @@ public class UserControllerTest {
                     User check = userRepository.findByEmail(user.getEmail()).orElseThrow(IllegalArgumentException::new);
                     assertThat(uri).contains("/users/edit/" + check.getId());
                 });
+    }
+
+    @Test
+    public void 회원_탈퇴() {
+        User user = new User(NAME, EMAIL, PASSWORD);
+        addUser(user);
+        webTestClient.delete().uri("/users");
     }
 
     @Test

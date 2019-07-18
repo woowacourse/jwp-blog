@@ -3,10 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
@@ -14,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
+    private static final String SESSION_NAME = "userInfo";
 
     private final UserRepository userRepository;
 
@@ -62,6 +60,7 @@ public class UserController {
 
     @PostMapping("/users")
     public String saveUser(final UserDto.SignUpUserInfo signUpUserInfo, final Model model) {
+        //TODO 예외처리
         User user = signUpUserInfo.toUser();
         if (containsUser(user.getEmail())) {
             model.addAttribute("errorMessage", "이메일이 중복됩니다");
@@ -73,26 +72,35 @@ public class UserController {
 
     //TODO IllegalArgumentException -> CustomException으로 변화
     @GetMapping("/users/{id}")
-    public String userPage(@PathVariable Long id, final Model model) {
+    public String myPage(@PathVariable Long id, final Model model) {
         User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         model.addAttribute("user", user);
         return "mypage";
     }
 
     @GetMapping("/users/edit/{id}")
-    public String userEditPage(@PathVariable Long id, final Model model) {
+    public String editPage(@PathVariable Long id, final Model model) {
         User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         model.addAttribute("user", user);
         return "mypage-edit";
     }
 
     @PutMapping("/users/edit")
-    public String update(final User user) {
+    public String update(final User user, final HttpSession session) {
         User userParam = userRepository.findByEmail(user.getEmail()).orElseThrow(IllegalArgumentException::new);
-        userParam.setName(user.getName());
+        userParam.setName(user.getName());          //이름 변경
+        //TODO Setter -> update or Dto
         userRepository.save(userParam);
         System.out.println(userParam);
+        session.setAttribute(SESSION_NAME, UserDto.SessionUserInfo.toDto(userParam));
+
         return "redirect:/users/edit/" + userParam.getId() ;
+    }
+
+    @DeleteMapping("/users")
+    public String delete(final User user) {
+        System.out.println(user);
+        return "/index";
     }
 
     private boolean canLogin(final String email, final String password) {
