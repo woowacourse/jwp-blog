@@ -8,6 +8,8 @@ import techcourse.myblog.repository.UserRepository;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static techcourse.myblog.service.SignUpException.*;
+
 @Service
 public class UserService {
     private static final int MIN_NAME_LENGTH = 2;
@@ -27,37 +29,48 @@ public class UserService {
     }
 
     public void save(UserDto userDto) {
+        validate(userDto);
+        userRepository.save(userDto.toEntity());
+    }
+
+    private void validate(UserDto userDto) {
         checkDuplicatedEmail(userDto.getEmail());
         checkValidNameLength(userDto.getName());
         checkValidName(userDto.getName());
+        checkPasswordConfirm(userDto);
         checkValidPasswordLength(userDto.getPassword());
         checkValidPassword(userDto.getPassword());
-        userRepository.save(userDto.toEntity());
     }
 
     private void checkDuplicatedEmail(String email) {
         User user = userRepository.findByEmail(email);
         if (user != null) {
-            throw new SignUpException(SignUpException.EMAIL_DUPLICATION_MESSAGE);
+            throw new SignUpException(EMAIL_DUPLICATION_MESSAGE);
         }
     }
 
     private void checkValidNameLength(String name) {
         int nameLength = name.length();
         if (nameLength < MIN_NAME_LENGTH || nameLength > MAX_NAME_LENGTH) {
-            throw new SignUpException(SignUpException.INVALID_NAME_LENGTH_MESSAGE);
+            throw new SignUpException(INVALID_NAME_LENGTH_MESSAGE);
         }
     }
 
     private void checkValidName(String name) {
         if (!matchRegex(name, KOREAN_ENGLISH_REGEX)) {
-            throw new SignUpException(SignUpException.NAME_INCLUDE_INVALID_CHARACTERS_MESSAGE);
+            throw new SignUpException(NAME_INCLUDE_INVALID_CHARACTERS_MESSAGE);
+        }
+    }
+
+    private void checkPasswordConfirm(UserDto userDto) {
+        if (!userDto.confirmPassword()) {
+            throw new SignUpException(PASSWORD_CONFIRM_FAIL_MESSAGE);
         }
     }
 
     private void checkValidPasswordLength(String password) {
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new SignUpException(SignUpException.INVALID_PASSWORD_LENGTH_MESSAGE);
+            throw new SignUpException(INVALID_PASSWORD_LENGTH_MESSAGE);
         }
     }
 
@@ -67,7 +80,7 @@ public class UserService {
                 || !matchRegex(password, NUMBER_REGEX)
                 || !matchRegex(password, SPECIAL_CHARACTER_REGEX)
                 || matchRegex(password, KOREAN_REGEX)) {
-            throw new SignUpException(SignUpException.INVALID_PASSWORD_MESSAGE);
+            throw new SignUpException(INVALID_PASSWORD_MESSAGE);
         }
     }
 

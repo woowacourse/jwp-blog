@@ -18,8 +18,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("이메일이 중복되는 경우에 예외를 던져준다.")
     void checkEmailDuplication() {
-        UserDto userDto1 = new UserDto("name", "email@woowa.com", VALID_PASSWORD);
-        UserDto userDto2 = new UserDto("name", "email@woowa.com", VALID_PASSWORD);
+        UserDto userDto1 = new UserDto("name", "email@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
+        UserDto userDto2 = new UserDto("name", "email@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
 
         userService.save(userDto1);
 
@@ -30,7 +30,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("이름이 2자 미만인 경우에 예외를 던져준다.")
     void underValidNameLength() {
-        UserDto userDto = new UserDto("a", "email1@woowa.com", VALID_PASSWORD);
+        UserDto userDto = new UserDto("a", "email1@woowa.com",
+                VALID_PASSWORD, VALID_PASSWORD);
 
         assertThatThrownBy(() -> userService.save(userDto))
                 .isInstanceOf(SignUpException.class);
@@ -39,7 +40,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("이름이 10자 초과인 경우에 예외를 던져준다.")
     void exceedValidNameLength() {
-        UserDto userDto = new UserDto("abcdefghijk", "email2@woowa.com", VALID_PASSWORD);
+        UserDto userDto = new UserDto("abcdefghijk", "email2@woowa.com",
+                VALID_PASSWORD, VALID_PASSWORD);
 
         assertThatThrownBy(() -> userService.save(userDto))
                 .isInstanceOf(SignUpException.class);
@@ -48,7 +50,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("이름이 숫자를 포함하는 경우에 예외를 던져준다.")
     void includeNumberInName() {
-        UserDto userDto = new UserDto("abcde1", "email3@woowa.com", VALID_PASSWORD);
+        UserDto userDto = new UserDto("abcde1", "email3@woowa.com",
+                VALID_PASSWORD, VALID_PASSWORD);
 
         assertThatThrownBy(() -> userService.save(userDto))
                 .isInstanceOf(SignUpException.class);
@@ -57,7 +60,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("이름이 특수문자를 포함하는 경우에 예외를 던져준다.")
     void includeSpecialCharacterInName() {
-        UserDto userDto = new UserDto("abcde!@", "email4@woowa.com", VALID_PASSWORD);
+        UserDto userDto = new UserDto("abcde!@", "email4@woowa.com",
+                VALID_PASSWORD, VALID_PASSWORD);
 
         assertThatThrownBy(() -> userService.save(userDto))
                 .isInstanceOf(SignUpException.class);
@@ -66,7 +70,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("password가 8자 미만인 경우 예외를 던져준다.")
     void underValidPasswordLength() {
-        UserDto userDto = new UserDto("abcde", "email5@woowa.com", "passwor");
+        UserDto userDto = new UserDto("abcde", "email5@woowa.com",
+                "passwor", "passwor");
 
         assertThatThrownBy(() -> userService.save(userDto))
                 .isInstanceOf(SignUpException.class);
@@ -75,7 +80,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("password에 소문자가 포함되지 않으면 예외를 던져준다.")
     void checkUndercaseInPassword() {
-        UserDto userDto = new UserDto("abcde", "email6@woowa.com", "PASSWORD1!");
+        UserDto userDto = new UserDto("abcde", "email6@woowa.com",
+                "PASSWORD1!", "PASSWORD1!");
 
         assertThatThrownBy(() -> userService.save(userDto))
                 .isInstanceOf(SignUpException.class);
@@ -84,7 +90,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("password에 대문자가 포함되지 않으면 예외를 던져준다.")
     void checkUppercaseInPassword() {
-        UserDto userDto = new UserDto("abcde", "email7@woowa.com", "password1!");
+        UserDto userDto = new UserDto("abcde", "email7@woowa.com",
+                "password1!", "password1!");
 
         assertThatThrownBy(() -> userService.save(userDto))
                 .isInstanceOf(SignUpException.class);
@@ -93,7 +100,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("password에 숫자가 포함되지 않으면 예외를 던져준다.")
     void checkNumberInPassword() {
-        UserDto userDto = new UserDto("abcde", "email8@woowa.com", "passWORD!");
+        UserDto userDto = new UserDto("abcde", "email8@woowa.com",
+                "passWORD!", "passWORD!");
 
         assertThatThrownBy(() -> userService.save(userDto))
                 .isInstanceOf(SignUpException.class);
@@ -102,7 +110,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("password에 특수문자가 포함되지 않으면 예외를 던져준다.")
     void checkSpecialCharacterInPassword() {
-        UserDto userDto = new UserDto("abcde", "email9@woowa.com", "passWORD1");
+        UserDto userDto = new UserDto("abcde", "email9@woowa.com",
+                "passWORD1", "passWORD1");
 
         assertThatThrownBy(() -> userService.save(userDto))
                 .isInstanceOf(SignUpException.class);
@@ -111,7 +120,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("password에 한글이 포함되면 예외를 던져준다.")
     void checkPasswordDoesNotContainsKorean() {
-        UserDto userDto = new UserDto("abcde", "email10@woowa.com", "passWORD가1!");
+        UserDto userDto = new UserDto("abcde", "email10@woowa.com",
+                "passWORD가1!", "passWORD가1!");
 
         assertThatThrownBy(() -> userService.save(userDto))
                 .isInstanceOf(SignUpException.class);

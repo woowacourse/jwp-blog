@@ -47,6 +47,7 @@ class UserControllerTest {
         String name = "hibri";
         String email = "test1@woowa.com";
         String password = VALID_PASSWORD;
+        String passwordConfirm = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -54,7 +55,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password))
+                        .with("password", password)
+                        .with("passwordConfirm", passwordConfirm))
                 .exchange()
                 .expectStatus().isFound()
                 .expectBody()
@@ -71,6 +73,7 @@ class UserControllerTest {
         String name = "Deock";
         String email = "test2@woowa.com";
         String password = VALID_PASSWORD;
+        String passwordConfirm = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -78,7 +81,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password))
+                        .with("password", password)
+                        .with("passwordConfirm", passwordConfirm))
                 .exchange()
                 .expectStatus().isFound();
 
@@ -88,7 +92,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password))
+                        .with("password", password)
+                        .with("passwordConfirm", passwordConfirm))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -104,6 +109,7 @@ class UserControllerTest {
         String name = "a";
         String email = "test3@woowa.com";
         String password = VALID_PASSWORD;
+        String passwordConfirm = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -111,7 +117,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password))
+                        .with("password", password)
+                        .with("passwordConfirm", passwordConfirm))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -127,6 +134,7 @@ class UserControllerTest {
         String name = "abcdefghijk";
         String email = "test4@woowa.com";
         String password = VALID_PASSWORD;
+        String passwordConfirm = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -134,7 +142,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password))
+                        .with("password", password)
+                        .with("passwordConfirm", passwordConfirm))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -150,6 +159,7 @@ class UserControllerTest {
         String name = "afghij1";
         String email = "test4@woowa.com";
         String password = VALID_PASSWORD;
+        String passwordConfirm = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -157,7 +167,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password))
+                        .with("password", password)
+                        .with("passwordConfirm", passwordConfirm))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -173,6 +184,7 @@ class UserControllerTest {
         String name = "name";
         String email = "test5@woowa.com";
         String password = "passwor";
+        String passwordConfirm = "passwor";
 
         webTestClient.post()
                 .uri("/users")
@@ -180,7 +192,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password))
+                        .with("password", password)
+                        .with("passwordConfirm", passwordConfirm))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -196,6 +209,7 @@ class UserControllerTest {
         String name = "name";
         String email = "test5@woowa.com";
         String password = "wrong password";
+        String passwordConfirm = "wrong password";
 
         webTestClient.post()
                 .uri("/users")
@@ -203,13 +217,39 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password))
+                        .with("password", password)
+                        .with("passwordConfirm", passwordConfirm))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
                     assertThat(body).contains(SignUpException.INVALID_PASSWORD_MESSAGE);
+                });
+    }
+
+    @Test
+    @DisplayName("비밀번호 확인과 비밀번호가 다른 경우 에러 메시지를 담은 페이지를 되돌려준다.")
+    void confirmPassword() {
+        String name = "name";
+        String email = "test5@woowa.com";
+        String password = VALID_PASSWORD;
+        String passwordConfirm = VALID_PASSWORD + "diff";
+
+        webTestClient.post()
+                .uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password)
+                        .with("passwordConfirm", passwordConfirm))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body).contains(SignUpException.PASSWORD_CONFIRM_FAIL_MESSAGE);
                 });
     }
 }

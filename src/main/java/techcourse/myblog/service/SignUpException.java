@@ -7,6 +7,7 @@ public class SignUpException extends RuntimeException {
             "Name can't include in special characters or Number!";
     public static final String INVALID_PASSWORD_LENGTH_MESSAGE = "Invalid password length!(8~)";
     public static final String INVALID_PASSWORD_MESSAGE = "Invalid password!";
+    public static final String PASSWORD_CONFIRM_FAIL_MESSAGE = "Password confirm fail!";
 
     public SignUpException(String errorMessage) {
         super(errorMessage);
