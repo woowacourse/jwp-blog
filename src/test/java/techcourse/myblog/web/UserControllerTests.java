@@ -161,6 +161,11 @@ class UserControllerTests {
                 });
     }
 
+    @Test
+    void 로그아웃() {
+        httpRequestAndExpectStatus(GET, "/logout", FOUND);
+    }
+
     private WebTestClient.ResponseSpec httpRequestAndExpectStatus(HttpMethod method, String uri, HttpStatus status) {
         return httpRequestAndExpectStatus(method, uri, null, status);
     }
