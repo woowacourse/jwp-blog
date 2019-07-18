@@ -35,6 +35,7 @@ public class UserController {
     public ModelAndView registerUsers(@Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getAllErrors().get(0).getDefaultMessage());
             modelAndView.setView(new RedirectView("signup"));
             return modelAndView;
         }
