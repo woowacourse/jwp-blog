@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.service.UserService;
+
+import javax.validation.Valid;
 
 @Controller
 public class UserController {
@@ -29,10 +31,10 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ModelAndView registerUsers(UserDto userDto) {
-        userService.save(userDto);
+    public ModelAndView registerUsers(@Valid UserRequestDto userRequestDto) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("login"));
+        userService.save(userRequestDto);
         return modelAndView;
     }
 }
