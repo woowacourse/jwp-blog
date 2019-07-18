@@ -9,7 +9,6 @@ import java.util.Objects;
 
 @Entity
 public class Article {
-    private static long NEXT_ID = 1;
 
     @Id
     @GeneratedValue
@@ -18,7 +17,7 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public static Article of(long id, String title, String coverUrl, String contents) {
+    public static Article of(Long id, String title, String coverUrl, String contents) {
         Article newArticle = new Article();
         newArticle.id = id;
         newArticle.title = title;
@@ -28,12 +27,11 @@ public class Article {
     }
 
     public static Article of(String title, String coverUrl, String content) {
-        return of(NEXT_ID++, title, coverUrl, content);
+        return of(null, title, coverUrl, content);
     }
 
     public static Article from(ArticleRequestDto dto) {
         Article newArticle = new Article();
-        newArticle.id = NEXT_ID++;
         newArticle.title = dto.getTitle();
         newArticle.coverUrl = dto.getCoverUrl();
         newArticle.contents = dto.getContents();
