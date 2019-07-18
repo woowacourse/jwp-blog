@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -21,13 +22,13 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String writeArticle(Article article, Model model) {
-        articleRepository.save(article);
-        model.addAttribute("article", articleRepository.getLatestArticle());
+        Article newArticle = articleRepository.save(article);
+        model.addAttribute("article", newArticle);
         return "article";
     }
 
     @GetMapping("/")
-    public String showArticles(Model model) {
+    public String showArticles(Model model, HttpSession httpSession) {
         List<Article> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
@@ -35,26 +36,29 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}/edit")
     public String showArticleEditingPage(@PathVariable int articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId));
+        model.addAttribute("article",
+                articleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("잘못된 접근입니다")));
         return "article-edit";
     }
 
     @GetMapping("/articles/{articleId}")
     public String showArticleById(@PathVariable int articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId));
+        model.addAttribute("article",
+                articleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("잘못된 접근입니다.")));
         return "article";
     }
 
     @PutMapping("/articles/{articleId}")
     public String updateArticle(@PathVariable int articleId, Article article, Model model) {
-        articleRepository.update(articleId, article);
-        model.addAttribute("article", articleRepository.findById(articleId));
+        article.setId(articleId);
+        Article newArticle = articleRepository.save(article);
+        model.addAttribute("article", newArticle);
         return "article";
     }
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable int articleId) {
-        articleRepository.delete(articleId);
+        articleRepository.deleteById(articleId);
         return "redirect:/";
     }
 }
