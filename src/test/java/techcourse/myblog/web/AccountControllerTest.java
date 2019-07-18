@@ -83,7 +83,7 @@ public class AccountControllerTest {
         testSignupProcess(testName, testPassword, wrongEmail)
                 .expectStatus()
                 .isOk()
-                ;
+        ;
     }
 
     @Test
@@ -152,6 +152,17 @@ public class AccountControllerTest {
     void failSigupTest_Pw7자리() {
         String wrongPw = "abcFG1!";
         testSignupProcess(testName, wrongPw, testEmail)
+                .expectStatus()
+                .isOk();
+    }
+
+    @Test
+    void 이메일_중복_확인() {
+        testSignupProcess(testName, testPassword, testEmail)
+                .expectStatus()
+                .isFound();
+
+        testSignupProcess(testName, testPassword, testEmail)
                 .expectStatus()
                 .isOk();
     }
