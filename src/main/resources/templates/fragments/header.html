@@ -14,9 +14,14 @@
         </ul>
         <ul class="nav-right">
             <li class="user-profile">
-                <a href="/users/login">
+                <a th:if="${user != null}" href="/" >
                     <div class="user-info login-btn pointer mrg-right-10">
-                        <span class="name pdd-right-5 text-white">Login</span>
+                        <span class="name pdd-right-5 text-white" th:text="${user.userName}">Name</span>
+                    </div>
+                </a>
+                <a th:unless="${user != null}" href="/users/login" >
+                    <div class="user-info login-btn pointer mrg-right-10">
+                        <span th:unless="${user != null}" class="name pdd-right-5 text-white">Login</span>
                     </div>
                 </a>
             </li>
