@@ -29,14 +29,23 @@ public class UsersController {
 
 	@PostMapping("/users")
 	public String signUp(@Valid UserDto newUser, BindingResult bindingResult, Model model) {
-		if(bindingResult.hasErrors()) {
+		if (bindingResult.hasErrors()) {
 			List<FieldError> errors = bindingResult.getFieldErrors();
-			model.addAttribute("errors", errors.get(0).getField()+"입력 오류 입니다.");
+			model.addAttribute("errors", errors.get(0).getField() + "입력 오류 입니다.");
 			return "/signup";
 		}
-		System.out.println(newUser);
+		if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
+			model.addAttribute("errors", "이미 존재하는 email입니다.");
+			return "/signup";
+		}
+
 		User user = new User(newUser);
 		userRepository.save(user);
 		return "redirect:/login";
+	}
+
+	@GetMapping("/login")
+	public String login() {
+		return "login";
 	}
 }
