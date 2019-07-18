@@ -1,10 +1,10 @@
 package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.UserService;
 
 @Controller
@@ -29,5 +29,11 @@ public class UserController {
     public String enrollUser(UserDto userDto) {
         userService.createUser(userDto);
         return "redirect:/login";
+    }
+
+    @GetMapping("/users")
+    public String showUsers(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "user-list";
     }
 }

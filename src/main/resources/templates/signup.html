@@ -37,7 +37,7 @@
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
-                                                    <form action="/users" method="post">
+                                                    <form action="/users" method="post" onsubmit="return enrollUser();">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
                                                             <input type="text" name="name" class="form-control" pattern="^[a-zA-Zㄱ-ㅎ가-힣]*$" minlength="2" maxlength="10" required>
@@ -99,6 +99,24 @@
 
     password.onchange = validatePassword;
     confirm_password.onkeyup = validatePassword;
+</script>
+<script>
+    // TODO: 중복된 이메일일 경우, 페이지가 안넘어가도록 수정해야 함
+    /*function enrollUser() {
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/users');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) return false;
+            if (xhr.status === 200) {
+            } else {
+                alert("이미 등록되어 있는 이메일입니다.");
+                console.log('err' + xhr.status);
+                return false;
+            }
+        };
+        xhr.send();
+    }*/
 </script>
 </body>
 </html>
