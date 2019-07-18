@@ -18,8 +18,7 @@ import techcourse.myblog.domain.UserRepository;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -27,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class UserControllerTest {
     private static final String NAME = "yusi";
     private static final String EMAIL = "test@naver.com";
-    private static final String PASSWORD = "12345b@aA";
+    private static final String PASSWORD = "12345abc";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -74,10 +73,13 @@ public class UserControllerTest {
 
         User other = new User(2L, "other", EMAIL, PASSWORD);
 
-        addUser(other, response -> {
-            String uri = response.getResponseHeaders().get("Location").get(0);
-            assertTrue(uri.contains("/signup"));
-        });
+        webTestClient.post().uri("/users")
+                .body(BodyInserters
+                        .fromFormData("name", other.getName())
+                        .with("email", other.getEmail())
+                        .with("password", other.getPassword()))
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @Test
@@ -127,7 +129,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void 로그인_실패() {
+    public void 로그인_실패_이메일이_없을때() {
         webTestClient.post().uri("/login")
                 .body(BodyInserters
                         .fromFormData("email", EMAIL)
@@ -135,11 +137,39 @@ public class UserControllerTest {
                         .with("password", PASSWORD)
                 )
                 .exchange()
-                .expectStatus().isFound()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    public void 로그인_실패_비밀번호가_다를때() {
+        User user = new User(1L, NAME, EMAIL, PASSWORD);
+
+        addUser(user, response -> {
+            String uri = response.getResponseHeaders().get("Location").get(0);
+            assertTrue(uri.contains("/login"));
+        });
+
+        webTestClient.post().uri("/login")
+                .body(BodyInserters
+                        .fromFormData("email", EMAIL)
+                        .with("name", NAME)
+                        .with("password", "12345678")
+                )
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    public void 로그아웃_테스트() {
+        로그인_성공();
+
+        webTestClient.get().uri("/logout")
+                .exchange()
+                .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
-                    String uri = response.getResponseHeaders().get("Location").get(0);
-                    assertThat(uri).contains("/login");
+                   String body = new String(response.getResponseBody());
+                   assertFalse(body.contains("로그아웃"));
                 });
     }
 

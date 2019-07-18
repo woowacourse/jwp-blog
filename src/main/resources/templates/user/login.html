@@ -38,11 +38,12 @@
                                                     </div>
                                                     <form action="/login" method="post">
                                                         <div class="form-group">
-                                                            <input type="email" name="email" class="form-control" placeholder="Id">
+                                                            <input type="email" name="email" class="form-control"
+                                                                   id="user-email-input" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <input type="password" name="password" class="form-control"
-                                                                   placeholder="Password">
+                                                                   id="user-password-input" placeholder="Password" required>
                                                         </div>
                                                         <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
                                                             <input id="agreement" name="agreement" type="checkbox">
@@ -85,5 +86,21 @@
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 <script src="../../static/js/index.js"></script>
+<script>
+    let message = "[[ ((${errorMessage} != null)? ${errorMessage} : '') ]]";
+
+    function alertMessage() {
+        if (message !== '') {
+            const input = document.getElementById('user-password-input');
+            const errorElement = document.createElement('div');
+            errorElement.setAttribute('class', 'alert alert-primary');
+            errorElement.setAttribute('role', 'alert');
+            errorElement.setAttribute('id', 'error-message');
+            errorElement.innerHTML = message;
+            input.insertAdjacentElement('afterend', errorElement);
+        }
+    }
+    alertMessage();
+</script>
 </body>
 </html>

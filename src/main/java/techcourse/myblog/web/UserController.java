@@ -27,14 +27,24 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(final UserDto.LoginInfo loginInfo, final HttpSession session) {
-        if (containsUser(loginInfo.getEmail())) {
-            User user = userRepository.findByEmail(loginInfo.getEmail());
+    public String login(final UserDto.LoginInfo loginInfo, final HttpSession session, final Model model) {
+        //TODO 메시지 보내는 방식으로 고치기
+        if (canLogin(loginInfo.getEmail(), loginInfo.getPassword())) {
+            // TODO 중복 get 제거
+            User user = userRepository.findByEmail(loginInfo.getEmail()).orElseThrow(IllegalArgumentException::new);
             UserDto.SessionUserInfo sessionUserInfo = UserDto.SessionUserInfo.toDto(user);
             session.setAttribute("userInfo", sessionUserInfo);
             return "/index";
         }
-        return "redirect:/login";
+        model.addAttribute("errorMessage", "비밀번호를 올바르게 입력하시거나 회원가입을 해주세요");
+
+        return "/user/login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(final HttpSession session) {
+        session.removeAttribute("userInfo");
+        return "/index";
     }
 
     @GetMapping("/signup")
@@ -49,24 +59,12 @@ public class UserController {
         return "/user/user-list";
     }
 
-
-//    @PostMapping("/users")
-//    public String saveUser(final User user, final Model model) {
-////        User user = signUpUserInfo.toUser();
-//        if (containsUser(user.getEmail())) {
-//            model.addAttribute("errorMessage", "이메일이 중복됩니다");
-//            return "redirect:/signup";
-//        }
-//        userRepository.save(user);
-//        return "redirect:/login";
-//    }
-
     @PostMapping("/users")
-    public String saveUser1(final UserDto.SignUpUserInfo signUpUserInfo, final Model model) {
+    public String saveUser(final UserDto.SignUpUserInfo signUpUserInfo, final Model model) {
         User user = signUpUserInfo.toUser();
         if (containsUser(user.getEmail())) {
             model.addAttribute("errorMessage", "이메일이 중복됩니다");
-            return "redirect:/signup";
+            return "/user/signup";
         }
         userRepository.save(user);
         return "redirect:/login";
@@ -78,6 +76,15 @@ public class UserController {
         User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         model.addAttribute("user", user);
         return "/mypage";
+    }
+
+    private boolean canLogin(final String email, final String password) {
+        try {
+            User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+            return user.matchPassword(password);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
     private boolean containsUser(final String email) {
