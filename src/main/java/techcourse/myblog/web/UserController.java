@@ -26,20 +26,32 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping("/signup")
+    public String createSignupForm(UserDto userDto, HttpSession session) {
+        if (session.getAttribute("user") != null) {
+            return "redirect:/";
+        }
+        return "signup";
+    }
+
     @GetMapping("/login")
-    public String createLoginForm(UserDto userDto) {
+    public String createLoginForm(UserDto userDto, HttpSession session) {
+        if (session.getAttribute("user") != null) {
+            return "redirect:/";
+        }
         return "login";
+    }
+
+    @GetMapping("/logout")
+    public RedirectView logout(HttpSession session) {
+        session.invalidate();
+        return new RedirectView("/");
     }
 
     @GetMapping("/users")
     public String userList(Model model) {
         model.addAttribute("users", userRepository.findAll());
         return "user-list";
-    }
-
-    @GetMapping("/signup")
-    public String createSignupForm(UserDto userDto) {
-        return "signup";
     }
 
     @PostMapping("/users")
@@ -74,11 +86,5 @@ public class UserController {
 
         session.setAttribute("user", loginUser.get());
         return "redirect:/";
-    }
-
-    @GetMapping("/logout")
-    public RedirectView logout(HttpSession session) {
-        session.invalidate();
-        return new RedirectView("/");
     }
 }

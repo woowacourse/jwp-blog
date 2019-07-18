@@ -103,7 +103,7 @@ class UserControllerTests {
 
     @Test
     void 동일_이메일_중복_가입() {
-        email = "newemail@email";
+        email = "registered1@email";
         UserDto userDto = new UserDto(name, email, password);
 
         httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), FOUND);
@@ -123,7 +123,7 @@ class UserControllerTests {
 
     @Test
     void 로그인_성공_시_메인_화면으로_리다이렉트() {
-        final String forLoginEmail = "login@login.com";
+        final String forLoginEmail = "registered2@email";
 
         UserDto userDto = new UserDto(name, forLoginEmail, password);
         httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), FOUND);
@@ -147,7 +147,7 @@ class UserControllerTests {
 
     @Test
     void 비밀번호_불일치하는_경우_에러() {
-        final String forLoginEmail = "login@login.com";
+        final String forLoginEmail = "registered3@email";
 
         UserDto userDto = new UserDto(name, forLoginEmail, password);
         httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), FOUND);
