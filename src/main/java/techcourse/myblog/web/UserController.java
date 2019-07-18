@@ -49,7 +49,7 @@ public class UserController {
         } catch (User.UserCreationConstraintException e) {
             model.addAttribute("error", true);
             model.addAttribute("message", e.getMessage());
-            return "redirect:/signup";
+            return "signup";
         }
     }
 
