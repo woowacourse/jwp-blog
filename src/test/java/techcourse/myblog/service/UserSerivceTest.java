@@ -7,14 +7,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import techcourse.myblog.controller.dto.LoginDTO;
 import techcourse.myblog.controller.dto.UserDTO;
+import techcourse.myblog.exception.LoginFailException;
+import techcourse.myblog.exception.UserNotExistException;
+import techcourse.myblog.model.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserSerivceTest {
-    private static final UserDTO userDTO = new UserDTO("test1","test1@testtest.com", "1234");
+    private static final String TEST_EMAIL_1 = "test1@test.com";
+    private static final String TEST_EMAIL_2 = "test2@test.com";
+    private static final String TEST_PASSWORD_1 = "!Q@W3e4r";
+    private static final String TEST_PASSWORD_2 = "!Q@W3e4r5t";
+    private static final String TEST_USERNAME = "test1";
+    private static final UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
 
     @Autowired
     UserService userService;
@@ -31,14 +41,39 @@ public class UserSerivceTest {
 
     @Test
     void 이메일로_중복인지_테스트() {
-        UserDTO userDTOTest = new UserDTO("test2","test1@testtest.com", "12345");
+        UserDTO userDTOTest = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
         assertThat(userService.isDuplicateEmail(userDTOTest)).isTrue();
     }
 
     @Test
     void 이메일로_중복아닌지_테스트() {
-        UserDTO userDTOTest = new UserDTO("test2","test2@testtest.com", "12345");
+        UserDTO userDTOTest = new UserDTO(TEST_USERNAME,TEST_EMAIL_2, TEST_PASSWORD_1);
         assertThat(userService.isDuplicateEmail(userDTOTest)).isFalse();
+    }
+
+    @Test
+    void 로그인_성공_테스트() {
+        LoginDTO loginDTO = new LoginDTO(TEST_EMAIL_1, TEST_PASSWORD_1);
+        User user = userService.getLoginUser(loginDTO);
+        assertThat(user.getEmail()).isEqualTo(TEST_EMAIL_1);
+    }
+
+    @Test
+    void 로그인_아이디_찾기_실패_테스트() {
+        LoginDTO loginDTO = new LoginDTO(TEST_EMAIL_2, TEST_PASSWORD_1);
+
+        assertThrows(UserNotExistException.class, () -> {
+            userService.getLoginUser(loginDTO);
+        });
+    }
+
+    @Test
+    void 로그인_패스워드_불일치_테스트() {
+        LoginDTO loginDTO = new LoginDTO(TEST_EMAIL_1, TEST_PASSWORD_2);
+
+        assertThrows(LoginFailException.class, () -> {
+            userService.getLoginUser(loginDTO);
+        });
     }
 
     @AfterEach
