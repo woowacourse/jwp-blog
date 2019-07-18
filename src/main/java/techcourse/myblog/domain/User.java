@@ -59,10 +59,9 @@ public class User {
         return email;
     }
 
-    public void update(User user) {
-        this.name = user.name;
-        this.password = user.password;
-        this.email = user.email;
+    public void updateNameAndEmail(String name, String email) {
+        this.name = name;
+        this.email = email;
     }
 
     public boolean isMatchPassword(UserDto dto) {

@@ -8,6 +8,7 @@ import techcourse.myblog.dto.SignupDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,5 +49,19 @@ public class UserService {
         List<User> users = new ArrayList<>();
         userRepository.findAll().forEach(users::add);
         return users;
+    }
+
+    public void updateUser(UserDto userDto, HttpSession session) {
+        User user = getUserBySession(session);
+        user.updateNameAndEmail(userDto.getName(), userDto.getEmail());
+        userRepository.save(user);
+    }
+
+    private User getUserBySession(HttpSession session) {
+        return userRepository.findByEmail(session.getAttribute("userEmail").toString()).orElseThrow(UserException::new);
+    }
+
+    public void deleteUser(HttpSession session) {
+        userRepository.delete(getUserBySession(session));
     }
 }
