@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.domain.SnsInfoRepository;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserDto;
 import techcourse.myblog.domain.UserRepository;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +23,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SnsInfoRepository snsInfoRepository;
 
     @GetMapping("/signup")
     public String showSignUpPage() {
@@ -59,7 +64,7 @@ public class UserController {
 
     @PostMapping("/users")
     public String addUser(UserDto userDto) {
-        User user = userRepository.save(userDto.toUser());
+        User user = userRepository.save(userDto.toEntity());
 
         return "redirect:/login";
     }
@@ -72,7 +77,7 @@ public class UserController {
         }
 
         model.addAttribute("users", users.stream()
-                .map(user -> UserDto.from(user))
+                .map(user -> UserDto.fromWithoutPassword(user))
                 .collect(toList()));
 
         System.out.println(users);
@@ -85,10 +90,7 @@ public class UserController {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isPresent()) {
-            UserDto userDto = new UserDto();
-            userDto.setName(user.get().getName());
-            userDto.setEmail(user.get().getEmail());
-
+            UserDto userDto = UserDto.fromWithoutPassword(user.get());
             model.addAttribute("userInfo", userDto);
 
             return "mypage";
@@ -108,18 +110,16 @@ public class UserController {
 
         Optional<User> user = userRepository.findById(id);
 
-        UserDto userDto = new UserDto();
         if (user.isPresent()) {
-            userDto.setName(user.get().getName());
-            userDto.setEmail(user.get().getEmail());
+            UserDto userDto = UserDto.fromWithoutPassword(user.get());
+            model.addAttribute("userInfo", userDto);
         }
-
-        model.addAttribute("userInfo", userDto);
 
         return "mypage-edit";
     }
 
     @PutMapping("/users/{id}/mypage-edit")
+    @Transactional
     public String updateUser(@PathVariable final long id, HttpSession session, UserDto userDto) {
         // TODO: 로그인되었는지 확인 (아니면 메인으로)
 
@@ -131,9 +131,9 @@ public class UserController {
         Optional<User> maybeUser = userRepository.findById(id);
         if (maybeUser.isPresent()) {
             UserDto findUserDto = UserDto.from(maybeUser.get());
-            findUserDto.setName(userDto.getName());
-
-            userRepository.save(findUserDto.toUser());
+            findUserDto.updateUserInfo(userDto);
+            snsInfoRepository.deleteByUserId(id);
+            userRepository.save(findUserDto.toEntity());
         }
 
         return "redirect:/users/" + id + "/mypage";

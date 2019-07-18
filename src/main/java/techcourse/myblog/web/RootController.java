@@ -39,9 +39,7 @@ public class RootController {
         Object userId = session.getAttribute("userId");
         if (userId != null) {
             userRepository.findById((long) userId).ifPresent( user -> {
-                UserDto userDto = new UserDto();
-                userDto.setId(user.getId());
-                userDto.setName(user.getName());
+                UserDto userDto = UserDto.fromWithoutPassword(user);
 
                 model.addAttribute("userInfo", userDto);
             });
