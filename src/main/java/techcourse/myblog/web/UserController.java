@@ -16,9 +16,10 @@ import techcourse.myblog.web.dto.UserUpdateRequestDto;
 import javax.servlet.http.HttpSession;
 import java.util.NoSuchElementException;
 
+import static techcourse.myblog.web.ControllerUtil.*;
+
 @Controller
 public class UserController {
-    private static final String SESSION_USER_KEY = "user";
 
     @Autowired
     private UserRepository userRepository;
@@ -140,15 +141,5 @@ public class UserController {
         userRepository.deleteById(((User) session.getAttribute(SESSION_USER_KEY)).getId());
         session.removeAttribute(SESSION_USER_KEY);
         return "redirect:/";
-    }
-
-    private boolean isLoggedIn(HttpSession session) {
-        return session.getAttribute(SESSION_USER_KEY) != null;
-    }
-
-    private void checkAndPutUser(Model model, HttpSession session) {
-        if (isLoggedIn(session)) {
-            model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
-        }
     }
 }

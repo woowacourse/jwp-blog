@@ -13,9 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static techcourse.myblog.web.ControllerUtil.SESSION_USER_KEY;
+import static techcourse.myblog.web.ControllerUtil.checkAndPutUser;
+
 @Controller
 public class ArticleController {
-    private static final String SESSION_USER_KEY = "user";
 
     private final ArticleService articleService;
 
@@ -78,13 +80,5 @@ public class ArticleController {
         return "redirect:/";
     }
 
-    private boolean isLoggedIn(HttpSession session) {
-        return session.getAttribute(SESSION_USER_KEY) != null;
-    }
 
-    private void checkAndPutUser(Model model, HttpSession session) {
-        if (isLoggedIn(session)) {
-            model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
-        }
-    }
 }
