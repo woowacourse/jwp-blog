@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserRequestDto;
 
-import static techcourse.myblog.service.UserAssembler.*;
+import static techcourse.myblog.service.UserAssembler.convertToEntity;
 
 @Service
 public class UserService {
@@ -17,8 +17,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void save(UserDto userDto) {
-        User user = convertToEntity(userDto);
+    public void save(UserRequestDto userRequestDto) {
+        User user = convertToEntity(userRequestDto);
         userRepository.save(user);
     }
 }
