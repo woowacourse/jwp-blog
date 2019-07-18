@@ -44,9 +44,9 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String updateArticle(@PathVariable long articleId, ArticleDto articleDto) {
-        Article article = articleService.updateByArticle(articleId, articleDto);
+        ArticleDto toArticleDto = articleService.updateByArticle(articleId, articleDto);
 
-        return "redirect:/articles/" + article.getId();
+        return "redirect:/articles/" + toArticleDto.getId();
     }
 
     @GetMapping("/articles/{articleId}/edit")

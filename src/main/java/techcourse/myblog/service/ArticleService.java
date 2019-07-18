@@ -23,13 +23,14 @@ public class ArticleService {
         return maybeArticle.map(article -> ArticleDto.from(article));
     }
 
-    public Article updateByArticle(long articleId, ArticleDto articleDto) {
+    public ArticleDto updateByArticle(long articleId, ArticleDto articleDto) {
         Optional<Article> maybeArticle = articleRepository.findById(articleId);
         if (maybeArticle.isPresent()) {
             ArticleDto findArticleDto = ArticleDto.from(maybeArticle.get());
             articleDto.setId(findArticleDto.getId());
 
-            return articleRepository.save(articleDto.toArticle());
+            Article article = articleRepository.save(articleDto.toArticle());
+            return ArticleDto.from(article);
         }
         throw new IllegalArgumentException("업데이트 할 수 없습니다.");
     }
