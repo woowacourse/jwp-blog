@@ -32,22 +32,24 @@
                                                     <form action="/users" method="post" accept-charset="UTF-8">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input type="text" name="username" class="form-control">
+                                                            <input type="text" name="username" class="form-control" required autofocus minlength="2" maxlength="10">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
-                                                            <input type="email" name="email" class="form-control">
+                                                            <input type="email" name="email" class="form-control" required autofocus>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
                                                             <input type="password" name="password" class="form-control"
-                                                                   placeholder="Password">
+                                                                   placeholder="Password" required autofocus minlength="8"
+                                                                   pattern=passwordRule>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm
                                                                 Password</label>
                                                             <input type="password" class="form-control"
-                                                                   placeholder="Password">
+                                                                   placeholder="Password" required autofocus minlength="8"
+                                                                   pattern=passwordRule>
                                                         </div>
                                                         <div class="form-group">
                                                             <button type="submit"
@@ -75,5 +77,8 @@
     </div>
 </div>
 <th:block th:include="common/js"></th:block>
+<script>
+    var passwordRule = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[\d])(?=.*[!-#%-*,-\/:;?@\[-\]_{}$+<->^`|~])[a-zA-Z\d!-#%-*,-\/:;?@\[-\]_{}$+<->^`|~]+$";
+</script>
 </body>
 </html>
