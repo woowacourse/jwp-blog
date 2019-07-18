@@ -21,6 +21,6 @@ public class User {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~`!@#$%\\^&*()-]).{8,}$", message = "소문자, 대문자, 숫자, 특수문자가 조합된 8글자 이상을 입력하세요 ")
     private String password;
     @Email(message = "Wrong Email")
-    @Column()
+    @Column(unique=true)
     private String email;
 }

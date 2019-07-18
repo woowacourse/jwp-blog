@@ -158,11 +158,12 @@ public class AccountControllerTest {
 
     @Test
     void 이메일_중복_확인() {
-        testSignupProcess(testName, testPassword, testEmail)
+        String duplEmail = "name@hi.com";
+        testSignupProcess(testName, testPassword, duplEmail)
                 .expectStatus()
                 .isFound();
 
-        testSignupProcess(testName, testPassword, testEmail)
+        testSignupProcess(testName, testPassword, duplEmail)
                 .expectStatus()
                 .isOk();
     }
