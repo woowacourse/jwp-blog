@@ -16,8 +16,7 @@ public class ArticleAssemblerTest {
     void setUp() {
         assembler = new ArticleAssembler();
         articleDto = new ArticleDto("title", "", "contents");
-        articleDto.setId(1);
-        article = new Article(1, "title", "", "contents");
+        article = new Article("title", "", "contents");
     }
 
     @Test

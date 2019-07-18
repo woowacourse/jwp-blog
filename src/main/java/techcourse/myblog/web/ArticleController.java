@@ -34,9 +34,9 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public ModelAndView createArticle(ArticleDto articleDTO) {
-        ArticleDto persistArticle = articleService.save(articleDTO);
+        int id = articleService.save(articleDTO);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/articles/" + persistArticle.getId()));
+        modelAndView.setView(new RedirectView("/articles/" + id));
         return modelAndView;
     }
 
