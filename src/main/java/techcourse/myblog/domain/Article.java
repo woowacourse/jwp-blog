@@ -2,24 +2,35 @@ package techcourse.myblog.domain;
 
 import techcourse.myblog.web.dto.ArticleDto;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.util.Objects;
+
+@Entity
 public class Article {
-    private final int articleId;
+    @Id
+    @GeneratedValue
+    private Long articleId;
     private String title;
     private String coverUrl;
     private String contents;
 
-    public Article(int articleId, String title, String coverUrl, String contents) {
+    public Article() {
+
+    }
+
+    public Article(ArticleDto articleDto) {
+        this.title = articleDto.getTitle();
+        this.coverUrl = articleDto.getCoverUrl();
+        this.contents = articleDto.getContents();
+    }
+
+    public Article(long articleId, String title, String coverUrl, String contents) {
         this.articleId = articleId;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-    }
-
-    public Article(int articleId, ArticleDto articleDto) {
-        this.articleId = articleId;
-        this.title = articleDto.getTitle();
-        this.coverUrl = articleDto.getCoverUrl();
-        this.contents = articleDto.getContents();
     }
 
     public boolean isSameId(int articleId) {
@@ -32,7 +43,7 @@ public class Article {
         this.contents = articleDto.getContents();
     }
 
-    public int getArticleId() {
+    public Long getArticleId() {
         return articleId;
     }
 
@@ -46,5 +57,21 @@ public class Article {
 
     public String getContents() {
         return contents;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return Objects.equals(articleId, article.articleId) &&
+                Objects.equals(title, article.title) &&
+                Objects.equals(coverUrl, article.coverUrl) &&
+                Objects.equals(contents, article.contents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(articleId, title, coverUrl, contents);
     }
 }

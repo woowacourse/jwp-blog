@@ -22,3 +22,4 @@
      * html 중복 제거
    - 좌측 상단 배너 클릭 시 index 페이지 이동
    - Controller에서 Redirect 사용
+   - JpaRepository 적용

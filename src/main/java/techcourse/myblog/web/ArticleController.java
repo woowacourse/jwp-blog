@@ -27,9 +27,9 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String articleEditPage(@PathVariable int articleId, Model model) {
+    public String articleEditPage(@PathVariable Long articleId, Model model) {
         Article article = articleRepository
-                .find(articleId)
+                .findById(articleId)
                 .orElseThrow(CouldNotFindArticleIdException::new);
         String actionRoute = "/articles/" + articleId;
         String formMethod = "put";
@@ -42,17 +42,14 @@ public class ArticleController {
 
     @PostMapping("/write")
     public String createNewArticle(ArticleDto articleDto) {
-        int articleId = articleRepository.getLastArticleId();
-        Article article = new Article(articleId, articleDto);
-
-        articleRepository.save(article);
-        return "redirect:/articles/" + articleId;
+        Article article = articleRepository.save(new Article(articleDto));
+        return "redirect:/articles/" + article.getArticleId();
     }
 
     @GetMapping("/articles/{articleId}")
-    public String searchArticle(@PathVariable int articleId, Model model) {
+    public String searchArticle(@PathVariable Long articleId, Model model) {
         Article article = articleRepository
-                .find(articleId)
+                .findById(articleId)
                 .orElseThrow(CouldNotFindArticleIdException::new);
 
         model.addAttribute("article", article);
@@ -60,8 +57,8 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable int articleId, ArticleDto articleDto) {
-        articleRepository.find(articleId)
+    public String editArticle(@PathVariable Long articleId, ArticleDto articleDto) {
+        articleRepository.findById(articleId)
                 .orElseThrow(CouldNotFindArticleIdException::new)
                 .updateArticle(articleDto);
 
@@ -69,8 +66,8 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId) {
-        articleRepository.delete(articleId);
+    public String deleteArticle(@PathVariable Long articleId) {
+        articleRepository.deleteById(articleId);
 
         return "redirect:/";
     }

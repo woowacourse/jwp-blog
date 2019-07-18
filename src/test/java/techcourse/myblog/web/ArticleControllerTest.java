@@ -14,6 +14,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.validator.CouldNotFindArticleIdException;
+import techcourse.myblog.web.dto.ArticleDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -21,27 +22,23 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest {
-    private static final int TEST_ARTICLE_ID = 1;
-    private static final int DELETE_TEST_ARTICLE_ID = 0;
-
-    private Article article;
-
     @Autowired
     private ArticleRepository articleRepository;
 
     @Autowired
     private WebTestClient webTestClient;
 
+    private Article article;
+
     @BeforeEach
     void setUp() {
-        article = new Article(
-                TEST_ARTICLE_ID,
+        ArticleDto articleDto = ArticleDto.of(
                 "test title",
                 "test coverUrl",
                 "test contents"
         );
 
-        articleRepository.save(article);
+        article = articleRepository.save(new Article(articleDto));
     }
 
     private WebTestClient.ResponseSpec requestGetTest(String testUrl) {
@@ -67,7 +64,7 @@ public class ArticleControllerTest {
     @DisplayName("게시글을 작성한 뒤 생성 버튼을 눌렀을 때 생성된 게시글을 보여준다.")
     void createNewArticleTest() {
         // Given
-        int expectedIdGeneratedByServer = TEST_ARTICLE_ID;
+        long expectedIdGeneratedByServer = article.getArticleId();
         String inputTitle = "test title";
         String inputCoverUrl = "test coverUrl";
         String inputContents = "test contents";
@@ -78,7 +75,7 @@ public class ArticleControllerTest {
         // Then
         responseSpec
                 .expectStatus().isFound();
-        Article article = articleRepository.find(expectedIdGeneratedByServer)
+        Article article = articleRepository.findById(expectedIdGeneratedByServer)
                 .orElseThrow(CouldNotFindArticleIdException::new);
 
         assertThat(article.getTitle()).isEqualTo(inputTitle);
@@ -95,7 +92,7 @@ public class ArticleControllerTest {
     @Test
     @DisplayName("게시글에서 수정 버튼을 누르는 경우 id에 해당하는 edit 페이지를 되돌려준다.")
     void articleEditPageTest() {
-        requestGetTest("/articles/" + TEST_ARTICLE_ID + "/edit")
+        requestGetTest("/articles/" + article.getArticleId() + "/edit")
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
@@ -108,30 +105,22 @@ public class ArticleControllerTest {
     @Test
     @DisplayName("게시글을 삭제한다.")
     void deleteArticleTest() {
-        // Given
-        Article deleteArticle = new Article(
-                DELETE_TEST_ARTICLE_ID,
-                "deleting title",
-                "deleting coverUrl",
-                "deleting contents"
-        );
-
-        articleRepository.save(deleteArticle);
+        long deleteTestId = article.getArticleId();
 
         // When, Then
         webTestClient.delete()
-                .uri("/articles/" + DELETE_TEST_ARTICLE_ID)
+                .uri("/articles/" + deleteTestId)
                 .exchange()
                 .expectStatus().isFound();
 
         assertThatThrownBy(() -> articleRepository
-                .find(DELETE_TEST_ARTICLE_ID)
+                .findById(deleteTestId)
                 .orElseThrow(CouldNotFindArticleIdException::new))
                 .isInstanceOf(CouldNotFindArticleIdException.class);
     }
 
     @AfterEach
     void tearDown() {
-        articleRepository.delete(TEST_ARTICLE_ID);
+        articleRepository.deleteAll();
     }
 }
