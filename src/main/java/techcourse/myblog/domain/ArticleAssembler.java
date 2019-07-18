@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import techcourse.myblog.dto.ArticleDto;
+
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,6 +1,10 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleAssembler;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;

@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.dto;
 
 public class ArticleDto {
     private long articleId;
