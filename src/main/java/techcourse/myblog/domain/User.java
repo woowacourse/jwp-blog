@@ -20,7 +20,7 @@ public class User {
     @Column(unique = true)
     private String email;
 
-    public User() {
+    protected User() {
     }
 
     public User(String name, String password, String email) {
@@ -65,9 +65,8 @@ public class User {
         this.email = user.email;
     }
 
-    public boolean isEqualTo(UserDto dto) {
-        return this.email.equals(dto.getEmail()) &&
-                this.password.equals(dto.getPassword());
+    public boolean isMatchPassword(UserDto dto) {
+        return this.password.equals(dto.getPassword());
     }
 
     @Override

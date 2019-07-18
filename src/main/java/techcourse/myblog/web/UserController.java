@@ -5,23 +5,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserException;
+import techcourse.myblog.dto.LoginDto;
+import techcourse.myblog.dto.SignupDto;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class UserController {
 
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/login")
@@ -32,24 +30,23 @@ public class UserController {
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.removeAttribute("userName");
-        return "index";
+        return "redirect:/";
     }
 
     @PostMapping("/login")
-    public String login(UserDto userDto, HttpSession session) {
-        User user = userRepository.findByEmail(userDto.getEmail()).orElseThrow(UserException::new);
-        if (!user.isEqualTo(userDto)) {
-            return "/login";
+    public String login(UserDto userDto, Model model, HttpSession session) {
+        LoginDto dto = userService.loginByEmailAndPwd(userDto);
+        if (dto.isSuccess()) {
+            session.setAttribute("userName", dto.getName());
+            return "redirect:/";
         }
-        session.setAttribute("userName", user.getName());
-        return "redirect:/";
+        model.addAttribute("error", dto.getMessage());
+        return "login";
     }
 
     @GetMapping("/users")
     public String users(Model model) {
-        List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(users::add);
-        model.addAttribute("users", users);
+        model.addAttribute("users", userService.findAll());
         return "user-list";
     }
 
@@ -59,8 +56,14 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String addUser(UserDto dto) {
-        userRepository.save(dto.toEntity());
-        return "redirect:/users";
+    public String addUser(UserDto userDto, Model model, HttpSession session) {
+        SignupDto signupDto = userService.addUser(userDto);
+
+        if (userService.addUser(userDto).isSuccess()) {
+            session.setAttribute("userName", userDto.getName());
+            return "redirect:/";
+        }
+        model.addAttribute("error", signupDto.getMessage());
+        return "signup";
     }
 }

@@ -10,8 +10,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.repository.UserRepository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
@@ -38,9 +36,27 @@ class UserControllerTest {
                         .with("password", "b")
                         .with("email", "c"))
                 .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void loginUserTest() {
+        webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("email", "andole@gmail.com")
+                        .with("password", "A!1bcdefg"))
+                .exchange()
                 .expectStatus()
                 .is3xxRedirection();
+    }
 
-        assertThat(userRepository.count()).isNotEqualTo(0);
+    @Test
+    void 로그인_실패_테스트() {
+        webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("email", "xxx@gmail.com")
+                        .with("password", "A!1bcdefg"))
+                .exchange()
+                .expectStatus().isOk();
     }
 }
