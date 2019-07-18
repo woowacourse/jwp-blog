@@ -16,6 +16,7 @@ import techcourse.myblog.dto.UserDto;
 
 import java.util.Objects;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.FOUND;
@@ -28,7 +29,9 @@ class UserControllerTests {
     @Autowired
     private WebTestClient webTestClient;
 
-    private String name, email, password;
+    private String name;
+    private String email;
+    private String password;
 
     @BeforeEach
     void setup() {
@@ -81,7 +84,7 @@ class UserControllerTests {
                 .expectBody()
                 .consumeWith(res -> {
                     String body = new String(Objects.requireNonNull(res.getResponseBody()));
-                    body.contains("이메일 양식을 지켜주세요.");
+                    assertThat(body.contains("이메일 양식을 지켜주세요.")).isTrue();
                 });
     }
 
@@ -94,7 +97,7 @@ class UserControllerTests {
                 .expectBody()
                 .consumeWith(res -> {
                     String body = new String(Objects.requireNonNull(res.getResponseBody()));
-                    body.contains("비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요.");
+                    assertThat(body.contains("비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요.")).isTrue();
                 });
     }
 
@@ -109,13 +112,53 @@ class UserControllerTests {
                 .expectBody()
                 .consumeWith(res -> {
                     String body = new String(Objects.requireNonNull(res.getResponseBody()));
-                    body.contains("이미 존재하는 email입니다.");
+                    assertThat(body.contains("이미 존재하는 email입니다.")).isTrue();
                 });
     }
 
     @Test
     void 회원목록_페이지() {
         httpRequestAndExpectStatus(GET, "/users", OK);
+    }
+
+    @Test
+    void 로그인_성공_시_메인_화면으로_리다이렉트() {
+        final String forLoginEmail = "login@login.com";
+
+        UserDto userDto = new UserDto(name, forLoginEmail, password);
+        httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), FOUND);
+
+        httpRequestAndExpectStatus(POST, "/login", createLoginForm(userDto), FOUND);
+    }
+
+    @Test
+    void 해당_이메일이_없는_경우_에러() {
+        final String notSignedUpEmail = "thisisfake@login.com";
+
+        UserDto userDto = new UserDto(name, notSignedUpEmail, password);
+
+        httpRequestAndExpectStatus(POST, "/login", createLoginForm(userDto), OK)
+                .expectBody()
+                .consumeWith(res -> {
+                    String body = new String(Objects.requireNonNull(res.getResponseBody()));
+                    assertThat(body.contains("이메일을 확인해주세요.")).isTrue();
+                });
+    }
+
+    @Test
+    void 비밀번호_불일치하는_경우_에러() {
+        final String forLoginEmail = "login@login.com";
+
+        UserDto userDto = new UserDto(name, forLoginEmail, password);
+        httpRequestAndExpectStatus(POST, "/users", createUserForm(userDto), FOUND);
+
+        UserDto userDtoWrongPassword = new UserDto(name, forLoginEmail, "abcdeghf");
+        httpRequestAndExpectStatus(POST, "/login", createLoginForm(userDtoWrongPassword), OK)
+                .expectBody()
+                .consumeWith(res -> {
+                    String body = new String(Objects.requireNonNull(res.getResponseBody()));
+                    assertThat(body.contains("비밀번호를 확인해주세요.")).isTrue();
+                });
     }
 
     private WebTestClient.ResponseSpec httpRequestAndExpectStatus(HttpMethod method, String uri, HttpStatus status) {
@@ -136,6 +179,12 @@ class UserControllerTests {
         return BodyInserters
                 .fromFormData("name", userDto.getName())
                 .with("email", userDto.getEmail())
+                .with("password", userDto.getPassword());
+    }
+
+    private BodyInserters.FormInserter<String> createLoginForm(UserDto userDto) {
+        return BodyInserters
+                .fromFormData("email", userDto.getEmail())
                 .with("password", userDto.getPassword());
     }
 }
