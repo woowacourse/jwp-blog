@@ -143,4 +143,43 @@ public class UserControllerTests {
             assertThat(body.contains(name)).isTrue();
         });
     }
+
+    @Test
+    void userListTest() {
+        String email = "email@google.co.kr";
+        String name = "name";
+        String password = "P@ssw0rd";
+
+        String email1 = "asdf@google.co.kr";
+        String name1 = "asdfsadfasdf";
+        String password1 = "!234Qwer";
+
+        UserDto userDto = UserDto.builder()
+                .email(email)
+                .name(name)
+                .password(password)
+                .confirmPassword(password)
+                .build();
+
+        userService.save(userDto);
+
+        userDto = UserDto.builder()
+                .email(email1)
+                .name(name1)
+                .password(password1)
+                .confirmPassword(password1)
+                .build();
+
+        userService.save(userDto);
+
+        webTestClient.get().uri("/users")
+                .exchange()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(name)).isTrue();
+            assertThat(body.contains(email)).isTrue();
+            assertThat(body.contains(name1)).isTrue();
+            assertThat(body.contains(email1)).isTrue();
+        });
+    }
 }

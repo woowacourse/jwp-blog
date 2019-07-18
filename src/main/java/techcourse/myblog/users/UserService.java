@@ -5,6 +5,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -39,6 +42,16 @@ public class UserService {
     public User login(UserDto userDto) {
         return userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword())
                 .orElseThrow(() -> new ValidSingupException("존재하지 않는 이메일 또는 비밀번호가 틀립니다.", "password"));
+    }
+
+    public List<UserResponseDto> findAllExceptPassword() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> {
+                    UserResponseDto responseDto = new UserResponseDto();
+                    BeanUtils.copyProperties(user, responseDto);
+                    return responseDto;
+                }).collect(Collectors.toList());
     }
 }
 
