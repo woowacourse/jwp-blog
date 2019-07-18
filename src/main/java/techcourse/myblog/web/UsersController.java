@@ -27,6 +27,11 @@ public class UsersController {
 		return "signup";
 	}
 
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
+
 	@PostMapping("/users")
 	public String signUp(@Valid UserDto newUser, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
@@ -44,8 +49,14 @@ public class UsersController {
 		return "redirect:/login";
 	}
 
-	@GetMapping("/login")
-	public String login() {
-		return "login";
+	@GetMapping("users")
+	public String users() {
+		return "redirect:/user-list";
+	}
+
+	@GetMapping("/user-list")
+	public String userList(Model model) {
+		model.addAttribute("users", userRepository.findAll()); //TODO: UserDto변환 고려하기
+		return "user-list";
 	}
 }

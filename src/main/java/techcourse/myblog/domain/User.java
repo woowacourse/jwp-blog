@@ -27,4 +27,16 @@ public class User {
 		this.password = userDto.getPassword();
 		this.email = userDto.getEmail();
 	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getEmail() {
+		return email;
+	}
 }
