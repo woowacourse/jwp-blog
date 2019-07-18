@@ -1,9 +1,12 @@
 package techcourse.myblog.domain;
 
 import lombok.Builder;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User {
@@ -17,6 +20,9 @@ public class User {
     private String password;
     @Pattern(regexp = "^[A-Za-zㄱ-ㅎ|ㅏ-ㅣ|가-힣]{2,10}$")
     private String name;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<SnsInfo> snsInfos;
 
     public User() {
     }
@@ -45,13 +51,29 @@ public class User {
         return name;
     }
 
+    public void addSnsInfo(SnsInfo snsInfo) {
+        if (snsInfos == null) {
+            snsInfos = new ArrayList();
+        }
+
+        snsInfos.add(snsInfo);
+    }
+
+    public SnsInfo getSnsInfo(int idx) {
+        if (snsInfos ==  null) return null;
+        if (idx < 0 || snsInfos.size() <= idx) return null;
+
+        return snsInfos.get(idx);
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", snsInfos=" + snsInfos +
                 '}';
     }
 }

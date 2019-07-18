@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -116,5 +117,26 @@ class UserRepositoryTest {
                 .build();
 
         assertThrows(ConstraintViolationException.class, () -> userRepository.save(user));
+    }
+
+    @Test
+    //@Transactional
+    void snsInfo_() {
+        User user = User.builder()
+                .id(1l)
+                .name(validName)
+                .email(validEmail)
+                .password(validPassword)
+                .build();
+
+        SnsInfo snsInfo = SnsInfo.builder()
+                .email(validEmail)
+                //.user(user)
+                .build();
+        user.addSnsInfo(snsInfo);
+
+        userRepository.save(user);
+
+        //System.out.println(userRepository.findById(1L));
     }
 }
