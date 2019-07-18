@@ -26,21 +26,21 @@ public class UserControllerTest {
     void create_user() {
         webTestClient.post().uri("/users/new")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "Martin")
-                        .with("email", "martin@gmail.com")
+                .body(BodyInserters.fromFormData("userName", "Brown")
+                        .with("email", "brown@gmail.com")
                         .with("password", "Aa12345!")
+                        .with("confirmPassword", "Aa12345!")
                 ).exchange()
                 .expectStatus().isFound();
     }
 
     @Test
     void show_login() {
-        webTestClient.get().uri("/users/login").exchange().expectStatus().isOk();
+        webTestClient.get().uri("/login").exchange().expectStatus().isOk();
     }
 
     @Test
     void show_all_users() {
-        create_user();
         webTestClient.get().uri("/users")
                 .exchange()
                 .expectStatus()
@@ -54,13 +54,12 @@ public class UserControllerTest {
 
     @Test
     void check_same_email() {
-        create_user();
-
         webTestClient.post().uri("/users/new")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData("userName", "Martin")
-                        .with("email", "martin@gmail.com")
-                        .with("password", "123456")
+                        .with("email", "buddy@buddy.com")
+                        .with("password", "Aa12345!")
+                        .with("confirmPassword", "Aa12345!")
                 ).exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(res -> {
@@ -76,6 +75,7 @@ public class UserControllerTest {
                 .body(BodyInserters.fromFormData("userName", "M")
                         .with("email", "martin@gmail.com")
                         .with("password", "Aa12345!")
+                        .with("confirmPassword", "Aa12345!")
                 ).exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(res -> {
@@ -91,6 +91,7 @@ public class UserControllerTest {
                 .body(BodyInserters.fromFormData("userName", "Martin")
                         .with("email", "martin@gmail.com")
                         .with("password", "A")
+                        .with("confirmPassword", "A")
                 ).exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(res -> {
@@ -117,7 +118,7 @@ public class UserControllerTest {
 
     @Test
     void showUserEdit() {
-        webTestClient.get().uri("/users/edit")
+        webTestClient.get().uri("/users/mypage/edit")
                 .exchange()
                 .expectStatus()
                 .isOk();
