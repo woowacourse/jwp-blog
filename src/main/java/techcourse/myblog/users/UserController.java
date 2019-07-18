@@ -53,16 +53,22 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable Long id, Model model){
+    public String show(@PathVariable Long id, Model model) {
         UserResponseDto userResponseDto = userService.findById(id);
-        model.addAttribute("user",userResponseDto);
+        model.addAttribute("user", userResponseDto);
         return "mypage";
     }
 
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Long id, Model model){
+    public String editForm(@PathVariable Long id, Model model) {
         UserResponseDto userResponseDto = userService.findById(id);
-        model.addAttribute("user",userResponseDto);
+        model.addAttribute("user", userResponseDto);
         return "mypage-edit";
+    }
+
+    @PutMapping("/{id}")
+    public String edit(@PathVariable Long id, UserDto userDto) {
+        UserResponseDto responseDto = userService.update(id, userDto);
+        return "redirect:/users/" + id;
     }
 }

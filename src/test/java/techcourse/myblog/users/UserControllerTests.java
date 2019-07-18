@@ -230,4 +230,26 @@ public class UserControllerTests {
             assertThat(body.contains(email)).isTrue();
         });
     }
+
+    @Test
+    void edit() {
+        String email = "email@google.co.kr";
+        String name = "name";
+        String password = "P@ssw0rd";
+        UserDto userDto = UserDto.builder()
+                .email(email)
+                .name(name)
+                .password(password)
+                .confirmPassword(password)
+                .build();
+
+        Long userId = userService.save(userDto);
+        String changedName = "asdf";
+
+        webTestClient.put().uri("/users/{id}", userId)
+                .body(BodyInserters.fromFormData("name", changedName))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location",".*/users/[0-9]+");
+    }
 }

@@ -67,6 +67,17 @@ public class UserService {
 
         return userResponseDto;
     }
+
+    public UserResponseDto update(Long userId, UserDto userDto) {
+        UserResponseDto userResponseDto = new UserResponseDto();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Can't find User : " + userId));
+        user.setName(userDto.getName());
+
+        BeanUtils.copyProperties(user, userResponseDto);
+
+        return userResponseDto;
+    }
 }
 
 
