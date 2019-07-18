@@ -67,7 +67,8 @@
                                                         <a href="login.html"
                                                            class="text-info pointer mrg-left-5">로그인</a>
                                                     </div>
-                                                </div>
+                                                    <div th:if="${errors}" th:text="${errors}" class="alert alert-danger" role="alert"></div>
+                                                    </div>
                                             </div>
                                         </div>
                                     </div>
@@ -96,7 +97,6 @@
         }
         return true;
     }
-
 </script>
 </body>
 </html>
