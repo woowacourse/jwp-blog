@@ -252,4 +252,24 @@ public class UserControllerTests {
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location",".*/users/[0-9]+");
     }
+
+    @Test
+    void delete() {
+        String email = "email@google.co.kr";
+        String name = "name";
+        String password = "P@ssw0rd";
+        UserDto userDto = UserDto.builder()
+                .email(email)
+                .name(name)
+                .password(password)
+                .confirmPassword(password)
+                .build();
+
+        Long userId = userService.save(userDto);
+
+        webTestClient.delete().uri("/users/{id}", userId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location",".*/");
+    }
 }

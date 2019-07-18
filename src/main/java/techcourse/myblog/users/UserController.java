@@ -71,4 +71,11 @@ public class UserController {
         UserResponseDto responseDto = userService.update(id, userDto);
         return "redirect:/users/" + id;
     }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Long id, HttpSession session){
+        userService.deleteById(id);
+        session.removeAttribute("user");
+        return "redirect:/";
+    }
 }

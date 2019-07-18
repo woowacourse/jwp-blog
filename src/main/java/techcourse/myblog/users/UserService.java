@@ -5,6 +5,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,6 +78,10 @@ public class UserService {
         BeanUtils.copyProperties(user, userResponseDto);
 
         return userResponseDto;
+    }
+
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 }
 
