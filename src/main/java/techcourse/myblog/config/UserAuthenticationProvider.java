@@ -17,7 +17,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 
 public class UserAuthenticationProvider implements AuthenticationProvider {
-
     private UserService userService;
 
     public UserAuthenticationProvider(UserService userService) {

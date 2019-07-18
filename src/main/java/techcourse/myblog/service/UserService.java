@@ -7,7 +7,6 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.UserRepository;
 
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +26,7 @@ public class UserService {
     }
 
     public Optional<User> authenticate(String email, String password) {
-        return StreamSupport.stream(userRepository.findAll().spliterator(),false)
-                .filter(a -> a.isSameMail(email) && a.isSamePassword(password))
-                .findAny();
+        System.out.println(userRepository.findByEmailAndPassword(email,password));
+        return userRepository.findByEmailAndPassword(email,password);
     }
 }

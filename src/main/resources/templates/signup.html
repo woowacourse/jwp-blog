@@ -75,7 +75,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
-                                                            <input type="email" name="email" class="form-control" required th:pattern="${eamilPattern}">
+                                                            <input type="email" name="email" class="form-control" required th:pattern="${emailPattern}">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
@@ -89,7 +89,7 @@
                                                                    placeholder="Password" required th:pattern="${passwordPattern}">
                                                         </div>
                                                         <div class="form-group">
-                                                            <button onClick ="signupPost()"
+                                                            <button type="submit" onClick ="return signupPost()"
                                                                     class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
                                                                 가입하기
                                                             </button>
@@ -129,11 +129,12 @@
     var signupPost = function(e){
         var password = document.getElementById("passwordInput").value;
         var passwordConfirm = document.getElementById("passwordConfirmInput").value;
-        if(password == passwordConfirm){
-            document.getElementById("signupForm").submit();
-        }else {
-            alert("다름!");
-            e.preventDefault();
+        var form = document.getElementById("signupForm");
+        if(password == passwordConfirm && form.checkValidity()){
+            return true
+        }else if( password != passwordConfirm && form.checkValidity()){
+            alert("올바른 형식을 입력하세요.");
+            return false
         }
     }
 </script>
