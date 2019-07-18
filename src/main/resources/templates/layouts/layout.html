@@ -6,10 +6,10 @@
     <th:block th:include="fragments/head"/>
 </head>
 <body>
-<th:block th:if="${session.username} !=null">
+<th:block th:if="${session.user} !=null">
     <th:block th:include="fragments/nav :: login"/>
 </th:block>
-<th:block th:unless="${session.username} !=null">
+<th:block th:unless="${session.user} !=null">
     <th:block th:include="fragments/nav :: logout"/>
 </th:block>
 

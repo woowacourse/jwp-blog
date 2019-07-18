@@ -39,9 +39,13 @@ public class UserService {
         }
     }
 
-    public User login(UserDto userDto) {
-        return userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword())
+    public UserResponseDto login(UserDto userDto) {
+        UserResponseDto userResponseDto = new UserResponseDto();
+        User user = userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword())
                 .orElseThrow(() -> new ValidSingupException("존재하지 않는 이메일 또는 비밀번호가 틀립니다.", "password"));
+
+        BeanUtils.copyProperties(user, userResponseDto);
+        return userResponseDto;
     }
 
     public List<UserResponseDto> findAllExceptPassword() {
@@ -52,6 +56,16 @@ public class UserService {
                     BeanUtils.copyProperties(user, responseDto);
                     return responseDto;
                 }).collect(Collectors.toList());
+    }
+
+    public UserResponseDto findById(Long id) {
+        UserResponseDto userResponseDto = new UserResponseDto();
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Can't find User : " + id));
+
+        BeanUtils.copyProperties(user, userResponseDto);
+
+        return userResponseDto;
     }
 }
 

@@ -182,4 +182,52 @@ public class UserControllerTests {
             assertThat(body.contains(email1)).isTrue();
         });
     }
+
+    @Test
+    void editForm() {
+        String email = "email@google.co.kr";
+        String name = "name";
+        String password = "P@ssw0rd";
+        UserDto userDto = UserDto.builder()
+                .email(email)
+                .name(name)
+                .password(password)
+                .confirmPassword(password)
+                .build();
+
+        Long userId = userService.save(userDto);
+
+        webTestClient.get().uri("/users/{id}/edit", userId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(name)).isTrue();
+            assertThat(body.contains(email)).isTrue();
+        });
+    }
+
+    @Test
+    void show() {
+        String email = "email@google.co.kr";
+        String name = "name";
+        String password = "P@ssw0rd";
+        UserDto userDto = UserDto.builder()
+                .email(email)
+                .name(name)
+                .password(password)
+                .confirmPassword(password)
+                .build();
+
+        Long userId = userService.save(userDto);
+
+        webTestClient.get().uri("/users/{id}", userId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(name)).isTrue();
+            assertThat(body.contains(email)).isTrue();
+        });
+    }
 }

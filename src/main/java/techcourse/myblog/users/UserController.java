@@ -3,10 +3,7 @@ package techcourse.myblog.users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -37,14 +34,14 @@ public class UserController {
     @PostMapping("/login")
     @ResponseBody
     public String login(UserDto userDto, HttpSession session) {
-        String name = userService.login(userDto).getName();
-        session.setAttribute("username", name);
-        return name;
+        UserResponseDto userResponseDto = userService.login(userDto);
+        session.setAttribute("user", userResponseDto);
+        return userResponseDto.getName();
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("username");
+        session.removeAttribute("user");
         return "redirect:/";
     }
 
@@ -53,5 +50,19 @@ public class UserController {
         List<UserResponseDto> users = userService.findAllExceptPassword();
         model.addAttribute("users", users);
         return "user-list";
+    }
+
+    @GetMapping("/{id}")
+    public String show(@PathVariable Long id, Model model){
+        UserResponseDto userResponseDto = userService.findById(id);
+        model.addAttribute("user",userResponseDto);
+        return "mypage";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model){
+        UserResponseDto userResponseDto = userService.findById(id);
+        model.addAttribute("user",userResponseDto);
+        return "mypage-edit";
     }
 }
