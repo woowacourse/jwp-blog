@@ -18,7 +18,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/article/writing","/auth/**").hasAnyRole( "USER")
-                .antMatchers("/css/**", "/js/**", "/img/**","/article/*","/","/user/signup").permitAll()
+                .antMatchers("/css/**", "/js/**", "/img/**","/article/*","/","/user/signup","/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -29,6 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .permitAll();
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
 
         http.logout()
                 .logoutUrl("/logout") // default

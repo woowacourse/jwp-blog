@@ -14,15 +14,16 @@ import java.util.stream.StreamSupport;
 public class UserService {
     private final UserRepository userRepository;
 
-    public void save(User user) {
-        StreamSupport.stream(userRepository.findAll().spliterator(), false)
-        .filter(a -> a.isSameMail(user.getEmail()))
-        .findAny()
-                .ifPresent(a -> {
-            throw new IllegalArgumentException();
-        });
-
+    public User save(User user) {
+        emailDuplicateValidate(user);
         userRepository.save(user);
+        return user;
+    }
+
+    private void emailDuplicateValidate(User user) {
+        if(userRepository.existsByEmail(user.getEmail())){
+            throw new IllegalArgumentException();
+        }
     }
 
     public Optional<User> authenticate(String email, String password) {

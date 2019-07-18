@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,7 +8,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.service.UserService;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static techcourse.myblog.web.UserController.USER_MAPPING_URL;
 
 @ExtendWith(SpringExtension.class)

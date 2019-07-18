@@ -40,7 +40,7 @@ public class User {
     }
 
     public boolean isSameMail(String email) {
-        return this.email.equals(email);
+        return this.email==email;
     }
 
     public boolean isSamePassword(String password) {
