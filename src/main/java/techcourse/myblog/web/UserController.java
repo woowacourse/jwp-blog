@@ -5,13 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.UserService;
 
 @Controller
 public class UserController {
-    private UserRepository userRepository;
+    private UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/users/login")
@@ -26,7 +27,7 @@ public class UserController {
 
     @PostMapping("/users")
     public String createUser(UserDto userDto) {
-        userRepository.save(userDto.toEntity());
+        userService.save(userDto);
         return "redirect:/users/login";
     }
 }
