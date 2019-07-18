@@ -6,6 +6,8 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,5 +39,21 @@ public class ArticleService {
 
     public void deleteById(long articleId) {
         articleRepository.deleteById(articleId);
+    }
+
+    public List<ArticleDto> readAll() {
+        List<ArticleDto> articleDtos = new ArrayList<>();
+        for (Article article : articleRepository.findAll()) {
+            articleDtos.add(ArticleDto.from(article));
+        }
+        return  articleDtos;
+    }
+
+    public List<ArticleDto> readByCategoryId(long categoryId) {
+        List<ArticleDto> articleDtos = new ArrayList<>();
+        for (Article article : articleRepository.findByCategoryId(categoryId)) {
+            articleDtos.add(ArticleDto.from(article));
+        }
+        return articleDtos;
     }
 }

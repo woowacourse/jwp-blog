@@ -14,7 +14,7 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<CategoryDto> findAll() {
+    public List<CategoryDto> readAll() {
         List<CategoryDto> categories = new ArrayList<>();
         for (Category category : categoryRepository.findAll()) {
             categories.add(CategoryDto.from(category));
