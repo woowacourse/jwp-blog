@@ -37,6 +37,7 @@ public class ArticleRepositoryTest {
             .orElseThrow(IllegalStateException::new);
         articleFound.update(Article.of("changed title", articleFound.getCoverUrl(), articleFound.getContents()));
         articleRepository.save(articleFound);
+
         Article articleToAssert = articleRepository.findById(newArticle.getId())
             .orElseThrow(IllegalStateException::new);
 

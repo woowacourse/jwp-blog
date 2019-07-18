@@ -79,6 +79,4 @@ public class ArticleController {
         articleService.deleteById(articleId);
         return "redirect:/";
     }
-
-
 }

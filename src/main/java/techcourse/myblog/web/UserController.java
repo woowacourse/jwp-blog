@@ -49,7 +49,7 @@ public class UserController {
         } catch (User.UserCreationConstraintException e) {
             model.addAttribute("error", true);
             model.addAttribute("message", e.getMessage());
-            return "signup";
+            return "redirect:/signup";
         }
     }
 
@@ -76,7 +76,7 @@ public class UserController {
 
             model.addAttribute("error", true);
             model.addAttribute("message", "비밀번호를 확인해주세요");
-            return "login";
+            return "redirect:/login";
         } catch (NoSuchElementException e) {
             model.addAttribute("error", true);
             model.addAttribute("message", e.getMessage());
@@ -85,7 +85,7 @@ public class UserController {
             model.addAttribute("error", true);
             model.addAttribute("message", "서버 에러입니다");
         }
-        return "login";
+        return "redirect:/login";
     }
 
     @GetMapping("/users")

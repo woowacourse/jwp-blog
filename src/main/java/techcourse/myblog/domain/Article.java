@@ -60,7 +60,6 @@ public class Article {
         title = article.getTitle();
         coverUrl = article.coverUrl;
         contents = article.contents;
-
     }
 
     @Override

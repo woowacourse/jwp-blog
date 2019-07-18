@@ -30,7 +30,7 @@ public class User {
         namePattern = Pattern.compile("^[a-zA-Z ]*$");
         // ref. http://html5pattern.com/Passwords
         //TODO 정규표현식 숫자가 포함되지 않아도 통과 (TestPasswod!)
-        passwordPattern = Pattern.compile("(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$");
+        passwordPattern = Pattern.compile("(?=^.{8,}$)((?=.*\\d)(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$");
     }
 
 
