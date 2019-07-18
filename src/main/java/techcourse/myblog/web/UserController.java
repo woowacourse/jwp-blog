@@ -46,5 +46,10 @@ public class UserController {
         return "user-list";
     }
 
+    @GetMapping("/edit")
+    public String showEditPage() {
+        return "mypage";
+    }
+
 
 }

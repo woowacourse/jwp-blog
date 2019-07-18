@@ -115,4 +115,11 @@ public class UserControllerTest {
         });
     }
 
+    @Test
+    void showUserEdit() {
+        webTestClient.get().uri("/users/edit")
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
 }
