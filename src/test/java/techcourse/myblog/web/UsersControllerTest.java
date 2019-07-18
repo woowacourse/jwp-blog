@@ -92,4 +92,24 @@ class UsersControllerTest {
 				.expectStatus()
 				.isOk();
 	}
+
+	@Test
+	void users() {
+		webTestClient.get()
+				.uri("/users")
+				.exchange()
+				.expectStatus()
+				.isFound()
+				.expectHeader()
+				.valueMatches("Location", ".+/user-list");
+	}
+
+	@Test
+	void userList() {
+		webTestClient.get()
+				.uri("/user-list")
+				.exchange()
+				.expectStatus()
+				.isOk();
+	}
 }
