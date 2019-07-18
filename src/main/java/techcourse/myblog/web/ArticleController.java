@@ -15,6 +15,13 @@ import java.util.List;
 public class ArticleController {
     private final ArticleRepository articleRepository;
 
+    @GetMapping("/")
+    public String showArticles(Model model, HttpSession httpSession) {
+        List<Article> articles = articleRepository.findAll();
+        model.addAttribute("articles", articles);
+        return "index";
+    }
+
     @GetMapping("/writing")
     public String showArticleWritingPage() {
         return "article-edit";
@@ -25,13 +32,6 @@ public class ArticleController {
         Article newArticle = articleRepository.save(article);
         model.addAttribute("article", newArticle);
         return "article";
-    }
-
-    @GetMapping("/")
-    public String showArticles(Model model, HttpSession httpSession) {
-        List<Article> articles = articleRepository.findAll();
-        model.addAttribute("articles", articles);
-        return "index";
     }
 
     @GetMapping("/articles/{articleId}/edit")
