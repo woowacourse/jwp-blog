@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.presentation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.error.RequestError;
 import techcourse.myblog.web.exception.BadRequestException;
 

@@ -27,4 +27,17 @@ public class MainControllerTest {
                 .expectStatus().isOk();
     }
 
+    @Test
+    void 로그인_페이지_GET() {
+        webTestClient.get().uri("/login")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void 회원가입_페이지_GET() {
+        webTestClient.get().uri("/signup")
+                .exchange()
+                .expectStatus().isOk();
+    }
 }

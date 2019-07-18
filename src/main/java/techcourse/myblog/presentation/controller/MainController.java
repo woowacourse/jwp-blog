@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.presentation.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,5 +27,15 @@ public class MainController {
     public String readWritingPage(Model model) {
         model.addAttribute("method", "post");
         return "/article-edit";
+    }
+
+    @GetMapping("/login")
+    public String readLoginPage() {
+        return "login";
+    }
+
+    @GetMapping("/signup")
+    public String readSignUpPage() {
+        return "signup";
     }
 }

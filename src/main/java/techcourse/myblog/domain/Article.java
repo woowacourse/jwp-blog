@@ -1,6 +1,6 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.application.dto.ArticleDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +17,10 @@ public class Article {
     private String title;
     private String coverUrl;
     private String contents;
+
+    private Article() {
+
+    }
 
     public static class ArticleBuilder {
         private String title;
@@ -41,10 +45,6 @@ public class Article {
         public Article build() {
             return new Article(this);
         }
-    }
-
-    public Article() {
-
     }
 
     public Article(ArticleBuilder articleBuilder) {
