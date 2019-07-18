@@ -34,3 +34,8 @@
             ~~- GET /users 로 요청해서 회원목록페이지(user-list.html) 이동~~
             ~~- DB에서 회원정보 가져와 출력~~ 
     ~~3. 실행 쿼리 보기 설정~~
+
+    TODO.
+    
+        1. DTO를 내부 static 클래스를 만들어 사용해볼 것
+        2. ModelMapper

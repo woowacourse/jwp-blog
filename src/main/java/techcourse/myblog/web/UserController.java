@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
@@ -27,14 +27,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(final User user, final HttpServletRequest request) {
-        if(alreadyHasEmail(user)) {
-            User userParam = userRepository.findByEmail(user.getEmail());
-            userParam.setPassword(null);
-            request.getSession().setAttribute("userInfo", userParam);
+    public String login(final UserDto.LoginInfo loginInfo, final HttpSession session) {
+        if (containsUser(loginInfo.getEmail())) {
+            User user = userRepository.findByEmail(loginInfo.getEmail());
+            UserDto.SessionUserInfo sessionUserInfo = UserDto.SessionUserInfo.toDto(user);
+            session.setAttribute("userInfo", sessionUserInfo);
             return "/index";
         }
-        return "/user/login";
+        return "redirect:/login";
     }
 
     @GetMapping("/signup")
@@ -46,26 +46,41 @@ public class UserController {
     public String findUsers(final Model model) {
         final Iterable<User> users = userRepository.findAll();
         model.addAttribute("users", users);
-        return "user/user-list";
+        return "/user/user-list";
     }
+
+
+//    @PostMapping("/users")
+//    public String saveUser(final User user, final Model model) {
+////        User user = signUpUserInfo.toUser();
+//        if (containsUser(user.getEmail())) {
+//            model.addAttribute("errorMessage", "이메일이 중복됩니다");
+//            return "redirect:/signup";
+//        }
+//        userRepository.save(user);
+//        return "redirect:/login";
+//    }
 
     @PostMapping("/users")
-    public String saveUser(final User user, final Model model) {
-        if (alreadyHasEmail(user)) {
+    public String saveUser1(final UserDto.SignUpUserInfo signUpUserInfo, final Model model) {
+        User user = signUpUserInfo.toUser();
+        if (containsUser(user.getEmail())) {
             model.addAttribute("errorMessage", "이메일이 중복됩니다");
-            return "/user/signup";
+            return "redirect:/signup";
         }
         userRepository.save(user);
-        return "/user/login";
+        return "redirect:/login";
     }
 
+    //TODO IllegalArgumentException -> CustomException으로 변화
     @GetMapping("/users/{id}")
-    public String userPage(@PathVariable Long id) {
+    public String userPage(@PathVariable Long id, final Model model) {
         User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        return "/mypage/" + user.getId();
+        model.addAttribute("user", user);
+        return "/mypage";
     }
 
-    private boolean alreadyHasEmail(final User user) {
-        return userRepository.existsByEmail(user.getEmail());
+    private boolean containsUser(final String email) {
+        return userRepository.existsByEmail(email);
     }
 }

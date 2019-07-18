@@ -1,7 +1,5 @@
 package techcourse.myblog.domain;
 
-import org.hibernate.validator.constraints.UniqueElements;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +16,19 @@ public class User {
     private String password;
 
     public User() {
+    }
 
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(long id, String name, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
     public Long getId() {
