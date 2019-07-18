@@ -23,6 +23,7 @@
                         <div class="user-info login-btn pointer mrg-right-10">
                             <span class="name pdd-right-5 text-white">Login</span>
                         </div>
+                        <div th:if="${error}" th:text="${message}" class="alert alert-primary" role="alert">
                     </a>
                 </li>
             </ul>

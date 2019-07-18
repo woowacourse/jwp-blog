@@ -1,6 +1,6 @@
 package techcourse.myblog.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,23 +9,23 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@RequiredArgsConstructor
 
-    @Autowired
-    private UserAuthenticationProvider authenticationProvider;
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    private final UserAuthenticationProvider authenticationProvider;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/img/**").permitAll()
-                .antMatchers("/auth/**").hasAnyRole( "USER") // 내부적으로 접두어 "ROLE_"가 붙는다.
-                .anyRequest().authenticated();
-
-        http.formLogin()
-                .loginPage("/login") // default
+                .antMatchers("/article/writing","/auth/**").hasAnyRole( "USER")
+                .antMatchers("/css/**", "/js/**", "/img/**","/article/*","/","/user/signup").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/user") // default
                 .loginProcessingUrl("/authenticate")
-                .failureUrl("/login?error") // default
-                .defaultSuccessUrl("/home")
+                .failureUrl("/user?error") // default
+                .defaultSuccessUrl("/")
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .permitAll();

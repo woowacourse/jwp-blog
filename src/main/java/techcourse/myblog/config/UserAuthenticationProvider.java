@@ -1,6 +1,6 @@
 package techcourse.myblog.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,10 +14,15 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
+
 public class UserAuthenticationProvider implements AuthenticationProvider {
 
-    @Autowired
-    UserService userService;
+    private UserService userService;
+
+    public UserAuthenticationProvider(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication)
@@ -27,7 +32,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
         Optional<User> maybeUser = userService.authenticate(email, password);
 
-        if(!maybeUser.isPresent()){
+        if (!maybeUser.isPresent()) {
             maybeUser.get().setPassword(null);
             throw new IllegalArgumentException("로그인 실패!");
         }

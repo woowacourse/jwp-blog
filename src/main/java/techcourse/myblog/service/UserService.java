@@ -16,7 +16,7 @@ public class UserService {
 
     public void save(User user) {
         StreamSupport.stream(userRepository.findAll().spliterator(), false)
-        .filter(a -> a.isSameMail(user))
+        .filter(a -> a.isSameMail(user.getEmail()))
         .findAny()
                 .ifPresent(a -> {
             throw new IllegalArgumentException();
@@ -24,7 +24,6 @@ public class UserService {
 
         userRepository.save(user);
     }
-
 
     public Optional<User> authenticate(String email, String password) {
         return StreamSupport.stream(userRepository.findAll().spliterator(),false)
