@@ -45,8 +45,9 @@ public class UserController {
         System.out.println(password);
         return userRepository.findByEmail(email)
                             .filter(u -> u.authenticate(password))
-                            .map(ifSucceeded -> {
-                                    session.setAttribute("user", Objects.hash(email) + "");
+                            .map(user -> {
+                                    session.setAttribute("key", Objects.hash(email));
+                                    session.setAttribute("username", user.getName());
                                     Cookie loginCookie = new Cookie("credential", Objects.hash(email) + "");
                                     res.addCookie(loginCookie);
                                     return new RedirectView("/");
