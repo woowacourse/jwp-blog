@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.UserRepository;
 
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -16,8 +17,18 @@ public class UserService {
     public void save(User user) {
         StreamSupport.stream(userRepository.findAll().spliterator(), false)
         .filter(a -> a.isSameMail(user))
-        .findAny().ifPresent(a -> {
+        .findAny()
+                .ifPresent(a -> {
             throw new IllegalArgumentException();
         });
+
+        userRepository.save(user);
+    }
+
+
+    public Optional<User> authenticate(String email, String password) {
+        return StreamSupport.stream(userRepository.findAll().spliterator(),false)
+                .filter(a -> a.isSameMail(email) && a.isSamePassword(password))
+                .findAny();
     }
 }
