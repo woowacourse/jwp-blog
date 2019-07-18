@@ -28,10 +28,10 @@
                            class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </a>
+                        <form th:method="delete" th:action="'/users/' + ${user.email}">
+                            <input type="submit" value="탈퇴" class="btn btn-info"/>
+                        </form>
                     </div>
-                    <form>
-                        <input type="submit" value="삭제" class="btn btn-info"/>
-                    </form>
                     <div class="card-block">
                         <div class="row">
                             <div class="col-md-3">

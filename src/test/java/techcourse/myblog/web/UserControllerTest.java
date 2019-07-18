@@ -16,6 +16,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
+import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -170,7 +171,7 @@ public class UserControllerTest {
     public void 마이_페이지를_클릭했을때_마이페이지로_이동() {
         User user = new User(NAME, EMAIL, PASSWORD);
         addUser(user);
-        User check = userRepository.findByEmail(EMAIL).orElseThrow(IllegalArgumentException::new);
+        User check = userRepository.findByEmail(EMAIL).orElseThrow(NoSuchElementException::new);
         webTestClient.get().uri("/users/" + check.getId())
                 .exchange()
                 .expectStatus().isOk()
@@ -187,7 +188,7 @@ public class UserControllerTest {
         User user = new User(NAME, EMAIL, PASSWORD);
         addUser(user);
 
-        User check = userRepository.findByEmail(EMAIL).orElseThrow(IllegalArgumentException::new);
+        User check = userRepository.findByEmail(EMAIL).orElseThrow(NoSuchElementException::new);
         webTestClient.get().uri("/users/edit/" + check.getId())
                 .exchange()
                 .expectStatus().isOk()
@@ -211,7 +212,8 @@ public class UserControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String uri = response.getResponseHeaders().get("Location").get(0);
-                    User check = userRepository.findByEmail(user.getEmail()).orElseThrow(IllegalArgumentException::new);
+                    //TODO getter 이용 제거
+                    User check = userRepository.findByEmail(user.getEmail()).orElseThrow(NoSuchElementException::new);
                     assertThat(uri).contains("/users/edit/" + check.getId());
                 });
     }
@@ -220,7 +222,14 @@ public class UserControllerTest {
     public void 회원_탈퇴() {
         User user = new User(NAME, EMAIL, PASSWORD);
         addUser(user);
-        webTestClient.delete().uri("/users");
+        webTestClient.delete().uri("/users/{email}", EMAIL)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                   String body = new String(response.getResponseBody());
+                   assertFalse(body.contains("로그아웃"));
+                });
     }
 
     @Test

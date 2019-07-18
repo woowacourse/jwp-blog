@@ -8,6 +8,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
 import javax.servlet.http.HttpSession;
+import java.util.NoSuchElementException;
 
 @Controller
 public class UserController {
@@ -30,7 +31,7 @@ public class UserController {
         //TODO 메시지 보내는 방식으로 고치기
         if (canLogin(loginInfo.getEmail(), loginInfo.getPassword())) {
             // TODO 중복 get 제거
-            User user = userRepository.findByEmail(loginInfo.getEmail()).orElseThrow(IllegalArgumentException::new);
+            User user = userRepository.findByEmail(loginInfo.getEmail()).orElseThrow(NoSuchElementException::new);
             UserDto.SessionUserInfo sessionUserInfo = UserDto.SessionUserInfo.toDto(user);
             session.setAttribute("userInfo", sessionUserInfo);
             return "/index";
@@ -70,24 +71,24 @@ public class UserController {
         return "redirect:/login";
     }
 
-    //TODO IllegalArgumentException -> CustomException으로 변화
+    //TODO NoSuchElementException -> CustomException으로 변화
     @GetMapping("/users/{id}")
     public String myPage(@PathVariable Long id, final Model model) {
-        User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findById(id).orElseThrow(NoSuchElementException::new);
         model.addAttribute("user", user);
         return "mypage";
     }
 
     @GetMapping("/users/edit/{id}")
     public String editPage(@PathVariable Long id, final Model model) {
-        User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findById(id).orElseThrow(NoSuchElementException::new);
         model.addAttribute("user", user);
         return "mypage-edit";
     }
 
     @PutMapping("/users/edit")
     public String update(final User user, final HttpSession session) {
-        User userParam = userRepository.findByEmail(user.getEmail()).orElseThrow(IllegalArgumentException::new);
+        User userParam = userRepository.findByEmail(user.getEmail()).orElseThrow(NoSuchElementException::new);
         userParam.setName(user.getName());          //이름 변경
         //TODO Setter -> update or Dto
         userRepository.save(userParam);
@@ -97,17 +98,19 @@ public class UserController {
         return "redirect:/users/edit/" + userParam.getId() ;
     }
 
-    @DeleteMapping("/users")
-    public String delete(final User user) {
-        System.out.println(user);
+    @DeleteMapping("/users/{email}")
+    public String delete(@PathVariable String email, final HttpSession session) {
+        User user = userRepository.findByEmail(email).orElseThrow(NoSuchElementException::new);
+        userRepository.delete(user);
+        session.removeAttribute(SESSION_NAME);
         return "/index";
     }
 
     private boolean canLogin(final String email, final String password) {
         try {
-            User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+            User user = userRepository.findByEmail(email).orElseThrow(NoSuchElementException::new);
             return user.matchPassword(password);
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException e) {
             return false;
         }
     }
