@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureWebTestClient
 public class UserControllerTest {
     private static final String NAME = "yusi";
-    private static final String EMAIL = "test@naver.com";
+    private static final String EMAIL = "temp@mail.com";
     private static final String PASSWORD = "12345abc";
 
     @Autowired
@@ -44,6 +44,11 @@ public class UserControllerTest {
     public void addUserTest() {
         User user = new User(1L, NAME, EMAIL, PASSWORD);
 
+        addUser(user);
+    }
+
+    //TODO 메소드 네이밍 고치기
+    private void addUser(User user) {
         addUser(user, response -> {
             String uri = response.getResponseHeaders().get("Location").get(0);
             assertTrue(uri.contains("/login"));
@@ -66,10 +71,7 @@ public class UserControllerTest {
     public void 이메일_중복일때_가입_테스트() {
         User user = new User(1L, NAME, EMAIL, PASSWORD);
 
-        addUser(user, response -> {
-            String uri = response.getResponseHeaders().get("Location").get(0);
-            assertTrue(uri.contains("/login"));
-        });
+        addUser(user);
 
         User other = new User(2L, "other", EMAIL, PASSWORD);
 
@@ -86,10 +88,7 @@ public class UserControllerTest {
     public void 회원_목록_조회() {
         User user = new User(1L, NAME, EMAIL, PASSWORD);
 
-        addUser(user, response -> {
-            String uri = response.getResponseHeaders().get("Location").get(0);
-            assertTrue(uri.contains("/login"));
-        });
+        addUser(user);
 
         final int count = 1;
         String delimiter = "class=\"card-body\"";
@@ -108,10 +107,7 @@ public class UserControllerTest {
     public void 로그인_성공() {
         User user = new User(1L, NAME, EMAIL, PASSWORD);
 
-        addUser(user, response -> {
-            String uri = response.getResponseHeaders().get("Location").get(0);
-            assertTrue(uri.contains("/login"));
-        });
+        addUser(user);
 
         webTestClient.post().uri("/login")
                 .body(BodyInserters
@@ -144,10 +140,7 @@ public class UserControllerTest {
     public void 로그인_실패_비밀번호가_다를때() {
         User user = new User(1L, NAME, EMAIL, PASSWORD);
 
-        addUser(user, response -> {
-            String uri = response.getResponseHeaders().get("Location").get(0);
-            assertTrue(uri.contains("/login"));
-        });
+        addUser(user);
 
         webTestClient.post().uri("/login")
                 .body(BodyInserters
@@ -168,8 +161,58 @@ public class UserControllerTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
-                   String body = new String(response.getResponseBody());
-                   assertFalse(body.contains("로그아웃"));
+                    String body = new String(response.getResponseBody());
+                    assertFalse(body.contains("로그아웃"));
+                });
+    }
+
+    @Test
+    public void 마이_페이지를_클릭했을때_마이페이지로_이동() {
+        User user = new User(NAME, EMAIL, PASSWORD);
+        addUser(user);
+        User check = userRepository.findByEmail(EMAIL).orElseThrow(IllegalArgumentException::new);
+        webTestClient.get().uri("/users/" + check.getId())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body).contains(check.getName())
+                            .contains(check.getEmail());
+                });
+    }
+
+    @Test
+    public void 마이페이지의_수정_버튼클릭시_수정페이지_이동() {
+        User user = new User(NAME, EMAIL, PASSWORD);
+        addUser(user);
+
+        User check = userRepository.findByEmail(EMAIL).orElseThrow(IllegalArgumentException::new);
+        webTestClient.get().uri("/users/edit/" + check.getId())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+
+                });
+    }
+
+    @Test
+    public void 회원_수정() {
+        User user = new User(NAME, EMAIL, PASSWORD);
+        addUser(user);
+
+        webTestClient.put().uri("/users/edit")
+                .body(BodyInserters
+                        .fromFormData("name", "CHANGE")
+                        .with("email", user.getEmail()))
+                .exchange()
+                .expectStatus().isFound()
+                .expectBody()
+                .consumeWith(response -> {
+                    String uri = response.getResponseHeaders().get("Location").get(0);
+                    User check = userRepository.findByEmail(user.getEmail()).orElseThrow(IllegalArgumentException::new);
+                    assertThat(uri).contains("/users/edit/" + check.getId());
                 });
     }
 

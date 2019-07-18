@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
@@ -75,7 +76,23 @@ public class UserController {
     public String userPage(@PathVariable Long id, final Model model) {
         User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         model.addAttribute("user", user);
-        return "/mypage";
+        return "mypage";
+    }
+
+    @GetMapping("/users/edit/{id}")
+    public String userEditPage(@PathVariable Long id, final Model model) {
+        User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        model.addAttribute("user", user);
+        return "mypage-edit";
+    }
+
+    @PutMapping("/users/edit")
+    public String update(final User user) {
+        User userParam = userRepository.findByEmail(user.getEmail()).orElseThrow(IllegalArgumentException::new);
+        userParam.setName(user.getName());
+        userRepository.save(userParam);
+        System.out.println(userParam);
+        return "redirect:/users/edit/" + userParam.getId() ;
     }
 
     private boolean canLogin(final String email, final String password) {

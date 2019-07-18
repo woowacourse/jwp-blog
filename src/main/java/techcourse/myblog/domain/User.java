@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Objects;
 
+//TODO User에서 모든 파라미터를 가진 생성자 삭제 고려
 @Entity
 public class User {
     @Id
