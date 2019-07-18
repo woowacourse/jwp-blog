@@ -8,6 +8,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.service.SignUpException;
 
 import java.net.URI;
 
@@ -60,6 +61,39 @@ class UserControllerTest {
                     URI location = response.getResponseHeaders().getLocation();
                     assertThat(location.toString())
                             .isEqualTo("http://localhost:" + randomPortNumber + "/users/login");
+                });
+    }
+
+    @Test
+    @DisplayName("email이 중복되는 경우 error message와 함께 sign-up페이지를 보여준다.")
+    void showSignUpPageWhenDuplicatedEmail() {
+        String name = "learnerDeock";
+        String email = "deocks@woowa.com";
+        String password = "1234abc!!!!";
+
+        webTestClient.post()
+                .uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password))
+                .exchange()
+                .expectStatus().isFound();
+
+        webTestClient.post()
+                .uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body).contains(SignUpException.EMAIL_DUPLICATION_MESSAGE);
                 });
     }
 }

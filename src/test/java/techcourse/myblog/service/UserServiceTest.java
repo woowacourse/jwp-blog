@@ -23,6 +23,6 @@ class UserServiceTest {
         userService.save(userDto1);
 
         assertThatThrownBy(() -> userService.save(userDto2))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SignUpException.class);
     }
 }

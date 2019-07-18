@@ -43,15 +43,15 @@
                                                     <form action="/users" method="post">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input type="text" name="name" class="form-control">
+                                                            <input required minlength="2" maxlength="8" pattern="[(가-힣a-zA-Z)]+" type="text" id="name" name="name" class="form-control">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
-                                                            <input type="email" name="email" class="form-control">
+                                                            <input required type="email" id="email" name="email" class="form-control">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
-                                                            <input type="password" name="password" class="form-control"
+                                                            <input required minlength="8" type="password" name="password" class="form-control"
                                                                    placeholder="Password">
                                                         </div>
                                                         <div class="form-group">
@@ -87,5 +87,25 @@
 </div>
 
 <th:block th:replace="fragments/script :: scriptFragment"></th:block>
+<script th:inline="javascript">
+    if ([[${errorMessage}]]) {
+        alert([[${errorMessage}]]);
+    }
+
+    const nameInput = document.getElementById("name");
+
+    nameInput.addEventListener('input', () => {
+      nameInput.setCustomValidity('');
+      nameInput.checkValidity();
+    });
+
+    nameInput.addEventListener('invalid', () => {
+        if(nameInput.value === '') {
+            nameInput.setCustomValidity('이름을 입력해 주세요.');
+        } else {
+            nameInput.setCustomValidity('이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다.');
+        }
+    });
+</script>
 </body>
 </html>

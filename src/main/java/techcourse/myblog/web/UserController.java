@@ -1,10 +1,13 @@
 package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.SignUpException;
 import techcourse.myblog.service.UserService;
 
 @Controller
@@ -29,5 +32,11 @@ public class UserController {
     public String createUser(UserDto userDto) {
         userService.save(userDto);
         return "redirect:/users/login";
+    }
+
+    @ExceptionHandler(SignUpException.class)
+    public String handleSignUpException(Model model, Exception e) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "sign-up";
     }
 }

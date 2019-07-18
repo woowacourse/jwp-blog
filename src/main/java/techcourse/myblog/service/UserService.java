@@ -21,7 +21,7 @@ public class UserService {
     private void checkDuplicatedEmail(String email) {
         User user = userRepository.findByEmail(email);
         if (user != null) {
-            throw new IllegalArgumentException();
+            throw new SignUpException(SignUpException.EMAIL_DUPLICATION_MESSAGE);
         }
     }
 }
