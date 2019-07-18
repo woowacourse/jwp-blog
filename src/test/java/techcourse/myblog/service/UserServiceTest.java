@@ -17,7 +17,7 @@ public class UserServiceTest {
 
     @BeforeEach
     void 이메일_등록() {
-        userDto = new UserDto("ab", "eara12sa@naver.com", "12345678!Aa");
+        userDto = new UserDto("ab", "abcd@abcd", "12345678!Aa");
         userService.save(userDto);
     }
 
