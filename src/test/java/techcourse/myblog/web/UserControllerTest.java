@@ -7,11 +7,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.web.dto.UserRequestDto;
 
 import java.util.function.Consumer;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -73,5 +75,26 @@ class UserControllerTest {
                     .contains(userRequestDto.getEmail());
             });
         });
+    }
+
+    @Test
+    void mypage() {
+        UserRequestDto user = UserRequestDto.of("john", "logout_test@example.com", "p@ssW0rd", "p@ssW0rd");
+        postUser(user, postUserResponse -> {
+            webTestClient.get().uri("/mypage")
+                .header("Authorization", createAuthHeaderString(user))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(mypageResponse -> {
+                    assertThat(new String(mypageResponse.getResponseBody()))
+                        .contains(user.getEmail())
+                        .contains(user.getName());
+                });
+        });
+    }
+
+    private String createAuthHeaderString(UserRequestDto user) {
+        return "Basic " + Base64Utils.encodeToString((user.getEmail() + ":" + user.getPassword()).getBytes(UTF_8));
     }
 }
