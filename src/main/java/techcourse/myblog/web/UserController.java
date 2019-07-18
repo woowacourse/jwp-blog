@@ -11,9 +11,10 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -34,15 +35,20 @@ public class UserController {
 
     @PostMapping("/login")
     public RedirectView login(
+            String email,
+            String password,
             HttpSession session,
-            @RequestParam String email,
-            @RequestParam String password,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            HttpServletResponse res
     ) {
+        System.out.println(email);
+        System.out.println(password);
         return userRepository.findByEmail(email)
                             .filter(u -> u.authenticate(password))
-                            .map(u -> {
-                                    session.setAttribute("loginhash", Objects.hash(email + password));
+                            .map(ifSucceeded -> {
+                                    session.setAttribute("user", Objects.hash(email) + "");
+                                    Cookie loginCookie = new Cookie("credential", Objects.hash(email) + "");
+                                    res.addCookie(loginCookie);
                                     return new RedirectView("/");
                             }).orElseGet(() -> {
                                     redirectAttributes.addAttribute(
@@ -61,12 +67,12 @@ public class UserController {
 
     @PostMapping("/users")
     public RedirectView registerUser(User user, RedirectAttributes redirectAttributes) {
-        return userRepository.findByEmail(user.getEmail()).map(u -> {
-            redirectAttributes.addAttribute("errorMessage", "이미 존재하는 이메일입니다.");
-            return new RedirectView("/signup");
+        return userRepository.findByEmail(user.getEmail()).map(ifExists -> {
+                redirectAttributes.addAttribute("errorMessage", "이미 존재하는 이메일입니다.");
+                return new RedirectView("/signup");
         }).orElseGet(() -> {
-            userRepository.save(user);
-            return new RedirectView("/login");
+                userRepository.save(user);
+                return new RedirectView("/login");
         });
     }
 }
