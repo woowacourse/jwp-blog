@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.*;
+import techcourse.myblog.service.ArticleService;
 
 @Controller
 public class CategoryController {
     @Autowired
-    private ArticleRepository articleRepository;
-
-    @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private ArticleService articleService;
 
     @PostMapping("/categories/add")
     public String addCategories(CategoryDto categoryDto) {
@@ -24,7 +24,7 @@ public class CategoryController {
 
     @GetMapping("categories/delete/{categoryId}")
     public String deleteCategories(@PathVariable long categoryId) {
-        if (articleRepository.findByCategoryId(categoryId).isEmpty()) {
+        if (articleService.readByCategoryId(categoryId).isEmpty()) {
             categoryRepository.deleteById(categoryId);
         }
 
