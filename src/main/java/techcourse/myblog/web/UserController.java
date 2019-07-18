@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.web.dto.LoginRequestDto;
+import techcourse.myblog.web.dto.UserRequestDto;
+import techcourse.myblog.web.dto.UserUpdateRequestDto;
 
 import javax.servlet.http.HttpSession;
 import java.util.NoSuchElementException;

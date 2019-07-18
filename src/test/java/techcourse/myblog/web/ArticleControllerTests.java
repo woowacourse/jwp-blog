@@ -9,6 +9,7 @@ import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.web.dto.ArticleRequestDto;
 
 import java.util.function.Consumer;
 

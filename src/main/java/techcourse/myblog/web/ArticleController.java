@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.web.dto.ArticleRequestDto;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;

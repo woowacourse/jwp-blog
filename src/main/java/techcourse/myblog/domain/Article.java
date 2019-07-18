@@ -1,6 +1,6 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.web.ArticleRequestDto;
+import techcourse.myblog.web.dto.ArticleRequestDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
