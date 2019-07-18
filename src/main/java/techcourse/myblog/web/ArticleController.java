@@ -20,7 +20,7 @@ public class ArticleController {
 
     @GetMapping("/articles/new")
     public String showArticleWritingPage(Model model) {
-        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("categories", categoryService.readAll());
         return "article-edit";
     }
 
@@ -55,7 +55,7 @@ public class ArticleController {
 
         if (maybeArticleDto.isPresent()) {
             model.addAttribute("article", maybeArticleDto.get());
-            model.addAttribute("categories", categoryService.findAll());
+            model.addAttribute("categories", categoryService.readAll());
             return "article-edit";
         }
         return "error";
