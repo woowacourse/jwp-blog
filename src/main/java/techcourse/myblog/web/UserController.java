@@ -3,10 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
@@ -125,5 +122,14 @@ public class UserController {
                                                                     return new RedirectView("/mypage");
                                                             });
         }).orElse(new RedirectView("/"));
+    }
+
+    @DeleteMapping("/users")
+    public RedirectView deleteUser(HttpSession session) {
+        userRepository.findByEmail((String) session.getAttribute("email")).ifPresent(user -> {
+            userRepository.delete(user);
+            session.invalidate();
+        });
+        return new RedirectView("/");
     }
 }
