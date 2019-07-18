@@ -31,11 +31,11 @@ public class UserController {
         }
         return "signup";
     }
-    
+
     @PostMapping("/users")
-    public String register(UserRequestDto userRequestDto, Model model, HttpSession session){
+    public String register(UserRequestDto userRequestDto, Model model, HttpSession session) {
         try {
-            if(isLoggedIn(session)) {
+            if (isLoggedIn(session)) {
                 return "redirect:/";
             }
             if (!userRequestDto.getPassword().equals(userRequestDto.getPasswordConfirm())) {
@@ -55,7 +55,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginView(HttpSession session) {
-        if(isLoggedIn(session)) {
+        if (isLoggedIn(session)) {
             return "redirect:/";
         }
         return "login";
@@ -64,7 +64,7 @@ public class UserController {
     @PostMapping("/login")
     public String login(LoginRequestDto requestDto, Model model, HttpSession session) {
         try {
-            if(isLoggedIn(session)) {
+            if (isLoggedIn(session)) {
                 return "redirect:/";
             }
             User user = userRepository.findByEmail(requestDto.getEmail())

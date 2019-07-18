@@ -5,11 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.web.dto.ArticleRequestDto;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -19,18 +18,18 @@ import static techcourse.myblog.web.ControllerUtil.checkAndPutUser;
 @Controller
 public class ArticleController {
 
-    private final ArticleService articleService;
+    //    private final ArticleService articleService;
+    private final ArticleRepository articleRepository;
 
     @Autowired
-    public ArticleController(ArticleService articleService) {
-        this.articleService = articleService;
+    public ArticleController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
     }
 
     @GetMapping("/")
     public String indexView(Model model, HttpSession session) {
         checkAndPutUser(model, session);
-        List<Article> articles = new ArrayList<>();
-        articleService.findAll().forEach(articles::add);
+        List<Article> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
     }
@@ -43,14 +42,15 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String publishArticle(ArticleRequestDto article) {
-        Article saved = articleService.save(Article.from(article));
+        Article saved = articleRepository.save(Article.from(article));
         return "redirect:/articles/" + saved.getId();
     }
 
     @GetMapping("/articles/{articleId}")
     public String articleView(@PathVariable Long articleId, Model model) {
         try {
-            Article article = articleService.findById(articleId);
+            Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> createNotFoundException(articleId));
             model.addAttribute("article", article);
             return "article";
         } catch (NoSuchElementException e) {
@@ -60,7 +60,8 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}/edit")
     public String editArticleView(@PathVariable Long articleId, Model model) {
-        Article article = articleService.findById(articleId);
+        Article article = articleRepository.findById(articleId)
+            .orElseThrow(() -> createNotFoundException(articleId));
         model.addAttribute("article", article);
         return "article-edit";
     }
@@ -68,15 +69,20 @@ public class ArticleController {
     @PutMapping("/articles/{articleId}")
     public String editArticle(@PathVariable Long articleId, ArticleRequestDto reqArticle, Model model) {
         Article article = Article.of(articleId, reqArticle.getTitle(), reqArticle.getCoverUrl(), reqArticle.getContents());
-        articleService.save(article);
-        Article articleToShow = articleService.findById(articleId);
+        articleRepository.save(article);
+        Article articleToShow = articleRepository.findById(articleId)
+            .orElseThrow(() -> createNotFoundException(articleId));
         model.addAttribute("article", articleToShow);
         return "article";
     }
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable Long articleId) {
-        articleService.deleteById(articleId);
+        articleRepository.deleteById(articleId);
         return "redirect:/";
+    }
+
+    private static NoSuchElementException createNotFoundException(Long id) {
+        return new NoSuchElementException("Can't find article with id: " + id);
     }
 }

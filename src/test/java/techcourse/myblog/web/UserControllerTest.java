@@ -94,6 +94,31 @@ class UserControllerTest {
         });
     }
 
+    @Test
+    void mypage_put() {
+        UserRequestDto user = UserRequestDto.of("john", "user_put_test@example.com", "p@ssW0rd", "p@ssW0rd");
+        postUser(user, postUserResponse -> {
+            webTestClient.put().uri("/users")
+                .header("Authorization", createAuthHeaderString(user))
+                .body(BodyInserters.fromFormData("name", "park"))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody()
+                .consumeWith(mypagePutResponse -> {
+                    webTestClient.get().uri("/mypage")
+                        .header("Authorization", createAuthHeaderString(user))
+                        .exchange()
+                        .expectStatus().isOk()
+                        .expectBody()
+                        .consumeWith(mypageResponse -> {
+                            assertThat(new String(mypageResponse.getResponseBody()))
+                                .contains("park")
+                                .contains(user.getEmail());
+                        });
+                });
+        });
+    }
+
     private String createAuthHeaderString(UserRequestDto user) {
         return "Basic " + Base64Utils.encodeToString((user.getEmail() + ":" + user.getPassword()).getBytes(UTF_8));
     }

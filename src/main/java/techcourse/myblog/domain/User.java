@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 /**
  * NOTE:
- *
+ * <p>
  * 유저네임에 대한 제약사항은 다음과 같이 가정
  * 길이는 2~10글자이며 영문 대소문자만 허용
  */
@@ -62,10 +62,7 @@ public class User {
         if (userName.length() < 2 || userName.length() > 10) {
             return true;
         }
-        if (!namePattern.matcher(userName).matches()) {
-            return true;
-        }
-        return false;
+        return !namePattern.matcher(userName).matches();
     }
 
     private static boolean isInvalidPassword(String password) {
