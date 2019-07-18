@@ -14,7 +14,7 @@
         <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')"></div>
         <div class="welcome-text-container">
             <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
+                <h1 class="text-white border bottom font-size-35 padding-5" id="welcome-message">Welcome</h1>
             </div>
         </div>
     </div>
@@ -77,5 +77,14 @@
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 <script src="/static/js/index.js"></script>
+<script>
+    const name = "[[ ((${session.userInfo} != null)? ${session.userInfo.name} : '') ]]";
+
+    if (name !== '') {
+        const welcomeElement = document.getElementById('welcome-message');
+        console.log(welcomeElement);
+        welcomeElement.insertAdjacentHTML('beforeend', ' ' + name + '!');
+    }
+</script>
 </body>
 </html>
