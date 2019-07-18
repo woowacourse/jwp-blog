@@ -10,6 +10,16 @@ import java.util.regex.Pattern;
 
 @Service
 public class UserService {
+    private static final int MIN_NAME_LENGTH = 2;
+    private static final int MAX_NAME_LENGTH = 10;
+    private static final int MIN_PASSWORD_LENGTH = 8;
+    private static final String KOREAN_ENGLISH_REGEX = "^[(ㄱ-ㅎ가-힣a-zA-Z)]+$";
+    private static final String UNDER_CASE_REGEX = "[(a-z)]+";
+    private static final String UPPER_CASE_REGEX = "[(A-Z)]+";
+    private static final String NUMBER_REGEX = "[(0-9)]+";
+    private static final String SPECIAL_CHARACTER_REGEX = "[ `~!@#[$]%\\^&[*]\\(\\)_-[+]=\\{\\}\\[\\][|]'\":;,.<>/?]+";
+    private static final String KOREAN_REGEX = "[(ㄱ-ㅎ가-힣)]+";
+
     private UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -20,6 +30,8 @@ public class UserService {
         checkDuplicatedEmail(userDto.getEmail());
         checkValidNameLength(userDto.getName());
         checkValidName(userDto.getName());
+        checkValidPasswordLength(userDto.getPassword());
+        checkValidPassword(userDto.getPassword());
         userRepository.save(userDto.toEntity());
     }
 
@@ -30,20 +42,39 @@ public class UserService {
         }
     }
 
-    public void checkValidNameLength(String name) {
+    private void checkValidNameLength(String name) {
         int nameLength = name.length();
-        if (nameLength < 2 || nameLength > 10) {
+        if (nameLength < MIN_NAME_LENGTH || nameLength > MAX_NAME_LENGTH) {
             throw new SignUpException(SignUpException.INVALID_NAME_LENGTH_MESSAGE);
         }
     }
 
-    public void checkValidName(String name) {
-        Pattern pattern = Pattern.compile("^[(가-힣a-zA-Z)]+$");
-        Matcher matcher = pattern.matcher(name);
-
-        if (!matcher.find()) {
+    private void checkValidName(String name) {
+        if (!matchRegex(name, KOREAN_ENGLISH_REGEX)) {
             throw new SignUpException(SignUpException.NAME_INCLUDE_INVALID_CHARACTERS_MESSAGE);
         }
+    }
+
+    private void checkValidPasswordLength(String password) {
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new SignUpException(SignUpException.INVALID_PASSWORD_LENGTH_MESSAGE);
+        }
+    }
+
+    private void checkValidPassword(String password) {
+        if (!matchRegex(password, UNDER_CASE_REGEX)
+                || !matchRegex(password, UPPER_CASE_REGEX)
+                || !matchRegex(password, NUMBER_REGEX)
+                || !matchRegex(password, SPECIAL_CHARACTER_REGEX)
+                || matchRegex(password, KOREAN_REGEX)) {
+            throw new SignUpException(SignUpException.INVALID_PASSWORD_MESSAGE);
+        }
+    }
+
+    private boolean matchRegex(String input, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.find();
     }
 
 }

@@ -13,6 +13,7 @@ import techcourse.myblog.service.SignUpException;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
@@ -45,7 +46,7 @@ class UserControllerTest {
     void createUser() {
         String name = "hibri";
         String email = "test1@woowa.com";
-        String password = "1234abc!!!!";
+        String password = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -69,7 +70,7 @@ class UserControllerTest {
     void isDuplicatedEmail() {
         String name = "Deock";
         String email = "test2@woowa.com";
-        String password = "1234abc!!!!";
+        String password = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -102,7 +103,7 @@ class UserControllerTest {
     void underValidNameLength() {
         String name = "a";
         String email = "test3@woowa.com";
-        String password = "1234abc!!!!";
+        String password = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -125,7 +126,7 @@ class UserControllerTest {
     void exceedValidNameLength() {
         String name = "abcdefghijk";
         String email = "test4@woowa.com";
-        String password = "1234abc!!!!";
+        String password = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -144,11 +145,11 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("이름이 숫자를 포함하는 경우 error message를 담은 페이지를 되돌려준다.")
-    void includeNumbersInName() {
+    @DisplayName("잘못된 이름인 경우 error message를 담은 페이지를 되돌려준다.")
+    void checkInvalidName() {
         String name = "afghij1";
         String email = "test4@woowa.com";
-        String password = "1234abc!!!!";
+        String password = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -167,11 +168,11 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("이름이 특수문자를 포함하는 경우 error message를 담은 페이지를 되돌려준다.")
-    void includeSpecialCharactersInName() {
-        String name = "afghij!";
-        String email = "test4@woowa.com";
-        String password = "1234abc!!!!";
+    @DisplayName("비밀번호 길이가 8자 미만인 경우 error message를 담은 페이지를 되돌려준다.")
+    void checkInvalidPasswordLength() {
+        String name = "name";
+        String email = "test5@woowa.com";
+        String password = "passwor";
 
         webTestClient.post()
                 .uri("/users")
@@ -185,7 +186,30 @@ class UserControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body).contains(SignUpException.NAME_INCLUDE_INVALID_CHARACTERS_MESSAGE);
+                    assertThat(body).contains(SignUpException.INVALID_PASSWORD_LENGTH_MESSAGE);
+                });
+    }
+
+    @Test
+    @DisplayName("잘못된 비밀번호인 경우 error message를 담은 페이지를 되돌려준다.")
+    void checkInvalidPassword() {
+        String name = "name";
+        String email = "test5@woowa.com";
+        String password = "wrong password";
+
+        webTestClient.post()
+                .uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body).contains(SignUpException.INVALID_PASSWORD_MESSAGE);
                 });
     }
 }
