@@ -1,6 +1,10 @@
 package techcourse.myblog.domain;
 
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserDto;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserAssembler {
     public static UserDto writeDto(User user) {
@@ -12,6 +16,12 @@ public class UserAssembler {
         userDto.setPassword(user.getPassword());
 
         return userDto;
+    }
+
+    public static List<UserDto> writeDtos(List<User> users) {
+        return users.stream()
+                .map(UserAssembler::writeDto)
+                .collect(Collectors.toList());
     }
 
     public static User writeUser(UserDto userDto) {

@@ -31,4 +31,8 @@ public class UserService {
             throw new DuplicateKeyException("중복되는 이메일입니다.");
         }
     }
+
+    public List<UserDto> getAllUsers() {
+        return UserAssembler.writeDtos(userRepository.findAll());
+    }
 }
