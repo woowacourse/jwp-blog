@@ -10,13 +10,13 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
-// TODO 로그인 / 에러 처리는 아래와 동일
 // TODO 로그아웃
 // TODO 회원 수정
 // TODO 회원 탈퇴
@@ -43,12 +43,18 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(HttpSession session, UserDto userDto) {
+    public String login(HttpServletRequest httpServletRequest, UserDto userDto) {
         Optional<User> user = userService.findByEmailAndPassword(userDto);
         if (user.isPresent()) {
-            session.setAttribute("user", user.get());
+            httpServletRequest.getSession().setAttribute("user", user.get());
             return "redirect:/";
         }
         return "redirect:/login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest httpServletRequest) {
+        httpServletRequest.getSession().removeAttribute("user");
+        return "redirect:/";
     }
 }
