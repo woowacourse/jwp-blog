@@ -30,9 +30,8 @@ public class ArticleService {
     }
 
     public Article update(Long articleId, ArticleDto articleDto) {
-        Article selectedArticle = articleRepository.getOne(articleId);
-        selectedArticle.update(articleDto);
-        return articleRepository.save(selectedArticle);
+        Article selectedArticle = findById(articleId);
+        return articleRepository.save(selectedArticle.update(articleDto));
     }
 
     public void delete(Long articleId) {

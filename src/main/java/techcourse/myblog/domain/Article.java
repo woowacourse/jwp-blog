@@ -3,12 +3,13 @@ package techcourse.myblog.domain;
 import techcourse.myblog.web.dto.ArticleDto;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Article")
 public class Article {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     private String title;
     private String coverUrl;
@@ -52,5 +53,21 @@ public class Article {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return Objects.equals(id, article.id) &&
+                Objects.equals(title, article.title) &&
+                Objects.equals(coverUrl, article.coverUrl) &&
+                Objects.equals(contents, article.contents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, coverUrl, contents);
     }
 }
