@@ -1,5 +1,8 @@
 package techcourse.myblog.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,6 +10,8 @@ import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
+@NoArgsConstructor
+@Getter
 public class Article {
 
     @Id
@@ -15,8 +20,6 @@ public class Article {
     private String title;
     private String coverUrl;
     private String contents;
-
-    public Article() {}
     
     private Article(String title, String coverUrl, String contents) {
         this.title = title;
@@ -33,29 +36,13 @@ public class Article {
         this.coverUrl = article.coverUrl;
         this.contents = article.contents;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-    
-    public String getContents() {
-        return contents;
-    }
     
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return id == article.id;
+        return id.equals(article.id);
     }
     
     @Override

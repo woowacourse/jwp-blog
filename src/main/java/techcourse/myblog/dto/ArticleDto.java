@@ -1,5 +1,9 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.dto;
 
+import lombok.Getter;
+import techcourse.myblog.domain.Article;
+
+@Getter
 public class ArticleDto {
     private String title;
     private String coverUrl;
@@ -13,17 +17,5 @@ public class ArticleDto {
 
     public Article toArticle() {
         return Article.to(title, coverUrl, contents);
-    }
-    
-    public String getTitle() {
-        return title;
-    }
-    
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-    
-    public String getContents() {
-        return contents;
     }
 }
