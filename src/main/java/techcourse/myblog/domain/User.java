@@ -65,4 +65,8 @@ public class User {
             throw new IllegalArgumentException("형식에 맞는 비밀번호가 아닙니다.");
         }
     }
+
+    public boolean matchPassword(String password) {
+        return this.password.equals(password);
+    }
 }

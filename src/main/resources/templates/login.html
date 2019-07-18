@@ -10,7 +10,7 @@
             <div class="header-container pdd-right-15">
                 <ul class="nav-left mrg-left-0">
                     <li>
-                        <a href="index.html">
+                        <a href="/">
                             <div class="logo logo-dark d-none"
                                  style="background-image: url('/images/logo/logo_full_dark.png')"></div>
                             <div class="logo logo-white"
@@ -30,6 +30,7 @@
                                 <div class="mx-auto full-height col-md-4">
                                     <div class="vertical-align full-height">
                                         <div class="table-cell padding-20">
+                                            <div th:text="${error}"></div>
                                             <div class="card">
                                                 <div class="card-body">
                                                     <div class="pdd-horizon-30 pdd-vertical-30">
@@ -37,13 +38,15 @@
                                                             <h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">
                                                                 로그인</h2>
                                                         </div>
-                                                        <form>
+                                                        <form method="post" action="/login/check">
                                                             <div class="form-group">
                                                                 <input class="form-control" placeholder="Id"
+                                                                       name="email"
                                                                        type="email">
                                                             </div>
                                                             <div class="form-group">
                                                                 <input class="form-control" placeholder="Password"
+                                                                       name="password"
                                                                        type="password">
                                                             </div>
                                                             <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
@@ -54,7 +57,8 @@
                                                                 <a href="">Forgot Password?</a>
                                                             </div>
                                                             <div class="mrg-top-20 text-right">
-                                                                <a class="btn btn-tumblr" href="user-list.html">로그인</a>
+                                                                <button type="submit" class="btn btn-tumblr">로그인
+                                                                </button>
                                                             </div>
                                                         </form>
                                                         <div class="text-dark">

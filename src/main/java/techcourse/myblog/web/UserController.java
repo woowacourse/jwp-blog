@@ -33,16 +33,11 @@ public class UserController {
         try {
             User user = new User(userDto);
             userRepository.save(user);
-            return "redirect:/users/login";
+            return "redirect:/login";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
             return "signup";
         }
-    }
-
-    @GetMapping("/login")
-    public String showLoginPage() {
-        return "login";
     }
 
     @GetMapping
