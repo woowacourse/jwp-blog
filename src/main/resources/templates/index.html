@@ -10,20 +10,7 @@
 
 <body>
 <div>
-    <header class="header navbar bg-transparent no-border" id="header">
-        <div class="header-container">
-            <th:block th:include="common/index_logo"></th:block>
-            <ul class="nav-right">
-                <li class="user-profile">
-                    <a href="login">
-                        <div class="user-info login-btn pointer mrg-right-10">
-                            <span class="name pdd-right-5 text-white">Login</span>
-                        </div>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </header>
+    <th:block th:include="common/navbar"></th:block>
     <div class="about-cover card no-border mrg-btm-0">
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
         <div class="welcome-text-container">
