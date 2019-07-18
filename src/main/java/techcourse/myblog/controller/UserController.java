@@ -6,18 +6,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
-// TODO 로그아웃
 // TODO 회원 수정
 // TODO 회원 탈퇴
 public class UserController {
@@ -41,15 +40,15 @@ public class UserController {
         model.addAttribute("users", userService.findAll());
         return "user-list";
     }
-
+    
     @PostMapping("/login")
-    public String login(HttpServletRequest httpServletRequest, UserDto userDto) {
+    public RedirectView login(HttpServletRequest httpServletRequest, UserDto userDto) {
         Optional<User> user = userService.findByEmailAndPassword(userDto);
         if (user.isPresent()) {
             httpServletRequest.getSession().setAttribute("user", user.get());
-            return "redirect:/";
+            return new RedirectView("/");
         }
-        return "redirect:/login";
+        return new RedirectView("/login");
     }
 
     @GetMapping("/logout")
