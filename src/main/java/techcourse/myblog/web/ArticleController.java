@@ -5,11 +5,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import techcourse.myblog.domain.ArticleAssembler;
+import org.springframework.web.bind.annotation.PutMapping;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleDto;
 import techcourse.myblog.domain.ArticleService;
-
-import java.util.List;
 
 @Controller
 public class ArticleController {
@@ -38,8 +37,21 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String showArticle(@PathVariable long articleId, Model model) {
-        ArticleDto article = articleService.getArticleById(articleId);
+        ArticleDto article = articleService.getArticleDtoById(articleId);
         model.addAttribute("article", article);
         return "article";
+    }
+
+    @GetMapping("/articles/{articleId}/edit")
+    public String showEditForm(@PathVariable long articleId, Model model) {
+        ArticleDto article = articleService.getArticleDtoById(articleId);
+        model.addAttribute("article", article);
+        return "article-edit";
+    }
+
+    @PutMapping("/articles/{articleId}")
+    public String editArticle(@PathVariable long articleId, ArticleDto articleDto) {
+        articleService.updateArticle(articleDto);
+        return "redirect:/articles/" + articleId;
     }
 }
