@@ -15,6 +15,8 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class LogInController {
+    private static final String LOGGED_IN_USER = "loggedInUser";
+
     private LogInService logInService;
 
     public LogInController(LogInService logInService) {
@@ -22,7 +24,11 @@ public class LogInController {
     }
 
     @GetMapping("/login")
-    public String showLoginPage() {
+    public String showLoginPage(HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        if (httpSession.getAttribute(LOGGED_IN_USER) != null) {
+            return "redirect:/";
+        }
         return "login";
     }
 
@@ -30,14 +36,14 @@ public class LogInController {
     public String logIn(LogInInfoDto logInInfoDto, HttpServletRequest httpServletRequest) {
         LoggedInUserDto loggedInUserDto = logInService.logIn(logInInfoDto);
         HttpSession httpSession = httpServletRequest.getSession();
-        httpSession.setAttribute("loggedInUser", loggedInUserDto);
+        httpSession.setAttribute(LOGGED_IN_USER, loggedInUserDto);
         return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
-        httpSession.removeAttribute("loggedInUser");
+        httpSession.removeAttribute(LOGGED_IN_USER);
         return "redirect:/";
     }
 

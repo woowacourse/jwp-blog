@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import javax.servlet.http.HttpSession;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,9 +22,6 @@ class LogInControllerTest {
     int randomPortNumber;
 
     @Autowired
-    HttpSession httpSession;
-
-    @Autowired
     WebTestClient webTestClient;
 
     @Test
@@ -34,6 +31,15 @@ class LogInControllerTest {
                 .uri("/login")
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    @DisplayName("로그아웃시 메인 화면을 띄운다.")
+    void logOut() {
+        webTestClient.get()
+                .uri("/logout")
+                .exchange()
+                .expectStatus().isFound();
     }
 
     @Test
@@ -110,5 +116,10 @@ class LogInControllerTest {
                     String body = new String(response.getResponseBody());
                     assertThat(body).contains(LOGIN_FAIL_MESSAGE);
                 });
+    }
+
+    @AfterEach
+    void tearDown() {
+        webTestClient.get().uri("/logout");
     }
 }
