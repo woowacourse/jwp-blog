@@ -13,7 +13,7 @@ class UserControllerTest {
     private WebTestClient webTestClient;
 
     @Test
-    void showSignupFormTest() {
+    void 회원가입_페이지_접근_테스트() {
         webTestClient.get().uri("/signup")
                             .exchange()
                             .expectStatus()
@@ -21,7 +21,7 @@ class UserControllerTest {
     }
 
     @Test
-    void registerUserTest() {
+    void 회원_등록_테스트() {
         webTestClient.post().uri("/users")
                             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                             .body(
@@ -34,7 +34,7 @@ class UserControllerTest {
     }
 
     @Test
-    void showLoginFormTest() {
+    void 로그인_페이지_접근_테스트() {
         webTestClient.get().uri("/login")
                             .exchange()
                             .expectStatus()
@@ -42,7 +42,7 @@ class UserControllerTest {
     }
 
     @Test
-    void showUsersList() {
+    void 회원_목록_페이지_접근_테스트() {
         webTestClient.get().uri("/users")
                             .exchange()
                             .expectStatus()
