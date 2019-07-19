@@ -51,6 +51,13 @@ public class UserController {
         return redirectView;
     }
 
+    @GetMapping("/logout")
+    public RedirectView logout(HttpSession httpSession) {
+        httpSession.invalidate();
+
+        return new RedirectView("/");
+    }
+
     @GetMapping("/mypage")
     public ModelAndView readMyPage(HttpSession httpSession) {
         ModelAndView modelAndView = new ModelAndView();
