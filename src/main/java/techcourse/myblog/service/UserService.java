@@ -17,7 +17,7 @@ public class UserService {
     private static final int MAX_NAME_LENGTH = 10;
     private static final int MIN_PASSWORD_LENGTH = 8;
     private static final String KOREAN_ENGLISH_REGEX = "^[(ㄱ-ㅎ가-힣a-zA-Z)]+$";
-    private static final String UNDER_CASE_REGEX = "[(a-z)]+";
+    private static final String LOWER_CASE_REGEX = "[(a-z)]+";
     private static final String UPPER_CASE_REGEX = "[(A-Z)]+";
     private static final String NUMBER_REGEX = "[(0-9)]+";
     private static final String SPECIAL_CHARACTER_REGEX = "[ `~!@#[$]%\\^&[*]\\(\\)_-[+]=\\{\\}\\[\\][|]'\":;,.<>/?]+";
@@ -80,7 +80,7 @@ public class UserService {
     }
 
     private void checkValidPassword(String password) {
-        if (!matchRegex(password, UNDER_CASE_REGEX)
+        if (!matchRegex(password, LOWER_CASE_REGEX)
                 || !matchRegex(password, UPPER_CASE_REGEX)
                 || !matchRegex(password, NUMBER_REGEX)
                 || !matchRegex(password, SPECIAL_CHARACTER_REGEX)
