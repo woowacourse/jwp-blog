@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 @Service
 public class UserService {
     private static final int NOT_FOUND_RESULT = 0;
-    
+
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -52,10 +52,10 @@ public class UserService {
     public User getUser(UserDto userDto) {
         String email = userDto.getEmail();
         String password = userDto.getPassword();
-        
+
         checkUserByEmail(email);
         checkPassword(email, password);
-        
+
         return userRepository.findUserByEmailAndPassword(email, password);
     }
 
@@ -70,5 +70,15 @@ public class UserService {
         if (user == null) {
             throw new NoSuchElementException("비밀번호가 일치하지 않습니다.");
         }
+    }
+
+    public void updateUser(UserDto userDto) {
+        String updatedName = userDto.getName();
+        String email = userDto.getEmail();
+
+        User user = userRepository.findUserByEmail(email);
+        User updatedUser = new User(user.getUserId(), updatedName, email, user.getPassword());
+
+        userRepository.save(updatedUser);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
@@ -82,5 +83,12 @@ public class UserController {
         }
 
         return "redirect:/login";
+    }
+
+    @PutMapping("/mypage/edit")
+    public String updateUser(UserDto userDto, HttpSession httpSession) {
+        userService.updateUser(userDto);
+        httpSession.setAttribute("name", userDto.getName());
+        return "redirect:/mypage";
     }
 }
