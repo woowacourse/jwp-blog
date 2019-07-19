@@ -36,6 +36,13 @@ public class UserController {
         return "login";
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpSession httpSession) {
+        httpSession.removeAttribute("name");
+        httpSession.removeAttribute("email");
+        return "redirect:/";
+    }
+
     @PostMapping("/users")
     public String enrollUser(UserDto userDto) {
         userService.createUser(userDto);
