@@ -15,12 +15,12 @@
 # 게시글 조회
 - 게시글 페이지 이동
     - 메인페이지(index.html)에서 게시글을 클릭 시 게시글 페이지(article.html)으로 이동
-    - GET /articles/{articleId} 으로 요청
+    - GET /articles/{id} 으로 요청
     
 # 게시글 수정
 - 게시글 수정 페이지 이동
     - 게시글 페이지(article.html)에서 수정 버튼 누르기
-    - GET /articles/{articleId}/edit 으로 요청
+    - GET /articles/{id}/edit 으로 요청
     - 게시글 수정 페이지(article-edit.html)로 이동
 - 게시글 수정
     - PUT /articles/{articleId} 으로 요청
@@ -28,8 +28,8 @@
     
 # 게시글 삭제
 - 게시글 페이지(article.html)에서 삭제 버튼 누르기
-    - DELETE /articles/{articleId} 으로 요청
-    - 게시글 목록 조회 페이지(index.html)로 이동
+    - DELETE /articles/{id} 으로 요청
+    - 게시글 목록 조회 페이지(/)로 이동
     
 # 2주차
    
