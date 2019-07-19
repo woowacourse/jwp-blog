@@ -37,6 +37,7 @@
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
+                                                    <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger" role="alert"></div>
                                                     <form action="/users" method="post" onsubmit="return enrollUser();">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
