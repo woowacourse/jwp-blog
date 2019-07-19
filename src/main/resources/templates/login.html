@@ -31,11 +31,12 @@
                                                         </div>
                                                         <form action="/login" method="post">
                                                             <div class="form-group">
-                                                                <input type="email" class="form-control" name="email" placeholder="Email">
+                                                                <input type="email" class="form-control" name="email" placeholder="이메일">
                                                             </div>
                                                             <div class="form-group">
-                                                                <input type="password" class="form-control" name="password" placeholder="Password">
+                                                                <input type="password" class="form-control" name="password" placeholder="비밀번호">
                                                             </div>
+                                                            <div class="alert alert-danger" role="alert" th:if="${errorMessage} != null" th:text="${errorMessage}"></div>
                                                             <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
                                                                 <input id="agreement" name="agreement" type="checkbox">
                                                                 <label for="agreement">로그인 유지</label>

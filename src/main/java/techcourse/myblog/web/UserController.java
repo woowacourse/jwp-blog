@@ -22,7 +22,8 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(@RequestParam(required = false) String errorMessage, Model model) {
+        model.addAttribute("errorMessage", errorMessage);
         return "login";
     }
 
@@ -67,13 +68,23 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public RedirectView registerUser(User user, RedirectAttributes redirectAttributes) {
-        return userRepository.findByEmail(user.getEmail()).map(ifSameEmailExists -> {
+    public RedirectView registerUser(
+            String name,
+            String email,
+            String password,
+            RedirectAttributes redirectAttributes
+    ) {
+        return userRepository.findByEmail(email).map(ifSameEmailExists -> {
             redirectAttributes.addAttribute("errorMessage", "이미 등록된 이메일입니다.");
             return new RedirectView("/signup");
         }).orElseGet(() -> {
-            userRepository.save(user);
-            return new RedirectView("/login");
+            try {
+                userRepository.save(new User(name, email, password));
+                return new RedirectView("/login");
+            } catch(IllegalArgumentException e) {
+                redirectAttributes.addAttribute("errorMessage", "잘못된 입력입니다.");
+                return new RedirectView("/signup");
+            }
         });
     }
 
@@ -90,25 +101,43 @@ public class UserController {
     }
 
     @GetMapping("/profile/edit")
-    public String profileEditForm(Model model, HttpSession session) {
+    public String profileEditForm(
+            @RequestParam(required = false) String errorMessage,
+            Model model,
+            HttpSession session
+    ) {
         return ifLoggedIn(session).map(user -> {
+            if (errorMessage != null) {
+                model.addAttribute("errorMessage", errorMessage);
+            }
             model.addAttribute("user", user);
             return "mypage-edit";
         }).orElse("redirect:/");
     }
 
     @PutMapping("/profile/edit")
-    public RedirectView profileEditConfirm(String email, String name, HttpSession session) {
+    public RedirectView profileEditConfirm(
+            String name,
+            String email,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) {
         return ifLoggedIn(session).map(user -> {
             if (!email.equals(user.getEmail()) && userRepository.findByEmail(email).isPresent()) {
+                redirectAttributes.addAttribute("errorMessage", "이미 등록된 이메일입니다.");
                 return new RedirectView("/profile/edit");
             }
-            user.setName(name);
-            user.setEmail(email);
-            userRepository.save(user);
-            session.setAttribute("name", name);
-            session.setAttribute("email", email);
-            return new RedirectView("/profile");
+            try {
+                user.setName(name);
+                user.setEmail(email);
+                userRepository.save(user);
+                session.setAttribute("name", name);
+                session.setAttribute("email", email);
+                return new RedirectView("/profile");
+            } catch (IllegalArgumentException e) {
+                redirectAttributes.addAttribute("errorMessage", "잘못된 입력입니다.");
+                return new RedirectView("/profile/edit");
+            }
         }).orElse(new RedirectView("/login"));
     }
 

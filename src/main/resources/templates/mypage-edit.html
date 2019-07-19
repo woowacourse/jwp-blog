@@ -85,6 +85,8 @@
                                             <div class="col-md-8 text-right">
                                                 <input type="text" class="form-control" value="https://www.facebook.com/profile">
                                             </div>
+                                            <hr>
+                                            <div class="col-12 alert alert-danger" role="alert" th:if="${errorMessage} != null" th:text="${errorMessage}"></div>
                                         </div>
                                     </div>
                                 </div>
