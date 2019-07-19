@@ -1,5 +1,6 @@
 package techcourse.myblog.application.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +28,20 @@ public class UserServiceTests {
 
     @Test
     void User_조회() {
-        String email = "zino@naver.com";
+        String email = "zino1@naver.com";
         String name = "zino";
         String password = "zinozino";
 
         UserDto userDto = new UserDto(email,name,password);
         userService.save(userDto);
-        UserDto foundUser = userService.findAll().get(0);
+        UserDto foundUser = userService.findAll().get(1);
 
         assertThat(foundUser.getEmail()).isEqualTo(email);
         assertThat(foundUser.getName()).isEqualTo(name);
         assertThat(foundUser.getPassword()).isEqualTo(password);
+    }
+
+    @AfterEach
+    void tearDown() {
     }
 }
