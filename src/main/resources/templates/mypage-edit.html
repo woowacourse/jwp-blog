@@ -35,7 +35,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" value="Brown">
+                                <input th:value="${session.loggedInUser?.name}" type="text" class="form-control">
                             </div>
                         </div>
                         <hr>
@@ -44,7 +44,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10">gracefulBrown@woowahan.com</p>
+                                <p th:text="${session.loggedInUser?.email}" class="mrg-top-10"></p>
                             </div>
                         </div>
                         <hr>

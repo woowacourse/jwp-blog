@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MyPageControllerTest {
     @Autowired
     WebTestClient webTestClient;
@@ -48,8 +48,6 @@ class MyPageControllerTest {
                 .uri("/mypage")
                 .exchange()
                 .expectStatus().isOk();
-
-        webTestClient.get().uri("/logout");
     }
 
     @Test
@@ -63,6 +61,6 @@ class MyPageControllerTest {
 
     @AfterEach
     void tearDown() {
-
+        webTestClient.get().uri("/logout");
     }
 }

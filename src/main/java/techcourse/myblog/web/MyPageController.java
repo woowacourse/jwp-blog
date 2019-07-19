@@ -18,4 +18,13 @@ public class MyPageController {
         }
         return "mypage";
     }
+
+    @GetMapping("/mypage/edit")
+    public String showMyPageEdit(HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        if (httpSession.getAttribute(LOGGED_IN_USER) == null) {
+            return "redirect:/";
+        }
+        return "mypage-edit";
+    }
 }
