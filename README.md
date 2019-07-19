@@ -3,14 +3,14 @@
    - MySql로 옮기기
    - 실행 쿼리 보기 설정
    - 회원가입페이지(signup.html)이 Post /users로 요청
-   - DB에 user 정보 저장
+   - DB에 userDto 정보 저장
    - 생성후 로그인 화면 이동
    - 회원 가입 규칙 위반시 알림
        - 동일한 email 중복불가
        - 이름은 2~10자 숫자, 특문 X
        - 비밀번호는 8자 이상의 소문, 대문, 숫자, 특문 조합
 - 회원 조회
-   - Get /users로 요청 후 목록페이지(user-list.html)이동
+   - Get /users로 요청 후 목록페이지(userDto-list.html)이동
 - 로그인
    - 성공시 메인화면 우측 상단에 사용자 이름
    - 실패 시 맞는 실패 메시지

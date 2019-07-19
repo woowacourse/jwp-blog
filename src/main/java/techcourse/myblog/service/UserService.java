@@ -2,7 +2,6 @@ package techcourse.myblog.service;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.UserDto;
 import techcourse.myblog.domain.User;
@@ -14,11 +13,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     public User save(UserDto userDto) {
         emailDuplicateValidate(userDto);
-        userDto.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        userDto.setPassword(userDto.getPassword());
         User user = new User(userDto.getName(),userDto.getEmail(),userDto.getPassword());
         userRepository.save(user);
         return user;
@@ -31,7 +28,18 @@ public class UserService {
     }
 
     public Optional<User> authenticate(String email, String password) {
-        System.out.println(userRepository.findByEmailAndPassword(email,password));
         return userRepository.findByEmailAndPassword(email,password);
+    }
+
+    public boolean isMatchPassword(UserDto userDto){
+        Optional<User> maybeUser = userRepository.findByEmail(userDto.getEmail());
+        if(maybeUser.isPresent()){
+            return isSamePassword(maybeUser.get());
+        }
+        throw new IllegalArgumentException();
+    }
+
+    private boolean isSamePassword(User userDto) {
+        return userDto.isSamePassword(userDto);
     }
 }

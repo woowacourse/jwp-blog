@@ -12,7 +12,7 @@ import static techcourse.myblog.web.UserController.USER_MAPPING_URL;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserControllerTest {
+class UserDtoControllerTest {
 //    @Qualifier("databaseUserService")
 //    protected UserDetailsService userDetailsService;
 //

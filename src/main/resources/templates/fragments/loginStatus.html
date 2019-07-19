@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="ko"
+<html xmlns:th="http://www.thymeleaf.org" lang="ko"
       xmlns="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="loginStatus">
 <ul class="nav-right">
     <li class="user-profile">
-        <a href="/user" sec:authorize="isAnonymous()">
+        <a href="/user" th:if="${session.user == null}">
             <div class="user-info login-btn pointer mrg-right-10">
                 <span class="name pdd-right-5 text-white">Login</span>
             </div>
         </a>
-        <a href="/user/show" sec:authorize="isAuthenticated()">
-            <div th:text="${user.name}"class="user-info login-btn pointer mrg-right-10">
+        <a href="/user/show" th:if="${session.user != null}">
+            <div th:text="${session.user.name}" class="user-info login-btn pointer mrg-right-10">
             </div>
         </a>
     </li>
