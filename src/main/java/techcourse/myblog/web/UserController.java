@@ -47,4 +47,14 @@ public class UserController {
         model.addAttribute("users", userService.getAllUsers());
         return "user-list";
     }
+
+    @GetMapping("/mypage")
+    public String showMypage(Model model) {
+        return "mypage";
+    }
+
+    @GetMapping("/mypage/edit")
+    public String showEditPage(Model model) {
+        return "mypage-edit";
+    }
 }
