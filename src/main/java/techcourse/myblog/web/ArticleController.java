@@ -39,7 +39,7 @@ public class ArticleController {
     public String showArticleById(@PathVariable final long articleId, final Model model) {
         Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
         model.addAttribute("article", article);
-        return "article/article";
+        return "/article/article";
     }
 
     @PutMapping("/articles/{articleId}")
@@ -50,7 +50,7 @@ public class ArticleController {
         return new RedirectView("/articles/" + article.getId());
     }
 
-    @DeleteMapping("articles/{articleId}")
+    @DeleteMapping("/articles/{articleId}")
     public RedirectView deleteArticle(@PathVariable final long articleId) {
         articleRepository.deleteById(articleId);
         return new RedirectView("/");
@@ -60,6 +60,6 @@ public class ArticleController {
     public String toEditPage(@PathVariable final long articleId, final Model model) {
         Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
         model.addAttribute("article", article);
-        return "article/article-edit";
+        return "/article/article-edit";
     }
 }

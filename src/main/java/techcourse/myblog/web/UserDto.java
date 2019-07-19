@@ -8,6 +8,14 @@ public class UserDto {
         private String email;
         private String password;
 
+        public LoginInfo() {
+        }
+
+        public LoginInfo(String email, String password) {
+            this.email = email;
+            this.password = password;
+        }
+
         public String getEmail() {
             return email;
         }
@@ -30,7 +38,16 @@ public class UserDto {
         private String email;
         private String password;
 
-        User toUser() {
+        public SignUpUserInfo() {
+        }
+
+        public SignUpUserInfo(String name, String email, String password) {
+            this.name = name;
+            this.email = email;
+            this.password = password;
+        }
+
+        public User toUser() {
             return new User(name, email, password);
         }
 
@@ -64,6 +81,10 @@ public class UserDto {
         private String name;
         private String email;
 
+        public SessionUserInfo() {
+
+        }
+
         private SessionUserInfo(final long id, final String name, final String email) {
             this.id = id;
             this.name = name;
@@ -72,6 +93,10 @@ public class UserDto {
 
         public static SessionUserInfo toDto(final User user) {
             return new SessionUserInfo(user.getId(), user.getName(), user.getEmail());
+        }
+
+        public boolean isSameId(final Long id) {
+            return (id.compareTo(id) == 0);
         }
 
         public Long getId() {
@@ -99,7 +124,7 @@ public class UserDto {
         }
     }
 
-    public class updateInfo {
+    public class UpdateInfo {
 
         private String name;
         private String email;

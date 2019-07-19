@@ -9,21 +9,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
-import org.springframework.web.reactive.function.client.WebClient;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
@@ -182,7 +178,45 @@ public class UserControllerTest {
                     assertFalse(body.contains("로그아웃"));
                 });
     }
-    
+
+//    @Test
+//    public void 마이_페이지를_클릭했을때_마이페이지로_이동() {
+//        User user = new User(NAME, EMAIL, PASSWORD);
+//        addUser(user);
+//        User check = userRepository.findByEmail(EMAIL).orElseThrow(NoSuchElementException::new);
+//
+//        webTestClient.get().uri("/users/{id}", check.getId())
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectBody()
+//                .consumeWith(response -> {
+//                    String body = new String(response.getResponseBody());
+//                    assertThat(body)
+//                            .contains(check.getName())
+//                            .contains(check.getEmail());
+//                });
+//    }
+//
+//    @Test
+//    public void 회원_수정() {
+//        User user = new User(NAME, EMAIL, PASSWORD);
+//        addUser(user);
+//
+//        webTestClient.put().uri("/users/edit")
+//                .body(BodyInserters
+//                        .fromFormData("name", "CHANGE")
+//                        .with("email", user.getEmail()))
+//                .exchange()
+//                .expectStatus().isFound()
+//                .expectBody()
+//                .consumeWith(response -> {
+//                    String uri = response.getResponseHeaders().get("Location").get(0);
+//                    //TODO getter 이용 제거
+//                    User check = userRepository.findByEmail(user.getEmail()).orElseThrow(NoSuchElementException::new);
+//                    assertThat(uri).contains("/users/edit/" + check.getId());
+//                });
+//    }
+
     @Test
     public void 마이페이지의_수정_버튼클릭시_수정페이지_이동() {
         User user = new User(NAME, EMAIL, PASSWORD);
