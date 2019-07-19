@@ -14,7 +14,7 @@ public class SnsInfo {
     private String email;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     public SnsInfo() {

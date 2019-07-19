@@ -1,9 +1,9 @@
 package techcourse.myblog.domain;
 
 import lombok.Builder;
-import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(unique = true)
-    @Pattern(regexp = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$")
+    @Email
     private String email;
     @Pattern(regexp = "^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]{8,}$")
     private String password;
@@ -60,7 +60,7 @@ public class User {
     }
 
     public SnsInfo getSnsInfo(int idx) {
-        if (snsInfos ==  null) return null;
+        if (snsInfos == null) return null;
         if (idx < 0 || snsInfos.size() <= idx) return null;
 
         return snsInfos.get(idx);
