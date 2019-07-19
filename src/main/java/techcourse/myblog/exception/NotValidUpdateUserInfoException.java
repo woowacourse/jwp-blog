@@ -4,8 +4,9 @@ import org.springframework.validation.FieldError;
 
 import java.net.BindException;
 
-public class NotValidUpdateUserInformation extends BindException {
-    public NotValidUpdateUserInformation(FieldError fieldError) {
+public class NotValidUpdateUserInfoException extends BindException {
+    public NotValidUpdateUserInfoException(FieldError fieldError) {
         super(fieldError.getDefaultMessage());
     }
+
 }

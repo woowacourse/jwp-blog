@@ -3,6 +3,7 @@ package techcourse.myblog.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import techcourse.myblog.exception.NotValidUserInfoException;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,7 +36,7 @@ public class User {
 
     private void checkConfirmPassword(UserDto userDto) {
         if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new NotValidUserInfoException("비밀번호가 일치하지 않습니다.");
         }
     }
 

@@ -6,13 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserDto;
 import techcourse.myblog.domain.UserUpdateRequestDto;
 import techcourse.myblog.exception.NotFoundObjectException;
-import techcourse.myblog.exception.NotValidUpdateUserInformation;
+import techcourse.myblog.exception.NotValidUpdateUserInfoException;
+import techcourse.myblog.exception.NotValidUserInfoException;
 import techcourse.myblog.repo.UserRepository;
 
 import javax.servlet.http.HttpSession;
@@ -36,16 +36,13 @@ public class UserController {
     }
 
     @PostMapping("/new")
-    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
+    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) throws NotValidUserInfoException {
         if (bindingResult.hasErrors()) {
-            FieldError fieldError = bindingResult.getFieldError();
-            model.addAttribute("error", fieldError.getDefaultMessage());
-            return "signup";
+            throw new NotValidUserInfoException(bindingResult.getFieldError().getDefaultMessage());
         }
 
         if (userRepository.existsByEmail(userDto.getEmail())) {
-            model.addAttribute("error", "중복된 이메일 입니다.");
-            return "signup";
+            throw new NotValidUserInfoException("중복된 이메일 입니다.");
         }
 
         User user = new User(userDto);
@@ -78,9 +75,9 @@ public class UserController {
     @Transactional
     @PutMapping("/mypage/edit")
     public String editUserInfo(@Valid UserUpdateRequestDto userUpdateRequestDto,
-                               BindingResult bindingResult, HttpSession httpSession) throws NotValidUpdateUserInformation {
+                               BindingResult bindingResult, HttpSession httpSession) throws NotValidUpdateUserInfoException {
         if (bindingResult.hasErrors()) {
-            throw new NotValidUpdateUserInformation(bindingResult.getFieldError());
+            throw new NotValidUpdateUserInfoException(bindingResult.getFieldError());
         }
         String email = ((User) httpSession.getAttribute("user")).getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(NotFoundObjectException::new);
@@ -99,12 +96,20 @@ public class UserController {
         return "redirect:/";
     }
 
-    @ExceptionHandler(NotValidUpdateUserInformation.class)
+    @ExceptionHandler(NotValidUserInfoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleNotValidUpdateInformation(FieldError fieldError, Model model) {
-        log.error(fieldError.getDefaultMessage());
-        model.addAttribute("error", fieldError.getDefaultMessage());
-        return "mypage-edit";
+    public String handleNotValidUpdateInformation(NotValidUserInfoException e, Model model) {
+        log.error(e.getMessage());
+        model.addAttribute("error", e.getMessage());
+        return "signup";
+    }
+
+    @ExceptionHandler(NotValidUpdateUserInfoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleaaa(NotValidUpdateUserInfoException e, Model model) {
+        log.error(e.getMessage());
+        model.addAttribute("error", e.getMessage());
+        return "mypage";
     }
 
 }
