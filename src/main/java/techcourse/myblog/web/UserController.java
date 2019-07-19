@@ -79,21 +79,27 @@ public class UserController {
         }
 
         String email = ((User) httpSession.getAttribute("user")).getEmail();
-        User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
-        //TODO: exception catch 할 곳 필요
-        user.setUserName(userUpdateRequestDto.getUserName());
-        httpSession.setAttribute("user", user);
-        return "redirect:/users/mypage";
+        try {
+            User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+            user.setUserName(userUpdateRequestDto.getUserName());
+            httpSession.setAttribute("user", user);
+            return "redirect:/users/mypage";
+        } catch (IllegalArgumentException e) {
+            return "redirect:/";
+        }
     }
 
     @Transactional
     @DeleteMapping("/mypage")
     public String deleteUser(HttpSession httpSession) {
         String email = ((User) httpSession.getAttribute("user")).getEmail();
-        User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
-        //TODO: exception catch 할 곳 필요
-        httpSession.removeAttribute("user");
-        userRepository.delete(user);
-        return "redirect:/";
+        try {
+            User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+            httpSession.removeAttribute("user");
+            userRepository.delete(user);
+            return "redirect:/";
+        } catch (IllegalArgumentException e) {
+            return "redirect:/";
+        }
     }
 }

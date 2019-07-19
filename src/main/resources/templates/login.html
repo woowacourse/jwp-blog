@@ -30,7 +30,10 @@
                                 <div class="mx-auto full-height col-md-4">
                                     <div class="vertical-align full-height">
                                         <div class="table-cell padding-20">
-                                            <div th:text="${error}"></div>
+                                            <div th:if="${error}"
+                                                 class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                <strong th:text="${error}"></strong>
+                                            </div>
                                             <div class="card">
                                                 <div class="card-body">
                                                     <div class="pdd-horizon-30 pdd-vertical-30">

@@ -15,6 +15,10 @@
         <form action="/users/mypage/edit" method="post">
             <input name="_method" type="hidden" value="put"/>
             <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
+                <div th:if="${error}"
+                     class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong th:text="${error}"></strong>
+                </div>
                 <div class="row">
                     <div class="col-md-7 mx-auto">
                         <div class="card">
