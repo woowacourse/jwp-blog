@@ -1,6 +1,8 @@
 package techcourse.myblog.web;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class ArticleController {
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
     private final ArticleRepository articleRepository;
 
     @GetMapping("/")
@@ -42,8 +45,13 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String showArticleById(@PathVariable int articleId, Model model) {
-        model.addAttribute("article",
-                articleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("잘못된 접근입니다.")));
+        try {
+            model.addAttribute("article",
+                    articleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("잘못된 접근입니다.")));
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("message", e);
+            return "redirect:/err";
+        }
         return "article";
     }
 
