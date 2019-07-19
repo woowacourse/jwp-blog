@@ -24,9 +24,13 @@ public class UserService {
         return maybeUser.map(UserDto::from);
     }
 
-    public UserDto create(UserDto userDto) {
-        User user = userRepository.save(userDto.toEntity());
-        return UserDto.from(user);
+    public Optional<UserDto> create(UserDto userDto) {
+        try {
+            User user = userRepository.save(userDto.toEntity());
+            return Optional.of(UserDto.from(user));
+        } catch (Exception e){
+            return Optional.empty();
+        }
     }
 
     public List<UserDto> readAll() {
