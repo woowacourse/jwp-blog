@@ -2,6 +2,7 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -90,5 +91,13 @@ public class UserController {
         userService.updateUser(userDto);
         httpSession.setAttribute("name", userDto.getName());
         return "redirect:/mypage";
+    }
+
+    @DeleteMapping("/mypage/delete")
+    public String deleteUser(HttpSession httpSession) {
+        userService.deleteUser((String) httpSession.getAttribute("email"));
+        httpSession.removeAttribute("name");
+        httpSession.removeAttribute("email");
+        return "redirect:/";
     }
 }
