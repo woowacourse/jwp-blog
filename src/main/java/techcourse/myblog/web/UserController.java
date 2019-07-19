@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserLoginDto;
 
 import javax.servlet.http.HttpSession;
@@ -62,8 +63,9 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String signUp(User user, Model model) {
-        if (validateUser(user)) {
+    public String signUp(UserDto userDto, Model model) {
+        if (validateUser(userDto)) {
+            User user = userDto.toEntity();
             userRepository.save(user);
             return "redirect:/login";
         }
@@ -134,10 +136,10 @@ public class UserController {
         return "redirect:/";
     }
 
-    private boolean validateUser(User user) {
-        return validateName(user.getName())
-                && validatePassword(user.getPassword())
-                && validateEmail(user.getEmail());
+    private boolean validateUser(UserDto userDto) {
+        return validateName(userDto.getName())
+                && validatePassword(userDto.getPassword())
+                && validateEmail(userDto.getEmail());
     }
 
     private boolean validateName(String name) {
