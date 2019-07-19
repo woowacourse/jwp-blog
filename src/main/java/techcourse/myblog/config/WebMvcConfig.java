@@ -17,7 +17,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private HandlerInterceptor interceptor;
 
     @Autowired
-    @Qualifier(value = "LoginUserInfoInterceptor")
+    @Qualifier(value = "loginUserInterceptor")
     private LoginUserInterceptor loginUserInterceptor;
 
 

@@ -67,7 +67,7 @@ public class UserController {
         Optional<UserDto> maybeUserDto = userService.readWithoutPasswordById(id);
 
         if (maybeUserDto.isPresent()) {
-            model.addAttribute("userInfo", maybeUserDto.get());
+            model.addAttribute("userData", maybeUserDto.get());
 
             return "mypage";
         }
@@ -85,7 +85,7 @@ public class UserController {
         Optional<UserDto> maybeUserDto = userService.readWithoutPasswordById(id);
 
         if (maybeUserDto.isPresent()) {
-            model.addAttribute("userInfo", maybeUserDto.get());
+            model.addAttribute("userData", maybeUserDto.get());
             return "mypage-edit";
         }
         return "error";
