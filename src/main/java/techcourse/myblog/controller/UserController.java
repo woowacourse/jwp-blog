@@ -79,8 +79,11 @@ public class UserController {
     }
 
     @DeleteMapping
-    public String deleteUser(UserDTO userDTO, Model model) {
-        userService.delete(userDTO);
+    public String deleteUser(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        userService.delete(user.getEmail());
+        session.invalidate();
         return "redirect:/";
     }
 

@@ -56,15 +56,15 @@ public class UserService {
         return userRepository.findUserByEmailAddress(userDTO.getEmail()) != null;
     }
 
-    public void delete(UserDTO userDTO){
-        userRepository.deleteUserByEmailAddress(userDTO.getEmail());
+    public void delete(String email){
+        userRepository.deleteUserByEmailAddress(email);
     }
 
     public User update(UserDTO userDTO) {
         log.error("email {} ", userDTO.getEmail());
         log.error("name {} ", userDTO.getUserName());
         log.error("password {} ", userDTO.getPassword());
-        int result = userRepository.update(userDTO.getUserName(), userDTO.getPassword(), userDTO.getEmail());
+        int result = userRepository.updateUserByEmailAddress(userDTO.getUserName(), userDTO.getPassword(), userDTO.getEmail());
         if(result == 0){
             throw new UserNotExistException("유저정보가 없습니다.");
         }

@@ -78,6 +78,6 @@ public class UserSerivceTest {
 
     @AfterEach
     void tearDown() {
-        userService.delete(userDTO);
+        userService.delete(TEST_EMAIL_1);
     }
 }
