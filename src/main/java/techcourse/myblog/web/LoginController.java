@@ -44,5 +44,4 @@ public class LoginController {
         httpSession.removeAttribute("user");
         return "redirect:/";
     }
-
 }

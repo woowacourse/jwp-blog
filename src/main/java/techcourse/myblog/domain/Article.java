@@ -16,7 +16,6 @@ import javax.persistence.Id;
 @Setter
 @NoArgsConstructor
 public class Article {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,5 +36,4 @@ public class Article {
         this.coverUrl = articleDto.getCoverUrl();
 
     }
-
 }

@@ -18,8 +18,9 @@ import javax.validation.Valid;
 @RequestMapping("/users")
 public class UserController {
     private static final String NO_USER_MESSAGE = "존재하지 않는 유저입니다.";
-    private final UserService userService;
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;

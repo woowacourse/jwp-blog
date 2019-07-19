@@ -14,10 +14,9 @@ import javax.transaction.Transactional;
 @RequestMapping("/articles")
 public class ArticleController {
     private static final String NO_ARTICLE_MESSAGE = "존재하지 않는 게시글 입니다.";
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     private final ArticleService articleService;
-
-    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     public ArticleController(ArticleService articleService) {
         this.articleService = articleService;

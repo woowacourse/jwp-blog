@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
-
     @Autowired
     private ArticleRepository articleRepository;
     private String title;
@@ -43,7 +42,6 @@ public class ArticleControllerTests {
         checkIsOk(getResponse("/articles/new"));
     }
 
-
     @Test
     void create_article() {
         ArticleDto articleDto = new ArticleDto(title, coverUrl, contents);
@@ -53,14 +51,12 @@ public class ArticleControllerTests {
         checkBody(responseSpec, articleDto);
     }
 
-
     @Test
     void create_update() {
         articleRepository.save(article);
 
         checkIsOk(getResponse("articles/" + article.getId() + "/edit"));
     }
-
 
     @Test
     void submit_update() {
@@ -121,6 +117,4 @@ public class ArticleControllerTests {
                             });
                 });
     }
-
-
 }

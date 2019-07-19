@@ -12,7 +12,6 @@ import techcourse.myblog.repository.UserRepository;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 public class LoginControllerTest {
-
     @Autowired
     WebTestClient webTestClient;
 

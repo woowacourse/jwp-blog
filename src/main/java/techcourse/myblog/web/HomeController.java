@@ -7,7 +7,6 @@ import techcourse.myblog.repository.ArticleRepository;
 
 @Controller
 public class HomeController {
-
     private final ArticleRepository articleRepository;
 
     public HomeController(ArticleRepository articleRepository) {
