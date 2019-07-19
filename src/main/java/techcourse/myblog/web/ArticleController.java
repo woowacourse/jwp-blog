@@ -5,9 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.repo.ArticleRepository;
 import techcourse.myblog.service.ArticleService;
 
 import javax.transaction.Transactional;

@@ -9,8 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.repo.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.Objects;
 

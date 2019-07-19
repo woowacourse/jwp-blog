@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserUpdateRequestDto;
-import techcourse.myblog.repo.UserRepository;
+import techcourse.myblog.repository.UserRepository;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
