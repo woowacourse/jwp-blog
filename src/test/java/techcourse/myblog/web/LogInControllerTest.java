@@ -46,7 +46,7 @@ class LogInControllerTest {
     @DisplayName("로그인 성공 시 메인 화면을 띄우고 우측 상단에 사용자 이름을 띄운다.")
     void successLogIn() {
         String name = "testName";
-        String email = "test1@woowa.com";
+        String email = "logintest1@woowa.com";
         String password = VALID_PASSWORD;
         String passwordConfirm = VALID_PASSWORD;
 
@@ -87,7 +87,7 @@ class LogInControllerTest {
     @DisplayName("로그인 실패시 에러 메세지 출력한다.")
     void failLogIn() {
         String name = "testName";
-        String email = "test2@woowa.com";
+        String email = "logintest2@woowa.com";
         String password = VALID_PASSWORD;
         String passwordConfirm = VALID_PASSWORD;
         String diffEmail = "diff@woowa.com";

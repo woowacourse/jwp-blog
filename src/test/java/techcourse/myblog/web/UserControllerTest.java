@@ -63,7 +63,7 @@ class UserControllerTest {
                 .consumeWith(response -> {
                     URI location = response.getResponseHeaders().getLocation();
                     assertThat(location.toString())
-                            .isEqualTo("http://localhost:" + randomPortNumber + "/users/login");
+                            .isEqualTo("http://localhost:" + randomPortNumber + "/login");
                 });
     }
 
