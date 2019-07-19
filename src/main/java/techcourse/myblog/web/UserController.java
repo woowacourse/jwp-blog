@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
 
@@ -70,7 +71,16 @@ public class UserController {
     }
 
     @GetMapping("/mypage/edit")
-    public String showEditPage(Model model) {
-        return "mypage-edit";
+    public String showEditPage(Model model, HttpSession httpSession) {
+        String email = (String) httpSession.getAttribute("email");
+
+        if (email != null) {
+            User user = userService.getUser(email);
+            model.addAttribute("user", UserAssembler.writeDto(user));
+
+            return "mypage-edit";
+        }
+
+        return "redirect:/login";
     }
 }
