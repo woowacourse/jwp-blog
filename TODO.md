@@ -83,5 +83,5 @@
 - [ ] 회원 정보 수정 테스트 코드!
 
 ### 회원 탈퇴
-- [ ] MyPage > profile 하단 > 탈퇴 버튼 추가
-- [ ] 탈퇴버튼 클릭시 ``DELETE /users`` 로 요청 ~ 탈퇴 처리 후 ``GET /`` 로 redirect
+- [X] MyPage > profile 하단 > 탈퇴 버튼 추가
+- [X] 탈퇴버튼 클릭시 ``DELETE /users`` 로 요청 ~ 탈퇴 처리 후 ``GET /`` 로 redirect

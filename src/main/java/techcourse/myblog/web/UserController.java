@@ -130,4 +130,14 @@ public class UserController {
         session.setAttribute("user", loginUser.get());
         return "redirect:/";
     }
+
+    @DeleteMapping("/users")
+    public RedirectView removeUser(UserDto userDto, HttpSession session) { //탈퇴
+        User user = (User) session.getAttribute("user");
+        if (user != null && user.matchEmail(user)) {
+            userRepository.delete(user);
+        }
+        session.invalidate();
+        return new RedirectView("/");
+    }
 }
