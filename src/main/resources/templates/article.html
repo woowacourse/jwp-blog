@@ -25,10 +25,10 @@
             <div class="row">
                 <div class="col-lg-10 mx-auto">
                     <a class="float-right pointer btn btn-icon"
-                       th:href="@{/articles/{articleId}/edit(articleId=${article.articleId})}" type="submit">
+                       th:href="'/articles/' + ${article.id} + '/edit'" type="submit">
                         <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                     </a>
-                    <form method="post" th:action="@{/articles/{articleId}(articleId=${article.articleId})}">
+                    <form method="post" th:action="'/articles/' + ${article.id}">
                         <input name="_method" type="hidden" value="delete">
                         <button class="float-right pointer btn btn-icon" type="submit">
                             <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>

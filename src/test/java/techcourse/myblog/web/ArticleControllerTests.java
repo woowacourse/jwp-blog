@@ -40,7 +40,7 @@ public class ArticleControllerTests {
 
     @Test
     void writeArticle() {
-        checkIsOk(getResponse("/articles/writing"));
+        checkIsOk(getResponse("/articles/new"));
     }
 
 
@@ -58,7 +58,7 @@ public class ArticleControllerTests {
     void create_update() {
         articleRepository.save(article);
 
-        checkIsOk(getResponse("articles/" + article.getArticleId() + "/edit"));
+        checkIsOk(getResponse("articles/" + article.getId() + "/edit"));
     }
 
 
@@ -67,7 +67,7 @@ public class ArticleControllerTests {
         articleRepository.save(article);
         ArticleDto articleDto = new ArticleDto("update title", "update coverUrl", "update contents");
 
-        WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/" + article.getArticleId()), articleDto);
+        WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/" + article.getId()), articleDto);
         checkIsFound(responseSpec);
         checkBody(responseSpec, articleDto);
 
@@ -77,7 +77,7 @@ public class ArticleControllerTests {
     void create_delete() {
         articleRepository.save(article);
 
-        webTestClient.delete().uri("/articles/" + article.getArticleId())
+        webTestClient.delete().uri("/articles/" + article.getId())
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection();

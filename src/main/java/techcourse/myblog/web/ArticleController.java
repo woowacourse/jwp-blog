@@ -1,66 +1,77 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repo.ArticleRepository;
+import techcourse.myblog.service.ArticleService;
 
 import javax.transaction.Transactional;
 
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
-    private final ArticleRepository articleRepository;
+    private static final String NO_ARTICLE_MESSAGE = "존재하지 않는 게시글 입니다.";
 
-    ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    private final ArticleService articleService;
+
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
+
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
-    @GetMapping("/writing")
+    @GetMapping("/new")
     public String writeArticle() {
         return "article-edit";
     }
 
     @PostMapping
     public String createArticle(ArticleDto articleDto, Model model) {
-        Article article = Article.builder()
-                .title(articleDto.getTitle())
-                .coverUrl(articleDto.getCoverUrl())
-                .contents(articleDto.getContents())
-                .build();
-        articleRepository.save(article);
-        model.addAttribute("article", article);
-        return "redirect:/articles/" + article.getArticleId();
+        return "redirect:/articles/" + articleService.create(articleDto);
     }
 
-    @GetMapping("/{articleId}")
-    public String showArticle(@PathVariable Long articleId, Model model) {
-        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-        model.addAttribute("article", article);
-        return "article";
+    @GetMapping("/{id}")
+    public String showArticle(@PathVariable Long id, Model model) {
+        try {
+            model.addAttribute("article", articleService.find(id));
+            return "article";
+        } catch (IllegalArgumentException e) {
+            log.error(NO_ARTICLE_MESSAGE);
+            return "/";
+        }
     }
 
-    @GetMapping("/{articleId}/edit")
-    public String updateArticle(@PathVariable Long articleId, Model model) {
-        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-        model.addAttribute("article", article);
-        return "article-edit";
+    @GetMapping("/{id}/edit")
+    public String updateArticle(@PathVariable Long id, Model model) {
+        try {
+            model.addAttribute("article", articleService.find(id));
+            return "article-edit";
+        } catch (IllegalArgumentException e) {
+            log.error(NO_ARTICLE_MESSAGE);
+            return "/";
+        }
     }
 
     @Transactional
-    @PutMapping("/{articleId}")
-    public String showUpdatedArticle(@PathVariable Long articleId, ArticleDto updatedArticle, Model model) {
-        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-        article.update(updatedArticle);
-        model.addAttribute("article", updatedArticle);
-        return "redirect:/articles/" + articleId;
+    @PutMapping("/{id}")
+    public String showUpdatedArticle(@PathVariable Long id, ArticleDto updatedArticle, Model model) {
+        try {
+            model.addAttribute("article", articleService.update(id, updatedArticle));
+            return "redirect:/articles/" + id;
+        } catch (IllegalArgumentException e) {
+            log.error(NO_ARTICLE_MESSAGE);
+            return "/";
+        }
     }
 
-    @DeleteMapping("/{articleId}")
-    public String deleteArticle(@PathVariable Long articleId) {
-        articleRepository.deleteById(articleId);
+    @DeleteMapping("/{id}")
+    public String deleteArticle(@PathVariable Long id) {
+        articleService.delete(id);
         return "redirect:/";
     }
 }

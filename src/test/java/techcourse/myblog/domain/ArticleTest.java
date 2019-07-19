@@ -27,8 +27,8 @@ public class ArticleTest {
     }
 
     @Test
-    void increase_articleId_test() {
+    void increase_id_test() {
         Article secondArticle = new Article(title, coverUrl, contents);
-        assertThat(secondArticle.getArticleId()).isEqualTo(secondArticle.getArticleId());
+        assertThat(secondArticle.getId()).isEqualTo(secondArticle.getId());
     }
 }
