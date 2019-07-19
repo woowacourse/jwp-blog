@@ -36,7 +36,7 @@
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
-                                                    <form id="signupForm" th:action="@{/users}" method="post"
+                                                    <form id="signupForm" th:action="@{/join}" method="post"
                                                           name="signUp">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
@@ -106,7 +106,7 @@
             if (checkPassword()) {
                 document.getElementById('signupForm').submit();
             } else {
-                alert("비밃너호 값이 똑같지 않습다");
+                alert("비밀너호 값이 똑같지 않습다");
             }
         } else {
             alert('아이디와 비밃너호를 확인하세요');
