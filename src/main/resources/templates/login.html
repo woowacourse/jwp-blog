@@ -61,6 +61,8 @@
                                                         <div class="pull-right mrg-left-10">
                                                             <a href="">Forgot Password?</a>
                                                         </div>
+                                                        <div th:text="${errorMessage}" class="alert alert-danger" role="alert">
+                                                        </div>
                                                         <div class="mrg-top-20 text-right">
                                                             <button type="submit" class="btn btn-tumblr">로그인</button>
                                                         </div>
@@ -85,5 +87,12 @@
 </div>
 
 <th:block th:replace="fragments/script :: scriptFragment"></th:block>
+<script th:inline="javascript">
+    if ([[${errorMessage}]]) {
+        $('.alert').alert()
+    } else {
+        $('.alert').alert('close')
+    }
+</script>
 </body>
 </html>
