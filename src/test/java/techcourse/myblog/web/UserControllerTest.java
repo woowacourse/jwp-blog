@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -7,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,6 +20,9 @@ public class UserControllerTest {
     @Autowired
     WebTestClient webTestClient;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Test
     void show_sign_up() {
         webTestClient.get().uri("/users/signup").exchange().expectStatus().isOk();
@@ -26,8 +32,8 @@ public class UserControllerTest {
     void create_user() {
         webTestClient.post().uri("/users/new")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "Brown")
-                        .with("email", "brown@gmail.com")
+                .body(BodyInserters.fromFormData("userName", "Martin")
+                        .with("email", "martin@gmail.com")
                         .with("password", "Aa12345!")
                         .with("confirmPassword", "Aa12345!")
                 ).exchange()
@@ -40,16 +46,40 @@ public class UserControllerTest {
     }
 
     @Test
-    void show_all_users() {
+    void users_withLogin() {
+        webTestClient.post().uri("/users/new")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("userName", "Martin")
+                        .with("email", "martin@gmail.com")
+                        .with("password", "Aa12345!")
+                        .with("confirmPassword", "Aa12345!")
+                ).exchange()
+                .expectStatus()
+                .isFound();
+
+        loginSession();
         webTestClient.get().uri("/users")
                 .exchange()
                 .expectStatus()
-                .isOk()
-                .expectBody().consumeWith(res -> {
-            String body = new String(res.getResponseBody());
-            assertThat(body.contains("Martin")).isTrue();
-            assertThat(body.contains("martin@gmail.com")).isTrue();
-        });
+                .isOk();
+    }
+
+    @Test
+    void users_withoutLogin() {
+        webTestClient.post().uri("/users/new")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("userName", "Martin")
+                        .with("email", "martin@gmail.com")
+                        .with("password", "Aa12345!")
+                        .with("confirmPassword", "Aa12345!")
+                ).exchange()
+                .expectStatus()
+                .isFound();
+
+        webTestClient.get().uri("/users")
+                .exchange()
+                .expectStatus()
+                .isFound();
     }
 
     @Test
@@ -57,7 +87,16 @@ public class UserControllerTest {
         webTestClient.post().uri("/users/new")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData("userName", "Martin")
-                        .with("email", "buddy@buddy.com")
+                        .with("email", "martin@gmail.com")
+                        .with("password", "Aa12345!")
+                        .with("confirmPassword", "Aa12345!")
+                ).exchange()
+                .expectStatus().isFound();
+
+        webTestClient.post().uri("/users/new")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("userName", "Martin")
+                        .with("email", "martin@gmail.com")
                         .with("password", "Aa12345!")
                         .with("confirmPassword", "Aa12345!")
                 ).exchange()
@@ -107,7 +146,7 @@ public class UserControllerTest {
                 .body(BodyInserters.fromFormData("userName", "Martin")
                         .with("email", "martin@gmail.com")
                         .with("password", "Aa12345!")
-                        .with("confirmPassword","Ss12345!")
+                        .with("confirmPassword", "Ss12345!")
                 ).exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(res -> {
@@ -117,12 +156,54 @@ public class UserControllerTest {
     }
 
     @Test
-    void showUserEdit() {
+    void showMyPage_withLogin() {
+        loginSession();
+        webTestClient.get().uri("/users/mypage")
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
+
+    @Test
+    void showMyPage_withoutLogin() {
+        webTestClient.get().uri("/users/mypage")
+                .exchange()
+                .expectStatus()
+                .isFound();
+    }
+
+    @Test
+    void showUserEdit_withLogin() {
+        loginSession();
         webTestClient.get().uri("/users/mypage/edit")
                 .exchange()
                 .expectStatus()
                 .isOk();
     }
 
+    @Test
+    void showUserEdit_withoutLogin() {
+        webTestClient.get().uri("/users/mypage/edit")
+                .exchange()
+                .expectStatus()
+                .isFound();
+    }
 
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
+    }
+
+    void loginSession() {
+        webTestClient = WebTestClient.bindToWebHandler(exchange -> {
+            String path = exchange.getRequest().getURI().getPath();
+            if ("/users".equals(path) || "/users/mypage".equals(path) || "/users/mypage/edit".equals(path)) {
+                return exchange.getSession()
+                        .doOnNext(webSession ->
+                                webSession.getAttributes().put("user", new User("Martin", "martin@gmail.com", "Aa12345!")))
+                        .then();
+            }
+            return null;
+        }).build();
+    }
 }
