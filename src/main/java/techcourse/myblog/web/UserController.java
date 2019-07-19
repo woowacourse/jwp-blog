@@ -25,6 +25,12 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping
+    public String findAllUsers(Model model) {
+        model.addAttribute("users", userService.findAll());
+        return "user-list";
+    }
+
     @GetMapping("/signup")
     public String showSignUpPage() {
         return "signup";
@@ -38,18 +44,13 @@ public class UserController {
             return "signup";
         }
 
-        if (!userService.create(userDto)) {
-            model.addAttribute("error", "중복된 이메일 입니다.");
+        try {
+            userService.create(userDto);
+            return "redirect:/login";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
             return "signup";
         }
-
-        return "redirect:/login";
-    }
-
-    @GetMapping
-    public String findAllUsers(Model model) {
-        model.addAttribute("users", userService.findAll());
-        return "user-list";
     }
 
     @GetMapping("/mypage")

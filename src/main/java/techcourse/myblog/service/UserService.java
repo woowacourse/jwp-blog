@@ -17,13 +17,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public boolean create(UserDto userDto) {
+    public void create(UserDto userDto) {
         if (userRepository.existsByEmail(userDto.getEmail())) {
-            return false;
+            throw new IllegalArgumentException("중복된 이메일 입니다.");
         }
         User user = new User(userDto);
         userRepository.save(user);
-        return true;
     }
 
     public Iterable<User> findAll() {
