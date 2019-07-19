@@ -1,7 +1,5 @@
 package techcourse.myblog.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,7 +8,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.UserGroups;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
@@ -18,7 +15,6 @@ import techcourse.myblog.service.DuplicateEmailException;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import javax.validation.groups.Default;
 import java.util.Optional;
 
@@ -26,8 +22,6 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     public UserController(final UserService userService) {
         this.userService = userService;
@@ -45,7 +39,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "signup";
         }
-        return "login";
+        return "redirect:/login";
     }
 
     @GetMapping("")
