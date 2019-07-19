@@ -6,12 +6,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserDto;
+import techcourse.myblog.domain.UserUpdateRequestDto;
 import techcourse.myblog.repo.UserRepository;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @Controller
@@ -69,16 +72,19 @@ public class UserController {
         return "mypage-edit";
     }
 
-//    @PutMapping("/mypage/edit")
-//    public String editUserInfo(UserDto userDto, HttpSession httpSession) {
-//        User user = (User) httpSession.getAttribute("user");
-//        user.setEmail(userDto.getEmail());
-//        user.setUserName(userDto.getUserName());
-//        user.setPassword(userDto.getPassword());
-//
-//
-//
-//    }
+    @Transactional
+    @PutMapping("/mypage/edit")
+    public String editUserInfo(@Valid UserUpdateRequestDto userUpdateRequestDto, BindingResult bindingResult, HttpSession httpSession, Model model) {
+        if (bindingResult.hasErrors()) {
+            FieldError fieldError = bindingResult.getFieldError();
+            model.addAttribute("error", fieldError.getDefaultMessage());
+            return "mypage-edit";
+        }
 
-
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
+        User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+        user.setUserName(userUpdateRequestDto.getUserName());
+        httpSession.setAttribute("user", user);
+        return "redirect:/users/mypage";
+    }
 }

@@ -12,7 +12,6 @@ import javax.transaction.Transactional;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
-
     private final ArticleRepository articleRepository;
 
     ArticleController(ArticleRepository articleRepository) {

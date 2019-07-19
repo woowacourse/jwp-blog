@@ -4,7 +4,6 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <th:block layout:fragment="content">
-    <link href="/css/mypage.css" rel="stylesheet">
     <div>
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
@@ -21,7 +20,7 @@
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
                             <a class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5"
-                               href="mypage-edit.html">
+                               href="/users/mypage/edit">
                                 <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                             </a>
                         </div>
@@ -31,7 +30,7 @@
                                     <p class="mrg-top-10 text-dark"><b>Name</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mrg-top-10">Brown</p>
+                                    <p class="mrg-top-10" th:text="${session.user.userName}"></p>
                                 </div>
                             </div>
                             <hr>
@@ -40,7 +39,7 @@
                                     <p class="mrg-top-10 text-dark"><b>Email</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mrg-top-10">gracefulBrown@woowahan.com</p>
+                                    <p class="mrg-top-10" th:text="${session.user.email}"></p>
                                 </div>
                             </div>
                             <hr>
