@@ -47,14 +47,14 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
-                                                            <input type="password" name="password" class="form-control"
+                                                            <input type="password" id="password" name="password" class="form-control"
+                                                                   onchange="if(this.checkValidity()) form.password_two.pattern = this.value;"
                                                                    placeholder="Password" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm
                                                                 Password</label>
-                                                            <input type="password" class="form-control"
-                                                                   placeholder="Password" required>
+                                                            <input type="password" id="password_two" name="password_two" class="form-control" placeholder="Password" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <button type="submit"

@@ -24,8 +24,11 @@ public class UserController {
 
     @PostMapping("/signup")
     public String addUser(UserDto userDto) {
-        userService.create(userDto);
-        return "redirect:/login";
+        Optional<UserDto> maybeUserDto = userService.create(userDto);
+        if (maybeUserDto.isPresent()) {
+            return "redirect:/login";
+        }
+        return "redirect:/error";
     }
 
     @GetMapping("/login")
@@ -80,14 +83,13 @@ public class UserController {
         if (id != (long) userId) {
             return "redirect:/";
         }
-
         Optional<UserDto> maybeUserDto = userService.readWithoutPasswordById(id);
 
         if (maybeUserDto.isPresent()) {
             model.addAttribute("userData", maybeUserDto.get());
             return "mypage-edit";
         }
-        return "error";
+        return "redirect:/error";
     }
 
     @PutMapping("/users/{id}/mypage-edit")
@@ -108,7 +110,6 @@ public class UserController {
         if (userId == null || id != (long) userId) {
             return "redirect:/";
         }
-
         userService.deleteById(id);
 
         return "redirect:/logout";
