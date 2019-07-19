@@ -26,11 +26,15 @@ public class User {
     @Transient
     private static Pattern passwordPattern;
 
+    @Transient
+    private static Pattern emailPattern;
+
     static {
         namePattern = Pattern.compile("^[a-zA-Z ]*$");
         // ref. http://html5pattern.com/Passwords
         //TODO 정규표현식 숫자가 포함되지 않아도 통과 (TestPasswod!)
         passwordPattern = Pattern.compile("(?=^.{8,}$)((?=.*\\d)(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$");
+        emailPattern = Pattern.compile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
     }
 
 
@@ -45,6 +49,10 @@ public class User {
     public static User of(String userName, String email, String password, Function<String, Boolean> emailDuplicateChecker) {
         if (emailDuplicateChecker.apply(email)) {
             throw new UserCreationConstraintException("이미 등록된 이메일입니다.");
+        }
+
+        if (isInvalidEmail(email)) {
+            throw new UserCreationConstraintException("올바르지 않은 이메일입니다.");
         }
 
         if (isInvalidUserName(userName)) {
@@ -71,6 +79,10 @@ public class User {
         }
 
         return !passwordPattern.matcher(password).matches();
+    }
+
+    private static boolean isInvalidEmail(String email) {
+        return !emailPattern.matcher(email).matches();
     }
 
     public void update(User user) {

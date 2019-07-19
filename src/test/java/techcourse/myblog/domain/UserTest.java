@@ -22,6 +22,17 @@ public class UserTest {
     }
 
     @Test
+    void invalid_email() {
+        assertDoesNotThrow(() -> User.of("jame", "aaa@mail.com", "p@ssW0rd", this::checkEmailDuplicate));
+        assertThrows(User.UserCreationConstraintException.class,
+            () -> User.of("james", "aaa", "p@ssW0rd", this::checkEmailDuplicate));
+        assertThrows(User.UserCreationConstraintException.class,
+            () -> User.of("james", "email.com", "p@ssW0rd", this::checkEmailDuplicate));
+        assertThrows(User.UserCreationConstraintException.class,
+            () -> User.of("james", "@email.com", "p@ssW0rd", this::checkEmailDuplicate));
+    }
+
+    @Test
     void name_constraint() {
         assertThrows(User.UserCreationConstraintException.class,
             () -> User.of("김철수", "test1@example.com", "p@ssW0rd", this::checkEmailDuplicate));
