@@ -46,4 +46,12 @@ public class User {
     public boolean matchPassword(User user) {
         return this.password.equals(user.password);
     }
+
+    public boolean matchEmail(User user) {
+        return this.email.equals(user.email);
+    }
+
+    public void modifyName(String name) {
+        this.name = name;
+    }
 }

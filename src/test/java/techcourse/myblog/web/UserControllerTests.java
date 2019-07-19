@@ -56,6 +56,21 @@ class UserControllerTests {
     }
 
     @Test
+    void 로그아웃() {
+        httpRequestAndExpectStatus(GET, "/logout", FOUND);
+    }
+
+    @Test
+    void 비로그인시_회원_정보_페이지_요청_불가() {
+        httpRequestAndExpectStatus(GET, "/mypage", FOUND);
+    }
+
+    @Test
+    void 비로그인시_회원_정보_수정_페이지_요청_불가() {
+        httpRequestAndExpectStatus(GET, "/mypage/edit", FOUND);
+    }
+
+    @Test
     void 회원가입_성공() {
         UserDto userDto = new UserDto(name, email, password);
 
@@ -159,11 +174,6 @@ class UserControllerTests {
                     String body = new String(Objects.requireNonNull(res.getResponseBody()));
                     assertThat(body.contains("비밀번호를 확인해주세요.")).isTrue();
                 });
-    }
-
-    @Test
-    void 로그아웃() {
-        httpRequestAndExpectStatus(GET, "/logout", FOUND);
     }
 
     private WebTestClient.ResponseSpec httpRequestAndExpectStatus(HttpMethod method, String uri, HttpStatus status) {

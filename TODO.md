@@ -77,8 +77,10 @@
 - [X] 로그인하지 않은 유저가 로그인/회원가입 화면에 접근할 경우 200 OK
 
 ### 회원 수정
-- [ ] ``GET /mypage`` 로 요청시 회원 정보 페이지로 이동 (200 OK)
-- [ ] ``POST /mypage``로 요청시 회원 정보 수정하고 ``GET /mypage`` 로 redirect
+- [X] ``GET /mypage`` 로 요청시 회원 정보 페이지로 이동 (200 OK)
+- [X] ``GET /mypage/edit`` 로 요청시 회원정보 수정페이지로 이동 (200 OK)
+- [X] ``POST /mypage``로 요청시 회원 정보 수정하고 ``GET /mypage`` 로 redirect  
+- [ ] 회원 정보 수정 테스트 코드!
 
 ### 회원 탈퇴
 - [ ] MyPage > profile 하단 > 탈퇴 버튼 추가

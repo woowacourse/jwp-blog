@@ -1,14 +1,20 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.UserInfo;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.model.UserRepository;
@@ -20,6 +26,8 @@ import java.util.Optional;
 @Controller
 public class UserController {
     private final UserRepository userRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     public UserController(UserRepository userRepository) {
@@ -54,6 +62,41 @@ public class UserController {
         return "user-list";
     }
 
+    @GetMapping("/mypage")
+    public String myPage(Model model, HttpSession session) {
+        Object user = session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/";
+        }
+        model.addAttribute("user", user);
+        return "mypage";
+    }
+
+    @GetMapping("/mypage/edit")
+    public String createMyPageForm(UserDto userDto, HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/";
+        }
+        model.addAttribute("user", user);
+        return "mypage-edit";
+    }
+
+    @PutMapping("/mypage")
+    public String editUser(@Validated(UserInfo.class) UserDto userDto, BindingResult bindingResult,
+                           HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("user", user);
+            return "mypage-edit";
+        }
+
+        user.modifyName(userDto.getName());
+        userRepository.save(user);
+        return "redirect:/mypage";
+    }
+
     @PostMapping("/users")
     public String createUser(@Valid UserDto userDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -62,7 +105,7 @@ public class UserController {
 
         try {
             userRepository.save(userDto.toUser());
-        } catch(DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             bindingResult.addError(new FieldError("userDto", "email", "이미 존재하는 email입니다."));
             return "signup";
         }
