@@ -1,7 +1,6 @@
 package techcourse.myblog.web;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +13,7 @@ import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.Objects;
 
@@ -25,6 +25,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private ArticleRepository articleRepository;
 
     private String title;
     private String coverUrl;
@@ -47,30 +50,28 @@ public class ArticleControllerTests {
     @Test
     void showArticleWritingPages() {
         checkGetStatus("/writing");
-
     }
 
     @Test
     void showArticles() {
         checkStatus(webTestClient.post(), "/articles");
+        Article article = articleRepository.findArticleByTitle(title);
 
         uniContents = contents;
-
         checkGetStatus("/")
                 .expectBody()
                 .consumeWith(this::checkBodyResponse);
-        deleteMethod();
+
+        deleteMethod(article.getId());
     }
 
     @Test
     void findArticleById() {
         checkStatus(webTestClient.post(), "/articles");
-
         checkGetStatus("/articles/1")
                 .expectBody()
                 .consumeWith(this::checkBodyResponse);
-
-        deleteMethod();
+        deleteMethod(1);
     }
 
     @Test
@@ -79,7 +80,9 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(this::checkBodyResponse);
 
-        deleteMethod();
+        Article article = articleRepository.findArticleByTitle(title);
+
+        deleteMethod(article.getId());
     }
 
     @Test
@@ -88,30 +91,26 @@ public class ArticleControllerTests {
         coverUrl = "http://www.kinews.net/news/photo/200907/bjs.jpg";
         contents = "나는 우아한형제들에서 짱이다.";
         uniContents = StringEscapeUtils.escapeJava(contents);
-
         checkStatus(webTestClient.post(), "/articles");
+        Article article = articleRepository.findArticleByTitle(title);
 
-        checkStatus(webTestClient.put(), "/articles/1")
+        checkStatus(webTestClient.put(), "/articles/" + article.getId())
                 .expectBody()
-                .consumeWith(this::checkBodyResponse);
+                .consumeWith(this::checkBodyResponse)
+                .returnResult();
 
-        deleteMethod();
+        deleteMethod(article.getId());
     }
 
     @Test
     void deleteTest() {
         checkStatus(webTestClient.post(), "/articles");
+        Article article = articleRepository.findArticleByTitle(title);
+        deleteMethod(article.getId());
 
-        deleteMethod();
-
-        webTestClient.get().uri("/articles/1")
+        webTestClient.get().uri("/articles/" + article.getId())
                 .exchange()
-                .expectStatus().is4xxClientError();
-    }
-
-    @AfterEach
-    void tearDown() {
-        Article.initCurrentId();
+                .expectStatus().is3xxRedirection();
     }
 
     private WebTestClient.ResponseSpec checkStatus(WebTestClient.RequestBodyUriSpec requestMethod, String uri) {
@@ -126,13 +125,13 @@ public class ArticleControllerTests {
                 .expectStatus().isOk();
     }
 
-    private void deleteMethod() {
+    private void deleteMethod(int id) {
         webTestClient.delete()
-                .uri("/articles/1")
+                .uri("/articles/" + id)
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
-    
+
     private void checkBodyResponse(EntityExchangeResult<byte[]> response) {
         String body = new String(Objects.requireNonNull(response.getResponseBody()));
         assertThat(body.contains(title)).isTrue();
