@@ -1,5 +1,7 @@
 package techcourse.myblog.web.dto;
 
+import java.util.Objects;
+
 public class ArticleDto {
     private String title;
     private String coverUrl;
@@ -33,5 +35,29 @@ public class ArticleDto {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    @Override
+    public String toString() {
+        return "ArticleDto{" +
+                "title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ArticleDto that = (ArticleDto) o;
+        return Objects.equals(title, that.title) &&
+                Objects.equals(coverUrl, that.coverUrl) &&
+                Objects.equals(contents, that.contents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, coverUrl, contents);
     }
 }

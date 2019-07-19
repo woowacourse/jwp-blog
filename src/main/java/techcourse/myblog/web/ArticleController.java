@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +11,7 @@ import techcourse.myblog.web.dto.ArticleDto;
 @Controller
 public class ArticleController {
     private final ArticleService articleService;
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
@@ -39,6 +42,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String create(ArticleDto articleDto) {
+        log.debug("articleDto : {}", articleDto);
         return "redirect:/articles/" + articleService.save(articleDto).getId();
     }
 
@@ -50,6 +54,7 @@ public class ArticleController {
 
     @DeleteMapping("/articles/{articleId}")
     public String delete(@PathVariable Long articleId) {
+        log.debug("articleId : {}", articleId);
         articleService.delete(articleId);
         return "redirect:/";
     }

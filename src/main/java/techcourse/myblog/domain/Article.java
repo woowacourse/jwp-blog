@@ -2,7 +2,10 @@ package techcourse.myblog.domain;
 
 import techcourse.myblog.web.dto.ArticleDto;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity

@@ -8,7 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.web.dto.ArticleDto;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -40,7 +41,6 @@ public class ArticleServiceTest {
                         "abc")
         );
         assertThat(articleService.findById(newArticle.getId())).isEqualTo(newArticle);
-        System.out.println("저장" + articleService.findAll().size());
     }
 
     @Test
