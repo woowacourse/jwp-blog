@@ -22,10 +22,9 @@ public class UserDto {
     @Email
     private String email;
 
-    @NotBlank(groups = UserGroups.Edit.class)
+    @NotBlank
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-            message = "비밀번호는 8자 이상의 소문자, 대문자, 숫자, 특수문자의 조합입니다.",
-            groups = UserGroups.Edit.class)
+            message = "비밀번호는 8자 이상의 소문자, 대문자, 숫자, 특수문자의 조합입니다.")
     private String password;
 
     public User toUser() {
