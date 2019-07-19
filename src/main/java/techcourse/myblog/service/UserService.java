@@ -31,28 +31,18 @@ public class UserService {
     }
 
     @Transactional
-    public String update(UserUpdateRequestDto userUpdateRequestDto, HttpSession httpSession) {
-        try {
-            String email = ((User) httpSession.getAttribute("user")).getEmail();
-            User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
-            user.setUserName(userUpdateRequestDto.getUserName());
-            httpSession.setAttribute("user", user);
-            return "redirect:/users/mypage";
-        } catch (IllegalArgumentException e) {
-            return "redirect:/";
-        }
+    public void update(UserUpdateRequestDto userUpdateRequestDto, HttpSession httpSession) {
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
+        User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+        user.setUserName(userUpdateRequestDto.getUserName());
+        httpSession.setAttribute("user", user);
     }
 
     @Transactional
-    public String delete(HttpSession httpSession) {
-        try {
-            String email = ((User) httpSession.getAttribute("user")).getEmail();
-            User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
-            httpSession.removeAttribute("user");
-            userRepository.delete(user);
-            return "redirect:/";
-        } catch (IllegalArgumentException e) {
-            return "redirect:/";
-        }
+    public void delete(HttpSession httpSession) {
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
+        User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+        httpSession.removeAttribute("user");
+        userRepository.delete(user);
     }
 }

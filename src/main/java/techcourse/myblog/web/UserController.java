@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,7 +17,9 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/users")
 public class UserController {
+    private static final String NO_USER_MESSAGE = "존재하지 않는 유저입니다.";
     private final UserService userService;
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -34,7 +38,7 @@ public class UserController {
             return "signup";
         }
 
-        if (userService.create(userDto)) {
+        if (!userService.create(userDto)) {
             model.addAttribute("error", "중복된 이메일 입니다.");
             return "signup";
         }
@@ -72,11 +76,22 @@ public class UserController {
             return "mypage-edit";
         }
 
-        return userService.update(userUpdateRequestDto, httpSession);
+        try {
+            userService.update(userUpdateRequestDto, httpSession);
+            return "redirect:/users/mypage";
+        } catch (IllegalArgumentException e) {
+            log.error(NO_USER_MESSAGE);
+            return "redirect:/";
+        }
     }
 
     @DeleteMapping("/mypage")
     public String deleteUser(HttpSession httpSession) {
-        return userService.delete(httpSession);
+        try {
+            userService.delete(httpSession);
+        } catch (IllegalArgumentException e) {
+            log.error(NO_USER_MESSAGE);
+        }
+        return "redirect:/";
     }
 }
