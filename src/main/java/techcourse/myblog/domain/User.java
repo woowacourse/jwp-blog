@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,6 +29,7 @@ public class User {
         checkConfirmPassword(userDto);
     }
 
+    @Builder
     public User(String userName, String email, String password) {
         this.userName = userName;
         this.email = email;
