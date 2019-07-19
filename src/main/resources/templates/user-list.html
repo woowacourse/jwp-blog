@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:include="/common/meta"></th:block>
+    <th:block th:include="/common/css"></th:block>
+    <link href="/css/index.css" rel="stylesheet">
+</head>
+<body>
+<div>
+    <th:block th:include="/common/navbar"></th:block>
+    <th:block th:include="/common/main_cover"></th:block>
+    <div class="container-fluid z-10 bottom-120 relative max-width-lg mx-auto mrg-btm-30 padding-30">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card">
+                    <div class="card-heading border bottom">
+                        <h4 class="card-title">User List</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled list-info">
+                            <li th:each="users : ${users}">
+                                <div class="pdd-vertical-10">
+                                    <img alt=""
+                                         class="thumb-img img-circle"
+                                         src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
+                                    <div class="info">
+                                        <a class="title no-pdd-vertical text-semibold inline-block lh-1"
+                                           href="" th:text="${users.name}"></a>
+                                        <span class="sub-title">
+                                            <span th:text="${users.email}"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:include="common/footer"></th:block>
+<th:block th:include="common/js"></th:block>
+</body>
+</html>
