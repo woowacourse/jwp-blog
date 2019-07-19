@@ -19,9 +19,8 @@ public class ArticleService {
     }
 
     public List<Article> findAll() {
-        List<Article> articles = new ArrayList<>();
-        articleRepository.findAll().forEach(articles::add);
-        return articles;
+        return StreamSupport.stream(articleRepository.findAll().spliterator(), true)
+                .collect(Collectors.toList());
     }
 
     public Article findArticle(long articleId) {

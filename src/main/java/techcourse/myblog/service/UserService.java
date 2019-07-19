@@ -46,9 +46,8 @@ public class UserService {
     }
 
     public List<User> findAll() {
-        List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(users::add);
-        return users;
+        return StreamSupport.stream(userRepository.findAll().spliterator(), true)
+                .collect(Collectors.toList());
     }
 
     public void updateUser(UserDto userDto, HttpSession session) {
