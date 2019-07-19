@@ -30,8 +30,7 @@ public class User {
         return new User(name, email, password);
     }
 
-    public void update(User user) {
+    public void modify(User user) {
         this.name = user.name;
-        this.password = user.password;
     }
 }
