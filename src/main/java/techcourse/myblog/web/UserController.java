@@ -5,6 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.exception.SignUpException;
@@ -41,6 +43,14 @@ public class UserController {
     public String createUser(UserDto userDto) {
         userService.save(userDto);
         return "redirect:/login";
+    }
+
+    @PutMapping("/users")
+    public String editUserName(UserPublicInfoDto userPublicInfoDto, HttpServletRequest httpServletRequest) {
+        userService.update(userPublicInfoDto);
+        HttpSession httpSession = httpServletRequest.getSession();
+        httpSession.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
+        return "redirect:/mypage";
     }
 
     @ExceptionHandler(SignUpException.class)

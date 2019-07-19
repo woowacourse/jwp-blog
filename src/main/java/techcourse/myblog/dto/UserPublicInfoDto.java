@@ -1,10 +1,10 @@
 package techcourse.myblog.dto;
 
-public class LoggedInUserDto {
+public class UserPublicInfoDto {
     private String name;
     private String email;
 
-    public LoggedInUserDto(String name, String email) {
+    public UserPublicInfoDto(String name, String email) {
         this.name = name;
         this.email = email;
     }

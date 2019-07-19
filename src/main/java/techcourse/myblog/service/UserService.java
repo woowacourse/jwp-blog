@@ -2,8 +2,10 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
 
 import java.util.List;
@@ -95,6 +97,15 @@ public class UserService {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         return matcher.find();
+    }
+
+    public void update(UserPublicInfoDto userPublicInfoDto) {
+        User user = userRepository.findByEmail(userPublicInfoDto.getEmail());
+        if (user == null) {
+            throw new NotFoundUserException();
+        }
+        user.setName(userPublicInfoDto.getName());
+        userRepository.save(user);
     }
 
 }
