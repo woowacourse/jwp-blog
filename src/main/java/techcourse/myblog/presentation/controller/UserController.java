@@ -1,18 +1,22 @@
 package techcourse.myblog.presentation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.UserService;
+import techcourse.myblog.application.service.exception.DuplicatedIdException;
+import techcourse.myblog.application.service.exception.NotExistIdException;
+import techcourse.myblog.presentation.controller.exception.InvalidUpdateException;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
@@ -38,16 +42,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public RedirectView login(HttpSession httpSession, UserDto user) {
-        RedirectView redirectView = new RedirectView();
-        if (userService.login(user)) {
-            redirectView.setUrl("/");
-            httpSession.setAttribute("email", user.getEmail());
-            httpSession.setMaxInactiveInterval(600);
-            return redirectView;
-        }
+    public RedirectView login(HttpSession httpSession, @Valid UserDto user) {
+        userService.login(user);
 
-        redirectView.setUrl("/login");
+        RedirectView redirectView = new RedirectView("/");
+        httpSession.setAttribute("email", user.getEmail());
+        httpSession.setMaxInactiveInterval(600);
         return redirectView;
     }
 
@@ -78,7 +78,7 @@ public class UserController {
     }
 
     @PutMapping("/mypage/edit")
-    public RedirectView updateUser(HttpSession httpSession, UserDto user) {
+    public RedirectView updateUser(HttpSession httpSession, @Valid UserDto user) {
         RedirectView redirectView = new RedirectView();
         String email = (String) httpSession.getAttribute("email");
 
@@ -89,13 +89,11 @@ public class UserController {
             redirectView.setUrl("/mypage");
             return redirectView;
         }
-
-        redirectView.setUrl("/login");
-        return redirectView;
+        throw new InvalidUpdateException("잘못된 이메일 입력입니다.");
     }
 
     @DeleteMapping("/users")
-    public RedirectView deleteUser(HttpSession httpSession, UserDto user) {
+    public RedirectView deleteUser(HttpSession httpSession, @Valid UserDto user) {
         RedirectView redirectView = new RedirectView("/");
         String email = (String) httpSession.getAttribute("email");
 
@@ -104,6 +102,39 @@ public class UserController {
             httpSession.invalidate();
         }
 
+        return redirectView;
+    }
+
+    @ExceptionHandler(DuplicatedIdException.class)
+    public RedirectView handleDuplicatedIdError(RedirectAttributes redirectAttributes, DuplicatedIdException e) {
+        RedirectView redirectView = new RedirectView("/signup");
+        redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
+        return redirectView;
+    }
+
+    @ExceptionHandler(NotExistIdException.class)
+    public RedirectView handleNotExistIdError(RedirectAttributes redirectAttributes, NotExistIdException e) {
+        RedirectView redirectView = new RedirectView(e.getNextView());
+        redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
+        return redirectView;
+    }
+
+    @ExceptionHandler(InvalidUpdateException.class)
+    public RedirectView handleInvalidUpdateError(RedirectAttributes redirectAttributes, InvalidUpdateException e) {
+        RedirectView redirectView = new RedirectView("/mypage/edit");
+        redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
+        return redirectView;
+    }
+
+    @ExceptionHandler(BindException.class)
+    public RedirectView handleInvalidUpdateError(RedirectAttributes redirectAttributes, BindException e) {
+        RedirectView redirectView = new RedirectView("signup");
+
+        String errorMessages = e.getFieldErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining("\n"));
+
+        redirectAttributes.addFlashAttribute("errormessage", errorMessages);
         return redirectView;
     }
 }

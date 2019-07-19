@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.application.service.exception.DuplicatedIdException;
+import techcourse.myblog.application.service.exception.NotExistIdException;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
@@ -22,7 +24,12 @@ public class UserService {
 
     @Transactional
     public String save(UserDto userDto) {
-        return userRepository.save(new User(userDto.getEmail(), userDto.getName(), userDto.getPassword())).getEmail();
+        User user = new User(userDto.getEmail(), userDto.getName(), userDto.getPassword());
+
+        if(userRepository.findById(userDto.getEmail()).isPresent()){
+            throw new DuplicatedIdException("이미 사용중인 이메일입니다.");
+        }
+        return userRepository.save(user).getEmail();
     }
 
     @Transactional(readOnly = true)
@@ -33,24 +40,25 @@ public class UserService {
         return userDtos;
     }
 
+    @Valid
     @Transactional(readOnly = true)
     public UserDto findById(String email) {
         return new UserDto(userRepository.findById(email)
-                .orElseThrow(IllegalArgumentException::new));
+                .orElseThrow(() -> new NotExistIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login")));
     }
 
     @Transactional
-    public boolean login(@Valid UserDto userDto) {
-        String password1 = userDto.getPassword();
-        String password2 = findById(userDto.getEmail()).getPassword();
+    public boolean login(UserDto userDto) {
+        String requestPassword = userDto.getPassword();
+        String expectedPassword = findById(userDto.getEmail()).getPassword();
 
-        return password1.equals(password2);
+        return requestPassword.equals(expectedPassword);
     }
 
     @Transactional
     public void modify(@Valid UserDto userDto) {
         User user = userRepository.findById(userDto.getEmail())
-                .orElseThrow(IllegalAccessError::new);
+                .orElseThrow(() -> new NotExistIdException("해당 이메일의 유저가 존재하지 않습니다.", "/"));
         user.updateName(userDto.getName());
         user.updatePassword(userDto.getPassword());
     }
