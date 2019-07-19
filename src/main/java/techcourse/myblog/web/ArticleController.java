@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleVo;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repo.ArticleRepository;
 
 import javax.transaction.Transactional;
@@ -24,11 +24,11 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String createArticle(ArticleVo articleVO, Model model) {
+    public String createArticle(ArticleDto articleDto, Model model) {
         Article article = Article.builder()
-                .title(articleVO.getTitle())
-                .coverUrl(articleVO.getCoverUrl())
-                .contents(articleVO.getContents())
+                .title(articleDto.getTitle())
+                .coverUrl(articleDto.getCoverUrl())
+                .contents(articleDto.getContents())
                 .build();
         articleRepository.save(article);
         model.addAttribute("article", article);
@@ -51,7 +51,7 @@ public class ArticleController {
 
     @Transactional
     @PutMapping("/{articleId}")
-    public String showUpdatedArticle(@PathVariable Long articleId, ArticleVo updatedArticle, Model model) {
+    public String showUpdatedArticle(@PathVariable Long articleId, ArticleDto updatedArticle, Model model) {
         Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
         article.update(updatedArticle);
         model.addAttribute("article", updatedArticle);

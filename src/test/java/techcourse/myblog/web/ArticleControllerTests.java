@@ -10,7 +10,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.repo.ArticleRepository;
-import techcourse.myblog.domain.ArticleVo;
+import techcourse.myblog.dto.ArticleDto;
 
 import java.util.Objects;
 
@@ -46,11 +46,11 @@ public class ArticleControllerTests {
 
     @Test
     void create_article() {
-        ArticleVo articleVO = new ArticleVo(title, coverUrl, contents);
+        ArticleDto articleDto = new ArticleDto(title, coverUrl, contents);
         WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.post()
-                .uri("/articles"), articleVO)
+                .uri("/articles"), articleDto)
                 .expectStatus().isFound();
-        checkBody(responseSpec, articleVO);
+        checkBody(responseSpec, articleDto);
     }
 
 
@@ -65,11 +65,11 @@ public class ArticleControllerTests {
     @Test
     void submit_update() {
         articleRepository.save(article);
-        ArticleVo articleVO = new ArticleVo("update title", "update coverUrl", "update contents");
+        ArticleDto articleDto = new ArticleDto("update title", "update coverUrl", "update contents");
 
-        WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/" + article.getArticleId()), articleVO);
+        WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/" + article.getArticleId()), articleDto);
         checkIsFound(responseSpec);
-        checkBody(responseSpec, articleVO);
+        checkBody(responseSpec, articleDto);
 
     }
 
@@ -96,17 +96,17 @@ public class ArticleControllerTests {
                 .exchange();
     }
 
-    private WebTestClient.ResponseSpec getResponse(WebTestClient.RequestBodySpec requestBodySpec, ArticleVo articleVO) {
+    private WebTestClient.ResponseSpec getResponse(WebTestClient.RequestBodySpec requestBodySpec, ArticleDto articleDto) {
         return requestBodySpec
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", articleVO.getTitle())
-                        .with("coverUrl", articleVO.getCoverUrl())
-                        .with("contents", articleVO.getContents()))
+                        .fromFormData("title", articleDto.getTitle())
+                        .with("coverUrl", articleDto.getCoverUrl())
+                        .with("contents", articleDto.getContents()))
                 .exchange();
     }
 
-    private void checkBody(WebTestClient.ResponseSpec responseSpec, ArticleVo articleVO) {
+    private void checkBody(WebTestClient.ResponseSpec responseSpec, ArticleDto articleDto) {
         responseSpec.expectBody()
                 .consumeWith(response -> {
                     webTestClient.get().uri(Objects.requireNonNull(response.getResponseHeaders().get("Location")).get(0))
@@ -115,9 +115,9 @@ public class ArticleControllerTests {
                             .expectBody()
                             .consumeWith(res -> {
                                 String body = new String(Objects.requireNonNull(res.getResponseBody()));
-                                assertThat(body.contains(articleVO.getTitle())).isTrue();
-                                assertThat(body.contains(articleVO.getCoverUrl())).isTrue();
-                                assertThat(body.contains(articleVO.getContents())).isTrue();
+                                assertThat(body.contains(articleDto.getTitle())).isTrue();
+                                assertThat(body.contains(articleDto.getCoverUrl())).isTrue();
+                                assertThat(body.contains(articleDto.getContents())).isTrue();
                             });
                 });
     }

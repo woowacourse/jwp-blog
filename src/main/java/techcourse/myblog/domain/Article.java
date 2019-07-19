@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import techcourse.myblog.dto.ArticleDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,10 +31,10 @@ public class Article {
         this.contents = contents;
     }
 
-    public void update(ArticleVo articleVO) {
-        this.title = articleVO.getTitle();
-        this.contents = articleVO.getContents();
-        this.coverUrl = articleVO.getCoverUrl();
+    public void update(ArticleDto articleDto) {
+        this.title = articleDto.getTitle();
+        this.contents = articleDto.getContents();
+        this.coverUrl = articleDto.getCoverUrl();
 
     }
 

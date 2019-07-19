@@ -3,6 +3,7 @@ package techcourse.myblog.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import techcourse.myblog.dto.UserDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

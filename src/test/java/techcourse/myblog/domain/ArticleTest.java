@@ -2,6 +2,7 @@ package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.dto.ArticleDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,11 +19,11 @@ public class ArticleTest {
 
     @Test
     void update() {
-        ArticleVo articleVO = new ArticleVo("new title", "new coverUrl", "new contents");
-        article.update(articleVO);
-        assertThat(article.getTitle().equals(articleVO.getTitle()));
-        assertThat(article.getCoverUrl().equals(articleVO.getCoverUrl()));
-        assertThat(article.getContents().equals(articleVO.getContents()));
+        ArticleDto articleDto = new ArticleDto("new title", "new coverUrl", "new contents");
+        article.update(articleDto);
+        assertThat(article.getTitle().equals(articleDto.getTitle()));
+        assertThat(article.getCoverUrl().equals(articleDto.getCoverUrl()));
+        assertThat(article.getContents().equals(articleDto.getContents()));
     }
 
     @Test

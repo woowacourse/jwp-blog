@@ -6,8 +6,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserDto;
-import techcourse.myblog.domain.UserUpdateRequestDto;
+import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserUpdateRequestDto;
 import techcourse.myblog.repo.UserRepository;
 
 import javax.servlet.http.HttpSession;

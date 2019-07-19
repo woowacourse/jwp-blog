@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import techcourse.myblog.domain.AuthenticationDto;
+import techcourse.myblog.dto.AuthenticationDto;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.repo.UserRepository;
 
