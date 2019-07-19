@@ -23,8 +23,9 @@ public class UserSerivceTest {
     private static final String TEST_EMAIL_2 = "test2@test.com";
     private static final String TEST_PASSWORD_1 = "!Q@W3e4r";
     private static final String TEST_PASSWORD_2 = "!Q@W3e4r5t";
-    private static final String TEST_USERNAME = "test1";
-    private static final UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
+    private static final String TEST_USERNAME_1 = "test1";
+    private static final String TEST_USERNAME_2 = "test2";
+    private static final UserDTO userDTO = new UserDTO(TEST_USERNAME_1, TEST_EMAIL_1, TEST_PASSWORD_1);
 
     @Autowired
     UserService userService;
@@ -41,13 +42,13 @@ public class UserSerivceTest {
 
     @Test
     void 이메일로_중복인지_테스트() {
-        UserDTO userDTOTest = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
+        UserDTO userDTOTest = new UserDTO(TEST_USERNAME_1, TEST_EMAIL_1, TEST_PASSWORD_1);
         assertThat(userService.isDuplicateEmail(userDTOTest)).isTrue();
     }
 
     @Test
     void 이메일로_중복아닌지_테스트() {
-        UserDTO userDTOTest = new UserDTO(TEST_USERNAME, TEST_EMAIL_2, TEST_PASSWORD_1);
+        UserDTO userDTOTest = new UserDTO(TEST_USERNAME_1, TEST_EMAIL_2, TEST_PASSWORD_1);
         assertThat(userService.isDuplicateEmail(userDTOTest)).isFalse();
     }
 
@@ -61,19 +62,27 @@ public class UserSerivceTest {
     @Test
     void 로그인_아이디_찾기_실패_테스트() {
         LoginDTO loginDTO = new LoginDTO(TEST_EMAIL_2, TEST_PASSWORD_1);
-
-        assertThrows(UserNotExistException.class, () -> {
-            userService.getLoginUser(loginDTO);
-        });
+        assertThrows(UserNotExistException.class, () -> userService.getLoginUser(loginDTO));
     }
 
     @Test
     void 로그인_패스워드_불일치_테스트() {
         LoginDTO loginDTO = new LoginDTO(TEST_EMAIL_1, TEST_PASSWORD_2);
+        assertThrows(LoginFailException.class, () -> userService.getLoginUser(loginDTO));
+    }
 
-        assertThrows(LoginFailException.class, () -> {
-            userService.getLoginUser(loginDTO);
-        });
+    @Test
+    void 유저_정보_수정_테스트() {
+        UserDTO userDTOTest = new UserDTO(TEST_USERNAME_2, TEST_EMAIL_1, TEST_PASSWORD_2);
+        assertThat(userService.update(userDTOTest).getUserName()).isEqualTo(TEST_USERNAME_2);
+        assertThat(userService.update(userDTOTest).getPassword()).isEqualTo(TEST_PASSWORD_2);
+    }
+
+    @Test
+    void 유저_삭제_테스트() {
+        userService.save(new UserDTO(TEST_USERNAME_2, TEST_EMAIL_2, TEST_PASSWORD_2));
+        userService.delete(TEST_EMAIL_2);
+        assertThat(userService.getUsers().size()).isEqualTo(1);
     }
 
     @AfterEach
