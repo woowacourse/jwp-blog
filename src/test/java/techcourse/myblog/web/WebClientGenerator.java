@@ -31,4 +31,11 @@ public class WebClientGenerator {
                 .expectStatus()
                 .isEqualTo(status);
     }
+
+    protected WebTestClient.RequestHeadersSpec<?> request(HttpMethod method, String uri, MultiValueMap<String, String> data) {
+        return webTestClient.method(method)
+                .uri(uri)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData(data));
+    }
 }
