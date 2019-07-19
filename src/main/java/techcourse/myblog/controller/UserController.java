@@ -1,5 +1,7 @@
 package techcourse.myblog.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,10 +19,10 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
-// TODO 회원 수정
-// TODO 회원 탈퇴
 public class UserController {
     private final UserService userService;
+
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     public UserController(final UserService userService) {
         this.userService = userService;
@@ -28,6 +30,7 @@ public class UserController {
 
     @PostMapping("")
     public String createUser(@Valid UserDto userDto, BindingResult bindingResult) {
+        log.debug("Sign Up -> userDto : {}", userDto);
         if (bindingResult.hasErrors()) {
             return "signup";
         }
@@ -40,9 +43,10 @@ public class UserController {
         model.addAttribute("users", userService.findAll());
         return "user-list";
     }
-    
+
     @PostMapping("/login")
     public RedirectView login(HttpServletRequest httpServletRequest, UserDto userDto) {
+        log.debug("Login -> userDto : {}", userDto);
         Optional<User> user = userService.findByEmailAndPassword(userDto);
         if (user.isPresent()) {
             httpServletRequest.getSession().setAttribute("user", user.get());
