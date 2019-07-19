@@ -34,7 +34,20 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional
     public Optional<User> findByEmailAndPassword(UserDto userDto) {
         return userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
+    }
+
+    @Transactional
+    public void update(User user, UserDto userDto) {
+        User updateUser = userRepository.findById(user.getId()).get();
+        user.update(userDto.toUser());
+        updateUser.update(userDto.toUser());
+    }
+
+    @Transactional
+    public void delete(User user) {
+        userRepository.delete(user);
     }
 }

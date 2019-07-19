@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class User {
 
     @Id
@@ -26,5 +28,10 @@ public class User {
 
     public static User to(String name, String email, String password) {
         return new User(name, email, password);
+    }
+
+    public void update(User user) {
+        this.name = user.name;
+        this.password = user.password;
     }
 }
