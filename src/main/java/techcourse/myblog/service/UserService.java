@@ -4,12 +4,13 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.exception.SignUpException;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static techcourse.myblog.service.SignUpException.*;
+import static techcourse.myblog.service.exception.SignUpException.*;
 
 @Service
 public class UserService {
@@ -30,6 +31,7 @@ public class UserService {
     }
 
     public List<User> findAll() {
+
         return userRepository.findAll();
     }
 

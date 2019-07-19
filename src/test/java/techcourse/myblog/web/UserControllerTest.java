@@ -8,7 +8,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.service.SignUpException;
+import techcourse.myblog.service.exception.SignUpException;
 
 import java.net.URI;
 

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.service.SignUpException;
+import techcourse.myblog.service.exception.SignUpException;
 import techcourse.myblog.service.UserService;
 
 @Controller
@@ -31,7 +31,7 @@ public class UserController {
     @PostMapping("/users")
     public String createUser(UserDto userDto) {
         userService.save(userDto);
-        return "redirect:/users/login";
+        return "redirect:/login";
     }
 
     @ExceptionHandler(SignUpException.class)

@@ -1,4 +1,4 @@
-package techcourse.myblog.service;
+package techcourse.myblog.service.exception;
 
 public class SignUpException extends RuntimeException {
     public static final String EMAIL_DUPLICATION_MESSAGE = "Email duplication!";
