@@ -54,18 +54,12 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String showMyPage(HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
-        }
+    public String showMyPage() {
         return "mypage";
     }
 
     @GetMapping("/mypage/edit")
-    public String showEditPage(HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
-        }
+    public String showEditPage() {
         return "mypage-edit";
     }
 
