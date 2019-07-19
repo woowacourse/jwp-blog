@@ -17,6 +17,7 @@
 </div>
 
 <form th:action="@{/users/edit}" th:method="put" accept-charset="utf-8">
+    <input type="hidden" name="id" class="form-control" th:value="${user.id}">
     <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
         <div class="row">
             <div class="col-md-7 mx-auto">
@@ -30,10 +31,10 @@
                             <div class="col-md-3">
                                 <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="user-name-input">
                                 <input type="text" name="name" class="form-control" th:value="${user.name}"
-                                       required pattern="^[가-힣|a-zA-Z]+$" minlength="2"
-                                       maxlength="8">
+                                required pattern="^[가-힣|a-zA-Z]+$" minlength="2"
+                                maxlength="8">
                             </div>
                         </div>
                         <hr>

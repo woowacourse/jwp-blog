@@ -1,5 +1,7 @@
 package techcourse.myblog.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
@@ -10,6 +12,7 @@ import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
 
@@ -22,11 +25,11 @@ public class UserService {
         return userRepository.save(signUpUserInfo.toUser());
     }
 
-    public User save(final UserDto.UpdateInfo updateInfo) {
+    public User update(final UserDto.UpdateInfo updateInfo) {
         User user = userRepository.findByEmail(updateInfo.getEmail())
                 .orElseThrow(NoSuchElementException::new);
-        user.setName(updateInfo.getName());
-        return userRepository.save(user);
+        User userUpdated = new User(updateInfo.getName(), updateInfo.getEmail(), user.getPassword());
+        return userRepository.save(userUpdated);
     }
 
     public User findById(final long id) {

@@ -103,7 +103,7 @@ public class UserDto {
 
 		}
 
-		private SessionUserInfo(final long id, final String name, final String email) {
+		public SessionUserInfo(final long id, final String name, final String email) {
 			this.id = id;
 			this.name = name;
 			this.email = email;
@@ -114,7 +114,7 @@ public class UserDto {
 		}
 
 		public boolean isSameId(final Long id) {
-			return (id.compareTo(id) == 0);
+			return this.id.compareTo(id) == 0;
 		}
 
 		public Long getId() {
@@ -140,15 +140,34 @@ public class UserDto {
 		public void setEmail(String email) {
 			this.email = email;
 		}
+
+		@Override
+		public String toString() {
+			return "SessionUserInfo{" +
+					"id=" + id +
+					", name='" + name + '\'' +
+					", email='" + email + '\'' +
+					'}';
+		}
 	}
 
 	public class UpdateInfo {
+		@NotNull
+		private Long id;
 
 		@NotNull
 		private String name;
 
 		@NotNull
 		private String email;
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
 
 		public String getName() {
 			return name;
@@ -164,6 +183,15 @@ public class UserDto {
 
 		public void setEmail(String email) {
 			this.email = email;
+		}
+
+		@Override
+		public String toString() {
+			return "UpdateInfo{" +
+					"id=" + id +
+					", name='" + name + '\'' +
+					", email='" + email + '\'' +
+					'}';
 		}
 	}
 }

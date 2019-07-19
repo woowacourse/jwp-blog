@@ -31,6 +31,11 @@ public class User {
 	public User() {
 	}
 
+	public User(final long id, final String name, final String email, final String password) {
+		this(name, email, password);
+		this.id = id;
+	}
+
 	public User(final String name, final String email, final String password) {
 		validate(name, password);
 		this.name = name;

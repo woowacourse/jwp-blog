@@ -50,7 +50,6 @@ public class UserControllerTest {
 		save(user);
 	}
 
-	//TODO 메소드 네이밍 고치기
 	private void save(User user) {
 		save(user, response -> {
 			String uri = response.getResponseHeaders().get("Location").get(0);
@@ -165,10 +164,12 @@ public class UserControllerTest {
 				});
 	}
 
+	//TODO 아래 지우기 g
+
 //    @Test
 //    public void 마이_페이지를_클릭했을때_마이페이지로_이동() {
 //        User user = new User(NAME, EMAIL, PASSWORD);
-//        save(user);
+//        update(user);
 //        User check = userRepository.findByEmail(EMAIL).orElseThrow(NoSuchElementException::new);
 //
 //        webTestClient.get().uri("/users/{id}", check.getId())
@@ -186,7 +187,7 @@ public class UserControllerTest {
 //    @Test
 //    public void 회원_수정() {
 //        User user = new User(NAME, EMAIL, PASSWORD);
-//        save(user);
+//        update(user);
 //
 //        webTestClient.put().uri("/users/edit")
 //                .body(BodyInserters
@@ -197,7 +198,7 @@ public class UserControllerTest {
 //                .expectBody()
 //                .consumeWith(response -> {
 //                    String uri = response.getResponseHeaders().get("Location").get(0);
-//                    //TODO getter 이용 제거
+//
 //                    User check = userRepository.findByEmail(user.getEmail()).orElseThrow(NoSuchElementException::new);
 //                    assertThat(uri).contains("/users/edit/" + check.getId());
 //                });
