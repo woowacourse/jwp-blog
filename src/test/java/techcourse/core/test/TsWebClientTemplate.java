@@ -6,20 +6,20 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 
-public class WebTestClientTemplate {
+public class TsWebClientTemplate {
     private final WebTestClient webTestClient;
     private final MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
-    private WebTestClientTemplate(WebTestClient webTestClient) {
+    private TsWebClientTemplate(WebTestClient webTestClient) {
         this.webTestClient = webTestClient;
     }
 
-    public WebTestClientTemplate addParam(String key, String value) {
+    public TsWebClientTemplate addParam(String key, String value) {
         this.params.add(key, value);
         return this;
     }
 
-    public WebTestClient.ResponseSpec post(String url) {
+    public WebTestClient.ResponseSpec formPost(String url) {
         return webTestClient
                 .post()
                 .uri(url)
@@ -28,7 +28,7 @@ public class WebTestClientTemplate {
                 .exchange();
     }
 
-    public static WebTestClientTemplate urlEncodedForm(WebTestClient webTestClient) {
-        return new WebTestClientTemplate(webTestClient);
+    public static TsWebClientTemplate urlEncodedForm(WebTestClient webTestClient) {
+        return new TsWebClientTemplate(webTestClient);
     }
 }

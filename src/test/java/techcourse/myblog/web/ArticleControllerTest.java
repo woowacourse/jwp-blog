@@ -2,31 +2,20 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.core.test.WebTestClientTemplate;
+import techcourse.core.test.AcceptanceBaseTest;
+import techcourse.core.test.TsWebClientTemplate;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
 import java.net.URI;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTest {
-
-    @Autowired
-    private WebTestClient webTestClient;
+public class ArticleControllerTest extends AcceptanceBaseTest {
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -36,25 +25,23 @@ public class ArticleControllerTest {
 
     @Test
     void index() {
-        webTestClient.get().uri("/")
+        anonymousClient().get().uri("/")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void articleForm() {
-        webTestClient.get().uri("/articles/new")
+        anonymousClient().get().uri("/articles/new")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void 작성된_게시글을_리스트에_등록하는지_테스트() {
-        webTestClient.post()
+        anonymousClient().post()
                 .uri("/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .header("Authorization", "Basic " + Base64Utils
-                        .encodeToString(("javajigi:password").getBytes(UTF_8)))
                 .body(BodyInserters
                         .fromFormData("articleId", "1")
                         .with("title", title)
@@ -85,15 +72,15 @@ public class ArticleControllerTest {
     }
 
     private WebTestClient.ResponseSpec createResource() {
-        return WebTestClientTemplate.urlEncodedForm(webTestClient)
+        return TsWebClientTemplate.urlEncodedForm(anonymousClient())
                     .addParam("title", title)
                     .addParam("coverUrl", coverUrl)
                     .addParam("contents", contents)
-                    .post("/write");
+                    .formPost("/write");
     }
 
     private WebTestClient.ResponseSpec getResource(URI location) {
-        return webTestClient.get().uri(location)
+        return anonymousClient().get().uri(location)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -101,7 +88,7 @@ public class ArticleControllerTest {
 
     @Test
     void 수정할_게시물의_내용_출력_확인_테스트() {
-        webTestClient.post()
+        anonymousClient().post()
                 .uri("/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -112,7 +99,7 @@ public class ArticleControllerTest {
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response -> {
-                    webTestClient.get().uri(response.getResponseHeaders().getLocation() + "/edit")
+                    anonymousClient().get().uri(response.getResponseHeaders().getLocation() + "/edit")
                             .exchange()
                             .expectStatus()
                             .isOk()
@@ -128,7 +115,7 @@ public class ArticleControllerTest {
 
     @Test
     void 게시글_삭제_테스트() {
-        webTestClient.post()
+        anonymousClient().post()
                 .uri("/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -140,7 +127,7 @@ public class ArticleControllerTest {
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(response -> {
-                    webTestClient.delete().uri(response.getResponseHeaders().getLocation())
+                    anonymousClient().delete().uri(response.getResponseHeaders().getLocation())
                             .exchange()
                             .expectStatus()
                             .isFound();

@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +11,7 @@ import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
 public class ArticleController {
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     private ArticleRepository articleRepository;
 
@@ -18,6 +21,8 @@ public class ArticleController {
 
     @GetMapping("/")
     public String getAllArticles(Model model) {
+        log.debug("A debug message");
+        log.info("A info message");
         model.addAttribute("articles", articleRepository.findAll());
         return "index";
     }
