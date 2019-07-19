@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.dto.UserLoginDto;
 
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
@@ -19,6 +20,12 @@ import java.util.regex.Pattern;
 @Controller
 @AllArgsConstructor
 public class UserController {
+    private static final String ERROR_MESSAGE = "message";
+    private static final String SESSION_NAME = "name";
+    private static final String SESSION_EMAIL = "signedEmail";
+    private static final String NAME_PATTERN = "^([a-zA-Z]){2,10}$";
+    private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,20}$";
+
     private final UserRepository userRepository;
 
     @GetMapping("/login")
@@ -30,19 +37,19 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String userLogin(User user, HttpSession httpSession, Model model) {
-        User dbUser = userRepository.findUserByEmail(user.getEmail());
-        if (Objects.isNull(dbUser)) {
-            model.addAttribute("message", "이메일을 똑바로 입력하세요");
+    public String userLogin(UserLoginDto loginDto, HttpSession httpSession, Model model) {
+        User user = userRepository.findUserByEmail(loginDto.getEmail());
+        if (Objects.isNull(user)) {
+            model.addAttribute(ERROR_MESSAGE, "이메일을 똑바로 입력하세요");
             return "redirect:/err";
         }
-        if (!user.getPassword().equals(dbUser.getPassword())) {
-            model.addAttribute("message", "패스워드가 올바르지 않습니다.");
+        if (user.checkPassword(loginDto.getPassword())) {
+            model.addAttribute(ERROR_MESSAGE, "패스워드가 올바르지 않습니다.");
             return "redirect:/err";
         }
 
-        httpSession.setAttribute("name", dbUser.getName());
-        httpSession.setAttribute("signedEmail", dbUser.getEmail());
+        httpSession.setAttribute(SESSION_NAME, user.getName());
+        httpSession.setAttribute(SESSION_EMAIL, user.getEmail());
         return "redirect:/";
     }
 
@@ -61,7 +68,7 @@ public class UserController {
             return "redirect:/login";
         }
 
-        model.addAttribute("message", "잘못된 입력입니다.");
+        model.addAttribute(ERROR_MESSAGE, "잘못된 입력입니다.");
         return "redirect:/err";
     }
 
@@ -76,7 +83,7 @@ public class UserController {
         try {
             initMyPage(httpSession, model);
         } catch (IllegalArgumentException e) {
-            model.addAttribute("message", e);
+            model.addAttribute(ERROR_MESSAGE, e);
             return "redirect:/err";
         }
         return "mypage-edit";
@@ -88,21 +95,21 @@ public class UserController {
         oldUser.setName(user.getName());
         oldUser.setPassword(user.getPassword());
 
-        String signedEmail = httpSession.getAttribute("signedEmail").toString();
+        String signedEmail = httpSession.getAttribute(SESSION_EMAIL).toString();
         String email = oldUser.getEmail();
 
         if (!signedEmail.equals(email)) {
-            redirectAttributes.addFlashAttribute("message", "잘못된 접근입니다.");
+            redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "잘못된 접근입니다.");
             return "redirect:/err";
         }
 
         if (!(validateName(user.getName()) && validatePassword(user.getPassword()))) {
-            redirectAttributes.addFlashAttribute("message", "아이디와 비밀번호가 옳지 않습니다");
+            redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "아이디와 비밀번호가 옳지 않습니다");
             return "redirect:/err";
         }
 
         userRepository.save(oldUser);
-        httpSession.setAttribute("name", oldUser.getName());
+        httpSession.setAttribute(SESSION_NAME, oldUser.getName());
 
         return "redirect:/mypage";
     }
@@ -121,7 +128,7 @@ public class UserController {
 
     @DeleteMapping("/delete/user")
     public String deleteUser(HttpSession httpSession) {
-        User user = userRepository.findUserByEmail(httpSession.getAttribute("signedEmail").toString());
+        User user = userRepository.findUserByEmail(httpSession.getAttribute(SESSION_EMAIL).toString());
         userRepository.delete(user);
         httpSession.invalidate();
         return "redirect:/";
@@ -134,14 +141,14 @@ public class UserController {
     }
 
     private boolean validateName(String name) {
-        Pattern pattern = Pattern.compile("^([a-zA-Z]){2,10}$");
+        Pattern pattern = Pattern.compile(NAME_PATTERN);
         Matcher matcher = pattern.matcher(name);
 
         return matcher.matches();
     }
 
     private boolean validatePassword(String password) {
-        Pattern pattern = Pattern.compile("^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,20}$");
+        Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
         Matcher matcher = pattern.matcher(password);
 
         return matcher.matches();
@@ -153,11 +160,11 @@ public class UserController {
 
 
     private boolean checkLogedIn(HttpSession httpSession) {
-        return !Objects.isNull(httpSession.getAttribute("signedEmail"));
+        return !Objects.isNull(httpSession.getAttribute(SESSION_EMAIL));
     }
 
     private void initMyPage(HttpSession httpSession, Model model) {
-        String email = httpSession.getAttribute("signedEmail").toString();
+        String email = httpSession.getAttribute(SESSION_EMAIL).toString();
 
         User user = userRepository.findUserByEmail(email);
         if (Objects.isNull(user)) {
