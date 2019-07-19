@@ -20,20 +20,17 @@ public class UserController {
 
     @GetMapping("/signup")
     public String showSignUpPage() {
-        // TODO: 로그인 된 유저인지 체크
         return "signup";
     }
 
     @PostMapping("/signup")
     public String addUser(UserDto userDto) {
         userService.create(userDto);
-
         return "redirect:/login";
     }
 
     @GetMapping("/login")
     public String showLoginPage() {
-        // TODO: 로그인 된 유저인지 체크
         return "login";
     }
 
@@ -80,8 +77,6 @@ public class UserController {
 
     @GetMapping("/users/{id}/mypage-edit")
     public String showMypageEdit(@PathVariable final long id, HttpSession session, Model model) {
-        // TODO: 로그인되었는지 확인 (아니면 메인으로)
-
         Object userId = session.getAttribute("userId");
         if (id != (long) userId) {
             return "redirect:/";
@@ -99,8 +94,6 @@ public class UserController {
     @PutMapping("/users/{id}/mypage-edit")
     @Transactional
     public String updateUser(@PathVariable final long id, HttpSession session, UserDto userDto) {
-        // TODO: 로그인되었는지 확인 (아니면 메인으로)
-
         Object userId = session.getAttribute("userId");
         if (id != (long) userId) {
             return "redirect:/";
@@ -112,8 +105,6 @@ public class UserController {
 
     @DeleteMapping("/users/{id}/mypage-edit")
     public String deleteUser(@PathVariable final long id, HttpSession session) {
-        // TODO: 로그인되었는지 확인 (아니면 메인으로)
-
         Object userId = session.getAttribute("userId");
         if (userId == null || id != (long) userId) {
             return "redirect:/";

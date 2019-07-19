@@ -6,18 +6,24 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import techcourse.myblog.interceptor.LoginInterceptor;
+import techcourse.myblog.interceptor.LoginUserInterceptor;
+import techcourse.myblog.interceptor.UserInfoInterceptor;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
-    @Qualifier(value = "httpInterceptor")
+    @Qualifier(value = "loginInterceptor")
     private HandlerInterceptor interceptor;
 
     @Autowired
-    @Qualifier(value = "loginInterceptor")
-    private LoginInterceptor loginInterceptor;
+    @Qualifier(value = "LoginUserInfoInterceptor")
+    private LoginUserInterceptor loginUserInterceptor;
+
+
+    @Autowired
+    @Qualifier(value = "userInfoInterceptor")
+    private UserInfoInterceptor userInfoInterceptor;
 
 
     @Override
@@ -25,7 +31,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(interceptor)
                 .addPathPatterns("/users/**");
 
-        registry.addInterceptor(loginInterceptor)
+        registry.addInterceptor(userInfoInterceptor)
                 .addPathPatterns("/**");
+
+        registry.addInterceptor(loginUserInterceptor)
+                .addPathPatterns("/signup")
+                .addPathPatterns("/login");
     }
 }
