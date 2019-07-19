@@ -211,6 +211,7 @@ public class ArticleControllerTests {
                     assertThat(body.contains("GUEST")).isTrue();
                     assertThat(body.contains("로그인")).isTrue();
                     assertThat(body.contains("회원가입")).isTrue();
+                    assertThat(body.contains("로그아웃")).isFalse();
                 });
     }
 }

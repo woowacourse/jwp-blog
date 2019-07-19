@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,10 +22,24 @@ public class AccountControllerTest {
     private String testName = "abcdeFGHIJ";
     private String testPassword = "abcdEFGH123!@#";
     private String testEmail = "abc@hi.com";
+    private long defaultId = 1;
+    private String defaultName = "default";
+    private String defaultPassword = testPassword;
+    private String defaultEmail = "default@default.com";
+
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     public AccountControllerTest(WebTestClient webTestClient) {
         this.webTestClient = webTestClient;
+    }
+
+    @BeforeEach
+    void setUp() {
+        testSignupProcess(defaultName, defaultPassword, defaultEmail);
+//        testSuccessLogin(defaultEmail, defaultPassword);
     }
 
     @Test
@@ -157,13 +173,20 @@ public class AccountControllerTest {
     }
 
     @Test
-    void 이메일_중복_확인() {
+    void signupTest_이메일_중복_확인() {
         String duplEmail = "name@hi.com";
         testSignupProcess(testName, testPassword, duplEmail)
                 .expectStatus()
                 .isFound();
 
         testSignupProcess(testName, testPassword, duplEmail)
+                .expectStatus()
+                .isOk();
+    }
+
+    @Test
+    void signupTest_이메일_중복_확인2() {
+        testSignupProcess(testName, testPassword, defaultEmail)
                 .expectStatus()
                 .isOk();
     }
@@ -178,43 +201,131 @@ public class AccountControllerTest {
         testSuccessLogin(email, testPassword);
     }
 
-    private void testSuccessLogin(String email, String password) {
-        webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectStatus()
-                .isFound()
-        .expectBody()
-        .consumeWith(response -> {
-            assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
-        })
-        ;
-    }
-
     @Test
     void 로그인_테스트_실패_아이디_틀림() {
-        String email = "aa@loginfail1.com";
         String wrongEmail = "aa";
-        testSignupProcess(testName, testPassword, email)
-                .expectStatus()
-                .isFound();
 
-        testFailLogin(testPassword, wrongEmail);
+        testFailLogin(defaultPassword, wrongEmail);
     }
 
     @Test
     void 로그인_테스트_실패_비밀번호_틀림() {
-        String email = "aa@loginfail2.com";
         String wrongPW = "aa";
-        testSignupProcess(testName, testPassword, email)
-                .expectStatus()
-                .isFound();
 
-        testFailLogin(wrongPW, email);
+        testFailLogin(wrongPW, defaultEmail);
     }
+
+    @Test
+    void 로그아웃_성공() {
+        testSuccessLogout();
+    }
+
+    @Test
+    void 로그아웃_실패() {
+        testFailLogout();
+    }
+
+
+    //    @Test
+//    void 로그인_후_마이페이지_접근() {
+//        String email = "aa@loginMypage1.com";
+//        testSignupProcess(testName, testPassword, email)
+//                .expectStatus()
+//                .isFound();
+//
+//        testSuccessLogin(email, testPassword);
+//
+//        User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//
+//        webTestClient.get().uri("/accounts/profile/" + loggedInUser.getId())
+//                .exchange()
+//                .expectStatus()
+//                .isOk();
+//    }
+    @Test
+    void 마이페이지_접근() {
+        webTestClient.get().uri("/accounts/profile/" + defaultId)
+                .exchange()
+                .expectStatus()
+                .isOk().expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(defaultEmail)).isTrue();
+            assertThat(body.contains(defaultName)).isTrue();
+        });
+    }
+
+    @Test
+    void 본인_마이페이지_수정_페이지_접근() {
+        String cookie = webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", defaultEmail)
+                        .with("password", defaultPassword))
+                .exchange()
+                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+
+        webTestClient.get().uri("/accounts/profile/edit").header("Cookie", cookie)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(defaultName)).isTrue();
+                    assertThat(body.contains(defaultEmail)).isTrue();
+                });
+    }
+
+    @Test
+    void 마이페이지_수정_후_저장_성공() {
+        String cookie = webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", defaultEmail)
+                        .with("password", defaultPassword))
+                .exchange()
+                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+
+        webTestClient.put().uri("/accounts/profile/edit").header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", defaultName + "a")
+                        .with("email", defaultEmail)
+                        .with("password", defaultPassword)
+                        .with("id", String.valueOf(defaultId)))
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .expectBody()
+                .consumeWith(response -> {
+                    webTestClient.get().uri("/accounts/profile/edit").header("Cookie", cookie)
+                            .exchange()
+                            .expectStatus()
+                            .isOk()
+                            .expectBody()
+                            .consumeWith(innerResponse -> {
+                                String body = new String(innerResponse.getResponseBody());
+                                assertThat(body.contains(defaultName + "a")).isTrue();
+                                assertThat(body.contains(defaultEmail)).isTrue();
+                            });
+
+                    webTestClient.put().uri("/accounts/profile/edit").header("Cookie", cookie)
+                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                            .body(BodyInserters
+                                    .fromFormData("name", defaultName)
+                                    .with("email", defaultEmail)
+                                    .with("password", defaultPassword)
+                                    .with("id", String.valueOf(defaultId)))
+                            .exchange()
+                            .expectStatus()
+                            .isFound();
+                });
+    }
+
+    //    @Test
+//    void user_list_test() {
+//        webTestClient.get().uri("/accounts/user-list").exchange().expectStatus().isOk();
+//    }
 
     private WebTestClient.ResponseSpec testSignupProcess(String name, String password, String email) {
         return webTestClient.post()
@@ -228,7 +339,24 @@ public class AccountControllerTest {
                 ;
     }
 
+    private void testSuccessLogin(String email, String password) {
+        webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", email)
+                        .with("password", password))
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .expectBody()
+                .consumeWith(response -> {
+                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
+                })
+        ;
+    }
+
     private void testFailLogin(String wrongPW, String testEmail) {
+        String errorMessgae = "아이디나 비밀번호가 잘못되었습니다.";
         webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -236,11 +364,41 @@ public class AccountControllerTest {
                         .with("password", wrongPW))
                 .exchange()
                 .expectStatus()
+                .isOk()
+                .expectBody().consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(errorMessgae)).isTrue();
+        });
+        ;
+    }
+
+    private void testSuccessLogout() {
+        String cookie = webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", defaultEmail)
+                        .with("password", defaultPassword))
+                .exchange()
+                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+
+        webTestClient.get().uri("/logout").header("Cookie", cookie)
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .expectBody()
+                .consumeWith(innerResponse -> {
+                    assertThat(innerResponse.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
+                });
+    }
+
+    private void testFailLogout() {
+        webTestClient.get().uri("/logout")
+                .exchange()
+                .expectStatus()
                 .isFound()
                 .expectBody()
                 .consumeWith(response -> {
                     assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isTrue();
-                })
-        ;
+                });
     }
 }

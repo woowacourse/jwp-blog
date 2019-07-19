@@ -1,29 +1,32 @@
 package techcourse.myblog.web;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserForm;
 import techcourse.myblog.domain.UserRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @Controller
 public class AccountController {
     private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AccountController(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/accounts/signup")
@@ -34,12 +37,12 @@ public class AccountController {
 
     @PostMapping("/accounts/users")
     public String processSignup(Model model, @Valid UserForm userForm, Errors errors) {
-
+        log.debug(">>> UserForm : {} Error : {}", userForm, errors);
         if (errors.hasErrors()) {
             return "signup";
         }
 
-        User user = userForm.toUser(passwordEncoder);
+        User user = userForm.toUser();
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             errors.rejectValue("email", "0", "이메일 중복입니다.");
             return "signup";
@@ -51,7 +54,69 @@ public class AccountController {
     }
 
     @GetMapping("/login")
-    public String showLoginPage() {
+    public String showLoginPage(HttpServletRequest request) {
+        if (request.getSession().getAttribute("user") != null) {
+            return "redirect:/";
+        }
+
         return "login";
+    }
+
+    @PostMapping("/login")
+    public String processLogin(UserForm userForm, HttpServletRequest request, Model model) {
+        String errorMessage = "아이디나 비밀번호가 잘못되었습니다.";
+        Optional<User> user = userRepository.findByEmail(userForm.getEmail());
+        if (!user.isPresent() || !userForm.getPassword().equals(user.get().getPassword())) {
+            model.addAttribute("error", errorMessage);
+            return "login";
+        }
+
+        request.getSession().setAttribute("user", user.get());
+        return "redirect:/";
+
+    }
+
+    @GetMapping("/logout")
+    public String processLogout(HttpServletRequest request) {
+        log.debug(">>> session : {}", request.getSession().getAttribute("user"));
+        if (request.getSession().getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
+        request.getSession().removeAttribute("user");
+        return "redirect:/";
+    }
+
+    @GetMapping("/accounts/profile/{id}")
+    public String showProfilePage(@PathVariable Long id, Model model) {
+        User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
+        model.addAttribute("user", user);
+
+        return "mypage";
+    }
+
+    @GetMapping("/accounts/profile/edit")
+    public String showProfileEditPage(Model model) {
+        model.addAttribute("userForm", new UserForm());
+        return "mypage-edit";
+    }
+
+    @PutMapping("/accounts/profile/edit")
+    public String processUpdateProfile(Model model, @Valid UserForm userForm, HttpServletRequest request, Errors errors) {
+        log.debug(">>> put edit userForm : {}" , userForm);
+        if (errors.hasErrors()) {
+            return "mypage-edit";
+        }
+        userRepository.save(userForm.toUser());
+        request.getSession().setAttribute("user", userForm.toUser());
+
+        return "redirect:/accounts/profile/" + userForm.getId();
+    }
+
+    @GetMapping("/accounts/user-list")
+    public String showUserList(Model model) {
+        List<User> userList = userRepository.findAll();
+        model.addAttribute("userList", userList);
+        return "user-list";
     }
 }

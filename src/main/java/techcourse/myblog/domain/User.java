@@ -1,15 +1,8 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnTransformer;
-import org.hibernate.annotations.GeneratorType;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -18,7 +11,7 @@ import java.util.Collection;
 @ToString
 @Data
 @NoArgsConstructor
-public class User implements UserDetails {
+public class User {
     public User(String name, String password, String email) {
         this.name = name;
         this.password = password;
@@ -37,34 +30,4 @@ public class User implements UserDetails {
     private String name;
     private String password;
     private String email;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }
