@@ -31,7 +31,24 @@ public class UserDto {
     }
 
     @Data
+    public static class Update {
+        @Pattern(regexp = "[A-Za-zㄱ-ㅎㅏ-ㅣ가-힣]{2,10}",
+                message = "올바른 이름 형식이 아닙니다.")
+        private String name;
+
+        public User toUser(long id, String email, String password) {
+            return User.builder()
+                    .id(id)
+                    .name(name)
+                    .email(email)
+                    .password(password)
+                    .build();
+        }
+    }
+
+    @Data
     public static class Response {
+        private long id;
         private String email;
         private String name;
     }

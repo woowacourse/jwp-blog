@@ -9,11 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.User;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
+    private String cookie;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -27,6 +27,14 @@ public class UserControllerTests {
                         .with("password", "password1234!")
                         .with("name", "name"))
                 .exchange();
+
+        cookie = webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", "email@gmail.com")
+                        .with("password", "password1234!"))
+                .exchange()
+                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
     }
 
     @Test
@@ -114,25 +122,8 @@ public class UserControllerTests {
 
     @Test
     void MyPage_이동_성공_테스트() {
-        webTestClient =
-                WebTestClient.bindToWebHandler(exchange -> {
-                    String path = exchange.getRequest().getURI().getPath();
-                    if ("/users".equals(path) || "/mypage".equals(path) || "/mypage-edit".equals(path)) {
-                        return exchange.getSession()
-                                .doOnNext(webSession ->
-                                        webSession.getAttributes()
-                                                .put("user", User.builder()
-                                                        .id(0)
-                                                        .name("name")
-                                                        .email("email@gmail.com")
-                                                        .password("password")
-                                                        .build()))
-                                .then();
-                    }
-                    return null;
-                }).build();
-
-        webTestClient.get().uri("/mypage")
+        webTestClient.get().uri("/mypage/1")
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -143,5 +134,35 @@ public class UserControllerTests {
         webTestClient.get().uri("/mypage")
                 .exchange()
                 .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*(/login)");
+    }
+
+    @Test
+    void EditMyPage_이동_성공_테스트() {
+        webTestClient.get().uri("/mypage/1/edit")
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void 회원_정보_수정_성공_테스트() {
+        webTestClient.put().uri("/users/1")
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", "newName"))
+                .exchange()
+                .expectStatus().isFound();
+    }
+
+    @Test
+    void 회원_정보_수정_실패_테스트() {
+        webTestClient.put().uri("/users/1")
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", ""))
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 }
