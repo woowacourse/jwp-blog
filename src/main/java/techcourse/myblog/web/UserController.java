@@ -75,4 +75,21 @@ public class UserController {
         modelAndView.setView(new RedirectView("/"));
         return modelAndView;
     }
+
+    @GetMapping("/mypage")
+    public ModelAndView showMyPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("mypage");
+        return modelAndView;
+    }
+
+    @GetMapping("/logout")
+    public ModelAndView logOut(HttpServletRequest request) {
+        request.getSession().invalidate();
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setView(new RedirectView("/"));
+        return modelAndView;
+    }
+
+
 }

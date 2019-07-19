@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.exception.ArticleDtoNotFoundException;
 import techcourse.myblog.exception.ArticleNotFoundException;
@@ -18,17 +17,15 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleServiceTest {
-    private ArticleService service;
     private ArticleAssembler assembler;
     private ArticleDto articleDto;
     private int id;
 
     @Autowired
-    private ArticleRepository repository;
+    private ArticleService service;
 
     @BeforeEach
     void setUp() {
-        service = new ArticleService(repository);
         assembler = new ArticleAssembler();
         articleDto = new ArticleDto("title", "", "content");
         id = service.save(articleDto);
