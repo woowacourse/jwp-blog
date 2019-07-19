@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
@@ -44,7 +43,7 @@ public class UserController {
             model.addAttribute(ERROR_MESSAGE, "이메일을 똑바로 입력하세요");
             return "redirect:/err";
         }
-        if (user.checkPassword(loginDto.getPassword())) {
+        if (!user.checkPassword(loginDto.getPassword())) {
             model.addAttribute(ERROR_MESSAGE, "패스워드가 올바르지 않습니다.");
             return "redirect:/err";
         }
@@ -92,26 +91,26 @@ public class UserController {
     }
 
     @PutMapping("/mypage/{id}")
-    public String completeEditMypage(HttpSession httpSession, Model model, User user, RedirectAttributes redirectAttributes) {
-        User oldUser = userRepository.findById(user.getId()).orElseThrow(IllegalArgumentException::new);
-        oldUser.setName(user.getName());
-        oldUser.setPassword(user.getPassword());
+    public String completeEditMypage(HttpSession httpSession, UserDto userDto, Model model) {
+        String sessionEmail = httpSession.getAttribute(SESSION_EMAIL).toString();
+        String email = userDto.getEmail();
 
-        String signedEmail = httpSession.getAttribute(SESSION_EMAIL).toString();
-        String email = oldUser.getEmail();
-
-        if (!signedEmail.equals(email)) {
-            redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "잘못된 접근입니다.");
+        if (!sessionEmail.equals(email)) {
+            model.addAttribute(ERROR_MESSAGE, "잘못된 접근입니다.");
             return "redirect:/err";
         }
 
-        if (!(validateName(user.getName()) && validatePassword(user.getPassword()))) {
-            redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "아이디와 비밀번호가 옳지 않습니다");
+        if (!(validateName(userDto.getName()) && validatePassword(userDto.getPassword()))) {
+            model.addAttribute(ERROR_MESSAGE, "아이디와 비밀번호가 옳지 않습니다");
             return "redirect:/err";
         }
 
-        userRepository.save(oldUser);
-        httpSession.setAttribute(SESSION_NAME, oldUser.getName());
+        User user = userRepository.findUserByEmail(userDto.getEmail());
+        user.setName(userDto.getName());
+        user.setPassword(userDto.getPassword());
+
+        userRepository.save(user);
+        httpSession.setAttribute(SESSION_NAME, user.getName());
 
         return "redirect:/mypage";
     }

@@ -18,12 +18,10 @@
     <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
         <div class="row">
             <div class="col-md-7 mx-auto">
-                <form th:action="@{/mypage/{id}(id=${user.id})}" th:method="put">
+                <form th:action="@{/mypage/save}" th:method="put">
                     <div class="card">
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
-                            <!--이렇게 submit으로 되어있고 밖에 FOrm이 없는 경우는 어디에 어떻게 가게 됩니까?-->
-                            <!--<button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정</button>-->
                             <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정
                             </button>
                         </div>
@@ -53,6 +51,7 @@
                                     <p class="mrg-top-10 text-dark"><b>Email</b></p>
                                 </div>
                                 <div class="col-md-6">
+                                    <input type="hidden" name="email" th:value="${user.email}">
                                     <p class="mrg-top-10" th:text="${user} ? ${user.email} : '포비만세'">
                                         gracefulBrown@woowahan.com</p>
                                 </div>

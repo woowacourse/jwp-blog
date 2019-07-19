@@ -75,9 +75,8 @@ class UserControllerTest {
 
         webTestClient.post().uri("/login")
                 .body(BodyInserters
-                        .fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
+                        .fromFormData("password", password)
+                        .with("email", email))
                 .exchange()
                 .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/;jsessionid=([0-9A-Z])+")
                 .expectStatus().is3xxRedirection();
