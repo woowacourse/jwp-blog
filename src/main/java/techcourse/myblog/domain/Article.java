@@ -11,7 +11,6 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String title;
     private String coverUrl;
     private String contents;
@@ -25,7 +24,7 @@ public class Article {
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(long id) {
@@ -33,7 +32,7 @@ public class Article {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
@@ -41,7 +40,7 @@ public class Article {
     }
 
     public String getCoverUrl() {
-        return coverUrl;
+        return this.coverUrl;
     }
 
     public void setCoverUrl(String coverUrl) {
@@ -49,7 +48,7 @@ public class Article {
     }
 
     public String getContents() {
-        return contents;
+        return this.contents;
     }
 
     public void setContents(String contents) {
@@ -65,13 +64,13 @@ public class Article {
             return false;
         }
         Article article = (Article) o;
-        return Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
+        return Objects.equals(this.title, article.title) &&
+                Objects.equals(this.coverUrl, article.coverUrl) &&
+                Objects.equals(this.contents, article.contents);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents);
+        return Objects.hash(this,id, this.title, this.coverUrl, this.contents);
     }
 }

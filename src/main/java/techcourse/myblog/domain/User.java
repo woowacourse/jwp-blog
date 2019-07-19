@@ -29,48 +29,49 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
         this.name = validateName(name);
     }
 
-    private String validateName(String name) {
-        return Optional.ofNullable(name).filter(x -> (MIN_NAME_LENGTH <= x.length()) && (x.length() <= MAX_NAME_LENGTH))
+    private String validateName(String input) {
+        return Optional.ofNullable(input).filter(x -> (MIN_NAME_LENGTH <= x.length())
+                                                    && (x.length() <= MAX_NAME_LENGTH))
                                         .filter(x -> nameValidation.matcher(x).matches())
                                         .orElseThrow(IllegalArgumentException::new);
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
         this.email = validateEmail(email);
     }
 
-    private String validateEmail(String email) {
-        return Optional.ofNullable(email).filter(x -> x.contains("@"))
+    private String validateEmail(String input) {
+        return Optional.ofNullable(input).filter(x -> x.contains("@"))
                                         .filter(x -> x.substring(x.indexOf("@")).contains("."))
                                         .orElseThrow(IllegalArgumentException::new);
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
         this.password = validatePassword(password);
     }
 
-    public boolean authenticate(String password) {
-        return this.password.equals(password);
+    private String validatePassword(String input) {
+        return Optional.ofNullable(input).filter(x -> MIN_PASSWORD_LENGTH <= x.length())
+                                        .filter(x -> passwordValidation.matcher(x).matches())
+                                        .orElseThrow(IllegalArgumentException::new);
     }
 
-    private String validatePassword(String password) {
-        return Optional.ofNullable(password).filter(x -> MIN_PASSWORD_LENGTH <= x.length())
-                                            .filter(x -> passwordValidation.matcher(x).matches())
-                                            .orElseThrow(IllegalArgumentException::new);
+    public boolean authenticate(String password) {
+        return this.password.equals(password);
     }
 }

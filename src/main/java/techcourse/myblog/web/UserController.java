@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,24 +11,18 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 public class UserController {
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/signup")
-    public String showSignupForm(@RequestParam(required = false) String errorMessage, Model model) {
-        model.addAttribute("errorMessage", errorMessage);
-        return "signup";
-    }
-
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String loginForm() {
         return "login";
     }
 
@@ -35,44 +31,21 @@ public class UserController {
             String email,
             String password,
             HttpSession session,
-            RedirectAttributes redirectAttributes,
-            HttpServletResponse res
+            RedirectAttributes redirectAttributes
     ) {
-        System.out.println(email);
-        System.out.println(password);
         return userRepository.findByEmail(email)
-                            .filter(u -> u.authenticate(password))
+                            .filter(user -> user.authenticate(password))
                             .map(user -> {
-                                    session.setAttribute("key", Objects.hash(email));
-                                    session.setAttribute("username", user.getName());
-                                    session.setAttribute("email", user.getEmail());
-//                                    Cookie loginCookie = new Cookie("credential", Objects.hash(email) + "");
-//                                    res.addCookie(loginCookie);
-                                    return new RedirectView("/");
+                                session.setAttribute("name", user.getName());
+                                session.setAttribute("email", user.getEmail());
+                                return new RedirectView("/");
                             }).orElseGet(() -> {
-                                    redirectAttributes.addAttribute(
-                                            "errorMessage",
-                                            "존재하지 않는 사용자이거나 잘못된 비밀번호입니다."
-                                    );
-                                    return new RedirectView("/login");
+                                redirectAttributes.addAttribute(
+                                        "errorMessage",
+                                        "존재하지 않는 사용자이거나 잘못된 비밀번호입니다."
+                                );
+                                return new RedirectView("/login");
                             });
-    }
-
-    @GetMapping("/users")
-    public String showAllUsers(Model model) {
-        model.addAttribute("users", userRepository.findAll());
-        return "user-list";
-    }
-
-    @PostMapping("/users")
-    public RedirectView registerUser(User user, RedirectAttributes redirectAttributes) {
-        return userRepository.findByEmail(user.getEmail()).map(ifExists -> {
-                redirectAttributes.addAttribute("errorMessage", "이미 존재하는 이메일입니다.");
-                return new RedirectView("/signup");
-        }).orElseGet(() -> {
-                userRepository.save(user);
-                return new RedirectView("/login");
-        });
     }
 
     @GetMapping("/logout")
@@ -81,52 +54,67 @@ public class UserController {
         return new RedirectView("/");
     }
 
-    @GetMapping("/mypage")
-    public String mypage(HttpSession session, Model model) {
-        return userRepository.findByEmail((String) session.getAttribute("email"))
-                            .map(user -> {
-                                model.addAttribute("user", user);
-                                return "mypage";
-                            })
-                            .orElse("redirect:/");
+    @GetMapping("/users")
+    public String userList(Model model) {
+        model.addAttribute("users", userRepository.findAll());
+        return "user-list";
     }
 
-    @GetMapping("/mypageedit")
-    public String myPageEdit(HttpSession session, Model model) {
-        return userRepository.findByEmail((String) session.getAttribute("email"))
-                .map(user -> {
-                    model.addAttribute("user", user);
-                    return "mypage-edit";
-                })
-                .orElse("redirect:/");
+    @GetMapping("/signup")
+    public String signupForm(@RequestParam(required = false) String errorMessage, Model model) {
+        model.addAttribute("errorMessage", errorMessage);
+        return "signup";
     }
 
-    @PutMapping("/mypageedit")
-    public RedirectView myPageEditConfirm(HttpSession session, String email, String name) {
-        return userRepository.findByEmail((String) session.getAttribute("email")).map(user -> {
-                    if (email.equals(user.getEmail())) {
-                        user.setName(name);
-                        user.setEmail(email);
-                        userRepository.save(user);
-                        session.setAttribute("username", name);
-                        session.setAttribute("email", email);
-                        return new RedirectView("/mypage");
-                    }
-                    return userRepository.findByEmail(email).map(sameEmail -> new RedirectView("."))
-                                                            .orElseGet(() -> {
-                                                                    user.setName(name);
-                                                                    user.setEmail(email);
-                                                                    userRepository.save(user);
-                                                                    session.setAttribute("username", name);
-                                                                    session.setAttribute("email", email);
-                                                                    return new RedirectView("/mypage");
-                                                            });
-        }).orElse(new RedirectView("/"));
+    @PostMapping("/users")
+    public RedirectView registerUser(User user, RedirectAttributes redirectAttributes) {
+        return userRepository.findByEmail(user.getEmail()).map(ifSameEmailExists -> {
+            redirectAttributes.addAttribute("errorMessage", "이미 등록된 이메일입니다.");
+            return new RedirectView("/signup");
+        }).orElseGet(() -> {
+            userRepository.save(user);
+            return new RedirectView("/login");
+        });
     }
 
-    @DeleteMapping("/users")
-    public RedirectView deleteUser(HttpSession session) {
-        userRepository.findByEmail((String) session.getAttribute("email")).ifPresent(user -> {
+    private Optional<User> ifLoggedIn(HttpSession session) {
+        return userRepository.findByEmail((String) session.getAttribute("email"));
+    }
+
+    @GetMapping("/profile")
+    public String profile(Model model, HttpSession session) {
+        return ifLoggedIn(session).map(user -> {
+            model.addAttribute("user", user);
+            return "mypage";
+        }).orElse("redirect:/");
+    }
+
+    @GetMapping("/profile/edit")
+    public String profileEditForm(Model model, HttpSession session) {
+        return ifLoggedIn(session).map(user -> {
+            model.addAttribute("user", user);
+            return "mypage-edit";
+        }).orElse("redirect:/");
+    }
+
+    @PutMapping("/profile/edit")
+    public RedirectView profileEditConfirm(String email, String name, HttpSession session) {
+        return ifLoggedIn(session).map(user -> {
+            if (!email.equals(user.getEmail()) && userRepository.findByEmail(email).isPresent()) {
+                return new RedirectView("/profile/edit");
+            }
+            user.setName(name);
+            user.setEmail(email);
+            userRepository.save(user);
+            session.setAttribute("name", name);
+            session.setAttribute("email", email);
+            return new RedirectView("/profile");
+        }).orElse(new RedirectView("/login"));
+    }
+
+    @DeleteMapping("/profile")
+    public RedirectView cancelProfile(HttpSession session) {
+        ifLoggedIn(session).ifPresent(user -> {
             userRepository.delete(user);
             session.invalidate();
         });

@@ -1,8 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}"
-      lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}" lang="ko">
 <head>
     <link rel="stylesheet" href="/css/mypage.css">
 </head>
@@ -10,30 +7,25 @@
 <th:block layout:fragment="content">
     <div>
         <th:block th:replace="layout/header :: header"></th:block>
-
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
-                <div class="display-block height-100">
-
-                </div>
+                <div class="display-block height-100"></div>
             </div>
         </div>
-
         <div th:object="${user}" class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
             <div class="row">
                 <div class="col-md-7 mx-auto">
                     <div class="card">
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
-                            <a href="/mypageedit"
-                               class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
+                            <a href="/profile/edit" class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                                 <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                             </a>
                         </div>
                         <div class="card-block">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <p class="mrg-top-10 text-dark"><b>Name</b></p>
+                                    <p class="mrg-top-10 text-dark"><b>이름</b></p>
                                 </div>
                                 <div class="col-md-6">
                                     <p class="mrg-top-10" th:text="*{name}"></p>
@@ -42,21 +34,20 @@
                             <hr>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <p class="mrg-top-10 text-dark"><b>Email</b></p>
+                                    <p class="mrg-top-10 text-dark"><b>이메일</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mrg-top-10" th:text="*{email}">gracefulBrown@woowahan.com</p>
+                                    <p class="mrg-top-10" th:text="*{email}"></p>
                                 </div>
                             </div>
                             <hr>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <p class="mrg-top-10 text-dark"><b>Avatar</b></p>
+                                    <p class="mrg-top-10 text-dark"><b>아바타</b></p>
                                 </div>
                                 <div class="col-md-6">
                                     <div>
-                                        <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
-                                             width="117" alt="">
+                                        <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" width="117" alt="">
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +85,7 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    <form class="col-12" action="/users" th:method="delete">
+                                    <form class="col-12" action="/profile" th:method="delete">
                                         <button class="col-12 btn btn-danger">회원 탈퇴</button>
                                     </form>
                                 </div>
