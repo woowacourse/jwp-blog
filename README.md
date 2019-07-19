@@ -45,8 +45,9 @@
         - DELETE 메소드를 이용하여 탈퇴 요청
         
 4. 기타
-    - 테스트시에만 DB가 초기화 되도록 설정하는 방법 찾아보기(UserControllerTest)
+    - 테스트시에만 DB가 초기화 되도록 설정하는 방법 찾아보기(UserControllerTest) - profile
     - 테스트 코드 중복 제거(UserControllerTests)
+    - logging
 ### Done
 0. 페어와 코드 동기화
 
