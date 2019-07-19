@@ -31,7 +31,9 @@
                                 <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" name="name" class="form-control" th:value="${user.name}">
+                                <input type="text" name="name" class="form-control" th:value="${user.name}"
+                                       required pattern="^[가-힣|a-zA-Z]+$" minlength="2"
+                                       maxlength="8">
                             </div>
                         </div>
                         <hr>

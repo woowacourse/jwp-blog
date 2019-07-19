@@ -19,7 +19,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String index(Model model) {
-        Iterable<Article> articles = articleRepository.findAll();
+        final Iterable<Article> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
     }
@@ -52,8 +52,6 @@ public class ArticleController {
 
     @DeleteMapping("articles/{articleId}")
     public RedirectView deleteArticle(@PathVariable final long articleId) {
-        System.out.println(articleId);
-        System.out.println(articleRepository.findAll());
         articleRepository.deleteById(articleId);
         return new RedirectView("/");
     }

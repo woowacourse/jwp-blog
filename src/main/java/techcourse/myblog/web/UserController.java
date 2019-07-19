@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,9 @@ import java.util.NoSuchElementException;
 
 @Controller
 public class UserController {
+    private static final Logger log =
+            LoggerFactory.getLogger(UserController.class);
+
     private static final String SESSION_NAME = "userInfo";
 
     private final UserRepository userRepository;
@@ -22,8 +27,11 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login() {
-        return "/user/login";
+    public String login(final HttpSession session) {
+        if (session.getAttribute(SESSION_NAME) == null) {
+            return "/user/login";
+        }
+        return "redirect:/";
     }
 
     @PostMapping("/login")
@@ -43,18 +51,22 @@ public class UserController {
 
     @GetMapping("/logout")
     public String logout(final HttpSession session) {
-        session.removeAttribute("userInfo");
+        session.removeAttribute(SESSION_NAME);
         return "/index";
     }
 
     @GetMapping("/signup")
-    public String signUp() {
-        return "/user/signup";
+    public String signUp(final HttpSession session) {
+        if (session.getAttribute(SESSION_NAME) == null) {
+            return "/user/signup";
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/users")
     public String findUsers(final Model model) {
         final Iterable<User> users = userRepository.findAll();
+        log.debug("users : {}", users);
         model.addAttribute("users", users);
         return "/user/user-list";
     }
@@ -72,11 +84,20 @@ public class UserController {
     }
 
     //TODO NoSuchElementException -> CustomException으로 변화
+    //TODO 세션값과 ID를 비교해서 다르면 user-list로 이동 에러메시지?
     @GetMapping("/users/{id}")
-    public String myPage(@PathVariable Long id, final Model model) {
-        User user = userRepository.findById(id).orElseThrow(NoSuchElementException::new);
-        model.addAttribute("user", user);
-        return "mypage";
+    public String myPage(@PathVariable Long id, final Model model, final HttpSession session) {
+        UserDto.SessionUserInfo sessionUserInfo = (UserDto.SessionUserInfo) session.getAttribute(SESSION_NAME);
+
+        log.debug("session value : {}", sessionUserInfo);
+        log.debug("id : {}", id);
+
+        if (sessionUserInfo != null && sessionUserInfo.getId() == id) {
+            User user = userRepository.findById(id).orElseThrow(NoSuchElementException::new);
+            model.addAttribute("user", user);
+            return "mypage";
+        }
+        return "redirect:/users";
     }
 
     @GetMapping("/users/edit/{id}")
@@ -87,15 +108,13 @@ public class UserController {
     }
 
     @PutMapping("/users/edit")
-    public String update(final User user, final HttpSession session) {
-        User userParam = userRepository.findByEmail(user.getEmail()).orElseThrow(NoSuchElementException::new);
-        userParam.setName(user.getName());          //이름 변경
-        //TODO Setter -> update or Dto
-        userRepository.save(userParam);
-        System.out.println(userParam);
-        session.setAttribute(SESSION_NAME, UserDto.SessionUserInfo.toDto(userParam));
+    public String update(final UserDto.updateInfo updateInfo, final HttpSession session) {
+        User user = userRepository.findByEmail(updateInfo.getEmail()).orElseThrow(NoSuchElementException::new);
+        user.setName(updateInfo.getName());
+        userRepository.save(user);
+        session.setAttribute(SESSION_NAME, UserDto.SessionUserInfo.toDto(user));
 
-        return "redirect:/users/edit/" + userParam.getId() ;
+        return "redirect:/users/" + user.getId();
     }
 
     @DeleteMapping("/users/{email}")

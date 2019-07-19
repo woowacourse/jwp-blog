@@ -4,15 +4,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
-import org.springframework.test.web.reactive.server.HeaderAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
+import org.springframework.web.reactive.function.client.WebClient;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
@@ -26,6 +30,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 public class UserControllerTest {
+    private static final Logger log = LoggerFactory.getLogger(UserControllerTest.class);
+
     private static final String NAME = "yusi";
     private static final String EMAIL = "temp@mail.com";
     private static final String PASSWORD = "12345abc";
@@ -38,6 +44,20 @@ public class UserControllerTest {
 
     @BeforeEach
     public void setUp() {
+//        User loginUser = new User(NAME, EMAIL, PASSWORD);
+//        webTestClient = WebTestClient.bindToWebHandler(exchange -> {
+//           String path = exchange.getRequest().getURI().getPath();
+//           log.info("path : {}", path);
+//           if (path.equals("/mypage") || path.equals("/mypage-edit")) {
+//               return exchange.getSession()
+//                       .doOnNext(webSession ->
+//                            webSession.getAttributes().put("userInfo", UserDto.SessionUserInfo.toDto(loginUser)))
+//                       .then();
+//           }
+//           return null;
+//        }).build();
+        User loginUser = new User(NAME, EMAIL, PASSWORD);
+
         userRepository.deleteAll();
     }
 
@@ -71,9 +91,7 @@ public class UserControllerTest {
     @Test
     public void 이메일_중복일때_가입_테스트() {
         User user = new User(1L, NAME, EMAIL, PASSWORD);
-
         addUser(user);
-
         User other = new User(2L, "other", EMAIL, PASSWORD);
 
         webTestClient.post().uri("/users")
@@ -88,11 +106,10 @@ public class UserControllerTest {
     @Test
     public void 회원_목록_조회() {
         User user = new User(1L, NAME, EMAIL, PASSWORD);
-
         addUser(user);
 
         final int count = 1;
-        String delimiter = "class=\"card-body\"";
+        String element = "class=\"card-body\"";
 
         webTestClient.get().uri("/users")
                 .exchange()
@@ -100,14 +117,13 @@ public class UserControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertEquals(count, StringUtils.countOccurrencesOf(body, delimiter));
+                    assertEquals(count, StringUtils.countOccurrencesOf(body, element));
                 });
     }
 
     @Test
     public void 로그인_성공() {
         User user = new User(1L, NAME, EMAIL, PASSWORD);
-
         addUser(user);
 
         webTestClient.post().uri("/login")
@@ -166,23 +182,7 @@ public class UserControllerTest {
                     assertFalse(body.contains("로그아웃"));
                 });
     }
-
-    @Test
-    public void 마이_페이지를_클릭했을때_마이페이지로_이동() {
-        User user = new User(NAME, EMAIL, PASSWORD);
-        addUser(user);
-        User check = userRepository.findByEmail(EMAIL).orElseThrow(NoSuchElementException::new);
-        webTestClient.get().uri("/users/" + check.getId())
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body).contains(check.getName())
-                            .contains(check.getEmail());
-                });
-    }
-
+    
     @Test
     public void 마이페이지의_수정_버튼클릭시_수정페이지_이동() {
         User user = new User(NAME, EMAIL, PASSWORD);
@@ -191,31 +191,7 @@ public class UserControllerTest {
         User check = userRepository.findByEmail(EMAIL).orElseThrow(NoSuchElementException::new);
         webTestClient.get().uri("/users/edit/" + check.getId())
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-
-                });
-    }
-
-    @Test
-    public void 회원_수정() {
-        User user = new User(NAME, EMAIL, PASSWORD);
-        addUser(user);
-
-        webTestClient.put().uri("/users/edit")
-                .body(BodyInserters
-                        .fromFormData("name", "CHANGE")
-                        .with("email", user.getEmail()))
-                .exchange()
-                .expectStatus().isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    String uri = response.getResponseHeaders().get("Location").get(0);
-                    //TODO getter 이용 제거
-                    User check = userRepository.findByEmail(user.getEmail()).orElseThrow(NoSuchElementException::new);
-                    assertThat(uri).contains("/users/edit/" + check.getId());
-                });
+                .expectStatus().isOk();
     }
 
     @Test
@@ -227,8 +203,8 @@ public class UserControllerTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
-                   String body = new String(response.getResponseBody());
-                   assertFalse(body.contains("로그아웃"));
+                    String body = new String(response.getResponseBody());
+                    assertFalse(body.contains("로그아웃"));
                 });
     }
 
