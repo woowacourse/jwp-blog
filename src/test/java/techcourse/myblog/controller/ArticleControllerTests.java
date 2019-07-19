@@ -11,6 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
@@ -131,11 +132,7 @@ public class ArticleControllerTests {
     }
 
     private String getResponseBody(byte[] responseBody) {
-        try {
-            return new String(responseBody, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("ArticleControllerTest 에서 EncodingException 발생 : " + e.getMessage());
-        }
+        return new String(responseBody, StandardCharsets.UTF_8);
     }
 
     @Test

@@ -1,7 +1,5 @@
 package techcourse.myblog.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +19,7 @@ public class HomeController {
     public String home(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        if(user != null){
+        if (user != null) {
             model.addAttribute("user", user);
         }
         model.addAttribute("articles", articleRepository.findAll());

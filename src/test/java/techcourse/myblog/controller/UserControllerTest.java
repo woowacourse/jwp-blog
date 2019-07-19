@@ -12,6 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
@@ -29,11 +30,9 @@ class UserControllerTest {
     private static final String EMAIL_2 = "test2@test.com";
     private static final String PASSWORD_1 = "1234";
     private static final String PASSWORD_2 = "12345";
-
-    private String cookie;
-
     @Autowired
     WebTestClient webTestClient;
+    private String cookie;
 
     @BeforeEach
     void setUp() {
@@ -160,19 +159,15 @@ class UserControllerTest {
     }
 
     private String getResponseBody(byte[] responseBody) {
-        try {
-            return new String(responseBody, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("ArticleControllerTest 에서 EncodingException 발생 : " + e.getMessage());
-        }
+        return new String(responseBody, StandardCharsets.UTF_8);
     }
 
     @Test
     void 수정_테스트() {
         webTestClient.post().uri("/users/mypage")
                 .body(fromFormData("userName", USER_NAME_2)
-                    .with("email", EMAIL_1)
-                    .with("password", PASSWORD_2))
+                        .with("email", EMAIL_1)
+                        .with("password", PASSWORD_2))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectBody()
@@ -181,7 +176,7 @@ class UserControllerTest {
                     webTestClient.get().uri(url)
                             .exchange()
                             .expectBody()
-                            .consumeWith(redirectResponse ->{
+                            .consumeWith(redirectResponse -> {
                                 String body = getResponseBody(redirectResponse.getResponseBody());
                                 assertThat(body.contains(USER_NAME_2)).isTrue();
                             });

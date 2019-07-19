@@ -21,8 +21,8 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public void save(UserDTO userDTO){
-        if (isDuplicateEmail(userDTO)){
+    public void save(UserDTO userDTO) {
+        if (isDuplicateEmail(userDTO)) {
             throw new EmailRepetitionException("이메일이 중복입니다.");
         }
         userRepository.save(new User(userDTO.getUserName(), userDTO.getEmail(), userDTO.getPassword()));
@@ -37,7 +37,7 @@ public class UserService {
     }
 
     private boolean checkPassword(String password, String checkPassword) {
-         return password.equals(checkPassword);
+        return password.equals(checkPassword);
     }
 
     private User checkUser(LoginDTO loginDTO) {
@@ -48,7 +48,7 @@ public class UserService {
         throw new UserNotExistException("해당 아이디를 가진 유저는 존재하지 않습니다.");
     }
 
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         return userRepository.findAll();
     }
 
@@ -56,7 +56,7 @@ public class UserService {
         return userRepository.findUserByEmailAddress(userDTO.getEmail()) != null;
     }
 
-    public void delete(String email){
+    public void delete(String email) {
         userRepository.deleteUserByEmailAddress(email);
     }
 
@@ -65,7 +65,7 @@ public class UserService {
         log.error("name {} ", userDTO.getUserName());
         log.error("password {} ", userDTO.getPassword());
         int result = userRepository.updateUserByEmailAddress(userDTO.getUserName(), userDTO.getPassword(), userDTO.getEmail());
-        if(result == 0){
+        if (result == 0) {
             throw new UserNotExistException("유저정보가 없습니다.");
         }
         return userRepository.findUserByEmailAddress(userDTO.getEmail());

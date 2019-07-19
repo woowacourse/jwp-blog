@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String signUpForm(String signUpStatus, Model model){
+    public String signUpForm(String signUpStatus, Model model) {
         model.addAttribute("signUpStatus", signUpStatus);
         return "signup";
     }
@@ -54,7 +54,7 @@ public class UserController {
     public String login(@ModelAttribute LoginDTO loginDTO, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         try {
             User user = userService.getLoginUser(loginDTO);
-            log.info("userName : {}" , user.getUserName());
+            log.info("userName : {}", user.getUserName());
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             return "redirect:/";
@@ -66,7 +66,7 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request){
+    public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.invalidate();
         return "redirect:/";
