@@ -27,10 +27,17 @@ public class LogInController {
     }
 
     @PostMapping("/login")
-    public String login(LogInInfoDto logInInfoDto, HttpServletRequest httpServletRequest) {
+    public String logIn(LogInInfoDto logInInfoDto, HttpServletRequest httpServletRequest) {
         LoggedInUserDto loggedInUserDto = logInService.logIn(logInInfoDto);
         HttpSession httpSession = httpServletRequest.getSession();
         httpSession.setAttribute("loggedInUser", loggedInUserDto);
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        httpSession.removeAttribute("loggedInUser");
         return "redirect:/";
     }
 

@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+import javax.servlet.http.HttpSession;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,6 +20,9 @@ import static techcourse.myblog.service.exception.LogInException.LOGIN_FAIL_MESS
 class LogInControllerTest {
     @LocalServerPort
     int randomPortNumber;
+
+    @Autowired
+    HttpSession httpSession;
 
     @Autowired
     WebTestClient webTestClient;
