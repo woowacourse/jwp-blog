@@ -3,9 +3,11 @@ package techcourse.myblog.application.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
 import techcourse.myblog.application.service.exception.NotExistIdException;
+import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
@@ -48,11 +50,13 @@ public class UserService {
     }
 
     @Transactional
-    public boolean login(UserDto userDto) {
-        String requestPassword = userDto.getPassword();
-        String expectedPassword = findById(userDto.getEmail()).getPassword();
+    public void login(LoginDto loginDto) {
+        String requestPassword = loginDto.getPassword();
+        String expectedPassword = findById(loginDto.getEmail()).getPassword();
 
-        return requestPassword.equals(expectedPassword);
+        if(!requestPassword.equals(expectedPassword)){
+            throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
+        }
     }
 
     @Transactional

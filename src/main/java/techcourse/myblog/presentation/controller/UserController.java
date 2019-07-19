@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.UserService;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
 import techcourse.myblog.application.service.exception.NotExistIdException;
+import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 import techcourse.myblog.presentation.controller.exception.InvalidUpdateException;
 
 import javax.servlet.http.HttpSession;
@@ -42,11 +44,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public RedirectView login(HttpSession httpSession, @Valid UserDto user) {
-        userService.login(user);
+    public RedirectView login(HttpSession httpSession, LoginDto loginDto) {
+        userService.login(loginDto);
 
         RedirectView redirectView = new RedirectView("/");
-        httpSession.setAttribute("email", user.getEmail());
+        httpSession.setAttribute("email", loginDto.getEmail());
         httpSession.setMaxInactiveInterval(600);
         return redirectView;
     }
@@ -126,8 +128,15 @@ public class UserController {
         return redirectView;
     }
 
+    @ExceptionHandler(NotMatchPasswordException.class)
+    public RedirectView handleNotMatchPasswordError(RedirectAttributes redirectAttributes, NotMatchPasswordException e) {
+        RedirectView redirectView = new RedirectView("/login");
+        redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
+        return redirectView;
+    }
+
     @ExceptionHandler(BindException.class)
-    public RedirectView handleInvalidUpdateError(RedirectAttributes redirectAttributes, BindException e) {
+    public RedirectView handleBindError(RedirectAttributes redirectAttributes, BindException e) {
         RedirectView redirectView = new RedirectView("signup");
 
         String errorMessages = e.getFieldErrors().stream()
