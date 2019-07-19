@@ -36,4 +36,6 @@ dependencies {
 	compile 'mysql:mysql-connector-java'
 
 	implementation 'org.projectlombok:lombok:1.18.8'
+
+	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 }

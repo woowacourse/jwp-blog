@@ -24,6 +24,13 @@ public class UserController {
         return "signup";
     }
 
+    @PostMapping("/signup")
+    public String addUser(UserDto userDto) {
+        userService.create(userDto);
+
+        return "redirect:/login";
+    }
+
     @GetMapping("/login")
     public String showLoginPage() {
         // TODO: 로그인 된 유저인지 체크
@@ -49,13 +56,6 @@ public class UserController {
             session.removeAttribute("userId");
         }
         return "redirect:/";
-    }
-
-    @PostMapping("/users")
-    public String addUser(UserDto userDto) {
-        userService.create(userDto);
-
-        return "redirect:/login";
     }
 
     @GetMapping("/users")
