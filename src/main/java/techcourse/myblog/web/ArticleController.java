@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.service.ArticleService;
 
 import javax.servlet.http.HttpSession;
@@ -26,9 +27,9 @@ public class ArticleController {
     public String showMain(Model model, final HttpSession session) {
         List<ArticleDto> articleDtos = articleService.findAll();
         model.addAttribute("articleDTOs", articleDtos);
-        String name = (String) session.getAttribute("name");
-        if (!Objects.isNull(name)) {
-            model.addAttribute("name", name);
+        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        if (!Objects.isNull(user)) {
+            model.addAttribute("user", user);
         }
         return "index";
     }

@@ -19,12 +19,12 @@
                 </li>
             </ul>
             <ul class="nav-right">
-                <th:block th:if="${name != null}">
+                <th:block th:if="${user}">
                 <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
                     <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
                         <img class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
                         <div class="user-info text-white">
-                            <span class="name pdd-right-5" th:text="${name}" >Brown</span>
+                            <span class="name pdd-right-5" th:text="${user.name}" >Brown</span>
                             <i class="ti-angle-down font-size-10"></i>
                         </div>
                     </a>
@@ -45,7 +45,7 @@
                     </ul>
                 </li>
                 </th:block>
-                <th:block th:unless="${name != null}">
+                <th:block th:unless="${user}">
                 <li class="user-profile">
                     <a href="/login">
                         <div class="user-info login-btn pointer mrg-right-10">

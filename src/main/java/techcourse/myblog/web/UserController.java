@@ -32,7 +32,7 @@ public class UserController {
     @GetMapping("/login")
     public ModelAndView showLogin(final HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
-        if (!Objects.isNull(session.getAttribute("name"))) {
+        if (!Objects.isNull(session.getAttribute("user"))) {
             modelAndView.setView(new RedirectView("/"));
             return modelAndView;
         }
@@ -43,7 +43,7 @@ public class UserController {
     @GetMapping("/signup")
     public ModelAndView showSignUp(final HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
-        if (!Objects.isNull(session.getAttribute("name"))) {
+        if (!Objects.isNull(session.getAttribute("user"))) {
             modelAndView.setView(new RedirectView("/"));
             return modelAndView;
         }
@@ -84,15 +84,17 @@ public class UserController {
         }
 
         HttpSession session = request.getSession();
-        session.setAttribute("name", userResponseDto.getName());
+        session.setAttribute("user", userResponseDto);
         modelAndView.setView(new RedirectView("/"));
         return modelAndView;
     }
 
     @GetMapping("/mypage")
-    public ModelAndView showMyPage() {
+    public ModelAndView showMyPage(HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("mypage");
+        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        modelAndView.addObject("user", user);
         return modelAndView;
     }
 
