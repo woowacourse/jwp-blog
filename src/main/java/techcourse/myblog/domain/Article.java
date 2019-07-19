@@ -1,51 +1,30 @@
 package techcourse.myblog.domain;
 
-import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class Article {
-    private static final String EMPTY_TEXT = "NULL";
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private final int id;
     private String title;
     private String coverUrl;
     private String contents;
 
-    public Article(int id, String title, String coverUrl, String contents) {
-        validateTitle(title);
-        validateContents(contents);
-        this.id = id;
+    public Article() {
+    }
+
+    public Article(String title, String coverUrl, String contents) {
         this.title = title;
+        this.coverUrl = coverUrl;
         this.contents = contents;
-        this.coverUrl = (isBlank(coverUrl)) ? EMPTY_TEXT : coverUrl;
     }
 
-    private void validateTitle(String title) {
-        if (isBlank(title)) {
-            throw new InvalidArticleException("제목을 입력해주세요!");
-        }
-    }
-
-    private void validateContents(String contents) {
-        if (isBlank(contents)) {
-            throw new InvalidArticleException("내용을 입력해주세요!");
-        }
-    }
-
-    private boolean isBlank(String text) {
-        return text == null || "".equals(text);
-    }
-
-    public boolean matchId(int articleId) {
-        return this.id == articleId;
-    }
-
-    public void update(Article article) {
-        this.title = article.title;
-        this.contents = article.contents;
-        this.coverUrl = article.coverUrl;
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -61,19 +40,13 @@ public class Article {
         return contents;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return id == article.id &&
-                Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
+    public boolean isTitleMath(String title) {
+        return this.title.equals(title);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents);
+    public void updateArticle(Article article) {
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
     }
 }

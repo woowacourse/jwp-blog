@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<head>
-    <head th:include="includes/common_meta :: common_meta"></head>
-    <head th:include="includes/common_css :: common_css"></head>
-    <link rel="stylesheet" href="/static/css/article-edit.css">
+<head th:replace="/fragments/article-edit-head :: articleEditHead">
 </head>
+
 <body>
 <div>
     <div class="header navbar bg-transparent no-border">
@@ -12,62 +10,24 @@
             <ul class="nav-left mrg-left-0">
                 <li>
                     <a href="/">
-                        <div class="logo logo-dark d-none"
-                             style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white"
-                             style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
+                        <div class="logo logo-dark d-none" style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white" style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
             <ul class="nav-right">
-                <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
-                    <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
-                        <img class="profile-img img-fluid"
-                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
-                        <div class="user-info text-white">
-                            <span class="name pdd-right-5">Brown</span>
-                            <i class="ti-angle-down font-size-10"></i>
-                        </div>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="text-dark">
-                            <a href="/static/mypage.html">
-                                <i class="ti-user pdd-right-10"></i>
-                                <span class="text-dark">마이 페이지</span>
-                            </a>
-                        </li>
-                        <li role="separator" class="divider"></li>
-                        <li class="text-dark">
-                            <a href="index.html">
-                                <i class="ti-power-off pdd-right-10"></i>
-                                <span class="text-dark">로그아웃</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                <th:block th:include="${session.user == null} ? '/includes/login-nav' : '/includes/logout-nav'"/>
             </ul>
         </div>
     </div>
-    <form th:action="${article} ? '/articles/' + ${article.id} : '/write'" name="article" method="post"
-          accept-charset="utf-8">
-        <input th:if="${article!=null}" type="hidden" name="_method" value="put"/>
+    <form th:action="${article != null ? '/articles/' + article.id : '/articles'}" name="article" method="post" accept-charset="utf-8" >
+        <input th:if="${article != null}" type="hidden" name="_method" value="put"/>
         <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg"
-                 style="background-image: url('/static/images/pages/index/study.jpg')">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="text" name="title" th:if="${article}" th:value="${article.title}"
-                               class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
-                               autocomplete="off">
-                        <input type="text" name="title" th:unless="${article}"
-                               class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
-                               placeholder="제목을 입력해주세요" autocomplete="off">
-                        <input type="text" name="coverUrl" th:if="${article}" th:value="${article.coverUrl}"
-                               class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
-                               autocomplete="off">
-                        <input type="text" name="coverUrl" th:unless="${article}"
-                               class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
-                               placeholder="배경 url을 입력해주세요" autocomplete="off">
+                        <input type="text" th:value="${article != null ? article.title : ''}" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" autocomplete="off">
+                        <input type="text" th:value="${article != null ? article.coverUrl : ''}" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"  placeholder="배경 url을 입력해주세요" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -77,7 +37,7 @@
             <div class="row">
                 <div class="col-lg-1 col-md-1"></div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
-                    <input id="article-contents" name="contents" type="hidden">
+                    <input id="article-contents" th:value="${article != null ? article.contents : ''}" name="contents" type="hidden">
                     <div id="editSection"></div>
                 </div>
                 <div class="col-lg-1 col-md-1">
@@ -85,7 +45,7 @@
                         <button id="save-btn" type="submit" class="btn btn-default">
                             <i class="ti-save"></i>
                         </button>
-                        <a href="/" class="btn btn-default">
+                        <a th:href="${article == null ? '/' : '/articles/' + article.id}" class="btn btn-default">
                             <i class="ti-close"></i>
                         </a>
                     </div>
@@ -95,29 +55,21 @@
     </form>
 </div>
 
-<body th:include="includes/common_js :: common_js"></body>
+<th:block th:include="/fragments/article-js :: articleJs"/>
 
-<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-<script type="text/javascript" th:inline="javascript">
-    var initValue = ""
-    /*<![CDATA[*/
-    [# th:if= "${article}"]
-    initValue =  /*[[${article.contents}]]*/
-    [/]
-    /*]]>*/
+<script type="text/javascript">
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
+        initialValue: document.getElementById('article-contents').value,
         previewStyle: 'vertical',
         events: {
             change: function () {
                 document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
             }
         },
-        height: 'calc(100vh - 360px)',
-        initialValue: initValue
+        height: 'calc(100vh - 360px)'
     });
-
 </script>
 </body>
 </html>
