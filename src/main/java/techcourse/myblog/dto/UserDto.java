@@ -1,5 +1,6 @@
 package techcourse.myblog.dto;
 
+import techcourse.myblog.UserInfo;
 import techcourse.myblog.domain.User;
 
 import javax.validation.constraints.Email;
@@ -7,9 +8,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 public class UserDto {
-    @NotBlank(message = "이름을 입력해주세요")
+    @NotBlank(message = "이름을 입력해주세요",
+            groups={UserInfo.class})
     @Pattern(regexp = "[^ !@#$%^&*(),.?\\\":{}|<>0-9]{2,10}",
-            message = "이름은 2~10자, 숫자나 특수문자가 포함될 수 없습니다.")
+            message = "이름은 2~10자, 숫자나 특수문자가 포함될 수 없습니다.",
+            groups={UserInfo.class})
     private String name;
 
     @NotBlank(message = "이메일을 입력해주세요.")
@@ -41,5 +44,14 @@ public class UserDto {
 
     public User toUser() {
         return new User(name, email, password);
+    }
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

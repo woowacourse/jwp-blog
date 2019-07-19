@@ -9,37 +9,14 @@
 
 <body>
 <div>
-    <header id="header" class="header navbar bg-transparent no-border">
-        <div class="header-container">
-            <ul class="nav-left mrg-left-0">
-                <li>
-                    <a href="/">
-                        <div class="logo logo-dark d-none"
-                             style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white"
-                             style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav-right">
-                <li class="user-profile">
-                    <a href="/login">
-                        <div class="user-info login-btn pointer mrg-right-10">
-                            <span class="name pdd-right-5 text-white">Login</span>
-                        </div>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </header>
-
+    <th:block th:include="includes/header :: header"></th:block>
     <div class="about-cover card no-border mrg-btm-0">
         <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')"></div>
-        <!--        <div class="welcome-text-container">-->
-        <!--            <div class="welcome-txt">-->
-        <!--                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>-->
-        <!--            </div>-->
-        <!--        </div>-->
+<!--        <div class="welcome-text-container">-->
+<!--            <div class="welcome-txt">-->
+<!--                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 
     <div class="container-fluid width-100 mrg-btm-30">
@@ -108,7 +85,8 @@
     </div>
 </div>
 
-<footer th:include="includes/footer :: footer"></footer>
+<th:block th:include="includes/footer :: footer"></th:block>
+<!--<footer th:include="includes/footer :: footer"></footer>-->
 <body th:include="includes/js :: common_js"></body>
 </body>
 </html>

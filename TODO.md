@@ -46,8 +46,8 @@
 - [X] 회원가입페이지(signup.html) 에서 ``POST /users`` 로 요청하면
     DB에 user정보 저장
 - [X] 저장 후 로그인 화면으로 redirect
-- [ ] 실패 시 사용자에게 알려준다
-- [ ] 회원가입 관련 html 수정 (signup.html)
+- [X] 실패 시 사용자에게 알려준다
+- [X] 회원가입 관련 html 수정 (signup.html)
 
 ### 회원 가입 규칙
 - [X] 동일한 email 중복 가입 시도 -> 에러
@@ -57,11 +57,31 @@
 
 ### 회원 조회
 - [X] ``GET /users``로 요청하여 회원 목록 페이지(user-list.html) 이동
-- [ ] 회원 목록 페이지에서 DB에 저장된 회원 정보 확인
-- [ ] user-list.html 수정
+- [X] 회원 목록 페이지에서 DB에 저장된 회원 정보 확인
+- [X] user-list.html 수정
 
 ### 기타
 - [X] MySql로 DB 변경
 - [X] 실행 쿼리 보기 설정하기
-- [ ] update CrudRepository의 save 대안 찾아보기
+- [X] update CrudRepository의 save 대안 찾아보기
 - [ ] 테스트 코드 독립성 - (테스트 메서드마다 DB 롤백할 수 있는 방법 찾아보기)
+
+### 로그인
+- [X] 로그인 성공 시 메인 화면(index.html)으로 redirect
+- [X] 로그인 성공 시 메인화면 우측 상단에 사용자 이름을 띄운다.
+- [X] 해당 이메일이 없는 경우 -> 에러
+- [X] 비밀번호 불일치 경우 -> 에러
+- [X] 로그아웃 요청 시 메인 화면(index.html)으로 redirect
+- [X] 로그인 한 유저가 로그인/회원가입 화면에 접근할 경우 메인 화면(index.html)으로 redirect
+- [ ] 로그인 한 유저가 로그인/회원가입 화면에 접근할 경우 메인 화면(index.html)으로 redirect 테스트!
+- [X] 로그인하지 않은 유저가 로그인/회원가입 화면에 접근할 경우 200 OK
+
+### 회원 수정
+- [X] ``GET /mypage`` 로 요청시 회원 정보 페이지로 이동 (200 OK)
+- [X] ``GET /mypage/edit`` 로 요청시 회원정보 수정페이지로 이동 (200 OK)
+- [X] ``POST /mypage``로 요청시 회원 정보 수정하고 ``GET /mypage`` 로 redirect  
+- [ ] 회원 정보 수정 테스트 코드!
+
+### 회원 탈퇴
+- [X] MyPage > profile 하단 > 탈퇴 버튼 추가
+- [X] 탈퇴버튼 클릭시 ``DELETE /users`` 로 요청 ~ 탈퇴 처리 후 ``GET /`` 로 redirect
