@@ -4,10 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserDto;
 import techcourse.myblog.domain.UserUpdateRequestDto;
@@ -83,8 +80,20 @@ public class UserController {
 
         String email = ((User) httpSession.getAttribute("user")).getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+        //TODO: exception catch 할 곳 필요
         user.setUserName(userUpdateRequestDto.getUserName());
         httpSession.setAttribute("user", user);
         return "redirect:/users/mypage";
+    }
+
+    @Transactional
+    @DeleteMapping("/mypage")
+    public String deleteUser(HttpSession httpSession) {
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
+        User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+        //TODO: exception catch 할 곳 필요
+        httpSession.removeAttribute("user");
+        userRepository.delete(user);
+        return "redirect:/";
     }
 }
