@@ -18,4 +18,11 @@ public class UserDto {
         private String name;
         private String email;
     }
+
+    @Getter
+    @Setter
+    public static class Login {
+        private String email;
+        private String password;
+    }
 }
