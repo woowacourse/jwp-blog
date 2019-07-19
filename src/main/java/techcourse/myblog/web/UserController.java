@@ -9,6 +9,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
@@ -26,7 +27,8 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String showLoginForm(@RequestParam(required = false) String errorMessage, Model model) {
+        model.addAttribute("errorMessage", errorMessage);
         return "login";
     }
 
@@ -38,16 +40,14 @@ public class UserController {
             RedirectAttributes redirectAttributes,
             HttpServletResponse res
     ) {
-        System.out.println(email);
-        System.out.println(password);
         return userRepository.findByEmail(email)
                             .filter(u -> u.authenticate(password))
                             .map(user -> {
                                     session.setAttribute("key", Objects.hash(email));
                                     session.setAttribute("username", user.getName());
                                     session.setAttribute("email", user.getEmail());
-//                                    Cookie loginCookie = new Cookie("credential", Objects.hash(email) + "");
-//                                    res.addCookie(loginCookie);
+                                    Cookie loginCookie = new Cookie("credential", Objects.hash(email) + "");
+                                    res.addCookie(loginCookie);
                                     return new RedirectView("/");
                             }).orElseGet(() -> {
                                     redirectAttributes.addAttribute(

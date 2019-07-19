@@ -56,6 +56,7 @@
                                                                 <button type="submit" class="btn btn-tumblr">로그인</button>
                                                             </div>
                                                         </form>
+                                                        <div class="alert alert-danger" role="alert" th:if="${errorMessage} != null" th:text="${errorMessage}"></div>
                                                         <div class="text-dark">
                                                             <span>아직 회원이 아니신가요?</span>
                                                             <a href="/signup" class="text-info pointer mrg-left-5">회원가입</a>
