@@ -1,5 +1,6 @@
 package techcourse.myblog.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class UserDto {
     @Pattern(regexp = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$", message = "형식에 맞는 비밀번호가 아닙니다.")
     private String confirmPassword;
 
+    @Builder
     public UserDto(String userName, String email, String password, String confirmPassword) {
         this.userName = userName;
         this.email = email;
