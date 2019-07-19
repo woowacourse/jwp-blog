@@ -79,7 +79,7 @@
                                                             <input id="password-check" type="password" class="form-control" pattern="^([a-zA-Z0-9!@#$%^&*]{8,})$" required placeholder="Password" autocomplete="off">
                                                         </div>
                                                         <div class="form-group">
-                                                            <button id="form-submit-button" type="submit" onclick="submitForm()" class="btn btn-info btn-block border-radius-6 font-size-16 text-white">가입하기</button>
+                                                            <button id="form-submit-button" type="submit" onclick="return submitForm()" class="btn btn-info btn-block border-radius-6 font-size-16 text-white">가입하기</button>
                                                         </div>
 
                                                     </form>
@@ -116,11 +116,10 @@
             alert("잘못된 비밀번호입니다");
             return false;
         }
+
+        document.querySelector("#user-form").submit();
     }
 
-    document.querySelector("#form-submit-button").addEventListener("click", (e)=>{
-        e.preventDefault();
-    })
 </script>
 </body>
 </html>

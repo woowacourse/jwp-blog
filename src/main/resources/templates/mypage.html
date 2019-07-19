@@ -146,6 +146,16 @@
                                     </div>
                                 </div>
                                 <hr>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <form action="/users" method="post">
+                                            <input type="hidden" name="_method" value="delete"/>
+                                            <input type="text" name="email" th:value="${user.email}" hidden>
+                                            <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">탈퇴</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <hr>
                             </div>
                         </div>
                     </div>
