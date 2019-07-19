@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import techcourse.myblog.UserDto;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.UserRepository;
 
@@ -23,21 +24,21 @@ public class UserServiceTests {
 
     @Test
     void save_Test() {
-        User user = User.builder().name("김강민")
+        UserDto userDto = UserDto.builder().name("김강민")
                 .email("kangmin789@naver.com")
                 .password("asdASD12!@")
                 .build();
-        userService.save(user);
+        userService.save(userDto);
         assertThat(userRepository.findById((long)1)).isNotNull();
     }
 
     @Test
     void uthenticate_Test(){
-        User user = User.builder().name("김강민")
+        UserDto userDto = UserDto.builder().name("김강민")
                 .email("2@naver.com")
                 .password("asdASD12!@")
                 .build();
-        userService.save(user);
+        userService.save(userDto);
         Optional<User> maybeUser = userService.authenticate("2@naver.com","asdASD12!@");
         assertThat(maybeUser.isPresent()).isTrue();
     }

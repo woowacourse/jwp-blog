@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="ko">
 <head>
     <th:block th:include="fragments/head :: head"/>
 </head>
@@ -19,9 +19,15 @@
             </ul>
             <ul class="nav-right">
                 <li class="user-profile">
-                    <a href="/user">
+                    <a href="/user" sec:authorize="isAnonymous()">
                         <div class="user-info login-btn pointer mrg-right-10">
                             <span class="name pdd-right-5 text-white">Login</span>
+                        </div>
+                        <div th:if="${error}" th:text="${message}" class="alert alert-primary" role="alert">
+                    </a>
+                    <a href="/user/show" sec:authorize="isAuthenticated()">
+                        <div class="user-info login-btn pointer mrg-right-10">
+                            <span class="name pdd-right-5 text-white">로긴됨</span>
                         </div>
                         <div th:if="${error}" th:text="${message}" class="alert alert-primary" role="alert">
                     </a>
