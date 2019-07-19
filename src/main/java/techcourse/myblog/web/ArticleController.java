@@ -9,7 +9,9 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class ArticleController {
@@ -21,9 +23,13 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public String showMain(Model model) {
+    public String showMain(Model model, final HttpSession session) {
         List<ArticleDto> articleDtos = articleService.findAll();
         model.addAttribute("articleDTOs", articleDtos);
+        String name = (String) session.getAttribute("name");
+        if (!Objects.isNull(name)) {
+            model.addAttribute("name", name);
+        }
         return "index";
     }
 

@@ -10,9 +10,11 @@ import techcourse.myblog.exception.DuplicatedEmailException;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
+import static techcourse.myblog.service.UserAssembler.convertToDto;
 import static techcourse.myblog.service.UserAssembler.convertToEntity;
 
 @Service
@@ -37,5 +39,14 @@ public class UserService {
         return userRepository.findAll().stream()
                 .map(UserAssembler::convertToDto)
                 .collect(collectingAndThen(toList(), Collections::unmodifiableList));
+    }
+
+    public UserResponseDto findByEmailAndPassword(String email, String password) {
+        Optional<User> userOpt = userRepository.findByEmailAndPassword(email, password);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            return convertToDto(user);
+        }
+        throw new IllegalArgumentException("틀린 이메일입니다!");
     }
 }

@@ -12,6 +12,8 @@ import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -45,12 +47,22 @@ public class UserController {
     public ModelAndView registerUsers(@Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getAllErrors().get(0).getDefaultMessage());
             modelAndView.setView(new RedirectView("signup"));
             return modelAndView;
         }
         modelAndView.setView(new RedirectView("login"));
         userService.save(userRequestDto);
+        return modelAndView;
+    }
+
+    @PostMapping("/users/login")
+    public ModelAndView processLogin(HttpServletRequest request, String email, String password) {
+        ModelAndView modelAndView = new ModelAndView();
+        UserResponseDto userResponseDto = userService.findByEmailAndPassword(email, password);
+
+        HttpSession session = request.getSession();
+        session.setAttribute("name", userResponseDto.getName());
+        modelAndView.setView(new RedirectView("/"));
         return modelAndView;
     }
 }
