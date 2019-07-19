@@ -4,12 +4,13 @@ import techcourse.myblog.dto.UserDto;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Entity
 public class User {
-    private static final String NAME_PATTERN = "^[ㄱ-ㅎ가-힣a-zA-Z]{2,10}$";
-    private static final String PASSWORD_PATTERN = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z[0-9]$@$!%*#?&]{8,}$";
+    private static final Pattern NAME_PATTERN = Pattern.compile("^[ㄱ-ㅎ가-힣a-zA-Z]{2,10}$");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z[0-9]$@$!%*#?&]{8,}$");
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -30,14 +31,16 @@ public class User {
     }
 
     private String validatePassword(String password) {
-        if (!Pattern.matches(PASSWORD_PATTERN, password)) {
+        Matcher matcher = PASSWORD_PATTERN.matcher(password);
+        if (!matcher.find()) {
             throw new UserException();
         }
         return password;
     }
 
     private String validateName(String name) {
-        if (!Pattern.matches(NAME_PATTERN, name)) {
+        Matcher matcher = NAME_PATTERN.matcher(name);
+        if (!matcher.find()) {
             throw new UserException();
         }
         return name;

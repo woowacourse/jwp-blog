@@ -4,6 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -23,6 +25,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+    private static final Logger log = LoggerFactory.getLogger(ArticleControllerTests.class);
+
     private String title = "제목";
     private String contents = "contents";
     private String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
@@ -39,6 +43,7 @@ public class ArticleControllerTests {
 
     @BeforeEach
     void setUp() {
+        log.debug("Before Cookie: {} ", cookie);
         userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
         cookie = webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -46,6 +51,8 @@ public class ArticleControllerTests {
                         .with("password", "A!1bcdefg"))
                 .exchange()
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+
+        log.debug("After Cookie : {}", cookie);
     }
 
     private WebTestClient.RequestBodySpec cookedPostRequest(String uri) {

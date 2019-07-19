@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +11,7 @@ import techcourse.myblog.service.ArticleService;
 
 @Controller
 public class ArticleController {
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     private ArticleService articleService;
 
@@ -18,6 +21,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String index(Model model) {
+        log.info("START {} ", model);
         model.addAttribute("articles", articleService.findAll());
         return "index";
     }
@@ -34,6 +38,7 @@ public class ArticleController {
             return "article";
         } catch (ArticleException e) {
             return "/";
+
         }
     }
 
