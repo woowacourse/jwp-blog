@@ -30,10 +30,10 @@ public class Article {
         this.contents = contents;
     }
 
-    public void update(ArticleVo articleVO) {
-        this.title = articleVO.getTitle();
-        this.contents = articleVO.getContents();
-        this.coverUrl = articleVO.getCoverUrl();
+    public void update(ArticleDto articleDto) {
+        this.title = articleDto.getTitle();
+        this.contents = articleDto.getContents();
+        this.coverUrl = articleDto.getCoverUrl();
 
     }
 

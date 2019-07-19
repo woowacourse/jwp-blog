@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 @Setter
 @NoArgsConstructor
 public class UserUpdateRequestDto {
+
     @Pattern(regexp = "^[a-zA-Z]{2,10}$", message = "형식에 맞는 이름이 아닙니다.")
     private String userName;
-
 }

@@ -1,10 +1,13 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleVo;
+import techcourse.myblog.domain.ArticleDto;
+import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.repo.ArticleRepository;
 
 import javax.transaction.Transactional;
@@ -12,6 +15,8 @@ import javax.transaction.Transactional;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
+
     private final ArticleRepository articleRepository;
 
     ArticleController(ArticleRepository articleRepository) {
@@ -24,11 +29,11 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String createArticle(ArticleVo articleVO, Model model) {
+    public String createArticle(ArticleDto articleDto, Model model) {
         Article article = Article.builder()
-                .title(articleVO.getTitle())
-                .coverUrl(articleVO.getCoverUrl())
-                .contents(articleVO.getContents())
+                .title(articleDto.getTitle())
+                .coverUrl(articleDto.getCoverUrl())
+                .contents(articleDto.getContents())
                 .build();
         articleRepository.save(article);
         model.addAttribute("article", article);
@@ -37,22 +42,22 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable Long articleId, Model model) {
-        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new);
         model.addAttribute("article", article);
         return "article";
     }
 
     @GetMapping("/{articleId}/edit")
     public String updateArticle(@PathVariable Long articleId, Model model) {
-        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new);
         model.addAttribute("article", article);
         return "article-edit";
     }
 
     @Transactional
     @PutMapping("/{articleId}")
-    public String showUpdatedArticle(@PathVariable Long articleId, ArticleVo updatedArticle, Model model) {
-        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+    public String showUpdatedArticle(@PathVariable Long articleId, ArticleDto updatedArticle, Model model) {
+        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new);
         article.update(updatedArticle);
         model.addAttribute("article", updatedArticle);
         return "redirect:/articles/" + articleId;
@@ -63,4 +68,5 @@ public class ArticleController {
         articleRepository.deleteById(articleId);
         return "redirect:/";
     }
+
 }
