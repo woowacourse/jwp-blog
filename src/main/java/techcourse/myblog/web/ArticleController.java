@@ -10,56 +10,56 @@ import techcourse.myblog.domain.ArticleRepository;
 
 @Controller
 public class ArticleController {
-    private final ArticleRepository articleRepository;
+	private final ArticleRepository articleRepository;
 
-    @Autowired
-    public ArticleController(final ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
+	@Autowired
+	public ArticleController(final ArticleRepository articleRepository) {
+		this.articleRepository = articleRepository;
+	}
 
-    @GetMapping("/")
-    public String index(Model model) {
-        final Iterable<Article> articles = articleRepository.findAll();
-        model.addAttribute("articles", articles);
-        return "index";
-    }
+	@GetMapping("/")
+	public String index(Model model) {
+		final Iterable<Article> articles = articleRepository.findAll();
+		model.addAttribute("articles", articles);
+		return "index";
+	}
 
-    @GetMapping("/writing")
-    public String showWritingPage() {
-        return "article/article-edit";
-    }
+	@GetMapping("/writing")
+	public String showWritingPage() {
+		return "article/article-edit";
+	}
 
-    @PostMapping("/articles")
-    public RedirectView addArticle(final Article articleParam) {
-        Article article = articleRepository.save(articleParam);
-        return new RedirectView("/articles/" + article.getId());
-    }
+	@PostMapping("/articles")
+	public RedirectView addArticle(final Article articleParam) {
+		Article article = articleRepository.save(articleParam);
+		return new RedirectView("/articles/" + article.getId());
+	}
 
-    @GetMapping("/articles/{articleId}")
-    public String showArticleById(@PathVariable final long articleId, final Model model) {
-        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-        model.addAttribute("article", article);
-        return "/article/article";
-    }
+	@GetMapping("/articles/{articleId}")
+	public String showArticleById(@PathVariable final long articleId, final Model model) {
+		Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+		model.addAttribute("article", article);
+		return "/article/article";
+	}
 
-    @PutMapping("/articles/{articleId}")
-    public RedirectView updateArticle(@PathVariable final long articleId, final Article articleParam) {
-        articleRepository.update(articleParam);
-        articleParam.setId(articleId);
-        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-        return new RedirectView("/articles/" + article.getId());
-    }
+	@PutMapping("/articles/{articleId}")
+	public RedirectView updateArticle(@PathVariable final long articleId, final Article articleParam) {
+		articleRepository.update(articleParam);
+		articleParam.setId(articleId);
+		Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+		return new RedirectView("/articles/" + article.getId());
+	}
 
-    @DeleteMapping("/articles/{articleId}")
-    public RedirectView deleteArticle(@PathVariable final long articleId) {
-        articleRepository.deleteById(articleId);
-        return new RedirectView("/");
-    }
+	@DeleteMapping("/articles/{articleId}")
+	public RedirectView deleteArticle(@PathVariable final long articleId) {
+		articleRepository.deleteById(articleId);
+		return new RedirectView("/");
+	}
 
-    @GetMapping("/articles/{articleId}/edit")
-    public String toEditPage(@PathVariable final long articleId, final Model model) {
-        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-        model.addAttribute("article", article);
-        return "/article/article-edit";
-    }
+	@GetMapping("/articles/{articleId}/edit")
+	public String toEditPage(@PathVariable final long articleId, final Model model) {
+		Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+		model.addAttribute("article", article);
+		return "/article/article-edit";
+	}
 }

@@ -10,31 +10,31 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 public class UserRepositoryTest {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @Test
-    public void Email로_중복_여부_참_테스트() {
-        User user = new User("테스트", "test@woowahan.com", "12345678");
-        userRepository.save(user);
-        assertTrue(userRepository.existsByEmail("test@woowahan.com"));
-    }
+	@Test
+	public void Email로_중복_여부_참_테스트() {
+		User user = new User("테스트", "test@woowahan.com", "12345678");
+		userRepository.save(user);
+		assertTrue(userRepository.existsByEmail("test@woowahan.com"));
+	}
 
-    @Test
-    public void Email로_중복_여부_거짓_테스트() {
-        User user = new User("테스트", "test@woowahan.com", "12345678");
-        userRepository.save(user);
-        assertFalse(userRepository.existsByEmail("test1@woowahan.com"));
-    }
+	@Test
+	public void Email로_중복_여부_거짓_테스트() {
+		User user = new User("테스트", "test@woowahan.com", "12345678");
+		userRepository.save(user);
+		assertFalse(userRepository.existsByEmail("test1@woowahan.com"));
+	}
 
-    @Test
-    @DisplayName("Email을_기준으로_조회")
-    public void findByEmail() {
-        User expected = new User("테스트", "test@woowahan.com", "12345678");
-        userRepository.save(expected);
+	@Test
+	@DisplayName("Email을_기준으로_조회")
+	public void findByEmail() {
+		User expected = new User("테스트", "test@woowahan.com", "12345678");
+		userRepository.save(expected);
 
-        User actual = userRepository.findByEmail(expected.getEmail()).orElseThrow(IllegalArgumentException::new);
-        expected.setId(actual.getId());
-        assertEquals(expected, actual);
-    }
+		User actual = userRepository.findByEmail(expected.getEmail()).orElseThrow(IllegalArgumentException::new);
+		expected.setId(actual.getId());
+		assertEquals(expected, actual);
+	}
 }

@@ -20,117 +20,117 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 public class ArticleControllerTest {
-    private static final String ROOT_URL = "/";
-    private static final String EDIT_URL = "/articles/6/edit";
-    private static final String WRITING_URL = "/writing";
-    private static final String ARTICLE_URL = "/articles";
-    private static final String SPECIFIC_ARTICLE_URL = "/articles/1";
-    private static final String SPECIFIC_ARTICLE_DELETE_URL = "/articles/2";
+	private static final String ROOT_URL = "/";
+	private static final String EDIT_URL = "/articles/6/edit";
+	private static final String WRITING_URL = "/writing";
+	private static final String ARTICLE_URL = "/articles";
+	private static final String SPECIFIC_ARTICLE_URL = "/articles/1";
+	private static final String SPECIFIC_ARTICLE_DELETE_URL = "/articles/2";
 
-    private static final String ARTICLE_DELIMITER
-            = "<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tab-centered-1\">";
+	private static final String ARTICLE_DELIMITER
+			= "<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tab-centered-1\">";
 
-    private static final String TITLE_NAME = "title";
-    private static final String COVER_URL_NAME = "coverUrl";
-    private static final String CONTENTS_NAME = "contents";
+	private static final String TITLE_NAME = "title";
+	private static final String COVER_URL_NAME = "coverUrl";
+	private static final String CONTENTS_NAME = "contents";
 
-    private static final String TITLE_VALUE = "TEST";
-    private static final String COVER_URL_VALUE = "https://img.com";
-    private static final String CONTENTS_VALUE = "TEST_CONTENTS";
+	private static final String TITLE_VALUE = "TEST";
+	private static final String COVER_URL_VALUE = "https://img.com";
+	private static final String CONTENTS_VALUE = "TEST_CONTENTS";
 
-    @Autowired
-    private ArticleRepository articleRepository;
+	@Autowired
+	private ArticleRepository articleRepository;
 
-    @Autowired
-    private WebTestClient webTestClient;
+	@Autowired
+	private WebTestClient webTestClient;
 
-    @BeforeEach
-    void setUp() {
-        articleRepository.deleteAll();
-    }
+	@BeforeEach
+	void setUp() {
+		articleRepository.deleteAll();
+	}
 
-    @Test
-    @DisplayName("새로운글을_쓸때_테스트")
-    public void showWritingPage() {
-        webTestClient.get()
-                .uri(WRITING_URL)
-                .exchange()
-                .expectStatus()
-                .isOk();
-    }
+	@Test
+	@DisplayName("새로운글을_쓸때_테스트")
+	public void showWritingPage() {
+		webTestClient.get()
+				.uri(WRITING_URL)
+				.exchange()
+				.expectStatus()
+				.isOk();
+	}
 
-    @Test
-    @DisplayName("Article을_추가할때_redirect하는지_테스트")
-    public void addArticleTest() {
-        webTestClient.post()
-                .uri(ARTICLE_URL)
-                .body(BodyInserters
-                        .fromFormData(TITLE_NAME, TITLE_VALUE)
-                        .with(COVER_URL_NAME, COVER_URL_VALUE)
-                        .with(CONTENTS_NAME, CONTENTS_VALUE))
-                .exchange()
-                .expectStatus()
-                .isFound();
-    }
+	@Test
+	@DisplayName("Article을_추가할때_redirect하는지_테스트")
+	public void addArticleTest() {
+		webTestClient.post()
+				.uri(ARTICLE_URL)
+				.body(BodyInserters
+						.fromFormData(TITLE_NAME, TITLE_VALUE)
+						.with(COVER_URL_NAME, COVER_URL_VALUE)
+						.with(CONTENTS_NAME, CONTENTS_VALUE))
+				.exchange()
+				.expectStatus()
+				.isFound();
+	}
 
-    @Test
-    @DisplayName("Article의_목록을_조회하는지_테스트")
-    public void indexTest() {
-        final int count = 3;
-        addArticleTest();
-        addArticleTest();
-        addArticleTest();
+	@Test
+	@DisplayName("Article의_목록을_조회하는지_테스트")
+	public void indexTest() {
+		final int count = 3;
+		addArticleTest();
+		addArticleTest();
+		addArticleTest();
 
-        webTestClient.get()
-                .uri(ROOT_URL)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertEquals(count, StringUtils.countOccurrencesOf(body, ARTICLE_DELIMITER));
-                });
-    }
+		webTestClient.get()
+				.uri(ROOT_URL)
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertEquals(count, StringUtils.countOccurrencesOf(body, ARTICLE_DELIMITER));
+				});
+	}
 
-    @Test
-    @DisplayName("ArticleId에_맞는_Article을_조회할때_테스트")
-    public void showArticleById() {
-        addArticleTest();
+	@Test
+	@DisplayName("ArticleId에_맞는_Article을_조회할때_테스트")
+	public void showArticleById() {
+		addArticleTest();
 
-        webTestClient.get()
-                .uri(SPECIFIC_ARTICLE_URL)
-                .exchange()
-                .expectStatus()
-                .isOk();
-    }
+		webTestClient.get()
+				.uri(SPECIFIC_ARTICLE_URL)
+				.exchange()
+				.expectStatus()
+				.isOk();
+	}
 
-    @Test
-    @DisplayName("ArticleId에_맞는_Article을_변경하는지_테스트")
-    public void updateArticleById() {
-        addArticleTest();
+	@Test
+	@DisplayName("ArticleId에_맞는_Article을_변경하는지_테스트")
+	public void updateArticleById() {
+		addArticleTest();
 
-        webTestClient.get()
-                .uri(EDIT_URL)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(TITLE_VALUE)).isTrue();
-                    assertThat(body.contains(COVER_URL_VALUE)).isTrue();
-                    assertThat(body.contains(CONTENTS_VALUE)).isTrue();
-                });
-    }
+		webTestClient.get()
+				.uri(EDIT_URL)
+				.exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.consumeWith(response -> {
+					String body = new String(response.getResponseBody());
+					assertThat(body.contains(TITLE_VALUE)).isTrue();
+					assertThat(body.contains(COVER_URL_VALUE)).isTrue();
+					assertThat(body.contains(CONTENTS_VALUE)).isTrue();
+				});
+	}
 
-    @Test
-    @DisplayName("Article을_삭제할때_redirect하는지_테스트")
-    public void deleteArticle() {
-        addArticleTest();
+	@Test
+	@DisplayName("Article을_삭제할때_redirect하는지_테스트")
+	public void deleteArticle() {
+		addArticleTest();
 
-        webTestClient.delete()
-                .uri(SPECIFIC_ARTICLE_DELETE_URL)
-                .exchange()
-                .expectStatus()
-                .isFound();
-    }
+		webTestClient.delete()
+				.uri(SPECIFIC_ARTICLE_DELETE_URL)
+				.exchange()
+				.expectStatus()
+				.isFound();
+	}
 }

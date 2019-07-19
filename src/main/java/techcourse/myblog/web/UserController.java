@@ -138,6 +138,6 @@ public class UserController {
 	public String delete(@PathVariable String email, final HttpSession session) {
 		userService.deleteByEmail(email);
 		session.removeAttribute(SESSION_NAME);
-		return "/index";
+		return "redirect:/";
 	}
 }
