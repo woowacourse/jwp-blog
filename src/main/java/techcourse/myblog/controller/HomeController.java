@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
-
     @Autowired
     ArticleRepository articleRepository;
 

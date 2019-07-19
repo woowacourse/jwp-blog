@@ -1,5 +1,7 @@
 package techcourse.myblog.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.controller.dto.LoginDTO;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @Service
 public class UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
     UserRepository userRepository;
 
@@ -52,7 +56,18 @@ public class UserService {
         return userRepository.findUserByEmailAddress(userDTO.getEmail()) != null;
     }
 
-    public void delete(UserDTO userDTO){
-        userRepository.deleteUserByEmailAddress(userDTO.getEmail());
+    public void delete(String email) {
+        userRepository.deleteUserByEmailAddress(email);
+    }
+
+    public User update(UserDTO userDTO) {
+        log.error("email {} ", userDTO.getEmail());
+        log.error("name {} ", userDTO.getUserName());
+        log.error("password {} ", userDTO.getPassword());
+        int result = userRepository.updateUserByEmailAddress(userDTO.getUserName(), userDTO.getPassword(), userDTO.getEmail());
+        if (result == 0) {
+            throw new UserNotExistException("유저정보가 없습니다.");
+        }
+        return userRepository.findUserByEmailAddress(userDTO.getEmail());
     }
 }
