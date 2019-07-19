@@ -1,10 +1,10 @@
 package techcourse.myblog.service;
 
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.exception.DuplicateEmailException;
 import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
@@ -29,8 +29,7 @@ public class UserService {
 
     private void validateEmail(UserDto userDto) {
         if (userRepository.countByEmail(userDto.getEmail()) > NOT_FOUND_RESULT) {
-            // TODO 예외 처리 클래스 찾아보기
-            throw new DuplicateKeyException("중복되는 이메일입니다.");
+            throw new DuplicateEmailException();
         }
     }
 
@@ -75,9 +74,10 @@ public class UserService {
     public void updateUser(UserDto userDto) {
         String updatedName = userDto.getName();
         String email = userDto.getEmail();
+        String password = userDto.getPassword();
 
         User user = userRepository.findUserByEmail(email);
-        User updatedUser = new User(user.getUserId(), updatedName, email, user.getPassword());
+        User updatedUser = new User(user.getUserId(), updatedName, email, password);
 
         userRepository.save(updatedUser);
     }

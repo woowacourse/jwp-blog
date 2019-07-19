@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.exception.DuplicateEmailException;
 import techcourse.myblog.exception.InvalidUserDataException;
 import techcourse.myblog.service.UserService;
 
@@ -21,7 +22,10 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String showSignup() {
+    public String showSignup(HttpSession httpSession) {
+        if (httpSession.getAttribute("name") != null) {
+            return "redirect:/";
+        }
         return "signup";
     }
 
@@ -34,14 +38,19 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String showLogin() {
+    public String showLogin(HttpSession httpSession) {
+        if (httpSession.getAttribute("name") != null) {
+            return "redirect:/";
+        }
         return "login";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
-        httpSession.removeAttribute("name");
-        httpSession.removeAttribute("email");
+        if (httpSession.getAttribute("name") != null) {
+            httpSession.removeAttribute("name");
+            httpSession.removeAttribute("email");
+        }
         return "redirect:/";
     }
 
@@ -52,9 +61,12 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public String showUsers(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
-        return "user-list";
+    public String showUsers(Model model, HttpSession httpSession) {
+        if (httpSession.getAttribute("name") != null) {
+            model.addAttribute("users", userService.getAllUsers());
+            return "user-list";
+        }
+        return "redirect:/login";
     }
 
     @GetMapping("/mypage")
@@ -101,6 +113,13 @@ public class UserController {
     @ExceptionHandler(InvalidUserDataException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleInvalidUserDataException(InvalidUserDataException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "signup";
+    }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleDuplicateEmailException(DuplicateEmailException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         return "signup";
     }
