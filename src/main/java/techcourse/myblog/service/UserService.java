@@ -1,5 +1,7 @@
 package techcourse.myblog.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.SnsInfoRepository;
@@ -13,6 +15,8 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
     private UserRepository userRepository;
 
@@ -26,6 +30,7 @@ public class UserService {
 
     public Optional<UserDto> create(UserDto userDto) {
         try {
+            log.debug("create", userDto);
             User user = userRepository.save(userDto.toEntity());
             return Optional.of(UserDto.from(user));
         } catch (Exception e){

@@ -55,6 +55,7 @@ public class UserDto {
                 .email(email)
                 .password(password)
                 .build();
+
         if (snsFacebookEmail != null) {
             user.addSnsInfo(SnsInfo.builder().email(snsFacebookEmail).user(user).build());
         }

@@ -25,9 +25,13 @@ public class UserInfoInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         // TODO : css 요청마다 사용하는 문제
         Object userId = session.getAttribute("userId");
+        if (modelAndView != null) {
+            modelAndView.getModel().remove("userInfo");
+        }
+
         if (userId != null && modelAndView != null) {
             userService.readWithoutPasswordById((long) userId)
-                    .ifPresent(userDto -> modelAndView.addObject("userInfo", userDto));
+                    .ifPresent(userDto -> modelAndView.getModel().put("userInfo", userDto));
         }
     }
 }

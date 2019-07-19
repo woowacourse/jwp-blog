@@ -93,7 +93,6 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}/mypage-edit")
-    @Transactional
     public String updateUser(@PathVariable final long id, HttpSession session, UserDto userDto) {
         Object userId = session.getAttribute("userId");
         if (id != (long) userId) {
