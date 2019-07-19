@@ -53,17 +53,18 @@
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
                                                             <input id="password" type="password" name="password" class="form-control" required th:field="*{password}"
-                                                                   placeholder="Password">
+                                                                   placeholder="Password" onchange="passwordOnChangeHandler()">
                                                             <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></span>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm
                                                                 Password</label>
                                                             <input id="input-pwcheck" type="password" class="form-control" required
-                                                                   placeholder="Password">
+                                                                   placeholder="Password" onchange="passwordOnChangeHandler()">
+                                                            <span id="password-check-error-message" style="color:red"></span>
                                                         </div>
                                                         <div class="form-group">
-                                                            <button type="submit"
+                                                            <button onclick ="return isSamePasswordAndCheckPassword()" type="submit"
                                                                     class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
                                                                 가입하기
                                                             </button>
@@ -89,6 +90,14 @@
 </div>
 
 <body th:include="includes/js :: common_js"></body>
+<script>
+
+    const isSamePasswordAndCheckPassword = () => document.getElementById('password').value === document.getElementById('input-pwcheck').value
+
+    const passwordOnChangeHandler = () => {
+        document.getElementById('password-check-error-message').innerText = isSamePasswordAndCheckPassword() ? '' : '비밀번호를 확인해주세요'
+    }
+</script>
 </body>
 
 </html>
