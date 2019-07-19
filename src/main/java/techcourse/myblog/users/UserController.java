@@ -1,6 +1,8 @@
 package techcourse.myblog.users;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    public static final String BASE_USER_URI = "/users";
+
     private final UserService userService;
 
     @GetMapping("/new")
@@ -23,6 +28,8 @@ public class UserController {
     @PostMapping
     @ResponseBody
     public Long signup(@Valid UserDto.Register userDto) {
+        log.debug(userDto.toString());
+
         return userService.save(userDto);
     }
 
@@ -34,6 +41,8 @@ public class UserController {
     @PostMapping("/login")
     @ResponseBody
     public String login(UserDto.Register userDto, HttpSession session) {
+        log.debug(userDto.toString());
+
         UserDto.Response userResponseDto = userService.login(userDto);
         session.setAttribute("user", userResponseDto);
         return userResponseDto.getName();

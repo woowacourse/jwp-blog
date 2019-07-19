@@ -1,9 +1,11 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 @AutoConfigureWebClient
@@ -14,8 +16,17 @@ public class MainControllerTests {
     WebTestClient webTestClient;
 
     @Test
-    void MainTest() {
+    @DisplayName("메인페이지 기본 uri만 입력")
+    void main() {
         webTestClient.get().uri("/")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    @DisplayName("메인페이지 article pageSize 맞는지 확인")
+    void order() {
+        webTestClient.get().uri("/?order=desc&pageSize=5")
                 .exchange()
                 .expectStatus().isOk();
     }

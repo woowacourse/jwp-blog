@@ -7,9 +7,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/articles")
+@RequestMapping(ArticleController.ARTICLE_BASE_URI)
 @RequiredArgsConstructor
 public class ArticleController {
+    public static final String ARTICLE_BASE_URI = "/articles";
+
     private final ArticleService articleService;
 
     @GetMapping("/new")
