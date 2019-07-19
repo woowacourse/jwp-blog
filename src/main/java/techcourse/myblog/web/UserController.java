@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.exception.UserCreationException;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -66,7 +67,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public String findUsers(final Model model) {
+    public String find(final Model model) {
         final Iterable<User> users = userService.findAll();
         log.debug("users : {}", users);
         model.addAttribute("users", users);
@@ -79,8 +80,13 @@ public class UserController {
             model.addAttribute("errorMessage", "이메일이 중복됩니다");
             return "/user/signup";
         }
-        userService.save(signUpUserInfo);
-        return "redirect:/login";
+        try {
+            userService.save(signUpUserInfo);
+            return "redirect:/login";
+        } catch (UserCreationException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "/user/signup";
+        }
     }
 
     @GetMapping("/users/{id}")
