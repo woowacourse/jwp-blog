@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.dto.UserDto;
 
 @Controller
 public class HomeController {
@@ -34,7 +35,7 @@ public class HomeController {
     }
 
     @GetMapping("/signup")
-    public String signUpForm() {
+    public String signUpForm(UserDto userDto) {
         return "signup";
     }
 }

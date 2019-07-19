@@ -50,18 +50,21 @@
                                                     <div class="mrg-btm-30">
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">회원가입</h2>
                                                     </div>
-                                                    <form action="/users" method="post">
+                                                    <form th:object="${userDto}" action="/users" method="post">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input type="text" name="name" id="name" class="form-control">
+                                                            <input th:field="*{name}" type="text" name="name" id="name" class="form-control">
+                                                            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></span>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
-                                                            <input type="email" name="email" id="email" class="form-control">
+                                                            <input th:field="*{email}" type="email" name="email" id="email" class="form-control">
+                                                            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></span>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
-                                                            <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+                                                            <input th:field="*{password}" type="password" name="password" id="password" class="form-control" placeholder="Password">
+                                                            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></span>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm Password</label>
