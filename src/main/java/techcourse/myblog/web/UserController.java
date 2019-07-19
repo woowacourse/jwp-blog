@@ -48,4 +48,13 @@ public class UserController {
         model.addAttribute("users", users);
         return "user-list";
     }
+
+    @GetMapping("/mypage")
+    public String renderMypage(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if(session == null){
+            return "redirect:/login";
+        }
+        return "mypage";
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.User;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -109,5 +110,38 @@ public class UserControllerTests {
         webTestClient.get().uri("/users")
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void MyPage_이동_성공_테스트() {
+        webTestClient =
+                WebTestClient.bindToWebHandler(exchange -> {
+                    String path = exchange.getRequest().getURI().getPath();
+                    if ("/users".equals(path) || "/mypage".equals(path) || "/mypage-edit".equals(path)) {
+                        return exchange.getSession()
+                                .doOnNext(webSession ->
+                                        webSession.getAttributes()
+                                                .put("user", User.builder()
+                                                        .id(0)
+                                                        .name("name")
+                                                        .email("email@gmail.com")
+                                                        .password("password")
+                                                        .build()))
+                                .then();
+                    }
+                    return null;
+                }).build();
+
+        webTestClient.get().uri("/mypage")
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
+
+    @Test
+    void MyPage_이동_실패_테스트() {
+        webTestClient.get().uri("/mypage")
+                .exchange()
+                .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*(/login)");
     }
 }
