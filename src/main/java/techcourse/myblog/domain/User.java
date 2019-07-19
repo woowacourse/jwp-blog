@@ -1,14 +1,27 @@
 package techcourse.myblog.domain;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import techcourse.myblog.exception.UserCreationException;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-//TODO User에서 모든 파라미터를 가진 생성자 삭제 고려
 @Entity
 public class User {
+    private static final Logger log = LoggerFactory.getLogger(User.class);
+
+    private static final int NAME_MIN_LENGTH = 2;
+    private static final int NAME_MAX_LENGTH = 8;
+    private static final int PASSWORD_MIN_LENGTH = 8;
+    private static final Pattern NAME_PATTERN = Pattern.compile("^[가-힣|a-zA-Z]+$");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^[a-zA-Z0-9@#$%^&+=]+$");
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,17 +32,41 @@ public class User {
     public User() {
     }
 
-    public User(String name, String email, String password) {
+    public User(final String name, final String email, final String password) {
+        validate(name, password);
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    public User(long id, String name, String email, String password) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
+    private void validate(final String name, final String password) {
+        validateName(name);
+        validatePassword(password);
+    }
+
+    private void validateName(final String name) {
+        log.debug("name in User.class : {}", name);
+        if (name.length() < NAME_MIN_LENGTH || name.length() > NAME_MAX_LENGTH) {
+            throw new UserCreationException("이름은 " + NAME_MIN_LENGTH +
+                    "이상 " + NAME_MAX_LENGTH + "이하로 작성하세요");
+        }
+
+
+        if (!NAME_PATTERN.matcher(name).find()) {
+            throw new UserCreationException("이름은 한글 또는 영어이름으로 입력하세요");
+        }
+    }
+
+    private void validatePassword(final String password) {
+        log.debug("password in User.class : {}", password);
+        if (password.length() < PASSWORD_MIN_LENGTH) {
+            throw new UserCreationException("이름은 " + NAME_MIN_LENGTH +
+                    "이상 " + NAME_MAX_LENGTH + "이하로 작성하세요");
+        }
+
+        if (!PASSWORD_PATTERN.matcher(password).find()) {
+            throw new UserCreationException("비밀번호는 소대문자 영어 + 숫자 조합입니다");
+        }
     }
 
     public boolean isSamePassword(String password) {

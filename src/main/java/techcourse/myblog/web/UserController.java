@@ -27,10 +27,14 @@ public class UserController {
 
     @GetMapping("/login")
     public String login(final HttpSession session) {
-        if (session.getAttribute(SESSION_NAME) == null) {
+        if (isSessionNull(session)) {
             return "/user/login";
         }
         return "redirect:/";
+    }
+
+    private boolean isSessionNull(HttpSession session) {
+        return session.getAttribute(SESSION_NAME) == null;
     }
 
     @PostMapping("/login")
@@ -55,7 +59,7 @@ public class UserController {
 
     @GetMapping("/signup")
     public String signUp(final HttpSession session) {
-        if (session.getAttribute(SESSION_NAME) == null) {
+        if (isSessionNull(session)) {
             return "/user/signup";
         }
         return "redirect:/";
@@ -79,7 +83,6 @@ public class UserController {
         return "redirect:/login";
     }
 
-    //TODO NoSuchElementException -> CustomException으로 변화
     @GetMapping("/users/{id}")
     public String myPage(@PathVariable Long id, final Model model, final HttpSession session) {
         UserDto.SessionUserInfo sessionUserInfo = (UserDto.SessionUserInfo) session.getAttribute(SESSION_NAME);
@@ -87,12 +90,16 @@ public class UserController {
         log.debug("session value : {}", sessionUserInfo);
         log.debug("id : {}", id);
 
-        if (sessionUserInfo != null && sessionUserInfo.isSameId(id)) {
+        if (isSessionMatch(id, sessionUserInfo)) {
             User user = userService.findById(id);
             model.addAttribute("user", user);
             return "mypage";
         }
         return "redirect:/users";
+    }
+
+    private boolean isSessionMatch(@PathVariable Long id, UserDto.SessionUserInfo sessionUserInfo) {
+        return sessionUserInfo != null && sessionUserInfo.isSameId(id);
     }
 
     @GetMapping("/users/edit/{id}")

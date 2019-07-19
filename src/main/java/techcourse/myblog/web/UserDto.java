@@ -2,147 +2,168 @@ package techcourse.myblog.web;
 
 import techcourse.myblog.domain.User;
 
+import javax.validation.constraints.NotNull;
+
 public class UserDto {
 
-    public static class LoginInfo {
-        private String email;
-        private String password;
+	public static class LoginInfo {
 
-        public LoginInfo() {
-        }
+		@NotNull
+		private String email;
 
-        public LoginInfo(String email, String password) {
-            this.email = email;
-            this.password = password;
-        }
+		@NotNull
+		private String password;
 
-        public String getEmail() {
-            return email;
-        }
+		public LoginInfo() {
+		}
 
-        public String getPassword() {
-            return password;
-        }
+		public LoginInfo(String email, String password) {
+			this.email = email;
+			this.password = password;
+		}
 
-        public void setEmail(String email) {
-            this.email = email;
-        }
+		public String getEmail() {
+			return email;
+		}
 
-        public void setPassword(String password) {
-            this.password = password;
-        }
-    }
+		public String getPassword() {
+			return password;
+		}
 
-    public static class SignUpUserInfo {
-        private String name;
-        private String email;
-        private String password;
+		public void setEmail(String email) {
+			this.email = email;
+		}
 
-        public SignUpUserInfo() {
-        }
+		public void setPassword(String password) {
+			this.password = password;
+		}
+	}
 
-        public SignUpUserInfo(String name, String email, String password) {
-            this.name = name;
-            this.email = email;
-            this.password = password;
-        }
+	public static class SignUpUserInfo {
 
-        public User toUser() {
-            return new User(name, email, password);
-        }
+		@NotNull
+		private String name;
 
-        public String getName() {
-            return name;
-        }
+		@NotNull
+		private String email;
 
-        public void setName(String name) {
-            this.name = name;
-        }
+		@NotNull
+		private String password;
 
-        public String getEmail() {
-            return email;
-        }
+		public SignUpUserInfo() {
+		}
 
-        public void setEmail(String email) {
-            this.email = email;
-        }
+		public SignUpUserInfo(String name, String email, String password) {
+			this.name = name;
+			this.email = email;
+			this.password = password;
+		}
 
-        public String getPassword() {
-            return password;
-        }
+		public User toUser() {
+			return new User(name, email, password);
+		}
 
-        public void setPassword(String password) {
-            this.password = password;
-        }
-    }
+		public String getName() {
+			return name;
+		}
 
-    public static class SessionUserInfo {
-        private Long id;
-        private String name;
-        private String email;
+		public void setName(String name) {
+			this.name = name;
+		}
 
-        public SessionUserInfo() {
+		public String getEmail() {
+			return email;
+		}
 
-        }
+		public void setEmail(String email) {
+			this.email = email;
+		}
 
-        private SessionUserInfo(final long id, final String name, final String email) {
-            this.id = id;
-            this.name = name;
-            this.email = email;
-        }
+		public String getPassword() {
+			return password;
+		}
 
-        public static SessionUserInfo toDto(final User user) {
-            return new SessionUserInfo(user.getId(), user.getName(), user.getEmail());
-        }
+		public void setPassword(String password) {
+			this.password = password;
+		}
+	}
 
-        public boolean isSameId(final Long id) {
-            return (id.compareTo(id) == 0);
-        }
+	public static class SessionUserInfo {
 
-        public Long getId() {
-            return id;
-        }
+		@NotNull
+		private Long id;
 
-        public void setId(Long id) {
-            this.id = id;
-        }
+		@NotNull
+		private String name;
 
-        public String getName() {
-            return name;
-        }
+		@NotNull
+		private String email;
 
-        public void setName(String name) {
-            this.name = name;
-        }
+		public SessionUserInfo() {
 
-        public String getEmail() {
-            return email;
-        }
+		}
 
-        public void setEmail(String email) {
-            this.email = email;
-        }
-    }
+		private SessionUserInfo(final long id, final String name, final String email) {
+			this.id = id;
+			this.name = name;
+			this.email = email;
+		}
 
-    public class UpdateInfo {
+		public static SessionUserInfo toDto(final User user) {
+			return new SessionUserInfo(user.getId(), user.getName(), user.getEmail());
+		}
 
-        private String name;
-        private String email;
+		public boolean isSameId(final Long id) {
+			return (id.compareTo(id) == 0);
+		}
 
-        public String getName() {
-            return name;
-        }
+		public Long getId() {
+			return id;
+		}
 
-        public void setName(String name) {
-            this.name = name;
-        }
+		public void setId(Long id) {
+			this.id = id;
+		}
 
-        public String getEmail() {
-            return email;
-        }
+		public String getName() {
+			return name;
+		}
 
-        public void setEmail(String email) {
-            this.email = email;
-        }
-    }
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+	}
+
+	public class UpdateInfo {
+
+		@NotNull
+		private String name;
+
+		@NotNull
+		private String email;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+	}
 }
