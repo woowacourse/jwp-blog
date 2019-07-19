@@ -41,9 +41,12 @@ public class UserService {
 
     @Transactional
     public void update(User user, UserDto userDto) {
-        User updateUser = userRepository.findById(user.getId()).get();
-        user.update(userDto.toUser());
-        updateUser.update(userDto.toUser());
+        Optional<User> updateUser = userRepository.findById(user.getId());
+
+        updateUser.ifPresent(userDB -> {
+            userDB.modify(userDto.toUser());
+            user.modify(userDto.toUser());
+        });
     }
 
     @Transactional
