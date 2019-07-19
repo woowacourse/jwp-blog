@@ -6,15 +6,20 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
 public class UserDto {
-    @Min(value = 2)
-    @Max(value = 10)
-    @Pattern(regexp = "^[a-zA-Zㄱ-ㅎ가-힣]*$")
+    private static final int MIN_USER_NAME_SIZE = 2;
+    private static final int MAX_USER_NAME_SIZE = 10;
+    private static final String USER_NAME_PATTERN = "^[a-zA-Zㄱ-ㅎ가-힣]*$";
+    private static final String USER_PASSWORD_PATTERN = "(?=^.{8,}$)((?=.*\\\\d)(?=.*\\\\W+))(?![.\\\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
+
+    @Min(value = MIN_USER_NAME_SIZE)
+    @Max(value = MAX_USER_NAME_SIZE)
+    @Pattern(regexp = USER_NAME_PATTERN)
     private String name;
 
-    @Email()
+    @Email
     private String email;
 
-    @Pattern(regexp = "(?=^.{8,}$)((?=.*\\\\d)(?=.*\\\\W+))(?![.\\\\n])(?=.*[A-Z])(?=.*[a-z]).*$")
+    @Pattern(regexp = USER_PASSWORD_PATTERN)
     private String password;
     private String passwordConfirm;
 
