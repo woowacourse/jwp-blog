@@ -8,6 +8,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicateEmailException;
+import techcourse.myblog.exception.FailedLoginException;
 import techcourse.myblog.exception.InvalidUserDataException;
 import techcourse.myblog.service.UserService;
 
@@ -31,7 +32,7 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(UserDto userDto, HttpSession httpSession) {
-        User user = userService.getUser(userDto);
+        User user = userService.findUserByEmailAndPassword(userDto);
         httpSession.setAttribute("name", user.getName());
         httpSession.setAttribute("email", user.getEmail());
         return "redirect:/";
@@ -74,7 +75,7 @@ public class UserController {
         String email = (String) httpSession.getAttribute("email");
 
         if (email != null) {
-            User user = userService.getUser(email);
+            User user = userService.findUserByEmailAndPassword(email);
             model.addAttribute("user", UserAssembler.writeDto(user));
 
             return "mypage";
@@ -88,7 +89,7 @@ public class UserController {
         String email = (String) httpSession.getAttribute("email");
 
         if (email != null) {
-            User user = userService.getUser(email);
+            User user = userService.findUserByEmailAndPassword(email);
             model.addAttribute("user", UserAssembler.writeDto(user));
 
             return "mypage-edit";
@@ -122,5 +123,12 @@ public class UserController {
     public String handleDuplicateEmailException(DuplicateEmailException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         return "signup";
+    }
+
+    @ExceptionHandler(FailedLoginException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleFailedLoginException(FailedLoginException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "login";
     }
 }

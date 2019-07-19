@@ -5,6 +5,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicateEmailException;
+import techcourse.myblog.exception.FailedLoginException;
 import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
@@ -21,13 +22,13 @@ public class UserService {
     }
 
     public void createUser(UserDto userDto) {
-        validateEmail(userDto);
+        validateUniqueEmail(userDto);
 
         User user = UserAssembler.writeUser(userDto);
         userRepository.save(user);
     }
 
-    private void validateEmail(UserDto userDto) {
+    private void validateUniqueEmail(UserDto userDto) {
         if (userRepository.countByEmail(userDto.getEmail()) > NOT_FOUND_RESULT) {
             throw new DuplicateEmailException();
         }
@@ -37,7 +38,7 @@ public class UserService {
         return UserAssembler.writeDtos(userRepository.findAll());
     }
 
-    public User getUser(String email) {
+    public User findUserByEmailAndPassword(String email) {
         User user = userRepository.findUserByEmail(email);
 
         if (user == null) {
@@ -47,8 +48,7 @@ public class UserService {
         return user;
     }
 
-    // TODO 이상쓰...
-    public User getUser(UserDto userDto) {
+    public User findUserByEmailAndPassword(UserDto userDto) {
         String email = userDto.getEmail();
         String password = userDto.getPassword();
 
@@ -60,14 +60,14 @@ public class UserService {
 
     private void checkUserByEmail(String email) {
         if (userRepository.countByEmail(email) == NOT_FOUND_RESULT) {
-            throw new NoSuchElementException("존재하지 않는 이메일입니다.");
+            throw new FailedLoginException("존재하지 않는 이메일입니다.");
         }
     }
 
     private void checkPassword(String email, String password) {
         User user = userRepository.findUserByEmailAndPassword(email, password);
         if (user == null) {
-            throw new NoSuchElementException("비밀번호가 일치하지 않습니다.");
+            throw new FailedLoginException("비밀번호가 일치하지 않습니다.");
         }
     }
 

@@ -33,9 +33,9 @@ class UserServiceTest {
         User user = new User(0L, "에헴", "abc@abc.com", "@Password1234");
         userService.createUser(UserAssembler.writeDto(user));
 
-        assertThat(userService.getUser(UserAssembler.writeDto(user)).getEmail()).isEqualTo(user.getEmail());
-        assertThat(userService.getUser(UserAssembler.writeDto(user)).getName()).isEqualTo(user.getName());
-        assertThat(userService.getUser(UserAssembler.writeDto(user)).getPassword()).isEqualTo(user.getPassword());
+        assertThat(userService.findUserByEmailAndPassword(UserAssembler.writeDto(user)).getEmail()).isEqualTo(user.getEmail());
+        assertThat(userService.findUserByEmailAndPassword(UserAssembler.writeDto(user)).getName()).isEqualTo(user.getName());
+        assertThat(userService.findUserByEmailAndPassword(UserAssembler.writeDto(user)).getPassword()).isEqualTo(user.getPassword());
     }
 
     @Test
@@ -43,7 +43,7 @@ class UserServiceTest {
         User user = new User(0L, "에헴", "abcd@abcd.com", "@Password1234");
 
         assertThrows(NoSuchElementException.class, () -> {
-            userService.getUser(UserAssembler.writeDto(user));
+            userService.findUserByEmailAndPassword(UserAssembler.writeDto(user));
         });
     }
 }
