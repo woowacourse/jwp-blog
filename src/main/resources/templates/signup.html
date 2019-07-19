@@ -47,8 +47,7 @@
                                                                 <input id="password-confirm" type="password" class="form-control" minlength="8" required pattern="[a-zA-Z0-9~!@#$%^&*]+">
                                                             </div>
                                                             <div id="not-match"></div>
-                                                            <div class="alert alert-danger" role="alert" th:if="${errorMessage} != null" th:text="${errorMessage}">
-                                                            </div>
+                                                            <div class="alert alert-danger" role="alert" th:if="${errorMessage} != null" th:text="${errorMessage}"></div>
                                                             <div class="form-group">
                                                                 <button type="submit" class="btn btn-info btn-block border-radius-6 font-size-16 text-white">가입하기</button>
                                                             </div>
@@ -76,7 +75,6 @@
         const password = document.getElementById('password');
         const passwordConfirm = document.getElementById('password-confirm');
         const signupForm = document.getElementById('form');
-
         signupForm.addEventListener('submit', e => {
             if (password.value !== passwordConfirm.value) {
                 alert('비밀번호를 확인해주세요!');
