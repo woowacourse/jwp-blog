@@ -56,8 +56,17 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String showMypage(Model model) {
-        return "mypage";
+    public String showMypage(Model model, HttpSession httpSession) {
+        String email = (String) httpSession.getAttribute("email");
+
+        if (email != null) {
+            User user = userService.getUser(email);
+            model.addAttribute("user", UserAssembler.writeDto(user));
+
+            return "mypage";
+        }
+
+        return "redirect:/login";
     }
 
     @GetMapping("/mypage/edit")

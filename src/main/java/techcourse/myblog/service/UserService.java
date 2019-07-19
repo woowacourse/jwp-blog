@@ -38,6 +38,17 @@ public class UserService {
         return UserAssembler.writeDtos(userRepository.findAll());
     }
 
+    public User getUser(String email) {
+        User user = userRepository.findUserByEmail(email);
+
+        if (user == null) {
+            throw new NoSuchElementException("잘못된 접근입니다.");
+        }
+
+        return user;
+    }
+
+    // TODO 이상쓰...
     public User getUser(UserDto userDto) {
         String email = userDto.getEmail();
         String password = userDto.getPassword();
