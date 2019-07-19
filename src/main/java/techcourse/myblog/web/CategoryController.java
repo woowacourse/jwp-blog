@@ -8,26 +8,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.CategoryDto;
 import techcourse.myblog.domain.CategoryRepository;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CategoryService;
 
 @Controller
 public class CategoryController {
+
     @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private ArticleService articleService;
+    private CategoryService categoryService;
 
     @PostMapping("/categories/add")
     public String addCategories(CategoryDto categoryDto) {
-        categoryRepository.save(categoryDto.toCategory());
-
+        categoryService.create(categoryDto);
         return "redirect:/";
     }
 
     @GetMapping("categories/delete/{categoryId}")
     public String deleteCategories(@PathVariable long categoryId) {
-        if (articleService.readByCategoryId(categoryId).isEmpty()) {
-            categoryRepository.deleteById(categoryId);
-        }
+        categoryService.deleteById(categoryId);
 
         return "redirect:/";
     }

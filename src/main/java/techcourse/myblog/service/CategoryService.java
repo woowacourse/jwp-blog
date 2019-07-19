@@ -12,6 +12,9 @@ import java.util.List;
 @Service
 public class CategoryService {
     @Autowired
+    private ArticleService articleService;
+
+    @Autowired
     private CategoryRepository categoryRepository;
 
     public List<CategoryDto> readAll() {
@@ -22,4 +25,13 @@ public class CategoryService {
         return categories;
     }
 
+    public void deleteById(long categoryId) {
+        if (articleService.readByCategoryId(categoryId).isEmpty()) {
+            categoryRepository.deleteById(categoryId);
+        }
+    }
+
+    public void create(CategoryDto categoryDto) {
+        categoryRepository.save(categoryDto.toCategory());
+    }
 }

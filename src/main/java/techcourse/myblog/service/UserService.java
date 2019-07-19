@@ -9,6 +9,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserDto;
 import techcourse.myblog.domain.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class UserService {
 
     public Optional<UserDto> create(UserDto userDto) {
         try {
-            log.debug("create", userDto);
+            log.info("create userDto" + userDto);
             User user = userRepository.save(userDto.toEntity());
             return Optional.of(UserDto.from(user));
         } catch (Exception e){
@@ -53,12 +54,14 @@ public class UserService {
         return userRepository.findById(id).map(UserDto::from);
     }
 
+    @Transactional
     public UserDto updateUser(long id, UserDto userDto) {
         Optional<UserDto> maybeFindUserDto = readById(id);
         if (maybeFindUserDto.isPresent()) {
             maybeFindUserDto.get().updateUserInfo(userDto);
 
             snsInfoRepository.deleteByUserId(id);
+            log.info("update userDto" + maybeFindUserDto);
             User user = userRepository.save(maybeFindUserDto.get().toEntity());
 
             return UserDto.fromWithoutPassword(user);
