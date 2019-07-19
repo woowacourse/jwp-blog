@@ -55,14 +55,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public RedirectView login(HttpServletRequest httpServletRequest, UserDto userDto) {
-        log.debug("Login -> userDto : {}", userDto);
+    public String login(HttpServletRequest httpServletRequest, UserDto userDto, BindingResult bindingResult) {
         Optional<User> user = userService.findByEmailAndPassword(userDto);
+
         if (user.isPresent()) {
             httpServletRequest.getSession().setAttribute("user", user.get());
-            return new RedirectView("/");
+            return "redirect:/";
         }
-        return new RedirectView("/login");
+        bindingResult.addError(new FieldError("userDto", "email", "이메일이나 비밀번호가 일치하지 않습니다."));
+
+        return "login";
     }
 
     @GetMapping("/logout")

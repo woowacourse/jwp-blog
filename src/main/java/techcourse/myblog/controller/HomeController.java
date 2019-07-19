@@ -30,7 +30,7 @@ public class HomeController {
     }
 
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(UserDto userDto) {
         return "login";
     }
 
