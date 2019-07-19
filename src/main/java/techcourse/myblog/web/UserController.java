@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class UserController {
@@ -29,13 +30,25 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String showLogin() {
-        return "login";
+    public ModelAndView showLogin(final HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+        if (!Objects.isNull(session.getAttribute("name"))) {
+            modelAndView.setView(new RedirectView("/"));
+            return modelAndView;
+        }
+        modelAndView.setViewName("login");
+        return modelAndView;
     }
 
     @GetMapping("/signup")
-    public String showSignUp() {
-        return "signup";
+    public ModelAndView showSignUp(final HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+        if (!Objects.isNull(session.getAttribute("name"))) {
+            modelAndView.setView(new RedirectView("/"));
+            return modelAndView;
+        }
+        modelAndView.setViewName("signup");
+        return modelAndView;
     }
 
     @GetMapping("/users")
@@ -90,6 +103,4 @@ public class UserController {
         modelAndView.setView(new RedirectView("/"));
         return modelAndView;
     }
-
-
 }
