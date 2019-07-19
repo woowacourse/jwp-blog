@@ -42,9 +42,12 @@ public class UserService {
     }
 
     public UserResponseDto findByEmailAndPassword(String email, String password) {
-        Optional<User> userOpt = userRepository.findByEmailAndPassword(email, password);
+        Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
+            if (!user.getPassword().equals(password)) {
+                throw new IllegalArgumentException("틀린 비밀번호입니다.");
+            }
             return convertToDto(user);
         }
         throw new IllegalArgumentException("틀린 이메일입니다!");

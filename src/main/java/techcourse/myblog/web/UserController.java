@@ -58,7 +58,15 @@ public class UserController {
     @PostMapping("/users/login")
     public ModelAndView processLogin(HttpServletRequest request, String email, String password) {
         ModelAndView modelAndView = new ModelAndView();
-        UserResponseDto userResponseDto = userService.findByEmailAndPassword(email, password);
+        UserResponseDto userResponseDto = null;
+        try {
+            userResponseDto = userService.findByEmailAndPassword(email, password);
+        } catch (IllegalArgumentException e) {
+            // TODO: 2019-07-19 에러메시지 띄우기
+            System.err.println(e.getMessage());
+            modelAndView.setView(new RedirectView("/login"));
+            return modelAndView;
+        }
 
         HttpSession session = request.getSession();
         session.setAttribute("name", userResponseDto.getName());
