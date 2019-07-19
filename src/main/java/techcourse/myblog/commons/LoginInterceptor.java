@@ -1,14 +1,22 @@
 package techcourse.myblog.commons;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import techcourse.myblog.users.UserController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
+import static techcourse.myblog.users.UserController.BASE_USER_URI;
 
 @Component
 public class LoginInterceptor extends HandlerInterceptorAdapter {
+    private static final Logger log = LoggerFactory.getLogger(LoginInterceptor.class);
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
@@ -16,15 +24,22 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         String method = request.getMethod();
         boolean isLogin = session.getAttribute("user") != null;
 
+        log.debug("PATH : {} METHOD : {} LOGIN : {} ", path, method, isLogin);
+
         if (isLogin) {
-            if (isLoginForm(path) || isSignup(path, method) || isSignupForm(path)) {
-                response.sendRedirect("/");
-                return false;
-            }
-            return true;
+            return isNotException(response, path, method);
         }
-        if (!isLoginForm(path)) {
-            response.sendRedirect("/users/login");
+
+        if (!(isLoginForm(path) || isSignup(path, method) || isSignupForm(path))) {
+            response.sendRedirect(BASE_USER_URI + "/login");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isNotException(final HttpServletResponse response, final String path, final String method) throws IOException {
+        if (isLoginForm(path) || isSignup(path, method) || isSignupForm(path)) {
+            response.sendRedirect("/");
             return false;
         }
         return true;
