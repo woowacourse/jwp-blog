@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +20,8 @@ import static techcourse.myblog.web.ControllerUtil.checkAndPutUser;
 @Controller
 public class ArticleController {
 
-    //    private final ArticleService articleService;
+    private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
+
     private final ArticleRepository articleRepository;
 
     @Autowired
