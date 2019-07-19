@@ -46,7 +46,7 @@ public class ArticleService {
         for (Article article : articleRepository.findAll()) {
             articleDtos.add(ArticleDto.from(article));
         }
-        return  articleDtos;
+        return articleDtos;
     }
 
     public List<ArticleDto> readByCategoryId(long categoryId) {

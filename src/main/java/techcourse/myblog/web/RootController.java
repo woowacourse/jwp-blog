@@ -7,13 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import techcourse.myblog.domain.*;
+import techcourse.myblog.domain.ArticleDto;
+import techcourse.myblog.domain.CategoryDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CategoryService;
-import techcourse.myblog.service.UserService;
 
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -25,9 +23,6 @@ public class RootController {
 
     @Autowired
     private CategoryService categoryService;
-
-    @Autowired
-    private UserService userService;
 
     @GetMapping("/")
     public String index(Model model) {
