@@ -10,6 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.exception.EmailNotFoundException;
+import techcourse.myblog.exception.InvalidPasswordException;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,10 +49,10 @@ public class UserController {
     public ModelAndView registerUsers(@Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         if (bindingResult.hasErrors()) {
-            modelAndView.setView(new RedirectView("signup"));
+            modelAndView.setView(new RedirectView("/signup"));
             return modelAndView;
         }
-        modelAndView.setView(new RedirectView("login"));
+        modelAndView.setView(new RedirectView("/login"));
         userService.save(userRequestDto);
         return modelAndView;
     }
@@ -61,7 +63,7 @@ public class UserController {
         UserResponseDto userResponseDto = null;
         try {
             userResponseDto = userService.findByEmailAndPassword(email, password);
-        } catch (IllegalArgumentException e) {
+        } catch (EmailNotFoundException | InvalidPasswordException e) {
             // TODO: 2019-07-19 에러메시지 띄우기
             System.err.println(e.getMessage());
             modelAndView.setView(new RedirectView("/login"));

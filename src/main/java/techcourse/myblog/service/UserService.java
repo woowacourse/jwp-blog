@@ -7,6 +7,8 @@ import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.DuplicatedEmailException;
+import techcourse.myblog.exception.EmailNotFoundException;
+import techcourse.myblog.exception.InvalidPasswordException;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,10 +48,10 @@ public class UserService {
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             if (!user.getPassword().equals(password)) {
-                throw new IllegalArgumentException("틀린 비밀번호입니다.");
+                throw new InvalidPasswordException("틀린 비밀번호입니다.");
             }
             return convertToDto(user);
         }
-        throw new IllegalArgumentException("틀린 이메일입니다!");
+        throw new EmailNotFoundException("틀린 이메일입니다!");
     }
 }
