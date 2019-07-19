@@ -15,13 +15,9 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
     }
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
-	implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '2.3.0'
 }
