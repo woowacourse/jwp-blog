@@ -29,7 +29,6 @@ public class Article {
     }
 
     protected Article() {
-
     }
 
     private String getDefaultUrl(String coverUrl) {
@@ -60,7 +59,7 @@ public class Article {
         this.title = modifiedArticle.title;
         this.contents = modifiedArticle.contents;
         this.coverUrl = modifiedArticle.coverUrl;
-        log.debug("Article Save done", this.id);
+        log.debug("Article Save done {}", this.id);
     }
 
     public boolean matchId(long id) {

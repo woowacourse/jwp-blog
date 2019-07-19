@@ -13,7 +13,6 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @SpringBootTest
 class UserRepositoryTest {
-
     @Autowired
     private UserRepository userRepository;
 
@@ -37,5 +36,4 @@ class UserRepositoryTest {
     void tearDown() {
         userRepository.deleteAll();
     }
-
 }

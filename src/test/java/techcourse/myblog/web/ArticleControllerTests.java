@@ -40,7 +40,6 @@ public class ArticleControllerTests {
     @Autowired
     private UserRepository userRepository;
 
-
     @BeforeEach
     void setUp() {
         log.debug("Before Cookie: {} ", cookie);
@@ -83,7 +82,6 @@ public class ArticleControllerTests {
                 .uri(uri)
                 .header("Cookie", cookie);
     }
-
 
     @Test
     void index() {

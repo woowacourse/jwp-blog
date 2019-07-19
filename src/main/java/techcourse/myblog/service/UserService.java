@@ -4,17 +4,17 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserException;
 import techcourse.myblog.dto.LoginDto;
-import techcourse.myblog.dto.SignupDto;
+import techcourse.myblog.dto.SingUpDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class UserService {
-
     private static final String NOT_EXIST_USER = "등록된 이메일이 없습니다.";
     private static final String NOT_MATCH_PASSWORD = "비밀번호가 일치하지 않습니다.";
 
@@ -37,11 +37,11 @@ public class UserService {
         }
     }
 
-    public SignupDto addUser(UserDto userDto) {
+    public SingUpDto addUser(UserDto userDto) {
         try {
-            return new SignupDto(true, userRepository.save(userDto.toEntity()).getId());
+            return new SingUpDto(true, userRepository.save(userDto.toEntity()).getId());
         } catch (UserException e) {
-            return new SignupDto(false, e.getMessage());
+            return new SingUpDto(false, e.getMessage());
         }
     }
 
@@ -57,7 +57,8 @@ public class UserService {
     }
 
     private User getUserBySession(HttpSession session) {
-        return userRepository.findByEmail(session.getAttribute("userEmail").toString()).orElseThrow(UserException::new);
+        return userRepository.findByEmail(session.getAttribute("userEmail").toString())
+                .orElseThrow(UserException::new);
     }
 
     public void deleteUser(HttpSession session) {

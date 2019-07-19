@@ -18,7 +18,6 @@ class ArticleRepositoryTest {
     @Autowired
     private ArticleRepository articleRepository;
 
-
     @BeforeEach
     void setUp() {
         Article article1 = new Article("a1", "b", "c");
@@ -44,8 +43,6 @@ class ArticleRepositoryTest {
         assertThatThrownBy(() -> articleRepository
                 .findById(100L).orElseThrow(IllegalArgumentException::new))
                 .isInstanceOf(IllegalArgumentException.class);
-
-
     }
 
     @Test

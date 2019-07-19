@@ -12,7 +12,6 @@ import techcourse.myblog.service.ArticleService;
 @Controller
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
-
     private ArticleService articleService;
 
     public ArticleController(ArticleService articleService) {
@@ -38,7 +37,6 @@ public class ArticleController {
             return "article";
         } catch (ArticleException e) {
             return "/";
-
         }
     }
 

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.dto.LoginDto;
-import techcourse.myblog.dto.SignupDto;
+import techcourse.myblog.dto.SingUpDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
 
@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
-
     private UserService userService;
 
     @Autowired
@@ -70,13 +69,13 @@ public class UserController {
 
     @PostMapping("/users")
     public String addUser(UserDto userDto, Model model, HttpSession session) {
-        SignupDto signupDto = userService.addUser(userDto);
+        SingUpDto singUpDto = userService.addUser(userDto);
 
         if (userService.addUser(userDto).isSuccess()) {
             session.setAttribute("userName", userDto.getName());
             return "redirect:/";
         }
-        model.addAttribute("error", signupDto.getMessage());
+        model.addAttribute("error", singUpDto.getMessage());
         return "signup";
     }
 

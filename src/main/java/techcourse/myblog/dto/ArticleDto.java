@@ -3,7 +3,6 @@ package techcourse.myblog.dto;
 import techcourse.myblog.domain.Article;
 
 public class ArticleDto {
-
     private String title;
     private String contents;
     private String coverUrl;

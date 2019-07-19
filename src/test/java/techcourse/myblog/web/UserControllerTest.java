@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
-
     @Autowired
     private WebTestClient webTestClient;
 
@@ -121,7 +120,6 @@ class UserControllerTest {
                 .exchange()
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
 
-
         webTestClient.put().uri("/users")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -141,7 +139,6 @@ class UserControllerTest {
                 .exchange()
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
 
-
         webTestClient.delete().uri("/users")
                 .header("Cookie", cookie)
                 .exchange().expectStatus().is3xxRedirection();
@@ -149,5 +146,4 @@ class UserControllerTest {
         assertThatThrownBy(() -> userRepository.findByEmail("andole@gmail.com").orElseThrow(IllegalAccessError::new))
                 .isInstanceOf(IllegalAccessError.class);
     }
-
 }

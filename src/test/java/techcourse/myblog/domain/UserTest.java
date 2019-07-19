@@ -53,5 +53,4 @@ class UserTest {
         assertThatThrownBy(() -> new User("aaa", "Ab!cdefgh", "a"))
                 .isInstanceOf(UserException.class);
     }
-
 }

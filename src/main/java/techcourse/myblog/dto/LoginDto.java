@@ -1,6 +1,7 @@
 package techcourse.myblog.dto;
 
 public class LoginDto {
+    private static final String NOT_FOUND = "NotFound";
     private final boolean success;
     private final String message;
     private final String name;
@@ -12,7 +13,7 @@ public class LoginDto {
     }
 
     public LoginDto(boolean success, String message) {
-        this(success, message, "NotFound");
+        this(success, message, NOT_FOUND);
     }
 
     public boolean isSuccess() {

@@ -10,7 +10,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LoginInterceptorConfigTest {
-
     @Autowired
     private WebTestClient webTestClient;
 
