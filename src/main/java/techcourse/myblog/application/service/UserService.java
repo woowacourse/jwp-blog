@@ -55,4 +55,8 @@ public class UserService {
         user.updatePassword(userDto.getPassword());
     }
 
+    @Transactional
+    public void remove(String email) {
+        userRepository.deleteById(email);
+    }
 }

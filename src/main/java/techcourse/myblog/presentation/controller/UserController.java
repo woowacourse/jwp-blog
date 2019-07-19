@@ -2,6 +2,7 @@ package techcourse.myblog.presentation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -53,26 +54,19 @@ public class UserController {
     @GetMapping("/mypage")
     public ModelAndView readMyPage(HttpSession httpSession) {
         ModelAndView modelAndView = new ModelAndView();
-        if (httpSession.getAttribute("email") != null) {
-            String email = (String) httpSession.getAttribute("email");
-            modelAndView.setViewName("mypage");
-            modelAndView.addObject("user", userService.findById(email));
-            return modelAndView;
-        }
-        modelAndView.setViewName("login");
+        String email = (String) httpSession.getAttribute("email");
+        modelAndView.setViewName("mypage");
+        modelAndView.addObject("user", userService.findById(email));
+
         return modelAndView;
     }
 
     @GetMapping("/mypage/edit")
     public ModelAndView readMyPageEdit(HttpSession httpSession) {
         ModelAndView modelAndView = new ModelAndView();
-        if (httpSession.getAttribute("email") != null) {
-            String email = (String) httpSession.getAttribute("email");
-            modelAndView.setViewName("mypage-edit");
-            modelAndView.addObject("user", userService.findById(email));
-            return modelAndView;
-        }
-        modelAndView.setViewName("login");
+        String email = (String) httpSession.getAttribute("email");
+        modelAndView.setViewName("mypage-edit");
+        modelAndView.addObject("user", userService.findById(email));
         return modelAndView;
     }
 
@@ -90,6 +84,19 @@ public class UserController {
         }
 
         redirectView.setUrl("/login");
+        return redirectView;
+    }
+
+    @DeleteMapping("/users")
+    public RedirectView deleteUser(HttpSession httpSession, UserDto user) {
+        RedirectView redirectView = new RedirectView("/");
+        String email = (String) httpSession.getAttribute("email");
+
+        if (user.getEmail().equals(email)) {
+            userService.remove(email);
+            httpSession.invalidate();
+        }
+
         return redirectView;
     }
 }
