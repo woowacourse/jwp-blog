@@ -26,8 +26,11 @@
    - DELETE 메소드를 이용하여 탈퇴 요청
 
 ## to do list
-- [ ] SecurityConfig에 로그인 관련 추가
-- [ ] User에 UserDetails 추가
-- [ ] UserDetailservice 추가
-- [ ] UserForm 추가 및 UserForm에서 User 생성하게 변경
-- [ ] 회원 수정, 탈퇴 기능 구현
+- [x] SecurityConfig에 로그인 관련 추가
+- [x] User에 UserDetails 추가
+- [x] UserDetailservice 추가
+- [x] UserForm 추가 및 UserForm에서 User 생성하게 변경
+- [ ] 회원 수정
+- [ ] 탈퇴
+- [ ] 인증시 회원페이지 접근 가능 테스트 
+- [ ] 미인증시 회원페이지 접근 실패 테스트

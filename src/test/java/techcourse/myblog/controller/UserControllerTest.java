@@ -13,6 +13,22 @@ import static techcourse.myblog.web.UserController.USER_MAPPING_URL;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
+//    @Qualifier("databaseUserService")
+//    protected UserDetailsService userDetailsService;
+//
+//    protected UsernamePasswordAuthenticationToken getPrincipal(String username) {
+//
+//        UserDetails user = this.userDetailsService.loadUserByUsername(username);
+//
+//        UsernamePasswordAuthenticationToken authentication =
+//                new UsernamePasswordAuthenticationToken(
+//                        user,
+//                        user.getPassword(),
+//                        user.getAuthorities());
+//
+//        return authentication;
+//    }
+
 
     @Autowired
     WebTestClient webTestClient;
@@ -37,6 +53,7 @@ class UserControllerTest {
                 .expectStatus()
                 .isOk();
     }
+
 
 
 }

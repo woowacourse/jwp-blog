@@ -9,30 +9,15 @@
         <div class="header-container">
             <ul class="nav-left mrg-left-0">
                 <li>
-                    <a href="index.html">
+                    <a href="/">
                         <div class="logo logo-dark d-none"
-                             style="background-image: url('gi/images/logo/logo_full_dark.png')"></div>
+                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
                         <div class="logo logo-white"
-                             style="background-image: url('gi/images/logo/logo_full_white.png')"></div>
+                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
-            <ul class="nav-right">
-                <li class="user-profile">
-                    <a href="/user" sec:authorize="isAnonymous()">
-                        <div class="user-info login-btn pointer mrg-right-10">
-                            <span class="name pdd-right-5 text-white">Login</span>
-                        </div>
-                        <div th:if="${error}" th:text="${message}" class="alert alert-primary" role="alert">
-                    </a>
-                    <a href="/user/show" sec:authorize="isAuthenticated()">
-                        <div class="user-info login-btn pointer mrg-right-10">
-                            <span class="name pdd-right-5 text-white">로긴됨</span>
-                        </div>
-                        <div th:if="${error}" th:text="${message}" class="alert alert-primary" role="alert">
-                    </a>
-                </li>
-            </ul>
+           <th:block th:include="fragments/loginStatus :: loginStatus"/>
         </div>
     </header>
 

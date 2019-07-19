@@ -51,4 +51,11 @@ public class UserController {
         return "mypage";
     }
 
+    @GetMapping("/edit")
+    public String edit(@AuthenticationPrincipal User user, Model model){
+        log.info(user.getName() + " " + user.getEmail());
+        model.addAttribute("user",user);
+        return "mypage-edit";
+    }
+
 }
