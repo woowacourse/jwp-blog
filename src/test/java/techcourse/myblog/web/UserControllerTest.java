@@ -24,15 +24,6 @@ class UserControllerTest {
     WebTestClient webTestClient;
 
     @Test
-    @DisplayName("로그인 페이지를 보여준다.")
-    void showLoginPage() {
-        webTestClient.get()
-                .uri("/users/login")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
     @DisplayName("회원가입 페이지를 보여준다.")
     void showRegisterPage() {
         webTestClient.get()

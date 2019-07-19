@@ -17,11 +17,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/users/login")
-    public String showLoginPage() {
-        return "login";
-    }
-
     @GetMapping("/users/sign-up")
     public String showRegisterPage() {
         return "sign-up";
