@@ -1,4 +1,4 @@
-package techcourse.myblog.web.dto;
+package techcourse.myblog.controller.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

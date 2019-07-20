@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.web.dto.ArticleDto;
+import techcourse.myblog.controller.dto.ArticleDto;
 
 @Controller
 public class ArticleController {

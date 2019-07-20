@@ -1,4 +1,4 @@
-package techcourse.myblog.web.dto;
+package techcourse.myblog.controller.dto;
 
 import java.util.Objects;
 

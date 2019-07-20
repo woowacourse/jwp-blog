@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.web.dto.LoginDto;
-import techcourse.myblog.web.dto.UserDto;
+import techcourse.myblog.controller.dto.LoginDto;
+import techcourse.myblog.controller.dto.UserDto;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
