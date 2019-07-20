@@ -3,15 +3,9 @@
 <head>
     <th:block th:include="fragments/head"></th:block>
 
-    <link rel="stylesheet" href="/css/app.css">
-    <link rel="stylesheet" href="/css/customize.css">
-    <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/article-edit.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
+
+    <th:block th:include="fragments/article-head"></th:block>
 </head>
 <body>
 <div>
@@ -62,7 +56,7 @@
 <th:block th:include="fragments/body"></th:block>
 
 <script id="input-template" type="tv-template">
-    <form  name="article" method="post" accept-charset="utf-8" action="/articles{path}">
+    <form  name="article" method="post" accept-charset="utf-8" action="/articles/{path}">
         {putTag}
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
