@@ -8,10 +8,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.AlreadyExistUserException;
-import techcourse.myblog.exception.SignUpInputException;
-import techcourse.myblog.exception.UserForbiddenException;
-import techcourse.myblog.exception.UserNotFoundException;
+import techcourse.myblog.exception.*;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.translator.UserTranslator;
 
@@ -69,12 +66,10 @@ public class UserController {
     }
 
     @GetMapping(path = {"/{email}", "/{email}/edit"})
-    public String showMyPageEdit(HttpServletRequest req, String email, Model model) {
+    public String showMyPageEdit(String email, HttpServletRequest req, Model model) {
         HttpSession session = req.getSession();
         String loginEmail = (String) session.getAttribute("email");
-        if (!loginEmail.equals(email)) {
-            throw new UserForbiddenException("인증 되지 않은 사용자입니다.");
-        }
+        userAuthenticated(email, loginEmail);
 
         Optional<User> maybeUser = userRepository.findByEmail(loginEmail);
         model.addAttribute("user", maybeUser.orElseThrow(() -> new UserNotFoundException("해당 이메일로 가입된 유저가 없습니다.")));
@@ -85,34 +80,39 @@ public class UserController {
         return "mypage";
     }
 
-    @PutMapping("/mypageedit")
-    public RedirectView myPageEditConfirm(@Valid UserDto userDto, Errors errors, HttpSession session) {
-        return userRepository.findByEmail((String) session.getAttribute("email")).map(user -> {
-            String name = userDto.getName();
-            String email = userDto.getEmail();
-            if (email.equals(user.getEmail())) {
-                userRepository.save(user);
-                session.setAttribute("username", name);
-                session.setAttribute("email", email);
-                return new RedirectView("/mypage");
-            }
-            return userRepository.findByEmail(email).map(sameEmail -> new RedirectView("."))
-                    .orElseGet(() -> {
-                        userRepository.save(user);
-                        session.setAttribute("username", name);
-                        session.setAttribute("email", email);
-                        return new RedirectView("/mypage");
-                    });
-        }).orElse(new RedirectView("/"));
+    @PutMapping("/{email}")
+    public RedirectView myPageEditConfirm(@PathVariable String email, @Valid UserDto userDto, Errors errors, HttpSession session) {
+        if (errors.hasErrors()) {
+            throw new UpdateUserInputException("잘못된 입력값입니다.");
+        }
+
+        String loginEmail = (String) session.getAttribute("email");
+        userAuthenticated(email, loginEmail);
+
+        Optional<User> maybeUser = userRepository.findByEmail(email);
+        User user = maybeUser.orElseThrow(() -> new UserNotFoundException("해당 이메일로 가입된 유저가 없습니다."));
+        User updatedUser = userTranslator.toEntity(user, userDto);
+        userRepository.save(updatedUser);
+
+        return new RedirectView("/users/" + email);
     }
 
-    @DeleteMapping("/users")
-    public RedirectView exitUser(HttpSession session) {
-        userRepository.findByEmail((String) session.getAttribute("email")).ifPresent(user -> {
+    @DeleteMapping("/{email}")
+    public RedirectView exitUser(String email, HttpSession session) {
+        String loginEmail = (String) session.getAttribute("email");
+        userAuthenticated(email, loginEmail);
+
+        userRepository.findByEmail(loginEmail).ifPresent(user -> {
             userRepository.delete(user);
             session.invalidate();
         });
         return new RedirectView("/");
+    }
+
+    private void userAuthenticated(final String email, final String loginEmail) {
+        if (!loginEmail.equals(email)) {
+            throw new UserForbiddenException("인증 되지 않은 사용자입니다.");
+        }
     }
 
     @ExceptionHandler({UserNotFoundException.class, UserForbiddenException.class})
