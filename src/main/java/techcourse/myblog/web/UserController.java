@@ -20,6 +20,9 @@ import java.util.List;
 
 @Controller
 public class UserController {
+    private static final String USER_INFO = "user";
+    private static final String USERS_INFO = "users";
+
     private UserService userService;
 
     public UserController(UserService userService) {
@@ -28,7 +31,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String createLoginForm(HttpServletRequest request) {
-        if (request.getSession().getAttribute("user") == null) {
+        if (request.getSession().getAttribute(USER_INFO) == null) {
             return "login";
         }
         return "redirect:/";
@@ -45,7 +48,7 @@ public class UserController {
             throw new SignUpException("email 중복");
         }
         User user = userService.saveUser(userRequest);
-        httpSession.setAttribute("user", user);
+        httpSession.setAttribute(USER_INFO, user);
 
         return "redirect:/login";
     }
@@ -56,14 +59,14 @@ public class UserController {
         for (User user : userService.findAll()) {
             users.add(new UserResponse(user.getName(), user.getEmail()));
         }
-        model.addAttribute("users", users);
+        model.addAttribute(USERS_INFO, users);
 
         return "user-list";
     }
 
     @GetMapping("/mypage")
     public String myPageForm(Model model, HttpServletRequest request) {
-        model.addAttribute("user", request.getSession().getAttribute("user"));
+        model.addAttribute(USER_INFO, request.getSession().getAttribute(USER_INFO));
 
         return "mypage";
     }
@@ -81,14 +84,14 @@ public class UserController {
             throw new LoginException("비밀번호 틀림");
         }
 
-        request.getSession().setAttribute("user", user);
+        request.getSession().setAttribute(USER_INFO, user);
 
         return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
-        request.getSession().removeAttribute("user");
+        request.getSession().removeAttribute(USER_INFO);
 
         return "redirect:/";
     }
@@ -97,7 +100,7 @@ public class UserController {
     public String editUser(@PathVariable("userId") Long userId, HttpServletRequest request) {
         String name = request.getParameter("name");
         User user = userService.editUserName(userId, name);
-        request.getSession().setAttribute("user", user);
+        request.getSession().setAttribute(USER_INFO, user);
 
         return "redirect:/";
     }
@@ -105,7 +108,7 @@ public class UserController {
     @DeleteMapping("/users/{userId}")
     public String deleteUser(@PathVariable("userId") Long userId, HttpServletRequest request) {
         userService.deleteById(userId);
-        request.getSession().removeAttribute("user");
+        request.getSession().removeAttribute(USER_INFO);
 
         return "redirect:/";
     }

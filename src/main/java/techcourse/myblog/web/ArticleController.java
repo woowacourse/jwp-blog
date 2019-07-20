@@ -13,6 +13,9 @@ import java.util.List;
 
 @Controller
 public class ArticleController {
+    private static final String ARTICLE_INFO = "article";
+    private static final String ARTICLES_INFO = "articles";
+
     private ArticleService articleService;
 
     public ArticleController(ArticleService articleService) {
@@ -23,14 +26,14 @@ public class ArticleController {
     public String index(Model model) {
         List<Article> articles = new ArrayList<>();
         articleService.findAll().forEach(articles::add);
-        model.addAttribute("articles", articles);
+        model.addAttribute(ARTICLES_INFO, articles);
 
         return "index";
     }
 
     @GetMapping("/writing")
     public String formArticle(Model model) {
-        model.addAttribute("article", null);
+        model.addAttribute(ARTICLE_INFO, null);
 
         return "article-edit";
     }
@@ -38,7 +41,7 @@ public class ArticleController {
     @PostMapping("/articles")
     public String saveArticle(@Valid ArticleRequest articleRequest, Model model) {
         Article article = articleService.post(articleRequest);
-        model.addAttribute("article", article);
+        model.addAttribute(ARTICLE_INFO, article);
 
         return "redirect:/articles/" + article.getId();
     }
@@ -46,7 +49,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}")
     public String selectArticle(@PathVariable("articleId") long articleId, Model model) {
         Article article = articleService.findById(articleId);
-        model.addAttribute("article", article);
+        model.addAttribute(ARTICLE_INFO, article);
 
         return "article";
     }
@@ -54,7 +57,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}/edit")
     public String edit(@PathVariable("articleId") long articleId, Model model) {
         Article article = articleService.findById(articleId);
-        model.addAttribute("article", article);
+        model.addAttribute(ARTICLE_INFO, article);
 
         return "article-edit";
     }
@@ -62,7 +65,7 @@ public class ArticleController {
     @PutMapping("/articles/{articleId}")
     public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleRequest articleRequest, Model model) {
         Article article = articleService.editArticle(articleRequest, articleId);
-        model.addAttribute("article", article);
+        model.addAttribute(ARTICLE_INFO, article);
 
         return "article";
     }
