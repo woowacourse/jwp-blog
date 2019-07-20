@@ -1,8 +1,8 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import techcourse.myblog.UserGroups;
+import techcourse.myblog.support.validation.UserGroups;
 import techcourse.myblog.domain.User;
 
 import javax.validation.constraints.Email;

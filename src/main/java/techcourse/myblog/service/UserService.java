@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.service.dto.UserDto;
 
 import java.util.List;
 import java.util.Optional;

@@ -8,9 +8,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import techcourse.myblog.UserGroups;
+import techcourse.myblog.support.validation.UserGroups;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.DuplicateEmailException;
 import techcourse.myblog.service.UserService;
 

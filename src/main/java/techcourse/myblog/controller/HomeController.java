@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.service.dto.UserDto;
 
 @Controller
 public class HomeController {

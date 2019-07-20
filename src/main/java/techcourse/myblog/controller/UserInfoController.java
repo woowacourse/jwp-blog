@@ -10,15 +10,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.UserGroups;
+import techcourse.myblog.support.validation.UserGroups;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/mypage")
