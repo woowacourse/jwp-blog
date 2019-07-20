@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.service.exception;
 
 public class UnequalPasswordException extends IllegalArgumentException {
     public UnequalPasswordException() {

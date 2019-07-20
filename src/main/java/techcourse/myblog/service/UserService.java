@@ -1,11 +1,14 @@
-package techcourse.myblog.web;
+package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.web.dto.UserDto;
+import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.exception.DuplicateEmailException;
+import techcourse.myblog.service.exception.InvalidDataFormException;
+import techcourse.myblog.service.exception.UnequalPasswordException;
 
 @Service
 public class UserService {
@@ -17,9 +20,9 @@ public class UserService {
 
     public void save(UserDto userDto, BindingResult bindingResult) {
         checkUserDataForm(bindingResult);
-        checkSamePasswords(userDto);
-        checkDuplicateEmail(userDto);
-        User user = User.of(userDto.getName(), userDto.getEmail(), userDto.getPassword());
+        checkEqualPassword(userDto);
+        checkDuplicateEmail(userDto.getEmail());
+        User user = User.of(userDto);
         userRepository.save(user);
     }
 
@@ -27,18 +30,18 @@ public class UserService {
         if (bindingResult.hasErrors()) {
             FieldError error = bindingResult.getFieldError();
             String errorMessage = error.getDefaultMessage();
-            throw new InvalidDataFormException("test error : " + errorMessage);
+            throw new InvalidDataFormException(errorMessage);
         }
     }
 
-    private void checkSamePasswords(UserDto userDto) {
+    private void checkEqualPassword(UserDto userDto) {
         if (!userDto.getPassword().equals(userDto.getPasswordConfirm())) {
             throw new UnequalPasswordException();
         }
     }
 
-    private void checkDuplicateEmail(UserDto userData) {
-        if (userRepository.findByEmail(userData.getEmail()).isPresent()) {
+    private void checkDuplicateEmail(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new DuplicateEmailException();
         }
     }

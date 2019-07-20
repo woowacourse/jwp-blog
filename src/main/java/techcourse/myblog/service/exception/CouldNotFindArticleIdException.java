@@ -1,4 +1,4 @@
-package techcourse.myblog.domain.validator;
+package techcourse.myblog.service.exception;
 
 public class CouldNotFindArticleIdException extends IllegalArgumentException {
     public CouldNotFindArticleIdException() {
