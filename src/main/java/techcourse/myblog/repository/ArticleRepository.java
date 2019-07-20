@@ -1,4 +1,4 @@
-package techcourse.myblog.model;
+package techcourse.myblog.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

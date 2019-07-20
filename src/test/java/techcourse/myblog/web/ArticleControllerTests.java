@@ -12,30 +12,30 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.model.ArticleRepository;
+import techcourse.myblog.repository.ArticleRepository;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.http.HttpMethod.*;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @ExtendWith(SpringExtension.class)
-public class ArticleControllerTests extends WebClientGenerator {
+public class ArticleControllerTests extends ControllerTestTemplate {
     @Autowired
     private ArticleRepository articleRepository;
 
     private ArticleDto articleDto = new ArticleDto("title", "coverUrl", "contents");
-    private Article saved;
+    private Article savedArticle;
 
     @BeforeEach
     void setup() {
-        if (saved == null) {
-            saved = articleRepository.save(articleDto.toArticle());
-        }
+        savedArticle = articleRepository.save(articleDto.toArticle());
     }
 
     @Test
     void articleForm() {
-        requestAndExpectStatus(GET, "/articles/writing", new LinkedMultiValueMap<>(), OK);
+        requestExpect(GET, "/articles/writing").isOk();
     }
 
     @Test
@@ -46,37 +46,39 @@ public class ArticleControllerTests extends WebClientGenerator {
         Article article = new Article(titleKo, coverUrlKo, contentsKo);
         Article articleApplyEscape = new Article(titleKo, coverUrlKo, StringEscapeUtils.escapeJava(contentsKo));
 
-        requestAndExpectStatus(POST, "/articles/write", parser(article), FOUND)
+        requestExpect(POST, "/articles/write", parser(article))
+                .isFound()
                 .expectBody()
                 .consumeWith(response ->
                         bodyCheck(
-                                requestAndExpectStatus(GET, getRedirectedUri(response), OK),
+                                requestExpect(GET, getRedirectedUri(response)).isOk(),
                                 articleApplyEscape));
     }
 
     @Test
     void create_article_en() {
-        requestAndExpectStatus(POST, "/articles/write", parser(articleDto.toArticle()), FOUND)
+        requestExpect(POST, "/articles/write", parser(articleDto.toArticle()))
+                .isFound()
                 .expectBody()
                 .consumeWith(response ->
-                        bodyCheck(requestAndExpectStatus(GET, getRedirectedUri(response), OK), articleDto.toArticle()));
+                        bodyCheck(requestExpect(GET, getRedirectedUri(response)).isOk(), articleDto.toArticle()));
     }
 
     @Test
     void 게시글_페이지_정상_조회() {
         bodyCheck(
-                requestAndExpectStatus(GET, "/articles/" + saved.getId(), new LinkedMultiValueMap<>(), OK), saved
+                requestExpect(GET, "/articles/" + savedArticle.getId()).isOk(), savedArticle
         );
     }
 
     @Test
     void 존재하지_않는_게시글_조회_에러() {
-        requestAndExpectStatus(GET, "/articles/0", INTERNAL_SERVER_ERROR);
+        requestExpect(GET, "/articles/0").isEqualTo(INTERNAL_SERVER_ERROR);
     }
 
     @Test
     void 게시글_수정페이지_이동() {
-        requestAndExpectStatus(GET, "/articles/" + saved.getId(), OK);
+        requestExpect(GET, "/articles/" + savedArticle.getId()).isOk();
     }
 
     @Test
@@ -84,17 +86,16 @@ public class ArticleControllerTests extends WebClientGenerator {
         Article article = articleRepository.save(articleDto.toArticle());
         Article editedArticle = new Article("new title", "new url", "new contents");
 
-        requestAndExpectStatus(PUT, "/articles/" + article.getId(), parser(editedArticle), FOUND)
+        requestExpect(PUT, "/articles/" + article.getId(), parser(editedArticle))
+                .isFound()
                 .expectBody()
                 .consumeWith(response ->
-                        bodyCheck(requestAndExpectStatus(GET, getRedirectedUri(response), OK), editedArticle));
+                        bodyCheck(requestExpect(GET, getRedirectedUri(response)).isOk(), editedArticle));
     }
 
     @Test
     void 게시글_삭제() {
-        Article article = articleRepository.save(articleDto.toArticle());
-
-        requestAndExpectStatus(DELETE, "/articles/" + article.getId(), FOUND);
+        requestExpect(DELETE, "/articles/" + savedArticle.getId()).isFound();
     }
 
     private String getRedirectedUri(EntityExchangeResult<byte[]> response) {
@@ -102,14 +103,12 @@ public class ArticleControllerTests extends WebClientGenerator {
     }
 
     private void bodyCheck(WebTestClient.ResponseSpec responseSpec, Article article) {
-        responseSpec
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(article.getTitle())).isTrue();
-                    assertThat(body.contains(article.getCoverUrl())).isTrue();
-                    assertThat(body.contains(article.getContents())).isTrue();
-                });
+        List<String> contents = new ArrayList<>();
+        contents.add(article.getTitle());
+        contents.add(article.getCoverUrl());
+        contents.add(article.getContents());
+
+        super.bodyCheck(responseSpec, contents);
     }
 
     private MultiValueMap<String, String> parser(Article article) {

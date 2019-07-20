@@ -59,10 +59,10 @@
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script type="text/javascript" th:inline="javascript">
     var initValue = ""
-    /*<![CDATA[*/
-    [# th:if= "${article}"]
+        /*<![CDATA[*/
+        [# th:if= "${article}"]
     initValue =  /*[[${article.contents}]]*/
-    [/]
+        [/]
     /*]]>*/
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
