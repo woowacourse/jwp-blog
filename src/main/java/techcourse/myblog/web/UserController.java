@@ -99,11 +99,4 @@ public class UserController {
         model.addAttribute("errorMessage", e.getMessage());
         return "signup";
     }
-
-    @ExceptionHandler(FailedLoginException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleFailedLoginException(FailedLoginException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "login";
-    }
 }
