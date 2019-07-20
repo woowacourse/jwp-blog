@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (request.getRequestURI().equals("/accounts/user") && request.getMethod().equals("POST")) {
+            return true;
+        }
 
         if (request.getSession().getAttribute("user") == null) {
             response.sendRedirect("/login");

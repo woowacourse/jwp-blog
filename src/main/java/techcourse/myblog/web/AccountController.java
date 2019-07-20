@@ -31,8 +31,8 @@ public class AccountController {
         return "signup";
     }
 
-    @PostMapping("/accounts/signup")
-    public String processSignup(Model model, @Valid UserForm userForm, Errors errors) {
+    @PostMapping("/accounts/user")
+    public String processSignup(@Valid UserForm userForm, Errors errors) {
         log.debug(">>> UserForm : {} Error : {}", userForm, errors);
         if (errors.hasErrors()) {
             return "signup";
@@ -47,6 +47,21 @@ public class AccountController {
         userRepository.save(user);
 
         return "redirect:/";
+    }
+
+    @DeleteMapping("/accounts/user")
+    public String deleteUser(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        request.getSession().removeAttribute("user");
+        userRepository.delete(user);
+        return "redirect:/";
+    }
+
+    @GetMapping("/accounts/users")
+    public String showUserList(Model model) {
+        List<User> users = userRepository.findAll();
+        model.addAttribute("users", users);
+        return "user-list";
     }
 
     @GetMapping("/login")
@@ -103,20 +118,5 @@ public class AccountController {
         request.getSession().setAttribute("user", userForm.toUser());
 
         return "redirect:/accounts/profile/" + userForm.getId();
-    }
-
-    @GetMapping("/accounts/users")
-    public String showUserList(Model model) {
-        List<User> users = userRepository.findAll();
-        model.addAttribute("users", users);
-        return "user-list";
-    }
-
-    @DeleteMapping("/accounts/user")
-    public String deleteUser(HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("user");
-        request.getSession().removeAttribute("user");
-        userRepository.delete(user);
-        return "redirect:/";
     }
 }

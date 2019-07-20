@@ -370,7 +370,7 @@ public class AccountControllerTest {
 
     private WebTestClient.ResponseSpec testSignupProcess(String name, String password, String email) {
         return webTestClient.post()
-                .uri("/accounts/signup")
+                .uri("/accounts/user")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("name", name)
@@ -382,7 +382,7 @@ public class AccountControllerTest {
 
     private WebTestClient.ResponseSpec testSignupProcessWithCookie(String name, String password, String email, String cookie) {
         return webTestClient.post()
-                .uri("/accounts/signup").header("Cookie", cookie)
+                .uri("/accounts/user").header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("name", name)

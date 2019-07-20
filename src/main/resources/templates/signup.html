@@ -36,7 +36,7 @@
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
-                                                    <form method="post" action="/accounts/signup" th:object="${userForm}" id="signForm">
+                                                    <form method="post" action="/accounts/user" th:object="${userForm}" id="signForm">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
                                                             <input type="text" class="form-control" th:field="*{name}">
