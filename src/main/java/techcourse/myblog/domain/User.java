@@ -15,14 +15,15 @@ import java.util.regex.Pattern;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String name;
     @Column(unique = true)
     private String email;
     private String password;
 
     @Builder
-    public User(final String name, final String email, final String password) {
+    public User(final Long id, final String name, final String email, final String password) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;

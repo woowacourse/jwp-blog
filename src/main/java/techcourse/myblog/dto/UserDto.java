@@ -10,6 +10,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 public class UserDto {
+    private Long id;
     @Length(min = 2, max = 10)
     @Pattern(regexp = "[a-zA-Z가-힣]{2,10}")
     private String name;
