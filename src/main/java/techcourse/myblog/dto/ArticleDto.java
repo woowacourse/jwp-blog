@@ -4,6 +4,7 @@ import techcourse.myblog.domain.Article;
 
 public class ArticleDto {
     private Long id;
+    private Long userId;
     private String title;
     private String coverUrl;
     private String contents;
@@ -19,6 +20,14 @@ public class ArticleDto {
         return id;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -32,6 +41,6 @@ public class ArticleDto {
     }
 
     public Article toEntity() {
-        return new Article(title, coverUrl, contents);
+        return new Article(userId, title, coverUrl, contents);
     }
 }

@@ -22,6 +22,6 @@ public class LogInService {
         if (logInUser == null) {
             throw new LogInException(LOGIN_FAIL_MESSAGE);
         }
-        return new UserPublicInfoDto(logInUser.getName(), logInUser.getEmail());
+        return new UserPublicInfoDto(logInUser.getId(), logInUser.getName(), logInUser.getEmail());
     }
 }
