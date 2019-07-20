@@ -3,8 +3,6 @@ package techcourse.myblog.domain;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.Collection;
 
 @Entity
 @EqualsAndHashCode(of = {"id"})

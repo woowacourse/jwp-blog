@@ -40,7 +40,6 @@ public class AccountController {
 
     @PostMapping("/accounts/users")
     public String processSignup(Model model, @Valid UserForm userForm, Errors errors) {
-        log.debug(">>> UserForm : {} Error : {}", userForm, errors);
         if (errors.hasErrors()) {
             return "signup";
         }
@@ -100,7 +99,6 @@ public class AccountController {
 
     @PutMapping("/accounts/profile/edit")
     public String processUpdateProfile(Model model, @Valid UserForm userForm, Errors errors, HttpServletRequest request) {
-        log.debug(">>> put edit userForm : {}" , userForm);
         if (errors.hasErrors()) {
             return "mypage-edit";
         }

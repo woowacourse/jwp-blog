@@ -96,10 +96,13 @@
 
 - [ ] 패키지 분리
 - [ ] 컨트롤러 분리
-- [ ] 테스트코드에서 매번 setup을 통해 데이터를 생성하지 말고 data.sql 이용해 미리 데이터 생성해놓자.
-- [ ] 테스트 코드 중복 제거 
+- [ ] AccountController 테스트 코드 중복 제거 
+- [ ] AccountController 테스트 코드 @BeforeEach 사용하지 말고 생성자에서 테스트 유저 추가
+- [ ] ArticleController 테스트 코드 중복 제거
+- [ ] ArticleController 테스트 코드 @BeforeEach 사용하지 말고 생성자에서 테스트 유저 추가
+- [x] ~~컨트롤러 Exception Handler 와 404 에러 페이지 추가~~
 - [ ] url /articles를 prefix로 빼기 (/writing -> /articles/writing)
 - [x] ~~html에서 form 중복 제거하기 (article-edit.html)~~
 - [x] ~~html에서 form 중복 제거하기 (header.html)~~
-- [ ] 테스트할 땐 db가 h2로 못가나? 
-- [ ] 자기가 쓴 글만 수정할 수 있도록 하기.
+- [ ] 테스트할 때만 h2 사용하기  
+- [ ] 자기가 쓴 글만 수정할 수 있도록 하기
