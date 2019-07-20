@@ -9,10 +9,10 @@ import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.exception.NotValidUpdateUserInfoException;
 import techcourse.myblog.exception.NotValidUserInfoException;
 import techcourse.myblog.exception.UnacceptablePathException;
-import techcourse.myblog.repo.UserRepository;
+import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.service.dto.UserUpdateRequestDto;
 import techcourse.myblog.user.User;
-import techcourse.myblog.user.UserDto;
-import techcourse.myblog.user.UserUpdateRequestDto;
+import techcourse.myblog.user.UserRepository;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;

@@ -1,7 +1,6 @@
-package techcourse.myblog.repo;
+package techcourse.myblog.user;
 
 import org.springframework.data.repository.CrudRepository;
-import techcourse.myblog.user.User;
 
 import java.util.Optional;
 

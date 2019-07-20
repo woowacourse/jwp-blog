@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import techcourse.myblog.exception.NotValidUserInfoException;
+import techcourse.myblog.service.dto.UserDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

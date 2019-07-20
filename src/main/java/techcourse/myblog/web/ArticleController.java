@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleDto;
+import techcourse.myblog.article.Article;
+import techcourse.myblog.article.ArticleRepository;
 import techcourse.myblog.exception.NotFoundObjectException;
-import techcourse.myblog.repo.ArticleRepository;
+import techcourse.myblog.service.dto.ArticleDto;
 
 import javax.transaction.Transactional;
 

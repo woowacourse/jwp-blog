@@ -8,9 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleDto;
-import techcourse.myblog.repo.ArticleRepository;
+import techcourse.myblog.article.Article;
+import techcourse.myblog.article.ArticleRepository;
+import techcourse.myblog.service.dto.ArticleDto;
 
 import java.util.Objects;
 
