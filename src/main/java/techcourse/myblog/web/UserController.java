@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-public class UsersController {
+public class UserController {
 	private final UserRepository userRepository;
 
-	public UsersController(UserRepository userRepository) {
+	public UserController(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 
