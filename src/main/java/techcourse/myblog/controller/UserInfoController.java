@@ -58,7 +58,7 @@ public class UserInfoController {
     @DeleteMapping("/withdraw")
     public String myPageDelete(HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
-        userService.delete(user);
+        userService.deleteById(user.getId());
         return "redirect:/users/logout";
     }
 }
