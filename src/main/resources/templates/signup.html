@@ -9,7 +9,7 @@
         <div class="header-container pdd-right-15">
             <ul class="nav-left mrg-left-0">
                 <li>
-                    <a href="index.html">
+                    <a href="/">
                         <div class="logo logo-dark d-none"
                              style="background-image: url('/images/logo/logo_full_dark.png')"></div>
                         <div class="logo logo-white"
@@ -36,7 +36,7 @@
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
-                                                    <form method="post" action="/accounts/users" th:object="${userForm}">
+                                                    <form method="post" action="/accounts/signup" th:object="${userForm}">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
                                                             <input type="text" class="form-control" th:field="*{name}">

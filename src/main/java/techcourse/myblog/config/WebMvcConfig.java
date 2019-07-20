@@ -17,7 +17,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(new UserInterceptor())
                 .addPathPatterns("/accounts/signup")
-                .addPathPatterns("/accounts/users")
                 .addPathPatterns("/login");
     }
 }

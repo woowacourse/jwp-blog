@@ -34,7 +34,7 @@ public class AccountController {
         return "signup";
     }
 
-    @PostMapping("/accounts/users")
+    @PostMapping("/accounts/signup")
     public String processSignup(Model model, @Valid UserForm userForm, Errors errors) {
         log.debug(">>> UserForm : {} Error : {}", userForm, errors);
         if (errors.hasErrors()) {
