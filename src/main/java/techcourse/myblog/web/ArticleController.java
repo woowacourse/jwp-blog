@@ -1,8 +1,6 @@
 package techcourse.myblog.web;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +14,6 @@ import java.util.List;
 @Controller
 public class ArticleController {
     private ArticleRepository articleRepository;
-//    private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
     public ArticleController(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
