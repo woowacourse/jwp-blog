@@ -25,7 +25,7 @@
                     <div class="card">
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
-                            <a href="/mypageedit"
+                            <a th:href="@{/users/{email}(email=*{email})}"
                                class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                                 <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                             </a>
@@ -94,7 +94,8 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    <form class="col-12" action="/users" th:method="delete">
+                                    <form class="col-12" th:action="@{/users/{email}(email=*{email})}"
+                                          th:method="delete">
                                         <button class="col-12 btn btn-danger">회원 탈퇴</button>
                                     </form>
                                 </div>

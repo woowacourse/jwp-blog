@@ -9,7 +9,7 @@
             <div class="header-container pdd-right-15">
                 <ul class="nav-left mrg-left-0">
                     <li>
-                        <a href="index.html">
+                        <a href="/">
                             <div class="logo logo-dark d-none"
                                  style="background-image: url('/images/logo/logo_full_dark.png')"></div>
                             <div class="logo logo-white"
@@ -55,6 +55,9 @@
                                                             <div class="mrg-top-20 text-right">
                                                                 <button type="submit" class="btn btn-tumblr">로그인</button>
                                                             </div>
+                                                            <div class="alert alert-danger" role="alert"
+                                                                 th:if="${errorMessage} != null"
+                                                                 th:text="${errorMessage}">
                                                         </form>
                                                         <div class="alert alert-danger" role="alert" th:if="${errorMessage} != null" th:text="${errorMessage}"></div>
                                                         <div class="text-dark">

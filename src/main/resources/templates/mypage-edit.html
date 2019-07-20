@@ -22,7 +22,7 @@
             <div class="row">
                 <div class="col-md-7 mx-auto">
                     <div th:object="${user}" class="card">
-                        <form action="/mypageedit" th:method="put">
+                        <form th:action="@{/users/{email}(email=*{email})}" th:method="put">
                             <div class="card-heading pdd-btm-5 border bottom">
                                 <h4 class="card-title d-inline-block">profile</h4>
                                 <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정
@@ -43,7 +43,7 @@
                                         <p class="mrg-top-10 text-dark"><b>Email</b></p>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="email" class="mrg-top-10" name="email" th:value="*{email}" />
+                                        <p class="mrg-top-10 text-dark"><b th:text="*{email}">Email</b></p>
                                     </div>
                                 </div>
                                 <hr>
