@@ -14,7 +14,7 @@
                 </li>
             </ul>
             <ul class="nav-right">
-                <li th:replace="layout/auth :: ${ session.key != null ? 'logout' : 'login' }"></li>
+                <li th:replace="layout/auth :: ${ session.email != null ? 'logout' : 'login' }"></li>
             </ul>
         </div>
     </header>
