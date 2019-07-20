@@ -30,7 +30,6 @@ public class UserControllerTests {
 
     @Test
     void 회원가입_POST() {
-        tearDown();
         webTestClient.post()
                 .uri("/users")
                 .body(fromFormData("name", "name")
