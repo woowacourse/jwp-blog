@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,14 +31,25 @@ public class ArticleControllerTests {
         this.title = "title";
         this.coverUrl = "coverUrl";
         this.contents = "contents";
+
+        webTestClient.post()     // 이 부분 beforeach로 빼자
+                .uri("/articles")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange()
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
-    void index() {
+    void index() {// 이 부분은 다른 컨트롤러 테스트로 이동시키자
+
         webTestClient.get()
                 .uri("/")
                 .exchange()
                 .expectStatus().isOk();
+
     }
 
     @Test
@@ -50,21 +62,21 @@ public class ArticleControllerTests {
 
     @Test
     void create_article() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().is3xxRedirection();
+//        webTestClient.post()     // 이 부분 beforeach로 빼자
+//                .uri("/articles")
+//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//                .body(BodyInserters.fromFormData("title", title)
+//                        .with("coverUrl", coverUrl)
+//                        .with("contents", contents))
+//                .exchange()
+//                .expectStatus().is3xxRedirection();
 
         webTestClient.get()
                 .uri("/")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .consumeWith(response->{
+                .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
                     assertTrue(body.contains(title));
                     assertTrue(body.contains(coverUrl));
@@ -73,8 +85,6 @@ public class ArticleControllerTests {
 
     @Test
     void find_article_by_Id() {
-
-        create_article();
 
         webTestClient.get()
                 .uri("/articles/1")
@@ -91,39 +101,47 @@ public class ArticleControllerTests {
 
     @Test
     void article_edit_test() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().is3xxRedirection();
+//        webTestClient.post()
+//                .uri("/articles")
+//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//                .body(BodyInserters.fromFormData("title", title)
+//                        .with("coverUrl", coverUrl)
+//                        .with("contents", contents))
+//                .exchange()
+//                .expectStatus().is3xxRedirection();
 
-        String editedTitle="editedTitle";
-        String editedCoverUrl="editedCoverUrl";
-        String editedContents="editedContents";
+        String editedTitle = "editedTitle";
+        String editedCoverUrl = "editedCoverUrl";
+        String editedContents = "editedContents";
 
         webTestClient.put()
                 .uri("/articles/1")
-                .body(BodyInserters.fromFormData("title",editedTitle)
-                        .with("coverUrl",editedCoverUrl)
-                        .with("contents",editedContents))
+                .body(BodyInserters.fromFormData("title", editedTitle)
+                        .with("coverUrl", editedCoverUrl)
+                        .with("contents", editedContents))
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
 
     @Test
-    void delete_article(){
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().is3xxRedirection();
+    void delete_article() {
+//        webTestClient.post()
+//                .uri("/articles")
+//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//                .body(BodyInserters.fromFormData("title", title)
+//                        .with("coverUrl", coverUrl)
+//                        .with("contents", contents))
+//                .exchange()
+//                .expectStatus().is3xxRedirection();
+//
+//        webTestClient.delete()
+//                .uri("/articles/1")
+//                .exchange()
+//                .expectStatus().is3xxRedirection();
+    }
 
+    @AfterEach
+    void after() {
         webTestClient.delete()
                 .uri("/articles/1")
                 .exchange()

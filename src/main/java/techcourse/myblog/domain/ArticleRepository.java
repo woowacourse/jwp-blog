@@ -29,17 +29,7 @@ public class ArticleRepository {
         return articles.stream()
                 .filter(article -> article.getId().equals(id))
                 .findAny()
-                .get();
-    }
-
-    public boolean modify(Article editedArticle) {
-        for (int i = 0; i < this.size(); i++) {
-            if (articles.get(i).isSameId(editedArticle)) {
-                articles.set(i, editedArticle);
-                return true;
-            }
-        }
-        return false;
+                .orElseThrow(RuntimeException::new);
     }
 
     public boolean removeById(Long articleId) {
