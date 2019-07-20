@@ -33,7 +33,7 @@ public class MainController {
                        Model model) {
         log.debug("page : {}, pageSize : {}, order : {}, orderType : {}", page, pageSize, order, orderType);
 
-        final Integer currentPage = page.orElse(1);
+        final Integer currentPage = page.orElse(0);
         final Integer size = pageSize.orElse(5);
         final Sort.Direction sorting = Sort.Direction.fromString(order.orElse("DESC"));
         final String sortingType = orderType.orElse("regDate");

@@ -29,20 +29,20 @@ public class UserService {
 
     private void verifyPassword(UserDto.Register userDto) {
         if (!userDto.isValidPassword()) {
-            throw new ValidSingupException(PASSWORD_INVALID_MESSAGE, "password");
+            throw new ValidUserException(PASSWORD_INVALID_MESSAGE, "password");
         }
     }
 
     private void verifyDuplicateEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new ValidSingupException(EMAIL_DUPLICATE_MESSAGE, "email");
+            throw new ValidUserException(EMAIL_DUPLICATE_MESSAGE, "email");
         }
     }
 
     public UserDto.Response login(UserDto.Register userDto) {
         UserDto.Response userResponseDto = new UserDto.Response();
         User user = userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword())
-                .orElseThrow(() -> new ValidSingupException("존재하지 않는 이메일 또는 비밀번호가 틀립니다.", "password"));
+                .orElseThrow(() -> new ValidUserException("존재하지 않는 이메일 또는 비밀번호가 틀립니다.", "password"));
 
         BeanUtils.copyProperties(user, userResponseDto);
         return userResponseDto;

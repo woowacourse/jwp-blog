@@ -6,17 +6,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class ValidSingupException extends RuntimeException {
-    private static final Logger log = LoggerFactory.getLogger(ValidSingupException.class);
+public class ValidUserException extends RuntimeException {
+    private static final Logger log = LoggerFactory.getLogger(ValidUserException.class);
 
     private Error[] errors;
 
-    public ValidSingupException(String defaultMessage, String field) {
+    public ValidUserException(String defaultMessage, String field) {
         this.errors = new Error[]{new Error(defaultMessage, field)};
         log.debug("field : {}, message : {}", field, defaultMessage);
     }
 
-    public ValidSingupException(Error[] errors) {
+    public ValidUserException(Error[] errors) {
         this.errors = errors;
     }
 
