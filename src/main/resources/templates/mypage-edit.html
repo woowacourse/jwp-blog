@@ -33,6 +33,8 @@
                             </button>
                         </div>
                         <div class="card-block">
+                            <div th:text="${errorMessage}" class="alert alert-danger" role="alert">
+                            </div>
                             <div class="row">
                                 <div class="col-md-3">
                                     <p class="mrg-top-10 text-dark"><b>Name</b></p>
@@ -114,5 +116,12 @@
 </div>
 
 <th:block th:replace="fragments/script :: scriptFragment"></th:block>
+<script th:inline="javascript">
+    if ([[${errorMessage}]]) {
+        $('.alert').alert()
+    } else {
+        $('.alert').alert('close')
+    }
+</script>
 </body>
 </html>

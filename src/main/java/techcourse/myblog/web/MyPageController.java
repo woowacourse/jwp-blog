@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.repository.UserRepository;
@@ -32,7 +33,11 @@ public class MyPageController {
     }
 
     @GetMapping("/mypage/{id}/edit")
-    public String showMyPageEdit(@PathVariable("id") long id, Model model, HttpServletRequest httpServletRequest) {
+    public String showMyPageEdit(@PathVariable("id") long id, Model model, HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
+        String errorMessage = (String) redirectAttributes.getFlashAttributes().get("errorMessage");
+        if (errorMessage != null) {
+            model.addAttribute("errorMessage", errorMessage);
+        }
         User user = userRepository.findById(id)
                 .orElseThrow(NotFoundUserException::new);
         if (isLoggedInUserMYPage(httpServletRequest, user)) {

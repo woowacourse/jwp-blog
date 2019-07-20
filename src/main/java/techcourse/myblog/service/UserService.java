@@ -8,6 +8,7 @@ import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
+import techcourse.myblog.service.exception.UserUpdateException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -37,7 +38,6 @@ public class UserService {
     }
 
     public List<User> findAll() {
-
         return userRepository.findAll();
     }
 
@@ -104,12 +104,19 @@ public class UserService {
     }
 
     public void update(UserPublicInfoDto userPublicInfoDto) {
-        User user = userRepository.findByEmail(userPublicInfoDto.getEmail());
-        if (user == null) {
-            throw new NotFoundUserException();
+        try {
+            User user = userRepository.findByEmail(userPublicInfoDto.getEmail());
+            String name = userPublicInfoDto.getName();
+            if (user == null) {
+                throw new NotFoundUserException();
+            }
+            checkValidNameLength(name);
+            checkValidName(name);
+            user.setName(userPublicInfoDto.getName());
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new UserUpdateException();
         }
-        user.setName(userPublicInfoDto.getName());
-        userRepository.save(user);
     }
 
     @Transactional
