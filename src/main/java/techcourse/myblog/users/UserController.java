@@ -82,7 +82,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id, HttpSession session){
+    public String delete(@PathVariable Long id, HttpSession session) {
         userService.deleteById(id);
         session.removeAttribute("user");
         return "redirect:/";

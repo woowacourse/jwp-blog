@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
@@ -63,7 +62,7 @@ public class UserControllerTests {
     @Test
     @DisplayName("회원가입 유효값 입력시 성공")
     void signUpValidInput() {
-        UserDto.Register userDto = new UserDto.Register(email+"a", "name", "P@ssw0rd", "P@ssw0rd");
+        UserDto.Register userDto = new UserDto.Register(email + "a", "name", "P@ssw0rd", "P@ssw0rd");
 
         postUsers(userDto)
                 .expectStatus().isOk()
@@ -296,7 +295,7 @@ public class UserControllerTests {
     void tearDown() {
         try {
             userService.deleteById(id);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }

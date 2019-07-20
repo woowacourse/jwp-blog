@@ -17,7 +17,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         UserDto.Response userDto = (UserDto.Response) session.getAttribute("user");
         String path = request.getRequestURI();
 
-        if(!ObjectUtils.isEmpty(userDto) && !path.contains(String.valueOf(userDto.getId()))){
+        if (!ObjectUtils.isEmpty(userDto) && !path.contains(String.valueOf(userDto.getId()))) {
             response.sendRedirect("/");
             return false;
         }

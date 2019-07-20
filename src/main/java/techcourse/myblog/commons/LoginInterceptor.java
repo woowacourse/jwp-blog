@@ -45,14 +45,14 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     }
 
     private boolean isSignupForm(String path) {
-        return path.equals("/users/new");
+        return path.equals(USER_BASE_URI+"/new");
     }
 
     private boolean isSignup(String path, String method) {
-        return path.equals("/users") && method.equals("POST");
+        return path.equals(USER_BASE_URI) && method.equals("POST");
     }
 
     private boolean isLoginForm(String path) {
-        return path.equals("/users/login");
+        return path.equals(USER_BASE_URI+"/login");
     }
 }

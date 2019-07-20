@@ -24,7 +24,7 @@ class LoginInterceptorTest {
             if ("/users".equals(path) || "/users/1".equals(path) || "/users/1/edit".equals(path)) {
                 return exchange.getSession()
                         .doOnNext(webSession ->
-                                webSession.getAttributes().put("user", new UserDto.Response(1L,"asd","asd")))
+                                webSession.getAttributes().put("user", new UserDto.Response(1L, "asd", "asd")))
                         .then();
             }
             return null;
@@ -41,7 +41,7 @@ class LoginInterceptorTest {
 
     @Test
     void 로그인후_mypage_페이지_접근() {
-        webTestClient.get().uri("/users/{id}",1)
+        webTestClient.get().uri("/users/{id}", 1)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -49,7 +49,7 @@ class LoginInterceptorTest {
 
     @Test
     void 로그인후_mypage_edit_페이지_접근() {
-        webTestClient.get().uri("/users/{id}/edit",1)
+        webTestClient.get().uri("/users/{id}/edit", 1)
                 .exchange()
                 .expectStatus()
                 .isOk();

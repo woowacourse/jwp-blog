@@ -10,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import techcourse.myblog.articles.Article;
 import techcourse.myblog.articles.ArticleService;
 
@@ -23,7 +22,6 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class MainController {
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
-
 
     private final ArticleService articleService;
 
