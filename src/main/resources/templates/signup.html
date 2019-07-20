@@ -36,7 +36,7 @@
                                                     <form action="/users" method="post">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input type="text" name="name" class="form-control" required pattern="^[a-zA-Z ]*$" minlength="2" maxlength="10">
+                                                            <input type="text" name="name" class="form-control" required pattern="^[가-힣a-zA-Z]+$" minlength="2" maxlength="10">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
@@ -44,16 +44,16 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
-                                                            <input type="password" name="password" class="form-control" placeholder="Password" required pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
+                                                            <input type="password" name="password" class="form-control" placeholder="Password" required pattern="^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z[0-9]$@$!%*#?&]{8,}$">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm Password</label>
-                                                            <input type="password" name="passwordConfirm" class="form-control" placeholder="Password" required pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
+                                                            <input type="password" name="passwordConfirm" class="form-control" placeholder="Password" required pattern="^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z[0-9]$@$!%*#?&]{8,}$">
                                                         </div>
                                                         <div class="form-group">
                                                             <button type="submit" class="btn btn-info btn-block border-radius-6 font-size-16 text-white">가입하기</button>
                                                         </div>
-                                                        <div th:if="${error}" th:text="${message}" class="alert alert-danger" role="alert" ></div>
+                                                        <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger" role="alert" ></div>
                                                     </form>
                                                     <div class="text-dark">
                                                         <span>이미 회원이신가요?</span>
