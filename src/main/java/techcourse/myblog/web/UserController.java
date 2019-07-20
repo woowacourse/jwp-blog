@@ -11,6 +11,9 @@ import techcourse.myblog.service.UserService;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import static techcourse.myblog.web.ControllerUtil.isLoggedIn;
+import static techcourse.myblog.web.ControllerUtil.putLoginUser;
+
 @Controller
 public class UserController {
     private final UserService userService;
@@ -20,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model, HttpSession session) {
+    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, HttpSession session, Model model) {
         try {
             if (isLoggedIn(session)) {
                 return "redirect:/";
@@ -33,14 +36,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("/login")
-    public String loginView(HttpSession session) {
-        if (isLoggedIn(session)) {
-            return "redirect:/";
-        }
-        return "login";
-    }
-
     @GetMapping("/signup")
     public String signUpView(HttpSession session) {
         if (isLoggedIn(session)) {
@@ -50,15 +45,9 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public String userListView(Model model, HttpSession session) {
-        if (isLoggedIn(session)) {
-            model.addAttribute("logInUser", session.getAttribute("logInUser"));
-        }
+    public String userListView(HttpSession session, Model model) {
+        putLoginUser(session, model);
         model.addAttribute("userList", userService.getUserList());
         return "user-list";
-    }
-
-    private boolean isLoggedIn(HttpSession session) {
-        return session.getAttribute("user") != null;
     }
 }

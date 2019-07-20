@@ -8,6 +8,10 @@ import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.exception.CouldNotFindArticleIdException;
 
+import javax.servlet.http.HttpSession;
+
+import static techcourse.myblog.web.ControllerUtil.putLoginUser;
+
 @Controller
 public class ArticleController {
     private final ArticleService articleService;
@@ -23,7 +27,8 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/new")
-    public String editNewArticleView(Model model) {
+    public String editNewArticleView(HttpSession session, Model model) {
+        putLoginUser(session, model);
         articleService.setActionOfArticle(model,
                 "/write",
                 "post"
@@ -33,7 +38,8 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String editArticleView(@PathVariable Long articleId, Model model) {
+    public String editArticleView(@PathVariable Long articleId, HttpSession session, Model model) {
+        putLoginUser(session, model);
         Article findArticle = articleService.findArticleById(articleId);
         articleService.setActionOfArticle(model,
                 "/articles/" + articleId,
@@ -45,8 +51,9 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}")
-    public String searchArticleView(@PathVariable Long articleId, Model model) {
+    public String searchArticleView(@PathVariable Long articleId, HttpSession session, Model model) {
         try {
+            putLoginUser(session, model);
             Article findArticle = articleService.findArticleById(articleId);
             model.addAttribute("article", findArticle);
             return "article";

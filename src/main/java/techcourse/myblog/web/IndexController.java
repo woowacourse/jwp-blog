@@ -6,7 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.repository.ArticleRepository;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
+
+import static techcourse.myblog.web.ControllerUtil.putLoginUser;
 
 @Controller
 public class IndexController {
@@ -17,7 +20,8 @@ public class IndexController {
     }
 
     @GetMapping("/")
-    public String indexView(Model model) {
+    public String indexView(HttpSession session, Model model) {
+        putLoginUser(session, model);
         List<Article> articles = articleRepository.findAll();
 
         model.addAttribute("articles", articles);
