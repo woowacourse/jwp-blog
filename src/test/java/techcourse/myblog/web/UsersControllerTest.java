@@ -27,15 +27,6 @@ class UsersControllerTest {
 	}
 
 	@Test
-	void login() {
-		webTestClient.get()
-				.uri("/login")
-				.exchange()
-				.expectStatus()
-				.isOk();
-	}
-
-	@Test
 	void joinSuccess() {
 		webTestClient.post()
 				.uri("/users")
