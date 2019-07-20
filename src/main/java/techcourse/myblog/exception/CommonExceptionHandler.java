@@ -13,8 +13,17 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(NotFoundObjectException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleNotFoundObjectException(NotFoundObjectException e) {
+    public String handleNotFoundException(NotFoundObjectException e) {
         log.error(e.getMessage());
         return "redirect:/";
     }
+
+
+    @ExceptionHandler(UnacceptablePathException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleUnacceptablePathException(UnacceptablePathException e) {
+        log.error(e.getMessage());
+        return "redirect:/login";
+    }
+
 }

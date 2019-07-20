@@ -34,7 +34,7 @@ public class LoginController {
     @PostMapping("/login/check")
     public String login(AuthenticationDto authenticationDto, HttpSession httpSession) {
         User user = userRepository.findByEmail(authenticationDto.getEmail())
-                .orElseThrow(() -> LoginException.notFoundEmail());
+                .orElseThrow(LoginException::notFoundEmail);
         if (!user.matchPassword(authenticationDto.getPassword())) {
             throw LoginException.notMatchPassword();
         }

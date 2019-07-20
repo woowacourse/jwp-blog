@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserDto;
@@ -13,6 +14,7 @@ import techcourse.myblog.domain.UserUpdateRequestDto;
 import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.exception.NotValidUpdateUserInfoException;
 import techcourse.myblog.exception.NotValidUserInfoException;
+import techcourse.myblog.exception.UnacceptablePathException;
 import techcourse.myblog.repo.UserRepository;
 
 import javax.servlet.http.HttpSession;
@@ -59,7 +61,7 @@ public class UserController {
     @GetMapping("/mypage")
     public String showMyPage(HttpSession httpSession) {
         if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
+            throw new UnacceptablePathException();
         }
         return "mypage";
     }
@@ -67,7 +69,7 @@ public class UserController {
     @GetMapping("/mypage/edit")
     public String showEditPage(HttpSession httpSession) {
         if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
+            throw new UnacceptablePathException();
         }
         return "mypage-edit";
     }
@@ -77,7 +79,8 @@ public class UserController {
     public String editUserInfo(@Valid UserUpdateRequestDto userUpdateRequestDto,
                                BindingResult bindingResult, HttpSession httpSession) throws NotValidUpdateUserInfoException {
         if (bindingResult.hasErrors()) {
-            throw new NotValidUpdateUserInfoException(bindingResult.getFieldError());
+            FieldError fieldError = bindingResult.getFieldError();
+            throw new NotValidUpdateUserInfoException(fieldError.getDefaultMessage());
         }
         String email = ((User) httpSession.getAttribute("user")).getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(NotFoundObjectException::new);
@@ -106,7 +109,7 @@ public class UserController {
 
     @ExceptionHandler(NotValidUpdateUserInfoException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleaaa(NotValidUpdateUserInfoException e, Model model) {
+    public String handleUpdateUserException(NotValidUpdateUserInfoException e, Model model) {
         log.error(e.getMessage());
         model.addAttribute("error", e.getMessage());
         return "mypage";

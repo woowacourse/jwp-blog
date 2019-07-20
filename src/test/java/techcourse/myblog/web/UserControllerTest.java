@@ -116,15 +116,6 @@ public class UserControllerTest {
         });
     }
 
-    //TODO 세션문제
-    @Test
-    void 유저정보_수정_페이지() {
-        webTestClient.get().uri("/users/mypage/edit")
-                .exchange()
-                .expectStatus()
-                .isOk();
-    }
-
     void create_user(String userName, String email, String password) {
         webTestClient.post().uri("/users/new")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
