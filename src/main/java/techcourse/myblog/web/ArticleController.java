@@ -4,54 +4,51 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.validator.CouldNotFindArticleIdException;
-import techcourse.myblog.web.dto.ArticleDto;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.exception.CouldNotFindArticleIdException;
 
 @Controller
 public class ArticleController {
-    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
 
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
+
+    @PostMapping("/write")
+    public String createArticle(ArticleDto articleDto) {
+        Article article = articleService.save(articleDto);
+        return "redirect:/articles/" + article.getArticleId();
     }
 
     @GetMapping("/articles/new")
-    public String articleCreationPage(Model model) {
-        String actionRoute = "/write";
-        String formMethod = "post";
+    public String editNewArticleView(Model model) {
+        articleService.setActionOfArticle(model,
+                "/write",
+                "post"
+        );
 
-        model.addAttribute("actionRoute", actionRoute);
-        model.addAttribute("formMethod", formMethod);
         return "article-edit";
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String articleEditPage(@PathVariable Long articleId, Model model) {
-        Article article = articleRepository
-                .findById(articleId)
-                .orElseThrow(CouldNotFindArticleIdException::new);
-        String actionRoute = "/articles/" + articleId;
-        String formMethod = "put";
+    public String editArticleView(@PathVariable Long articleId, Model model) {
+        Article findArticle = articleService.findArticleById(articleId);
+        articleService.setActionOfArticle(model,
+                "/articles/" + articleId,
+                "put"
+        );
 
-        model.addAttribute("actionRoute", actionRoute);
-        model.addAttribute("formMethod", formMethod);
-        model.addAttribute("article", article);
+        model.addAttribute("article", findArticle);
         return "article-edit";
     }
 
-    @PostMapping("/write")
-    public String createNewArticle(ArticleDto articleDto) {
-        Article article = articleRepository.save(new Article(articleDto));
-        return "redirect:/articles/" + article.getArticleId();
-    }
-
     @GetMapping("/articles/{articleId}")
-    public String searchArticle(@PathVariable Long articleId, Model model) {
+    public String searchArticleView(@PathVariable Long articleId, Model model) {
         try {
-            Article article = articleRepository.findById(articleId)
-                    .orElseThrow(CouldNotFindArticleIdException::new);
-            model.addAttribute("article", article);
+            Article findArticle = articleService.findArticleById(articleId);
+            model.addAttribute("article", findArticle);
             return "article";
         } catch (CouldNotFindArticleIdException e) {
             return "redirect:/";
@@ -59,17 +56,15 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable Long articleId, ArticleDto articleDto) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(CouldNotFindArticleIdException::new);
-        article.updateArticle(articleDto);
-        articleRepository.save(article);
+    public String updateArticle(@PathVariable Long articleId, ArticleDto articleDto) {
+        articleService.update(articleId, articleDto);
+
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable Long articleId) {
-        articleRepository.deleteById(articleId);
+        articleService.deleteById(articleId);
 
         return "redirect:/";
     }

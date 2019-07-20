@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class IndexController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String indexView(Model model) {
         List<Article> articles = articleRepository.findAll();
 
         model.addAttribute("articles", articles);
