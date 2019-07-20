@@ -15,8 +15,8 @@
         </div>
     </div>
 <form th:method="put" action="/accounts/profile/edit" th:object="${userForm}" accept-charset="utf-8">
-    <input type="hidden" th:value="${session.user.getPassword()}" th:field="*{password}" name="password" >
-    <input type="hidden" th:value="${session.user.getId()}" th:field="*{id}" name="id" >
+    <input type="hidden" th:field="*{password}">
+    <input type="hidden" th:field="*{id}">
     <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
         <div class="row">
             <div class="col-md-7 mx-auto">
@@ -31,7 +31,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" th:value="${session.user.getName()}" th:field="*{name}" name="name">
+                                <input type="text" class="form-control" th:field="*{name}">
                                 <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red"></span>
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10" th:text="${session.user.getEmail()}" th:field="*{email}" name="email">gracefulBrown@woowahan.com</p>
+                                <input type="email" class="form-control" th:field="*{email}" readonly>
                             </div>
                         </div>
                         <hr>
@@ -77,7 +77,6 @@
                                         <span class="font-size-14 mrg-left-10 text-dark text-bold">Github</span>
                                     </div>
                                     <div class="col-md-8 text-right">
-<!--                                        <input type="text" class="form-control" value="https://www.github.com/profile">-->
                                         <p class="form-control">"https://www.github.com/profile"</p>
                                     </div>
                                 </div>

@@ -96,13 +96,13 @@ public class AccountController {
     }
 
     @GetMapping("/accounts/profile/edit")
-    public String showProfileEditPage(Model model) {
-        model.addAttribute("userForm", new UserForm());
+    public String showProfileEditPage(Model model, HttpSession session) {
+        model.addAttribute("userForm", new UserForm((User) session.getAttribute("user")));
         return "mypage-edit";
     }
 
     @PutMapping("/accounts/profile/edit")
-    public String processUpdateProfile(Model model, @Valid UserForm userForm, HttpServletRequest request, Errors errors) {
+    public String processUpdateProfile(Model model, @Valid UserForm userForm, Errors errors, HttpServletRequest request) {
         log.debug(">>> put edit userForm : {}" , userForm);
         if (errors.hasErrors()) {
             return "mypage-edit";
@@ -113,7 +113,7 @@ public class AccountController {
         return "redirect:/accounts/profile/" + userForm.getId();
     }
 
-    @GetMapping("/accounts/user-list")
+    @GetMapping("/users")
     public String showUserList(Model model) {
         List<User> userList = userRepository.findAll();
         model.addAttribute("userList", userList);

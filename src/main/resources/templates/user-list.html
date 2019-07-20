@@ -20,22 +20,25 @@
                     <div class="card-heading border bottom">
                         <h4 class="card-title">User List</h4>
                     </div>
-                    <div class="card-body">
-                        <ul class="list-unstyled list-info">
-                            <li>
-                                <div class="pdd-vertical-10">
-                                    <img class="thumb-img img-circle"
-                                         src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
-                                    <div class="info">
-                                        <a href=""
-                                           class="title no-pdd-vertical text-semibold inline-block lh-1">Brown</a>
-                                        <span class="sub-title">
-                                            <span>gracefulBrown@woowahan.com</span>
-                                        </span>
+
+                    <div th:each="user : ${userList}">
+                        <div class="card-body">
+                            <ul class="list-unstyled list-info">
+                                <li>
+                                    <div class="pdd-vertical-10">
+                                        <img class="thumb-img img-circle"
+                                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
+                                        <div class="info">
+                                            <a th:text="${user.getName()}"  th:href="${'/accounts/profile/' + user.getId()}"
+                                               class="title no-pdd-vertical text-semibold inline-block lh-1">Brown</a>
+                                            <span class="sub-title">
+                                                <span th:text="${user.getEmail()}">gracefulBrown@woowahan.com</span>
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                        </ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -42,12 +42,12 @@
 - [x] ~~이름에 숫자 or 특수문자 있으면 안됨~~
 - [x] ~~비밀번호 8자 이상 + 소문자+대문자+숫자+특수문자 조합~~
 - [x] ~~회원 등록 실패시 errorMessage를 model에 담아 보내기~~
-- [ ] Error에 field 추가
+- [x] ~~Error에 field 추가~~
 
 (회원 조회)
-
-- [ ] GET /users 요청해 회원목록페이지(user-list.html) 이동
-- [ ] DB에 있는 전체 회원 정보 노출
+- [x] ~~버튼 추가~~
+- [x] ~~GET /users 요청해 회원목록페이지(user-list.html) 이동~~
+- [x] ~~DB에 있는 전체 회원 정보 노출~~
 
 (로그인 성공 시)
 
@@ -79,21 +79,17 @@
 - [x] ~~본인 프로필계정이 아니면 수정 버튼 노출 안되게 변경~~
 - [x] ~~수정버튼 클릭시 mypage-edit.html로 이동~~
 
-- [ ] 회원정보 수정시 본인 여부 판단해 본인일 경우만 mypage-edit.html로 이동(GET /accounts/profile/edit)
-- [ ] 본인이 아닌 경우엔 / 로 리다이렉트
-- [ ] 마이페이지(프로필)에서 본인일 경우에만 수정버튼이 나오게
-- [ ] /account/profile/edit/... 은 로그인 필수. 로그인 안한 상태면 로그인창으로 이동
+- [x] ~~로그인 한 경우만 mypage-edit.html로 이동(GET /accounts/profile/edit)~~
+- [ ] 로그인 안한 상태면 로그인창으로 이동
+- [x] ~~마이페이지(프로필)에서 본인일 경우에만 수정버튼이 나오게~~
 - [ ] 로그인 하면 원래 가려던 페이지로 이동
-- [ ] mypage-edit.html에서 PUT으로 수정 요청
+- [x] ~~mypage-edit.html에서 PUT으로 수정 요청~~
 - [x] ~~mypage-edit.html에 input태그 변경~~
-- [ ] 
-- [ ] mypage-edit.html에 form태그 추가
-- [ ] 이미지....이미지......
+- [x] ~~mypage-edit.html에 form태그 추가~~
 
 (회원 탈퇴)
 
 - [ ] MyPage > profile 하단 > 탈퇴 버튼을 추가
-- [ ] 탈퇴버튼 클릭시 ????.html 로 이동
 - [ ] DELETE로 탈퇴 요청
 
 (추가)
