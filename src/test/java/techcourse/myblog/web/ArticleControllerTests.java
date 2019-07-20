@@ -58,10 +58,17 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void showCreatePage() {
+    void showCreatePageWhenUserLogIn() {
         webTestClient.get().uri("/articles/new")
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void showCreatePageWhenUserLogOut() {
+        webTestClient.get().uri("/articles/new")
+                .exchange()
+                .expectStatus().isFound();
     }
 
     @Test

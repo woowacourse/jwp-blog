@@ -7,8 +7,13 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class ArticleController {
+    private static final String LOGGED_IN_USER = "loggedInUser";
+
     private ArticleRepository articleRepository;
 
     public ArticleController(final ArticleRepository articleRepository) {
@@ -22,7 +27,11 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/new")
-    public String showCreatePage() {
+    public String showCreatePage(HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        if (httpSession.getAttribute(LOGGED_IN_USER) == null) {
+            return "redirect:/login";
+        }
         return "article-edit";
     }
 
