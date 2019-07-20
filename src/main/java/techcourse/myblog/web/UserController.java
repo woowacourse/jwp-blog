@@ -3,14 +3,12 @@ package techcourse.myblog.web;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.exception.InvalidEditFormException;
+import techcourse.myblog.exception.InvalidSignUpFormException;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,10 +32,10 @@ public class UserController {
 
     @PostMapping("/users")
     public RedirectView createUser(
-            @Valid UserDto.Create userDto, BindingResult bindingResult) throws BindException {
+            @Valid UserDto.Create userDto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            throw new BindException(bindingResult);
+            throw new InvalidSignUpFormException(bindingResult.getFieldError().getDefaultMessage());
         }
 
         userService.save(userDto);
@@ -74,17 +72,31 @@ public class UserController {
     }
 
     @PutMapping("/users/{userId}")
-    public RedirectView updateUsers(
-                        @PathVariable long userId,
-                        HttpServletRequest request,
-                        @Valid UserDto.Update userDto,
-                        BindingResult result) throws BindException {
+    public RedirectView updateUser(@PathVariable long userId, HttpServletRequest request,
+                                   @Valid UserDto.Update userDto, BindingResult result) {
         if (result.hasErrors()) {
-            throw new BindException(result);
+            request.setAttribute("user", userService.findById(userId));
+            throw new InvalidEditFormException(result.getFieldError().getDefaultMessage());
         }
         UserDto.Response updatedUser = userService.update(userId, userDto);
         HttpSession session = request.getSession(false);
         session.setAttribute("user", updatedUser);
         return new RedirectView("/mypage/" + userId);
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public RedirectView deleteUser(@PathVariable long userId, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return new RedirectView("/login");
+        }
+        UserDto.Response user = userService.findById(userId);
+        UserDto.Response sessionUser = (UserDto.Response) session.getAttribute("user");
+        if (!sessionUser.getEmail().equals(user.getEmail())) {
+            return new RedirectView("/");
+        }
+        userService.deleteById(userId);
+        session.invalidate();
+        return new RedirectView("/");
     }
 }

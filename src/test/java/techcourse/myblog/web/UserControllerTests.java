@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,10 +12,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+@Slf4j
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
     private String cookie;
+    private static int userId = 1;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -28,6 +32,8 @@ public class UserControllerTests {
                         .with("name", "name"))
                 .exchange();
 
+        log.info("cookie : {}", cookie);
+
         cookie = webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -35,6 +41,8 @@ public class UserControllerTests {
                         .with("password", "password1234!"))
                 .exchange()
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+
+        log.info("cookie : {}", cookie);
     }
 
     @Test
@@ -42,19 +50,6 @@ public class UserControllerTests {
         webTestClient.get().uri("/signup")
                 .exchange()
                 .expectStatus().isOk();
-    }
-
-    @Test
-    void 회원가입_요청_성공_테스트() {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "newEmail@gmail.com")
-                        .with("password", "newPassword1234!")
-                        .with("name", "newName"))
-                .exchange()
-                .expectStatus().isFound()
-                .expectHeader().valueMatches("location", "(.)*(/login)(.)*");
     }
 
     @Test
@@ -116,29 +111,22 @@ public class UserControllerTests {
     @Test
     void 회원_정보_전체_조회_테스트() {
         webTestClient.get().uri("/users")
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void MyPage_이동_성공_테스트() {
-        webTestClient.get().uri("/mypage/1")
+    void MyPage_이동_테스트() {
+        webTestClient.get().uri("/mypage/" + userId)
                 .header("Cookie", cookie)
                 .exchange()
-                .expectStatus()
-                .isOk();
-    }
-
-    @Test
-    void MyPage_이동_실패_테스트() {
-        webTestClient.get().uri("/mypage")
-                .exchange()
-                .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*(/login)");
+                .expectStatus().isOk();
     }
 
     @Test
     void EditMyPage_이동_성공_테스트() {
-        webTestClient.get().uri("/mypage/1/edit")
+        webTestClient.get().uri("/mypage/" + userId + "/edit")
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk();
@@ -146,7 +134,7 @@ public class UserControllerTests {
 
     @Test
     void 회원_정보_수정_성공_테스트() {
-        webTestClient.put().uri("/users/1")
+        webTestClient.put().uri("/users/" + userId)
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -157,12 +145,20 @@ public class UserControllerTests {
 
     @Test
     void 회원_정보_수정_실패_테스트() {
-        webTestClient.put().uri("/users/1")
+        webTestClient.put().uri("/users/" + userId)
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("name", ""))
                 .exchange()
                 .expectStatus().isBadRequest();
+    }
+
+    @AfterEach
+    void 회원_탈퇴_성공_테스트() {
+        webTestClient.delete().uri("/users/" + userId++)
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus().isFound();
     }
 }

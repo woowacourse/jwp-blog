@@ -54,4 +54,8 @@ public class UserService {
         User updatedUser = userDto.toUser(userId, user.getEmail(), user.getPassword());
         return modelMapper.map(userRepository.save(updatedUser), UserDto.Response.class);
     }
+
+    public void deleteById(long userId) {
+        userRepository.deleteById(userId);
+    }
 }

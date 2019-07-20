@@ -94,6 +94,13 @@
                                         </div>
                                     </div>
                                     <hr>
+                                    <div>
+                                        <form th:method="delete" th:action="@{/users/{userId}/(userId = ${user.id})}">
+                                            <button type="submit">
+                                                <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -102,5 +109,11 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" th:inline="javascript">
+        const errorMessage = [[${errorMessage}]];
+        if (errorMessage !== null) {
+            alert(errorMessage);
+        }
+    </script>
 </th:block>
 </html>
