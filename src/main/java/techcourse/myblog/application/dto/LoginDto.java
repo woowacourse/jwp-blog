@@ -13,6 +13,15 @@ public class LoginDto {
     @Pattern(regexp = "^([a-zA-Z0-9!@#$%^&*]{8,})$", message = "8자리 이상의 글자, 숫자, 특수문자를 입력해야합니다.")
     private String password;
 
+    public LoginDto(String email, String password){
+        this.email = email;
+        this.password = password;
+    }
+
+    public static LoginDto of(UserDto userDto){
+        return new LoginDto(userDto.getEmail(), userDto.getPassword());
+    }
+
     public String getEmail() {
         return email;
     }

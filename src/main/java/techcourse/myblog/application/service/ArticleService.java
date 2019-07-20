@@ -37,7 +37,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public void deleteById(Long articleId) {
+    public void removeById(Long articleId) {
         articleRepository.deleteById(articleId);
     }
 

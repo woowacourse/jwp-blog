@@ -28,7 +28,7 @@ public class UserService {
     public String save(UserDto userDto) {
         User user = new User(userDto.getEmail(), userDto.getName(), userDto.getPassword());
 
-        if(userRepository.findById(userDto.getEmail()).isPresent()){
+        if (userRepository.findById(userDto.getEmail()).isPresent()) {
             throw new DuplicatedIdException("이미 사용중인 이메일입니다.");
         }
         return userRepository.save(user).getEmail();
@@ -54,7 +54,7 @@ public class UserService {
         String requestPassword = loginDto.getPassword();
         String expectedPassword = findById(loginDto.getEmail()).getPassword();
 
-        if(!requestPassword.equals(expectedPassword)){
+        if (!requestPassword.equals(expectedPassword)) {
             throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
         }
     }
@@ -68,7 +68,7 @@ public class UserService {
     }
 
     @Transactional
-    public void remove(String email) {
+    public void removeById(String email) {
         userRepository.deleteById(email);
     }
 }

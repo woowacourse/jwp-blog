@@ -100,7 +100,7 @@ public class UserController {
         String email = (String) httpSession.getAttribute("email");
 
         if (user.getEmail().equals(email)) {
-            userService.remove(email);
+            userService.removeById(email);
             httpSession.invalidate();
         }
 
