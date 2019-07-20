@@ -36,7 +36,7 @@ public class LoginController {
             return "redirect:/";
         } catch (UserNotExistException | LoginFailException e) {
             redirectAttributes.addAttribute("loginError", e.getMessage());
-            return "redirect:/users/login";
+            return "redirect:/login";
         }
     }
 }

@@ -23,6 +23,7 @@ class UserControllerTest {
     private static final String USER_NAME_1 = "test1";
     private static final String USER_NAME_2 = "test2";
     private static final String EMAIL_1 = "test1@test.com";
+    private static final String EMAIL_2 = "test2@test.com";
     private static final String PASSWORD_1 = "1234";
     private static final String PASSWORD_2 = "12345";
 
@@ -47,6 +48,16 @@ class UserControllerTest {
                         .with("password", PASSWORD_1))
                 .exchange()
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+    }
+
+    @Test
+    void users_url로_post_request_보낼_시_응답_코드_302_확인() {
+        webTestClient.post().uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("userName", USER_NAME_2)
+                        .with("email", EMAIL_2)
+                        .with("password", PASSWORD_2))
+                .exchange().expectStatus().isFound();
     }
 
     @Test

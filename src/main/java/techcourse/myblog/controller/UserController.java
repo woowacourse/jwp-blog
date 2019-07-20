@@ -23,7 +23,6 @@ public class UserController {
     @Autowired
     UserService userService;
 
-
     @GetMapping("/signup")
     public String createForm(String signUpStatus, Model model) {
         model.addAttribute("signUpStatus", signUpStatus);
@@ -34,7 +33,7 @@ public class UserController {
     public String create(@ModelAttribute UserDTO userDTO, RedirectAttributes redirectAttributes) {
         try {
             userService.save(userDTO);
-            return "redirect:/users/login";
+            return "redirect:/login";
         } catch (EmailRepetitionException e) {
             log.error(e.getMessage());
             redirectAttributes.addAttribute("signUpStatus", e.getMessage());
@@ -55,29 +54,5 @@ public class UserController {
         userService.delete(user.getEmail());
         session.invalidate();
         return "redirect:/";
-    }
-
-    @GetMapping("/mypage")
-    public String myPage(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
-        return "mypage";
-    }
-
-    @PostMapping("/mypage")
-    public String updateProfile(@ModelAttribute UserDTO userDTO, HttpServletRequest request) {
-        User user = userService.update(userDTO);
-        HttpSession session = request.getSession();
-        session.setAttribute("user", user);
-        return "redirect:/users/mypage";
-    }
-
-    @GetMapping("/mypage-edit")
-    public String myPageEdit(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
-        return "mypage-edit";
     }
 }

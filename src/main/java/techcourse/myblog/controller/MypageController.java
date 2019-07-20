@@ -31,7 +31,7 @@ public class MypageController {
         User user = userService.update(userDTO);
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
-        return "redirect:/users/mypage";
+        return "redirect:/mypage";
     }
 
     @GetMapping("/mypage/edit")

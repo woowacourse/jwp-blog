@@ -10,3 +10,5 @@
     (2) url 수정에 따른 html 파일 속 path 변경
     (3) test case 분리
 2. 테스트 케이스 이름들을 더 구체적인 이름으로 수정한다
+
+4. getResponseBody를 삭제한다
