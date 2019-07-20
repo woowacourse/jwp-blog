@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.exception.CouldNotFindArticleIdException;
 import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.service.exception.CouldNotFindArticleIdException;
 
 @Service
 public class ArticleService {

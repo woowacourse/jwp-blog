@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.service.exception.CouldNotFindUserIdException;
+import techcourse.myblog.exception.CouldNotFindUserIdException;
 
 import java.util.Optional;
 

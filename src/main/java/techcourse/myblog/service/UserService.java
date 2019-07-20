@@ -5,10 +5,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.exception.DuplicateEmailException;
+import techcourse.myblog.exception.InvalidDataFormException;
+import techcourse.myblog.exception.UnequalPasswordException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.service.exception.DuplicateEmailException;
-import techcourse.myblog.service.exception.InvalidDataFormException;
-import techcourse.myblog.service.exception.UnequalPasswordException;
 
 import java.util.List;
 

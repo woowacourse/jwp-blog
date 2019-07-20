@@ -1,4 +1,4 @@
-package techcourse.myblog.service.exception;
+package techcourse.myblog.exception;
 
 public class DuplicateEmailException extends IllegalArgumentException {
     public DuplicateEmailException() {

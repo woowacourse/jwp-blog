@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.exception.CouldNotFindArticleIdException;
+import techcourse.myblog.exception.CouldNotFindArticleIdException;
 
 import javax.servlet.http.HttpSession;
 

@@ -12,9 +12,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.service.exception.CouldNotFindArticleIdException;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.exception.CouldNotFindArticleIdException;
+import techcourse.myblog.repository.ArticleRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

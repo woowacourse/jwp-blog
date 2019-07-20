@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.service.exception.CouldNotFindArticleIdException;
+import techcourse.myblog.exception.CouldNotFindArticleIdException;
 
 import java.util.Optional;
 
