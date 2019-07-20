@@ -1,12 +1,11 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.web.dto.LoginRequestDto;
@@ -15,11 +14,14 @@ import techcourse.myblog.web.dto.UserUpdateRequestDto;
 
 import javax.servlet.http.HttpSession;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static techcourse.myblog.web.ControllerUtil.*;
 
 @Controller
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -33,9 +35,9 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String register(UserRequestDto userRequestDto, Model model, HttpSession session) {
+    public String register(UserRequestDto userRequestDto, Model model, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
         try {
-            if (isLoggedIn(session)) {
+            if (currentUser.isPresent()) {
                 return "redirect:/";
             }
             if (!userRequestDto.getPassword().equals(userRequestDto.getPasswordConfirm())) {
@@ -54,8 +56,8 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String loginView(HttpSession session) {
-        if (isLoggedIn(session)) {
+    public String loginView(@SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
+        if (currentUser.isPresent()) {
             return "redirect:/";
         }
         return "login";
@@ -73,24 +75,21 @@ public class UserController {
                 session.setAttribute("user", user);
                 return "redirect:/";
             }
-
-            model.addAttribute("error", true);
             model.addAttribute("message", "비밀번호를 확인해주세요");
-            return "redirect:/login";
         } catch (NoSuchElementException e) {
-            model.addAttribute("error", true);
             model.addAttribute("message", e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("error", true);
+            logger.error("Login error", e);
             model.addAttribute("message", "서버 에러입니다");
         }
+        model.addAttribute("error", true);
         return "redirect:/login";
     }
 
     @GetMapping("/users")
-    public String userListView(Model model, HttpSession session) {
-        checkAndPutUser(model, session);
+    public String userListView(Model model, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
+        checkAndPutUser(model, currentUser);
         model.addAttribute("users", userRepository.findAll());
         return "user-list";
     }
@@ -114,20 +113,20 @@ public class UserController {
     }
 
     @GetMapping("/mypage-edit")
-    public String myPageEditView(Model model, HttpSession session) {
-        if (isLoggedIn(session)) {
-            model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
+    public String myPageEditView(Model model, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
+        if (currentUser.isPresent()) {
+            model.addAttribute(SESSION_USER_KEY, currentUser.get());
             return "mypage-edit";
         }
         return "redirect:login";
     }
 
     @PutMapping("/users")
-    public String updateUser(UserUpdateRequestDto updateRequestDto, HttpSession session) {
-        if (!isLoggedIn(session)) {
+    public String updateUser(UserUpdateRequestDto updateRequestDto, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
+        if (!currentUser.isPresent()) {
             return "redirect:/login";
         }
-        User user = (User) session.getAttribute(SESSION_USER_KEY);
+        User user = currentUser.get();
         user.update(User.of(updateRequestDto.getName(), user.getEmail(), user.getPassword()));
         userRepository.save(user);
         return "redirect:/mypage";

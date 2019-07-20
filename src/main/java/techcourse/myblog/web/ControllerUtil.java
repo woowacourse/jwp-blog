@@ -1,8 +1,10 @@
 package techcourse.myblog.web;
 
 import org.springframework.ui.Model;
+import techcourse.myblog.domain.User;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 public class ControllerUtil {
     public static final String SESSION_USER_KEY = "user";
@@ -11,9 +13,7 @@ public class ControllerUtil {
         return session.getAttribute(SESSION_USER_KEY) != null;
     }
 
-    public static void checkAndPutUser(Model model, HttpSession session) {
-        if (isLoggedIn(session)) {
-            model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
-        }
+    public static void checkAndPutUser(Model model, Optional<User> currentUser) {
+        currentUser.ifPresent(user -> model.addAttribute(SESSION_USER_KEY, user));
     }
 }

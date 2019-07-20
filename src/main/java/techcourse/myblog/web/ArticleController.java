@@ -8,11 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.web.dto.ArticleRequestDto;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static techcourse.myblog.web.ControllerUtil.SESSION_USER_KEY;
 import static techcourse.myblog.web.ControllerUtil.checkAndPutUser;
@@ -30,8 +32,8 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public String indexView(Model model, HttpSession session) {
-        checkAndPutUser(model, session);
+    public String indexView(Model model, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
+        checkAndPutUser(model, currentUser);
         List<Article> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
