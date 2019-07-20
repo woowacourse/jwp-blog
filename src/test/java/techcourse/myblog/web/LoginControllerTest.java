@@ -45,8 +45,29 @@ class LoginControllerTest {
             String sessionId = getSessionId(postUserResponse);
 
             postLogin(loginDto, sessionId, postLoginResponse ->
-                    getRedirect(sessionId, getLoginRedirect->
+                    getRedirect(sessionId, getLoginRedirect ->
                             assertThat(new String(getLoginRedirect.getResponseBody())).contains("test")));
+        });
+    }
+
+    @Test
+    @DisplayName("로그인 후 로그아웃을 하면 메인페이지로 이동한다.")
+    void logoutTest() {
+        LoginDto loginDto = new LoginDto();
+        loginDto.setEmail("test@test.com");
+        loginDto.setPassword("PassW0rd@");
+
+        postUser(userDto, postUserResponse -> {
+            String sessionId = getSessionId(postUserResponse);
+
+            postLogin(loginDto, sessionId, postLoginResponse -> webTestClient.get()
+                    .uri("/logout" + sessionId)
+                    .exchange()
+                    .expectStatus().is3xxRedirection()
+                    .expectBody()
+                    .consumeWith(logout ->
+                            getRedirect(sessionId, index ->
+                                    assertThat(new String(index.getResponseBody())).doesNotContain("test"))));
         });
     }
 
