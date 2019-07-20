@@ -25,15 +25,6 @@ public class ArticleControllerTests {
 
     @BeforeEach
     void setUp() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", "jaemok")
-                        .with("coverUrl", "yuarel")
-                        .with("contents", "naeyong"))
-                .exchange();
-
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -49,6 +40,16 @@ public class ArticleControllerTests {
                         .with("password", "password1234!"))
                 .exchange()
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+
+        webTestClient.post()
+                .uri("/articles")
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", "jaemok")
+                        .with("coverUrl", "yuarel")
+                        .with("contents", "naeyong"))
+                .exchange();
     }
 
     @Test
