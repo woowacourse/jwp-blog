@@ -60,13 +60,12 @@ public class UserController {
 
     @ExceptionHandler({SignUpInputException.class, AlreadyExistUserException.class})
     public RedirectView registerException(RedirectAttributes redirectAttributes, Exception exception) {
-        redirectAttributes.addAttribute("errorMessage", exception.getMessage());
-
-        return new RedirectView("/auth/signup");
+        redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
+        return new RedirectView("/users/signup");
     }
 
     @GetMapping(path = {"/{email}", "/{email}/edit"})
-    public String showMyPageEdit(String email, HttpServletRequest req, Model model) {
+    public String showMyPageEdit(@PathVariable String email, HttpServletRequest req, Model model) {
         HttpSession session = req.getSession();
         String loginEmail = (String) session.getAttribute("email");
         userAuthenticated(email, loginEmail);
@@ -86,19 +85,23 @@ public class UserController {
             throw new UpdateUserInputException("잘못된 입력값입니다.");
         }
 
+        System.out.println(email);
+        System.out.println(userDto.getName());
+
         String loginEmail = (String) session.getAttribute("email");
         userAuthenticated(email, loginEmail);
 
         Optional<User> maybeUser = userRepository.findByEmail(email);
-        User user = maybeUser.orElseThrow(() -> new UserNotFoundException("해당 이메일로 가입된 유저가 없습니다."));
-        User updatedUser = userTranslator.toEntity(user, userDto);
-        userRepository.save(updatedUser);
+        User updateUser = userTranslator.toEntity(maybeUser.orElseThrow(() ->
+                new UserNotFoundException("해당 이메일로 가입된 유저가 없습니다.")), userDto);
+        User updatedUser = userRepository.save(updateUser);
+        session.setAttribute("username", updatedUser.getName());
 
         return new RedirectView("/users/" + email);
     }
 
     @DeleteMapping("/{email}")
-    public RedirectView exitUser(String email, HttpSession session) {
+    public RedirectView exitUser(@PathVariable String email, HttpSession session) {
         String loginEmail = (String) session.getAttribute("email");
         userAuthenticated(email, loginEmail);
 
@@ -106,6 +109,7 @@ public class UserController {
             userRepository.delete(user);
             session.invalidate();
         });
+
         return new RedirectView("/");
     }
 
