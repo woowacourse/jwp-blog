@@ -3,10 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
@@ -20,7 +17,8 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Optional;
 
-@Controller("/auth")
+@Controller
+@RequestMapping("/auth")
 public class AuthController {
 
     private final UserRepository userRepository;
