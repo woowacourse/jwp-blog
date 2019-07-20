@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserEditProfileDto;
 import techcourse.myblog.repository.UserRepository;
 
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @Controller
 public class UserController {
@@ -104,5 +106,16 @@ public class UserController {
 
 		model.addAttribute("errors", "비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
 		return "leave-user";
+	}
+
+	@PutMapping("/edit")
+	public String editUser(@Valid UserEditProfileDto userEditProfileDto, HttpSession httpSession, Model model) {
+		String email = httpSession.getAttribute("email").toString();
+		User user = userRepository.findByEmail(email).get();
+		user.editUser(userEditProfileDto);
+		userRepository.save(user);
+
+		model.addAttribute("user", user);
+		return "redirect:/mypage";
 	}
 }

@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserEditProfileDto;
 
 @Entity
 public class User {
@@ -15,6 +16,8 @@ public class User {
 	private String username;
 	private String password;
 	private String email;
+	private String githubURL;
+	private String facebookURL;
 
 	public User() {}
 
@@ -26,6 +29,16 @@ public class User {
 		this.username = userDto.getUsername();
 		this.password = userDto.getPassword();
 		this.email = userDto.getEmail();
+	}
+
+	public void editUser(UserEditProfileDto userEditProfileDto) {
+		this.username = userEditProfileDto.getUsername();
+		this.githubURL = userEditProfileDto.getGithubURL();
+		this.facebookURL = userEditProfileDto.getFacebookURL();
+	}
+
+	public boolean matchPassword(String password) {
+		return this.password.equals(password);
 	}
 
 	public String getUsername() {
@@ -40,7 +53,11 @@ public class User {
 		return email;
 	}
 
-	public boolean matchPassword(String password) {
-		return this.password.equals(password);
+	public String getGithubURL() {
+		return githubURL;
+	}
+
+	public String getFacebookURL() {
+		return facebookURL;
 	}
 }

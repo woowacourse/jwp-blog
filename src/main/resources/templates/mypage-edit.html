@@ -53,17 +53,19 @@
         <div class="row">
             <div class="col-md-7 mx-auto">
                 <div class="card">
-                    <div class="card-heading pdd-btm-5 border bottom">
+                    <form action="/edit" method="post">
+                        <input name="_method" type="hidden" value="PUT">
+                        <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
                         <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정</button>
-                    </div>
+                        </div>
                     <div class="card-block">
                         <div class="row">
                             <div class="col-md-3">
                                 <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" value="Brown">
+                                <input accept-charset="utf-8" class="form-control" name="username" th:value="${user.username}">
                             </div>
                         </div>
                         <hr>
@@ -72,7 +74,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10">gracefulBrown@woowahan.com</p>
+                                <p class="mrg-top-10" name="email" th:text="${user.email}"></p>
                             </div>
                         </div>
                         <hr>
@@ -108,7 +110,7 @@
                                         <span class="font-size-14 mrg-left-10 text-dark text-bold">Github</span>
                                     </div>
                                     <div class="col-md-8 text-right">
-                                        <input type="text" class="form-control" value="https://www.github.com/profile">
+                                        <input class="form-control" name="facebookURL" th:value="${user.facebookURL}">
                                     </div>
                                 </div>
                                 <hr>
@@ -122,13 +124,13 @@
                                         <span class="mrg-left-10 font-size-14 text-dark text-bold">Facebook</span>
                                     </div>
                                     <div class="col-md-8 text-right">
-                                        <input type="text" class="form-control"
-                                               value="https://www.facebook.com/profile">
+                                        <input class="form-control" name="githubURL" th:value="${user.githubURL}">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>

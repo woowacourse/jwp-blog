@@ -15,7 +15,7 @@
                 <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
                     <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
                         <img class="profile-img img-fluid"
-                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
+                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
                         <div class="user-info text-white">
                             <span class="name pdd-right-5" th:text="${(session.username == null)? 'Login' : session.username}"></span>
                             <i class="ti-angle-down font-size-10"></i>
@@ -72,7 +72,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10" th:text="${user.username}"></p>
+                                <p accept-charset="utf-8" class="mrg-top-10" th:text="${user.username}"></p>
                             </div>
                         </div>
                         <hr>
@@ -112,7 +112,7 @@
                                         <span class="font-size-14 mrg-left-10 text-dark text-bold">Github</span>
                                     </div>
                                     <div class="col-md-8 text-right">
-                                        <p class="mrg-top-10 text-dark">https://www.github.com/profile</p>
+                                        <p class="mrg-top-10 text-dark" th:text="${(user.githubURL == null)? '' : user.githubURL}"></p>
                                     </div>
                                 </div>
                                 <hr>
@@ -126,7 +126,7 @@
                                         <span class="mrg-left-10 font-size-14 text-dark text-bold">Facebook</span>
                                     </div>
                                     <div class="col-md-8 text-right">
-                                        <p class="mrg-top-10 text-dark">https://www.facebook.com/profile</p>
+                                        <p class="mrg-top-10 text-dark" th:text="${user.facebookURL == null? '' : user.facebookURL}"></p>
                                     </div>
                                 </div>
                                 <hr>
