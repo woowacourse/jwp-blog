@@ -37,7 +37,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<UserDto> findAll() {
         List<UserDto> userDtos = new ArrayList<>();
-        userRepository.findAll().forEach(user -> userDtos.add(new UserDto(user)));
+        userRepository.findAll().forEach(user -> userDtos.add(UserDto.of(user)));
 
         return userDtos;
     }
@@ -45,7 +45,7 @@ public class UserService {
     @Valid
     @Transactional(readOnly = true)
     public UserDto findById(String email) {
-        return new UserDto(userRepository.findById(email)
+        return UserDto.of(userRepository.findById(email)
                 .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login")));
     }
 

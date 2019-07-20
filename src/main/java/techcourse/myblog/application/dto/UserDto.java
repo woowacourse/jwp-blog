@@ -28,8 +28,8 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(User user) {
-        this(user.getEmail(), user.getName(), user.getPassword());
+    public static UserDto of(User user) {
+        return new UserDto(user.getEmail(), user.getName(), user.getPassword());
     }
 
     public void setEmail(String email) {
