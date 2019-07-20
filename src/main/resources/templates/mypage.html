@@ -70,10 +70,9 @@
                         </li>
                         <li role="separator" class="divider"></li>
                         <li class="text-dark">
-                            <a method = "post "href="/user/logout">
-                                <i class="ti-power-off pdd-right-10"></i>
-                                <span class="text-dark">로그아웃</span>
-                            </a>
+                            <form method = "post" action="/user/logout">
+                                <button type="submit" class="ti-power-off pdd-right-10">로그아웃</button>
+                            </form>
                         </li>
                     </ul>
                 </li>
@@ -99,6 +98,12 @@
                            class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </a>
+
+                        <form  action="/user/delete" method = "post"
+                           class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
+                            <input type="hidden"  name="_method" value="DELETE" hidden>
+                            <button type="submit" class="ti-trash text-dark font-size-16 pdd-horizontal-5"></button>
+                        </form>
                     </div>
                     <div class="card-block">
                         <div class="row">

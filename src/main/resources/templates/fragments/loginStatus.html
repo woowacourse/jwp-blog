@@ -10,7 +10,7 @@
             </div>
         </a>
         <a href="/user/show" th:if="${session.user != null}">
-            <div th:text="${session.user.name}" class="user-info login-btn pointer mrg-right-10">
+            <div th:text="${user.name}" class="user-info login-btn pointer mrg-right-10">
             </div>
         </a>
     </li>

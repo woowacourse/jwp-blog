@@ -56,7 +56,7 @@
                         <img class="profile-img img-fluid"
                              src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
                         <div class="user-info text-white">
-                            <span class="name pdd-right-5">Brown</span>
+                            <span th:text="${user.name}" class="name pdd-right-5">Brown</span>
                             <i class="ti-angle-down font-size-10"></i>
                         </div>
                     </a>
@@ -91,10 +91,13 @@
     <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
         <div class="row">
             <div class="col-md-7 mx-auto">
+                <form action="/user/edit" method="post">
+
                 <div class="card">
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
-                        <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정</button>
+                            <input name="_method" type="hidden" value="put"/>
+                            <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정</button>
                     </div>
                     <div class="card-block">
                         <div class="row">
@@ -102,7 +105,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" th:value="${user.name}">
+                                <input type="text" name="name" class="form-control" th:value="${user.name}" required th:pattern="${namePattern}">
                             </div>
                         </div>
                         <hr>
@@ -169,6 +172,7 @@
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>
