@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import jdk.internal.util.xml.impl.Input;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,10 +10,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.NotExistUserException;
-import techcourse.myblog.exception.NotMatchPasswordException;
-import techcourse.myblog.exception.UserLoginInputException;
+import techcourse.myblog.exception.*;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.translator.UserTranslator;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -22,28 +22,18 @@ import java.util.Optional;
 @RequestMapping("/auth")
 public class UserController {
 
-    @Autowired
     private UserRepository userRepository;
+    private UserTranslator userTranslator;
 
-    @GetMapping("/signup")
-    public String showSignupForm(@RequestParam(required = false) String errorMessage, Model model) {
-        model.addAttribute("errorMessage", errorMessage);
-        return "signup";
+    public UserController(final UserRepository userRepository, final UserTranslator userTranslator) {
+        this.userRepository = userRepository;
+        this.userTranslator = userTranslator;
     }
 
     @GetMapping("/login")
     public String showLoginForm(@RequestParam(required = false) String errorMessage, Model model) {
         model.addAttribute("errorMessage", errorMessage);
         return "login";
-    }
-
-    // TODO: Dto를 Domain 객체로 만들어 주는 Translation Layer 구현하기
-
-    @ExceptionHandler({ UserLoginInputException.class, NotMatchPasswordException.class, NotExistUserException.class })
-    public RedirectView loginException(RedirectAttributes redirectAttributes, Exception exception) {
-        redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
-
-        return new RedirectView("/auth/login");
     }
 
     @PostMapping("/login")
@@ -64,22 +54,47 @@ public class UserController {
         throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
     }
 
+    @ExceptionHandler({ UserLoginInputException.class, NotMatchPasswordException.class, NotExistUserException.class })
+    public RedirectView loginException(RedirectAttributes redirectAttributes, Exception exception) {
+        redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
+
+        return new RedirectView("/auth/login");
+    }
+
     @GetMapping("/users")
     public String showAllUsers(Model model) {
         model.addAttribute("users", userRepository.findAll());
         return "user-list";
     }
 
+    @GetMapping("/signup")
+    public String showSignupForm(@RequestParam(required = false) String errorMessage, Model model) {
+        model.addAttribute("errorMessage", errorMessage);
+        return "signup";
+    }
+
     @PostMapping("/users")
-    public RedirectView registerUser(UserDto userDto, RedirectAttributes redirectAttributes) {
-        User user = new User(userDto.getName(), userDto.getEmail(), userDto.getPassword());
-        return userRepository.findByEmail(user.getEmail()).map(ifExists -> {
-            redirectAttributes.addAttribute("errorMessage", "이미 존재하는 이메일입니다.");
-            return new RedirectView("/signup");
-        }).orElseGet(() -> {
-            userRepository.save(user);
-            return new RedirectView("/login");
-        });
+    public RedirectView registerUser(@Valid UserDto userDto, Errors errors) {
+        if (errors.hasErrors()) {
+            throw new SignUpInputException("회원 가입에 필요한 값이 잘못됐습니다. 확인해주세요");
+        }
+
+        Optional<User> maybeUser = userRepository.findByEmail(userDto.getEmail());
+
+        if (maybeUser.isPresent()) {
+            throw new AlreadyExistUserException("이미 존재하는 이메일입니다.");
+        }
+
+        User user = userTranslator.toEntity(new User(), userDto);
+        userRepository.save(user);
+        return new RedirectView("/auth/login");
+    }
+
+    @ExceptionHandler({ SignUpInputException.class, AlreadyExistUserException.class })
+    public RedirectView registerException(RedirectAttributes redirectAttributes, Exception exception) {
+        redirectAttributes.addAttribute("errorMessage", exception.getMessage());
+
+        return new RedirectView("/auth/signup");
     }
 
     @GetMapping("/logout")
@@ -99,7 +114,7 @@ public class UserController {
     }
 
     @GetMapping("/mypageedit")
-    public String myPageEdit(HttpSession session, Model model) {
+    public String showMyPageEdit(HttpSession session, Model model) {
         return userRepository.findByEmail((String) session.getAttribute("email"))
                 .map(user -> {
                     model.addAttribute("user", user);
@@ -130,7 +145,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public RedirectView deleteUser(HttpSession session) {
+    public RedirectView exitUser(HttpSession session) {
         userRepository.findByEmail((String) session.getAttribute("email")).ifPresent(user -> {
             userRepository.delete(user);
             session.invalidate();
