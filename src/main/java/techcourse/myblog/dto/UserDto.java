@@ -18,5 +18,6 @@ public class UserDto {
     @Pattern(regexp = "\\w{8,}")
     private String password;
     @Email
+    @Pattern(regexp = "\\b[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,4}\\b")
     private String email;
 }
