@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -44,7 +43,6 @@ public class ArticleControllerTests extends ControllerTestTemplate {
         String coverUrlKo = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
         String contentsKo = "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 '선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?'였다.";
         Article article = new Article(titleKo, coverUrlKo, contentsKo);
-        Article articleApplyEscape = new Article(titleKo, coverUrlKo, StringEscapeUtils.escapeJava(contentsKo));
 
         requestExpect(POST, "/articles/write", parser(article))
                 .isFound()
@@ -52,7 +50,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
                 .consumeWith(response ->
                         bodyCheck(
                                 requestExpect(GET, getRedirectedUri(response)).isOk(),
-                                articleApplyEscape));
+                                applyEscapeArticle(article)));
     }
 
     @Test
@@ -61,7 +59,13 @@ public class ArticleControllerTests extends ControllerTestTemplate {
                 .isFound()
                 .expectBody()
                 .consumeWith(response ->
-                        bodyCheck(requestExpect(GET, getRedirectedUri(response)).isOk(), articleDto.toArticle()));
+                        bodyCheck(
+                                requestExpect(GET, getRedirectedUri(response)).isOk(),
+                                applyEscapeArticle(articleDto.toArticle())));
+    }
+
+    private Article applyEscapeArticle(Article article) {
+        return new Article(article.getTitle(), article.getCoverUrl(), StringEscapeUtils.escapeJava(article.getContents()));
     }
 
     @Test
@@ -96,10 +100,6 @@ public class ArticleControllerTests extends ControllerTestTemplate {
     @Test
     void 게시글_삭제() {
         requestExpect(DELETE, "/articles/" + savedArticle.getId()).isFound();
-    }
-
-    private String getRedirectedUri(EntityExchangeResult<byte[]> response) {
-        return response.getResponseHeaders().get("Location").get(0);
     }
 
     private void bodyCheck(WebTestClient.ResponseSpec responseSpec, Article article) {

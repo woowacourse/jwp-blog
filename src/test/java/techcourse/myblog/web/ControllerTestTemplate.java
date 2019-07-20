@@ -5,6 +5,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.reactive.server.WebTestClient.RequestHeadersSpec;
@@ -55,4 +56,9 @@ public class ControllerTestTemplate {
                     contents.forEach(c -> assertThat(body).contains(c));
                 });
     }
+
+    protected String getRedirectedUri(EntityExchangeResult<byte[]> response) {
+        return response.getResponseHeaders().get("Location").get(0);
+    }
+
 }

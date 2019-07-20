@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <head th:include="includes/meta :: common_meta"></head>
-    <head th:include="includes/css :: common_css"></head>
-    <head th:include="includes/article_js :: article_js"></head>
+    <th:block th:include="includes/meta :: common_meta"></th:block>
+    <th:block th:include="includes/css :: common_css"></th:block>
+    <th:block th:include="includes/article_js :: article_js"></th:block>
     <link rel="stylesheet" href="/static/css/article.css">
 </head>
 <body>
@@ -107,10 +107,7 @@
         </div>
     </div>
 </div>
-
-
-<body th:include="includes/js :: common_js"></body>
-
+<th:block th:include="includes/js :: common_js"></th:block>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script type="text/javascript" th:inline="javascript">
     /* <![CDATA[ */

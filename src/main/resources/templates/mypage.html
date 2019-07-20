@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" lang="ko">
 <head>
-    <head th:include="includes/meta :: common_meta"></head>
-    <head th:include="includes/css :: common_css"></head>
+    <th:block th:include="includes/meta :: common_meta"></th:block>
+    <th:block th:include="includes/css :: common_css"></th:block>
     <link rel="stylesheet" href="/static/css/index.css">
     <link rel="stylesheet" href="/static/css/mypage.css">
     <style>
@@ -116,6 +116,6 @@
         </div>
     </div>
 </div>
-<body th:include="includes/js :: common_js"></body>
+<th:block th:include="includes/js :: common_js"></th:block>
 </body>
 </html>

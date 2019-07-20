@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorator="layout">
 <head>
-    <head th:include="includes/meta :: common_meta"></head>
-    <head th:include="includes/css :: common_css"></head>
+    <th:block th:include="includes/meta :: common_meta"></th:block>
+    <th:block th:include="includes/css :: common_css"></th:block>
     <link rel="stylesheet" href="/static/css/index.css">
 </head>
 
@@ -86,7 +86,6 @@
 </div>
 
 <th:block th:include="includes/footer :: footer"></th:block>
-<!--<footer th:include="includes/footer :: footer"></footer>-->
-<body th:include="includes/js :: common_js"></body>
+<th:block th:include="includes/js :: common_js"></th:block>
 </body>
 </html>
