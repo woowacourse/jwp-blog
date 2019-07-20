@@ -59,7 +59,9 @@
                                                                  th:if="${errorMessage} != null"
                                                                  th:text="${errorMessage}">
                                                         </form>
-                                                        <div class="alert alert-danger" role="alert" th:if="${errorMessage} != null" th:text="${errorMessage}"></div>
+                                                        <div class="alert alert-danger" role="alert"
+                                                             th:if="${errorMessage} != ''"
+                                                             th:text="${errorMessage}"></div>
                                                         <div class="text-dark">
                                                             <span>아직 회원이 아니신가요?</span>
                                                             <a href="/users/signup"

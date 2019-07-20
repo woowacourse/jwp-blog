@@ -28,7 +28,7 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String showLoginForm(@RequestParam(required = false) String errorMessage, Model model) {
+    public String showLoginForm(@ModelAttribute String errorMessage, Model model) {
         model.addAttribute("errorMessage", errorMessage);
         return "login";
     }
