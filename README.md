@@ -42,29 +42,32 @@
 - [x] ~~이름에 숫자 or 특수문자 있으면 안됨~~
 - [x] ~~비밀번호 8자 이상 + 소문자+대문자+숫자+특수문자 조합~~
 - [x] ~~회원 등록 실패시 errorMessage를 model에 담아 보내기~~
-- [ ] Error에 field 추가
+- [x] ~~Error에 field 추가~~
 
 (회원 조회)
 
-- [ ] GET /users 요청해 회원목록페이지(user-list.html) 이동
-- [ ] DB에 있는 전체 회원 정보 노출
+- [x] ~~user drop 메뉴에 전체 회원 목록 버튼 추가~~
+- [x] ~~버튼 클릭시 user-list.html로 이동~~
+
+- [x] ~~GET /accounts/users 요청해 회원목록페이지(user-list.html) 이동~~
+- [x] ~~user-list.html에서 DB에 있는 전체 회원 정보 노출~~
+- [x] ~~user-list.html에서 목록 하나 클릭 시 GET /accounts/profile/{id}~~
 
 (로그인 성공 시)
 
 - [x] ~~로그인 버튼 클릭시 login.html로 이동~~
 - [x] ~~로그인 성공 시 메인(/) 화면 노출~~
 - [x] ~~로그인 성공시 메인 우측 상단에 사용자 이름 띄우기~~
-- [ ] 다시 ~~로그인~~/회원가입 화면에 접근할 경우 메인(/) 화면 노출
+- [x] ~~다시 로그인/회원가입 화면에 접근할 경우 메인(/) 화면 노출~~
 - [x] ~~Security gradle import~~
 - [x] ~~security configure extends 만들기~~
 - [x] ~~UserDetail implements 만들기~~
 - [x] ~~UserDetailService 만들고~~
-- [x] intercepter webConfig 만들기
-- [x] HandlerIntercepterAdapter 만들기
+- [x] ~~intercepter webConfig 만들기~~
+- [x] ~~HandlerIntercepterAdapter 만들기~~
 - [x] ~~/accounts/profile/edit 에 접근시 로그인 여부 확인. 비 로그인일 시 /login으로 보냄~~
 - [x] ~~/accounts/logout 에 접근시 로그인 여부 확인. 비로그인 상태일 경우 /로 보냄~~
 - [x] ~~/accounts/signup, /accounts/login 에 접근시 로그인 여부 확인. 로그인 상태일 경우 /로 보냄~~
-- [ ] /accounts/users를 post /accounts/signup으로 변경
 
 (로그인 실패시)
 
@@ -82,17 +85,15 @@
 
 - [x] ~~마이페이지 클릭 시 mypage.html 로 이동 (/accounts/profile/{id})~~
 - [x] ~~해당 id(userId)의 계정의 프로필이 보이게 변경~~
-- [ ] 본인 프로필계정이 아니면 수정 버튼 노출 안되게 변경
+- [x] ~~본인 프로필계정이 아니면 수정 버튼 노출 안되게 변경~~
 - [x] ~~수정버튼 클릭시 mypage-edit.html로 이동~~
 
-- [ ] 회원정보 수정시 본인 여부 판단해 본인일 경우만 mypage-edit.html로 이동(GET /accounts/profile/edit)
-- [ ] 본인이 아닌 경우엔 /login으로 리다이렉트
-- [ ] 마이페이지(프로필)에서 본인일 경우에만 수정버튼이 나오게
-- [ ] 로그인 하면 원래 가려던 페이지로 이동
+- [x] ~~회원정보 수정시 본인 여부 판단해 본인일 경우만 mypage-edit.html로 이동(GET /accounts/profile/edit)~~
+- [x] ~~본인이 아닌 경우엔 /login으로 리다이렉트~~
+- [x] ~~마이페이지(프로필)에서 본인일 경우에만 수정버튼이 나오게~~
 - [x] ~~mypage-edit.html에서 PUT으로 수정 요청~~
 - [x] ~~mypage-edit.html에 input태그 변경~~
 - [ ] ~~mypage-edit.html에 form태그 추가~~
-- [ ] 이미지....이미지......
 
 (회원 탈퇴)
 
@@ -108,3 +109,10 @@
 - [ ] article entity lombok @Data 대신 바꾸기
 - [ ] 테스트할 땐 db가 h2로 못가나? 
 - [ ] 자기가 쓴 글만 수정할 수 있도록 하기.
+- [ ] 로그인 필수 페이지 접근 시 로그인 시도 후 원래 가려던 페이지로 가기
+- [ ] ~~/accounts/users를 post /accounts/signup으로 변경~~
+- [ ] 이미지....이미지......
+- [ ] login.html / signup.html 에서 logo부분 중복 제거 (header.html 에 포함된 부분)
+- [ ] AccountController가 너무 많이 가지고있는듯...?  무슨 기준으로 나누지 테스트도 연관되어있어서
+- [ ] drop menu 에서 로그인/비로그인 상관 없이 기본인 거 중복 제거
+- [ ] 로그인 페이지에서 회원가입 버튼 랜딩 url /accounts/signup으로 변경

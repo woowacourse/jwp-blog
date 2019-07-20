@@ -108,10 +108,10 @@ public class AccountController {
         return "redirect:/accounts/profile/" + userForm.getId();
     }
 
-    @GetMapping("/accounts/user-list")
+    @GetMapping("/accounts/users")
     public String showUserList(Model model) {
-        List<User> userList = userRepository.findAll();
-        model.addAttribute("userList", userList);
+        List<User> users = userRepository.findAll();
+        model.addAttribute("users", users);
         return "user-list";
     }
 }

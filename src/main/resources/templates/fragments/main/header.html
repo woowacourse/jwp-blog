@@ -41,6 +41,13 @@
                             <span class="text-dark">로그아웃</span>
                         </a>
                     </li>
+                    <li role="separator" class="divider"></li>
+                    <li class="text-dark">
+                        <a href="/accounts/users">
+                            <i class="ti-eye pdd-right-10"></i>
+                            <span class="text-dark">회원 조회</span>
+                        </a>
+                    </li>
                 </ul>
                 <ul th:unless="${session.user}" class="dropdown-menu">
                     <li class="text-dark">
@@ -54,6 +61,13 @@
                         <a href="/accounts/signup">
                             <i class="ti-power-off pdd-right-10"></i>
                             <span class="text-dark">회원가입</span>
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li class="text-dark">
+                        <a href="/accounts/users">
+                            <i class="ti-eye pdd-right-10"></i>
+                            <span class="text-dark">회원 조회</span>
                         </a>
                     </li>
                 </ul>

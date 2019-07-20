@@ -328,6 +328,21 @@ public class AccountControllerTest {
                 });
     }
 
+    @Test
+    void showUsersPage() {
+        webTestClient.get().uri("/accounts/users")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(defaultName)).isTrue();
+                    assertThat(body.contains(defaultEmail)).isTrue();
+                })
+        ;
+    }
+
     private String getLoginCookie(String email, String password) {
         return webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -338,11 +353,6 @@ public class AccountControllerTest {
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
     }
 
-
-    //    @Test
-//    void user_list_test() {
-//        webTestClient.get().uri("/accounts/user-list").exchange().expectStatus().isOk();
-//    }
 
     private WebTestClient.ResponseSpec testSignupProcess(String name, String password, String email) {
         return webTestClient.post()
