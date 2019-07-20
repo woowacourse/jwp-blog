@@ -27,10 +27,12 @@
                 <div class="card">
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
+                        <th:block th:if="${user?.id == session.loggedInUser?.id}">
                             <a th:href="${'/mypage/' + user?.id + '/edit'}"
                                class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                                 <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                             </a>
+                        </th:block>
                     </div>
                     <div class="card-block">
                         <div class="row">

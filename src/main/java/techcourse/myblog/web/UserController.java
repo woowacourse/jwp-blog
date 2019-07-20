@@ -2,12 +2,9 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import techcourse.myblog.dto.UserPublicInfoDto;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
@@ -46,12 +43,19 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @PutMapping("/users")
-    public String editUserName(UserPublicInfoDto userPublicInfoDto, HttpServletRequest httpServletRequest) {
-        userService.update(userPublicInfoDto);
+    @PutMapping("/users/{id}")
+    public String editUserName(@PathVariable Long id, UserPublicInfoDto userPublicInfoDto, HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
-        httpSession.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
-        return "redirect:/mypage";
+        if (isLoggedInUser(httpSession, id)) {
+            userService.update(userPublicInfoDto);
+            httpSession.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
+        }
+        return "redirect:/mypage/" + id;
+    }
+
+    public boolean isLoggedInUser(HttpSession httpSession, Long id) {
+        UserPublicInfoDto loggedInUser = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
+        return loggedInUser.getId().equals(id);
     }
 
     @ExceptionHandler(SignUpException.class)

@@ -31,15 +31,19 @@ public class MyPageController {
     }
 
     @GetMapping("/mypage/{id}/edit")
-    public String showMyPageEdit(@PathVariable("id") long id, Model model,HttpServletRequest httpServletRequest) {
+    public String showMyPageEdit(@PathVariable("id") long id, Model model, HttpServletRequest httpServletRequest) {
         User user = userRepository.findById(id)
                 .orElseThrow(NotFoundUserException::new);
-        model.addAttribute("user", new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail()));
-        return "mypage-edit";
+        if (isLoggedInUserMYPage(httpServletRequest, user)) {
+            model.addAttribute("user", new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail()));
+            return "mypage-edit";
+        }
+        return "redirect:/mypage/" + id;
     }
 
-    private boolean isLoggedIn(HttpServletRequest httpServletRequest) {
+    private boolean isLoggedInUserMYPage(HttpServletRequest httpServletRequest, User user) {
         HttpSession httpSession = httpServletRequest.getSession();
-        return httpSession.getAttribute(LOGGED_IN_USER) != null;
+        UserPublicInfoDto loggedInUser = (UserPublicInfoDto) httpSession.getAttribute("loggedInUser");
+        return (loggedInUser != null) && (user.getId().equals(loggedInUser.getId()));
     }
 }
