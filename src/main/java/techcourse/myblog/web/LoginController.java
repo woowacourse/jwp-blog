@@ -39,4 +39,13 @@ public class LoginController {
         }
         return "login";
     }
+
+    @GetMapping("/logout")
+    public String logoutView(HttpSession session) {
+        if (isLoggedIn(session)) {
+            session.removeAttribute("loginUser");
+            return "redirect:/";
+        }
+        return "redirect:/login";
+    }
 }
