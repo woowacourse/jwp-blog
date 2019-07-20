@@ -2,19 +2,14 @@ package techcourse.myblog.presentation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.service.ArticleService;
-import techcourse.myblog.error.RequestError;
-import techcourse.myblog.presentation.controller.exception.BadRequestException;
 
 @Controller
 public class ArticleController {
-    private static final int MIN_ARTICLE_ID = 1;
-
     private final ArticleService articleService;
 
     @Autowired
@@ -56,21 +51,5 @@ public class ArticleController {
         RedirectView redirectView = new RedirectView("/");
         articleService.deleteById(articleId);
         return redirectView;
-    }
-
-
-    private void checkArticleId(Long articleId) {
-        if (isLowerThanMinArticleId(articleId)) {
-            throw new BadRequestException();
-        }
-    }
-
-    private boolean isLowerThanMinArticleId(Long articleId) {
-        return articleId < MIN_ARTICLE_ID;
-    }
-
-    private String sendErrorPage(String pageName, Model model, RequestError requestError) {
-        model.addAttribute("error", requestError);
-        return pageName;
     }
 }
