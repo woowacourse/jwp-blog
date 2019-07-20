@@ -1,20 +1,14 @@
 package techcourse.myblog.web;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.service.ArticleService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
