@@ -1,7 +1,5 @@
 package techcourse.myblog.web.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,17 +18,13 @@ import javax.validation.Valid;
 @Controller
 public class UserController {
     private final UserService userService;
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping("/login")
-    public String loginForm(HttpSession httpSession, LoginDto loginDto) {
-        if (httpSession.getAttribute("user") != null) {
-            return "redirect:/";
-        }
+    public String loginForm(LoginDto loginDto) {
         return "login";
     }
 
@@ -57,19 +51,18 @@ public class UserController {
 
     @GetMapping("/mypage")
     public String showMyPage() {
-        // 잘 되는지 확인
+
         return "mypage";
     }
 
     @GetMapping("/mypage/edit")
     public String showMyPageEdit() {
-        // 잘 되는지 확인
+
         return "mypage-edit";
     }
 
     @PutMapping("/mypage/edit")
     public String updateUser(UserDto userDto, HttpSession httpSession) {
-        // 잘 되는지 확인
         User user = (User) httpSession.getAttribute("user");
         userDto.setEmail(user.getEmail());
         httpSession.setAttribute("user", userService.update(userDto));
@@ -79,7 +72,6 @@ public class UserController {
 
     @DeleteMapping("/mypage/edit")
     public String deleteUser(HttpSession httpSession) {
-        // 잘 되는지 확인
         User user = (User) httpSession.getAttribute("user");
         userService.remove(user.getEmail());
         return "redirect:/logout";
@@ -87,7 +79,6 @@ public class UserController {
 
     @GetMapping("/users")
     public String users(Model model) {
-        // 잘 되는지 확인
         model.addAttribute("users", userService.findAll());
         return "user-list";
     }
@@ -108,7 +99,6 @@ public class UserController {
 
     @GetMapping("/signup")
     public String singUp(UserDto userDto) {
-        // 잘 되는지 확인
         return "signup";
     }
 }
