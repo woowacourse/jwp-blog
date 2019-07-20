@@ -27,37 +27,27 @@
                         <span class="name pdd-right-5" th:text="${session.user != null ? session.user.getName() : 'GUEST'}">GUEST</span>
                     </div>
                 </a>
-                <ul th:if="${session.user}" class="dropdown-menu">
-                    <li class="text-dark">
+                <ul class="dropdown-menu">
+                    <li class="text-dark" th:if="${session.user}">
                         <a th:href="${'/accounts/profile/' + session.user.getId()}">
                             <i class="ti-user pdd-right-10"></i>
                             <span class="text-dark">마이페이지</span>
                         </a>
                     </li>
-                    <li role="separator" class="divider"></li>
-                    <li class="text-dark">
-                        <a href="/logout">
-                            <i class="ti-user pdd-right-10"></i>
-                            <span class="text-dark">로그아웃</span>
-                        </a>
-                    </li>
-                    <li role="separator" class="divider"></li>
-                    <li class="text-dark">
-                        <a href="/accounts/users">
-                            <i class="ti-eye pdd-right-10"></i>
-                            <span class="text-dark">회원 조회</span>
-                        </a>
-                    </li>
-                </ul>
-                <ul th:unless="${session.user}" class="dropdown-menu">
-                    <li class="text-dark">
+                    <li class="text-dark" th:unless="${session.user}">
                         <a href='/login'>
                             <i class="ti-user pdd-right-10"></i>
                             <span class="text-dark">로그인</span>
                         </a>
                     </li>
                     <li role="separator" class="divider"></li>
-                    <li class="text-dark">
+                    <li class="text-dark" th:if="${session.user}">
+                        <a href="/logout">
+                            <i class="ti-user pdd-right-10"></i>
+                            <span class="text-dark">로그아웃</span>
+                        </a>
+                    </li>
+                    <li class="text-dark" th:unless="${session.user}">
                         <a href="/accounts/signup">
                             <i class="ti-power-off pdd-right-10"></i>
                             <span class="text-dark">회원가입</span>
@@ -67,7 +57,7 @@
                     <li class="text-dark">
                         <a href="/accounts/users">
                             <i class="ti-eye pdd-right-10"></i>
-                            <span class="text-dark">회원 조회</span>
+                            <span class="text-dark">회원조회</span>
                         </a>
                     </li>
                 </ul>
