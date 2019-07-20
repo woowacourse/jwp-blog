@@ -10,6 +10,8 @@ import javax.persistence.Id;
 public class Article {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
+public class Article {
 	private Long id;
 	private String title;
 	private String contents;
@@ -80,26 +82,4 @@ public class Article {
 	public int hashCode() {
 		return Objects.hash(getId(), getTitle(), getContents(), getCoverUrl());
 	}
-
-	@Override
-	public String toString() {
-		return "Article{" +
-				"id=" + id +
-				", title='" + title + '\'' +
-				", contents='" + contents + '\'' +
-				", coverUrl='" + coverUrl + '\'' +
-				'}';
-	}
-
-//	public void setTitle(String title) {
-//		this.title = title;
-//	}
-//
-//	public void setContents(String contents) {
-//		this.contents = contents;
-//	}
-//
-//	public void setCoverUrl(String coverUrl) {
-//		this.coverUrl = coverUrl;
-//	}
 }

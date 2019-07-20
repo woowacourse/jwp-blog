@@ -3,6 +3,7 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import techcourse.myblog.domain.Article;
+
 import techcourse.myblog.repository.ArticleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +111,7 @@ public class ArticleControllerTests {
 				.isFound()
 				.expectHeader()
 				.valueMatches("Location", ".+/");
-
+    
 		assertThat(articleRepository.findById(articleId)).isEmpty();
 	}
 }
