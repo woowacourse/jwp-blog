@@ -96,8 +96,8 @@
 
 - [ ] 패키지 분리
 - [ ] 컨트롤러 분리
-- [ ] AccountController 테스트 코드 중복 제거 
-- [ ] AccountController 테스트 코드 @BeforeEach 사용하지 말고 생성자에서 테스트 유저 추가
+- [x] ~~AccountController 테스트 코드 중복 제거~~
+- [x] ~~AccountController 테스트 코드 @BeforeEach 사용하지 말고 생성자에서 테스트 유저 추가~~
 - [ ] ArticleController 테스트 코드 중복 제거
 - [ ] ArticleController 테스트 코드 @BeforeEach 사용하지 말고 생성자에서 테스트 유저 추가
 - [x] ~~컨트롤러 Exception Handler 와 404 에러 페이지 추가~~
