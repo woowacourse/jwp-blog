@@ -79,6 +79,10 @@ class ArticleControllerTests {
                 .exchange();
 
         webTestClient.put().uri("/articles/1")
+                .body(BodyInserters
+                        .fromFormData("title", "수정된_제목")
+                        .with("coverUrl", "수정된_주소")
+                        .with("contents", "수정된_내용"))
                 .exchange()
                 .expectStatus().isOk();
     }

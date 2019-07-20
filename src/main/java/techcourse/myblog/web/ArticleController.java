@@ -32,7 +32,6 @@ public class ArticleController {
     public String saveArticle(ArticleSaveDto articleSaveDto, Model model) {
         Article article = articleService.save(articleSaveDto.toEntity());
         model.addAttribute("article", article);
-        System.out.println(articleService.findAllArticles());
         return "article";
     }
 

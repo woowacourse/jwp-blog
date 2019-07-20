@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -16,15 +17,26 @@ class UserControllerTests {
     private WebTestClient webTestClient;
 
     @Test
-    void login() {
+    void login_페이지_이동() {
         webTestClient.get().uri("/login")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void signUp() {
+    void signUp_페이지_이동() {
         webTestClient.get().uri("/signup")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void 회원가입() {
+        webTestClient.post().uri("/users")
+                .body(BodyInserters
+                        .fromFormData("name", "이름")
+                        .with("email", "test@test.com")
+                        .with("password", "password"))
                 .exchange()
                 .expectStatus().isOk();
     }

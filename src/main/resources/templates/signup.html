@@ -65,22 +65,26 @@
 													<div class="mrg-btm-30">
 														<h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">회원가입</h2>
 													</div>
-													<form method="post">
+													<form method="post" action="/users" id="user-form">
 														<div class="form-group">
 															<label class="text-normal text-dark">Username</label>
-															<input type="text" name="name" class="form-control">
+															<input type="text" name="name" class="form-control" id="user-name-input"
+															       required pattern="^[가-힣|a-zA-Z]+$" minlength="2" maxlength="8">
 														</div>
 														<div class="form-group">
 															<label class="text-normal text-dark">Email Address</label>
-															<input type="email" name="email" class="form-control">
+															<input type="email" name="email" class="form-control" id="user-email-input"
+															       required>
 														</div>
 														<div class="form-group">
 															<label class="text-normal text-dark">Password</label>
-															<input type="password" name="password" class="form-control" placeholder="Password">
+															<input type="password" name="password" class="form-control" placeholder="Password"
+															       id="user-password-input" required minlength="8">
 														</div>
 														<div class="form-group">
 															<label class="text-normal text-dark">Confirm Password</label>
-															<input type="password" class="form-control" placeholder="Password">
+															<input type="password" class="form-control" placeholder="Password"
+															       id="user-password-confirm-input" required>
 														</div>
 														<div class="form-group">
 															<button type="submit"
@@ -90,7 +94,7 @@
 													</form>
 													<div class="text-dark">
 														<span>이미 회원이신가요?</span>
-														<a href="login.html" class="text-info pointer mrg-left-5">로그인</a>
+														<a href="/login" class="text-info pointer mrg-left-5">로그인</a>
 													</div>
 												</div>
 											</div>
@@ -117,5 +121,20 @@
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 <script src="js/index.js"></script>
+<script>
+    const password = document.getElementById("user-password-input");
+    const confirm_password = document.getElementById("user-password-confirm-input");
+    
+    function checkPassword() {
+        if (password.value !== confirm_password.value) {
+            confirm_password.setCustomValidity('비밀번호가 일치하지 않습니다.');
+            return;
+        }
+        confirm_password.setCustomValidity('');
+    }
+    
+    password.onchange = checkPassword;
+    confirm_password.onkeyup = checkPassword;
+</script>
 </body>
 </html>
