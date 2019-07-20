@@ -14,20 +14,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
-
     @Autowired
     private WebTestClient webTestClient;
+
+    private String VALID_NAME = "유효한이름";
+    private String VALID_EMAIL = "valid@email.com";
+    private String VALID_PASSWORD = "ValidPassword!123";
+
+    private String INVALID_NAME = "1nva1id";
+    private String INVALID_EMAIL = "invalidemail";
+    private String INVALID_PASSWORD = "invalidpw";
 
     @Test
     public void 회원가입_페이지_테스트() {
         webTestClient.get().uri("/signup")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    public void 로그인_페이지_테스트() {
-        webTestClient.get().uri("/login")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -38,9 +38,9 @@ class UserControllerTest {
                 .uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("name", "name")
-                        .with("email", "email")
-                        .with("password", "password"))
+                        .fromFormData("name", VALID_NAME)
+                        .with("email", VALID_EMAIL)
+                        .with("password", VALID_PASSWORD))
                 .exchange()
                 .expectStatus().isFound()
                 .expectBody()
@@ -51,6 +51,45 @@ class UserControllerTest {
                             .expectStatus()
                             .isOk();
                 });
+    }
+
+    @Test
+    public void 유효햐지_않은_이름으로_회원가입_하는_경우_예외처리() {
+        webTestClient.post()
+                .uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", INVALID_NAME)
+                        .with("email", VALID_EMAIL)
+                        .with("password", VALID_PASSWORD))
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    public void 유효하지_않은_이메일로_회원가입_하는_경우_예외처리() {
+        webTestClient.post()
+                .uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", VALID_NAME)
+                        .with("email", INVALID_EMAIL)
+                        .with("password", VALID_PASSWORD))
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    public void 유효하지_않은_비밀번호로_회원가입_하는_경우_예외처리() {
+        webTestClient.post()
+                .uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", VALID_NAME)
+                        .with("email", VALID_EMAIL)
+                        .with("password", INVALID_PASSWORD))
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 
     @Test

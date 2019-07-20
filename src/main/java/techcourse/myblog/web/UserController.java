@@ -3,16 +3,17 @@ package techcourse.myblog.web;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicateEmailException;
-import techcourse.myblog.exception.FailedLoginException;
-import techcourse.myblog.exception.InvalidUserDataException;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 public class UserController {
@@ -31,7 +32,11 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String enrollUser(UserDto userDto) {
+    public String enrollUser(@Valid UserDto userDto, BindingResult bindingResult) throws BindException {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+
         userService.createUser(userDto);
         return "redirect:/login";
     }
@@ -86,11 +91,11 @@ public class UserController {
         return "redirect:/logout";
     }
 
-    @ExceptionHandler(InvalidUserDataException.class)
+    @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleInvalidUserDataException(InvalidUserDataException e, Model model) {
+    public String handleBindException(BindException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "signup";
+        return "redirect:/signup";
     }
 
     @ExceptionHandler(DuplicateEmailException.class)

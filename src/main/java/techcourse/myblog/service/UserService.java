@@ -1,5 +1,7 @@
 package techcourse.myblog.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserAssembler;
@@ -13,6 +15,8 @@ import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private static final String LOG_TAG= "[UserService]";
     private static final int NOT_FOUND_RESULT = 0;
 
     private final UserRepository userRepository;
@@ -26,6 +30,8 @@ public class UserService {
 
         User user = UserAssembler.writeUser(userDto);
         userRepository.save(user);
+
+        log.info("{} User 저장 -> {}", LOG_TAG, user);
     }
 
     private void validateUniqueEmail(UserDto userDto) {
