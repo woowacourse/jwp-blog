@@ -25,14 +25,6 @@ public class ArticleControllerTests {
 
     @BeforeEach
     void setUp() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", "jaemok")
-                        .with("coverUrl", "yuarel")
-                        .with("contents", "naeyong"))
-                .exchange();
 
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -49,6 +41,16 @@ public class ArticleControllerTests {
                         .with("password", "password1234!"))
                 .exchange()
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+
+        webTestClient.post()
+                .uri("/articles")
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", "jaemok")
+                        .with("coverUrl", "yuarel")
+                        .with("contents", "naeyong"))
+                .exchange();
     }
 
     @Test
@@ -162,7 +164,9 @@ public class ArticleControllerTests {
 
     @AfterEach
     void 게시물_삭제_요청_테스트() {
-        webTestClient.delete().uri("/articles/" + currentArticleId++)
+        webTestClient.delete()
+            .uri("/articles/" + currentArticleId++)
+            .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
