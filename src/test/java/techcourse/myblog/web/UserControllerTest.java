@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -116,6 +117,34 @@ public class UserControllerTest {
         });
     }
 
+    @Test
+    void 로그인_전_마이페이지_접근() {
+        webTestClient.get().uri("/users/mypage").exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void 로그인_후_마이페이지_접근() {
+        setSession();
+        webTestClient.get().uri("/users/mypage").exchange()
+                .expectStatus().isOk();
+        removeSession();
+    }
+
+    @Test
+    void 로그인_전_회원수정페이지_접근() {
+        webTestClient.get().uri("/users/mypage/edit").exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void 로그인_후_회원수정페이지_접근() {
+        setSession();
+        webTestClient.get().uri("/users/mypage/edit").exchange()
+                .expectStatus().isOk();
+        removeSession();
+    }
+
     void create_user(String userName, String email, String password) {
         webTestClient.post().uri("/users/new")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -125,5 +154,32 @@ public class UserControllerTest {
                         .with("confirmPassword", password)
                 ).exchange().expectStatus().isFound();
     }
+
+    void setSession() {
+        webTestClient = WebTestClient.bindToWebHandler(exchange -> {
+            String path = exchange.getRequest().getURI().getPath();
+            if ("/users/mypage".equals(path) || "/users/mypage/edit".equals(path)) {
+                return exchange.getSession()
+                        .doOnNext(webSession ->
+                                webSession.getAttributes().put("user", new User("buddy", "buddyCU@buddy.com", "Aa12345!")))
+                        .then();
+            }
+            return null;
+        }).build();
+    }
+
+    void removeSession() {
+        webTestClient = WebTestClient.bindToWebHandler(exchange -> {
+            String path = exchange.getRequest().getURI().getPath();
+            if ("/users/mypage".equals(path) || "/users/mypage/edit".equals(path)) {
+                return exchange.getSession()
+                        .doOnNext(webSession ->
+                                webSession.getAttributes().remove("user"))
+                        .then();
+            }
+            return null;
+        }).build();
+    }
+
 
 }

@@ -1,4 +1,4 @@
-package techcourse.myblog.user;
+package techcourse.myblog.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +10,9 @@ import techcourse.myblog.exception.NotValidUpdateUserInfoException;
 import techcourse.myblog.exception.NotValidUserInfoException;
 import techcourse.myblog.exception.UnacceptablePathException;
 import techcourse.myblog.repo.UserRepository;
+import techcourse.myblog.user.User;
+import techcourse.myblog.user.UserDto;
+import techcourse.myblog.user.UserUpdateRequestDto;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;

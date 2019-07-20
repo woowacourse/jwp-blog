@@ -9,8 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.exception.NotValidUpdateUserInfoException;
 import techcourse.myblog.exception.NotValidUserInfoException;
+import techcourse.myblog.service.UserService;
 import techcourse.myblog.user.UserDto;
-import techcourse.myblog.user.UserService;
 import techcourse.myblog.user.UserUpdateRequestDto;
 
 import javax.servlet.http.HttpSession;
