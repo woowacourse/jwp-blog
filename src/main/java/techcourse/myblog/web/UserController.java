@@ -1,7 +1,5 @@
 package techcourse.myblog.web;
 
-import jdk.internal.util.xml.impl.Input;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -14,6 +12,8 @@ import techcourse.myblog.exception.*;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.translator.UserTranslator;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Optional;
@@ -103,24 +103,18 @@ public class UserController {
         return new RedirectView("/");
     }
 
-    @GetMapping("/mypage")
-    public String mypage(HttpSession session, Model model) {
-        return userRepository.findByEmail((String) session.getAttribute("email"))
-                .map(user -> {
-                    model.addAttribute("user", user);
-                    return "mypage";
-                })
-                .orElse("redirect:/");
-    }
+    @GetMapping(path = { "/mypage", "/mypageedit" })
+    public RedirectView showMyPageEdit(HttpServletRequest req, Model model) {
+        HttpSession session = req.getSession();
+        String loginEmail = (String) session.getAttribute("email");
+        Optional<User> maybeUser = userRepository.findByEmail(loginEmail);
 
-    @GetMapping("/mypageedit")
-    public String showMyPageEdit(HttpSession session, Model model) {
-        return userRepository.findByEmail((String) session.getAttribute("email"))
-                .map(user -> {
-                    model.addAttribute("user", user);
-                    return "mypage-edit";
-                })
-                .orElse("redirect:/");
+        model.addAttribute("user", maybeUser.orElseThrow(() -> new UserNotFoundException("해당 이메일로 가입된 유저가 없습니다.")));
+
+        if (req.getRequestURI().contains("mypageedit")){
+            return new RedirectView("/mypageedit");
+        }
+        return new RedirectView("/mypage");
     }
 
     @PutMapping("/mypageedit")
@@ -150,6 +144,13 @@ public class UserController {
             userRepository.delete(user);
             session.invalidate();
         });
+        return new RedirectView("/");
+    }
+
+    @ExceptionHandler({ UserNotFoundException.class })
+    public RedirectView userNotFoundException(RedirectAttributes redirectAttributes, Exception exception) {
+        redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
+
         return new RedirectView("/");
     }
 }
