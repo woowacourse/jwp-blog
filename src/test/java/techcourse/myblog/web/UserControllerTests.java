@@ -21,4 +21,11 @@ class UserControllerTests {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+    @Test
+    void signUp() {
+        webTestClient.get().uri("/signup")
+                .exchange()
+                .expectStatus().isOk();
+    }
 }
