@@ -79,9 +79,8 @@ public class UserController {
         try {
             userResponseDto = userService.findByEmailAndPassword(email, password);
         } catch (EmailNotFoundException | InvalidPasswordException e) {
-            // TODO: 2019-07-19 에러메시지 띄우기
-            System.err.println(e.getMessage());
-            modelAndView.setView(new RedirectView("/login"));
+            modelAndView.addObject("error", e.getMessage());
+            modelAndView.setViewName("login");
             return modelAndView;
         }
 
