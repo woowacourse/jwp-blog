@@ -16,23 +16,19 @@ import java.io.UnsupportedEncodingException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
-
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserControllerTest {
-    private static final String SIGN_UP_PAGE = "/users/signup";
+public class LoginControllerTest {
+    private static final String LOGIN_FAIL_PAGE = "/login";
     private static final String USER_NAME_1 = "test1";
-    private static final String USER_NAME_2 = "test2";
     private static final String EMAIL_1 = "test1@test.com";
+    private static final String EMAIL_2 = "test2@test.com";
     private static final String PASSWORD_1 = "1234";
     private static final String PASSWORD_2 = "12345";
-
-
-    private String cookie;
-
     @Autowired
     WebTestClient webTestClient;
+    private String cookie;
 
     @BeforeEach
     void setUp() {
@@ -52,40 +48,50 @@ class UserControllerTest {
     }
 
     @Test
-    void 회원가입_폼_테스트() {
-        webTestClient.get().uri("/users/signup")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-
-    @Test
-    void 유저_조회_테스트() {
-        webTestClient.get().uri("/users")
+    void 로그인_성공_리다이렉트_테스트_및_세션_테스트() {
+        webTestClient.get().uri("/").header("cookie", cookie)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .consumeWith(response -> {
-                    String body = getResponseBody(response.getResponseBody());
+                .consumeWith(redirectResponse -> {
+                    String body = getResponseBody(redirectResponse.getResponseBody());
                     assertThat(body.contains(USER_NAME_1)).isTrue();
-                    assertThat(body.contains(EMAIL_1)).isTrue();
                 });
     }
 
     @Test
-    void 유저_이메일_중복_테스트() {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("userName", USER_NAME_1)
-                        .with("email", EMAIL_1)
+    void 로그인_아이디_실패_리다이렉트_테스트() {
+        webTestClient.post().uri("/login")
+                .body(fromFormData("email", EMAIL_2)
                         .with("password", PASSWORD_1))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectBody()
                 .consumeWith(response -> {
                     String url = response.getResponseHeaders().get("Location").get(0);
-                    assertThat(url.contains(SIGN_UP_PAGE)).isTrue();
+
                 });
+
+    }
+
+    @Test
+    void 로그인_패스워드_실패_리다이렉트_테스트() {
+        webTestClient.post().uri("/login")
+                .body(fromFormData("email", EMAIL_1)
+                        .with("password", PASSWORD_2))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody()
+                .consumeWith(response -> {
+                    String url = response.getResponseHeaders().get("Location").get(0);
+                    assertThat(url.contains(LOGIN_FAIL_PAGE)).isTrue();
+                });
+    }
+
+    @AfterEach
+    void tearDown() {
+        webTestClient.delete().uri("/users").header("Cookie", cookie)
+                .exchange();
     }
 
     private String getResponseBody(byte[] responseBody) {
@@ -94,39 +100,5 @@ class UserControllerTest {
         } catch (UnsupportedEncodingException e) {
             throw new IllegalArgumentException("ArticleControllerTest 에서 EncodingException 발생 : " + e.getMessage());
         }
-    }
-
-    @Test
-    void 수정_테스트() {
-        webTestClient.post().uri("/users/mypage")
-                .body(fromFormData("userName", USER_NAME_2)
-                        .with("email", EMAIL_1)
-                        .with("password", PASSWORD_2))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    String url = response.getResponseHeaders().get("Location").get(0);
-                    webTestClient.get().uri(url)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = getResponseBody(redirectResponse.getResponseBody());
-                                assertThat(body.contains(USER_NAME_2)).isTrue();
-                            });
-                });
-    }
-
-    @Test
-    void 삭제_테스트() {
-        webTestClient.delete().uri("/users").header("Cookie", cookie)
-                .exchange()
-                .expectStatus().is3xxRedirection();
-    }
-
-    @AfterEach
-    void tearDown() {
-        webTestClient.delete().uri("/users").header("Cookie", cookie)
-                .exchange();
     }
 }
