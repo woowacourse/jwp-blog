@@ -49,6 +49,15 @@ public class UserController {
         return "signup";
     }
 
+    @GetMapping("/users")
+    public String userListView(Model model, HttpSession session) {
+        if (isLoggedIn(session)) {
+            model.addAttribute("logInUser", session.getAttribute("logInUser"));
+        }
+        model.addAttribute("userList", userService.getUserList());
+        return "user-list";
+    }
+
     private boolean isLoggedIn(HttpSession session) {
         return session.getAttribute("user") != null;
     }

@@ -10,6 +10,8 @@ import techcourse.myblog.service.exception.DuplicateEmailException;
 import techcourse.myblog.service.exception.InvalidDataFormException;
 import techcourse.myblog.service.exception.UnequalPasswordException;
 
+import java.util.List;
+
 @Service
 public class UserService {
     private UserRepository userRepository;
@@ -44,5 +46,9 @@ public class UserService {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new DuplicateEmailException();
         }
+    }
+
+    public List<User> getUserList() {
+        return userRepository.findAll();
     }
 }
