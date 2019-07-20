@@ -5,80 +5,145 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.http.ResponseCookie;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 
-import java.util.function.Consumer;
+import java.util.Objects;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserControllerTest {
+class UserControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
+    private int flagNo = 1;
+    private final String testEmail = "test@gmail.com";
+    private final String testPassword = "aidenAIDEN1!";
+
     @BeforeEach
     void setUp() {
+        registerUser(flagNo + testEmail);
+    }
 
+    private WebTestClient.ResponseSpec registerUser(String email) {
+        return webTestClient.post().uri("/user")
+                .body(fromFormData("name", "aiden")
+                        .with("email", email)
+                        .with("password", testPassword))
+                .exchange();
     }
 
     @Test
-    void signUp_test() {
-        signUpExchange(entityExchangeResult -> {});
+    void signUp() {
+        testGetMethod("/signup");
     }
 
-    private WebTestClient.BodyContentSpec signUpExchange(Consumer<EntityExchangeResult<byte[]>> consumer) {
-        return webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", "aiden")
-                        .with("email", "aiden@naver.com")
-                        .with("password", "aidenAIDEN1!"))
+    private void testGetMethod(String uri) {
+        webTestClient.get().uri(uri)
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/login.*")
-                .expectBody().consumeWith(consumer);
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void loginForm() {
+        testGetMethod("/login");
     }
 
     @Test
     void login_test_true() {
-        signUpExchange(entityExchangeResult -> {
-            webTestClient.post().uri("/login")
-                    .body(BodyInserters.fromFormData("email", "aiden@naver.com")
-                            .with("password", "aidenAIDEN1!")
-                    ).exchange()
-                    .expectStatus().is3xxRedirection()
-                    .expectHeader().valueMatches("Location", ".*localhost:[0-9]+/;.*");
-        });
+        webTestClient.post().uri("/login")
+                .body(fromFormData("email", flagNo + testEmail)
+                        .with("password", testPassword)
+                ).exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("Location", ".*localhost:[0-9]+/.*");
     }
 
     @Test
-    void login_test_false() {
-        signUpExchange(entityExchangeResult -> {
-            webTestClient.post().uri("/login")
-                    .body(BodyInserters.fromFormData("email", "aiden@naver.com")
-                            .with("password", "aidenAIDEN1")
-                    ).exchange()
-                    .expectStatus().isOk();
-        });
+    void login_False() {
+        webTestClient.post().uri("/login")
+                .body(fromFormData("email", flagNo + testEmail)
+                        .with("password", "wrongPassword")
+                ).exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(Objects.requireNonNull(response.getResponseBody()));
+                    assertThat(body.contains("이메일과 비밀번호를 다시 확인해주세요.")).isTrue();
+                });
     }
 
     @Test
-    void update_test() {
+    void myPage() {
+        testLoggedInGetMethod("/mypage", getResponseCookie());
+    }
+
+    private void testLoggedInGetMethod(String uri, ResponseCookie responseCookie) {
+        webTestClient.get().uri(uri)
+                .cookie("JSESSIONID", responseCookie.getValue())
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void myPageForm() {
+        testLoggedInGetMethod("/mypage/edit", getResponseCookie());
+    }
+
+    @Test
+    void userInfoUpdate() {
         String name = "whale";
-        signUpExchange(entityExchangeResult -> {
-            webTestClient.post().uri("/login")
-                    .body(BodyInserters.fromFormData("email", "aiden@naver.com")
-                            .with("password", "aidenAIDEN1!")
-                    ).exchange()
-                    .expectStatus().is3xxRedirection()
-                    .expectBody()
-                    .consumeWith(entityExchangeResult1 -> {
-                        webTestClient.put().uri("/mypage/edit")
-                                .body(BodyInserters.fromFormData("name", name))
-                                .exchange()
-                                .expectStatus().is3xxRedirection()
-                                .expectHeader().valueMatches("Location", ".*/mypage.*");
-                    });
-        });
+        ResponseCookie responseCookie = getResponseCookie();
+
+        webTestClient.put().uri("/mypage/edit")
+                .cookie("JSESSIONID", Objects.requireNonNull(responseCookie).getValue())
+                .body(fromFormData("name", name))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("Location", ".*/mypage.*");
+    }
+
+    private ResponseCookie getResponseCookie() {
+        return webTestClient.post().uri("/login")
+                .body(fromFormData("email", flagNo + testEmail)
+                        .with("password", testPassword))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .returnResult(ResponseCookie.class).getResponseCookies().getFirst("JSESSIONID");
+    }
+
+    @Test
+    void signUp_success() {
+        registerUser("signUp@woowa.com").expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("Location", ".*/login.*");
+    }
+
+    @Test
+    void signUp_duplicatedEmail_fail() {
+        registerUser(flagNo + testEmail).expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(Objects.requireNonNull(response.getResponseBody()));
+                    assertThat(body.contains("중복된 이메일입니다.")).isTrue();
+                });
+    }
+
+    @Test
+    void deleteUser() {
+        ResponseCookie responseCookie = getResponseCookie();
+        webTestClient.delete().uri("/mypage/edit")
+                .cookie("JSESSIONID", responseCookie.getValue())
+                .exchange();
+
+        login_False();
+    }
+
+    @Test
+    void userList() {
+        testLoggedInGetMethod("/users", getResponseCookie());
     }
 }
