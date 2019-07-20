@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+</head>
+<body>
+<div th:each="bean : ${beans}">>
+    <p th:text="${bean.name}"></p>
+    <p th:text="${bean.email}"></p>
+    <p><span th:text="*{bean.age}?: '(no age specified)'">27</span>.</p>
+</div>
+</body>
+</html>

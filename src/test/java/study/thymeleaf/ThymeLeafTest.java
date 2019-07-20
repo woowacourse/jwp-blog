@@ -9,6 +9,9 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ThymeLeafTest {
@@ -21,6 +24,7 @@ public class ThymeLeafTest {
         Context ctx = new Context();
         String welcomeMessage = "Hi World";
         ctx.setVariable("welcome", welcomeMessage);
+        ctx.setVariable("name", "Javajigi");
         String result = templateEngine.process("welcome", ctx);
         log.debug("{}", result);
         assertThat(result).contains(welcomeMessage);
@@ -33,6 +37,7 @@ public class ThymeLeafTest {
         Context ctx = new Context();
         String result = templateEngine.process("welcome", ctx);
         log.debug("{}", result);
+        assertThat(result).contains("Welcome message is null!");
     }
 
     @Test
@@ -46,6 +51,19 @@ public class ThymeLeafTest {
         log.debug("{}", result);
         assertThat(result).contains(myBean.getName());
         assertThat(result).contains(myBean.getEmail());
+    }
+
+    @Test
+    void each() {
+        TemplateEngine templateEngine = createTemplateEngine();
+
+        Context ctx = new Context();
+        MyBean javajigi = new MyBean("javajigi", "javajigi@slipp.net", 35);
+        MyBean sanjigi = new MyBean("sanjigi", "javajigi@slipp.net", 30);
+        List<MyBean> beans = Arrays.asList(javajigi, sanjigi);
+        ctx.setVariable("beans", beans);
+        String result = templateEngine.process("mybeaneach", ctx);
+        log.debug("{}", result);
     }
 
     @Test

@@ -4,5 +4,9 @@
 </head>
 <body>
 <p th:text="${welcome}">Hello World!</p>
+<p th:text="#{home.welcome(${name})}">Welcome to our grocery store!</p>
+<div th:if="${welcome} == null">
+    <p>Welcome message is null!</p>
+</div>
 </body>
 </html>

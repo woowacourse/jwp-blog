@@ -3,7 +3,10 @@
 <head>
 </head>
 <body>
-<p th:text="${myBean.name}"></p>
-<p th:text="${myBean.email}"></p>
+<div th:object="${myBean}">
+    <p th:text="*{name}"></p>
+    <p th:text="${myBean.email}"></p>
+    <p><span th:text="*{age}?: '(no age specified)'">27</span>.</p>
+</div>
 </body>
 </html>

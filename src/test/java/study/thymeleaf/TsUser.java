@@ -1,17 +1,13 @@
 package study.thymeleaf;
 
-public class MyBean {
+public class TsUser {
     private String name;
 
     private String email;
 
-    private Integer age;
+    private int age;
 
-    public MyBean(String name, String email) {
-        this(name, email, null);
-    }
-
-    public MyBean(String name, String email, Integer age) {
+    public TsUser(String name, String email, int age) {
         this.name = name;
         this.email = email;
         this.age = age;
@@ -25,7 +21,7 @@ public class MyBean {
         return email;
     }
 
-    public Integer getAge() {
+    public int getAge() {
         return age;
     }
 }
