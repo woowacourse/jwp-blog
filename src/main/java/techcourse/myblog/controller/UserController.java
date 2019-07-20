@@ -29,6 +29,10 @@ public class UserController {
 
     @PostMapping("")
     public String createUser(@Validated({Default.class, UserGroups.Edit.class}) UserDto userDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "signup";
+        }
+
         try {
             userService.save(userDto);
         } catch (DuplicateEmailException e) {
@@ -36,9 +40,6 @@ public class UserController {
             return "signup";
         }
 
-        if (bindingResult.hasErrors()) {
-            return "signup";
-        }
         return "redirect:/login";
     }
 
