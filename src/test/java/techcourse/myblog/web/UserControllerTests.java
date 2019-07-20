@@ -17,7 +17,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
     private String cookie;
-    private static int userId = 1;
+    private static long userId = 1;
 
     @Autowired
     private WebTestClient webTestClient;

@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserServiceTest {
-    private static int userId = 1;
+    private static long userId = 1;
 
     @Autowired
     private UserService userService;
@@ -65,7 +65,7 @@ class UserServiceTest {
 
     @Test
     void 회원정보_단건_실패_조회_테스트() {
-        int notExistedUserId = userId - 1;
+        long notExistedUserId = userId - 1;
         assertThrows(NotFoundUserException.class, () -> userService.findById(notExistedUserId));
     }
 
