@@ -12,12 +12,12 @@ import reactor.core.publisher.Mono;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HelloWorldControllerTests {
-
     @Autowired
     private WebTestClient webTestClient;
 
     @Test
     void passParamWithGetAndResponseBody() {
+
         String blogName = "helloWorld";
         webTestClient.get().uri("/helloworld?blogName=" + blogName)
                 .exchange()
@@ -38,7 +38,6 @@ public class HelloWorldControllerTests {
     @Test
     void passParamWithPost() {
         String blogName = "helloWorld";
-
         webTestClient.post()
                 .uri("/helloworld")
                 .body(Mono.just(blogName), String.class)
@@ -47,6 +46,5 @@ public class HelloWorldControllerTests {
                 .expectBody()
                 .consumeWith(response ->
                         Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
-
     }
 }
