@@ -34,6 +34,5 @@ public class Article {
         this.title = articleDto.getTitle();
         this.contents = articleDto.getContents();
         this.coverUrl = articleDto.getCoverUrl();
-
     }
 }
