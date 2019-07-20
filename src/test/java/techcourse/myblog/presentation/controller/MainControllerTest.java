@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.presentation.controller;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,22 +9,35 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTests {
+public class MainControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
     @Test
-    void index() {
+    void 메인_페이지_GET() {
         webTestClient.get().uri("/")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void articleForm() {
-        webTestClient.get().uri("/articles/new")
+    void writing_GET() {
+        webTestClient.get().uri("/writing")
                 .exchange()
                 .expectStatus().isOk();
     }
 
+    @Test
+    void 로그인_페이지_GET() {
+        webTestClient.get().uri("/login")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void 회원가입_페이지_GET() {
+        webTestClient.get().uri("/signup")
+                .exchange()
+                .expectStatus().isOk();
+    }
 }
