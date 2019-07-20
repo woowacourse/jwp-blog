@@ -10,8 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import java.io.UnsupportedEncodingException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
@@ -67,7 +65,7 @@ public class ArticleControllerTests {
                             .expectStatus().isOk()
                             .expectBody()
                             .consumeWith(redirectResponse -> {
-                                String body = getResponseBody(redirectResponse.getResponseBody());
+                                String body = new String(redirectResponse.getResponseBody());
                                 assertThat(body.contains(title)).isTrue();
                                 assertThat(body.contains(StringEscapeUtils.escapeJava(contents))).isTrue();
                                 assertThat(body.contains(coverUrl)).isTrue();
@@ -122,7 +120,7 @@ public class ArticleControllerTests {
                             .expectStatus().isOk()
                             .expectBody()
                             .consumeWith(redirectResponse -> {
-                                String body = getResponseBody(redirectResponse.getResponseBody());
+                                String body = new String(redirectResponse.getResponseBody());
                                 assertThat(body.contains(title)).isTrue();
                                 assertThat(body.contains(StringEscapeUtils.escapeJava(contents))).isTrue();
                                 assertThat(body.contains(coverUrl)).isTrue();
@@ -130,13 +128,6 @@ public class ArticleControllerTests {
                 });
     }
 
-    private String getResponseBody(byte[] responseBody) {
-        try {
-            return new String(responseBody, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("ArticleControllerTest 에서 EncodingException 발생 : " + e.getMessage());
-        }
-    }
 
     @Test
     void articleDelete() {

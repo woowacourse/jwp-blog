@@ -11,8 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import java.io.UnsupportedEncodingException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
@@ -55,18 +53,10 @@ class LogoutControllerTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
-                    String body = getResponseBody(response.getResponseBody());
+                    String body = new String(response.getResponseBody());
                     assertThat(body.contains(LOGIN_TEXT)).isTrue();
                 });
 
-    }
-
-    private String getResponseBody(byte[] responseBody) {
-        try {
-            return new String(responseBody, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("ArticleControllerTest 에서 EncodingException 발생 : " + e.getMessage());
-        }
     }
 
     @AfterEach
