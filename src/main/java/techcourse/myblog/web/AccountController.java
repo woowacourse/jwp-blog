@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserForm;
 import techcourse.myblog.domain.UserRepository;
@@ -30,7 +27,11 @@ public class AccountController {
     }
 
     @GetMapping("/accounts/signup")
-    public String showSignupPage(Model model) {
+    public String showSignupPage(Model model, HttpSession httpSession) {
+        if (httpSession.getAttribute("user") != null) {
+            return "redirect:/";
+        }
+
         model.addAttribute("userForm", new UserForm());
         return "signup";
     }
@@ -72,17 +73,12 @@ public class AccountController {
         }
 
         request.getSession().setAttribute("user", user.get());
-        return "redirect:/";
+        return "redirect:" + request.getHeader("Referer");
 
     }
 
     @GetMapping("/logout")
     public String processLogout(HttpServletRequest request) {
-        log.debug(">>> session : {}", request.getSession().getAttribute("user"));
-        if (request.getSession().getAttribute("user") == null) {
-            return "redirect:/login";
-        }
-
         request.getSession().removeAttribute("user");
         return "redirect:/";
     }
@@ -118,5 +114,13 @@ public class AccountController {
         List<User> userList = userRepository.findAll();
         model.addAttribute("userList", userList);
         return "user-list";
+    }
+
+    @DeleteMapping("/accounts/delete")
+    public String processDelete(HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+        userRepository.deleteById(user.getId());
+        httpSession.removeAttribute("user");
+        return "redirect:/";
     }
 }

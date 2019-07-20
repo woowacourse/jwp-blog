@@ -54,7 +54,7 @@
 - [x] ~~로그인 버튼 클릭시 login.html로 이동~~
 - [x] ~~로그인 성공 시 메인(/) 화면 노출~~
 - [x] ~~로그인 성공시 메인 우측 상단에 사용자 이름 띄우기~~
-- [ ] 다시 ~~로그인~~/회원가입 화면에 접근할 경우 메인(/) 화면 노출
+- [x] ~~다시 로그인/회원가입 화면에 접근할 경우 메인(/) 화면 노출~~
 - [x] ~~Security gradle import~~
 - [x] ~~security configure extends 만들기~~
 - [x] ~~UserDetail implements 만들기~~
@@ -80,7 +80,7 @@
 - [x] ~~수정버튼 클릭시 mypage-edit.html로 이동~~
 
 - [x] ~~로그인 한 경우만 mypage-edit.html로 이동(GET /accounts/profile/edit)~~
-- [ ] 로그인 안한 상태면 로그인창으로 이동
+- [x] 로그인 안한 상태면 로그인창으로 이동
 - [x] ~~마이페이지(프로필)에서 본인일 경우에만 수정버튼이 나오게~~
 - [ ] 로그인 하면 원래 가려던 페이지로 이동
 - [x] ~~mypage-edit.html에서 PUT으로 수정 요청~~
@@ -89,8 +89,8 @@
 
 (회원 탈퇴)
 
-- [ ] MyPage > profile 하단 > 탈퇴 버튼을 추가
-- [ ] DELETE로 탈퇴 요청
+- [x] ~~MyPage > profile 하단 > 탈퇴 버튼을 추가~~
+- [x] ~~DELETE로 탈퇴 요청~~
 
 (추가)
 

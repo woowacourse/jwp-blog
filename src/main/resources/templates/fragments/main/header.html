@@ -48,6 +48,14 @@
                                 <span class="text-dark">회원 목록</span>
                             </a>
                         </li>
+                        <li class="text-dark">
+                            <form th:method="delete" action="/accounts/delete">
+                                <button type="submit">
+                                    <i class="ti-power-off pdd-right-10"></i>
+                                    <span class="text-dark">회원 탈퇴</span>
+                                </button>
+                            </form>
+                        </li>
                     </div>
                     <div th:unless="${session.user}" class="dropdown-menu">
                         <li class="text-dark">
