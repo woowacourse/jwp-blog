@@ -85,7 +85,7 @@ public class UserController {
     public String handleUpdateUserException(NotValidUpdateUserInfoException e, Model model) {
         log.error(e.getMessage());
         model.addAttribute("error", e.getMessage());
-        return "mypage";
+        return "mypage-edit";
     }
 
 }

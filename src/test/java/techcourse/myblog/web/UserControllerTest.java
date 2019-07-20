@@ -145,7 +145,7 @@ public class UserControllerTest {
         removeSession();
     }
 
-    void create_user(String userName, String email, String password) {
+    private void create_user(String userName, String email, String password) {
         webTestClient.post().uri("/users/new")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData("userName", userName)

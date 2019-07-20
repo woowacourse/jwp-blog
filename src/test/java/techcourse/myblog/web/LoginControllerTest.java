@@ -31,13 +31,7 @@ public class LoginControllerTest {
 
     @Test
     void 로그인_없는_이메일() {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "Buddy")
-                        .with("email", "buddy@buddy.com")
-                        .with("password", "Aa12345!")
-                        .with("confirmPassword", "Aa12345!")
-                ).exchange();
+        create_user("Buddy", "buddy@buddy.com", "Aa12345!");
 
         webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -51,13 +45,7 @@ public class LoginControllerTest {
 
     @Test
     void 로그인_패스워드_불일치() {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "ssosso")
-                        .with("email", "ssosso@gmail.com")
-                        .with("password", "Aa12345!")
-                        .with("confirmPassword", "Aa12345!")
-                ).exchange();
+        create_user("ssosso", "ssosso@email.com", "Aa12345!");
 
         webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -68,5 +56,16 @@ public class LoginControllerTest {
                 .expectStatus()
                 .isBadRequest();
     }
+
+    private void create_user(String userName, String email, String password) {
+        webTestClient.post().uri("/users/new")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("userName", userName)
+                        .with("email", email)
+                        .with("password", password)
+                        .with("confirmPassword", password)
+                ).exchange();
+    }
+
 
 }
