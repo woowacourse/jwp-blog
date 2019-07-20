@@ -1,5 +1,7 @@
 package techcourse.myblog.web.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +16,7 @@ import techcourse.myblog.web.controller.dto.UserDto;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -21,6 +24,11 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("/signup")
+    public String signUp(UserDto userDto) {
+        return "signup";
     }
 
     @GetMapping("/login")
@@ -33,31 +41,29 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "login";
         }
-        try {
-            User user = userService.login(loginDto);
-            httpSession.setAttribute("user", user);
+        Optional<User> user = userService.checkUser(loginDto);
+        if (user.isPresent()) {
+            httpSession.setAttribute("user", user.get());
             return "redirect:/";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("errorMessage", "이메일과 비밀번호를 다시 확인해주세요.");
-            return "login";
         }
+
+        model.addAttribute("errorMessage", "이메일과 비밀번호를 다시 확인해주세요.");
+        return "login";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
-        httpSession.invalidate();
+        httpSession.removeAttribute("user");
         return "redirect:/";
     }
 
     @GetMapping("/mypage")
     public String showMyPage() {
-
         return "mypage";
     }
 
     @GetMapping("/mypage/edit")
     public String showMyPageEdit() {
-
         return "mypage-edit";
     }
 
@@ -66,7 +72,6 @@ public class UserController {
         User user = (User) httpSession.getAttribute("user");
         userDto.setEmail(user.getEmail());
         httpSession.setAttribute("user", userService.update(userDto));
-
         return "redirect:/mypage";
     }
 
@@ -83,22 +88,18 @@ public class UserController {
         return "user-list";
     }
 
-    @PostMapping("/users")
+
+    @PostMapping("/user")
     public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "signup";
         }
 
-        if (userService.exists(userDto.getEmail())) {
+        if (userService.findByEmail(userDto.getEmail()).isPresent()) {
             model.addAttribute("errorMessage", "중복된 이메일입니다.");
             return "signup";
         }
         userService.save(userDto);
         return "redirect:/login";
-    }
-
-    @GetMapping("/signup")
-    public String singUp(UserDto userDto) {
-        return "signup";
     }
 }

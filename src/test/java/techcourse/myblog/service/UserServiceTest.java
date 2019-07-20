@@ -22,51 +22,40 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        beforeUser = userService.save(
-                new UserDto("aiden",
-                        flagNo + "aiden1@naver.com",
-                        "aiden3")
-        );
+        beforeUser = userService.save(new UserDto("aiden",
+                flagNo + "aiden1@naver.com",
+                "aiden3"));
         flagNo++;
     }
 
     @Test
     void findByEmail() {
-        assertThat(userService.findByEmail(beforeUser.getEmail())).isEqualTo(beforeUser);
+        assertThat(userService.findByEmail(beforeUser.getEmail())
+                .orElseThrow(IllegalArgumentException::new)).isEqualTo(beforeUser);
     }
 
     @Test
     void save() {
         User newUser = userService.save(
-                new UserDto("whale", "whale@naver.com", "whale2")
-        );
-        assertThat(userService.findByEmail(newUser.getEmail())).isEqualTo(newUser);
+                new UserDto("whale", "whale@naver.com", "whale2"));
+        assertThat(userService.findByEmail(newUser.getEmail())
+                .orElseThrow(IllegalArgumentException::new)).isEqualTo(newUser);
     }
 
     @Test
     void update() {
-        User updatedUser = userService.update(new UserDto("pobi", beforeUser.getEmail(), beforeUser.getPassword()));
-        assertThat(userService.findByEmail(beforeUser.getEmail())).isEqualTo(updatedUser);
+        User updatedUser = userService.update(
+                new UserDto("pobi", beforeUser.getEmail(), beforeUser.getPassword()));
+        assertThat(userService.findByEmail(beforeUser.getEmail())
+                .orElseThrow(IllegalArgumentException::new)).isEqualTo(updatedUser);
     }
 
     @Test
     void remove() {
         userService.remove(beforeUser.getEmail());
-        assertThatThrownBy(() -> userService.findByEmail(beforeUser.getEmail()))
+        assertThatThrownBy(() -> userService.findByEmail(beforeUser.getEmail())
+                .orElseThrow(IllegalArgumentException::new))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test
-    void isExist_true() {
-        assertThat(userService.exists(beforeUser.getEmail())).isTrue();
-    }
-
-    @Test
-    void isExist_false() {
-        assertThat(userService.exists("coogie@naver.com")).isFalse();
-    }
-
-    @Test
-    void name() {
-    }
 }
