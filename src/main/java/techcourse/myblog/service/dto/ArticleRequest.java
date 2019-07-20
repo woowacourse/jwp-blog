@@ -1,7 +1,7 @@
 package techcourse.myblog.service.dto;
 
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.support.config.validator.TitleConstraint;
+import techcourse.myblog.support.validator.TitleConstraint;
 
 public class ArticleRequest {
     @TitleConstraint
