@@ -1,7 +1,5 @@
 package techcourse.myblog.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.UserRepository;
@@ -9,12 +7,11 @@ import techcourse.myblog.web.controller.dto.LoginDto;
 import techcourse.myblog.web.controller.dto.UserDto;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -28,34 +25,22 @@ public class UserService {
         return userRepository.save(User.of(userDto));
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public User update(UserDto userDto) {
-        User user = findByEmail(userDto.getEmail());
+        User user = findByEmail(userDto.getEmail()).orElseThrow(IllegalArgumentException::new);
         return userRepository.save(user.update(userDto));
     }
 
     public void remove(String email) {
-        userRepository.delete(findByEmail(email));
+        User user = findByEmail(email).orElseThrow(IllegalArgumentException::new);
+        userRepository.delete(user);
     }
 
-    public User login(LoginDto loginDto) throws IllegalArgumentException {
-        // TODO: 2019-07-19 Interceptor...
-        User user = findByEmail(loginDto.getEmail());
-        if(user.equalPassword(loginDto.getPassword())) {
-            return user;
-        }
-        throw new IllegalArgumentException("비밀번호 다르다.");
-    }
-
-    public boolean exists(String email) {
-        try {
-            findByEmail(email);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+    public Optional<User> checkUser(LoginDto loginDto) {
+        return userRepository.findByEmail(loginDto.getEmail())
+                .filter(user -> user.equalPassword(loginDto.getPassword()));
     }
 }
