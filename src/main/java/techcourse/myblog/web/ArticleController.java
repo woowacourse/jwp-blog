@@ -1,90 +1,71 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
+import java.util.List;
+
 @Controller
+@RequiredArgsConstructor
 public class ArticleController {
-
-    private ArticleRepository articleRepository;
-
-    @Autowired
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
-
-//    @GetMapping("/articles")
-//    public String index(Model model) {
-//        model.addAttribute("articles", articleRepository.findAll());
-//        return "index";
-//    }
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
+    private final ArticleRepository articleRepository;
 
     @GetMapping("/")
-    public ModelAndView index(String blogName) {
-        if (blogName == null) {
-            blogName = "누구게?";
-        }
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("index");
-        modelAndView.addObject("blogName", blogName);
-        modelAndView.addObject("articles", articleRepository.findAll());
-        return modelAndView;
+    public String showArticles(Model model) {
+        List<Article> articles = articleRepository.findAll();
+        model.addAttribute("articles", articles);
+        return "index";
     }
 
     @GetMapping("/writing")
-    public String writeForm() {
+    public String showArticleWritingPage() {
         return "article-edit";
     }
 
     @PostMapping("/articles")
-    public String createArticle(Article article) {
-        articleRepository.save(article);
-        return "redirect:/articles/" + article.getId();
-    }
-
-//    @GetMapping("/article/{articleId}")
-//    public ModelAndView show(@PathVariable String articleId) {
-//        Article article = articleRepository.findById(Long.parseLong(articleId))
-//                .orElseThrow(IllegalArgumentException::new);
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("article");
-//        modelAndView.addObject("article", article);
-//        return modelAndView;
-//    }
-
-    @GetMapping("/articles/{id}")
-    public ModelAndView show(@PathVariable long id) {
-        ModelAndView mav = new ModelAndView("article");
-        mav.addObject("article", articleRepository.findById(id).get());
-        return mav;
+    public String writeArticle(Article article, Model model) {
+        Article newArticle = articleRepository.save(article);
+        model.addAttribute("article", newArticle);
+        return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public ModelAndView writeForm(@PathVariable String articleId) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("article-edit");
-        Article article = articleRepository.findById(Long.parseLong(articleId))
-                .orElseThrow(IllegalArgumentException::new);
-        modelAndView.addObject("article", article);
-        return modelAndView;
+    public String showArticleEditingPage(@PathVariable int articleId, Model model) {
+        model.addAttribute("article",
+                articleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("잘못된 접근입니다")));
+        return "article-edit";
+    }
+
+    @GetMapping("/articles/{articleId}")
+    public String showArticleById(@PathVariable int articleId, Model model) {
+        try {
+            model.addAttribute("article",
+                    articleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("잘못된 접근입니다.")));
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("message", e);
+            return "redirect:/err";
+        }
+        return "article";
     }
 
     @PutMapping("/articles/{articleId}")
-    public RedirectView update(@PathVariable String articleId, Article newArticle) {
-        Article article = articleRepository.findById(Long.parseLong(articleId))
-                .orElseThrow(IllegalArgumentException::new);
-        article.update(newArticle);
-        return new RedirectView("/");
+    public String updateArticle(@PathVariable int articleId, Article article, Model model) {
+        article.setId(articleId);
+        Article newArticle = articleRepository.save(article);
+        model.addAttribute("article", newArticle);
+        return "article";
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public RedirectView delete(@PathVariable String articleId) {
-        articleRepository.deleteById(Long.parseLong(articleId));
-        return new RedirectView("/");
+    public String deleteArticle(@PathVariable int articleId) {
+        articleRepository.deleteById(articleId);
+        return "redirect:/";
     }
 }
