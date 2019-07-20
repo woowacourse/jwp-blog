@@ -46,5 +46,5 @@
         - [x] HTML5에서 제공하는 form validation 기능을 최대한 활용한다.
        
    - `/users`: 회원 목록 페이지(`user-list.html`)
-        - [ ] DB에 저장된 회원 정보를 노출한다.
+        - [x] DB에 저장된 회원 정보를 노출한다.
 
