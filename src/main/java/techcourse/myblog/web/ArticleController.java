@@ -54,11 +54,14 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}/edit")
-    public String showEditPage(@PathVariable("id") Long id, Model model) {
+    public String showEditPage(@PathVariable("id") Long id, Model model, HttpServletRequest httpServletRequest) {
         Article article = articleRepository.findById(id).get();
-        ArticleDto articleDto = new ArticleDto(article.getId(), article.getTitle(), article.getCoverUrl(), article.getContents());
-        model.addAttribute("article", articleDto);
-        return "article-edit";
+        if (isLoggedInUserArticle(httpServletRequest, article)) {
+            ArticleDto articleDto = new ArticleDto(article.getId(), article.getTitle(), article.getCoverUrl(), article.getContents());
+            model.addAttribute("article", articleDto);
+            return "article-edit";
+        }
+        return "redirect:/articles/" + id;
     }
 
     @PostMapping("/articles")
@@ -76,19 +79,25 @@ public class ArticleController {
     @PutMapping("/articles/{id}")
     public String editArticle(@PathVariable("id") long id, ArticleDto articleDto, HttpServletRequest httpServletRequest) {
         Article article = articleRepository.findById(id).get();
-        HttpSession httpSession = httpServletRequest.getSession();
-        User user = (User) httpSession.getAttribute(LOGGED_IN_USER);
-        if (user == null || !user.getId().equals(article.getUserId())) {
-            return "redirect:/articles/" + id;
+        if (isLoggedInUserArticle(httpServletRequest, article)) {
+            article.updateArticle(articleDto);
+            articleRepository.save(article);
         }
-        article.updateArticle(articleDto);
-        articleRepository.save(article);
         return "redirect:/articles/" + id;
     }
 
     @DeleteMapping("/articles/{id}")
-    public String deleteArticle(@PathVariable("id") long id) {
-        articleRepository.deleteById(id);
+    public String deleteArticle(@PathVariable("id") long id, HttpServletRequest httpServletRequest) {
+        Article article = articleRepository.findById(id).get();
+        if (isLoggedInUserArticle(httpServletRequest, article)) {
+            articleRepository.deleteById(id);
+        }
         return "redirect:/";
+    }
+
+    private boolean isLoggedInUserArticle(HttpServletRequest httpServletRequest, Article article) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        UserPublicInfoDto user = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
+        return (user != null) && (article != null) && user.getId().equals(article.getUserId());
     }
 }
