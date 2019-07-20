@@ -65,4 +65,9 @@ public class UserService {
         }
         throw new EmailNotFoundException("존재하지 않는 회원입니다.");
     }
+
+    // TODO: 2019-07-20 dto통합하기
+    public void delete(final UserResponseDto user) {
+        userRepository.deleteById(user.getEmail());
+    }
 }

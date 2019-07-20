@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -96,6 +97,15 @@ public class UserController {
         modelAndView.setViewName("mypage");
         UserResponseDto user = (UserResponseDto) session.getAttribute("user");
         modelAndView.addObject("user", user);
+        return modelAndView;
+    }
+
+    @DeleteMapping("/mypage")
+    public ModelAndView deleteUser(final HttpSession session) {
+        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        userService.delete(user);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setView(new RedirectView("/logout"));
         return modelAndView;
     }
 
