@@ -351,7 +351,7 @@ public class AccountControllerTest {
 
         testSignupProcess(name, password, email);
         String cookie = getLoginCookie(email, password);
-        webTestClient.delete().uri("/accounts/user").header("Cookie", cookie)
+        webTestClient.delete().uri("/accounts/delete").header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isFound();

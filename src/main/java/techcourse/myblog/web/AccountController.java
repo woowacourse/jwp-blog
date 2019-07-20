@@ -49,9 +49,10 @@ public class AccountController {
         return "redirect:/";
     }
 
-    @DeleteMapping("/accounts/user")
+    @DeleteMapping("/accounts/delete")
     public String deleteUser(HttpServletRequest request) {
         log.debug(">>> deleteUser: request : {}", request);
+        log.debug(">>> deleteUser: requestMethod : {}", request.getMethod());
         User user = (User) request.getSession().getAttribute("user");
         request.getSession().removeAttribute("user");
         userRepository.delete(user);
