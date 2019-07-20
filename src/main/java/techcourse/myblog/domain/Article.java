@@ -33,6 +33,10 @@ public class Article {
         this.contents = articleDto.getContents();
     }
 
+    public boolean matchUserId(Long userId) {
+        return this.userId.equals(userId);
+    }
+
     public Long getId() {
         return id;
     }

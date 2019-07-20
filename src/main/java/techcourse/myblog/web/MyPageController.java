@@ -50,6 +50,6 @@ public class MyPageController {
 
     @ExceptionHandler(NotFoundUserException.class)
     public String handleNotFoundUserException(Model model, Exception e) {
-        return "/";
+        return "redirect:/";
     }
 }
