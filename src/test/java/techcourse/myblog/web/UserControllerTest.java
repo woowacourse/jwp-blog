@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,170 +25,140 @@ public class UserControllerTest {
     @Autowired
     UserRepository userRepository;
 
+    private static UserDto userDto;
+
+    static {
+        userDto = UserDto.builder()
+                .userName("Martin")
+                .email("martin@gmail.com")
+                .password("Aa12345!")
+                .confirmPassword("Aa12345!")
+                .build();
+    }
+
     @Test
     void show_sign_up() {
-        webTestClient.get().uri("/users/signup").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void create_user() {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "Martin")
-                        .with("email", "martin@gmail.com")
-                        .with("password", "Aa12345!")
-                        .with("confirmPassword", "Aa12345!")
-                ).exchange()
-                .expectStatus().isFound();
-    }
-
-    @Test
-    void show_login() {
-        webTestClient.get().uri("/login").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void users_withLogin() {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "Martin")
-                        .with("email", "martin@gmail.com")
-                        .with("password", "Aa12345!")
-                        .with("confirmPassword", "Aa12345!")
-                ).exchange()
-                .expectStatus()
-                .isFound();
-
-        loginSession();
-        webTestClient.get().uri("/users")
+        webTestClient.get()
+                .uri("/users/signup")
                 .exchange()
                 .expectStatus()
                 .isOk();
     }
 
     @Test
-    void users_withoutLogin() {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "Martin")
-                        .with("email", "martin@gmail.com")
-                        .with("password", "Aa12345!")
-                        .with("confirmPassword", "Aa12345!")
-                ).exchange()
-                .expectStatus()
+    void create_user() {
+        postWithBody(webTestClient.post(), "/users/new", userDto)
                 .isFound();
+    }
 
-        webTestClient.get().uri("/users")
-                .exchange()
-                .expectStatus()
-                .isFound();
+
+    @Test
+    void show_login() {
+        getWithoutBody("/login").isOk();
+    }
+
+    @Test
+    void users_withLogin() {
+        postWithBody(webTestClient.post(), "/users/new", userDto).isFound();
+
+        loginSession();
+        getWithoutBody("/users").isOk();
+    }
+
+    @Test
+    void users_withoutLogin() {
+        postWithBody(webTestClient.post(), "/users/new", userDto).isFound();
+
+        getWithoutBody("/users").isFound();
     }
 
     @Test
     void check_same_email() {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "Martin")
-                        .with("email", "martin@gmail.com")
-                        .with("password", "Aa12345!")
-                        .with("confirmPassword", "Aa12345!")
-                ).exchange()
-                .expectStatus().isFound();
+        postWithBody(webTestClient.post(), "/users/new", userDto).isFound();
 
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "Martin")
-                        .with("email", "martin@gmail.com")
-                        .with("password", "Aa12345!")
-                        .with("confirmPassword", "Aa12345!")
-                ).exchange()
-                .expectStatus().isOk()
-                .expectBody().consumeWith(res -> {
-            String body = new String(res.getResponseBody());
-            assertThat(body.contains("중복된 이메일 입니다.")).isTrue();
-        });
+        postWithBody(webTestClient.post(), "/users/new", userDto)
+                .isOk()
+                .expectBody()
+                .consumeWith(res -> {
+                    String body = new String(res.getResponseBody());
+                    assertThat(body.contains("중복된 이메일 입니다.")).isTrue();
+                });
     }
 
     @Test
     void check_valid_name() {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "M")
-                        .with("email", "martin@gmail.com")
-                        .with("password", "Aa12345!")
-                        .with("confirmPassword", "Aa12345!")
-                ).exchange()
-                .expectStatus().isOk()
-                .expectBody().consumeWith(res -> {
-            String body = new String(res.getResponseBody());
-            assertThat(body.contains("형식에 맞는 이름이 아닙니다.")).isTrue();
-        });
+        UserDto invalidUser = UserDto.builder()
+                .userName("M")
+                .email("martin@gmail.com")
+                .password("Aa12345!")
+                .confirmPassword("Aa12345!")
+                .build();
+
+        postWithBody(webTestClient.post(), "/users/new", invalidUser)
+                .isOk()
+                .expectBody()
+                .consumeWith(res -> {
+                    String body = new String(res.getResponseBody());
+                    assertThat(body.contains("형식에 맞는 이름이 아닙니다.")).isTrue();
+                });
     }
 
     @Test
     void check_valid_password() {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "Martin")
-                        .with("email", "martin@gmail.com")
-                        .with("password", "A")
-                        .with("confirmPassword", "A")
-                ).exchange()
-                .expectStatus().isOk()
-                .expectBody().consumeWith(res -> {
-            String body = new String(res.getResponseBody());
-            assertThat(body.contains("형식에 맞는 비밀번호가 아닙니다.")).isTrue();
-        });
+        UserDto invalidUser = UserDto.builder()
+                .userName("M")
+                .email("martin@gmail.com")
+                .password("A")
+                .confirmPassword("A")
+                .build();
+
+        postWithBody(webTestClient.post(), "/users/new", invalidUser)
+                .isOk()
+                .expectBody()
+                .consumeWith(res -> {
+                    String body = new String(res.getResponseBody());
+                    assertThat(body.contains("형식에 맞는 비밀번호가 아닙니다.")).isTrue();
+                });
     }
 
     @Test
     void check_valid_confirm_password() {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "Martin")
-                        .with("email", "martin@gmail.com")
-                        .with("password", "Aa12345!")
-                        .with("confirmPassword", "Ss12345!")
-                ).exchange()
-                .expectStatus().isOk()
-                .expectBody().consumeWith(res -> {
-            String body = new String(res.getResponseBody());
-            assertThat(body.contains("비밀번호가 일치하지 않습니다.")).isTrue();
-        });
+        UserDto invalidUser = UserDto.builder()
+                .userName("M")
+                .email("martin@gmail.com")
+                .password("A")
+                .confirmPassword("A")
+                .build();
+
+        postWithBody(webTestClient.post(), "/users/new", invalidUser)
+                .isOk()
+                .expectBody()
+                .consumeWith(res -> {
+                    String body = new String(res.getResponseBody());
+                    assertThat(body.contains("비밀번호가 일치하지 않습니다.")).isTrue();
+                });
     }
 
     @Test
     void showMyPage_withLogin() {
         loginSession();
-        webTestClient.get().uri("/users/mypage")
-                .exchange()
-                .expectStatus()
-                .isOk();
+        getWithoutBody("/users/mypage").isOk();
     }
 
     @Test
     void showMyPage_withoutLogin() {
-        webTestClient.get().uri("/users/mypage")
-                .exchange()
-                .expectStatus()
-                .isFound();
+        getWithoutBody("/users/mypage").isFound();
     }
 
     @Test
     void showUserEdit_withLogin() {
         loginSession();
-        webTestClient.get().uri("/users/mypage/edit")
-                .exchange()
-                .expectStatus()
-                .isOk();
+        getWithoutBody("/users/mypage/edit").isOk();
     }
 
     @Test
     void showUserEdit_withoutLogin() {
-        webTestClient.get().uri("/users/mypage/edit")
-                .exchange()
-                .expectStatus()
-                .isFound();
+        getWithoutBody("/users/mypage/edit").isFound();
     }
 
     @AfterEach
@@ -205,5 +177,25 @@ public class UserControllerTest {
             }
             return null;
         }).build();
+    }
+
+    StatusAssertions postWithBody(WebTestClient.RequestBodyUriSpec requestBodyUriSpec, String uri, UserDto userDto) {
+        return requestBodyUriSpec
+                .uri(uri)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("userName", userDto.getUserName())
+                        .with("email", userDto.getEmail())
+                        .with("password", userDto.getPassword())
+                        .with("confirmPassword", userDto.getConfirmPassword()))
+                .exchange()
+                .expectStatus();
+    }
+
+    StatusAssertions getWithoutBody(String uri) {
+        return webTestClient
+                .get()
+                .uri(uri)
+                .exchange()
+                .expectStatus();
     }
 }
