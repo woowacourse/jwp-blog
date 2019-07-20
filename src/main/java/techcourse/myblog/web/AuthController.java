@@ -51,7 +51,7 @@ public class AuthController {
         throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
     }
 
-    @ExceptionHandler({ UserLoginInputException.class, NotMatchPasswordException.class, NotExistUserException.class })
+    @ExceptionHandler({UserLoginInputException.class, NotMatchPasswordException.class, NotExistUserException.class})
     public RedirectView loginException(RedirectAttributes redirectAttributes, Exception exception) {
         redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
 

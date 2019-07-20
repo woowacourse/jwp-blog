@@ -6,11 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Entity
-@Getter @EqualsAndHashCode(of = {"id"})
+@Getter
+@EqualsAndHashCode(of = {"id"})
 @NoArgsConstructor
 public class User {
     @Id

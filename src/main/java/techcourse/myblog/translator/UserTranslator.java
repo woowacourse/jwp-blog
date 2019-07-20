@@ -5,7 +5,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 
 @Component
-public class UserTranslator implements ModelTranslator<User, UserDto>{
+public class UserTranslator implements ModelTranslator<User, UserDto> {
     @Override
     public User toEntity(final User user, final UserDto userDto) {
         Long id = processValue(user.getId(), userDto.getId());
