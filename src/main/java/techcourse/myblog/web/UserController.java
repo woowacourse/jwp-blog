@@ -5,12 +5,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.dto.UserRequest;
+import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserLoginRequest;
+import techcourse.myblog.service.dto.UserRequest;
 import techcourse.myblog.service.dto.UserResponse;
 import techcourse.myblog.service.exception.LoginException;
 import techcourse.myblog.service.exception.SignUpException;
-import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

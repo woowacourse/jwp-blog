@@ -3,13 +3,14 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.service.dto.UserRequest;
 import techcourse.myblog.service.dto.UserLoginRequest;
+import techcourse.myblog.service.dto.UserRequest;
 import techcourse.myblog.service.exception.EditException;
 import techcourse.myblog.service.exception.LoginException;
 import techcourse.myblog.service.exception.SignUpException;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -33,7 +34,7 @@ public class UserService {
         }
     }
 
-    public Iterable<? extends User> findAll() {
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 

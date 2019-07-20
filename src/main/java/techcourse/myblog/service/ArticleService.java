@@ -6,6 +6,7 @@ import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.service.dto.ArticleRequest;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class ArticleService {
@@ -15,7 +16,7 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public Iterable<Article> findAll() {
+    public List<Article> findAll() {
         return articleRepository.findAll();
     }
 
