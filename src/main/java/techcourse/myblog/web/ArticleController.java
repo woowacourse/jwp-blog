@@ -5,28 +5,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.service.ArticleService;
 
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
-    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
 
     @Autowired
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
-    @GetMapping("/")
-    public String index(Model model) {
-        Iterable<Article> articles = articleRepository.findAll();
-        model.addAttribute("articles", articles);
-        return "index";
-    }
-
-    // TODO : /articles 중복 제거
-    @GetMapping("/articles/new")
+    @GetMapping("/new")
     public String writeNewArticle() {
-
         return "article-edit";
     }
 
@@ -35,40 +27,39 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PostMapping("/articles")
+    @PostMapping("")
     public String saveArticle(Article article, Model model) {
-        articleRepository.save(article);
+        articleService.save(article);
         model.addAttribute("article", article);
-        System.out.println(articleRepository.findAll());
+        System.out.println(articleService.findAllArticles());
         return "article";
     }
 
-    @GetMapping("/articles/{id}")
+    @GetMapping("/{id}")
     public String fetchArticle(@PathVariable long id, Model model) {
-        Article article = articleRepository.findById(id)
-                .orElseThrow(IllegalArgumentException::new);
+        Article article = articleService.findById(id);
         model.addAttribute("article", article);
         return "article";
     }
 
-    @GetMapping("/articles/{id}/edit")
+    @GetMapping("/{id}/edit")
     public String editArticle(@PathVariable long id, Model model) {
-        Article article = articleRepository.findById(id)
-                .orElseThrow(IllegalArgumentException::new);
+        Article article = articleService.findById(id);
         model.addAttribute("article", article);
         return "article-edit";
     }
 
-    @PutMapping("/articles/{id}")
+    @PutMapping("/{id}")
     public String saveEditedArticle(@PathVariable long id, Article editedArticle, Model model) {
-        articleRepository.update(editedArticle);
+        editedArticle.setId(id);
+        articleService.update(editedArticle);
         model.addAttribute("article", editedArticle);
         return "article";
     }
 
-    @DeleteMapping("/articles/{id}")
+    @DeleteMapping("/{id}")
     public String deleteArticle(@PathVariable long id) {
-        articleRepository.deleteById(id);
+        articleService.deleteById(id);
         return "redirect:/";
     }
 }

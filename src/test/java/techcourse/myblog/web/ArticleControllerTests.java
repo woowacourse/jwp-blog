@@ -33,7 +33,7 @@ public class ArticleControllerTests {
 
     @Test
     void writeArticleForm() {
-        webTestClient.get().uri("/writing")
+        webTestClient.get().uri("/articles/writing")
                 .exchange()
                 .expectStatus().isOk();
     }
