@@ -52,7 +52,7 @@ class UserControllerTest {
     }
 
     @Test
-    void 회원가입_폼_테스트() {
+    void 회원가입_페이지_응답_코드_200_테스트() {
         webTestClient.get().uri("/users/signup")
                 .exchange()
                 .expectStatus().isOk();
@@ -60,7 +60,7 @@ class UserControllerTest {
 
 
     @Test
-    void 유저_조회_테스트() {
+    void 유저_조회_페이지에_주입한_유저정보가_있는지_확인() {
         webTestClient.get().uri("/users")
                 .exchange()
                 .expectStatus().isOk()
@@ -73,7 +73,7 @@ class UserControllerTest {
     }
 
     @Test
-    void 유저_이메일_중복_테스트() {
+    void 중복된_이메일_보낼_시_회원가입_페이지로_리다이렉트하는지_확인() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("userName", USER_NAME_1)
@@ -97,28 +97,7 @@ class UserControllerTest {
     }
 
     @Test
-    void 수정_테스트() {
-        webTestClient.post().uri("/users/mypage")
-                .body(fromFormData("userName", USER_NAME_2)
-                        .with("email", EMAIL_1)
-                        .with("password", PASSWORD_2))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    String url = response.getResponseHeaders().get("Location").get(0);
-                    webTestClient.get().uri(url)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = getResponseBody(redirectResponse.getResponseBody());
-                                assertThat(body.contains(USER_NAME_2)).isTrue();
-                            });
-                });
-    }
-
-    @Test
-    void 삭제_테스트() {
+    void 삭제_요청을_보낼_시_3xx_응답_코드인지_확인() {
         webTestClient.delete().uri("/users").header("Cookie", cookie)
                 .exchange()
                 .expectStatus().is3xxRedirection();

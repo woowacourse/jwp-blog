@@ -48,7 +48,7 @@ public class LoginControllerTest {
     }
 
     @Test
-    void 로그인_성공_리다이렉트_테스트_및_세션_테스트() {
+    void 로그인되어_있을_때_메인_페이지에서_유저_이름이_뜨는지_확인() {
         webTestClient.get().uri("/").header("cookie", cookie)
                 .exchange()
                 .expectStatus().isOk()
@@ -60,7 +60,7 @@ public class LoginControllerTest {
     }
 
     @Test
-    void 로그인_아이디_실패_리다이렉트_테스트() {
+    void 존재하지_않는_아이디로_로그인할_때_로그인_페이지로_리다이렉트하는지_확인() {
         webTestClient.post().uri("/login")
                 .body(fromFormData("email", EMAIL_2)
                         .with("password", PASSWORD_1))
@@ -69,13 +69,14 @@ public class LoginControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String url = response.getResponseHeaders().get("Location").get(0);
+                    assertThat(url.contains(LOGIN_FAIL_PAGE)).isTrue();
 
                 });
 
     }
 
     @Test
-    void 로그인_패스워드_실패_리다이렉트_테스트() {
+    void 로그인_패스워드_불일치할_때_로그인_페이지로_리다이렉트하는지_테스트() {
         webTestClient.post().uri("/login")
                 .body(fromFormData("email", EMAIL_1)
                         .with("password", PASSWORD_2))

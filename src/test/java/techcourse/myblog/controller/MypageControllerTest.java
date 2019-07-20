@@ -47,7 +47,7 @@ class MypageControllerTest {
     }
 
     @Test
-    void 수정_테스트() {
+    void 수정했을_때_response가_수정한_내용을_헤더에_포함시키는지_확인() {
         webTestClient.post().uri("/mypage")
                 .body(fromFormData("userName", USER_NAME_2)
                         .with("email", EMAIL_1)

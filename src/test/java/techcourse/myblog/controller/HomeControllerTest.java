@@ -22,7 +22,7 @@ public class HomeControllerTest {
     WebTestClient webTestClient;
 
     @Test
-    void 로그인_하지_않았을때_초기_페이지() {
+    void 로그인_하지_않았을때_초기_페이지에_로그인_텍스트가_있는지_확인() {
         webTestClient.get().uri("/")
                 .exchange()
                 .expectStatus().isOk()

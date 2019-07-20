@@ -47,7 +47,7 @@ class LogoutControllerTest {
     }
 
     @Test
-    void logout() {
+    void 로그아웃했을_시_메인에_로그인_문자가_뜨는지_확인() {
         webTestClient.get().uri("/logout").header("cookie", cookie).exchange();
 
         webTestClient.get().uri("/").header("cookie", cookie)
