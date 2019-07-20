@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,22 +13,23 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode
 @Builder
-public class Article {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String title;
+    private String email;
 
-    private String coverUrl;
+    private String password;
 
-    private String contents;
+    private String name;
 
-    private Article(long id, String title, String coverUrl, String contents) {
+    public User(long id, String email, String password, String name) {
         this.id = id;
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
+        this.email = email;
+        this.password = password;
+        this.name = name;
     }
 }
