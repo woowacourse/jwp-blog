@@ -51,12 +51,8 @@ public class UserService {
     }
 
     private void checkPassword(UserLoginRequest userLoginRequest, User user) {
-        try {
-            if (!encryptHelper.isMatch(userLoginRequest.getPassword(), user.getPassword())) {
-                throw new LoginException("비밀번호 틀림");
-            }
-        } catch(Exception e) {
-            throw new LoginException("잘못된 비밀번호");
+        if (!encryptHelper.isMatch(userLoginRequest.getPassword(), user.getPassword())) {
+            throw new LoginException("비밀번호 틀림");
         }
     }
 

@@ -30,11 +30,8 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String createLoginForm(HttpServletRequest request) {
-        if (request.getSession().getAttribute(USER_INFO) == null) {
-            return "login";
-        }
-        return "redirect:/";
+    public String createLoginForm() {
+        return "login";
     }
 
     @GetMapping("/signup")
@@ -79,10 +76,6 @@ public class UserController {
     @PostMapping("/login")
     public String login(UserLoginRequest userLoginRequest, HttpServletRequest request) {
         User user = userService.findUserByEmail(userLoginRequest);
-//
-//        if (!user.matchPassword(userLoginRequest.getPassword())) {
-//            throw new LoginException("비밀번호 틀림");
-//        }
 
         request.getSession().setAttribute(USER_INFO, user);
 

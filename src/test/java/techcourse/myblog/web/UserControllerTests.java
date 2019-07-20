@@ -43,7 +43,8 @@ public class UserControllerTests {
     void loginForm() {
         webTestClient.get().uri("/login")
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus()
+                .isOk()
         ;
     }
 
@@ -51,7 +52,8 @@ public class UserControllerTests {
     void signUpForm() {
         webTestClient.get().uri("/signup")
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus()
+                .isOk()
         ;
     }
 
@@ -78,7 +80,9 @@ public class UserControllerTests {
                 .body(BodyInserters.fromFormData("email", "test@gmail.com")
                         .with("password", "PassWord1!"))
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus()
+                .is3xxRedirection()
+        ;
     }
 
     @Test
@@ -93,7 +97,8 @@ public class UserControllerTests {
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
                     assertTrue(body.contains("email 없음"));
-                });
+                })
+        ;
     }
 
     @Test
@@ -108,7 +113,8 @@ public class UserControllerTests {
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
                     assertTrue(body.contains("비밀번호 틀림"));
-                });
+                })
+        ;
     }
 
     @Test
@@ -118,7 +124,8 @@ public class UserControllerTests {
                 .expectHeader()
                 .valueMatches("location", "http://localhost:" + localServerPort + "/login")
                 .expectStatus()
-                .is3xxRedirection(); // 로그인 화면으로 갈 것임
+                .is3xxRedirection()
+        ; // 로그인 화면으로 갈 것임
     }
 
     @Test
@@ -128,7 +135,8 @@ public class UserControllerTests {
                 .expectHeader()
                 .valueMatches("location", "http://localhost:" + localServerPort + "/login")
                 .expectStatus()
-                .is3xxRedirection(); // 로그인 화면으로 갈 것임
+                .is3xxRedirection()
+        ; // 로그인 화면으로 갈 것임
     }
 
     @Test
@@ -138,6 +146,7 @@ public class UserControllerTests {
                 .expectHeader()
                 .valueMatches("location", "http://localhost:" + localServerPort + "/login")
                 .expectStatus()
-                .is3xxRedirection(); // 로그인 화면으로 갈 것임
+                .is3xxRedirection()
+        ; // 로그인 화면으로 갈 것임
     }
 }
