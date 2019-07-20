@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,5 +58,10 @@ public class UserController {
     public String handleSignUpException(Model model, Exception e) {
         model.addAttribute("errorMessage", e.getMessage());
         return "sign-up";
+    }
+
+    @ExceptionHandler(NotFoundUserException.class)
+    public String handleNotFoundUserException(Model model, Exception e) {
+        return "/";
     }
 }
