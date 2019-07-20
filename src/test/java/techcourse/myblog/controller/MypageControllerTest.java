@@ -19,12 +19,12 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class LogoutControllerTest {
+class MypageControllerTest {
     private static final String USER_NAME_1 = "test1";
+    private static final String USER_NAME_2 = "test2";
     private static final String EMAIL_1 = "test1@test.com";
     private static final String PASSWORD_1 = "1234";
-    private static final String LOGIN_TEXT = "Login";
-
+    private static final String PASSWORD_2 = "12345";
     @Autowired
     WebTestClient webTestClient;
     private String cookie;
@@ -47,18 +47,24 @@ class LogoutControllerTest {
     }
 
     @Test
-    void logout() {
-        webTestClient.get().uri("/logout").header("cookie", cookie).exchange();
-
-        webTestClient.get().uri("/").header("cookie", cookie)
+    void 수정_테스트() {
+        webTestClient.post().uri("/mypage")
+                .body(fromFormData("userName", USER_NAME_2)
+                        .with("email", EMAIL_1)
+                        .with("password", PASSWORD_2))
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().is3xxRedirection()
                 .expectBody()
                 .consumeWith(response -> {
-                    String body = getResponseBody(response.getResponseBody());
-                    assertThat(body.contains(LOGIN_TEXT)).isTrue();
+                    String url = response.getResponseHeaders().get("Location").get(0);
+                    webTestClient.get().uri(url)
+                            .exchange()
+                            .expectBody()
+                            .consumeWith(redirectResponse -> {
+                                String body = getResponseBody(redirectResponse.getResponseBody());
+                                assertThat(body.contains(USER_NAME_2)).isTrue();
+                            });
                 });
-
     }
 
     private String getResponseBody(byte[] responseBody) {
