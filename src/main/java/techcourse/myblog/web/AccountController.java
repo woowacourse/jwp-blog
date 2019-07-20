@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserForm;
 import techcourse.myblog.domain.UserRepository;
@@ -113,5 +110,13 @@ public class AccountController {
         List<User> users = userRepository.findAll();
         model.addAttribute("users", users);
         return "user-list";
+    }
+
+    @DeleteMapping("/accounts/users")
+    public String deleteUser(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        request.getSession().removeAttribute("user");
+        userRepository.delete(user);
+        return "redirect:/";
     }
 }

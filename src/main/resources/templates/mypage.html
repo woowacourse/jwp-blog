@@ -90,6 +90,17 @@
                                     </div>
                                 </div>
                                 <hr>
+                                <div class="row" th:if="${session.user != null && session.user.getId() == user.id}">
+                                    <div class="col-md-4">
+                                        <div class="btn-group">
+                                            <form th:method="delete" action="/accounts/users">
+                                            <button type="submit" class="btn btn-default">
+                                                <span>탈퇴</span>
+                                            </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

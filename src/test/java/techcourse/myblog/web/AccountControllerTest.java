@@ -343,6 +343,20 @@ public class AccountControllerTest {
         ;
     }
 
+    @Test
+    void deleteUser() {
+        String name = "delete";
+        String password = "asdfASDF1234!@#$";
+        String email = "delete@user.com";
+
+        testSignupProcess(name, password, email);
+        String cookie = getLoginCookie(email, password);
+        webTestClient.delete().uri("/accounts/users").header("Cookie", cookie)
+                .exchange()
+                .expectStatus()
+                .isFound();
+    }
+
     private String getLoginCookie(String email, String password) {
         return webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

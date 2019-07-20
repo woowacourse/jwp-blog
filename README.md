@@ -97,11 +97,14 @@
 
 (회원 탈퇴)
 
-- [ ] MyPage > profile 하단 > 탈퇴 버튼을 추가
-- [ ] 탈퇴버튼 클릭시 ????.html 로 이동
-- [ ] DELETE로 탈퇴 요청
+- [ ] ~~MyPage > profile 하단 > 탈퇴 버튼을 추가~~
+- [ ] ~~버튼 클릭시 DELETE로 탈퇴 요청~~
+- [ ] ~~탈퇴버튼 클릭시 ????.html 로 이동~~
+- [ ] ~~DELETE로 탈퇴 요청~~
 
 (추가)
+
+- [ ] readme 생성 (todolist와 분리)
 
 - [ ] url /articles를 prefix로 빼기 (/writing -> /articles/writing)
 - [x] ~~html에서 form 중복 제거하기 (article-edit.html)~~
@@ -114,5 +117,6 @@
 - [ ] 이미지....이미지......
 - [ ] login.html / signup.html 에서 logo부분 중복 제거 (header.html 에 포함된 부분)
 - [ ] AccountController가 너무 많이 가지고있는듯...?  무슨 기준으로 나누지 테스트도 연관되어있어서
-- [ ] drop menu 에서 로그인/비로그인 상관 없이 기본인 거 중복 제거
+- [x] ~~drop menu 에서 로그인/비로그인 상관 없이 기본인 거 중복 제거~~
 - [ ] 로그인 페이지에서 회원가입 버튼 랜딩 url /accounts/signup으로 변경
+- [ ] DB 저장시 비밀번호 암호화
