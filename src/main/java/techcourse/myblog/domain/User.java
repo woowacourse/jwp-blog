@@ -20,7 +20,8 @@ public class User {
 	private String githubURL;
 	private String facebookURL;
 
-	public User() {}
+	public User() {
+	}
 
 	public User(UserDto userDto) {
 		saveUser(userDto);

@@ -31,7 +31,7 @@ public class ArticleController {
 	public String saveArticle(ArticleDto articleDto, Model model) {
 		Article article = new Article(articleDto.getTitle(), articleDto.getContents(), articleDto.getCoverUrl());
 		Long id = articleRepository.save(article).getId();
-		return "redirect:/articles/"+id;
+		return "redirect:/articles/" + id;
 	}
 
 	@GetMapping("articles/{articleId}")

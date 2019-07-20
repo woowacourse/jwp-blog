@@ -15,8 +15,7 @@ public class UserDto {
 	@Pattern(regexp = "^[a-zA-Z가-힣]+$")
 	private String username;
 
-	// TODO: 차후 패스워드 암호화
-	@Length(min = 8) // 비밀번호는 8자 이상의 소문자, 대문자, 숫자, 특수문자의 조합이다.
+	@Length(min = 8)
 	@Pattern(regexp = "^(?=.*[\\p{Ll}])(?=.*[\\p{Lu}])(?=.*[\\p{N}])(?=.*[\\p{S}\\p{P}])[\\p{Ll}\\p{Lu}\\p{N}\\p{S}\\p{P}]+$")
 	private String password;
 

@@ -97,7 +97,7 @@ public class UserController {
 		String email = httpSession.getAttribute("email").toString();
 		Optional<User> user = userRepository.findByEmail(email);
 
-		if(user.get().matchPassword(password)) {
+		if (user.get().matchPassword(password)) {
 			model.addAttribute("result", "회원 탈퇴가 완료되었습니다.");
 			userRepository.delete(user.get());
 			httpSession.invalidate();
