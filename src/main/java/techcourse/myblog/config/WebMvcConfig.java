@@ -13,7 +13,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/accounts/profile/edit")
-                .addPathPatterns("/logout");
+                .addPathPatterns("/logout")
+                .addPathPatterns("/accounts/user");
 
         registry.addInterceptor(new UserInterceptor())
                 .addPathPatterns("/accounts/signup")

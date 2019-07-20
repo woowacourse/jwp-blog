@@ -112,7 +112,7 @@ public class AccountController {
         return "user-list";
     }
 
-    @DeleteMapping("/accounts/users")
+    @DeleteMapping("/accounts/user")
     public String deleteUser(HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
         request.getSession().removeAttribute("user");
