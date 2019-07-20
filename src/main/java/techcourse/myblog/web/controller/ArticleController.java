@@ -42,7 +42,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String create(ArticleDto articleDto) {
-        log.debug("articleDto : {}", articleDto);
+        log.debug("Create article : {}", articleDto);
         return "redirect:/articles/" + articleService.save(articleDto).getId();
     }
 
@@ -54,7 +54,7 @@ public class ArticleController {
 
     @DeleteMapping("/articles/{articleId}")
     public String delete(@PathVariable Long articleId) {
-        log.debug("articleId : {}", articleId);
+        log.debug("Delete articleId : {}", articleId);
         articleService.delete(articleId);
         return "redirect:/";
     }
