@@ -54,4 +54,15 @@ public class UserService {
         }
         throw new EmailNotFoundException("틀린 이메일입니다!");
     }
+
+    public UserResponseDto update(String email, String name) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            User retrieveUser = userOptional.get();
+            retrieveUser.update(name);
+            User persistUser = userRepository.save(retrieveUser);
+            return convertToDto(persistUser);
+        }
+        throw new EmailNotFoundException("존재하지 않는 회원입니다.");
+    }
 }

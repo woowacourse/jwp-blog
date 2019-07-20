@@ -5,10 +5,14 @@ import techcourse.myblog.dto.ArticleDto;
 
 public class ArticleAssembler {
     public ArticleDto convertToDto(final Article article) {
+        int id = article.getId();
         String title = article.getTitle();
         String coverUrl = article.getCoverUrl();
         String contents = article.getContents();
-        return new ArticleDto(title, coverUrl, contents);
+
+        ArticleDto articleDto = new ArticleDto(title, coverUrl, contents);
+        articleDto.setId(id);
+        return articleDto;
     }
 
     public Article convertToEntity(final ArticleDto articleDto) {

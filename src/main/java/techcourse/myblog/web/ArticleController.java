@@ -26,7 +26,7 @@ public class ArticleController {
     @GetMapping("/")
     public String showMain(Model model, final HttpSession session) {
         List<ArticleDto> articleDtos = articleService.findAll();
-        model.addAttribute("articleDTOs", articleDtos);
+        model.addAttribute("articleDtos", articleDtos);
         UserResponseDto user = (UserResponseDto) session.getAttribute("user");
         if (!Objects.isNull(user)) {
             model.addAttribute("user", user);

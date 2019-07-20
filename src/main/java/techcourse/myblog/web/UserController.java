@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserRequestDto;
@@ -103,6 +104,24 @@ public class UserController {
         request.getSession().invalidate();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/"));
+        return modelAndView;
+    }
+
+    @GetMapping("/mypage/mypage-edit")
+    public ModelAndView showMyPageEdit(final HttpSession session) {
+        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("user", user);
+        modelAndView.setViewName("mypage-edit");
+        return modelAndView;
+    }
+
+    @PutMapping("/mypage/mypage-edit")
+    public ModelAndView editMyPage(final HttpSession session, final String name) {
+        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        session.setAttribute("user", userService.update(user.getEmail(), name));
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setView(new RedirectView("/mypage"));
         return modelAndView;
     }
 }
