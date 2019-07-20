@@ -1,4 +1,4 @@
-package techcourse.myblog.controller;
+package techcourse.myblog.controller.interceptor;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
