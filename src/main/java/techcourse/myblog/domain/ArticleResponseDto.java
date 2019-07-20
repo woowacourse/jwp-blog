@@ -53,6 +53,6 @@ public class ArticleResponseDto {
     }
 
     public Article toArticle() {
-        return Article.of(title, coverUrl, contents);
+        return Article.createWithoutId(title, coverUrl, contents);
     }
 }

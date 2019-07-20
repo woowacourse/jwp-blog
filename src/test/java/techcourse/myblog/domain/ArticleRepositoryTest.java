@@ -20,9 +20,9 @@ public class ArticleRepositoryTest {
     @Test
     public void findAll_모든_article을_잘_가져오는지() {
         List<Article> articles = insertArticles(Arrays.asList(
-                Article.of("t1", "u1", "c1")
-                , Article.of("t2", "u2", "c2")
-                , Article.of("t3", "u3", "c3")
+                Article.createWithoutId("t1", "u1", "c1")
+                , Article.createWithoutId("t2", "u2", "c2")
+                , Article.createWithoutId("t3", "u3", "c3")
         ));
 
         assertThat(articleRepository.findAll()).isEqualTo(articles);
@@ -31,8 +31,8 @@ public class ArticleRepositoryTest {
     @Test
     public void findById_id에_해당하는_article을_잘_가져오는지() {
         List<Article> articles = insertArticles(Arrays.asList(
-                Article.of("t1", "u1", "c1")
-                , Article.of("t2", "u2", "c2")
+                Article.createWithoutId("t1", "u1", "c1")
+                , Article.createWithoutId("t2", "u2", "c2")
         ));
         int idx = 1;
         Article article = articles.get(idx);
@@ -47,8 +47,8 @@ public class ArticleRepositoryTest {
         int notExistId = 5;
 
         insertArticles(Arrays.asList(
-                Article.of("t1", "u1", "c1")
-                , Article.of("t2", "u2", "c2")
+                Article.createWithoutId("t1", "u1", "c1")
+                , Article.createWithoutId("t2", "u2", "c2")
         ));
 
         assertThat(articleRepository.findById(notExistId)).isNull();
@@ -56,17 +56,17 @@ public class ArticleRepositoryTest {
 
     @Test
     void insertArticle_insert테스트() {
-        Article article = insertArticle(Article.of("t", "u", "c"));
+        Article article = insertArticle(Article.createWithoutId("t", "u", "c"));
 
         assertThat(articleRepository.findById(article.getId())).isEqualTo(article);
     }
 
     @Test
     void updateArticle_update테스트() {
-        Article article = insertArticle(Article.of("t1", "u1", "c1"));
+        Article article = insertArticle(Article.createWithoutId("t1", "u1", "c1"));
         int id = article.getId();
 
-        Article newArticle = Article.of("t2", "u2", "c2");
+        Article newArticle = Article.createWithoutId("t2", "u2", "c2");
         newArticle = newArticle.replaceId(id);
 
         articleRepository.updateArticle(newArticle);
@@ -76,7 +76,7 @@ public class ArticleRepositoryTest {
 
     @Test
     void deleteArticle_delete테스트() {
-        Article article = insertArticle(Article.of("t", "u", "c"));
+        Article article = insertArticle(Article.createWithoutId("t", "u", "c"));
         int id = article.getId();
 
         articleRepository.deleteArticle(id);

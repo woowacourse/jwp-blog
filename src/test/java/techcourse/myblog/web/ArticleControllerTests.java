@@ -13,6 +13,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,18 +34,7 @@ public class ArticleControllerTests {
         String coverUrl = "coverUrl";
         String contents = "contents";
 
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .expectHeader()
-                .valueMatches("location", ".*/articles/.*");
+        createArticleWith(title, coverUrl, contents);
     }
 
     @Test
@@ -52,8 +43,7 @@ public class ArticleControllerTests {
         String coverUrl = "blogCoverUrl";
         String contents = "blogContents";
 
-        Article article = Article.of(title, coverUrl, contents);
-        int articleId = articleRepository.insertArticle(article);
+        int articleId = createArticleWith(title, coverUrl, contents);
 
 
         ResponseSpec rs = webTestClient.get()
@@ -75,8 +65,7 @@ public class ArticleControllerTests {
         String coverUrl = "blogCoverUrl";
         String contents = "blogContents";
 
-        Article article = Article.of(title, coverUrl, contents);
-        int articleId = articleRepository.insertArticle(article);
+        int articleId = createArticleWith(title, coverUrl, contents);
 
         ResponseSpec rs = webTestClient.get()
                 .uri("/articles/" + articleId + "/edit")
@@ -97,16 +86,15 @@ public class ArticleControllerTests {
         String coverUrl = "blogCoverUrl";
         String contents = "blogContents";
 
-        Article article = Article.of(title, coverUrl, contents);
-        int articleId = articleRepository.insertArticle(article);
+        int articleId = createArticleWith(title, coverUrl, contents);
 
         ResponseSpec rs = webTestClient.put()
                 .uri("/articles/" + articleId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", article.getTitle())
-                        .with("coverUrl", article.getCoverUrl())
-                        .with("contents", article.getContents()))
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
                 .exchange()
                 .expectStatus().isOk();
 
@@ -124,8 +112,11 @@ public class ArticleControllerTests {
 
     @Test
     void delete_article() {
-        Article article = Article.of("title", "url", "contents");
-        int articleId = articleRepository.insertArticle(article);
+        String title = "title";
+        String coverUrl = "coverUrl";
+        String contents = "contents";
+
+        int articleId = createArticleWith(title, coverUrl, contents);
 
         webTestClient.delete()
                 .uri("/articles/" + articleId)
@@ -133,6 +124,32 @@ public class ArticleControllerTests {
                 .expectStatus().isFound()
                 .expectHeader()
                 .valueMatches("location", "[^/]*//[^/]*/");
+    }
+
+    private int createArticleWith(String title, String coverUrl, String contents) {
+        int[] id = new int[]{0};
+        webTestClient.post()
+                .uri("/articles")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange()
+                .expectHeader()
+                .value("location", (location -> {
+                    System.out.println(location);
+
+                    id[0] = findId(location);
+                }));
+
+        return id[0];
+    }
+
+    private int findId(String locationFinishedById) {
+        List<String> chunks = Arrays.asList(locationFinishedById.split("/"));
+
+        return Integer.parseInt(chunks.get(chunks.size() - 1));
     }
 
     private void assertResponse(ResponseSpec rs, Consumer<EntityExchangeResult<byte[]>> assertBody) {
