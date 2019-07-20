@@ -14,7 +14,6 @@ import techcourse.myblog.domain.UserForm;
 import techcourse.myblog.domain.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -102,8 +101,7 @@ public class AccountController {
     }
 
     @PutMapping("/accounts/profile/edit")
-    public String processUpdateProfile(Model model, @Valid UserForm userForm, HttpServletRequest request, Errors errors) {
-        log.debug(">>> put edit userForm : {}" , userForm);
+    public String processUpdateProfile(Model model, HttpServletRequest request, @Valid UserForm userForm, Errors errors) {
         if (errors.hasErrors()) {
             return "mypage-edit";
         }

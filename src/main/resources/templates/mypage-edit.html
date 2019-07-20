@@ -14,13 +14,13 @@
             </div>
         </div>
     </div>
-<form th:method="put" action="/accounts/profile/edit" th:object="${userForm}" accept-charset="utf-8">
-    <input type="hidden" th:value="${session.user.getPassword()}" th:field="*{password}" name="password" >
-    <input type="hidden" th:value="${session.user.getId()}" th:field="*{id}" name="id" >
+<form th:method="put" action="/accounts/profile/edit" th:object="${userForm}">
     <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
         <div class="row">
             <div class="col-md-7 mx-auto">
                 <div class="card">
+                    <input type="hidden" th:value="${session.user.password}" name="password">
+                    <input type="hidden" th:value="${session.user.id}" name="id">
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
                         <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정</button>
@@ -31,7 +31,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" th:value="${session.user.getName()}" th:field="*{name}" name="name">
+                                <input th:value="${session.user.name}" type="text" name="name" class="form-control" value="Brown">
                                 <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red"></span>
                             </div>
                         </div>
@@ -41,7 +41,8 @@
                                 <p class="mrg-top-10 text-dark"><b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10" th:text="${session.user.getEmail()}" th:field="*{email}" name="email">gracefulBrown@woowahan.com</p>
+                                <p class="mrg-top-10" th:text ="${session.user.getEmail()}" name="email">gracefulBrown@woowahan.com</p>
+                                <input type="hidden" th:value="${session.user.email}" name="email">
                             </div>
                         </div>
                         <hr>
