@@ -4,6 +4,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+
 public class UserRequestDto {
     @NotBlank(message = "이메일을 작성해 주세요")
     @Email(message = "이메일의 양식을 지켜주세요")

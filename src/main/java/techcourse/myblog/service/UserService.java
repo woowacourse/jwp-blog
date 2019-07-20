@@ -70,4 +70,16 @@ public class UserService {
     public void deleteUser(UserResponseDto userResponseDto) {
         userRepository.deleteById(userResponseDto.getEmail());
     }
+
+    public void checkPasswordAndRepassword(UserRequestDto userRequestDto) {
+        if (!userRequestDto.getPassword().equals(userRequestDto.getRePassword())) {
+            throw new IllegalArgumentException("암호와 확인용 암호가 다릅니다.");
+        }
+    }
+
+    public void checkEmail(UserRequestDto userRequestDto) {
+        if (userRepository.findById(userRequestDto.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다!");
+        }
+    }
 }

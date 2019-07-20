@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public ModelAndView showSignUp(final HttpSession session) {
+    public ModelAndView showSignUp(final HttpSession session, UserRequestDto userRequestDto) {
         ModelAndView modelAndView = new ModelAndView();
         if (!Objects.isNull(session.getAttribute("user"))) {
             modelAndView.setView(new RedirectView("/"));
@@ -63,10 +64,26 @@ public class UserController {
     @PostMapping("/users")
     public ModelAndView registerUsers(@Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
+
         if (bindingResult.hasErrors()) {
-            modelAndView.setView(new RedirectView("/signup"));
+            modelAndView.setViewName("/signup");
             return modelAndView;
         }
+        try {
+            userService.checkPasswordAndRepassword(userRequestDto);
+        } catch (Exception e) {
+            bindingResult.addError(new FieldError("userRequestDto", "rePassword", e.getMessage()));
+            modelAndView.setViewName("/signup");
+            return modelAndView;
+        }
+        try {
+            userService.checkEmail(userRequestDto);
+        } catch (Exception e) {
+            bindingResult.addError(new FieldError("userRequestDto", "email", e.getMessage()));
+            modelAndView.setViewName("/signup");
+            return modelAndView;
+        }
+
         modelAndView.setView(new RedirectView("/login"));
         userService.save(userRequestDto);
         return modelAndView;
@@ -83,7 +100,6 @@ public class UserController {
             modelAndView.setViewName("login");
             return modelAndView;
         }
-
         HttpSession session = request.getSession();
         session.setAttribute("user", userResponseDto);
         modelAndView.setView(new RedirectView("/"));
