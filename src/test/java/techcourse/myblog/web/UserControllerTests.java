@@ -124,4 +124,26 @@ class UserControllerTests {
 				.expectStatus()
 				.isOk();
 	}
+
+	@Test
+	void moveMyPageFailureDueToNotLogin() {
+		webTestClient.get()
+				.uri("/mypage")
+				.exchange()
+				.expectStatus()
+				.isFound()
+				.expectHeader()
+				.valueMatches("Location", ".+/");
+	}
+
+	@Test
+	void moveMyPageEditFailureDueToNotLogin() {
+		webTestClient.get()
+				.uri("/mypage/edit")
+				.exchange()
+				.expectStatus()
+				.isFound()
+				.expectHeader()
+				.valueMatches("Location", ".+/");
+	}
 }

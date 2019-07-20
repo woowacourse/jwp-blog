@@ -51,7 +51,7 @@ class LoginControllerTests {
 				.expectStatus()
 				.isFound()
 				.expectHeader()
-				.valueMatches("Location", ".+/user-list;jsessionid=.+");
+				.valueMatches("Set-Cookie", "JSESSIONID=.+");
 	}
 
 	@Test
