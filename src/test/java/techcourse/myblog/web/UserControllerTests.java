@@ -72,7 +72,6 @@ public class UserControllerTests {
         ;
     }
 
-
     @Test
     void 로그인후_메인화면() {
         webTestClient.post().uri("/login")
@@ -141,6 +140,4 @@ public class UserControllerTests {
                 .expectStatus()
                 .is3xxRedirection(); // 로그인 화면으로 갈 것임
     }
-
-
 }

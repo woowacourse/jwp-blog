@@ -79,10 +79,10 @@ public class UserController {
     @PostMapping("/login")
     public String login(UserLoginRequest userLoginRequest, HttpServletRequest request) {
         User user = userService.findUserByEmail(userLoginRequest);
-
-        if (!user.matchPassword(userLoginRequest.getPassword())) {
-            throw new LoginException("비밀번호 틀림");
-        }
+//
+//        if (!user.matchPassword(userLoginRequest.getPassword())) {
+//            throw new LoginException("비밀번호 틀림");
+//        }
 
         request.getSession().setAttribute(USER_INFO, user);
 
