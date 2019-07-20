@@ -54,4 +54,20 @@ public class UserService {
         }
         throw new EmailNotFoundException("틀린 이메일입니다!");
     }
+
+    public UserResponseDto update(String name, String email) {
+        System.err.println(name + "   " + email);
+        Optional<User> userOpt = userRepository.findById(email);
+        if (userOpt.isPresent()) {
+            User userToUpdate = userOpt.get();
+            userToUpdate.updateName(name);
+            User persistUser = userRepository.save(userToUpdate);
+            return convertToDto(persistUser);
+        }
+        throw new EmailNotFoundException("그런 이메일은 존재하지 않습니다!");
+    }
+
+    public void deleteUser(UserResponseDto userResponseDto) {
+        userRepository.deleteById(userResponseDto.getEmail());
+    }
 }

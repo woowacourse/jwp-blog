@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserRequestDto;
@@ -13,6 +15,7 @@ import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.EmailNotFoundException;
 import techcourse.myblog.exception.InvalidPasswordException;
 import techcourse.myblog.service.UserService;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -102,6 +105,34 @@ public class UserController {
         request.getSession().invalidate();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/"));
+        return modelAndView;
+    }
+
+    @GetMapping("/mypage/mypage-edit")
+    public ModelAndView showMyPageEdit(final HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        modelAndView.addObject("user", user);
+        modelAndView.setViewName("mypage-edit");
+        return modelAndView;
+    }
+
+    @PutMapping("/mypage/mypage-edit")
+    public ModelAndView editMyPage(final HttpSession session, final String name, final String email) {
+        System.err.println(name + "     " + email);
+        ModelAndView modelAndView = new ModelAndView();
+        UserResponseDto user = userService.update(name, email);
+        session.setAttribute("user", user);
+        modelAndView.setView(new RedirectView("/mypage"));
+        return modelAndView;
+    }
+
+    @DeleteMapping("/mypage")
+    public ModelAndView deleteUser(final HttpSession session) {
+        UserResponseDto userResponseDto = (UserResponseDto) session.getAttribute("user");
+        userService.deleteUser(userResponseDto);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setView(new RedirectView("/logout"));
         return modelAndView;
     }
 }

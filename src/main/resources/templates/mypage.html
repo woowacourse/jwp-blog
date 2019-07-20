@@ -61,9 +61,14 @@
                 <div class="card">
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
-                        <a href="mypage-edit" class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
+                        <a href="mypage/mypage-edit" class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </a>
+                        <form action="/mypage" th:method="delete">
+                            <button type="submit" class="btn btn-icon">
+                                <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                            </button>
+                        </form>
                     </div>
                     <div class="card-block">
                         <div class="row">
