@@ -16,6 +16,8 @@ import java.util.List;
 @RequestMapping(UserController.USER_BASE_URI)
 public class UserController {
     public static final String USER_BASE_URI = "/users";
+    public static final String USER_SESSION = "user";
+
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
@@ -50,7 +52,7 @@ public class UserController {
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("user");
+        session.removeAttribute(USER_SESSION);
         return "redirect:/";
     }
 
@@ -84,7 +86,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Long id, HttpSession session) {
         userService.deleteById(id);
-        session.removeAttribute("user");
+        session.removeAttribute(USER_SESSION);
         return "redirect:/";
     }
 }

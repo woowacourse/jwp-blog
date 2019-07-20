@@ -9,12 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import static techcourse.myblog.users.UserController.USER_SESSION;
+
 @Component
 public class AuthInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
-        UserDto.Response userDto = (UserDto.Response) session.getAttribute("user");
+        UserDto.Response userDto = (UserDto.Response) session.getAttribute(USER_SESSION);
         String path = request.getRequestURI();
 
         if (!ObjectUtils.isEmpty(userDto) && !path.contains(String.valueOf(userDto.getId()))) {
