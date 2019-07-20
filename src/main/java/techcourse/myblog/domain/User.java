@@ -16,23 +16,18 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userName;
+    private String username;
     private String email;
     private String password;
 
-    @Transient
+    // Static fields are not persistent
     private static Pattern namePattern;
-
-    @Transient
     private static Pattern passwordPattern;
-
-    @Transient
     private static Pattern emailPattern;
 
     static {
         namePattern = Pattern.compile("^[a-zA-Z ]*$");
         // ref. http://html5pattern.com/Passwords
-        //TODO 정규표현식 숫자가 포함되지 않아도 통과 (TestPasswod!)
         passwordPattern = Pattern.compile("(?=^.{8,}$)((?=.*\\d)(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$");
         emailPattern = Pattern.compile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
     }
@@ -40,7 +35,7 @@ public class User {
 
     public static User of(String userName, String email, String password) {
         User user = new User();
-        user.userName = userName;
+        user.username = userName;
         user.email = email;
         user.password = password;
         return user;
@@ -56,7 +51,7 @@ public class User {
         }
 
         if (isInvalidUserName(userName)) {
-            throw new UserCreationConstraintException("올바르지 않은 유저네임입니다.");
+            throw new UserCreationConstraintException("올바르지 않은 이름입니다.");
         }
 
         if (isInvalidPassword(password)) {
@@ -86,7 +81,7 @@ public class User {
     }
 
     public void update(User user) {
-        this.userName = user.userName;
+        this.username = user.username;
         this.email = user.email;
         this.password = user.password;
     }
@@ -95,8 +90,8 @@ public class User {
         return id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public String getEmail() {
@@ -107,24 +102,24 @@ public class User {
         return password;
     }
 
+    public boolean authenticate(String email, String password) {
+        return this.email.equals(email) && this.password.equals(password);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(id, user.id) &&
-            Objects.equals(userName, user.userName) &&
+            Objects.equals(username, user.username) &&
             Objects.equals(email, user.email) &&
             Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName, email, password);
-    }
-
-    public boolean authentication(String email, String password) {
-        return this.email.equals(email) && this.password.equals(password);
+        return Objects.hash(id, username, email, password);
     }
 
     public static class UserCreationConstraintException extends IllegalArgumentException {

@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.service.UserAuthenticateException;
+import techcourse.myblog.service.UserService;
 import techcourse.myblog.web.dto.LoginRequestDto;
 import techcourse.myblog.web.dto.UserRequestDto;
 import techcourse.myblog.web.dto.UserUpdateRequestDto;
@@ -23,8 +25,12 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    private final UserService userService;
+
     @Autowired
-    private UserRepository userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/signup")
     public String registerView(HttpSession session) {
@@ -40,15 +46,9 @@ public class UserController {
             if (currentUser.isPresent()) {
                 return "redirect:/";
             }
-            if (!userRequestDto.getPassword().equals(userRequestDto.getPasswordConfirm())) {
-                throw new User.UserCreationConstraintException("비밀번호가 같지 않습니다.");
-            }
-
-            User user = User.of(userRequestDto.getName(), userRequestDto.getEmail(), userRequestDto.getPassword(),
-                email -> userRepository.findByEmail(email).isPresent());
-            userRepository.save(user);
+            userService.register(userRequestDto);
             return "redirect:/login";
-        } catch (User.UserCreationConstraintException e) {
+        } catch (IllegalArgumentException e) {
             model.addAttribute("error", true);
             model.addAttribute("message", e.getMessage());
             return "signup";
@@ -69,17 +69,13 @@ public class UserController {
             if (isLoggedIn(session)) {
                 return "redirect:/";
             }
-            User user = userRepository.findByEmail(requestDto.getEmail())
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 이메일입니다"));
-            if (user.authentication(requestDto.getEmail(), requestDto.getPassword())) {
-                session.setAttribute("user", user);
-                return "redirect:/";
-            }
-            model.addAttribute("message", "비밀번호를 확인해주세요");
-        } catch (NoSuchElementException e) {
+            User user = userService.authenticate(requestDto);
+            session.setAttribute(SESSION_USER_KEY, user);
+            return "redirect:/";
+        } catch (UserAuthenticateException e) {
+            logger.info("Login failed: {}", e.getMessage());
             model.addAttribute("message", e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error("Login error", e);
             model.addAttribute("message", "서버 에러입니다");
         }
@@ -90,7 +86,7 @@ public class UserController {
     @GetMapping("/users")
     public String userListView(Model model, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
         checkAndPutUser(model, currentUser);
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userService.findAll());
         return "user-list";
     }
 
@@ -122,13 +118,13 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public String updateUser(UserUpdateRequestDto updateRequestDto, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
-        if (!currentUser.isPresent()) {
+    public String updateUser(UserUpdateRequestDto updateRequestDto, HttpSession session) {
+        if (!isLoggedIn(session)) {
             return "redirect:/login";
         }
-        User user = currentUser.get();
-        user.update(User.of(updateRequestDto.getName(), user.getEmail(), user.getPassword()));
-        userRepository.save(user);
+        User user = (User)session.getAttribute(SESSION_USER_KEY);
+        User updated = userService.update(user.getId(), updateRequestDto);
+        session.setAttribute(SESSION_USER_KEY, updated);
         return "redirect:/mypage";
     }
 
@@ -137,8 +133,8 @@ public class UserController {
         if (!isLoggedIn(session)) {
             return "redirect:/login";
         }
-        userRepository.deleteById(((User) session.getAttribute(SESSION_USER_KEY)).getId());
-        session.removeAttribute(SESSION_USER_KEY);
+        userService.delete(((User) session.getAttribute(SESSION_USER_KEY)).getId());
+        session.invalidate();
         return "redirect:/";
     }
 }

@@ -66,9 +66,9 @@ public class UserTest {
     @Test
     void authentication() {
         User newUser = User.of("james", "authentication_test@email.com", "p@ssW0rd");
-        assertThat(newUser.authentication("authentication_test@email.com", "p@ssW0rd")).isTrue();
-        assertThat(newUser.authentication("authentication_test@email.com", "p@ssW0rd23")).isFalse();
-        assertThat(newUser.authentication("authentication_test123@email.com", "p@ssW0rd")).isFalse();
-        assertThat(newUser.authentication("auth_test@email.com", "p@ssW0rd")).isFalse();
+        assertThat(newUser.authenticate("authentication_test@email.com", "p@ssW0rd")).isTrue();
+        assertThat(newUser.authenticate("authentication_test@email.com", "p@ssW0rd23")).isFalse();
+        assertThat(newUser.authenticate("authentication_test123@email.com", "p@ssW0rd")).isFalse();
+        assertThat(newUser.authenticate("auth_test@email.com", "p@ssW0rd")).isFalse();
     }
 }
