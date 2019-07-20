@@ -149,4 +149,34 @@ public class UserControllerTests {
                 .is3xxRedirection()
         ; // 로그인 화면으로 갈 것임
     }
+
+    @Test
+    void 회원_이름_정상_수정() {
+        webTestClient.put().uri("/users/1")
+                .body(BodyInserters.fromFormData("name", "editName"))
+                .exchange()
+                .expectStatus()
+                .is3xxRedirection()
+                .expectBody()
+                .consumeWith(response -> {
+                    webTestClient.get().uri(response.getResponseHeaders().getLocation())
+                            .exchange()
+                            .expectBody()
+                            .consumeWith(response2 -> {
+                                String body = new String(response2.getResponseBody());
+                                assertTrue(body.contains("editName"));
+                            })
+                            ;
+                })
+                ;
+    }
+
+    @Test
+    void 회원_정상_탈퇴() {
+        webTestClient.delete().uri("/users/1")
+                .exchange()
+                .expectStatus()
+                .is3xxRedirection()
+                ;
+    }
 }
