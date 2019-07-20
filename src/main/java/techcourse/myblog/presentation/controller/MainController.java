@@ -5,8 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.CategoryRepository;
+import techcourse.myblog.application.service.ArticleService;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,17 +13,15 @@ import javax.servlet.http.HttpSession;
 public class MainController {
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
     
-    private final ArticleRepository articleRepository;
-    private final CategoryRepository categoryRepository;
+    private final ArticleService articleService;
 
-    public MainController(final ArticleRepository articleRepository, final CategoryRepository categoryRepository) {
-        this.articleRepository = articleRepository;
-        this.categoryRepository = categoryRepository;
+    public MainController(final ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     @GetMapping("/")
     public String readHomePage(HttpSession httpSession, Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
+        model.addAttribute("articles", articleService.findAll());
 
         if (httpSession.getAttribute("email") != null) {
             model.addAttribute("email", httpSession.getAttribute("email"));

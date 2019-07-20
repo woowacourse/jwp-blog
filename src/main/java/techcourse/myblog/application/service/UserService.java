@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
-import techcourse.myblog.application.service.exception.NotExistIdException;
+import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
@@ -46,7 +46,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserDto findById(String email) {
         return new UserDto(userRepository.findById(email)
-                .orElseThrow(() -> new NotExistIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login")));
+                .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login")));
     }
 
     @Transactional
@@ -62,7 +62,7 @@ public class UserService {
     @Transactional
     public void modify(@Valid UserDto userDto) {
         User user = userRepository.findById(userDto.getEmail())
-                .orElseThrow(() -> new NotExistIdException("해당 이메일의 유저가 존재하지 않습니다.", "/"));
+                .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/"));
         user.updateName(userDto.getName());
         user.updatePassword(userDto.getPassword());
     }

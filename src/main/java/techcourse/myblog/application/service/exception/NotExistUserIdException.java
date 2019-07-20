@@ -1,9 +1,9 @@
 package techcourse.myblog.application.service.exception;
 
-public class NotExistIdException extends RuntimeException {
+public class NotExistUserIdException extends RuntimeException {
     private String nextView;
 
-    public NotExistIdException(String message, String nextView) {
+    public NotExistUserIdException(String message, String nextView) {
         super(message);
         this.nextView = nextView;
     }

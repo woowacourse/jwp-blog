@@ -12,7 +12,7 @@ import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.UserService;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
-import techcourse.myblog.application.service.exception.NotExistIdException;
+import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 import techcourse.myblog.presentation.controller.exception.InvalidUpdateException;
 
@@ -114,8 +114,8 @@ public class UserController {
         return redirectView;
     }
 
-    @ExceptionHandler(NotExistIdException.class)
-    public RedirectView handleNotExistIdError(RedirectAttributes redirectAttributes, NotExistIdException e) {
+    @ExceptionHandler(NotExistUserIdException.class)
+    public RedirectView handleNotExistIdError(RedirectAttributes redirectAttributes, NotExistUserIdException e) {
         RedirectView redirectView = new RedirectView(e.getNextView());
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
         return redirectView;

@@ -1,4 +1,4 @@
-package techcourse.myblog.web.exception;
+package techcourse.myblog.presentation.controller.exception;
 
 public class NotExistEntityException extends RuntimeException {
     public NotExistEntityException() {

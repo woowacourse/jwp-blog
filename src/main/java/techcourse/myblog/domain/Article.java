@@ -1,7 +1,5 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.application.dto.ArticleDto;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -59,10 +57,16 @@ public class Article {
         this.contents = contents;
     }
 
-    public void update(Article article) {
-        this.title = article.getTitle();
-        this.coverUrl = article.getCoverUrl();
-        this.contents = article.getContents();
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
+    public void changeContents(String contents) {
+        this.contents = contents;
     }
 
     public Long getId() {
@@ -79,10 +83,6 @@ public class Article {
 
     public String getContents() {
         return contents;
-    }
-
-    public ArticleDto toDto() {
-        return new ArticleDto(title, coverUrl, contents);
     }
 
     @Override
