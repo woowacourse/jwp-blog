@@ -1,4 +1,4 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.dto.request;
 
 public class ArticleDto {
 	private Long id;

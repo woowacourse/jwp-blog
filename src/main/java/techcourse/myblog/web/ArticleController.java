@@ -1,7 +1,7 @@
 package techcourse.myblog.web;
 
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.request.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
 
 import org.springframework.stereotype.Controller;
@@ -31,7 +31,7 @@ public class ArticleController {
 	public String saveArticle(ArticleDto articleDto, Model model) {
 		Article article = new Article(articleDto.getTitle(), articleDto.getContents(), articleDto.getCoverUrl());
 		Long id = articleRepository.save(article).getId();
-		return "redirect:/articles/"+id;
+		return "redirect:/articles/" + id;
 	}
 
 	@GetMapping("articles/{articleId}")

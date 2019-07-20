@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ArticleTest {
+class ArticleTests {
 	@Test
 	void update() {
 		Article article = new Article("title", "contents", "www.coverUrl.com");

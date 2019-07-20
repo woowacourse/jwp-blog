@@ -2,20 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <title>우아한테크코스 기술블로그</title>
-    <th:block th:include="common/common_meta"></th:block>
-    <th:block th:include="common/common_css"></th:block>
+    <th:block th:include="common/meta"></th:block>
+    <th:block th:include="common/css"></th:block>
     <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
 <div>
     <header id="header" class="header navbar bg-transparent no-border">
         <div class="header-container">
-            <th:block th:include="common/common_index_logo"></th:block>
+            <th:block th:include="common/index_logo"></th:block>
             <ul class="nav-right">
                 <li class="user-profile">
-                    <a href="login.html">
+                    <a href="/login">
                         <div class="user-info login-btn pointer mrg-right-10">
-                            <span class="name pdd-right-5 text-white">Login</span>
+                            <span class="name pdd-right-5 text-white" th:text="${(session.username == null)? 'Login' : session.username}"></span>
                         </div>
                     </a>
                 </li>
@@ -99,7 +99,7 @@
         </a>
     </div>
 </div>
-<th:block th:include="common/common_footer"></th:block>
-<th:block th:include="common/common_js"></th:block>
+<th:block th:include="common/footer"></th:block>
+<th:block th:include="common/js"></th:block>
 </body>
 </html>

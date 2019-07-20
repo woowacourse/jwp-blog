@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>우아한 크루의 블로그</title>
     <th:block th:include="common/meta"></th:block>
@@ -27,35 +27,23 @@
                                                 <div class="pdd-horizon-30 pdd-vertical-30">
                                                     <div class="mrg-btm-30">
                                                         <h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">
-                                                            로그인</h2>
+                                                            회원 탈퇴</h2>
                                                     </div>
-                                                    <form action="/login" method="post">
+                                                    <form action="/leave" method="post">
+                                                        <input name="_method" type="hidden" value="DELETE">
                                                         <div class="form-group">
-                                                            <input class="form-control" name="email" placeholder="Id" type="email">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <input class="form-control" name="password" type="password"
-                                                                   placeholder="Password">
-                                                        </div>
-                                                        <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
-                                                            <input id="agreement" name="agreement" type="checkbox">
-                                                            <label for="agreement">로그인 유지</label>
+                                                            <input class="form-control" name="password" placeholder="password" type="password">
                                                         </div>
                                                         <div class="pull-right mrg-left-10">
-                                                            <a href="">Forgot Password?</a>
+                                                            <a href="/">홈으로 돌아가기</a>
                                                         </div>
                                                         <div class="mrg-top-20 text-right">
-                                                            <button class="btn btn-tumblr" type="submit">로그인</button>
+                                                            <button class="btn btn-tumblr" type="submit">회원탈퇴</button>
                                                         </div>
                                                     </form>
-                                                    <div class="text-dark">
-                                                        <span>아직 회원이 아니신가요?</span>
-                                                        <a href="/signup"
-                                                           class="text-info pointer mrg-left-5">회원가입</a>
-                                                    </div>
-                                                    <div class="alert alert-danger" role="alert" th:if="${errors}" th:text="${errors}"></div>
+                                                    <div class="alert alert-danger" id="erorrs" role="alert" th:if="${errors}" th:text="${errors}"></div>
                                                 </div>
-                                            </div>
+                                            </div>`
                                         </div>
                                     </div>
                                 </div>
@@ -68,5 +56,16 @@
     </div>
 </div>
 <th:block th:include="common/js"></th:block>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    var result = /*[[${result}]]*/ 'default';
+    if(result != null) {
+        alert(result);
+        location.href = "/";
+    }
+
+    /*]]>*/
+</script>
 </body>
 </html>
