@@ -5,14 +5,12 @@ import java.util.Objects;
 
 @Entity
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userId;
 
     private String name;
-
-    @Column(unique = true)
+    //@Column(unique = true)
     private String email;
     private String password;
 

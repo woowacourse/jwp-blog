@@ -79,4 +79,11 @@
 <!-- include fragments/footer -->
 <th:block th:replace="fragments/script"></th:block>
 </body>
+
+<script th:inline="javascript">
+    const message = [[${unexpectedAccessErrorMessage}]];
+    if (message != null) {
+        window.alert(message);
+    }
+</script>
 </html>

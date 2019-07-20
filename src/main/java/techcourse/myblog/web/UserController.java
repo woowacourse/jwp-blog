@@ -6,10 +6,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicateEmailException;
+import techcourse.myblog.exception.UnknownHostAccessException;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -43,11 +46,14 @@ public class UserController {
 
     @GetMapping("/users")
     public String showUsers(Model model, HttpSession httpSession) {
-        if (httpSession.getAttribute("name") != null) {
+        String name = (String) httpSession.getAttribute("name");
+
+        if (name != null) {
             model.addAttribute("users", userService.getAllUsers());
             return "user-list";
         }
-        return "redirect:/login";
+
+        throw new UnknownHostAccessException();
     }
 
     @GetMapping("/mypage")
@@ -61,7 +67,7 @@ public class UserController {
             return "mypage";
         }
 
-        return "redirect:/login";
+        throw new UnknownHostAccessException();
     }
 
     @GetMapping("/mypage/edit")
@@ -75,7 +81,7 @@ public class UserController {
             return "mypage-edit";
         }
 
-        return "redirect:/login";
+        throw new UnknownHostAccessException();
     }
 
     @PutMapping("/mypage/edit")
@@ -95,7 +101,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleBindException(BindException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "redirect:/signup";
+        return "signup";
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
@@ -103,5 +109,12 @@ public class UserController {
     public String handleDuplicateEmailException(DuplicateEmailException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         return "signup";
+    }
+
+    @ExceptionHandler(UnknownHostAccessException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleUnknownHostAccessException(UnknownHostAccessException e, Model model) {
+        model.addAttribute("unexpectedAccessErrorMessage", e.getMessage());
+        return "login";
     }
 }

@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.exception;
 
 public class UnknownHostAccessException extends RuntimeException {
     public UnknownHostAccessException() {
