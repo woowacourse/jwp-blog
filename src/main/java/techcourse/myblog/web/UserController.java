@@ -25,7 +25,7 @@ public class UserController {
 
 	@GetMapping("/signup")
 	public String signUpPage(HttpSession httpSession) {
-		if (httpSession.getAttribute("username") != null) {
+		if (httpSession.getAttribute("email") != null) {
 			return "redirect:/";
 		}
 		return "signup";
@@ -57,5 +57,23 @@ public class UserController {
 	public String userList(Model model) {
 		model.addAttribute("users", userRepository.findAll());
 		return "user-list";
+	}
+
+	@GetMapping("/mypage")
+	public String mypage(HttpSession httpSession, Model model) {
+		if (httpSession.getAttribute("email") == null) {
+			return "redirect:/";
+		}
+		model.addAttribute("user", userRepository.findByEmail(httpSession.getAttribute("email").toString()).get());
+		return "mypage";
+	}
+
+	@GetMapping("/mypage/edit")
+	public String mypageEdit(HttpSession httpSession, Model model) {
+		if (httpSession.getAttribute("email") == null) {
+			return "redirect:/";
+		}
+		model.addAttribute("user", userRepository.findByEmail(httpSession.getAttribute("email").toString()).get());
+		return "mypage-edit";
 	}
 }
