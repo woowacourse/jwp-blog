@@ -15,7 +15,6 @@ public class UserDto {
     @Email
     private String email;
 
-    // TODO: 2019-07-18 MESSAGE!!
     @Size(min = 8, max = 14)
     @NotBlank
     @Pattern(regexp = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-z])(?=.*[A-Z]).{8,14}$",
