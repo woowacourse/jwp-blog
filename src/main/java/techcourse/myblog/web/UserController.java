@@ -3,10 +3,8 @@ package techcourse.myblog.web;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
@@ -37,15 +35,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String userLogin(UserLoginDto loginDto, HttpSession httpSession, Model model) {
+    public String userLogin(UserLoginDto loginDto, HttpSession httpSession) {
         User user = userRepository.findUserByEmail(loginDto.getEmail());
         if (Objects.isNull(user)) {
-            model.addAttribute(ERROR_MESSAGE, "이메일을 똑바로 입력하세요");
-            return "redirect:/err";
+            throw new UserException("아이디가 올바르지 않습니다.");
         }
         if (!user.checkPassword(loginDto.getPassword())) {
-            model.addAttribute(ERROR_MESSAGE, "패스워드가 올바르지 않습니다.");
-            return "redirect:/err";
+            throw new UserException("패스워드가 올바르지 않습니다.");
         }
 
         httpSession.setAttribute(SESSION_NAME, user.getName());
@@ -68,9 +64,7 @@ public class UserController {
             userRepository.save(user);
             return "redirect:/login";
         }
-
-        model.addAttribute(ERROR_MESSAGE, "잘못된 입력입니다.");
-        return "redirect:/err";
+        throw new UserException("잘못된 입력입니다.");
     }
 
     @GetMapping("/mypage")
@@ -81,12 +75,7 @@ public class UserController {
 
     @GetMapping("/mypage/edit")
     public String editMyPage(HttpSession httpSession, Model model) {
-        try {
-            initMyPage(httpSession, model);
-        } catch (IllegalArgumentException e) {
-            model.addAttribute(ERROR_MESSAGE, e);
-            return "redirect:/err";
-        }
+        initMyPage(httpSession, model);
         return "mypage-edit";
     }
 
@@ -96,13 +85,11 @@ public class UserController {
         String email = userDto.getEmail();
 
         if (!sessionEmail.equals(email)) {
-            model.addAttribute(ERROR_MESSAGE, "잘못된 접근입니다.");
-            return "redirect:/err";
+            throw new UserException("잘못된 접근입니다.");
         }
 
         if (!(validateName(userDto.getName()) && validatePassword(userDto.getPassword()))) {
-            model.addAttribute(ERROR_MESSAGE, "아이디와 비밀번호가 옳지 않습니다");
-            return "redirect:/err";
+            throw new UserException("아이디와 비밀번호가 올바르지 않습니다.");
         }
 
         User user = userRepository.findUserByEmail(userDto.getEmail());
@@ -133,6 +120,12 @@ public class UserController {
         userRepository.delete(user);
         httpSession.invalidate();
         return "redirect:/";
+    }
+
+    @ExceptionHandler
+    public String handleUserException(UserException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute(ERROR_MESSAGE, e.getMessage());
+        return "redirect:/err";
     }
 
     private boolean validateUser(UserDto userDto) {
@@ -169,7 +162,7 @@ public class UserController {
 
         User user = userRepository.findUserByEmail(email);
         if (Objects.isNull(user)) {
-            throw new IllegalArgumentException("잘못된 접근입니다.");
+            throw new UserException("잘못된 접근입니다.");
         }
         model.addAttribute("user", user);
     }

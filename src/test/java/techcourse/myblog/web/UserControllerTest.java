@@ -31,7 +31,7 @@ class UserControllerTest {
                         .with("email", email)
                         .with("password", password))
                 .exchange()
-                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/err")
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/err;jsessionid=([0-9A-Z])+")
                 .expectStatus().is3xxRedirection();
     }
 
