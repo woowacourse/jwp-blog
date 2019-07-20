@@ -3,7 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.service.dto.ArticleDto;
 
 import javax.transaction.Transactional;
 

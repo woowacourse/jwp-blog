@@ -1,7 +1,7 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.service.dto;
 
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.validator.TitleConstraint;
+import techcourse.myblog.support.config.validator.TitleConstraint;
 
 public class ArticleDto {
     @TitleConstraint

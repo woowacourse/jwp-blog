@@ -1,11 +1,11 @@
-package techcourse.myblog.config;
+package techcourse.myblog.support.config;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import techcourse.myblog.exception.EditException;
-import techcourse.myblog.exception.ErrorMessage;
-import techcourse.myblog.exception.LoginException;
-import techcourse.myblog.exception.SignUpException;
+import techcourse.myblog.service.exception.EditException;
+import techcourse.myblog.service.exception.ErrorMessage;
+import techcourse.myblog.service.exception.LoginException;
+import techcourse.myblog.service.exception.SignUpException;
 
 @ControllerAdvice
 public class ExceptionHandler {

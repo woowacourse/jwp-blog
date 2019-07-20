@@ -3,11 +3,11 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.dto.UserLoginDto;
-import techcourse.myblog.exception.EditException;
-import techcourse.myblog.exception.LoginException;
-import techcourse.myblog.exception.SignUpException;
+import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.service.dto.UserLoginDto;
+import techcourse.myblog.service.exception.EditException;
+import techcourse.myblog.service.exception.LoginException;
+import techcourse.myblog.service.exception.SignUpException;
 
 import javax.transaction.Transactional;
 
