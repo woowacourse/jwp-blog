@@ -94,9 +94,12 @@
 
 (추가)
 
+- [ ] 패키지 분리
+- [ ] 컨트롤러 분리
+- [ ] 테스트코드에서 매번 setup을 통해 데이터를 생성하지 말고 data.sql 이용해 미리 데이터 생성해놓자.
+- [ ] 테스트 코드 중복 제거 
 - [ ] url /articles를 prefix로 빼기 (/writing -> /articles/writing)
 - [x] ~~html에서 form 중복 제거하기 (article-edit.html)~~
 - [x] ~~html에서 form 중복 제거하기 (header.html)~~
-- [ ] article entity lombok @Data 대신 바꾸기
 - [ ] 테스트할 땐 db가 h2로 못가나? 
 - [ ] 자기가 쓴 글만 수정할 수 있도록 하기.
