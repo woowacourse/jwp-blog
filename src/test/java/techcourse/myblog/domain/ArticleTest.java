@@ -3,34 +3,28 @@ package techcourse.myblog.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.web.dto.ArticleDto;
+import org.springframework.boot.test.context.SpringBootTest;
+import techcourse.myblog.dto.ArticleDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ArticleTest {
-    private static final int TEST_ARTICLE_ID = 1;
     private Article article;
 
     @BeforeEach
     void setUp() {
-        article = new Article(
-                TEST_ARTICLE_ID,
-                "test title",
-                "test coverUrl",
-                "test contents"
-        );
+        ArticleDto articleDto = new ArticleDto();
+        articleDto.setTitle("test title");
+        articleDto.setCoverUrl("test coverUrl");
+        articleDto.setContents("test contents");
+
+        article = Article.of(articleDto);
     }
 
     @Test
-    @DisplayName("같은 아이디 찾는 테스트")
-    void isSameIdTest() {
-        assertTrue(article.isSameId(TEST_ARTICLE_ID));
-    }
-
-    @Test
-    @DisplayName("업데이트하는 테스트")
-    void updateArticleTest() {
+    @DisplayName("게시물을 업데이트한다.")
+    void updateTest() {
         // Given
         ArticleDto articleDto = new ArticleDto();
         articleDto.setTitle("update title");

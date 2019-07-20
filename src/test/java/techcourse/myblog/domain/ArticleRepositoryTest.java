@@ -6,8 +6,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import techcourse.myblog.domain.validator.CouldNotFindArticleIdException;
-import techcourse.myblog.web.dto.ArticleDto;
+import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.service.exception.CouldNotFindArticleIdException;
 
 import java.util.Optional;
 
@@ -26,33 +27,59 @@ class ArticleRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        ArticleDto articleDto = ArticleDto.of("test title",
-                "test coverUrl",
-                "test contents"
-        );
+        ArticleDto articleDto = new ArticleDto();
+        articleDto.setTitle("test title");
+        articleDto.setCoverUrl("test coverUrl");
+        articleDto.setContents("test contents");
 
-        article = articleRepository.save(new Article(articleDto));
+        article = articleRepository.save(Article.of(articleDto));
     }
 
     @Test
-    @DisplayName("게시물을 저장한다.")
-    void saveTest() {
-        ArticleDto articleDto = ArticleDto.of(
-                "saveTest title",
-                "saveTest coverUrl",
-                "saveTest contents"
-        );
-        Article test = articleRepository.save(new Article(articleDto));
+    @DisplayName("게시물을 생성하고 저장한다.")
+    void createTest() {
+        ArticleDto articleDto = new ArticleDto();
+        articleDto.setTitle("saveTest title");
+        articleDto.setCoverUrl("saveTest coverUrl");
+        articleDto.setContents("saveTest contents");
+
+        Article test = articleRepository.save(Article.of(articleDto));
 
         assertThat(test).isNotNull();
     }
 
     @Test
     @DisplayName("게시물 id로 게시물을 조회한다.")
-    void findTest() {
+    void readTest() {
         Optional<Article> findArticle = articleRepository.findById(article.getArticleId());
         assertThat(findArticle.isPresent()).isTrue();
         assertThat(findArticle.get()).isEqualTo(article);
+    }
+
+    @Test
+    @DisplayName("Repository에 없는 id를 조회하는 경우 예외를 던져준다.")
+    void readFailTest() {
+        assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository
+                .findById(TEST_ARTICLE_ID_NOT_IN_REPO)
+                .orElseThrow(CouldNotFindArticleIdException::new)
+        );
+    }
+
+    @Test
+    @DisplayName("게시물 id를 이용해 해당 게시물을 업데이트 한다.")
+    void updateByIdTest() {
+        Article findArticle = articleRepository.findById(article.getArticleId()).get();
+        ArticleDto articleDto = new ArticleDto();
+        articleDto.setTitle("update title");
+        articleDto.setCoverUrl("update coverUrl");
+        articleDto.setContents("update contents");
+
+        findArticle.updateArticle(articleDto);
+        Article updateArticle = articleRepository.save(findArticle);
+
+        assertThat(updateArticle.getTitle()).isEqualTo("update title");
+        assertThat(updateArticle.getCoverUrl()).isEqualTo("update coverUrl");
+        assertThat(updateArticle.getContents()).isEqualTo("update contents");
     }
 
     @Test
@@ -61,15 +88,6 @@ class ArticleRepositoryTest {
         articleRepository.deleteById(article.getArticleId());
         assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository
                 .findById(article.getArticleId())
-                .orElseThrow(CouldNotFindArticleIdException::new)
-        );
-    }
-
-    @Test
-    @DisplayName("Repository에 없는 id를 조회하는 경우 예외를 던져준다.")
-    void findFailTest() {
-        assertThrows(CouldNotFindArticleIdException.class, () -> articleRepository
-                .findById(TEST_ARTICLE_ID_NOT_IN_REPO)
                 .orElseThrow(CouldNotFindArticleIdException::new)
         );
     }
