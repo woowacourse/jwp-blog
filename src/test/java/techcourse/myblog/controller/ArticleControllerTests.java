@@ -12,7 +12,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.ArticleService;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static techcourse.myblog.web.ArticleController.ARTICLE_MAPPING_URL;
+import static techcourse.myblog.controller.ArticleController.ARTICLE_MAPPING_URL;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

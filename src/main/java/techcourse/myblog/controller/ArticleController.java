@@ -1,8 +1,7 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,13 +9,13 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.ArticleService;
 
-import static techcourse.myblog.web.ArticleController.ARTICLE_MAPPING_URL;
+import static techcourse.myblog.controller.ArticleController.ARTICLE_MAPPING_URL;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(ARTICLE_MAPPING_URL)
+@Slf4j
 public class ArticleController {
-    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
     public static final String ARTICLE_MAPPING_URL= "/article";
     private final ArticleService articleService;
 

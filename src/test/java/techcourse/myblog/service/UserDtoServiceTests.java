@@ -1,5 +1,6 @@
 package techcourse.myblog.service;
 
+import techcourse.myblog.dto.UserDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class UserDtoServiceTests {
 
     @Test
     void save_Test() {
-        techcourse.myblog.UserDto userDto = techcourse.myblog.UserDto.builder().name("김강민")
+        UserDto userDto = UserDto.builder().name("김강민")
                 .email("kangmin789@naver.com")
                 .password("asdASD12!@")
                 .build();
@@ -33,7 +34,7 @@ public class UserDtoServiceTests {
 
     @Test
     void uthenticate_Test(){
-        techcourse.myblog.UserDto userDto = techcourse.myblog.UserDto.builder().name("김강민")
+        UserDto userDto = UserDto.builder().name("김강민")
                 .email("2@naver.com")
                 .password("asdASD12!@")
                 .build();

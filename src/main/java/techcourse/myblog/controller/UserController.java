@@ -1,28 +1,27 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.UserDto;
+import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import static techcourse.myblog.controller.UserController.USER_MAPPING_URL;
 import static techcourse.myblog.domain.User.*;
-import static techcourse.myblog.web.UserController.USER_MAPPING_URL;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(USER_MAPPING_URL)
+@Slf4j
 public class UserController {
     public static final String USER_MAPPING_URL = "/user";
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     public final UserService userService;
 
     @GetMapping
@@ -45,8 +44,7 @@ public class UserController {
     }
 
     @GetMapping("/show")
-    public String show(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
+    public String show(HttpSession session, Model model) {
         UserDto userDto = (UserDto) session.getAttribute("user");
         log.info("/user/show 에서의 로그 : "+ userDto.toString());
         model.addAttribute("user", userDto);
@@ -54,8 +52,7 @@ public class UserController {
     }
 
     @GetMapping("/edit")
-    public String editForm(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
+    public String editForm(HttpSession session, Model model) {
         UserDto userDto = (UserDto) session.getAttribute("user");
         log.info("/user/edit 에서의 로그 : "+ userDto.toString());
         model.addAttribute("user", userDto);
@@ -64,8 +61,7 @@ public class UserController {
     }
 
     @PutMapping("/edit")
-    public RedirectView edit(HttpServletRequest request,String name){
-        HttpSession session = request.getSession();
+    public RedirectView edit(HttpSession session,String name){
         UserDto userDto = (UserDto)session.getAttribute("user");
         userDto.setName(name);
         session.setAttribute("user",userDto);
@@ -75,23 +71,22 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public RedirectView login(UserDto userDto, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public ModelAndView login(UserDto userDto, HttpSession session, RedirectAttributes redirectAttributes) {
         UserDto responseUserDto;
         log.info("/user/login 에서의 로그 " + userDto.getName() + " " + userDto.getEmail() + " " + userDto.getPassword());
         try {
-            userService.checkPassword(userDto);
-            log.info("패스워드 체크까지 했음");
             responseUserDto = userService.getUserDtoByEmail(userDto.getEmail());
             log.info("이메일 찾기 까지 했음");
-            request.getSession().setAttribute("user",responseUserDto);
-            return new RedirectView("/");
+            userService.checkPassword(userDto);
+            log.info("패스워드 체크까지 했음");
+            session.setAttribute("user",responseUserDto);
+            return new ModelAndView("redirect:/");
         } catch (IllegalArgumentException e){
             log.info("캐치블록까지 왔음");
-            redirectAttributes.addAttribute("message","로긴실패!");
-            RedirectView rv = new RedirectView();
-            rv.setUrl(USER_MAPPING_URL);
-            return rv;
-        }
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.addObject("error",e.getMessage());
+            modelAndView.setViewName("login");
+            return modelAndView;        }
     }
 
     @PostMapping("/logout")

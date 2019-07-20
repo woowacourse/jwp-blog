@@ -4,7 +4,7 @@ package techcourse.myblog.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.UserDto;
+import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.UserRepository;
 
@@ -18,7 +18,7 @@ public class UserService {
     public User save(UserDto userDto) {
         emailDuplicateValidate(userDto);
         userDto.setPassword(userDto.getPassword());
-        log.info("save까지 왔음 : "+ userDto.getName() +" "+ userDto.getEmail()+" "+ userDto.getPassword());
+        log.info("UserService.save() : "+ userDto.getName() +" "+ userDto.getEmail()+" "+ userDto.getPassword());
         User user = new User(userDto.getName(),userDto.getEmail(),userDto.getPassword());
         userRepository.save(user);
         return user;
@@ -39,7 +39,7 @@ public class UserService {
         if(maybeUser.isPresent() && maybeUser.get().isSamePassword(userDto.getPassword())){
             return;
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
     }
 
 
@@ -50,7 +50,7 @@ public class UserService {
             User user = maybeUser.get();
             return new UserDto(user.getEmail(), user.getName(), user.getPassword());
         }
-        throw new IllegalArgumentException("유저가 존재하지 않습니다.");
+        throw new IllegalArgumentException("해당 이메일의 아이디가 존재하지 않습니다.");
     }
 
     public void updateUserName(UserDto userDto, String name) {

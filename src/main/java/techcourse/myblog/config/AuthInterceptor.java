@@ -2,7 +2,7 @@ package techcourse.myblog.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
-import techcourse.myblog.UserDto;
+import techcourse.myblog.dto.UserDto;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
