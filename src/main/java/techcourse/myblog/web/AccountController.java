@@ -51,6 +51,7 @@ public class AccountController {
 
     @DeleteMapping("/accounts/user")
     public String deleteUser(HttpServletRequest request) {
+        log.debug(">>> deleteUser: request : {}", request);
         User user = (User) request.getSession().getAttribute("user");
         request.getSession().removeAttribute("user");
         userRepository.delete(user);

@@ -355,6 +355,17 @@ public class AccountControllerTest {
                 .exchange()
                 .expectStatus()
                 .isFound();
+
+        webTestClient.get().uri("/accounts/users")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(email)).isFalse();
+                })
+        ;
     }
 
     private String getLoginCookie(String email, String password) {
