@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,8 +25,6 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    // TODO: Error 처리를 위한 @ExcecptionHandler 구현
-
     @GetMapping("/signup")
     public String showSignupForm(@RequestParam(required = false) String errorMessage, Model model) {
         model.addAttribute("errorMessage", errorMessage);
@@ -42,11 +39,11 @@ public class UserController {
 
     // TODO: Dto를 Domain 객체로 만들어 주는 Translation Layer 구현하기
 
-    @ExceptionHandler({NotMatchPasswordException.class, NotExistUserException.class})
+    @ExceptionHandler({ UserLoginInputException.class, NotMatchPasswordException.class, NotExistUserException.class })
     public RedirectView loginException(RedirectAttributes redirectAttributes, Exception exception) {
         redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
 
-        return new RedirectView("/login");
+        return new RedirectView("/auth/login");
     }
 
     @PostMapping("/login")
@@ -117,8 +114,6 @@ public class UserController {
             String name = userDto.getName();
             String email = userDto.getEmail();
             if (email.equals(user.getEmail())) {
-                user.setName(name);
-                user.setEmail(email);
                 userRepository.save(user);
                 session.setAttribute("username", name);
                 session.setAttribute("email", email);
@@ -126,8 +121,6 @@ public class UserController {
             }
             return userRepository.findByEmail(email).map(sameEmail -> new RedirectView("."))
                     .orElseGet(() -> {
-                        user.setName(name);
-                        user.setEmail(email);
                         userRepository.save(user);
                         session.setAttribute("username", name);
                         session.setAttribute("email", email);

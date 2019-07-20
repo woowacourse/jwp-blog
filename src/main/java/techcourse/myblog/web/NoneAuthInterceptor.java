@@ -13,7 +13,7 @@ public class NoneAuthInterceptor implements HandlerInterceptor {
         HttpSession session = req.getSession();
 
         if (session.getAttribute("username") == null) {
-            res.sendRedirect("/login");
+            res.sendRedirect("/auth/login");
             return false;
         }
 
