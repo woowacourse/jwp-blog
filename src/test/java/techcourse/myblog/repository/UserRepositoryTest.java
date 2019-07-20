@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.UserEmail;
 import techcourse.myblog.domain.UserException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -29,8 +30,9 @@ class UserRepositoryTest {
 
     @Test
     void findByNameTest() {
-        assertThat(userRepository.findByEmail("andole@gmail.com")).isNotNull();
-        assertThat(userRepository.findByEmail("andole@gmail.com")).isNotEqualTo(userRepository.findByEmail("aaa"));
+        assertThat(userRepository.findByEmail(UserEmail.of("andole@gmail.com"))).isNotNull();
+        assertThatThrownBy(() -> userRepository.findByEmail(UserEmail.of("abc@gmail.com")).orElseThrow(UserException::new))
+                .isInstanceOf(UserException.class);
     }
 
     @AfterEach

@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.UserEmail;
 import techcourse.myblog.repository.UserRepository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -129,7 +130,7 @@ class UserControllerTest {
                         .with("email", "edit@gmail.com"))
                 .exchange().expectStatus().is3xxRedirection();
 
-        assertDoesNotThrow(() -> userRepository.findByEmail("edit@gmail.com").orElseThrow(IllegalAccessError::new));
+        assertDoesNotThrow(() -> userRepository.findByEmail(UserEmail.of("edit@gmail.com")).orElseThrow(IllegalAccessError::new));
     }
 
     @Test
@@ -146,7 +147,7 @@ class UserControllerTest {
                 .header("Cookie", cookie)
                 .exchange().expectStatus().is3xxRedirection();
 
-        assertThatThrownBy(() -> userRepository.findByEmail("andole@gmail.com").orElseThrow(IllegalAccessError::new))
+        assertThatThrownBy(() -> userRepository.findByEmail(UserEmail.of("andole@gmail.com")).orElseThrow(IllegalAccessError::new))
                 .isInstanceOf(IllegalAccessError.class);
     }
 

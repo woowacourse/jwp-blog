@@ -2,6 +2,7 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.UserEmail;
 import techcourse.myblog.domain.UserException;
 import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.dto.SignupDto;
@@ -26,7 +27,7 @@ public class UserService {
 
     public LoginDto loginByEmailAndPwd(UserDto userDto) {
         try {
-            User user = userRepository.findByEmail(userDto.getEmail())
+            User user = userRepository.findByEmail(UserEmail.of(userDto.getEmail()))
                     .orElseThrow(() -> new UserException(NOT_EXIST_USER));
             if (user.isMatchPassword(userDto)) {
                 return new LoginDto(true, null, user.getName());
@@ -58,7 +59,7 @@ public class UserService {
     }
 
     private User getUserBySession(HttpSession session) {
-        return userRepository.findByEmail(session.getAttribute("userEmail").toString()).orElseThrow(UserException::new);
+        return userRepository.findByEmail(UserEmail.of(session.getAttribute("userEmail").toString())).orElseThrow(UserException::new);
     }
 
     public void deleteUser(HttpSession session) {

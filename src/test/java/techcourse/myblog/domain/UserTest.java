@@ -39,7 +39,7 @@ class UserTest {
 
     @Test
     void PASSWORD_VALIDATE2() {
-        assertDoesNotThrow(() -> new User("aaa", "Aa1!bcdef", "a"));
+        assertDoesNotThrow(() -> new User("aaa", "Aa1!bcdef", "abc@gmail.com"));
     }
 
     @Test
@@ -54,4 +54,18 @@ class UserTest {
                 .isInstanceOf(UserException.class);
     }
 
+    @Test
+    void EMAIL_VALIDATE() {
+        assertThatThrownBy(() -> new User("aaa", "A!1bcdefg", "abc")).isInstanceOf(UserException.class);
+    }
+
+    @Test
+    void EMAIL_VALIDATE2() {
+        assertThatThrownBy(() -> new User("aaa", "A!1bcdefg", "abc@")).isInstanceOf(UserException.class);
+    }
+
+    @Test
+    void USER_CORRECT_CASE() {
+        assertDoesNotThrow(() -> new User("abc", "A!1bcdefg", "a_b-c@abc.com"));
+    }
 }

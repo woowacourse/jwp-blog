@@ -4,46 +4,29 @@ import techcourse.myblog.dto.UserDto;
 
 import javax.persistence.*;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Entity
 public class User {
-    private static final Pattern NAME_PATTERN = Pattern.compile("^[ㄱ-ㅎ가-힣a-zA-Z]{2,10}$");
-    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z[0-9]$@$!%*#?&]{8,}$");
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 
-    private String name;
-    private String password;
+    @Convert(converter = UserNameConverter.class)
+    private UserName name;
+    @Convert(converter = UserPasswordConverter.class)
+    private UserPassword password;
 
     @Column(unique = true)
-    private String email;
+    @Convert(converter = UserEmailConverter.class)
+    private UserEmail email;
 
     protected User() {
     }
 
     public User(String name, String password, String email) {
-        this.name = validateName(name);
-        this.password = validatePassword(password);
-        this.email = email;
-    }
-
-    private String validatePassword(String password) {
-        Matcher matcher = PASSWORD_PATTERN.matcher(password);
-        if (!matcher.find()) {
-            throw new UserException();
-        }
-        return password;
-    }
-
-    private String validateName(String name) {
-        Matcher matcher = NAME_PATTERN.matcher(name);
-        if (!matcher.find()) {
-            throw new UserException();
-        }
-        return name;
+        this.name = UserName.of(name);
+        this.password = UserPassword.of(password);
+        this.email = UserEmail.of(email);
     }
 
     public Long getId() {
@@ -51,24 +34,24 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return name.getUserName();
     }
 
     public String getPassword() {
-        return password;
+        return password.getPassword();
     }
 
     public String getEmail() {
-        return email;
+        return email.getEmail();
     }
 
     public void updateNameAndEmail(String name, String email) {
-        this.name = name;
-        this.email = email;
+        this.name.update(name);
+        this.email.update(email);
     }
 
     public boolean isMatchPassword(UserDto dto) {
-        return this.password.equals(dto.getPassword());
+        return this.password.match(dto.getPassword());
     }
 
     @Override
