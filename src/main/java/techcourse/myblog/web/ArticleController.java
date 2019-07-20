@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.dto.ArticleSaveDto;
 import techcourse.myblog.service.ArticleService;
 
 @Controller
@@ -28,8 +29,8 @@ public class ArticleController {
     }
 
     @PostMapping("")
-    public String saveArticle(Article article, Model model) {
-        articleService.save(article);
+    public String saveArticle(ArticleSaveDto articleSaveDto, Model model) {
+        Article article = articleService.save(articleSaveDto.toEntity());
         model.addAttribute("article", article);
         System.out.println(articleService.findAllArticles());
         return "article";
@@ -50,10 +51,9 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public String saveEditedArticle(@PathVariable long id, Article editedArticle, Model model) {
-        editedArticle.setId(id);
-        articleService.update(editedArticle);
-        model.addAttribute("article", editedArticle);
+    public String saveEditedArticle(@PathVariable long id, ArticleSaveDto articleSaveDto, Model model) {
+        articleService.update(articleSaveDto.toEntity(), id);
+        model.addAttribute("article", articleSaveDto.toEntity());
         return "article";
     }
 

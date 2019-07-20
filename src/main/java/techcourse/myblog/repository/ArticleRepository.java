@@ -12,6 +12,6 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
     @Transactional
     @Modifying
     @Query(value = "update Article a set a.title = :#{#article.title}, a.coverUrl = :#{#article.coverUrl}"
-            + ", a.contents = :#{#article.contents} where a.id = :#{#article.id}")
-    Integer update(@Param("article") Article article);
+            + ", a.contents = :#{#article.contents} where a.id = :id")
+    Integer update(@Param("article") Article article, @Param("id") long id);
 }

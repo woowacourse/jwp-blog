@@ -18,16 +18,16 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public void save(Article article) {
-        articleRepository.save(article);
+    public Article save(Article article) {
+        return articleRepository.save(article);
     }
 
     public Article findById(long id) {
         return articleRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 
-    public void update(Article article) {
-        articleRepository.update(article);
+    public void update(Article article, long id) {
+        articleRepository.update(article, id);
     }
 
     public void deleteById(long id) {
