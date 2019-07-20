@@ -1,7 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.request.UserDto;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

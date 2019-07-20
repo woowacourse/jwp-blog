@@ -6,7 +6,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserLoginDto;
+import techcourse.myblog.dto.request.UserLoginDto;
 import techcourse.myblog.repository.UserRepository;
 
 import org.springframework.stereotype.Controller;

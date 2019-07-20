@@ -1,11 +1,11 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 
-import static techcourse.myblog.dto.UserDto.BLANK_NAME;
+import static techcourse.myblog.dto.request.UserDto.BLANK_NAME;
 
 public class UserEditProfileDto {
 	@Length(min = 2, max = 10)

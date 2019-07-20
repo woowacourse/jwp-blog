@@ -1,4 +1,4 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.dto.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -6,7 +6,7 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 
-import static techcourse.myblog.dto.UserDto.NOT_VALID_EMAIL;
+import static techcourse.myblog.dto.request.UserDto.NOT_VALID_EMAIL;
 
 public class UserLoginDto {
 	@NotBlank(message = NOT_VALID_EMAIL)

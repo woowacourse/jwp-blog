@@ -1,7 +1,7 @@
 package techcourse.myblog.web;
 
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.request.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
 
 import org.springframework.stereotype.Controller;

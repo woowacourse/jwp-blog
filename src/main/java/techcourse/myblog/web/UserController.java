@@ -6,8 +6,8 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.dto.UserEditProfileDto;
+import techcourse.myblog.dto.request.UserDto;
+import techcourse.myblog.dto.request.UserEditProfileDto;
 import techcourse.myblog.repository.UserRepository;
 
 import org.springframework.stereotype.Controller;

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.request.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;

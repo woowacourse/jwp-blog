@@ -4,8 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.dto.UserEditProfileDto;
+import techcourse.myblog.dto.request.UserDto;
+import techcourse.myblog.dto.request.UserEditProfileDto;
 
 @Entity
 public class User {
