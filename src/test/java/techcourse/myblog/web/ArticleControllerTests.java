@@ -13,16 +13,9 @@ import techcourse.myblog.domain.Article;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-public class ArticleControllerTests {
+class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
-
-    @Test
-    void index() {
-        webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
-    }
 
     @Test
     void articleForm() {
