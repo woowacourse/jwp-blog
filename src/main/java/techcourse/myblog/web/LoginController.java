@@ -2,6 +2,7 @@ package techcourse.myblog.web;
 
 import java.util.List;
 import java.util.Optional;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import techcourse.myblog.domain.User;
@@ -14,10 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 @Controller
-@SessionAttributes("username")
 public class LoginController {
 	private final UserRepository userRepository;
 
@@ -31,7 +30,7 @@ public class LoginController {
 	}
 
 	@PostMapping("/login")
-	public String userLogin(@Valid UserLoginDto userLoginDto, BindingResult bindingResult, Model model) {
+	public String userLogin(@Valid UserLoginDto userLoginDto, BindingResult bindingResult, Model model, HttpSession httpSession) {
 		if (bindingResult.hasErrors()) {
 			List<FieldError> errors = bindingResult.getFieldErrors();
 			model.addAttribute("errors", errors.get(0).getField() + "입력 오류 입니다.");
@@ -46,7 +45,9 @@ public class LoginController {
 			model.addAttribute("errors", "비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
 			return "/login";
 		}
-		model.addAttribute("username", loginUser.get().getUsername());
+
+		httpSession.setAttribute("email", loginUser.get().getEmail());
+		httpSession.setAttribute("username", loginUser.get().getUsername());
 		return "redirect:/user-list";
 	}
 }
