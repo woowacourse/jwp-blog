@@ -1,4 +1,4 @@
-package techcourse.myblog.controller;
+package techcourse.myblog.web.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.controller.dto.LoginDto;
-import techcourse.myblog.controller.dto.UserDto;
+import techcourse.myblog.web.controller.dto.LoginDto;
+import techcourse.myblog.web.controller.dto.UserDto;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -56,26 +56,20 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String showMyPage(HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
-        }
+    public String showMyPage() {
+        // 잘 되는지 확인
         return "mypage";
     }
 
     @GetMapping("/mypage/edit")
-    public String showMyPageEdit(HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
-        }
+    public String showMyPageEdit() {
+        // 잘 되는지 확인
         return "mypage-edit";
     }
 
     @PutMapping("/mypage/edit")
     public String updateUser(UserDto userDto, HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
-        }
+        // 잘 되는지 확인
         User user = (User) httpSession.getAttribute("user");
         userDto.setEmail(user.getEmail());
         httpSession.setAttribute("user", userService.update(userDto));
@@ -85,19 +79,15 @@ public class UserController {
 
     @DeleteMapping("/mypage/edit")
     public String deleteUser(HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
-        }
+        // 잘 되는지 확인
         User user = (User) httpSession.getAttribute("user");
         userService.remove(user.getEmail());
         return "redirect:/logout";
     }
 
     @GetMapping("/users")
-    public String users(Model model, HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
-        }
+    public String users(Model model) {
+        // 잘 되는지 확인
         model.addAttribute("users", userService.findAll());
         return "user-list";
     }
@@ -117,10 +107,8 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String singUp(UserDto userDto, HttpSession httpSession) {
-        if (httpSession.getAttribute("user") != null) {
-            return "redirect:/";
-        }
+    public String singUp(UserDto userDto) {
+        // 잘 되는지 확인
         return "signup";
     }
 }

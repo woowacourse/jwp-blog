@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.UserRepository;
-import techcourse.myblog.controller.dto.LoginDto;
-import techcourse.myblog.controller.dto.UserDto;
+import techcourse.myblog.web.controller.dto.LoginDto;
+import techcourse.myblog.web.controller.dto.UserDto;
 
 import java.util.List;
 

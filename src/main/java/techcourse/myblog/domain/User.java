@@ -1,6 +1,6 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.controller.dto.UserDto;
+import techcourse.myblog.web.controller.dto.UserDto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
