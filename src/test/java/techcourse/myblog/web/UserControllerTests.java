@@ -1,7 +1,9 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import techcourse.myblog.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -11,12 +13,23 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UsersControllerTest {
+class UserControllerTests {
 	@Autowired
 	private WebTestClient webTestClient;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@BeforeEach
+	void setUp() {
+		userRepository.deleteAll();
+	}
 
 	@Test
 	void getSignUpPage() {
@@ -27,7 +40,7 @@ class UsersControllerTest {
 	}
 
 	@Test
-	void joinSuccess() {
+	void signUpSuccess() {
 		webTestClient.post()
 				.uri("/users")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -40,10 +53,12 @@ class UsersControllerTest {
 				.isFound()
 				.expectHeader()
 				.valueMatches("Location", ".+/login");
+
+		assertTrue(userRepository.findByEmail("tiber@naver.com").isPresent());
 	}
 
 	@Test
-	void joinFailureDueToUsernameValue() {
+	void signUpFailureDueToUsernameValue() {
 		webTestClient.post()
 				.uri("/users")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -54,10 +69,12 @@ class UsersControllerTest {
 				.exchange()
 				.expectStatus()
 				.isOk();
+
+		assertFalse(userRepository.findByEmail("tiber@naver.com").isPresent());
 	}
 
 	@Test
-	void joinFailureDueToEmailValue() {
+	void signUpFailureDueToEmailValue() {
 		webTestClient.post()
 				.uri("/users")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -68,10 +85,12 @@ class UsersControllerTest {
 				.exchange()
 				.expectStatus()
 				.isOk();
+
+		assertFalse(userRepository.findByEmail("tibernaver.com").isPresent());
 	}
 
 	@Test
-	void joinFailureDueToPasswordValue() {
+	void signUpFailureDueToPasswordValue() {
 		webTestClient.post()
 				.uri("/users")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -82,6 +101,8 @@ class UsersControllerTest {
 				.exchange()
 				.expectStatus()
 				.isOk();
+
+		assertFalse(userRepository.findByEmail("tiber@naver.com").isPresent());
 	}
 
 	@Test
