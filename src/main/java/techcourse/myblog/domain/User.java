@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import techcourse.myblog.dto.UserDto;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,15 +13,16 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String email;
     private String password;
 
-    public static User of(String name, String email, String password) {
+    public static User of(UserDto userDto) {
         User user = new User();
-        user.name = name;
-        user.email = email;
-        user.password = password;
+        user.name = userDto.getName();
+        user.email = userDto.getEmail();
+        user.password = userDto.getPassword();
         return user;
     }
 
