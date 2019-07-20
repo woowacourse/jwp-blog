@@ -1,6 +1,7 @@
 package techcourse.myblog.web;
 
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -75,5 +76,32 @@ public class UserController {
 		}
 		model.addAttribute("user", userRepository.findByEmail(httpSession.getAttribute("email").toString()).get());
 		return "mypage-edit";
+	}
+
+	@GetMapping("/leave")
+	public String leave(HttpSession httpSession) {
+		if (httpSession.getAttribute("email") == null) {
+			return "redirect:/";
+		}
+		return "leave-user";
+	}
+
+	@PostMapping("/leave")
+	public String leaveUser(HttpSession httpSession, Model model, String password) {
+		if (httpSession.getAttribute("email") == null) {
+			return "redirect:/";
+		}
+		String email = httpSession.getAttribute("email").toString();
+		Optional<User> user = userRepository.findByEmail(email);
+
+		if(user.get().matchPassword(password)) {
+			model.addAttribute("result", "회원 탈퇴가 완료되었습니다.");
+			userRepository.delete(user.get());
+			httpSession.invalidate();
+			return "leave-user";
+		}
+
+		model.addAttribute("errors", "비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
+		return "leave-user";
 	}
 }
