@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.web.dto.ArticleRequestDto;
 

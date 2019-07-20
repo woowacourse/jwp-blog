@@ -3,7 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.web.dto.LoginRequestDto;
 import techcourse.myblog.web.dto.UserRequestDto;
 import techcourse.myblog.web.dto.UserUpdateRequestDto;

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.service.UserAuthenticateException;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.web.dto.LoginRequestDto;
@@ -15,7 +14,6 @@ import techcourse.myblog.web.dto.UserRequestDto;
 import techcourse.myblog.web.dto.UserUpdateRequestDto;
 
 import javax.servlet.http.HttpSession;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static techcourse.myblog.web.ControllerUtil.*;
