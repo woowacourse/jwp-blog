@@ -17,7 +17,7 @@ public class Article {
         this.contents = contents;
     }
 
-    public static Article of(String title, String coverUrl, String contents) {
+    public static Article createWithoutId(String title, String coverUrl, String contents) {
         return new Article(EMPTY_ID, title, coverUrl, contents);
     }
 
