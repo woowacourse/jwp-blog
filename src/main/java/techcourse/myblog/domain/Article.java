@@ -27,6 +27,10 @@ public class Article {
         this.contents = contents;
     }
 
+    public static Article of(ArticleDto articleDto) {
+        return new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
+    }
+
     public Article update(ArticleDto articleDto) {
         this.title = articleDto.getTitle();
         this.coverUrl = articleDto.getCoverUrl();
@@ -34,12 +38,12 @@ public class Article {
         return this;
     }
 
-    public static Article of(ArticleDto articleDto) {
-        return new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -52,10 +56,6 @@ public class Article {
 
     public String getContents() {
         return contents;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @Override

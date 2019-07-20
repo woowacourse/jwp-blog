@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -18,14 +17,10 @@ public class UserControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    @BeforeEach
-    void setUp() {
-
-    }
-
     @Test
     void signUp_test() {
-        signUpExchange(entityExchangeResult -> {});
+        signUpExchange(entityExchangeResult -> {
+        });
     }
 
     private WebTestClient.BodyContentSpec signUpExchange(Consumer<EntityExchangeResult<byte[]>> consumer) {

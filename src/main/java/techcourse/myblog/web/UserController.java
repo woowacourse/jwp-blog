@@ -19,8 +19,8 @@ import javax.validation.Valid;
 
 @Controller
 public class UserController {
-    private final UserService userService;
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;

@@ -10,8 +10,8 @@ import techcourse.myblog.web.dto.ArticleDto;
 
 @Controller
 public class ArticleController {
-    private final ArticleService articleService;
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
+    private final ArticleService articleService;
 
     public ArticleController(ArticleService articleService) {
         this.articleService = articleService;

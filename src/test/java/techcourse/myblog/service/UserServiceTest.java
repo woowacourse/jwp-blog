@@ -15,10 +15,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserServiceTest {
 
+    private static int flagNo = 1;
     @Autowired
     private UserService userService;
     private User beforeUser;
-    private static int flagNo = 1;
 
     @BeforeEach
     void setUp() {

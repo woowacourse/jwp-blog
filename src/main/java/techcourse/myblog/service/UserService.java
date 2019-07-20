@@ -12,9 +12,8 @@ import java.util.List;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository;
-
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -44,7 +43,7 @@ public class UserService {
     public User login(LoginDto loginDto) throws IllegalArgumentException {
         // TODO: 2019-07-19 Interceptor...
         User user = findByEmail(loginDto.getEmail());
-        if(user.equalPassword(loginDto.getPassword())) {
+        if (user.equalPassword(loginDto.getPassword())) {
             return user;
         }
         throw new IllegalArgumentException("비밀번호 다르다.");
