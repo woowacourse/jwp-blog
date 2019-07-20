@@ -17,13 +17,13 @@ public class IndexController {
     private final ArticleService articleService;
 
     @GetMapping("/")
-    public String index(HttpSession session, Model model){
+    public String index(HttpSession session, Model model) {
         model.addAttribute("articles", articleService.findAll());
         log.info(String.valueOf(session.getAttribute("user")));
 
         UserDto userDto = (UserDto) session.getAttribute("user");
 
-        if(userDto != null){
+        if (userDto != null) {
             model.addAttribute("user", userDto);
         }
         return "index";

@@ -1,12 +1,12 @@
 package techcourse.myblog.service;
 
-import techcourse.myblog.dto.UserDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
 import java.util.Optional;
@@ -29,17 +29,17 @@ public class UserDtoServiceTests {
                 .password("asdASD12!@")
                 .build();
         userService.save(userDto);
-        assertThat(userRepository.findById((long)1)).isNotNull();
+        assertThat(userRepository.findById((long) 1)).isNotNull();
     }
 
     @Test
-    void uthenticate_Test(){
+    void uthenticate_Test() {
         UserDto userDto = UserDto.builder().name("김강민")
                 .email("2@naver.com")
                 .password("asdASD12!@")
                 .build();
         userService.save(userDto);
-        Optional<User> maybeUser = userService.authenticate("2@naver.com","asdASD12!@");
+        Optional<User> maybeUser = userService.authenticate("2@naver.com", "asdASD12!@");
         assertThat(maybeUser.isPresent()).isTrue();
     }
 }

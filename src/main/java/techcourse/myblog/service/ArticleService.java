@@ -10,16 +10,16 @@ import techcourse.myblog.repository.ArticleRepository;
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
-    public Article save(Article article){
+    public Article save(Article article) {
         articleRepository.save(article);
         return article;
     }
 
-    public Article findById(long id){
+    public Article findById(long id) {
         return articleRepository.findById(id).get();
     }
 
-    public Iterable<Article> findAll(){
+    public Iterable<Article> findAll() {
         return articleRepository.findAll();
     }
 
@@ -28,7 +28,7 @@ public class ArticleService {
         return article;
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         articleRepository.deleteById(id);
     }
 }

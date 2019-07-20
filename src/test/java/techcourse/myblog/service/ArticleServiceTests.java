@@ -17,26 +17,27 @@ public class ArticleServiceTests {
     private ArticleService articleService;
     @Autowired
     private ArticleRepository articleRepository;
+
     @Test
     void save_Test() {
-        Article article =Article.builder()
+        Article article = Article.builder()
                 .title("a")
                 .coverUrl("b")
                 .contents("c")
                 .build();
         articleService.save(article);
-        assertThat(articleRepository.findById((long)1)).isNotNull();
+        assertThat(articleRepository.findById((long) 1)).isNotNull();
     }
 
     @Test
-    void delete_Test(){
-        Article article =  Article.builder()
+    void delete_Test() {
+        Article article = Article.builder()
                 .title("a")
                 .coverUrl("b")
                 .contents("c")
                 .build();
         articleService.save(article);
-        articleService.delete((long)1);
-        assertThat(articleRepository.findById((long)1).isPresent()).isEqualTo(false);
+        articleService.delete((long) 1);
+        assertThat(articleRepository.findById((long) 1).isPresent()).isEqualTo(false);
     }
 }
