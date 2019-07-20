@@ -47,7 +47,6 @@ public class UserService {
         }
     }
 
-
     public List<User> findAll() {
         Iterator<User> userIterator = userRepository.findAll().iterator();
         List<User> users = new ArrayList<>();
@@ -62,7 +61,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(BindingResult bindingResult, HttpSession httpSession,
+    public User updateUser(BindingResult bindingResult, HttpSession httpSession,
                            UserUpdateRequestDto userUpdateRequestDto) {
         if (bindingResult.hasErrors()) {
             FieldError fieldError = bindingResult.getFieldError();
@@ -71,14 +70,13 @@ public class UserService {
         String email = ((User) httpSession.getAttribute("user")).getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(NotFoundObjectException::new);
         user.setUserName(userUpdateRequestDto.getUserName());
-        httpSession.setAttribute("user", user);
+        return user;
     }
 
     @Transactional
     public void deleteUser(HttpSession httpSession) {
         String email = ((User) httpSession.getAttribute("user")).getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(NotFoundObjectException::new);
-        httpSession.removeAttribute("user");
         userRepository.delete(user);
     }
 

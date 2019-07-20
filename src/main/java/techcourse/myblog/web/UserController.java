@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.exception.NotValidUpdateUserInfoException;
 import techcourse.myblog.exception.NotValidUserInfoException;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.user.User;
 import techcourse.myblog.user.UserDto;
 import techcourse.myblog.user.UserUpdateRequestDto;
 
@@ -59,13 +60,15 @@ public class UserController {
     @PutMapping("/mypage/edit")
     public String editUserInfo(@Valid UserUpdateRequestDto userUpdateRequestDto,
                                BindingResult bindingResult, HttpSession httpSession) {
-        userService.updateUser(bindingResult, httpSession, userUpdateRequestDto);
+        User user = userService.updateUser(bindingResult, httpSession, userUpdateRequestDto);
+        httpSession.setAttribute("user", user);
         return "redirect:/users/mypage";
     }
 
     @DeleteMapping("/mypage")
     public String deleteUser(HttpSession httpSession) {
         userService.deleteUser(httpSession);
+        httpSession.removeAttribute("user");
         return "redirect:/";
     }
 
