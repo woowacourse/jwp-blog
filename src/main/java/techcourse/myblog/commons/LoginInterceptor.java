@@ -4,14 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import techcourse.myblog.users.UserController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import static techcourse.myblog.users.UserController.BASE_USER_URI;
+import static techcourse.myblog.users.UserController.USER_BASE_URI;
 
 @Component
 public class LoginInterceptor extends HandlerInterceptorAdapter {
@@ -31,7 +30,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
 
         if (!(isLoginForm(path) || isSignup(path, method) || isSignupForm(path))) {
-            response.sendRedirect(BASE_USER_URI + "/login");
+            response.sendRedirect(USER_BASE_URI + "/login");
             return false;
         }
         return true;

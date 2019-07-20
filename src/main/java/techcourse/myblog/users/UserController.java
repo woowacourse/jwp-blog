@@ -13,10 +13,10 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/users")
+@RequestMapping(UserController.USER_BASE_URI)
 public class UserController {
+    public static final String USER_BASE_URI = "/users";
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    public static final String BASE_USER_URI = "/users";
 
     private final UserService userService;
 
