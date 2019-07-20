@@ -1,6 +1,7 @@
 package techcourse.myblog.web;
 
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import techcourse.myblog.domain.User;
@@ -23,7 +24,10 @@ public class UsersController {
 	}
 
 	@GetMapping("/signup")
-	public String signUpPage() {
+	public String signUpPage(HttpSession httpSession) {
+		if (httpSession.getAttribute("username") != null) {
+			return "redirect:/";
+		}
 		return "signup";
 	}
 
@@ -50,8 +54,8 @@ public class UsersController {
 	}
 
 	@GetMapping("/user-list")
-	public String userList( Model model) {
-		model.addAttribute("users", userRepository.findAll()); //TODO: UserDto변환 고려하기
+	public String userList(Model model) {
+		model.addAttribute("users", userRepository.findAll());
 		return "user-list";
 	}
 }
