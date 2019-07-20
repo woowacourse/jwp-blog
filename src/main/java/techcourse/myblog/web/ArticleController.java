@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.ArticleRequest;
 import techcourse.myblog.service.ArticleService;
 
 import javax.validation.Valid;
@@ -36,8 +36,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String saveArticle(@Valid ArticleDto articleDto, Model model) {
-        Article article = articleService.save(articleDto);
+    public String saveArticle(@Valid ArticleRequest articleRequest, Model model) {
+        Article article = articleService.post(articleRequest);
         model.addAttribute("article", article);
 
         return "redirect:/articles/" + article.getId();
@@ -60,8 +60,8 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleDto articleDto, Model model) {
-        Article article = articleService.editArticle(articleDto, articleId);
+    public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleRequest articleRequest, Model model) {
+        Article article = articleService.editArticle(articleRequest, articleId);
         model.addAttribute("article", article);
 
         return "article";

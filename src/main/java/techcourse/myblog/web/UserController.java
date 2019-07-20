@@ -5,9 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.dto.UserDto;
-import techcourse.myblog.service.dto.UserLoginDto;
-import techcourse.myblog.service.dto.UserResponseDto;
+import techcourse.myblog.service.dto.UserRequest;
+import techcourse.myblog.service.dto.UserLoginRequest;
+import techcourse.myblog.service.dto.UserResponse;
 import techcourse.myblog.service.exception.LoginException;
 import techcourse.myblog.service.exception.SignUpException;
 import techcourse.myblog.service.UserService;
@@ -40,11 +40,11 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String saveUser(@Valid UserDto userDto, BindingResult bindingResult, HttpSession httpSession) {
+    public String saveUser(@Valid UserRequest userRequest, BindingResult bindingResult, HttpSession httpSession) {
         if (bindingResult.hasErrors()) {
             throw new SignUpException("email 중복");
         }
-        User user = userService.saveUser(userDto);
+        User user = userService.saveUser(userRequest);
         httpSession.setAttribute("user", user);
 
         return "redirect:/login";
@@ -52,9 +52,9 @@ public class UserController {
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        List<UserResponseDto> users = new ArrayList<>();
+        List<UserResponse> users = new ArrayList<>();
         for (User user : userService.findAll()) {
-            users.add(new UserResponseDto(user.getName(), user.getEmail()));
+            users.add(new UserResponse(user.getName(), user.getEmail()));
         }
         model.addAttribute("users", users);
 
@@ -74,10 +74,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserLoginDto userLoginDto, HttpServletRequest request) {
-        User user = userService.findUserByEmail(userLoginDto);
+    public String login(UserLoginRequest userLoginRequest, HttpServletRequest request) {
+        User user = userService.findUserByEmail(userLoginRequest);
 
-        if (!user.matchPassword(userLoginDto.getPassword())) {
+        if (!user.matchPassword(userLoginRequest.getPassword())) {
             throw new LoginException("비밀번호 틀림");
         }
 

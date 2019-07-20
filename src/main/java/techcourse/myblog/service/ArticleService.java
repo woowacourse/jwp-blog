@@ -3,7 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.ArticleRequest;
 
 import javax.transaction.Transactional;
 
@@ -19,9 +19,9 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public Article save(ArticleDto articleDto) {
-        Article article = new Article(articleDto.getTitle(),
-                articleDto.getCoverUrl(), articleDto.getContents());
+    public Article post(ArticleRequest articleRequest) {
+        Article article = new Article(articleRequest.getTitle(),
+                articleRequest.getCoverUrl(), articleRequest.getContents());
         return articleRepository.save(article);
     }
 
@@ -31,9 +31,9 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article editArticle(ArticleDto articleDto, long articleId) {
+    public Article editArticle(ArticleRequest articleRequest, long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-        article.updateArticle(articleDto.toArticle());
+        article.updateArticle(articleRequest.toArticle());
         return article;
     }
 

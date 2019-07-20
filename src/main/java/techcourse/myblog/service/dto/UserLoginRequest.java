@@ -1,22 +1,8 @@
 package techcourse.myblog.service.dto;
 
-import techcourse.myblog.support.config.validator.EmailConstraint;
-
-public class UserDto {
-    private String name;
-
-    @EmailConstraint
+public class UserLoginRequest {
     private String email;
-
     private String password;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getEmail() {
         return email;

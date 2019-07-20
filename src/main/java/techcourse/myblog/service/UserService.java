@@ -3,8 +3,8 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.service.dto.UserDto;
-import techcourse.myblog.service.dto.UserLoginDto;
+import techcourse.myblog.service.dto.UserRequest;
+import techcourse.myblog.service.dto.UserLoginRequest;
 import techcourse.myblog.service.exception.EditException;
 import techcourse.myblog.service.exception.LoginException;
 import techcourse.myblog.service.exception.SignUpException;
@@ -20,14 +20,14 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User saveUser(UserDto userDto) {
-        User user = createUser(userDto);
+    public User saveUser(UserRequest userRequest) {
+        User user = createUser(userRequest);
         return userRepository.save(user);
     }
 
-    private User createUser(UserDto userDto) {
+    private User createUser(UserRequest userRequest) {
         try {
-            return new User(userDto.getName(), userDto.getEmail(), userDto.getPassword());
+            return new User(userRequest.getName(), userRequest.getEmail(), userRequest.getPassword());
         } catch (IllegalArgumentException e) {
             throw new SignUpException(e.getMessage());
         }
@@ -37,8 +37,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findUserByEmail(UserLoginDto userLoginDto) {
-        return userRepository.findUserByEmail(userLoginDto.getEmail())
+    public User findUserByEmail(UserLoginRequest userLoginRequest) {
+        return userRepository.findUserByEmail(userLoginRequest.getEmail())
                 .orElseThrow(() -> new LoginException("email 없음"));
     }
 
