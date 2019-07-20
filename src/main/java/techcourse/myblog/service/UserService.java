@@ -5,10 +5,6 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserRequestDto;
-<<<<<<< HEAD
-import techcourse.myblog.exception.DuplicatedEmailException;
-
-=======
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.DuplicatedEmailException;
 import techcourse.myblog.exception.EmailNotFoundException;
@@ -21,7 +17,6 @@ import java.util.Optional;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static techcourse.myblog.service.UserAssembler.convertToDto;
->>>>>>> ba9fed822171eba44ccb2afd6d08e2aad0f225fd
 import static techcourse.myblog.service.UserAssembler.convertToEntity;
 
 @Service
@@ -41,8 +36,6 @@ public class UserService {
         }
         userRepository.save(user);
     }
-<<<<<<< HEAD
-=======
 
     public List<UserResponseDto> findAll() {
         return userRepository.findAll().stream()
@@ -61,5 +54,4 @@ public class UserService {
         }
         throw new EmailNotFoundException("틀린 이메일입니다!");
     }
->>>>>>> ba9fed822171eba44ccb2afd6d08e2aad0f225fd
 }

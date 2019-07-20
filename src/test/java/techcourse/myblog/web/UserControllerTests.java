@@ -31,7 +31,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void 회원등록_확인() {
+    void test1/*회원등록_확인*/() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -44,7 +44,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void 회원조회_테스트() {
+    void test2/*회원조회_테스트*/() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -68,7 +68,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void 로그인_확인() {
+    void test3/*로그인_확인*/() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -89,7 +89,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void 로그인_실패_확인_이메일실패() {
+    void test4/*로그인_실패_확인_이메일실패*/() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -111,7 +111,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void 로그인_실패_확인_비밀번호_불일치() {
+    void test5/*로그인_실패_확인_비밀번호_불일치*/() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -133,7 +133,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void 로그아웃_확인() {
+    void test6/*로그아웃_확인*/() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters

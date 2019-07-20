@@ -5,10 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.Article;
-<<<<<<< HEAD
+
 import techcourse.myblog.domain.ArticleRepository;
-=======
->>>>>>> ba9fed822171eba44ccb2afd6d08e2aad0f225fd
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.exception.ArticleDtoNotFoundException;
 import techcourse.myblog.exception.ArticleNotFoundException;
@@ -21,27 +19,16 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleServiceTest {
-<<<<<<< HEAD
-    private ArticleService service;
-=======
->>>>>>> ba9fed822171eba44ccb2afd6d08e2aad0f225fd
     private ArticleAssembler assembler;
     private ArticleDto articleDto;
     private int id;
 
     @Autowired
-<<<<<<< HEAD
-    private ArticleRepository repository;
 
-    @BeforeEach
-    void setUp() {
-        service = new ArticleService(repository);
-=======
     private ArticleService service;
 
     @BeforeEach
     void setUp() {
->>>>>>> ba9fed822171eba44ccb2afd6d08e2aad0f225fd
         assembler = new ArticleAssembler();
         articleDto = new ArticleDto("title", "", "content");
         id = service.save(articleDto);
