@@ -19,6 +19,8 @@ import java.util.Optional;
 @Slf4j
 @Controller
 public class AccountController {
+    public static final String EMAIL_DUPLICATION_ERROR_MSG = "이메일 중복입니다.";
+    public static final String LOGIN_ERROR_MSG = "아이디나 비밀번호가 잘못되었습니다.";
     private UserRepository userRepository;
 
     @Autowired
@@ -45,7 +47,7 @@ public class AccountController {
 
         User user = userForm.toUser();
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            errors.rejectValue("email", "0", "이메일 중복입니다.");
+            errors.rejectValue("email", "0", EMAIL_DUPLICATION_ERROR_MSG);
             return "signup";
         }
 
@@ -65,10 +67,9 @@ public class AccountController {
 
     @PostMapping("/login")
     public String processLogin(UserForm userForm, HttpServletRequest request, Model model) {
-        String errorMessage = "아이디나 비밀번호가 잘못되었습니다.";
         Optional<User> user = userRepository.findByEmail(userForm.getEmail());
         if (!user.isPresent() || !userForm.getPassword().equals(user.get().getPassword())) {
-            model.addAttribute("error", errorMessage);
+            model.addAttribute("error", LOGIN_ERROR_MSG);
             return "login";
         }
 
