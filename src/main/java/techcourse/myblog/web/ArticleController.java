@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.service.ArticleService;
-
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class ArticleController {
@@ -21,9 +23,13 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public String showMain(Model model) {
+    public String showMain(Model model, final HttpSession session) {
         List<ArticleDto> articleDtos = articleService.findAll();
         model.addAttribute("articleDTOs", articleDtos);
+        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        if (!Objects.isNull(user)) {
+            model.addAttribute("user", user);
+        }
         return "index";
     }
 
