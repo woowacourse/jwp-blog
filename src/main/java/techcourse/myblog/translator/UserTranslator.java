@@ -7,9 +7,9 @@ import techcourse.myblog.dto.UserDto;
 @Component
 public class UserTranslator implements ModelTranslator<User, UserDto>{
     @Override
-    public User toEntity(User user, final UserDto userDto) {
+    public User toEntity(final User user, final UserDto userDto) {
         Long id = processValue(user.getId(), userDto.getId());
-        String name = processValue(user.getName(), userDto.getName());
+        String name = processName(user.getName(), userDto.getName());
         String email = processValue(user.getEmail(), userDto.getEmail());
         String password = processValue(user.getPassword(), userDto.getPassword());
 
@@ -23,5 +23,9 @@ public class UserTranslator implements ModelTranslator<User, UserDto>{
 
     private <T> T processValue(T domainValue, T dtoValue) {
         return domainValue != null ? domainValue : dtoValue;
+    }
+
+    private <T> T processName(T name, T updateName) {
+        return updateName == null ? name : updateName;
     }
 }
