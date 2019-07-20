@@ -1,7 +1,5 @@
 package techcourse.myblog.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +15,6 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class ArticleController {
-    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
-
-
     private static final String LOGGED_IN_USER = "loggedInUser";
 
     private ArticleRepository articleRepository;
@@ -52,10 +47,9 @@ public class ArticleController {
                 article.getCoverUrl(), article.getContents());
         model.addAttribute("article", articleDto);
 
-        log.debug("Read Article User Id : {}", article.getUserId());
         User user = userRepository.findById(article.getUserId()).get();
         UserPublicInfoDto userPublicInfoDto = new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
-        model.addAttribute("user", userPublicInfoDto);
+        model.addAttribute("articleUser", userPublicInfoDto);
         return "article";
     }
 
@@ -74,16 +68,19 @@ public class ArticleController {
         if (userPublicInfoDto == null) {
             return "redirect:/login";
         }
-        log.debug("PublicUser Dto User Id : {}", userPublicInfoDto.getId());
         articleDto.setUserId(userPublicInfoDto.getId());
         Article persistArticle = articleRepository.save(articleDto.toEntity());
-        log.debug("Create Article User Id : {}", persistArticle.getUserId());
         return "redirect:/articles/" + persistArticle.getId();
     }
 
     @PutMapping("/articles/{id}")
-    public String editArticle(@PathVariable("id") long id, ArticleDto articleDto) {
+    public String editArticle(@PathVariable("id") long id, ArticleDto articleDto, HttpServletRequest httpServletRequest) {
         Article article = articleRepository.findById(id).get();
+        HttpSession httpSession = httpServletRequest.getSession();
+        User user = (User) httpSession.getAttribute(LOGGED_IN_USER);
+        if (user == null || !user.getId().equals(article.getUserId())) {
+            return "redirect:/articles/" + id;
+        }
         article.updateArticle(articleDto);
         articleRepository.save(article);
         return "redirect:/articles/" + id;
