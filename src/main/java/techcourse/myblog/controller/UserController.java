@@ -42,13 +42,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        session.invalidate();
-        return "redirect:/";
-    }
-
     @GetMapping
     public String showUsers(Model model) {
         model.addAttribute("users", userService.getUsers());
