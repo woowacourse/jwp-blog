@@ -2,12 +2,14 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserPublicInfoDto;
+import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,9 +29,11 @@ public class UserService {
     private static final String KOREAN_REGEX = "[(ㄱ-ㅎ가-힣)]+";
 
     private UserRepository userRepository;
+    private ArticleRepository articleRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, ArticleRepository articleRepository) {
         this.userRepository = userRepository;
+        this.articleRepository = articleRepository;
     }
 
     public List<User> findAll() {
@@ -108,4 +112,9 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
+    public void delete(Long id) {
+        articleRepository.deleteByUserId(id);
+        userRepository.deleteById(id);
+    }
 }

@@ -2,6 +2,7 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import techcourse.myblog.domain.User;
@@ -45,5 +46,10 @@ public class MyPageController {
         HttpSession httpSession = httpServletRequest.getSession();
         UserPublicInfoDto loggedInUser = (UserPublicInfoDto) httpSession.getAttribute("loggedInUser");
         return (loggedInUser != null) && (user.getId().equals(loggedInUser.getId()));
+    }
+
+    @ExceptionHandler(NotFoundUserException.class)
+    public String handleNotFoundUserException(Model model, Exception e) {
+        return "/";
     }
 }

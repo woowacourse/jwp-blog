@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,14 +57,19 @@ public class UserController {
         return loggedInUser.getId().equals(id);
     }
 
+    @DeleteMapping("/users/{id}")
+    public String deleteUser(@PathVariable Long id, HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        if (isLoggedInUser(httpSession, id)) {
+            userService.delete(id);
+            httpSession.removeAttribute(LOGGED_IN_USER);
+        }
+        return "redirect:/";
+    }
+
     @ExceptionHandler(SignUpException.class)
     public String handleSignUpException(Model model, Exception e) {
         model.addAttribute("errorMessage", e.getMessage());
         return "sign-up";
-    }
-
-    @ExceptionHandler(NotFoundUserException.class)
-    public String handleNotFoundUserException(Model model, Exception e) {
-        return "/";
     }
 }
