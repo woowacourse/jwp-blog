@@ -64,9 +64,7 @@ class LoginControllerTests {
 						.with("password", "asdfASDF1@"))
 				.exchange()
 				.expectStatus()
-				.isOk()
-				.expectHeader()
-				.doesNotExist("jsessionid");
+				.isOk();
 	}
 
 	@Test
@@ -79,8 +77,6 @@ class LoginControllerTests {
 						.with("password", "wrongPassword"))
 				.exchange()
 				.expectStatus()
-				.isOk()
-				.expectHeader()
-				.doesNotExist("jsessionid");
+				.isOk();
 	}
 }

@@ -62,42 +62,6 @@ public class ArticleControllerTests {
 	}
 
 	@Test
-	void lookUpArticle() {
-		articleRepository.save(new Article(title, contents, coverUrl));
-
-		webTestClient.get()
-				.uri("/")
-				.exchange()
-				.expectStatus()
-				.isOk()
-				.expectBody()
-				.consumeWith(response -> {
-					String body = new String(response.getResponseBody());
-					assertThat(body.contains(title)).isTrue();
-					assertThat(body.contains(coverUrl)).isTrue();
-					assertThat(body.contains(contents)).isTrue();
-				});
-	}
-
-	@Test
-	void findByIndex() {
-		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
-
-		webTestClient.get()
-				.uri("/articles/" + articleId)
-				.exchange()
-				.expectStatus()
-				.isOk()
-				.expectBody()
-				.consumeWith(response -> {
-					String body = new String(response.getResponseBody());
-					assertThat(body.contains(title)).isTrue();
-					assertThat(body.contains(coverUrl)).isTrue();
-					assertThat(body.contains(contents)).isTrue();
-				});
-	}
-
-	@Test
 	void updateArticle() {
 		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
 
@@ -109,14 +73,30 @@ public class ArticleControllerTests {
 						.with("coverUrl", "updatedCoverUrl")
 						.with("contents", "updatedContents"))
 				.exchange()
-				.expectStatus().isOk()
-				.expectBody()
-				.consumeWith(response -> {
-					String body = new String(response.getResponseBody());
-					assertThat(body.contains("updatedTitle")).isTrue();
-					assertThat(body.contains("updatedCoverUrl")).isTrue();
-					assertThat(body.contains("updatedContents")).isTrue();
-				});
+				.expectStatus()
+				.isOk();
+	}
+
+	@Test
+	void lookUpArticle() {
+		articleRepository.save(new Article(title, contents, coverUrl));
+
+		webTestClient.get()
+				.uri("/")
+				.exchange()
+				.expectStatus()
+				.isOk();
+	}
+
+	@Test
+	void findByIndex() {
+		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+
+		webTestClient.get()
+				.uri("/articles/" + articleId)
+				.exchange()
+				.expectStatus()
+				.isOk();
 	}
 
 	@Test

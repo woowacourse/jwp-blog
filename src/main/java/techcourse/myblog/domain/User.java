@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -59,5 +60,27 @@ public class User {
 
 	public String getFacebookURL() {
 		return facebookURL;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof User)) {
+			return false;
+		}
+		final User user = (User) o;
+		return Objects.equals(id, user.id) &&
+				Objects.equals(getUsername(), user.getUsername()) &&
+				Objects.equals(getPassword(), user.getPassword()) &&
+				Objects.equals(getEmail(), user.getEmail()) &&
+				Objects.equals(getGithubURL(), user.getGithubURL()) &&
+				Objects.equals(getFacebookURL(), user.getFacebookURL());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, getUsername(), getPassword(), getEmail(), getGithubURL(), getFacebookURL());
 	}
 }
