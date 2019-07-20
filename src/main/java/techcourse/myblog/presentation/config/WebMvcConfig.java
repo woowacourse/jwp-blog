@@ -12,6 +12,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new SessionInterceptor())
                 .addPathPatterns("/mypage")
-                .addPathPatterns("/mypage/edit"); //로그인 쪽은 예외처리를 한다.
+                .addPathPatterns("/mypage/edit")
+                .addPathPatterns("/logout"); //로그인 쪽은 예외처리를 한다.
     }
 }
