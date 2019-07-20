@@ -1,40 +1,29 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.web.dto.ArticleDto;
+import techcourse.myblog.dto.ArticleDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
 public class Article {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long articleId;
+
     private String title;
     private String coverUrl;
     private String contents;
 
-    public Article() {
-
-    }
-
-    public Article(ArticleDto articleDto) {
-        this.title = articleDto.getTitle();
-        this.coverUrl = articleDto.getCoverUrl();
-        this.contents = articleDto.getContents();
-    }
-
-    public Article(long articleId, String title, String coverUrl, String contents) {
-        this.articleId = articleId;
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
-    }
-
-    public boolean isSameId(int articleId) {
-        return this.articleId == articleId;
+    public static Article of(ArticleDto articleDto) {
+        Article article = new Article();
+        article.title = articleDto.getTitle();
+        article.coverUrl = articleDto.getCoverUrl();
+        article.contents = articleDto.getContents();
+        return article;
     }
 
     public void updateArticle(ArticleDto articleDto) {
