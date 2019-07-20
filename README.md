@@ -1,4 +1,4 @@
-# 나만의 블로그 만들기
+나만의 블로그 만들기
 
 ### TODO LIST
 
@@ -59,6 +59,12 @@
 - [x] ~~security configure extends 만들기~~
 - [x] ~~UserDetail implements 만들기~~
 - [x] ~~UserDetailService 만들고~~
+- [x] intercepter webConfig 만들기
+- [x] HandlerIntercepterAdapter 만들기
+- [x] ~~/accounts/profile/edit 에 접근시 로그인 여부 확인. 비 로그인일 시 /login으로 보냄~~
+- [x] ~~/accounts/logout 에 접근시 로그인 여부 확인. 비로그인 상태일 경우 /로 보냄~~
+- [x] ~~/accounts/signup, /accounts/login 에 접근시 로그인 여부 확인. 로그인 상태일 경우 /로 보냄~~
+- [ ] /accounts/users를 post /accounts/signup으로 변경
 
 (로그인 실패시)
 
@@ -76,18 +82,16 @@
 
 - [x] ~~마이페이지 클릭 시 mypage.html 로 이동 (/accounts/profile/{id})~~
 - [x] ~~해당 id(userId)의 계정의 프로필이 보이게 변경~~
-- [x] ~~본인 프로필계정이 아니면 수정 버튼 노출 안되게 변경~~
+- [ ] 본인 프로필계정이 아니면 수정 버튼 노출 안되게 변경
 - [x] ~~수정버튼 클릭시 mypage-edit.html로 이동~~
 
 - [ ] 회원정보 수정시 본인 여부 판단해 본인일 경우만 mypage-edit.html로 이동(GET /accounts/profile/edit)
-- [ ] 본인이 아닌 경우엔 / 로 리다이렉트
+- [ ] 본인이 아닌 경우엔 /login으로 리다이렉트
 - [ ] 마이페이지(프로필)에서 본인일 경우에만 수정버튼이 나오게
-- [ ] /account/profile/edit/... 은 로그인 필수. 로그인 안한 상태면 로그인창으로 이동
 - [ ] 로그인 하면 원래 가려던 페이지로 이동
-- [ ] mypage-edit.html에서 PUT으로 수정 요청
+- [x] ~~mypage-edit.html에서 PUT으로 수정 요청~~
 - [x] ~~mypage-edit.html에 input태그 변경~~
-- [ ] 
-- [ ] mypage-edit.html에 form태그 추가
+- [ ] ~~mypage-edit.html에 form태그 추가~~
 - [ ] 이미지....이미지......
 
 (회원 탈퇴)

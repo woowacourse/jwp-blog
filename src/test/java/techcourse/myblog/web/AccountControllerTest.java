@@ -39,7 +39,6 @@ public class AccountControllerTest {
     @BeforeEach
     void setUp() {
         testSignupProcess(defaultName, defaultPassword, defaultEmail);
-//        testSuccessLogin(defaultEmail, defaultPassword);
     }
 
     @Test
@@ -202,6 +201,30 @@ public class AccountControllerTest {
     }
 
     @Test
+    void showLoginPage() {
+        webTestClient.get().uri("/login")
+                .exchange()
+                .expectStatus()
+                .isOk()
+        ;
+    }
+
+    @Test
+    void showLoginPage_로그인_상태일_경우() {
+        String cookie = getLoginCookie(defaultEmail, defaultPassword);
+
+        webTestClient.get().uri("/login").header("Cookie",cookie)
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .expectBody()
+                .consumeWith(response -> {
+                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
+                })
+        ;
+    }
+
+    @Test
     void 로그인_테스트_실패_아이디_틀림() {
         String wrongEmail = "aa";
 
@@ -221,27 +244,10 @@ public class AccountControllerTest {
     }
 
     @Test
-    void 로그아웃_실패() {
+    void 로그아웃_실패_로그인_안했을_경우() {
         testFailLogout();
     }
 
-
-    //    @Test
-//    void 로그인_후_마이페이지_접근() {
-//        String email = "aa@loginMypage1.com";
-//        testSignupProcess(testName, testPassword, email)
-//                .expectStatus()
-//                .isFound();
-//
-//        testSuccessLogin(email, testPassword);
-//
-//        User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//
-//        webTestClient.get().uri("/accounts/profile/" + loggedInUser.getId())
-//                .exchange()
-//                .expectStatus()
-//                .isOk();
-//    }
     @Test
     void 마이페이지_접근() {
         webTestClient.get().uri("/accounts/profile/" + defaultId)
@@ -256,13 +262,7 @@ public class AccountControllerTest {
 
     @Test
     void 본인_마이페이지_수정_페이지_접근() {
-        String cookie = webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", defaultEmail)
-                        .with("password", defaultPassword))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+        String cookie = getLoginCookie(defaultEmail, defaultPassword);
 
         webTestClient.get().uri("/accounts/profile/edit").header("Cookie", cookie)
                 .exchange()
@@ -277,14 +277,20 @@ public class AccountControllerTest {
     }
 
     @Test
-    void 마이페이지_수정_후_저장_성공() {
-        String cookie = webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", defaultEmail)
-                        .with("password", defaultPassword))
+    void 미로그인시_본인_마이페이지_수정_페이지_접근() {
+        webTestClient.get().uri("/accounts/profile/edit")
                 .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+                .expectStatus()
+                .isFound()
+                .expectBody()
+                .consumeWith(response -> {
+                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isTrue();
+                });
+    }
+
+    @Test
+    void 마이페이지_수정_후_저장_성공() {
+        String cookie = getLoginCookie(defaultEmail, defaultPassword);
 
         webTestClient.put().uri("/accounts/profile/edit").header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -322,6 +328,17 @@ public class AccountControllerTest {
                 });
     }
 
+    private String getLoginCookie(String email, String password) {
+        return webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", email)
+                        .with("password", password))
+                .exchange()
+                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+    }
+
+
     //    @Test
 //    void user_list_test() {
 //        webTestClient.get().uri("/accounts/user-list").exchange().expectStatus().isOk();
@@ -330,6 +347,18 @@ public class AccountControllerTest {
     private WebTestClient.ResponseSpec testSignupProcess(String name, String password, String email) {
         return webTestClient.post()
                 .uri("/accounts/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", name)
+                        .with("password", password)
+                        .with("email", email))
+                .exchange()
+                ;
+    }
+
+    private WebTestClient.ResponseSpec testSignupProcessWithCookie(String name, String password, String email, String cookie) {
+        return webTestClient.post()
+                .uri("/accounts/users").header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("name", name)
@@ -373,13 +402,7 @@ public class AccountControllerTest {
     }
 
     private void testSuccessLogout() {
-        String cookie = webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", defaultEmail)
-                        .with("password", defaultPassword))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+        String cookie = getLoginCookie(defaultEmail, defaultPassword);
 
         webTestClient.get().uri("/logout").header("Cookie", cookie)
                 .exchange()

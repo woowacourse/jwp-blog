@@ -78,9 +78,6 @@ public class AccountController {
     @GetMapping("/logout")
     public String processLogout(HttpServletRequest request) {
         log.debug(">>> session : {}", request.getSession().getAttribute("user"));
-        if (request.getSession().getAttribute("user") == null) {
-            return "redirect:/login";
-        }
 
         request.getSession().removeAttribute("user");
         return "redirect:/";
