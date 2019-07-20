@@ -1,5 +1,7 @@
 package techcourse.myblog.users;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,14 +11,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.users.UserController.USER_BASE_URI;
 
 @AutoConfigureWebClient
 @ExtendWith(SpringExtension.class)
@@ -28,75 +31,78 @@ public class UserControllerTests {
     @Autowired
     UserService userService;
 
-    static int count = 0;
-    String email = "email@google.co.kr";
-    String name = "name";
-    String password = "P@ssw0rd";
+    private Long id;
+    private String email;
+    private String name;
+    private String password;
+
+    @BeforeEach
+    void setUp() {
+        email = "email@gmail.com";
+        name = "name";
+        password = "P@ssw0rd";
+
+        UserDto.Register userDto = UserDto.Register.builder()
+                .email(email)
+                .name(name)
+                .password(password)
+                .confirmPassword(password)
+                .build();
+
+        id = userService.save(userDto);
+    }
 
     @Test
-    void signupFormTest() {
-        webTestClient.get().uri("/users/new")
+    @DisplayName("회원가입 Form 요청")
+    void signupForm() {
+        webTestClient.get().uri(USER_BASE_URI + "/new")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void signup_성공_테스트() {
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password)
-                        .with("confirmPassword", password))
-                .exchange()
+    @DisplayName("회원가입 유효값 입력시 성공")
+    void signUpValidInput() {
+        UserDto.Register userDto = new UserDto.Register(email+"a", "name", "P@ssw0rd", "P@ssw0rd");
+
+        postUsers(userDto)
                 .expectStatus().isOk()
-                .expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.matches("[0-9]+")).isTrue();
-        });
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.matches("[0-9]+")).isTrue();
+                });
     }
 
     @Test
+    @DisplayName("회원가입 입력값 전부 유효하지 않은 값 입력시 메시지 전체 출력")
     void signup_valid_실패_테스트() {
-        String email = "emailgoogle.co.kr";
-        String name = "na213123me";
-        String password = "123";
+        UserDto.Register userDto = new UserDto.Register("emailgmlcom", "na213123me", "Pssw0d", "Pssw0d");
 
-        final BodyInserters.FormInserter<String> with = BodyInserters.fromFormData("name", name)
-                .with("email", email)
-                .with("password", password)
-                .with("confirmPassword", password);
-
-        webTestClient.post().uri("/users")
-                .body(with)
-                .exchange()
-                .expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(UserDto.EMAIL_NOT_MATCH_MESSAGE)).isTrue();
-            assertThat(body.contains(UserDto.NAME_NOT_MATCH_MESSAGE)).isTrue();
-            assertThat(body.contains(UserDto.PASSWORD_NOT_MATCH_MESSAGE)).isTrue();
-        });
+        postUsers(userDto)
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(UserDto.EMAIL_NOT_MATCH_MESSAGE)).isTrue();
+                    assertThat(body.contains(UserDto.NAME_NOT_MATCH_MESSAGE)).isTrue();
+                    assertThat(body.contains(UserDto.PASSWORD_NOT_MATCH_MESSAGE)).isTrue();
+                });
     }
 
     @ParameterizedTest(name = "{index}: {4}")
     @MethodSource("invalidParameters")
-    @DisplayName("회원가입 유효성 예외처리")
+    @DisplayName("회원가입 한가지 유효값 입력한 경우 예외처리")
     void 회원가입_유효성_에러_테스트(String name, String email, String password, String message, String me) {
+        UserDto.Register userDto = new UserDto.Register(email, name, password, password);
 
-        final BodyInserters.FormInserter<String> with = BodyInserters.fromFormData("name", name)
-                .with("email", email)
-                .with("password", password)
-                .with("confirmPassword", password);
-
-
-
-        webTestClient.post().uri("/users")
-                .body(with)
-                .exchange()
+        postUsers(userDto)
                 .expectStatus().isBadRequest()
-                .expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(message)).isTrue();
-        });
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(message)).isTrue();
+                });
     }
 
     static Stream<Arguments> invalidParameters() throws Throwable {
@@ -113,67 +119,94 @@ public class UserControllerTests {
     }
 
     @Test
-    void signup_이메일_중복_테스트() {
-        Long id = saveUserWithEmail();
+    void 회원가입_이메일_중복_입력() {
+        UserDto.Register userDto = new UserDto.Register(email, name, password, password);
 
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password)
-                        .with("confirmPassword", password))
-                .exchange()
+        postUsers(userDto)
                 .expectStatus().isBadRequest()
-                .expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(UserService.EMAIL_DUPLICATE_MESSAGE)).isTrue();
-        });
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(UserService.EMAIL_DUPLICATE_MESSAGE)).isTrue();
+                });
     }
 
     @Test
-    void 비밀번호_불일치_테스트() {
+    void 회원가입_비밀번호_불일치_테스트() {
         String email = "email@google.co.kr";
         String name = "name";
         String password = "P@ssw0rd";
         String confirmPassword = "P@ssw0rd+1";
+        UserDto.Register userDto = new UserDto.Register(email, name, password, confirmPassword);
 
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password)
-                        .with("confirmPassword", confirmPassword))
-                .exchange()
+        postUsers(userDto)
                 .expectStatus().isBadRequest()
-                .expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(UserService.PASSWORD_INVALID_MESSAGE)).isTrue();
-        });
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(UserService.PASSWORD_INVALID_MESSAGE)).isTrue();
+                });
+    }
+
+    private WebTestClient.ResponseSpec postUsers(final UserDto.Register userDto) {
+        return webTestClient.post().uri(USER_BASE_URI)
+                .body(BodyInserters
+                        .fromFormData("name", userDto.getName())
+                        .with("email", userDto.getEmail())
+                        .with("password", userDto.getPassword())
+                        .with("confirmPassword", userDto.getConfirmPassword()))
+                .exchange();
     }
 
     @Test
-    void loginFormTest() {
+    @DisplayName("비로그인 상태에서 로그인 form 접근")
+    void loginForm() {
         webTestClient.get().uri("/users/login")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void loginTest() {
-        Long id = saveUserWithEmail();
-
-        webTestClient.post().uri("/users/login")
-                .body(BodyInserters.fromFormData("email", email)
-                        .with("password", password))
+    @DisplayName("로그인 상태에서 로그인 form 접근시 차단")
+    void invalidLoginForm() {
+        webTestClient.get().uri("/users/login")
+                .cookie("JSESSIONID", getJSessionId())
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(name)).isTrue();
-        });
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
-    void userListTest() {
-        Long id = saveUserWithEmail();
+    @DisplayName("비로그인 상태에서 로그인")
+    void login() {
+
+        webTestClient.post().uri(USER_BASE_URI + "/login")
+                .body(BodyInserters.
+                        fromFormData("email", email)
+                        .with("password", password))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(name)).isTrue();
+                });
+    }
+
+    @Test
+    @DisplayName("로그인 상태에서 로그인 접근시 차단")
+    void invalidLogin() {
+        webTestClient.post().uri(USER_BASE_URI + "/login")
+                .body(BodyInserters.
+                        fromFormData("email", email)
+                        .with("password", password))
+                .cookie("JSESSIONID", getJSessionId())
+                .exchange()
+                .expectStatus().is3xxRedirection();
+    }
+
+    @Test
+    @DisplayName("유저리스트 보기")
+    void userList() {
 
         String email1 = "asdf@google.co.kr";
         String name1 = "asdfsadfasdf";
@@ -188,82 +221,83 @@ public class UserControllerTests {
 
         userService.save(userDto);
 
-        webTestClient.get().uri("/users")
+        webTestClient.get().uri(USER_BASE_URI)
                 .exchange()
-                .expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(name)).isTrue();
-            assertThat(body.contains(email)).isTrue();
-            assertThat(body.contains(name1)).isTrue();
-            assertThat(body.contains(email1)).isTrue();
-        });
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(name)).isTrue();
+                    assertThat(body.contains(email)).isTrue();
+                    assertThat(body.contains(name1)).isTrue();
+                    assertThat(body.contains(email1)).isTrue();
+                });
     }
 
     @Test
     void editForm() {
-        Long id = saveUserWithEmail();
 
-        webTestClient.get().uri("/users/{id}/edit", id)
+        webTestClient.get().uri(USER_BASE_URI + "/{id}/edit", id)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(name)).isTrue();
-            assertThat(body.contains(email)).isTrue();
-        });
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(name)).isTrue();
+                    assertThat(body.contains(email)).isTrue();
+                });
     }
 
     @Test
     void show() {
-        Long id = saveUserWithEmail();
 
-        webTestClient.get().uri("/users/{id}", id)
+        webTestClient.get().uri(USER_BASE_URI + "/{id}", id)
+                .cookie("JSESSIONID", getJSessionId())
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(name)).isTrue();
-            assertThat(body.contains(email)).isTrue();
-        });
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(name)).isTrue();
+                    assertThat(body.contains(email)).isTrue();
+                });
     }
 
     @Test
     void edit() {
-        Long id = saveUserWithEmail();
         String changedName = "asdf";
-
-
-        webTestClient.put().uri("/users/{id}", id)
+        webTestClient.put().uri(USER_BASE_URI + "/{id}", id)
+                .cookie("JSESSIONID", getJSessionId())
                 .body(BodyInserters.fromFormData("name", changedName))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/users/[0-9]+");
+                .expectHeader().valueMatches("location", ".*/users/" + id);
     }
 
     @Test
     void delete() {
-        Long id = saveUserWithEmail();
-
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("user", new UserDto.Response(5L,"asd","asd"));
-
-        webTestClient.delete().uri("/users/{id}", id)
+        webTestClient.delete().uri(USER_BASE_URI + "/{id}", id)
+                .cookie("JSESSIONID", getJSessionId())
                 .exchange()
                 .expectStatus().is3xxRedirection()
-        .expectHeader().valueMatches("location","/");
-
-
+                .expectHeader().valueMatches("location", ".*/");
     }
 
-    private Long saveUserWithEmail() {
-        email += ++count;
-        UserDto.Register userDto = UserDto.Register.builder()
-                .email(email)
-                .name(name)
-                .password(password)
-                .confirmPassword(password)
-                .build();
+    private String getJSessionId() {
+        return webTestClient.post().uri(USER_BASE_URI + "/login")
+                .body(BodyInserters
+                        .fromFormData("email", email)
+                        .with("password", password))
+                .exchange()
+                .returnResult(String.class)
+                .getResponseCookies().get("JSESSIONID").get(0).getValue();
+    }
 
-        return userService.save(userDto);
+    @AfterEach
+    void tearDown() {
+        try {
+            userService.deleteById(id);
+        }catch (Exception e){
+
+        }
     }
 }
