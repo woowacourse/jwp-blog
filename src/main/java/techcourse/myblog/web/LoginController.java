@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import techcourse.myblog.domain.AuthenticationDto;
-import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginException;
 import techcourse.myblog.repo.UserRepository;
+import techcourse.myblog.user.AuthenticationDto;
+import techcourse.myblog.user.User;
 
 import javax.servlet.http.HttpSession;
 

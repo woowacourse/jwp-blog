@@ -6,19 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserDto;
-import techcourse.myblog.domain.UserUpdateRequestDto;
-import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.exception.NotValidUpdateUserInfoException;
 import techcourse.myblog.exception.NotValidUserInfoException;
-import techcourse.myblog.exception.UnacceptablePathException;
-import techcourse.myblog.repo.UserRepository;
+import techcourse.myblog.user.UserDto;
+import techcourse.myblog.user.UserService;
+import techcourse.myblog.user.UserUpdateRequestDto;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @Controller
@@ -26,10 +21,10 @@ import javax.validation.Valid;
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/signup")
@@ -38,64 +33,39 @@ public class UserController {
     }
 
     @PostMapping("/new")
-    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) throws NotValidUserInfoException {
-        if (bindingResult.hasErrors()) {
-            throw new NotValidUserInfoException(bindingResult.getFieldError().getDefaultMessage());
-        }
-
-        if (userRepository.existsByEmail(userDto.getEmail())) {
-            throw new NotValidUserInfoException("중복된 이메일 입니다.");
-        }
-
-        User user = new User(userDto);
-        userRepository.save(user);
+    public String createUser(@Valid UserDto userDto, BindingResult bindingResult) throws NotValidUserInfoException {
+        userService.createNewUser(bindingResult, userDto);
         return "redirect:/login";
     }
 
     @GetMapping
     public String findAllUsers(Model model) {
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userService.findAll());
         return "user-list";
     }
 
     @GetMapping("/mypage")
     public String showMyPage(HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            throw new UnacceptablePathException();
-        }
+        userService.checkRequestAboutMypage(httpSession);
         return "mypage";
     }
 
     @GetMapping("/mypage/edit")
     public String showEditPage(HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            throw new UnacceptablePathException();
-        }
+        userService.checkRequestAboutMypage(httpSession);
         return "mypage-edit";
     }
 
-    @Transactional
     @PutMapping("/mypage/edit")
     public String editUserInfo(@Valid UserUpdateRequestDto userUpdateRequestDto,
-                               BindingResult bindingResult, HttpSession httpSession) throws NotValidUpdateUserInfoException {
-        if (bindingResult.hasErrors()) {
-            FieldError fieldError = bindingResult.getFieldError();
-            throw new NotValidUpdateUserInfoException(fieldError.getDefaultMessage());
-        }
-        String email = ((User) httpSession.getAttribute("user")).getEmail();
-        User user = userRepository.findByEmail(email).orElseThrow(NotFoundObjectException::new);
-        user.setUserName(userUpdateRequestDto.getUserName());
-        httpSession.setAttribute("user", user);
+                               BindingResult bindingResult, HttpSession httpSession) {
+        userService.updateUser(bindingResult, httpSession, userUpdateRequestDto);
         return "redirect:/users/mypage";
     }
 
-    @Transactional
     @DeleteMapping("/mypage")
     public String deleteUser(HttpSession httpSession) {
-        String email = ((User) httpSession.getAttribute("user")).getEmail();
-        User user = userRepository.findByEmail(email).orElseThrow(NotFoundObjectException::new);
-        httpSession.removeAttribute("user");
-        userRepository.delete(user);
+        userService.deleteUser(httpSession);
         return "redirect:/";
     }
 

@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.user;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
