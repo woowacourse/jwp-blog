@@ -30,31 +30,6 @@ public class UserController {
         return "signup";
     }
 
-    @PostMapping("/login")
-    public String login(UserDto userDto, HttpSession httpSession) {
-        User user = userService.findUserByEmailAndPassword(userDto);
-        httpSession.setAttribute("name", user.getName());
-        httpSession.setAttribute("email", user.getEmail());
-        return "redirect:/";
-    }
-
-    @GetMapping("/login")
-    public String showLogin(HttpSession httpSession) {
-        if (httpSession.getAttribute("name") != null) {
-            return "redirect:/";
-        }
-        return "login";
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession httpSession) {
-        if (httpSession.getAttribute("name") != null) {
-            httpSession.removeAttribute("name");
-            httpSession.removeAttribute("email");
-        }
-        return "redirect:/";
-    }
-
     @PostMapping("/users")
     public String enrollUser(UserDto userDto) {
         userService.createUser(userDto);
