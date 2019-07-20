@@ -51,7 +51,11 @@ public class User {
     }
 
     public boolean isMatchPassword(UserDto dto) {
-        return this.password.match(dto.getPassword());
+        return isMatchPassword(dto.getPassword());
+    }
+
+    public boolean isMatchPassword(String password) {
+        return this.password.match(password);
     }
 
     @Override
