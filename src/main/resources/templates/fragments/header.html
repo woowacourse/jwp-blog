@@ -12,11 +12,11 @@
                 </li>
             </ul>
             <ul class="nav-right">
-                <li th:if="${user}" id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
+                <li th:if="${logInUser}" id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
                     <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
-                        <img class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" th:alt="${user.name}">
+                        <img class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" th:alt="${logInUser.name}">
                         <div class="user-info text-white">
-                            <span class="name pdd-right-5" th:text="${user.name}"></span>
+                            <span class="name pdd-right-5" th:text="${logInUser.name}"></span>
                         </div>
                     </a>
                     <ul class="dropdown-menu">
@@ -35,7 +35,7 @@
                         </li>
                     </ul>
                 </li>
-                <li th:unless="${user}" class="user-profile">
+                <li th:unless="${logInUser}" class="user-profile">
                     <a href="/login">
                         <div class="user-info login-btn pointer mrg-right-10">
                             <span class="name pdd-right-5 text-white">Login</span>
