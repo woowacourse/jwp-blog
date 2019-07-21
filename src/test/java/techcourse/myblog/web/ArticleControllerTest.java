@@ -6,22 +6,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest {
-    private static final String APPENDING_DELETE_MESSAGE = "will be deleted";
+    private static final String CUSTOM_ARTICLE_ID = "1";
+    private static final String TITLE = "Hi, 코니";
+    private static final String COVER_URL = "Hi, 코니";
+    private static final String CONTENTS = "안녕안녕";
+
+    private BodyInserters.FormInserter<String> articleData = getBodyInserters(TITLE, COVER_URL, CONTENTS);
 
     @Autowired
     private WebTestClient webTestClient;
-
-    private String title = "Hi, 코니";
-    private String coverUrl = "Hi, 코니";
-    private String contents = "안녕안녕";
 
     @Test
     public void 인덱스_페이지_테스트() {
@@ -39,85 +43,82 @@ public class ArticleControllerTest {
 
     @Test
     public void 게시글_추가_테스트() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get()
-                            .uri(response.getResponseHeaders().getLocation())
-                            .exchange()
-                            .expectStatus()
-                            .isOk()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                String body = new String(res.getResponseBody());
-                                assertThat(body.contains(title)).isTrue();
-                                assertThat(body.contains(coverUrl)).isTrue();
-                                assertThat(body.contains(contents)).isTrue();
-                            });
-                });
+        postArticle(articleData,
+                response -> webTestClient.get()
+                        .uri(response.getResponseHeaders().getLocation())
+                        .exchange()
+                        .expectStatus()
+                        .isOk()
+                        .expectBody()
+                        .consumeWith(res -> {
+                            String body = new String(res.getResponseBody());
+                            assertThat(body.contains(TITLE)).isTrue();
+                            assertThat(body.contains(COVER_URL)).isTrue();
+                            assertThat(body.contains(CONTENTS)).isTrue();
+                        })
+        );
     }
 
     @Test
-    public void 게시글_수정_페이지_테스트() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get()
-                            .uri(response.getResponseHeaders().getLocation() + "/edit")
-                            .exchange()
-                            .expectStatus()
-                            .isOk()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                String body = new String(res.getResponseBody());
-                                assertThat(body.contains(title)).isTrue();
-                                assertThat(body.contains(coverUrl)).isTrue();
-                                assertThat(body.contains(contents)).isTrue();
-                            });
-                });
+    public void 게시글_수정_페이지가_잘_출력되는지_테스트() {
+        postArticle(articleData,
+                response -> webTestClient.get()
+                        .uri(response.getResponseHeaders().getLocation() + "/edit")
+                        .exchange()
+                        .expectStatus()
+                        .isOk()
+                        .expectBody()
+                        .consumeWith(res -> {
+                            String body = new String(res.getResponseBody());
+                            assertThat(body.contains(TITLE)).isTrue();
+                            assertThat(body.contains(COVER_URL)).isTrue();
+                            assertThat(body.contains(CONTENTS)).isTrue();
+                        })
+        );
     }
 
     @Test
     public void 게시글_수정_테스트() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.put()
-                            .uri(response.getResponseHeaders().getLocation())
-                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .body(BodyInserters
-                                    .fromFormData("title", "new title")
-                                    .with("coverUrl", "new coverUrl")
-                                    .with("contents", "new contents"))
-                            .exchange()
-                            .expectStatus().isFound()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                webTestClient.get()
+        String updatedTitle = "new TITLE";
+        String updatedCoverUrl = "new COVER_URL";
+        String updatedContents = "new CONTENTS";
+
+        postArticle(articleData,
+                response -> webTestClient.put()
+                        .uri(response.getResponseHeaders().getLocation())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .body(getBodyInserters(updatedTitle, updatedCoverUrl, updatedContents))
+                        .exchange()
+                        .expectStatus().isFound()
+                        .expectBody()
+                        .consumeWith(res -> {
+                            webTestClient.get()
+                                    .uri(res.getResponseHeaders().getLocation())
+                                    .exchange()
+                                    .expectStatus()
+                                    .isOk()
+                                    .expectBody()
+                                    .consumeWith(r -> {
+                                        String body = new String(r.getResponseBody());
+                                        assertThat(body.contains(updatedTitle)).isTrue();
+                                        assertThat(body.contains(updatedCoverUrl)).isTrue();
+                                        assertThat(body.contains(updatedContents)).isTrue();
+                                    });
+                        })
+        );
+    }
+
+    @Test
+    public void 게시글_삭제_테스트() {
+        postArticle(articleData,
+                response -> webTestClient.delete()
+                        .uri(response.getResponseHeaders().getLocation())
+                        .exchange()
+                        .expectStatus()
+                        .isFound()
+                        .expectBody()
+                        .consumeWith(
+                                res -> webTestClient.get()
                                         .uri(res.getResponseHeaders().getLocation())
                                         .exchange()
                                         .expectStatus()
@@ -125,49 +126,29 @@ public class ArticleControllerTest {
                                         .expectBody()
                                         .consumeWith(r -> {
                                             String body = new String(r.getResponseBody());
-                                            assertThat(body.contains("new title")).isTrue();
-                                            assertThat(body.contains("new coverUrl")).isTrue();
-                                            assertThat(body.contains("new contents")).isTrue();
-                                        });
-                            });
-
-                });
+                                            assertThat(body.contains(TITLE)).isFalse();
+                                            assertThat(body.contains(CONTENTS)).isFalse();
+                                            assertThat(body.contains(COVER_URL)).isFalse();
+                                        })
+                        )
+        );
     }
 
-    @Test
-    public void 게시글_삭제_테스트() {
+    private void postArticle(BodyInserters.FormInserter<String> articleData, Consumer<EntityExchangeResult<byte[]>> consumer) {
         webTestClient.post()
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title + APPENDING_DELETE_MESSAGE)
-                        .with("coverUrl", coverUrl + APPENDING_DELETE_MESSAGE)
-                        .with("contents", contents + APPENDING_DELETE_MESSAGE))
+                .body(articleData)
                 .exchange()
                 .expectStatus().isFound()
                 .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.delete()
-                            .uri(response.getResponseHeaders().getLocation())
-                            .exchange()
-                            .expectStatus()
-                            .isFound()
-                            .expectBody()
-                            .consumeWith(
-                                    res -> {
-                                        webTestClient.get()
-                                                .uri(res.getResponseHeaders().getLocation())
-                                                .exchange()
-                                                .expectStatus()
-                                                .isOk()
-                                                .expectBody()
-                                                .consumeWith(r -> {
-                                                    String body = new String(r.getResponseBody());
-                                                    assertThat(body.contains(title + APPENDING_DELETE_MESSAGE)).isFalse();
-                                                    assertThat(body.contains(contents + APPENDING_DELETE_MESSAGE)).isFalse();
-                                                    assertThat(body.contains(coverUrl + APPENDING_DELETE_MESSAGE)).isFalse();
-                                                });
-                                    });
-                });
+                .consumeWith(consumer);
+    }
+
+    private BodyInserters.FormInserter<String> getBodyInserters(String title, String coverUrl, String contents) {
+        return BodyInserters.fromFormData("articleId", CUSTOM_ARTICLE_ID)
+                .with("title", title)
+                .with("coverUrl", coverUrl)
+                .with("contents", contents);
     }
 }
