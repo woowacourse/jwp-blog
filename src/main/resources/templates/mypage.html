@@ -33,7 +33,7 @@
                                 <p class="mrg-top-10 text-dark"> <b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10">Brown</p>
+                                <p class="mrg-top-10" th:text="${loginUser.name}"></p>
                             </div>
                         </div>
                         <hr>
@@ -42,7 +42,7 @@
                                 <p class="mrg-top-10 text-dark"> <b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10">gracefulBrown@woowahan.com</p>
+                                <p class="mrg-top-10" th:text="${loginUser.email}"></p>
                             </div>
                         </div>
                         <hr>
