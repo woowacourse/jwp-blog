@@ -14,7 +14,10 @@
 				<li class="user-profile">
 					<a href="/login">
 						<div class="user-info login-btn pointer mrg-right-10">
-							<span class="name pdd-right-5 text-white">Login</span>
+							<span class="name pdd-right-5 text-white">
+								<span th:if="${session.user}" th:text="${session.user.name}"></span>
+								<span th:unless="${session.user}">Login</span>
+							</span>
 						</div>
 					</a>
 				</li>

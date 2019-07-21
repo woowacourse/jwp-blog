@@ -26,4 +26,8 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
+    public boolean matchPassword(String password) {
+        return this.password.equals(password);
+    }
 }

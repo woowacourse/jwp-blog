@@ -60,13 +60,13 @@
 								<div class="vertical-align full-height">
 									<div class="table-cell padding-20">
 										<div class="card">
-											<div class="alert alert-warning" role="alert" th:if="${errorMessage != null}">
+											<div class="alert alert-warning" role="alert" th:if="${errorMessage}">
 												<span th:text="${errorMessage}"></span>
 												<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 													<span aria-hidden="true">&times;</span>
 												</button>
 											</div>
-											<div class="alert alert-success" role="alert" th:if="${successMessage != null}">
+											<div class="alert alert-success" role="alert" th:if="${successMessage}">
 												<span th:text="${successMessage}"></span>
 												<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 													<span aria-hidden="true">&times;</span>
@@ -77,12 +77,12 @@
 													<div class="mrg-btm-30">
 														<h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">로그인</h2>
 													</div>
-													<form>
+													<form method="post" action="/login">
 														<div class="form-group">
-															<input type="email" class="form-control" placeholder="Id">
+															<input type="email" name="email" class="form-control" placeholder="Id">
 														</div>
 														<div class="form-group">
-															<input type="password" class="form-control" placeholder="Password">
+															<input type="password" name="password" class="form-control" placeholder="Password">
 														</div>
 														<div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
 															<input id="agreement" name="agreement" type="checkbox">
@@ -92,7 +92,7 @@
 															<a href="">Forgot Password?</a>
 														</div>
 														<div class="mrg-top-20 text-right">
-															<a href="user-list.html" class="btn btn-tumblr">로그인</a>
+															<button type="submit" class="btn btn-tumblr">로그인</button>
 														</div>
 													</form>
 													<div class="text-dark">

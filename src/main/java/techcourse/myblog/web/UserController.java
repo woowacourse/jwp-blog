@@ -6,9 +6,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.UserLoginDto;
 import techcourse.myblog.dto.UserSaveDto;
+import techcourse.myblog.exception.UserDuplicateException;
+import techcourse.myblog.exception.UserMismatchException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.service.UserService;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
@@ -21,21 +26,35 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String showLoginPage() {
         return "login";
     }
 
+    @PostMapping("/login")
+    public String login(UserLoginDto userLoginDto, Model model, HttpSession httpSession) {
+        try {
+            userService.checkLogin(userLoginDto.getEmail(), userLoginDto.getPassword());
+        } catch (UserNotFoundException | UserMismatchException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "login";
+        }
+
+        User user = userService.findByEmail(userLoginDto.getEmail());
+        httpSession.setAttribute("user", user);
+        return "index";
+    }
+
     @GetMapping("/signup")
-    public String signUp() {
+    public String showSignUpPage() {
         return "signup";
     }
 
     @PostMapping("/users")
-    public String saveUser(UserSaveDto userSaveDto, Model model) {
+    public String signUp(UserSaveDto userSaveDto, Model model) {
         try {
             userService.save(userSaveDto.toEntity());
             model.addAttribute("successMessage", SUCCESS_SIGN_UP_MESSAGE);
-        } catch (UserNotFoundException e) {
+        } catch (UserDuplicateException e) {
             model.addAttribute("errorMessage", e.getMessage());
         }
         return "login";
