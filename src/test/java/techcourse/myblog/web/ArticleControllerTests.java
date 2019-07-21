@@ -13,7 +13,7 @@ import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.service.ArticleService;
 
 import java.util.Objects;
 
@@ -27,7 +27,7 @@ public class ArticleControllerTests {
     private WebTestClient webTestClient;
 
     @Autowired
-    private ArticleRepository articleRepository;
+    private ArticleService articleService;
 
     private String title;
     private String coverUrl;
@@ -55,9 +55,10 @@ public class ArticleControllerTests {
     @Test
     void showArticles() {
         checkStatus(webTestClient.post(), "/articles");
-        Article article = articleRepository.findArticleByTitle(title);
+        Article article = articleService.findArticleByTitle(title);
 
         uniContents = contents;
+
         checkGetStatus("/")
                 .expectBody()
                 .consumeWith(this::checkBodyResponse);
@@ -80,7 +81,7 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(this::checkBodyResponse);
 
-        Article article = articleRepository.findArticleByTitle(title);
+        Article article = articleService.findArticleByTitle(title);
 
         deleteMethod(article.getId());
     }
@@ -91,8 +92,10 @@ public class ArticleControllerTests {
         coverUrl = "http://www.kinews.net/news/photo/200907/bjs.jpg";
         contents = "나는 우아한형제들에서 짱이다.";
         uniContents = StringEscapeUtils.escapeJava(contents);
+
         checkStatus(webTestClient.post(), "/articles");
-        Article article = articleRepository.findArticleByTitle(title);
+
+        Article article = articleService.findArticleByTitle(title);
 
         checkStatus(webTestClient.put(), "/articles/" + article.getId())
                 .expectBody()
@@ -105,7 +108,8 @@ public class ArticleControllerTests {
     @Test
     void deleteTest() {
         checkStatus(webTestClient.post(), "/articles");
-        Article article = articleRepository.findArticleByTitle(title);
+        Article article = articleService.findArticleByTitle(title);
+
         deleteMethod(article.getId());
 
         webTestClient.get().uri("/articles/" + article.getId())

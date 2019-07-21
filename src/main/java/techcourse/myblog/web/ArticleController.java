@@ -7,7 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.service.ArticleService;
 
 import java.util.List;
 
@@ -15,11 +16,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
-    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
 
     @GetMapping("/")
     public String showArticles(Model model) {
-        List<Article> articles = articleRepository.findAll();
+        List<Article> articles = articleService.findAllArticle();
         model.addAttribute("articles", articles);
         return "index";
     }
@@ -30,25 +31,26 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String writeArticle(Article article, Model model) {
-        Article newArticle = articleRepository.save(article);
+    public String writeArticle(ArticleDto articleDto, Model model) {
+        Article article = articleDto.toEntity();
+        Article newArticle = articleService.saveArticle(article);
+
         model.addAttribute("article", newArticle);
+
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String showArticleEditingPage(@PathVariable int articleId, Model model) {
-        model.addAttribute("article",
-                articleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("잘못된 접근입니다")));
+        model.addAttribute("article", articleService.findById(articleId));
         return "article-edit";
     }
 
     @GetMapping("/articles/{articleId}")
     public String showArticleById(@PathVariable int articleId, Model model) {
         try {
-            model.addAttribute("article",
-                    articleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("잘못된 접근입니다.")));
-        } catch (IllegalArgumentException e) {
+            model.addAttribute("article", articleService.findById(articleId));
+        } catch (ArticleNotFoundException e) {
             model.addAttribute("message", e);
             return "redirect:/err";
         }
@@ -56,16 +58,18 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable int articleId, Article article, Model model) {
+    public String updateArticle(@PathVariable int articleId, ArticleDto articleDto, Model model) {
+        Article article = articleDto.toEntity();
         article.setId(articleId);
-        Article newArticle = articleRepository.save(article);
+
+        Article newArticle = articleService.saveArticle(article);
         model.addAttribute("article", newArticle);
         return "article";
     }
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable int articleId) {
-        articleRepository.deleteById(articleId);
+        articleService.deleteById(articleId);
         return "redirect:/";
     }
 }
