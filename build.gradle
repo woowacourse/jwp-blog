@@ -14,10 +14,20 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'mysql:mysql-connector-java'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
     }
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+    testImplementation 'com.h2database:h2'
+
+	implementation 'org.springframework.boot:spring-boot-devtools'
+	compileOnly 'org.projectlombok:lombok:1.18.8'
+	annotationProcessor 'org.projectlombok:lombok:1.18.8'
 }
