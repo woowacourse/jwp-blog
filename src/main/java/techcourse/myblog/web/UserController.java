@@ -28,7 +28,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String showLogin(HttpSession httpSession) {
-        if (checkLogedIn(httpSession)) {
+        if (checkLoggedIn(httpSession)) {
             return "redirect:/";
         }
         return "login";
@@ -52,7 +52,7 @@ public class UserController {
 
     @GetMapping("/join")
     public String showSignUp(HttpSession httpSession) {
-        if (checkLogedIn(httpSession)) {
+        if (checkLoggedIn(httpSession)) {
             return "redirect:/";
         }
         return "signup";
@@ -112,7 +112,9 @@ public class UserController {
 
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
-        httpSession.invalidate();
+        httpSession.setAttribute(SESSION_NAME, null);
+        httpSession.setAttribute(SESSION_EMAIL, null);
+        //httpSession.invalidate();
         return "redirect:/";
     }
 
@@ -155,7 +157,7 @@ public class UserController {
     }
 
 
-    private boolean checkLogedIn(HttpSession httpSession) {
+    private boolean checkLoggedIn(HttpSession httpSession) {
         return !Objects.isNull(httpSession.getAttribute(SESSION_EMAIL));
     }
 
