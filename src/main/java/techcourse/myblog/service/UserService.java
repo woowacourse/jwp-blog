@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserException;
 import techcourse.myblog.dto.LoginDto;
-import techcourse.myblog.dto.SingUpDto;
+import techcourse.myblog.dto.SignUpDto;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.repository.UserRepository;
 
@@ -37,11 +37,11 @@ public class UserService {
         }
     }
 
-    public SingUpDto addUser(UserRequestDto userRequestDto) {
+    public SignUpDto addUser(UserRequestDto userRequestDto) {
         try {
-            return new SingUpDto(true, userRepository.save(userRequestDto.toEntity()).getId());
+            return new SignUpDto(true, userRepository.save(userRequestDto.toEntity()).getId());
         } catch (UserException e) {
-            return new SingUpDto(false, e.getMessage());
+            return new SignUpDto(false, e.getMessage());
         }
     }
 
