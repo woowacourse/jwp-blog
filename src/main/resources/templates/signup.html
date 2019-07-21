@@ -101,8 +101,7 @@
     const nameRule = /^(?=.*[a-zA-Z]).{2,10}$/;
     const passwordRule = /^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{8,20}$/;
 
-    const signUpCheck = () =
-    >
+    const signUpCheck = () =>
     {
         if (checkUserInfo()) {
             if (checkPassword()) {
@@ -114,17 +113,14 @@
             alert('아이디와 비밃너호를 확인하세요');
         }
     }
-    const checkUserInfo = () =
-    >
+    const checkUserInfo = () =>
     {
         const name = document.getElementById("name").value;
         const pwd = document.getElementById("password").value;
         return nameRule.test(name) && passwordRule.test(pwd);
-    }
-    ;
+    };
 
-    const checkPassword = () =
-    >
+    const checkPassword = () =>
     {
         const pwd = document.getElementById("password").value;
         const pwdConfirm = document.getElementById("passwordConfirm").value;
