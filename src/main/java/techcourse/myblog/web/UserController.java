@@ -79,7 +79,7 @@ public class UserController {
         return "mypage-edit";
     }
 
-    @PutMapping("/mypage/{id}")
+    @PutMapping("/mypage/save")
     public String completeEditMypage(HttpSession httpSession, UserDto userDto) {
         String sessionEmail = httpSession.getAttribute(SESSION_EMAIL).toString();
         String email = userDto.getEmail();
