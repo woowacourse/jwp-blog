@@ -61,8 +61,7 @@ public class UserService {
     }
 
     private void checkDuplicatedEmail(String email) {
-        User user = userRepository.findByEmail(email);
-        if (user != null) {
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new UserArgumentException(EMAIL_DUPLICATION_MESSAGE);
         }
     }
@@ -110,11 +109,9 @@ public class UserService {
 
     public void update(UserPublicInfoDto userPublicInfoDto) {
         try {
-            User user = userRepository.findByEmail(userPublicInfoDto.getEmail());
+            User user = userRepository.findByEmail(userPublicInfoDto.getEmail())
+                    .orElseThrow(NotFoundUserException::new);
             String name = userPublicInfoDto.getName();
-            if (user == null) {
-                throw new NotFoundUserException();
-            }
             checkValidNameLength(name);
             checkValidName(name);
             user.setName(userPublicInfoDto.getName());

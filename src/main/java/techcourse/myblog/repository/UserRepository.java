@@ -3,8 +3,10 @@ package techcourse.myblog.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import techcourse.myblog.domain.User;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByEmail(String email);
+import java.util.Optional;
 
-    User findByEmailAndPassword(String email, String password);
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByEmailAndPassword(String email, String password);
 }
