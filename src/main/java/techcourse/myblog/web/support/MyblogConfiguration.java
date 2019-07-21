@@ -15,7 +15,6 @@ public class MyblogConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/login")
-                .excludePathPatterns("/users")
                 .excludePathPatterns("/")
                 .excludePathPatterns("/css/**")
                 .excludePathPatterns("/js/**")
