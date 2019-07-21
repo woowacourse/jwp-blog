@@ -19,7 +19,7 @@ import javax.validation.Validator;
 import java.util.Optional;
 import java.util.Set;
 
-import static techcourse.myblog.web.ControllerUtil.*;
+import static techcourse.myblog.web.LoginUtil.*;
 
 @Controller
 public class UserController {

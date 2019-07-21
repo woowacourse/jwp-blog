@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static techcourse.myblog.web.ControllerUtil.SESSION_USER_KEY;
-import static techcourse.myblog.web.ControllerUtil.checkAndPutUser;
+import static techcourse.myblog.web.LoginUtil.SESSION_USER_KEY;
+import static techcourse.myblog.web.LoginUtil.checkAndPutUser;
 
 @Controller
 public class ArticleController {

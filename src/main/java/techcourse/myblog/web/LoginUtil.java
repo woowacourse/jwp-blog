@@ -6,7 +6,7 @@ import techcourse.myblog.domain.User;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
-public class ControllerUtil {
+public class LoginUtil {
     public static final String SESSION_USER_KEY = "user";
 
     public static boolean isLoggedIn(HttpSession session) {
