@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserWriteService {
     private final UserRepository userRepository;
 
-    public UserService(final UserRepository userRepository) {
+    public UserWriteService(final UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -27,16 +27,6 @@ public class UserService {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new DuplicateEmailException("이미 사용중인 이메일주소 입니다.");
         }
-    }
-
-    @Transactional
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
-
-    @Transactional
-    public Optional<User> findByEmailAndPassword(UserDto userDto) {
-        return userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
     }
 
     @Transactional

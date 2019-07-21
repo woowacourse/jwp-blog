@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.UserWriteService;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.support.ModelSupport;
 import techcourse.myblog.support.RedirectAttributeSupport;
@@ -22,10 +22,10 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/mypage")
 public class UserInfoController {
-    private final UserService userService;
+    private final UserWriteService userWriteService;
 
-    public UserInfoController(final UserService userService) {
-        this.userService = userService;
+    public UserInfoController(final UserWriteService userWriteService) {
+        this.userWriteService = userWriteService;
     }
 
     @GetMapping
@@ -50,7 +50,7 @@ public class UserInfoController {
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        userService.update(user.getId(), userDto).ifPresent(updateUser -> {
+        userWriteService.update(user.getId(), userDto).ifPresent(updateUser -> {
             request.getSession().setAttribute("user", updateUser);
         });
 
@@ -60,7 +60,7 @@ public class UserInfoController {
     @DeleteMapping("/withdraw")
     public RedirectView myPageDelete(HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("user");
-        userService.deleteById(user.getId());
+        userWriteService.deleteById(user.getId());
         return new RedirectView("/users/logout");
     }
 }

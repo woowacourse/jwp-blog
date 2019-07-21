@@ -13,7 +13,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.DuplicateEmailException;
-import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.UserReadService;
+import techcourse.myblog.service.UserWriteService;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.support.RedirectAttributeSupport;
 import techcourse.myblog.support.validation.UserGroups.All;
@@ -24,15 +25,18 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-    private final UserService userService;
+    private final UserWriteService userWriteService;
+    private final UserReadService userReadService;
 
-    public UserController(final UserService userService) {
-        this.userService = userService;
+    public UserController(final UserWriteService userWriteService,
+                          final UserReadService userReadService) {
+        this.userWriteService = userWriteService;
+        this.userReadService = userReadService;
     }
 
     @GetMapping
     public String findAllUsersForm(Model model) {
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute("users", userReadService.findAll());
         return "user-list";
     }
 
@@ -51,7 +55,7 @@ public class UserController {
         }
 
         try {
-            userService.save(userDto);
+            userWriteService.save(userDto);
         } catch (DuplicateEmailException e) {
             bindingResult.addError(new FieldError("userDto", "email", e.getMessage()));
             RedirectAttributeSupport.addBindingResult(redirectAttributes, bindingResult, "userDto", userDto);
@@ -64,7 +68,7 @@ public class UserController {
     @PostMapping("/login")
     public RedirectView login(HttpServletRequest httpServletRequest, @ModelAttribute("userDto") UserDto userDto,
                               BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        Optional<User> user = userService.findByEmailAndPassword(userDto);
+        Optional<User> user = userReadService.findByEmailAndPassword(userDto);
         if (user.isPresent()) {
             httpServletRequest.getSession().setAttribute("user", user.get());
             return new RedirectView("/");
