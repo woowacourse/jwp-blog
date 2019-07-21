@@ -8,7 +8,6 @@ import techcourse.myblog.service.dto.UserLoginRequest;
 import techcourse.myblog.service.dto.UserRequest;
 import techcourse.myblog.service.exception.EditException;
 import techcourse.myblog.service.exception.LoginException;
-import techcourse.myblog.service.exception.SignUpException;
 import techcourse.myblog.support.util.EncryptHelper;
 
 import javax.transaction.Transactional;
@@ -32,12 +31,8 @@ public class UserService {
     }
 
     private User createUser(UserRequest userRequest) {
-        try {
-            return new User(userRequest.getName(), userRequest.getEmail(),
-                    encryptHelper.encrypt(userRequest.getPassword()));
-        } catch (IllegalArgumentException e) {
-            throw new SignUpException(e.getMessage());
-        }
+        return new User(userRequest.getName(), userRequest.getEmail(),
+                encryptHelper.encrypt(userRequest.getPassword()));
     }
 
     public List<User> findAll() {

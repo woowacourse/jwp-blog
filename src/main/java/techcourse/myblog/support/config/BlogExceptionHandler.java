@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import techcourse.myblog.service.exception.EditException;
 import techcourse.myblog.service.exception.ErrorMessage;
 import techcourse.myblog.service.exception.LoginException;
-import techcourse.myblog.service.exception.SignUpException;
 
 @ControllerAdvice
 public class BlogExceptionHandler {
@@ -15,13 +14,6 @@ public class BlogExceptionHandler {
         ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
         model.addAttribute("error", errorMessage);
         return "login";
-    }
-
-    @ExceptionHandler(SignUpException.class)
-    public String handleSignUpException(SignUpException e, Model model) {
-        ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
-        model.addAttribute("error", errorMessage);
-        return "signup";
     }
 
     @ExceptionHandler(EditException.class)
