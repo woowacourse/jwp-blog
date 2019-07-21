@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserUpdateDto;
 import techcourse.myblog.exception.CouldNotFindUserIdException;
 
 import java.util.Optional;
@@ -70,18 +71,30 @@ class UserRepositoryTest {
     @Test
     @DisplayName("Repository에 없는 id를 조회하는 경우 예외를 던져준다.")
     void readFailTest() {
-        assertThrows(CouldNotFindUserIdException.class, () -> userRepository
-                .findById(TEST_USER_ID_NOT_IN_REPO)
+        assertThrows(CouldNotFindUserIdException.class, () ->
+                userRepository.findById(TEST_USER_ID_NOT_IN_REPO)
                 .orElseThrow(CouldNotFindUserIdException::new)
         );
+    }
+
+    @Test
+    @DisplayName("유저 id를 이용해 해당 유저 정보를 업데이트 한다.")
+    void updateByIdTest() {
+        UserUpdateDto userUpdateDto = new UserUpdateDto();
+        userUpdateDto.setName("kimhyojae");
+
+        user.updateUser(userUpdateDto);
+        User updateUser = userRepository.save(user);
+
+        assertThat(updateUser.getName()).isEqualTo("kimhyojae");
     }
 
     @Test
     @DisplayName("유저 id를 이용해 해당 유저의 정보를 지운다.")
     void deleteByIdTest() {
         userRepository.deleteById(user.getId());
-        assertThrows(CouldNotFindUserIdException.class, () -> userRepository
-                .findById(user.getId())
+        assertThrows(CouldNotFindUserIdException.class, () ->
+                userRepository.findById(user.getId())
                 .orElseThrow(CouldNotFindUserIdException::new)
         );
     }
