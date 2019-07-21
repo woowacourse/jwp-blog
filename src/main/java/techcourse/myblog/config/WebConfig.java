@@ -23,6 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns(USER_BASE_URI + "/{id}")
-                .addPathPatterns(USER_BASE_URI + "/{id}/edit");
+                .addPathPatterns(USER_BASE_URI + "/{id}/edit")
+                .excludePathPatterns(USER_BASE_URI + "/logout");
     }
 }
