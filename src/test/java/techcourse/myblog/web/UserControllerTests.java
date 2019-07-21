@@ -31,7 +31,7 @@ class UserControllerTests {
     }
 
     @Test
-    void 회원가입() {
+    void 회원가입_성공() {
         webTestClient.post().uri("/users")
                 .body(BodyInserters
                         .fromFormData("name", "이름")
