@@ -14,7 +14,6 @@ import java.util.function.Consumer;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
-@AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest {
     @Autowired
@@ -48,7 +47,7 @@ public class ArticleControllerTest {
     @Test
     void 게시물_생성() {
         postArticle(response -> {
-            String url = response.getResponseHeaders().get("Location").get(0);
+            String url = getRedirectUrl(response);
             testGetMethod(url)
                     .expectBody()
                     .consumeWith(
@@ -75,13 +74,13 @@ public class ArticleControllerTest {
     }
 
     @Test
-    void 게시글_수정() {
+    void updateArticle() {
         String updateTitle = "updatedTitle";
         String updateCoverUrl = "updatedCoverUrl";
         String updateContents = "updatedContents";
 
-        postArticle(response -> {
-            long id = Long.parseLong(response.getResponseHeaders().get("Location").get(0).split("/")[4]);
+        postArticle(postResponse -> {
+            long id = extractArticleId(postResponse);
             webTestClient.put().uri("/articles/" + id)
                     .body(fromFormData("title", updateTitle)
                             .with("coverUrl", updateCoverUrl)
@@ -90,11 +89,9 @@ public class ArticleControllerTest {
                     .expectStatus().is3xxRedirection()
                     .expectBody()
                     .consumeWith(
-                            response1 -> {
-                                String url = response1.getResponseHeaders().get("Location").get(0);
-                                webTestClient.get().uri(url)
-                                        .exchange()
-                                        .expectStatus().isOk()
+                            putResponse -> {
+                                String url = getRedirectUrl(putResponse);
+                                testGetMethod(url)
                                         .expectBody()
                                         .consumeWith(redirectResponse -> {
                                             String body = new String(redirectResponse.getResponseBody());
@@ -107,8 +104,16 @@ public class ArticleControllerTest {
         }, articleDto);
     }
 
+    private long extractArticleId(EntityExchangeResult<byte[]> postResponse) {
+        return Long.parseLong(getRedirectUrl(postResponse).split("/")[4]);
+    }
+
+    private String getRedirectUrl(EntityExchangeResult<byte[]> response) {
+        return response.getResponseHeaders().get("Location").get(0);
+    }
+
     @Test
-    void 게시글_삭제() {
+    void removeArticle() {
         postArticle(response -> {
             long id = Long.parseLong(response.getResponseHeaders().get("Location").get(0).split("/")[4]);
             webTestClient.delete().uri("/articles/" + id)
