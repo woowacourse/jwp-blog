@@ -6,12 +6,6 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
-/**
- * NOTE:
- * <p>
- * 유저네임에 대한 제약사항은 다음과 같이 가정
- * 길이는 2~10글자이며 영문 대소문자만 허용
- */
 @Entity
 public class User {
     @Id
