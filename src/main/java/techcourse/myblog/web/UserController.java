@@ -16,6 +16,8 @@ import static techcourse.myblog.web.ControllerUtil.putLoginUser;
 
 @Controller
 public class UserController {
+    private static final String LOGIN_SESSION_KEY = "loginUser";
+
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -49,5 +51,14 @@ public class UserController {
         putLoginUser(session, model);
         model.addAttribute("userList", userService.getUserList());
         return "user-list";
+    }
+
+    @GetMapping("/mypage")
+    public String mypageView(HttpSession session, Model model) {
+        if (isLoggedIn(session)) {
+            model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
+            return "mypage";
+        }
+        return "redirect:/";
     }
 }
