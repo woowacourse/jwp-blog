@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport"
@@ -61,14 +61,14 @@
 					</a>
 					<ul class="dropdown-menu">
 						<li class="text-dark">
-							<a href="mypage.html">
+							<a href="/mypage">
 								<i class="ti-user pdd-right-10"></i>
 								<span class="text-dark">마이 페이지</span>
 							</a>
 						</li>
 						<li role="separator" class="divider"></li>
 						<li class="text-dark">
-							<a href="index.html">
+							<a href="/">
 								<i class="ti-power-off pdd-right-10"></i>
 								<span class="text-dark">로그아웃</span>
 							</a>
@@ -93,7 +93,7 @@
 				<div class="card">
 					<div class="card-heading pdd-btm-5 border bottom">
 						<h4 class="card-title d-inline-block">profile</h4>
-						<a href="mypage-edit.html"
+						<a href="/mypage/edit"
 						   class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
 							<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
 						</a>
@@ -104,7 +104,7 @@
 								<p class="mrg-top-10 text-dark"><b>Name</b></p>
 							</div>
 							<div class="col-md-6">
-								<p class="mrg-top-10">Brown</p>
+								<p class="mrg-top-10" th:text="${session.user.name}">Brown</p>
 							</div>
 						</div>
 						<hr>
@@ -113,7 +113,7 @@
 								<p class="mrg-top-10 text-dark"><b>Email</b></p>
 							</div>
 							<div class="col-md-6">
-								<p class="mrg-top-10">gracefulBrown@woowahan.com</p>
+								<p class="mrg-top-10" th:text="${session.user.email}">gracefulBrown@woowahan.com</p>
 							</div>
 						</div>
 						<hr>

@@ -83,4 +83,9 @@ public class UserController {
         httpSession.removeAttribute("user");
         return "redirect:/";
     }
+
+    @GetMapping("/mypage")
+    public String showMyPage() {
+        return "mypage";
+    }
 }

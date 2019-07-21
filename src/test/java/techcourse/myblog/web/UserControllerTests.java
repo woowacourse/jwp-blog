@@ -71,4 +71,11 @@ class UserControllerTests {
                 .exchange()
                 .expectStatus().isFound();
     }
+
+    @Test
+    void mypage_페이지_이동() {
+        webTestClient.get().uri("/mypage")
+                .exchange()
+                .expectStatus().isOk();
+    }
 }
