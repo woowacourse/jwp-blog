@@ -8,8 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.application.service.UserService;
+import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.domain.UserRepository;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

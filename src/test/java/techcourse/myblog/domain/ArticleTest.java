@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.error.NullArticleElementException;
 
 import static org.assertj.core.api.Java6Assertions.assertThatThrownBy;
 

@@ -8,9 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.application.dto.UserDto;
 
-import static techcourse.myblog.controller.UserController.USER_MAPPING_URL;
+import static techcourse.myblog.presentation.controller.UserController.USER_MAPPING_URL;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

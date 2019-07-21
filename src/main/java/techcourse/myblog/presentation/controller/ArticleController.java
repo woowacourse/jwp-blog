@@ -1,4 +1,4 @@
-package techcourse.myblog.controller;
+package techcourse.myblog.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,9 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.application.service.ArticleService;
 
-import static techcourse.myblog.controller.ArticleController.ARTICLE_MAPPING_URL;
+import static techcourse.myblog.presentation.controller.ArticleController.ARTICLE_MAPPING_URL;
 
 @Controller
 @RequiredArgsConstructor

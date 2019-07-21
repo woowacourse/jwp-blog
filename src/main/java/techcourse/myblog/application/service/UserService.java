@@ -1,12 +1,12 @@
-package techcourse.myblog.service;
+package techcourse.myblog.application.service;
 
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.domain.UserRepository;
 
 import java.util.Optional;
 

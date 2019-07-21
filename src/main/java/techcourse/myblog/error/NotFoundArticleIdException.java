@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.error;
 
 public class NotFoundArticleIdException extends RuntimeException {
     public NotFoundArticleIdException(String msg){

@@ -1,9 +1,9 @@
-package techcourse.myblog.service;
+package techcourse.myblog.application.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.domain.ArticleRepository;
 
 @Service
 @RequiredArgsConstructor

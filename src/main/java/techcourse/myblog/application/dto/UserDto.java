@@ -1,4 +1,4 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.application.dto;
 
 import lombok.*;
 

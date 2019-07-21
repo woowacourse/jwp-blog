@@ -9,10 +9,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.application.service.ArticleService;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static techcourse.myblog.controller.ArticleController.ARTICLE_MAPPING_URL;
+import static techcourse.myblog.presentation.controller.ArticleController.ARTICLE_MAPPING_URL;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

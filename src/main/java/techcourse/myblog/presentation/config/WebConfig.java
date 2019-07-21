@@ -1,4 +1,4 @@
-package techcourse.myblog.config;
+package techcourse.myblog.presentation.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

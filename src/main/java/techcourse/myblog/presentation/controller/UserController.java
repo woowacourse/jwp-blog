@@ -1,4 +1,4 @@
-package techcourse.myblog.controller;
+package techcourse.myblog.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,13 +7,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.service.UserService;
+import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.application.service.UserService;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
-import static techcourse.myblog.controller.UserController.USER_MAPPING_URL;
+import static techcourse.myblog.presentation.controller.UserController.USER_MAPPING_URL;
 import static techcourse.myblog.domain.User.*;
 
 @Controller
