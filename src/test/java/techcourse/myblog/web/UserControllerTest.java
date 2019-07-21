@@ -106,7 +106,7 @@ public class UserControllerTest {
     @Test
     void check_valid_password() {
         UserSignUpRequestDto invalidUser = UserSignUpRequestDto.builder()
-                .userName("M")
+                .userName("Martin")
                 .email("martin@gmail.com")
                 .password("A")
                 .confirmPassword("A")
