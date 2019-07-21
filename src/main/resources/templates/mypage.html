@@ -8,47 +8,7 @@
 </head>
 <body>
 <div>
-    <header id="header" class="header navbar bg-transparent no-border">
-        <div class="header-container">
-            <ul class="nav-left mrg-left-0">
-                <li>
-                    <a href="index.html">
-                        <div class="logo logo-dark d-none"
-                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white"
-                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav-right">
-                <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
-                    <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
-                        <img class="profile-img img-fluid"
-                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
-                        <div class="user-info text-white">
-                            <span class="name pdd-right-5">Brown</span>
-                            <i class="ti-angle-down font-size-10"></i>
-                        </div>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="text-dark">
-                            <a href="mypage.html">
-                                <i class="ti-user pdd-right-10"></i>
-                                <span class="text-dark">마이 페이지</span>
-                            </a>
-                        </li>
-                        <li role="separator" class="divider"></li>
-                        <li class="text-dark">
-                            <a href="index.html">
-                                <i class="ti-power-off pdd-right-10"></i>
-                                <span class="text-dark">로그아웃</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </header>
+    <header th:replace="fragments/header :: header"></header>
 
     <div class="about-cover card no-border">
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
@@ -64,7 +24,7 @@
                 <div class="card">
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
-                        <a href="mypage-edit.html"
+                        <a href="/mypage/edit"
                            class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </a>
@@ -75,7 +35,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10">Brown</p>
+                                <p class="mrg-top-10" th:text="${user.name}"></p>
                             </div>
                         </div>
                         <hr>
@@ -84,7 +44,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10">gracefulBrown@woowahan.com</p>
+                                <p class="mrg-top-10" th:text="${user.email}"></p>
                             </div>
                         </div>
                         <hr>
@@ -133,6 +93,13 @@
                                     </div>
                                 </div>
                                 <hr>
+                                <div class="row">
+                                    <div class="col-md-12 text-right">
+                                        <form th:action="'/mypage/edit/' + ${user.userId}" th:method="delete">
+                                            <input type="submit" class="btn btn-tumblr" value="탈퇴">
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -143,6 +110,6 @@
 </div>
 
 <!-- include fragments/footer -->
-<th:block th:replace="fragments/common_script"></th:block>
+<th:block th:replace="fragments/script"></th:block>
 </body>
 </html>

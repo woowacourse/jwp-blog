@@ -37,13 +37,14 @@
                                                         <h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">
                                                             로그인</h2>
                                                     </div>
-                                                    <form>
+                                                    <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger" role="alert"></div>
+                                                    <form action="/login" method="post">
                                                         <div class="form-group">
-                                                            <input type="email" class="form-control" placeholder="Id">
+                                                            <input type="email" name="email" class="form-control" placeholder="Email" required>
                                                         </div>
                                                         <div class="form-group">
-                                                            <input type="password" class="form-control"
-                                                                   placeholder="Password">
+                                                            <input type="password" name="password" class="form-control"
+                                                                   placeholder="Password" required>
                                                         </div>
                                                         <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
                                                             <input id="agreement" name="agreement" type="checkbox">
@@ -53,12 +54,12 @@
                                                             <a href="">Forgot Password?</a>
                                                         </div>
                                                         <div class="mrg-top-20 text-right">
-                                                            <a href="user-list.html" class="btn btn-tumblr">로그인</a>
+                                                            <input type="submit" class="btn btn-tumblr" value="로그인">
                                                         </div>
                                                     </form>
                                                     <div class="text-dark">
                                                         <span>아직 회원이 아니신가요?</span>
-                                                        <a href="signup.html"
+                                                        <a href="/signup"
                                                            class="text-info pointer mrg-left-5">회원가입</a>
                                                     </div>
                                                 </div>
@@ -76,6 +77,13 @@
 </div>
 
 <!-- include fragments/footer -->
-<th:block th:replace="fragments/common_script"></th:block>
+<th:block th:replace="fragments/script"></th:block>
 </body>
+
+<script th:inline="javascript">
+    const message = [[${unexpectedAccessErrorMessage}]];
+    if (message != null) {
+        window.alert(message);
+    }
+</script>
 </html>
