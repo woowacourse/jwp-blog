@@ -6,10 +6,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import techcourse.myblog.controller.interceptor.CertificationInterceptor;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class CertificationConfig implements WebMvcConfigurer {
     private final CertificationInterceptor certificationInterceptor;
 
-    public WebConfig(CertificationInterceptor certificationInterceptor) {
+    public CertificationConfig(CertificationInterceptor certificationInterceptor) {
         this.certificationInterceptor = certificationInterceptor;
     }
 
