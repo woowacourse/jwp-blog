@@ -49,7 +49,7 @@ public class UserService {
 
     private void checkPassword(UserLoginRequest userLoginRequest, User user) {
         if (!encryptHelper.isMatch(userLoginRequest.getPassword(), user.getPassword())) {
-            throw new LoginException("입력한 비밀번호와 다릅니다!");
+            throw new LoginException("비밀번호가 일치하지 않습니다!");
         }
     }
 

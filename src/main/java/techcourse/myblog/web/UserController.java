@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String saveUser(@Valid UserRequest userRequest, BindingResult bindingResult, HttpSession httpSession) {
+    public String saveUser(@Valid UserRequest userRequest, BindingResult bindingResult) {
         // 회원 가입 입력 형식 유효성 검사
         if (bindingResult.hasErrors()) {
             return "signup";
@@ -81,10 +81,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserLoginRequest userLoginRequest, HttpServletRequest request) {
+    public String login(@Valid UserLoginRequest userLoginRequest, BindingResult bindingResult, HttpSession httpSession) {
+        if(bindingResult.hasErrors()) {
+            return "login";
+        }
+
         User user = userService.findUserByEmail(userLoginRequest);
 
-        request.getSession().setAttribute(USER_INFO, user);
+        httpSession.setAttribute(USER_INFO, user);
 
         return "redirect:/";
     }

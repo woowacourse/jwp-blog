@@ -112,7 +112,7 @@ public class UserControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertTrue(body.contains("입력한 비밀번호와 다릅니다!"));
+                    assertTrue(body.contains("비밀번호가 일치하지 않습니다!"));
                 })
         ;
     }
