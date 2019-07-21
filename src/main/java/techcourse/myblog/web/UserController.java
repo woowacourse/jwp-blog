@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -131,7 +130,7 @@ public class UserController {
     public String deleteUser(String email, HttpSession httpSession) {
         userService.deleteUser(email);
         httpSession.removeAttribute("user");
-        
+
         return "redirect:/";
     }
 }
