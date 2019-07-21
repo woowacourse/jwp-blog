@@ -17,7 +17,8 @@ import techcourse.myblog.web.dto.UserUpdateRequestDto;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import static techcourse.myblog.web.LoginUtil.*;
+import static techcourse.myblog.web.LoginUtil.SESSION_USER_KEY;
+import static techcourse.myblog.web.LoginUtil.isLoggedIn;
 
 @Controller
 public class UserController {
@@ -94,9 +95,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public String userListView(Model model,
-                               @SessionAttribute(name = SESSION_USER_KEY, required = false) User currentUser) {
-        checkAndPutUser(model, currentUser);
+    public String userListView(Model model) {
         model.addAttribute("users", userService.findAll());
         return "user-list";
     }
@@ -111,20 +110,18 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String myPageView(Model model, HttpSession session) {
+    public String myPageView(HttpSession session) {
         if (isLoggedIn(session)) {
-            model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
             return "mypage";
         }
         return "redirect:/login";
     }
 
     @GetMapping("/mypage-edit")
-    public String myPageEditView(Model model, @SessionAttribute(name = SESSION_USER_KEY, required = false) User currentUser) {
+    public String myPageEditView(@SessionAttribute(name = SESSION_USER_KEY, required = false) User currentUser) {
         if (currentUser == null) {
             return "redirect:login";
         }
-        model.addAttribute(SESSION_USER_KEY, currentUser);
         return "mypage-edit";
     }
 
@@ -141,7 +138,6 @@ public class UserController {
             return "redirect:/mypage";
         } catch (IllegalArgumentException e) {
             logger.error("Error occurred while update user", e);
-            model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
             model.addAttribute("error", true);
             model.addAttribute("message", e.getMessage());
             return "mypage";
