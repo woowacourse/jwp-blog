@@ -1,4 +1,4 @@
-package techcourse.myblog.service;
+package techcourse.myblog.application.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import techcourse.myblog.application.service.UserService;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.domain.UserRepository;
 
