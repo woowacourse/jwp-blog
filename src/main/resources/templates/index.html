@@ -91,5 +91,11 @@
             </form>
         </div>
     </div>
+    <script th:inline="javascript" type="text/javascript">
+        const error = [[ ${error}]];
+        if (error) {
+            window.alert(error);
+        }
+    </script>
 </th:block>
 </html>

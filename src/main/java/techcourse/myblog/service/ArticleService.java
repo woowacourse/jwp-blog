@@ -10,6 +10,8 @@ import javax.transaction.Transactional;
 
 @Service
 public class ArticleService {
+    private static final String NO_ARTICLE_MESSAGE = "존재하지 않는 게시글 입니다.";
+
     private final ArticleRepository articleRepository;
 
     public ArticleService(ArticleRepository articleRepository) {
@@ -31,12 +33,12 @@ public class ArticleService {
     }
 
     public Article find(Long id) {
-        return articleRepository.findById(id).orElseThrow(NoArticleException::new);
+        return articleRepository.findById(id).orElseThrow(() -> new NoArticleException(NO_ARTICLE_MESSAGE));
     }
 
     @Transactional
     public Article update(Long id, ArticleDto articleDto) {
-        Article article = articleRepository.findById(id).orElseThrow(NoArticleException::new);
+        Article article = articleRepository.findById(id).orElseThrow(() -> new NoArticleException(NO_ARTICLE_MESSAGE));
         article.update(articleDto);
         return article;
     }

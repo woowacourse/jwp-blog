@@ -1,12 +1,9 @@
 package techcourse.myblog.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.exception.NoArticleException;
 import techcourse.myblog.service.ArticleService;
 
 import javax.transaction.Transactional;
@@ -14,8 +11,6 @@ import javax.transaction.Transactional;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
-    private static final String NO_ARTICLE_MESSAGE = "존재하지 않는 게시글 입니다.";
-    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     private final ArticleService articleService;
 
@@ -29,42 +24,27 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String createArticle(ArticleDto articleDto, Model model) {
+    public String createArticle(ArticleDto articleDto) {
         return "redirect:/articles/" + articleService.create(articleDto);
     }
 
     @GetMapping("/{id}")
     public String showArticle(@PathVariable Long id, Model model) {
-        try {
-            model.addAttribute("article", articleService.find(id));
-            return "article";
-        } catch (NoArticleException e) {
-            log.error(NO_ARTICLE_MESSAGE);
-            return "/";
-        }
+        model.addAttribute("article", articleService.find(id));
+        return "article";
     }
 
     @GetMapping("/{id}/edit")
     public String updateArticle(@PathVariable Long id, Model model) {
-        try {
-            model.addAttribute("article", articleService.find(id));
-            return "article-edit";
-        } catch (NoArticleException e) {
-            log.error(NO_ARTICLE_MESSAGE);
-            return "/";
-        }
+        model.addAttribute("article", articleService.find(id));
+        return "article-edit";
     }
 
     @Transactional
     @PutMapping("/{id}")
     public String showUpdatedArticle(@PathVariable Long id, ArticleDto updatedArticle, Model model) {
-        try {
-            model.addAttribute("article", articleService.update(id, updatedArticle));
-            return "redirect:/articles/" + id;
-        } catch (NoArticleException e) {
-            log.error(NO_ARTICLE_MESSAGE);
-            return "/";
-        }
+        model.addAttribute("article", articleService.update(id, updatedArticle));
+        return "redirect:/articles/" + id;
     }
 
     @DeleteMapping("/{id}")

@@ -96,7 +96,7 @@ public class ArticleControllerTest {
                 .uri("/articles/" + savedArticle.getId())
                 .exchange()
                 .expectStatus()
-                .is5xxServerError();
+                .isFound();
     }
 
     @AfterEach

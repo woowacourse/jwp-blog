@@ -1,7 +1,5 @@
 package techcourse.myblog.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserSignUpRequestDto;
 import techcourse.myblog.dto.UserUpdateRequestDto;
-import techcourse.myblog.exception.NoUserException;
-import techcourse.myblog.exception.SignUpFailException;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -20,9 +16,6 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/users")
 public class UserController {
-    private static final String NO_USER_MESSAGE = "존재하지 않는 유저입니다.";
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
-
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -48,13 +41,8 @@ public class UserController {
             return "signup";
         }
 
-        try {
-            userService.create(userSignUpRequestDto);
-            return "redirect:/login";
-        } catch (SignUpFailException e) {
-            model.addAttribute("error", e.getMessage());
-            return "signup";
-        }
+        userService.create(userSignUpRequestDto);
+        return "redirect:/login";
     }
 
     @GetMapping("/mypage")
@@ -75,26 +63,17 @@ public class UserController {
             return "mypage-edit";
         }
 
-        try {
-            String email = ((User) httpSession.getAttribute("user")).getEmail();
-            User user = userService.update(userUpdateRequestDto, email);
-            httpSession.setAttribute("user", user);
-            return "redirect:/users/mypage";
-        } catch (NoUserException e) {
-            log.error(NO_USER_MESSAGE);
-            return "redirect:/";
-        }
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
+        User user = userService.update(userUpdateRequestDto, email);
+        httpSession.setAttribute("user", user);
+        return "redirect:/users/mypage";
     }
 
     @DeleteMapping("/mypage")
     public String deleteUser(HttpSession httpSession) {
-        try {
-            String email = ((User) httpSession.getAttribute("user")).getEmail();
-            userService.delete(email);
-            httpSession.removeAttribute("user");
-        } catch (NoUserException e) {
-            log.error(NO_USER_MESSAGE);
-        }
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
+        userService.delete(email);
+        httpSession.removeAttribute("user");
         return "redirect:/";
     }
 }

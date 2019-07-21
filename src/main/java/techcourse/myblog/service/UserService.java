@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 
 @Service
 public class UserService {
+    private static final String NO_USER_MESSAGE = "존재하지 않는 유저입니다.";
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -32,13 +33,13 @@ public class UserService {
 
     @Transactional
     public User update(UserUpdateRequestDto userUpdateRequestDto, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(NoUserException::new);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new NoUserException(NO_USER_MESSAGE));
         user.setUserName(userUpdateRequestDto.getUserName());
         return user;
     }
 
     public void delete(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(NoUserException::new);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new NoUserException(NO_USER_MESSAGE));
         userRepository.delete(user);
     }
 }
