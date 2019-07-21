@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserSignUpRequestDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,9 +23,9 @@ public class User {
     private String email;
     private String password;
 
-    public User(UserDto userDto) {
-        this(userDto.getUserName(), userDto.getEmail(), userDto.getPassword());
-        checkConfirmPassword(userDto);
+    public User(UserSignUpRequestDto userSignUpRequestDto) {
+        this(userSignUpRequestDto.getUserName(), userSignUpRequestDto.getEmail(), userSignUpRequestDto.getPassword());
+        checkConfirmPassword(userSignUpRequestDto);
     }
 
     @Builder
@@ -35,8 +35,8 @@ public class User {
         this.password = password;
     }
 
-    private void checkConfirmPassword(UserDto userDto) {
-        if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
+    private void checkConfirmPassword(UserSignUpRequestDto userSignUpRequestDto) {
+        if (!userSignUpRequestDto.getPassword().equals(userSignUpRequestDto.getConfirmPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }

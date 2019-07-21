@@ -2,7 +2,7 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserSignUpRequestDto;
 import techcourse.myblog.dto.UserUpdateRequestDto;
 import techcourse.myblog.repository.UserRepository;
 
@@ -17,11 +17,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void create(UserDto userDto) {
-        if (userRepository.existsByEmail(userDto.getEmail())) {
+    public void create(UserSignUpRequestDto userSignUpRequestDto) {
+        if (userRepository.existsByEmail(userSignUpRequestDto.getEmail())) {
             throw new IllegalArgumentException("중복된 이메일 입니다.");
         }
-        User user = new User(userDto);
+        User user = new User(userSignUpRequestDto);
         userRepository.save(user);
     }
 

@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDto {
+public class UserSignUpRequestDto {
     @Pattern(regexp = "^[a-zA-Z]{2,10}$", message = "형식에 맞는 이름이 아닙니다.")
     private String userName;
 
@@ -24,7 +24,7 @@ public class UserDto {
     private String confirmPassword;
 
     @Builder
-    public UserDto(String userName, String email, String password, String confirmPassword) {
+    public UserSignUpRequestDto(String userName, String email, String password, String confirmPassword) {
         this.userName = userName;
         this.email = email;
         this.password = password;

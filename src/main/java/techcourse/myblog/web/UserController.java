@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserSignUpRequestDto;
 import techcourse.myblog.dto.UserUpdateRequestDto;
 import techcourse.myblog.service.UserService;
 
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/new")
-    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
+    public String createUser(@Valid UserSignUpRequestDto userSignUpRequestDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             FieldError fieldError = bindingResult.getFieldError();
             model.addAttribute("error", fieldError.getDefaultMessage());
@@ -46,7 +46,7 @@ public class UserController {
         }
 
         try {
-            userService.create(userDto);
+            userService.create(userSignUpRequestDto);
             return "redirect:/login";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());

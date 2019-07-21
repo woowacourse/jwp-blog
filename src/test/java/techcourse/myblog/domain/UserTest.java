@@ -1,7 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserSignUpRequestDto;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,12 +9,12 @@ public class UserTest {
     @Test
     void checkConfirmPassword() {
         assertThrows(IllegalArgumentException.class, () -> {
-            UserDto userDto = UserDto.builder().userName("Martin")
+            UserSignUpRequestDto userSignUpRequestDto = UserSignUpRequestDto.builder().userName("Martin")
                     .email("oeeen3@gmail.com")
                     .password("Aa12345!")
                     .confirmPassword("Aa12345@")
                     .build();
-            User user = new User(userDto);
+            User user = new User(userSignUpRequestDto);
         });
     }
 

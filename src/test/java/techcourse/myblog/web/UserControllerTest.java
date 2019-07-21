@@ -10,7 +10,7 @@ import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserSignUpRequestDto;
 import techcourse.myblog.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,10 +25,10 @@ public class UserControllerTest {
     @Autowired
     UserRepository userRepository;
 
-    private static UserDto userDto;
+    private static UserSignUpRequestDto userSignUpRequestDto;
 
     static {
-        userDto = UserDto.builder()
+        userSignUpRequestDto = UserSignUpRequestDto.builder()
                 .userName("Martin")
                 .email("martin@gmail.com")
                 .password("Aa12345!")
@@ -47,7 +47,7 @@ public class UserControllerTest {
 
     @Test
     void create_user() {
-        postWithBody(webTestClient.post(), "/users/new", userDto)
+        postWithBody(webTestClient.post(), "/users/new", userSignUpRequestDto)
                 .isFound();
     }
 
@@ -59,7 +59,7 @@ public class UserControllerTest {
 
     @Test
     void users_withLogin() {
-        postWithBody(webTestClient.post(), "/users/new", userDto).isFound();
+        postWithBody(webTestClient.post(), "/users/new", userSignUpRequestDto).isFound();
 
         loginSession();
         getWithoutBody("/users").isOk();
@@ -67,16 +67,16 @@ public class UserControllerTest {
 
     @Test
     void users_withoutLogin() {
-        postWithBody(webTestClient.post(), "/users/new", userDto).isFound();
+        postWithBody(webTestClient.post(), "/users/new", userSignUpRequestDto).isFound();
 
         getWithoutBody("/users").isFound();
     }
 
     @Test
     void check_same_email() {
-        postWithBody(webTestClient.post(), "/users/new", userDto).isFound();
+        postWithBody(webTestClient.post(), "/users/new", userSignUpRequestDto).isFound();
 
-        postWithBody(webTestClient.post(), "/users/new", userDto)
+        postWithBody(webTestClient.post(), "/users/new", userSignUpRequestDto)
                 .isOk()
                 .expectBody()
                 .consumeWith(res -> {
@@ -87,7 +87,7 @@ public class UserControllerTest {
 
     @Test
     void check_valid_name() {
-        UserDto invalidUser = UserDto.builder()
+        UserSignUpRequestDto invalidUser = UserSignUpRequestDto.builder()
                 .userName("M")
                 .email("martin@gmail.com")
                 .password("Aa12345!")
@@ -105,7 +105,7 @@ public class UserControllerTest {
 
     @Test
     void check_valid_password() {
-        UserDto invalidUser = UserDto.builder()
+        UserSignUpRequestDto invalidUser = UserSignUpRequestDto.builder()
                 .userName("M")
                 .email("martin@gmail.com")
                 .password("A")
@@ -123,7 +123,7 @@ public class UserControllerTest {
 
     @Test
     void check_valid_confirm_password() {
-        UserDto invalidUser = UserDto.builder()
+        UserSignUpRequestDto invalidUser = UserSignUpRequestDto.builder()
                 .userName("M")
                 .email("martin@gmail.com")
                 .password("A")
@@ -179,14 +179,14 @@ public class UserControllerTest {
         }).build();
     }
 
-    StatusAssertions postWithBody(WebTestClient.RequestBodyUriSpec requestBodyUriSpec, String uri, UserDto userDto) {
+    StatusAssertions postWithBody(WebTestClient.RequestBodyUriSpec requestBodyUriSpec, String uri, UserSignUpRequestDto userSignUpRequestDto) {
         return requestBodyUriSpec
                 .uri(uri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", userDto.getUserName())
-                        .with("email", userDto.getEmail())
-                        .with("password", userDto.getPassword())
-                        .with("confirmPassword", userDto.getConfirmPassword()))
+                .body(BodyInserters.fromFormData("userName", userSignUpRequestDto.getUserName())
+                        .with("email", userSignUpRequestDto.getEmail())
+                        .with("password", userSignUpRequestDto.getPassword())
+                        .with("confirmPassword", userSignUpRequestDto.getConfirmPassword()))
                 .exchange()
                 .expectStatus();
     }
