@@ -2,9 +2,15 @@ package techcourse.myblog.domain;
 
 import techcourse.myblog.dto.ArticleRequestDto;
 
-public class Article {
-    private static long NEXT_ID = 1;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
+public class Article {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String coverUrl;
@@ -17,7 +23,6 @@ public class Article {
     public static Article of(ArticleRequestDto articleRequestDto) {
         Article newArticle = new Article();
 
-        newArticle.id = NEXT_ID++;
         newArticle.title = articleRequestDto.getTitle();
         newArticle.coverUrl = articleRequestDto.getCoverUrl();
         newArticle.contents = articleRequestDto.getContents();

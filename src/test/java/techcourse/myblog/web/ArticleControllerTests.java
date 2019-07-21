@@ -97,7 +97,6 @@ public class ArticleControllerTests {
         articleRequestDto.setTitle("1");
         articleRequestDto.setCoverUrl("2");
         articleRequestDto.setContents("3");
-        articleRequestDto.setCategory("4");
 
         Article article = Article.of(articleRequestDto);
         articleRepository.addArticle(article);
@@ -106,7 +105,6 @@ public class ArticleControllerTests {
         articleRequestDtoToChange.setTitle(title);
         articleRequestDtoToChange.setCoverUrl(coverUrl);
         articleRequestDtoToChange.setContents(contents);
-        articleRequestDtoToChange.setCategory(category);
 
         webTestClient.put()
                 .uri("/articles/" + newArticle.getId())
