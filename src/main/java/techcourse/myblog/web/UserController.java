@@ -11,8 +11,6 @@ import techcourse.myblog.exception.DuplicateEmailException;
 import techcourse.myblog.exception.FailedLoginException;
 import techcourse.myblog.exception.InvalidUserDataException;
 import techcourse.myblog.service.UserService;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -115,7 +113,7 @@ public class UserController {
 
     @ExceptionHandler(DuplicateEmailException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleDuplicateEmailException(DuplicateEmailException e, HttpServletRequest request, Model model) {
+    public String handleDuplicateEmailException(DuplicateEmailException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         return "signup";
     }
