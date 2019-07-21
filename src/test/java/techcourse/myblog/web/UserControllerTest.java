@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserControllerTest {
+public class UserControllerTest extends LoginTemplate {
     @Autowired
     private WebTestClient webTestClient;
 
@@ -113,35 +113,22 @@ class UserControllerTest {
 
     @Test
     void 회원정보_수정_테스트() {
-        String cookie = webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", "andole@gmail.com")
-                        .with("password", "A!1bcdefg"))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-
-        webTestClient.put().uri("/users")
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        loggedInPutRequest("/users")
                 .body(BodyInserters.fromFormData("name", "mobumsaeng")
                         .with("email", "edit@gmail.com"))
-                .exchange().expectStatus().is3xxRedirection();
+                .exchange()
+                .expectStatus()
+                .is3xxRedirection();
 
         assertDoesNotThrow(() -> userRepository.findByEmail("edit@gmail.com").orElseThrow(IllegalAccessError::new));
     }
 
     @Test
     void 회원정보_삭제_테스트() {
-        String cookie = webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", "andole@gmail.com")
-                        .with("password", "A!1bcdefg"))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-
-        webTestClient.delete().uri("/users")
-                .header("Cookie", cookie)
-                .exchange().expectStatus().is3xxRedirection();
+        loggedInDeleteRequest("/users")
+                .exchange().
+                expectStatus()
+                .is3xxRedirection();
 
         assertThatThrownBy(() -> userRepository.findByEmail("andole@gmail.com").orElseThrow(IllegalAccessError::new))
                 .isInstanceOf(IllegalAccessError.class);
