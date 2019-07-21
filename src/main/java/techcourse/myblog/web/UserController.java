@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.dto.SignUpDto;
 import techcourse.myblog.dto.UserRequestDto;
+import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -17,10 +18,12 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class UserController {
     private UserService userService;
+    private LoginService loginService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, LoginService loginService) {
         this.userService = userService;
+        this.loginService = loginService;
     }
 
     @GetMapping("/login")
@@ -36,7 +39,7 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(UserRequestDto userRequestDto, Model model, HttpSession session) {
-        LoginDto dto = userService.loginByEmailAndPwd(userRequestDto);
+        LoginDto dto = loginService.loginByEmailAndPwd(userRequestDto);
         if (dto.isSuccess()) {
             session.setAttribute("userName", dto.getName());
             session.setAttribute("userEmail", userRequestDto.getEmail());
