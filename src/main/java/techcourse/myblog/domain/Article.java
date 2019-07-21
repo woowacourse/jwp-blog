@@ -29,7 +29,7 @@ public class Article {
         this.contents = contents;
     }
     
-    public static Article to(String title, String coverUrl, String contents) {
+    public static Article from(String title, String coverUrl, String contents) {
         return new Article(title, coverUrl, contents);
     }
     

@@ -16,6 +16,6 @@ public class ArticleDto {
     }
 
     public Article toArticle() {
-        return Article.to(title, coverUrl, contents);
+        return Article.from(title, coverUrl, contents);
     }
 }
