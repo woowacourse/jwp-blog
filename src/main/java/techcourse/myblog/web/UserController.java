@@ -33,7 +33,7 @@ public class UserController {
 
     @PostMapping("/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("userName");
+        session.removeAttribute(UserInfo.NAME);
         return "redirect:/";
     }
 
@@ -41,8 +41,8 @@ public class UserController {
     public String login(UserRequestDto userRequestDto, Model model, HttpSession session) {
         LoginDto dto = loginService.loginByEmailAndPwd(userRequestDto);
         if (dto.isSuccess()) {
-            session.setAttribute("userName", dto.getName());
-            session.setAttribute("userEmail", userRequestDto.getEmail());
+            session.setAttribute(UserInfo.NAME, dto.getName());
+            session.setAttribute(UserInfo.EMAIL, userRequestDto.getEmail());
             return "redirect:/";
         }
         model.addAttribute("error", dto.getMessage());
@@ -75,7 +75,7 @@ public class UserController {
         SignUpDto signUpDto = userService.addUser(userRequestDto);
 
         if (userService.addUser(userRequestDto).isSuccess()) {
-            session.setAttribute("userName", userRequestDto.getName());
+            session.setAttribute(UserInfo.NAME, userRequestDto.getName());
             return "redirect:/";
         }
         model.addAttribute("error", signUpDto.getMessage());
@@ -85,16 +85,16 @@ public class UserController {
     @PutMapping("/users")
     public String updateUser(UserRequestDto userRequestDto, HttpSession session) {
         userService.updateUser(userRequestDto, session);
-        session.setAttribute("userName", userRequestDto.getName());
-        session.setAttribute("userEmail", userRequestDto.getEmail());
+        session.setAttribute(UserInfo.NAME, userRequestDto.getName());
+        session.setAttribute(UserInfo.EMAIL, userRequestDto.getEmail());
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/users")
     public String deleteUser(HttpSession session) {
         userService.deleteUser(session);
-        session.removeAttribute("userName");
-        session.removeAttribute("userEmail");
+        session.removeAttribute(UserInfo.NAME);
+        session.removeAttribute(UserInfo.EMAIL);
         return "redirect:/";
     }
 }
