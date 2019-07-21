@@ -1,0 +1,40 @@
+package techcourse.myblog.domain;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserUpdateDto;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class UserTest {
+    private User user;
+
+    @BeforeEach
+    void setUp() {
+        UserDto userDto = new UserDto();
+        userDto.setName("kimhyojae");
+        userDto.setEmail("test@test.com");
+        userDto.setPassword("PassW0rd@");
+        userDto.setPasswordConfirm("PassW0rd@");
+
+        user = User.of(userDto);
+    }
+
+    @Test
+    @DisplayName("유저의 정보를 업데이트 한다.")
+    void updateUserTest() {
+        // Given
+        UserUpdateDto userUpdateDto = new UserUpdateDto();
+        userUpdateDto.setName("update");
+
+        // When
+        user.updateUser(userUpdateDto);
+
+        // Then
+        assertThat(user.getName()).isEqualTo("update");
+    }
+}
