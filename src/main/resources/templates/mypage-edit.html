@@ -22,6 +22,8 @@
         <div class="row">
             <div class="col-md-7 mx-auto">
                 <form action="/mypage/edit" th:method="put">
+                    <input type="hidden" name="userId" th:value="${user.userId}">
+                    <input type="hidden" name="password" th:value="${user.password}">
                     <div class="card">
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
@@ -34,7 +36,8 @@
                                     <p class="mrg-top-10 text-dark"><b>Name</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" name="name" class="form-control" th:value="${user.name}">
+                                    <input type="text" name="name" class="form-control" th:value="${user.name}" placeholder="숫자 및 특수문자 제외 2자 이상 10자 이내"
+                                           pattern="^[a-zA-Zㄱ-ㅎ가-힣]*$" minlength="2" maxlength="10" required>
                                 </div>
                             </div>
                             <hr>
