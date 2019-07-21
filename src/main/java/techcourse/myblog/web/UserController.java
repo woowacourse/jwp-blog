@@ -6,8 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
@@ -85,7 +83,11 @@ public class UserController {
     }
 
     @PutMapping("/mypage/edit")
-    public String updateUser(UserDto userDto, HttpSession httpSession) {
+    public String updateUser(@Valid UserDto userDto, HttpSession httpSession, BindingResult bindingResult) throws BindException {
+        if (bindingResult.hasErrors()) {
+            throw new BindException(bindingResult);
+        }
+
         userService.updateUser(userDto);
         httpSession.setAttribute("name", userDto.getName());
         return "redirect:/mypage";
@@ -100,7 +102,7 @@ public class UserController {
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleBindException(BindException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
+        model.addAttribute("errorMessage", e.getFieldError().getDefaultMessage());
         return "signup";
     }
 
