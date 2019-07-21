@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.ArticleException;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.service.ArticleService;
 
 @Controller
@@ -47,13 +47,13 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String saveArticle(ArticleDto dto) {
-        return "redirect:/articles/" + articleService.save(dto);
+    public String saveArticle(ArticleRequestDto articleRequestDto) {
+        return "redirect:/articles/" + articleService.save(articleRequestDto);
     }
 
     @PutMapping("/articles/{articleId}")
-    public String getModifiedArticle(@PathVariable long articleId, ArticleDto dto, Model model) {
-        model.addAttribute("article", articleService.update(articleId, dto));
+    public String getModifiedArticle(@PathVariable long articleId, ArticleRequestDto articleRequestDto, Model model) {
+        model.addAttribute("article", articleService.update(articleId, articleRequestDto));
         return "article";
     }
 

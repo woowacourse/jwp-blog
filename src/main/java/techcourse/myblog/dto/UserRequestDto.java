@@ -2,15 +2,15 @@ package techcourse.myblog.dto;
 
 import techcourse.myblog.domain.User;
 
-public class UserDto {
+public class UserRequestDto {
     private String name;
     private String password;
     private String email;
 
-    public UserDto() {
+    public UserRequestDto() {
     }
 
-    public UserDto(String name, String password, String email) {
+    public UserRequestDto(String name, String password, String email) {
         this.name = name;
         this.password = password;
         this.email = email;

@@ -1,6 +1,6 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserRequestDto;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -67,7 +67,7 @@ public class User {
         this.email = email;
     }
 
-    public boolean isMatchPassword(UserDto dto) {
+    public boolean isMatchPassword(UserRequestDto dto) {
         return this.password.equals(dto.getPassword());
     }
 

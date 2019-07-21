@@ -5,7 +5,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserException;
 import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.dto.SingUpDto;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.repository.UserRepository;
 
 import javax.servlet.http.HttpSession;
@@ -24,11 +24,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public LoginDto loginByEmailAndPwd(UserDto userDto) {
+    public LoginDto loginByEmailAndPwd(UserRequestDto userRequestDto) {
         try {
-            User user = userRepository.findByEmail(userDto.getEmail())
+            User user = userRepository.findByEmail(userRequestDto.getEmail())
                     .orElseThrow(() -> new UserException(NOT_EXIST_USER));
-            if (user.isMatchPassword(userDto)) {
+            if (user.isMatchPassword(userRequestDto)) {
                 return new LoginDto(true, null, user.getName());
             }
             return new LoginDto(false, NOT_MATCH_PASSWORD);
@@ -37,9 +37,9 @@ public class UserService {
         }
     }
 
-    public SingUpDto addUser(UserDto userDto) {
+    public SingUpDto addUser(UserRequestDto userRequestDto) {
         try {
-            return new SingUpDto(true, userRepository.save(userDto.toEntity()).getId());
+            return new SingUpDto(true, userRepository.save(userRequestDto.toEntity()).getId());
         } catch (UserException e) {
             return new SingUpDto(false, e.getMessage());
         }
@@ -50,9 +50,9 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void updateUser(UserDto userDto, HttpSession session) {
+    public void updateUser(UserRequestDto userRequestDto, HttpSession session) {
         User user = getUserBySession(session);
-        user.updateNameAndEmail(userDto.getName(), userDto.getEmail());
+        user.updateNameAndEmail(userRequestDto.getName(), userRequestDto.getEmail());
         userRepository.save(user);
     }
 

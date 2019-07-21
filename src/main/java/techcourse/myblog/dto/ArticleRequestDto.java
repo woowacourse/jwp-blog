@@ -2,18 +2,18 @@ package techcourse.myblog.dto;
 
 import techcourse.myblog.domain.Article;
 
-public class ArticleDto {
+public class ArticleRequestDto {
     private String title;
     private String contents;
     private String coverUrl;
 
-    public ArticleDto(String title, String contents, String coverUrl) {
+    public ArticleRequestDto(String title, String contents, String coverUrl) {
         this.title = title;
         this.contents = contents;
         this.coverUrl = coverUrl;
     }
 
-    public ArticleDto() {
+    public ArticleRequestDto() {
     }
 
     public String getTitle() {

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.dto.SingUpDto;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -35,11 +35,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserDto userDto, Model model, HttpSession session) {
-        LoginDto dto = userService.loginByEmailAndPwd(userDto);
+    public String login(UserRequestDto userRequestDto, Model model, HttpSession session) {
+        LoginDto dto = userService.loginByEmailAndPwd(userRequestDto);
         if (dto.isSuccess()) {
             session.setAttribute("userName", dto.getName());
-            session.setAttribute("userEmail", userDto.getEmail());
+            session.setAttribute("userEmail", userRequestDto.getEmail());
             return "redirect:/";
         }
         model.addAttribute("error", dto.getMessage());
@@ -68,11 +68,11 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String addUser(UserDto userDto, Model model, HttpSession session) {
-        SingUpDto singUpDto = userService.addUser(userDto);
+    public String addUser(UserRequestDto userRequestDto, Model model, HttpSession session) {
+        SingUpDto singUpDto = userService.addUser(userRequestDto);
 
-        if (userService.addUser(userDto).isSuccess()) {
-            session.setAttribute("userName", userDto.getName());
+        if (userService.addUser(userRequestDto).isSuccess()) {
+            session.setAttribute("userName", userRequestDto.getName());
             return "redirect:/";
         }
         model.addAttribute("error", singUpDto.getMessage());
@@ -80,10 +80,10 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public String updateUser(UserDto userDto, HttpSession session) {
-        userService.updateUser(userDto, session);
-        session.setAttribute("userName", userDto.getName());
-        session.setAttribute("userEmail", userDto.getEmail());
+    public String updateUser(UserRequestDto userRequestDto, HttpSession session) {
+        userService.updateUser(userRequestDto, session);
+        session.setAttribute("userName", userRequestDto.getName());
+        session.setAttribute("userEmail", userRequestDto.getEmail());
         return "redirect:/mypage";
     }
 

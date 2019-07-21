@@ -3,7 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleException;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.List;
@@ -29,15 +29,15 @@ public class ArticleService {
                 .orElseThrow(() -> new ArticleException(NOT_EXIST_ARTICLE));
     }
 
-    public Long save(ArticleDto articleDto) {
-        Article article = articleDto.toEntity();
+    public Long save(ArticleRequestDto articleRequestDto) {
+        Article article = articleRequestDto.toEntity();
         articleRepository.save(article);
         return article.getId();
     }
 
-    public Article update(long articleId, ArticleDto articleDto) {
+    public Article update(long articleId, ArticleRequestDto articleRequestDto) {
         Article originArticle = findArticle(articleId);
-        originArticle.update(articleDto.toEntity());
+        originArticle.update(articleRequestDto.toEntity());
         articleRepository.save(originArticle);
         return originArticle;
     }
