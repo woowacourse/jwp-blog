@@ -6,7 +6,6 @@ import techcourse.myblog.dto.UserSignUpRequestDto;
 import techcourse.myblog.dto.UserUpdateRequestDto;
 import techcourse.myblog.repository.UserRepository;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 @Service
@@ -30,18 +29,14 @@ public class UserService {
     }
 
     @Transactional
-    public void update(UserUpdateRequestDto userUpdateRequestDto, HttpSession httpSession) {
-        String email = ((User) httpSession.getAttribute("user")).getEmail();
+    public User update(UserUpdateRequestDto userUpdateRequestDto, String email) {
         User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
         user.setUserName(userUpdateRequestDto.getUserName());
-        httpSession.setAttribute("user", user);
+        return user;
     }
 
-    @Transactional
-    public void delete(HttpSession httpSession) {
-        String email = ((User) httpSession.getAttribute("user")).getEmail();
+    public void delete(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
-        httpSession.removeAttribute("user");
         userRepository.delete(user);
     }
 }

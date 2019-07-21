@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserSignUpRequestDto;
 import techcourse.myblog.dto.UserUpdateRequestDto;
 import techcourse.myblog.service.UserService;
@@ -73,7 +74,9 @@ public class UserController {
         }
 
         try {
-            userService.update(userUpdateRequestDto, httpSession);
+            String email = ((User) httpSession.getAttribute("user")).getEmail();
+            User user = userService.update(userUpdateRequestDto, email);
+            httpSession.setAttribute("user", user);
             return "redirect:/users/mypage";
         } catch (IllegalArgumentException e) {
             log.error(NO_USER_MESSAGE);
@@ -84,7 +87,9 @@ public class UserController {
     @DeleteMapping("/mypage")
     public String deleteUser(HttpSession httpSession) {
         try {
-            userService.delete(httpSession);
+            String email = ((User) httpSession.getAttribute("user")).getEmail();
+            userService.delete(email);
+            httpSession.removeAttribute("user");
         } catch (IllegalArgumentException e) {
             log.error(NO_USER_MESSAGE);
         }

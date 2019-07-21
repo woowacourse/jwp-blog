@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.AuthenticationDto;
 import techcourse.myblog.service.LoginService;
 
@@ -29,7 +30,9 @@ public class LoginController {
     @PostMapping("/login/check")
     public String login(AuthenticationDto authenticationDto, Model model, HttpSession httpSession) {
         try {
-            return loginService.login(authenticationDto, httpSession);
+            User user = loginService.login(authenticationDto);
+            httpSession.setAttribute("user", user);
+            return "redirect:/";
         } catch (IllegalArgumentException e) {
             log.info("로그인 실패 : {}", e.getMessage());
             model.addAttribute("error", e.getMessage());
@@ -39,6 +42,7 @@ public class LoginController {
 
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
-        return loginService.logout(httpSession);
+        httpSession.removeAttribute("user");
+        return "redirect:/";
     }
 }
