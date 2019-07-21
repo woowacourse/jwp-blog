@@ -8,12 +8,13 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.service.exception.SignUpException;
 
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
+import static techcourse.myblog.service.exception.SignUpException.SIGN_UP_FAIL_MESSAGE;
+import static techcourse.myblog.service.exception.UserArgumentException.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
@@ -99,7 +100,7 @@ class UserControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body).contains(SignUpException.EMAIL_DUPLICATION_MESSAGE);
+                    assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, EMAIL_DUPLICATION_MESSAGE);
                 });
     }
 
@@ -124,7 +125,7 @@ class UserControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body).contains(SignUpException.INVALID_NAME_LENGTH_MESSAGE);
+                    assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, INVALID_NAME_LENGTH_MESSAGE);
                 });
     }
 
@@ -149,7 +150,7 @@ class UserControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body).contains(SignUpException.INVALID_NAME_LENGTH_MESSAGE);
+                    assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, INVALID_NAME_LENGTH_MESSAGE);
                 });
     }
 
@@ -174,7 +175,7 @@ class UserControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body).contains(SignUpException.NAME_INCLUDE_INVALID_CHARACTERS_MESSAGE);
+                    assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, NAME_INCLUDE_INVALID_CHARACTERS_MESSAGE);
                 });
     }
 
@@ -199,7 +200,7 @@ class UserControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body).contains(SignUpException.INVALID_PASSWORD_LENGTH_MESSAGE);
+                    assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, INVALID_PASSWORD_LENGTH_MESSAGE);
                 });
     }
 
@@ -224,7 +225,7 @@ class UserControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body).contains(SignUpException.INVALID_PASSWORD_MESSAGE);
+                    assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, INVALID_PASSWORD_MESSAGE);
                 });
     }
 
@@ -249,7 +250,7 @@ class UserControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body).contains(SignUpException.PASSWORD_CONFIRM_FAIL_MESSAGE);
+                    assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, PASSWORD_CONFIRM_FAIL_MESSAGE);
                 });
     }
 }

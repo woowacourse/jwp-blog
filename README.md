@@ -23,6 +23,8 @@
     - 테스트 코드 중복 제거(UserControllerTests)
     - logging
     - logout 관련 테스트 작성
+    - validation domin에서 체크(@Pattern)
+    
 ### Done
 0. 페어와 코드 동기화
 

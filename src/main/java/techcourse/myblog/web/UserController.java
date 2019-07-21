@@ -76,6 +76,12 @@ public class UserController {
         return "redirect:/";
     }
 
+    @ExceptionHandler(SignUpException.class)
+    public String handleSignUpException(Model model, Exception e) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "sign-up";
+    }
+
     @ExceptionHandler(UserUpdateException.class)
     public String handleUpdateUserException(Exception e,
                                             HttpServletRequest httpServletRequest,
@@ -84,11 +90,5 @@ public class UserController {
         UserPublicInfoDto user = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         return "redirect:/mypage/" + user.getId() + "/edit";
-    }
-
-    @ExceptionHandler(SignUpException.class)
-    public String handleSignUpException(Model model, Exception e) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "sign-up";
     }
 }

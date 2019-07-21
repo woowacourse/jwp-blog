@@ -8,6 +8,7 @@ import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
+import techcourse.myblog.service.exception.UserArgumentException;
 import techcourse.myblog.service.exception.UserUpdateException;
 
 import javax.transaction.Transactional;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static techcourse.myblog.service.exception.SignUpException.*;
+import static techcourse.myblog.service.exception.UserArgumentException.*;
 
 @Service
 public class UserService {
@@ -42,8 +43,12 @@ public class UserService {
     }
 
     public void save(UserDto userDto) {
-        validate(userDto);
-        userRepository.save(userDto.toEntity());
+        try {
+            validate(userDto);
+            userRepository.save(userDto.toEntity());
+        } catch (Exception e) {
+            throw new SignUpException(e.getMessage());
+        }
     }
 
     private void validate(UserDto userDto) {
@@ -58,32 +63,32 @@ public class UserService {
     private void checkDuplicatedEmail(String email) {
         User user = userRepository.findByEmail(email);
         if (user != null) {
-            throw new SignUpException(EMAIL_DUPLICATION_MESSAGE);
+            throw new UserArgumentException(EMAIL_DUPLICATION_MESSAGE);
         }
     }
 
     private void checkValidNameLength(String name) {
         int nameLength = name.length();
         if (nameLength < MIN_NAME_LENGTH || nameLength > MAX_NAME_LENGTH) {
-            throw new SignUpException(INVALID_NAME_LENGTH_MESSAGE);
+            throw new UserArgumentException(INVALID_NAME_LENGTH_MESSAGE);
         }
     }
 
     private void checkValidName(String name) {
         if (!matchRegex(name, KOREAN_ENGLISH_REGEX)) {
-            throw new SignUpException(NAME_INCLUDE_INVALID_CHARACTERS_MESSAGE);
+            throw new UserArgumentException(NAME_INCLUDE_INVALID_CHARACTERS_MESSAGE);
         }
     }
 
     private void checkPasswordConfirm(UserDto userDto) {
         if (!userDto.confirmPassword()) {
-            throw new SignUpException(PASSWORD_CONFIRM_FAIL_MESSAGE);
+            throw new UserArgumentException(PASSWORD_CONFIRM_FAIL_MESSAGE);
         }
     }
 
     private void checkValidPasswordLength(String password) {
         if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new SignUpException(INVALID_PASSWORD_LENGTH_MESSAGE);
+            throw new UserArgumentException(INVALID_PASSWORD_LENGTH_MESSAGE);
         }
     }
 
@@ -93,7 +98,7 @@ public class UserService {
                 || !matchRegex(password, NUMBER_REGEX)
                 || !matchRegex(password, SPECIAL_CHARACTER_REGEX)
                 || matchRegex(password, KOREAN_REGEX)) {
-            throw new SignUpException(INVALID_PASSWORD_MESSAGE);
+            throw new UserArgumentException(INVALID_PASSWORD_MESSAGE);
         }
     }
 
@@ -115,7 +120,7 @@ public class UserService {
             user.setName(userPublicInfoDto.getName());
             userRepository.save(user);
         } catch (Exception e) {
-            throw new UserUpdateException();
+            throw new UserUpdateException(e.getMessage());
         }
     }
 
