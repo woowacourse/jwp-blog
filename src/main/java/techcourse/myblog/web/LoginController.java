@@ -1,7 +1,6 @@
 package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.dto.UserDto;
@@ -26,11 +25,12 @@ public class LoginController {
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.removeAttribute("userName");
+        session.removeAttribute("userEmail");
         return "redirect:/";
     }
 
     @PostMapping("/login")
-    public String login(UserDto userDto, Model model, HttpSession session) {
+    public String login(UserDto userDto, HttpSession session) {
         setLoginSession(session, loginService.loginByEmailAndPwd(userDto));
         return "redirect:/";
     }

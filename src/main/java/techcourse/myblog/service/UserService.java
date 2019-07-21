@@ -7,6 +7,7 @@ import techcourse.myblog.domain.UserException;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class UserService {
         return users;
     }
 
+    @Transactional
     public void updateUser(String userEmail, UserDto userDto) {
         User user = userRepository.findByEmail(UserEmail.of(userEmail)).orElseThrow(UserException::new);
         user.updateNameAndEmail(userDto.getName(), userDto.getEmail());

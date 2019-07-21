@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.support;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,7 +9,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LoginInterceptorConfigTest {
+public class MyblogConfigurationTest {
 
     @Autowired
     private WebTestClient webTestClient;

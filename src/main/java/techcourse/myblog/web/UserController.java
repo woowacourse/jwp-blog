@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.web.support.UserSessionInfo;
 
 import javax.servlet.http.HttpSession;
 
@@ -45,15 +46,15 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public String updateUser(UserDto userDto, HttpSession session) {
-        userService.updateUser(getSessionValueByEmail(session), userDto);
+    public String updateUser(UserDto userDto, HttpSession session, UserSessionInfo userSessionInfo) {
+        userService.updateUser(userSessionInfo.getEmail(), userDto);
         createSession(session, userDto);
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/users")
-    public String deleteUser(HttpSession session) {
-        userService.deleteUser(getSessionValueByEmail(session));
+    public String deleteUser(HttpSession session, UserSessionInfo userSessionInfo) {
+        userService.deleteUser(userSessionInfo.getEmail());
         removeSession(session);
         return "redirect:/";
     }
@@ -67,9 +68,4 @@ public class UserController {
         session.removeAttribute("userName");
         session.removeAttribute("userEmail");
     }
-
-    private String getSessionValueByEmail(HttpSession session) {
-        return session.getAttribute("userEmail").toString();
-    }
-
 }

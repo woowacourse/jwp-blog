@@ -1,9 +1,12 @@
 package techcourse.myblog.repository;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
 
@@ -13,11 +16,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest
+@RunWith(SpringRunner.class)
+@DataJpaTest
 class ArticleRepositoryTest {
     @Autowired
     private ArticleRepository articleRepository;
-
 
     @BeforeEach
     void setUp() {
@@ -30,6 +33,11 @@ class ArticleRepositoryTest {
         articleRepository.save(article3);
     }
 
+    @AfterEach
+    void tearDown() {
+        articleRepository.deleteAll();
+    }
+
     @Test
     void createTest() {
         long count = articleRepository.count();
@@ -39,13 +47,9 @@ class ArticleRepositoryTest {
 
     @Test
     void findByIdTest() {
-        assertThat(articleRepository.findById(1L).get().getTitle()).isEqualTo("a1");
-        assertThat(articleRepository.findById(1L).get().getId()).isEqualTo(1L);
         assertThatThrownBy(() -> articleRepository
                 .findById(100L).orElseThrow(IllegalArgumentException::new))
                 .isInstanceOf(IllegalArgumentException.class);
-
-
     }
 
     @Test
