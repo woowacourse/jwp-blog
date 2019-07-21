@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserUpdateDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,6 +25,10 @@ public class User {
         user.email = userDto.getEmail();
         user.password = userDto.getPassword();
         return user;
+    }
+
+    public void updateUser(UserUpdateDto userUpdateDto) {
+        this.name = userUpdateDto.getName();
     }
 
     public Long getId() {

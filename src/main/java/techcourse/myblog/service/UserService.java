@@ -5,6 +5,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserUpdateDto;
 import techcourse.myblog.exception.DuplicateEmailException;
 import techcourse.myblog.exception.InvalidDataFormException;
 import techcourse.myblog.exception.UnequalPasswordException;
@@ -46,6 +47,12 @@ public class UserService {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new DuplicateEmailException();
         }
+    }
+
+    public void update(User user, UserUpdateDto userUpdateDto, BindingResult bindingResult) {
+        checkUserDataForm(bindingResult);
+        user.updateUser(userUpdateDto);
+        userRepository.save(user);
     }
 
     public List<User> getUserList() {
