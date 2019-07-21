@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserAuthenticateException;
@@ -14,10 +15,9 @@ import techcourse.myblog.web.dto.UserRequestDto;
 import techcourse.myblog.web.dto.UserUpdateRequestDto;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
 import javax.validation.Validator;
 import java.util.Optional;
-import java.util.Set;
 
 import static techcourse.myblog.web.LoginUtil.*;
 
@@ -27,12 +27,10 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
-    private final Validator validator;
 
     @Autowired
-    public UserController(UserService userService, Validator validator) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.validator = validator;
     }
 
     @GetMapping("/signup")
@@ -44,9 +42,10 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String register(UserRequestDto userRequestDto, Model model, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
+    public String register(@Valid UserRequestDto userRequestDto, BindingResult bindingResult,
+                           Model model, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
         try {
-            assertValidRequest(validator.validate(userRequestDto));
+            checkBindingResult(bindingResult);
             if (currentUser.isPresent()) {
                 return "redirect:/";
             }
@@ -59,9 +58,10 @@ public class UserController {
         }
     }
 
-    private <T> void assertValidRequest(Set<ConstraintViolation<T>> violations) {
-        if (!violations.isEmpty()) {
-            throw new IllegalArgumentException(violations.iterator().next().getMessage());
+    private <T> void checkBindingResult(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new IllegalArgumentException(
+                bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
     }
 
@@ -128,9 +128,9 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public String updateUser(UserUpdateRequestDto updateRequestDto, HttpSession session, Model model) {
+    public String updateUser(@Valid UserUpdateRequestDto updateRequestDto, BindingResult bindingResult, HttpSession session, Model model) {
         try {
-            assertValidRequest(validator.validate(updateRequestDto));
+            checkBindingResult(bindingResult);
             if (!isLoggedIn(session)) {
                 return "redirect:/login";
             }
