@@ -76,6 +76,15 @@ class UserControllerTest {
                 .consumeWith(consumer);
     }
 
+    public static void getIndexView(WebTestClient webTestClient, String sessionId, Consumer<EntityExchangeResult<byte[]>> consumer) {
+        webTestClient.get()
+                .uri("/" + sessionId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(consumer);
+    }
+
     @Test
     @DisplayName("회원 가입 후 로그인 페이지로 이동한다.")
     void signUpTest() {
@@ -209,6 +218,26 @@ class UserControllerTest {
                         .expectBody()
                         .consumeWith(test -> assertThat(new String(test.getResponseBody()))
                                 .contains("이름은 한글 또는 영어만 입력이 가능합니다."));
+            });
+        });
+    }
+
+    @Test
+    @DisplayName("회원탈퇴 후에 메인 페이지에 비로그인 상태인지 확인한다.")
+    void withdrawalTest() {
+        userDto.setName("김효재");
+        userDto.setEmail("delete@test.com");
+        loginDto.setEmail("delete@test.com");
+
+        postUser(webTestClient, userDto, postUserResponse -> {
+            String sessionId = getSessionId(postUserResponse);
+            postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {
+                webTestClient.delete()
+                        .uri("/withdrawal" + sessionId)
+                        .exchange()
+                        .expectBody()
+                        .consumeWith(withdrawal -> getIndexView(webTestClient, sessionId, index ->
+                                assertThat(new String(index.getResponseBody())).doesNotContain("김효재")));
             });
         });
     }

@@ -16,6 +16,7 @@ import techcourse.myblog.dto.UserDto;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.web.UserControllerTest.getIndexView;
 import static techcourse.myblog.web.UserControllerTest.postUser;
 
 @ExtendWith(SpringExtension.class)
@@ -53,15 +54,6 @@ class LoginControllerTest {
                 .consumeWith(consumer);
     }
 
-    private void getIndexView(String sessionId, Consumer<EntityExchangeResult<byte[]>> consumer) {
-        webTestClient.get()
-                .uri("/" + sessionId)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(consumer);
-    }
-
     public static String getSessionId(EntityExchangeResult<byte[]> postUserResponse) {
         return ";jsessionid=" + postUserResponse.getResponseCookies().getFirst("JSESSIONID").getValue();
     }
@@ -72,7 +64,8 @@ class LoginControllerTest {
         postUser(webTestClient, userDto, postUserResponse -> {
             String sessionId = getSessionId(postUserResponse);
             postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {
-                getIndexView(sessionId, index -> assertThat(new String(index.getResponseBody())).contains("test"));
+                getIndexView(webTestClient, sessionId, index ->
+                        assertThat(new String(index.getResponseBody())).contains("test"));
             });
         });
     }
@@ -93,8 +86,8 @@ class LoginControllerTest {
                         .expectStatus().is3xxRedirection()
                         .expectBody()
                         .consumeWith(logout ->
-                                getIndexView(sessionId, index -> assertThat(new String(index.getResponseBody()))
-                                        .doesNotContain("logout")));
+                                getIndexView(webTestClient, sessionId, index ->
+                                        assertThat(new String(index.getResponseBody())).doesNotContain("logout")));
             });
         });
     }
