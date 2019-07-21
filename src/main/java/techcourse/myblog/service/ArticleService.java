@@ -32,10 +32,9 @@ public class ArticleService {
     }
 
     @Transactional
-    public Long save(ArticleDto articleDto) {
-        Article article = articleDto.toEntity();
-        articleRepository.save(article);
-        return article.getId();
+    public Long save(Article article) {
+        Article newArticle = articleRepository.save(article);
+        return newArticle.getId();
     }
 
     @Transactional
