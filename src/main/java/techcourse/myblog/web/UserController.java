@@ -38,11 +38,15 @@ public class UserController {
     public String createSignupForm(Model model,
                                    UserDto userDto,
                                    BindingResult bindingResult) {
+        checkErrors(model, bindingResult);
+        return "signup";
+    }
+
+    private void checkErrors(Model model, BindingResult bindingResult) {
         List<ObjectError> errors = (List<ObjectError>) model.asMap().get("errors");
         if (errors != null) {
             errors.forEach(error -> bindingResult.addError(error));
         }
-        return "signup";
     }
 
     @PostMapping("/users")
@@ -71,10 +75,7 @@ public class UserController {
     public String createLoginForm(Model model,
                                   UserDto userDto,
                                   BindingResult bindingResult) {
-        List<ObjectError> errors = (List<ObjectError>) model.asMap().get("errors");
-        if (errors != null) {
-            errors.forEach(error -> bindingResult.addError(error));
-        }
+        checkErrors(model, bindingResult);
 
         return "login";
     }
@@ -129,12 +130,7 @@ public class UserController {
     public String createMyPageForm(Model model,
                                    UserDto userDto,
                                    BindingResult bindingResult) {
-
-        List<ObjectError> errors = (List<ObjectError>) model.asMap().get("errors");
-        if (errors != null) {
-            errors.forEach(error -> bindingResult.addError(error));
-        }
-
+        checkErrors(model, bindingResult);
         return "mypage-edit";
     }
 
