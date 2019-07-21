@@ -16,6 +16,12 @@ public class UserDto {
         this.email = email;
     }
 
+    public UserDto(User user) {
+        this.name = user.getName();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+    }
+
     public String getName() {
         return name;
     }

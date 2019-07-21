@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserEmail;
 import techcourse.myblog.repository.UserRepository;
 
@@ -28,12 +30,12 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp() {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("name", "andole")
-                        .with("password", "A!1bcdefg")
-                        .with("email", "andole@gmail.com"))
-                .exchange();
+        userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
+    }
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
     }
 
     @Test
@@ -54,7 +56,7 @@ class UserControllerTest {
                         .with("password", "b")
                         .with("email", "c"))
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isAccepted();
 
         assertThat(userRepository.count()).isEqualTo(count);
     }
@@ -68,49 +70,9 @@ class UserControllerTest {
                         .with("password", "A!1bcdefg")
                         .with("email", "test@test.com"))
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("Location", ".+\\/login.+");
         assertThat(userRepository.count()).isNotEqualTo(count);
-    }
-
-    @Test
-    void 로그인_성공_테스트() {
-        webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", "andole@gmail.com")
-                        .with("password", "A!1bcdefg"))
-                .exchange()
-                .expectStatus()
-                .is3xxRedirection();
-    }
-
-    @Test
-    void 이메일_없음_테스트() {
-        webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", "xxx@gmail.com")
-                        .with("password", "A!1bcdefg"))
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains("등록된 이메일이 없습니다.")).isTrue();
-                });
-    }
-
-    @Test
-    void 비밀번호_틀림_테스트() {
-        webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", "andole@gmail.com")
-                        .with("password", "B!1bcdefg"))
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains("비밀번호가 일치하지 않습니다.")).isTrue();
-                });
     }
 
     @Test
@@ -150,5 +112,4 @@ class UserControllerTest {
         assertThatThrownBy(() -> userRepository.findByEmail(UserEmail.of("andole@gmail.com")).orElseThrow(IllegalAccessError::new))
                 .isInstanceOf(IllegalAccessError.class);
     }
-
 }
