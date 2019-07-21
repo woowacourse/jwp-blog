@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class ArticleServiceTest {
@@ -36,7 +36,7 @@ class ArticleServiceTest {
     @Test
     @DisplayName("findById 없는 id로 검색했을 경우 예외처리")
     void findById_예외처리() {
-        assertThrows(IllegalArgumentException.class, ()-> articleService.findById(100L));
+        assertThrows(IllegalArgumentException.class, () -> articleService.findById(100L));
     }
 
     @Test
