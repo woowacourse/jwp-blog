@@ -3,19 +3,19 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.service.ArticleService;
 
 @Controller
 public class HomeController {
-    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
 
-    public HomeController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public HomeController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
+        model.addAttribute("articles", articleService.findAll());
         return "index";
     }
 }

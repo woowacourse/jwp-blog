@@ -15,6 +15,10 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
+    public Iterable<Article> findAll() {
+        return articleRepository.findAll();
+    }
+
     public Long create(ArticleDto articleDto) {
         Article article = Article.builder()
                 .title(articleDto.getTitle())
