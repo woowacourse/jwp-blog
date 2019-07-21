@@ -12,8 +12,11 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
-    @Autowired
-    ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
+
+    public HomeController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @GetMapping("/")
     public String home(HttpServletRequest request, Model model) {

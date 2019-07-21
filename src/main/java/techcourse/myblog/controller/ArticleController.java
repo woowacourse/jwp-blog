@@ -10,11 +10,16 @@ import techcourse.myblog.repository.ArticleRepository;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
+
+    private final ArticleRepository articleRepository;
+
     @Autowired
-    private ArticleRepository articleRepository;
+    public ArticleController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @GetMapping("/{articleId}")
-    public String showArticle(@PathVariable("articleId") int articleId, Model model) {
+    public String showArticle(@PathVariable int articleId, Model model) {
         model.addAttribute("article", articleRepository.get(articleId));
         model.addAttribute("articleId", articleId);
         return "article";
@@ -32,20 +37,20 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}/edit")
-    public String articleUpdateForm(@PathVariable("articleId") int articleId, Model model) {
+    public String articleUpdateForm(@PathVariable int articleId, Model model) {
         model.addAttribute("article", articleRepository.get(articleId));
         model.addAttribute("articleId", articleId);
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
-    public String updateArticle(@PathVariable("articleId") int articleId, Article article) {
+    public String updateArticle(@PathVariable int articleId, Article article) {
         articleRepository.update(articleId, article);
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/{articleId}")
-    public String deleteArticle(@PathVariable("articleId") int articleId) {
+    public String deleteArticle(@PathVariable int articleId) {
         articleRepository.remove(articleId);
         return "redirect:/";
     }
