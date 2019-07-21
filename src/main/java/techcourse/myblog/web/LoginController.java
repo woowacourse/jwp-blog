@@ -1,21 +1,24 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.AuthenticationDto;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.LoginService;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
-    private UserRepository userRepository;
+    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
-    public LoginController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private final LoginService loginService;
+
+    public LoginController(LoginService loginService) {
+        this.loginService = loginService;
     }
 
     @GetMapping("/login")
@@ -26,14 +29,9 @@ public class LoginController {
     @PostMapping("/login/check")
     public String login(AuthenticationDto authenticationDto, Model model, HttpSession httpSession) {
         try {
-            User user = userRepository.findByEmail(authenticationDto.getEmail())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 이메일은 존재하지 않습니다."));
-            if (!user.matchPassword(authenticationDto.getPassword())) {
-                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-            }
-            httpSession.setAttribute("user", user);
-            return "redirect:/";
+            return loginService.login(authenticationDto, httpSession);
         } catch (IllegalArgumentException e) {
+            log.info("로그인 실패 : {}", e.getMessage());
             model.addAttribute("error", e.getMessage());
             return "login";
         }
@@ -41,7 +39,6 @@ public class LoginController {
 
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
-        httpSession.removeAttribute("user");
-        return "redirect:/";
+        return loginService.logout(httpSession);
     }
 }
