@@ -23,12 +23,13 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String addUser(UserDto userDto) {
+    public String addUser(UserDto userDto, Model model) {
         Optional<UserDto> maybeUserDto = userService.create(userDto);
         if (maybeUserDto.isPresent()) {
             return "redirect:/login";
         }
-        return "redirect:/error";
+        model.addAttribute("error", "error");
+        return "signup";
     }
 
     @GetMapping("/login")
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String showLoginPage(UserDto userDto, HttpSession session) {
+    public String showLoginPage(UserDto userDto, HttpSession session, Model model) {
         Optional<UserDto> maybeUserDto = userService.findUser(userDto);
 
         if (maybeUserDto.isPresent()) {
@@ -46,7 +47,8 @@ public class UserController {
 
             return "redirect:/";
         }
-        return "";
+        model.addAttribute("error", "error");
+        return "login";
     }
 
     @GetMapping("/logout")
@@ -89,7 +91,7 @@ public class UserController {
             model.addAttribute("userData", maybeUserDto.get());
             return "mypage-edit";
         }
-        return "redirect:/error";
+        return "redirect:/";
     }
 
     @PutMapping("/users/{id}/mypage-edit")
