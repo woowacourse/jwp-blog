@@ -1,50 +1,62 @@
 package techcourse.myblog.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.service.ArticleReadService;
+import techcourse.myblog.service.ArticleWriteService;
 import techcourse.myblog.service.dto.ArticleDto;
-import techcourse.myblog.domain.ArticleRepository;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
-    private final ArticleRepository articleRepository;
-    
-    @Autowired
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    private final ArticleWriteService articleWriteService;
+    private final ArticleReadService articleReadService;
+
+    public ArticleController(final ArticleWriteService articleWriteService,
+                             final ArticleReadService articleReadService) {
+        this.articleWriteService = articleWriteService;
+        this.articleReadService = articleReadService;
     }
 
     @PostMapping
     public String createArticle(ArticleDto articleDto) {
-        Article article = articleRepository.save(articleDto.toArticle());
+        Article article = articleWriteService.save(articleDto);
         return "redirect:/articles/" + article.getId();
     }
 
     @GetMapping("/{articleId}")
     public String selectArticle(@PathVariable Long articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId).get());
-        return "article";
+        Optional<Article> articleOptional = articleReadService.findById(articleId);
+        if (articleOptional.isPresent()) {
+            model.addAttribute("article", articleOptional.get());
+            return "article";
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/{articleId}/edit")
     public String updateArticleForm(@PathVariable Long articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId).get());
-        return "article-edit";
+        Optional<Article> articleOptional = articleReadService.findById(articleId);
+        if (articleOptional.isPresent()) {
+            model.addAttribute("article", articleOptional.get());
+            return "article-edit";
+        }
+        return "redirect:/";
     }
 
     @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable Long articleId, ArticleDto articleDto) {
-        articleRepository.update(articleId, articleDto);
+        articleWriteService.update(articleId, articleDto);
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable Long articleId) {
-        articleRepository.deleteById(articleId);
+        articleWriteService.deleteById(articleId);
         return "redirect:/";
     }
 }
