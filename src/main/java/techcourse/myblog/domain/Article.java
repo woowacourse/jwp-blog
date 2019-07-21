@@ -28,10 +28,12 @@ public class Article {
         this.coverUrl = coverUrl;
     }
 
-    public void update(Article article) {
+    public Article update(Article article) {
         title = article.getTitle();
         coverUrl = article.getCoverUrl();
         contents = article.getContents();
+
+        return this;
     }
 
     public Long getId() {
