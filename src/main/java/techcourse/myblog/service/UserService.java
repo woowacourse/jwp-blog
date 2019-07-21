@@ -6,6 +6,7 @@ import techcourse.myblog.domain.UserException;
 import techcourse.myblog.dto.SignUpDto;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.utils.SessionUtil;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -40,7 +41,7 @@ public class UserService {
     }
 
     private User getUserBySession(HttpSession session) {
-        return userRepository.findByEmail(session.getAttribute("userEmail").toString())
+        return userRepository.findByEmail(SessionUtil.getAttribute(session, "userEmail").toString())
                 .orElseThrow(UserException::new);
     }
 

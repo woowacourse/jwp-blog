@@ -12,6 +12,8 @@ import techcourse.myblog.dto.SignUpDto;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.utils.ModelUtil;
+import techcourse.myblog.utils.SessionUtil;
 
 import javax.servlet.http.HttpSession;
 
@@ -33,7 +35,7 @@ public class UserController {
 
     @PostMapping("/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute(UserInfo.NAME);
+        SessionUtil.removeAttribute(session, UserInfo.NAME);
         return "redirect:/";
     }
 
@@ -41,17 +43,17 @@ public class UserController {
     public String login(UserRequestDto userRequestDto, Model model, HttpSession session) {
         LoginDto dto = loginService.loginByEmailAndPwd(userRequestDto);
         if (dto.isSuccess()) {
-            session.setAttribute(UserInfo.NAME, dto.getName());
-            session.setAttribute(UserInfo.EMAIL, userRequestDto.getEmail());
+            SessionUtil.setAttribute(session, UserInfo.NAME, dto.getName());
+            SessionUtil.setAttribute(session, UserInfo.EMAIL, userRequestDto.getEmail());
             return "redirect:/";
         }
-        model.addAttribute("error", dto.getMessage());
+        ModelUtil.addAttribute(model, "error", dto.getMessage());
         return "login";
     }
 
     @GetMapping("/users")
     public String users(Model model) {
-        model.addAttribute("users", userService.findAll());
+        ModelUtil.addAttribute(model, "users", userService.findAll());
         return "user-list";
     }
 
@@ -75,26 +77,26 @@ public class UserController {
         SignUpDto signUpDto = userService.addUser(userRequestDto);
 
         if (userService.addUser(userRequestDto).isSuccess()) {
-            session.setAttribute(UserInfo.NAME, userRequestDto.getName());
+            SessionUtil.setAttribute(session, UserInfo.NAME, userRequestDto.getName());
             return "redirect:/";
         }
-        model.addAttribute("error", signUpDto.getMessage());
+        ModelUtil.addAttribute(model, "error", signUpDto.getMessage());
         return "signup";
     }
 
     @PutMapping("/users")
     public String updateUser(UserRequestDto userRequestDto, HttpSession session) {
         userService.updateUser(userRequestDto, session);
-        session.setAttribute(UserInfo.NAME, userRequestDto.getName());
-        session.setAttribute(UserInfo.EMAIL, userRequestDto.getEmail());
+        SessionUtil.setAttribute(session, UserInfo.NAME, userRequestDto.getName());
+        SessionUtil.setAttribute(session, UserInfo.EMAIL, userRequestDto.getEmail());
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/users")
     public String deleteUser(HttpSession session) {
         userService.deleteUser(session);
-        session.removeAttribute(UserInfo.NAME);
-        session.removeAttribute(UserInfo.EMAIL);
+        SessionUtil.removeAttribute(session, UserInfo.NAME);
+        SessionUtil.removeAttribute(session, UserInfo.EMAIL);
         return "redirect:/";
     }
 }

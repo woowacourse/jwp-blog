@@ -1,17 +1,15 @@
 package techcourse.myblog.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.ArticleException;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.utils.ModelUtil;
 
 @Controller
 public class ArticleController {
-    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
     private ArticleService articleService;
 
     public ArticleController(ArticleService articleService) {
@@ -20,8 +18,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String index(Model model) {
-        log.info("START {} ", model);
-        model.addAttribute("articles", articleService.findAll());
+        ModelUtil.addAttribute(model, "articles", articleService.findAll());
         return "index";
     }
 
@@ -33,7 +30,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}")
     public String getArticle(@PathVariable long articleId, Model model) {
         try {
-            model.addAttribute("article", articleService.findArticle(articleId));
+            ModelUtil.addAttribute(model, "article", articleService.findArticle(articleId));
             return "article";
         } catch (ArticleException e) {
             return "/";
@@ -42,7 +39,7 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}/edit")
     public String getEditArticle(@PathVariable long articleId, Model model) {
-        model.addAttribute("article", articleService.findArticle(articleId));
+        ModelUtil.addAttribute(model, "article", articleService.findArticle(articleId));
         return "article-edit";
     }
 
@@ -53,7 +50,7 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String getModifiedArticle(@PathVariable long articleId, ArticleRequestDto articleRequestDto, Model model) {
-        model.addAttribute("article", articleService.update(articleId, articleRequestDto));
+        ModelUtil.addAttribute(model, "article", articleService.update(articleId, articleRequestDto));
         return "article";
     }
 
