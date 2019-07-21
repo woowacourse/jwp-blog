@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 public class HomeController {
     private final ArticleRepository articleRepository;
 
+    @Autowired
     public HomeController(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
