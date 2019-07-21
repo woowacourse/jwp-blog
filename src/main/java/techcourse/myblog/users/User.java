@@ -27,6 +27,10 @@ public class User {
     @Column
     private String password;
 
+    static String authenticate(final String password) {
+        return password;
+    }
+
     void update(final User other) {
         this.name = other.name;
     }
