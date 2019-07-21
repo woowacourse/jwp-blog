@@ -23,7 +23,6 @@ public class UserService {
 
     public void createUser(UserDto userDto) {
         validateUniqueEmail(userDto);
-
         User user = UserAssembler.writeUser(userDto);
         userRepository.save(user);
     }
@@ -40,21 +39,17 @@ public class UserService {
 
     public User findUserByEmailAndPassword(String email) {
         User user = userRepository.findUserByEmail(email);
-
         if (user == null) {
             throw new NoSuchElementException("잘못된 접근입니다.");
         }
-
         return user;
     }
 
     public User findUserByEmailAndPassword(UserDto userDto) {
         String email = userDto.getEmail();
         String password = userDto.getPassword();
-
         checkUserByEmail(email);
         checkPassword(email, password);
-
         return userRepository.findUserByEmailAndPassword(email, password);
     }
 
@@ -75,10 +70,8 @@ public class UserService {
         String updatedName = userDto.getName();
         String email = userDto.getEmail();
         String password = userDto.getPassword();
-
         User user = userRepository.findUserByEmail(email);
         User updatedUser = new User(user.getUserId(), updatedName, email, password);
-
         userRepository.save(updatedUser);
     }
 

@@ -12,6 +12,7 @@ import techcourse.myblog.exception.FailedLoginException;
 import techcourse.myblog.exception.InvalidUserDataException;
 import techcourse.myblog.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -30,12 +31,10 @@ public class UserController {
         return "signup";
     }
 
-    @PostMapping("/login")
-    public String login(UserDto userDto, HttpSession httpSession) {
-        User user = userService.findUserByEmailAndPassword(userDto);
-        httpSession.setAttribute("name", user.getName());
-        httpSession.setAttribute("email", user.getEmail());
-        return "redirect:/";
+    @PostMapping("/users")
+    public String enrollUser(UserDto userDto) {
+        userService.createUser(userDto);
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
@@ -46,6 +45,14 @@ public class UserController {
         return "login";
     }
 
+    @PostMapping("/login")
+    public String login(UserDto userDto, HttpSession httpSession) {
+        User user = userService.findUserByEmailAndPassword(userDto);
+        httpSession.setAttribute("name", user.getName());
+        httpSession.setAttribute("email", user.getEmail());
+        return "redirect:/";
+    }
+
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
         if (httpSession.getAttribute("name") != null) {
@@ -53,12 +60,6 @@ public class UserController {
             httpSession.removeAttribute("email");
         }
         return "redirect:/";
-    }
-
-    @PostMapping("/users")
-    public String enrollUser(UserDto userDto) {
-        userService.createUser(userDto);
-        return "redirect:/login";
     }
 
     @GetMapping("/users")
@@ -73,28 +74,22 @@ public class UserController {
     @GetMapping("/mypage")
     public String showMypage(Model model, HttpSession httpSession) {
         String email = (String) httpSession.getAttribute("email");
-
         if (email != null) {
             User user = userService.findUserByEmailAndPassword(email);
             model.addAttribute("user", UserAssembler.writeDto(user));
-
             return "mypage";
         }
-
         return "redirect:/login";
     }
 
     @GetMapping("/mypage/edit")
     public String showEditPage(Model model, HttpSession httpSession) {
         String email = (String) httpSession.getAttribute("email");
-
         if (email != null) {
             User user = userService.findUserByEmailAndPassword(email);
             model.addAttribute("user", UserAssembler.writeDto(user));
-
             return "mypage-edit";
         }
-
         return "redirect:/login";
     }
 
@@ -120,7 +115,7 @@ public class UserController {
 
     @ExceptionHandler(DuplicateEmailException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleDuplicateEmailException(DuplicateEmailException e, Model model) {
+    public String handleDuplicateEmailException(DuplicateEmailException e, HttpServletRequest request, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         return "signup";
     }
