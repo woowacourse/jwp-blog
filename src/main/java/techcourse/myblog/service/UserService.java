@@ -31,18 +31,13 @@ public class UserService {
         }
     }
 
-    public Optional<User> authenticate(String email, String password) {
-        return userRepository.findByEmailAndPassword(email, password);
-    }
-
-    public void checkPassword(UserDto userDto) {
+    public boolean checkPassword(UserDto userDto) {
         Optional<User> maybeUser = userRepository.findByEmail(userDto.getEmail());
         if (maybeUser.isPresent() && maybeUser.get().isSamePassword(userDto.getPassword())) {
-            return;
+            return true;
         }
         throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
     }
-
 
     public Optional<UserDto> getUserDtoByEmail(String email) {
         Optional<User> maybeUser = userRepository.findByEmail(email);
@@ -53,11 +48,12 @@ public class UserService {
         return Optional.empty();
     }
 
-    public void updateUserName(UserDto userDto, String name) {
+    public String updateUserName(UserDto userDto, String name) {
         User user = userRepository.findByEmail(userDto.getEmail()).get();
         user.setName(name);
         userRepository.save(user);
         log.info("updateUserName에서 의 name " + name);
+        return user.getName();
     }
 
     public void deleteUser(UserDto userDto) {

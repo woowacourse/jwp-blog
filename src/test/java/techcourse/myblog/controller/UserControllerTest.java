@@ -48,17 +48,10 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("회원가입시 이미 있는 이메일을 입력했을 때 테스트")
-    void signUp_post_duplicate_Email_Error() {
-        userDto = new UserDto("abc@abc.com", "abc", "asdASD12!@");
-        postUser(userDto).expectStatus().is5xxServerError();
-
-    }
-
-    @Test
-    void signUp_post_isNotMatchPassword_Error() {
-        userDto = new UserDto("abc@abc.com", "abc", "asdASD12!@#$");
-        postUser(userDto).expectStatus().is5xxServerError();
+    @DisplayName("로그아웃 리다이렉트가 잘 되는지 테스트")
+    void logout_post_is3xxRedirect() {
+        userDto = new UserDto("kangmin789@abc.com", "abc", "asdASD12!@");
+        postUser(userDto).expectStatus().is3xxRedirection();
 
     }
 
