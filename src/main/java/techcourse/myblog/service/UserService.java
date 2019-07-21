@@ -41,10 +41,8 @@ public class UserService {
     }
 
     public User login(LoginDto loginDto) throws IllegalArgumentException {
-        // TODO: 2019-07-19 Interceptor...
-        User user = findByEmail(loginDto.getEmail());
-        if (user.equalPassword(loginDto.getPassword())) {
-            return user;
+        if (userRepository.existsByEmailAndPassword(loginDto.getEmail(), loginDto.getPassword())) {
+            return findByEmail(loginDto.getEmail());
         }
         throw new IllegalArgumentException("비밀번호 다르다.");
     }
