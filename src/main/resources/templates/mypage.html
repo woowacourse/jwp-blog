@@ -113,7 +113,8 @@
 								<p class="mrg-top-10 text-dark"><b>Email</b></p>
 							</div>
 							<div class="col-md-6">
-								<p class="mrg-top-10" th:if="${session.user}" th:text="${session.user.email}">gracefulBrown@woowahan.com</p>
+								<p class="mrg-top-10" th:if="${session.user}" th:text="${session.user.email}">
+									gracefulBrown@woowahan.com</p>
 							</div>
 						</div>
 						<hr>
@@ -163,6 +164,14 @@
 								<hr>
 							</div>
 						</div>
+					</div>
+					<div>
+						<form action="/mypage" method="post">
+							<input id="article-write" type="hidden" name="_method" value="delete"/>
+							<input type="hidden" name="email" class="form-control" th:if="${session.user}"
+							       th:value="${session.user.email}">
+							<button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">회원 탈퇴</button>
+						</form>
 					</div>
 				</div>
 			</div>

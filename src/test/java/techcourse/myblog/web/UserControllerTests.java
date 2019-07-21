@@ -94,4 +94,11 @@ class UserControllerTests {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+    @Test
+    void mypage_delete() {
+        webTestClient.delete().uri("/mypage")
+                .exchange()
+                .expectStatus().isFound();
+    }
 }

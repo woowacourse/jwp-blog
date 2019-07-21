@@ -4,6 +4,7 @@ import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -124,5 +125,13 @@ public class UserController {
 
         httpSession.setAttribute("user", user);
         return "redirect:/mypage";
+    }
+
+    @DeleteMapping("/mypage")
+    public String deleteUser(String email, HttpSession httpSession) {
+        userService.deleteUser(email);
+        httpSession.removeAttribute("user");
+        
+        return "redirect:/";
     }
 }

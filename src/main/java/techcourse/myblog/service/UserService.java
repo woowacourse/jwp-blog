@@ -49,4 +49,8 @@ public class UserService {
             throw new UserMismatchException(ERROR_MISMATCH_PASSWORD_MESSAGE);
         }
     }
+
+    public void deleteUser(String email) {
+        userRepository.deleteByEmail(email);
+    }
 }
