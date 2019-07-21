@@ -43,18 +43,18 @@ public class User {
         return password;
     }
 
-    public boolean matchPassword(User user) {
-        if (password == null) {
+    public boolean matchPassword(String password) {
+        if (this.password == null) {
             throw new IllegalUserException("password 값이 설정되어 있지 않습니다.");
         }
-        return this.password.equals(user.password);
+        return this.password.equals(password);
     }
 
-    public boolean matchEmail(User user) {
-        if (email == null) {
+    public boolean matchEmail(String email) {
+        if (this.email == null) {
             throw new IllegalUserException("password 값이 설정되어 있지 않습니다.");
         }
-        return email.equals(user.email);
+        return this.email.equals(email);
     }
 
     public void modifyName(String name) {

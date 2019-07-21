@@ -99,7 +99,7 @@ public class UserController {
             return new RedirectView("/login");
         }
 
-        if (!loginUser.get().matchPassword(userDto.toUser())) {
+        if (!loginUser.get().matchPassword(userDto.getPassword())) {
             redirectAttributes.addFlashAttribute("errors", Arrays.asList(
                     new FieldError("userDto", "password", WRONG_PASSWORD_MESSAGE)));
             return new RedirectView("/login");
@@ -152,10 +152,10 @@ public class UserController {
         return new RedirectView("/mypage");
     }
 
-    @DeleteMapping("/users")
-    public RedirectView removeUser(UserDto userDto, HttpSession session) {
+    @DeleteMapping("/users/{email}")
+    public RedirectView removeUser(@PathVariable String email, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        if (user != null && user.matchEmail(userDto.toUser())) {
+        if (user != null && user.matchEmail(email)) {
             userRepository.delete(user);
         }
         session.invalidate();
