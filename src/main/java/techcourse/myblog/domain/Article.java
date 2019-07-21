@@ -51,10 +51,6 @@ public class Article {
 		this.id = id;
 	}
 
-	public boolean matchId(Long articleId) {
-		return this.id.equals(articleId);
-	}
-
 	public void update(Article article) {
 		this.title = article.title;
 		this.contents = article.contents;

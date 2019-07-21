@@ -2,7 +2,6 @@ package techcourse.myblog.web;
 
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.request.ArticleDto;
-
 import techcourse.myblog.repository.ArticleRepository;
 
 import org.springframework.stereotype.Controller;
@@ -29,8 +28,8 @@ public class ArticleController {
 	}
 
 	@PostMapping("articles")
-	public String saveArticle(ArticleDto articleDto, Model model) {
-		Article article = new Article(articleDto.getTitle(), articleDto.getContents(), articleDto.getCoverUrl());
+	public String saveArticle(ArticleDto articleDto) {
+		Article article = articleDto.valueOfArticle(); //TODO: 여기선 아이디 없음.
 		Long id = articleRepository.save(article).getId();
 		return "redirect:/articles/" + id;
 	}
@@ -49,7 +48,7 @@ public class ArticleController {
 
 	@PutMapping("articles/{articleId}")
 	public String modifyArticle(@PathVariable Long articleId, ArticleDto articleDto, Model model) {
-		Article article = new Article(articleId, articleDto.getTitle(), articleDto.getContents(), articleDto.getCoverUrl());
+		Article article = articleDto.valueOfArticle(); //TODO: 메소드를 하나 더 만들지 말지 고려해보기
 		articleRepository.save(article);
 		model.addAttribute("article", articleRepository.findById(articleId).get());
 		return "article";
