@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
@@ -42,21 +41,21 @@ public class UserController {
 
     @PostMapping
     public ModelAndView signUp(UserDto userDto) {
-        Optional<UserDto> maybeUserDto =  userService.getUserDtoByEmail(userDto.getEmail());
+        Optional<UserDto> maybeUserDto = userService.getUserDtoByEmail(userDto.getEmail());
         log.info("Controller-signUp Post");
-        if(maybeUserDto.isPresent()){
+        if (maybeUserDto.isPresent()) {
             return getAndInsertModelAndView(DUPLICATE_EMAIL_ERROR_MESSAGE);
         }
         userService.save(userDto);
-        return new ModelAndView("redirect:/"+USER_MAPPING_URL);
+        return new ModelAndView("redirect:/" + USER_MAPPING_URL);
     }
 
     @PostMapping("/login")
-    public ModelAndView login(UserDto userDto, HttpSession session, RedirectAttributes redirectAttributes) {
+    public ModelAndView login(UserDto userDto, HttpSession session) {
         log.info("/user/login 에서의 로그 " + userDto.getName() + " " + userDto.getEmail() + " " + userDto.getPassword());
         Optional<UserDto> maybeUserDto = userService.getUserDtoByEmail(userDto.getEmail());
 
-        if(!maybeUserDto.isPresent()){
+        if (!maybeUserDto.isPresent()) {
             log.info("Contoller-login : 중복 이메일 체크");
             return getAndInsertModelAndView(NO_EMAIL_ERROR_MESSAGE);
         }

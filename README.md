@@ -30,7 +30,7 @@
 - [x] User에 UserDetails 추가
 - [x] UserDetailservice 추가
 - [x] UserForm 추가 및 UserForm에서 User 생성하게 변경
-- [ ] 회원 수정
-- [ ] 탈퇴
+- [x] 회원 수정
+- [x] 탈퇴
 - [ ] 인증시 회원페이지 접근 가능 테스트 
 - [ ] 미인증시 회원페이지 접근 실패 테스트

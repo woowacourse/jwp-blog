@@ -16,14 +16,14 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User save(UserDto userDto) {
+    public UserDto save(UserDto userDto) {
         emailDuplicateValidate(userDto);
         userDto.setPassword(userDto.getPassword());
         log.info("UserService.save() : " + userDto.getName() + " " + userDto.getEmail() + " " + userDto.getPassword());
         User user = new User(userDto.getName(), userDto.getEmail(), userDto.getPassword());
         userRepository.save(user);
-        return user;
-}
+        return new UserDto(user.getEmail(),user.getName(),user.getPassword());
+    }
 
     private void emailDuplicateValidate(UserDto userDto) {
         if (userRepository.existsByEmail(userDto.getEmail())) {
@@ -43,7 +43,7 @@ public class UserService {
         Optional<User> maybeUser = userRepository.findByEmail(email);
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
-            return Optional.of(new UserDto(user.getEmail(),user.getName(),user.getPassword()));
+            return Optional.of(new UserDto(user.getEmail(), user.getName(), user.getPassword()));
         }
         return Optional.empty();
     }

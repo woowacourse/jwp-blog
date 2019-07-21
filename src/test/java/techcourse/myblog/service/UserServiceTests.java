@@ -74,8 +74,8 @@ public class UserServiceTests {
 
     @Test
     @DisplayName("이름을 바꿀때 잘 바뀌는 지 테스트")
-    void updateUserName_test(){
-        assertThat(userService.updateUserName(userDto,"로비")).isEqualTo("로비");
+    void updateUserName_test() {
+        assertThat(userService.updateUserName(userDto, "로비")).isEqualTo("로비");
     }
 
     @AfterEach
