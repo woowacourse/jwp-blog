@@ -21,8 +21,10 @@ public class UserController {
     private static final String ERROR_MESSAGE = "message";
     private static final String SESSION_NAME = "name";
     private static final String SESSION_EMAIL = "signedEmail";
+    private static final String SESSION_AUTH = "isAuth";
     private static final String NAME_PATTERN = "^([a-zA-Z]){2,10}$";
     private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,20}$";
+
 
     private final UserService userService;
 
@@ -46,6 +48,7 @@ public class UserController {
 
         httpSession.setAttribute(SESSION_NAME, user.getName());
         httpSession.setAttribute(SESSION_EMAIL, user.getEmail());
+        httpSession.setAttribute(SESSION_AUTH, true);
 
         return "redirect:/";
     }
@@ -114,7 +117,7 @@ public class UserController {
     public String logout(HttpSession httpSession) {
         httpSession.setAttribute(SESSION_NAME, null);
         httpSession.setAttribute(SESSION_EMAIL, null);
-        //httpSession.invalidate();
+        httpSession.setAttribute(SESSION_AUTH, false);
         return "redirect:/";
     }
 
