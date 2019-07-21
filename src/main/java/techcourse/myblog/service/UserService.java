@@ -6,6 +6,7 @@ import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicateEmailException;
 import techcourse.myblog.exception.FailedLoginException;
+import techcourse.myblog.exception.FailedPasswordVerificationException;
 import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class UserService {
 
     public void createUser(UserDto userDto) {
         validateUniqueEmail(userDto);
+        validatePasswordConfirm(userDto);
         User user = UserAssembler.writeUser(userDto);
         userRepository.save(user);
     }
@@ -30,6 +32,12 @@ public class UserService {
     private void validateUniqueEmail(UserDto userDto) {
         if (userRepository.countByEmail(userDto.getEmail()) > NOT_FOUND_RESULT) {
             throw new DuplicateEmailException();
+        }
+    }
+
+    private void validatePasswordConfirm(UserDto userDto) {
+        if (!userDto.getPassword().equals(userDto.getPasswordConfirm())) {
+            throw new FailedPasswordVerificationException();
         }
     }
 

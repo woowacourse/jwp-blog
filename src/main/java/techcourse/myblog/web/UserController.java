@@ -9,8 +9,10 @@ import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicateEmailException;
 import techcourse.myblog.exception.FailedLoginException;
+import techcourse.myblog.exception.FailedPasswordVerificationException;
 import techcourse.myblog.exception.InvalidUserDataException;
 import techcourse.myblog.service.UserService;
+
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -123,5 +125,12 @@ public class UserController {
     public String handleFailedLoginException(FailedLoginException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         return "login";
+    }
+
+    @ExceptionHandler(FailedPasswordVerificationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleFailedPasswordVerificationException(FailedPasswordVerificationException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "signup";
     }
 }

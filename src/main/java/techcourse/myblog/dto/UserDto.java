@@ -5,6 +5,7 @@ public class UserDto {
     private String name;
     private String email;
     private String password;
+    private String passwordConfirm;
 
     public long getUserId() {
         return userId;
@@ -36,5 +37,13 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
     }
 }

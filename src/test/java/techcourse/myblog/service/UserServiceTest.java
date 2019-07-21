@@ -1,11 +1,11 @@
 package techcourse.myblog.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserAssembler;
+import techcourse.myblog.dto.UserDto;
 
 import java.util.NoSuchElementException;
 
@@ -14,36 +14,45 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserServiceTest {
+    private UserDto userDto;
+
     @Autowired
     private UserService userService;
 
+    @BeforeEach
+    public void setUp() {
+        userDto = new UserDto();
+        userDto.setUserId(0L);
+        userDto.setName("코니");
+        userDto.setPassword("@Password12");
+        userDto.setPasswordConfirm("@Password12");
+    }
+
     @Test
     public void 중복된_이메일을_등록하는_경우_예외처리() {
-        User user1 = new User(0L, "코니코니", "cony@cony.com", "@Password1234");
-        User user2 = new User(0L, "코니코니", "cony@cony.com", "@Password1234");
-
-        userService.createUser(UserAssembler.writeDto(user1));
+        userDto.setEmail("cony1@cony.com");
+        userService.createUser(userDto);
 
         assertThrows(DuplicateKeyException.class,
-                () -> userService.createUser(UserAssembler.writeDto(user2)));
+                () -> userService.createUser(userDto));
     }
 
     @Test
     public void 등록된_사용자가_로그인을_하는_경우_테스트() {
-        User user = new User(0L, "에헴", "abc@abc.com", "@Password1234");
-        userService.createUser(UserAssembler.writeDto(user));
+        userDto.setEmail("cony2@cony.com");
+        userService.createUser(userDto);
 
-        assertThat(userService.findUserByEmailAndPassword(UserAssembler.writeDto(user)).getEmail()).isEqualTo(user.getEmail());
-        assertThat(userService.findUserByEmailAndPassword(UserAssembler.writeDto(user)).getName()).isEqualTo(user.getName());
-        assertThat(userService.findUserByEmailAndPassword(UserAssembler.writeDto(user)).getPassword()).isEqualTo(user.getPassword());
+        assertThat(userService.findUserByEmailAndPassword(userDto).getEmail()).isEqualTo(userDto.getEmail());
+        assertThat(userService.findUserByEmailAndPassword(userDto).getName()).isEqualTo(userDto.getName());
+        assertThat(userService.findUserByEmailAndPassword(userDto).getPassword()).isEqualTo(userDto.getPassword());
     }
 
     @Test
     public void 등록되지_않은_사용자가_로그인을_하는_경우_예외처리() {
-        User user = new User(0L, "에헴", "abcd@abcd.com", "@Password1234");
+        userDto.setEmail("conie@cony.com");
 
         assertThrows(NoSuchElementException.class, () -> {
-            userService.findUserByEmailAndPassword(UserAssembler.writeDto(user));
+            userService.findUserByEmailAndPassword(userDto);
         });
     }
 }

@@ -42,7 +42,7 @@ class UserControllerTest {
 
     @Test
     public void 회원가입_테스트() {
-        user = new User(USER_ID, NAME, "cony1@cony.com", PASSWORD);
+        user = new User(USER_ID, NAME, "cony11@cony.com", PASSWORD);
 
         enrollUser(user, response -> {
             webTestClient.get()
@@ -55,7 +55,7 @@ class UserControllerTest {
 
     @Test
     public void 로그인_테스트() {
-        user = new User(USER_ID, NAME, "cony2@cony.com", PASSWORD);
+        user = new User(USER_ID, NAME, "cony12@cony.com", PASSWORD);
 
         enrollUser(user, response -> {
             webTestClient.post()
@@ -70,7 +70,7 @@ class UserControllerTest {
 
     @Test
     public void 로그아웃_테스트() {
-        user = new User(USER_ID, NAME, "cony3@cony.com", PASSWORD);
+        user = new User(USER_ID, NAME, "cony13@cony.com", PASSWORD);
 
         enrollUser(user, response -> {
             webTestClient.post()
@@ -92,7 +92,7 @@ class UserControllerTest {
 
     @Test
     public void 회원조회_페이지_테스트() {
-        user = new User(USER_ID, NAME, "cony4@cony.com", PASSWORD);
+        user = new User(USER_ID, NAME, "cony14@cony.com", PASSWORD);
 
         enrollUser(user, response -> {
             webTestClient.get()
@@ -111,7 +111,7 @@ class UserControllerTest {
 
     @Test
     public void 마이페이지_테스트() {
-        user = new User(USER_ID, NAME, "cony5@cony.com", PASSWORD);
+        user = new User(USER_ID, NAME, "cony15@cony.com", PASSWORD);
 
         enrollUser(user, response -> {
             webTestClient.get()
@@ -130,7 +130,7 @@ class UserControllerTest {
 
     @Test
     public void 회원정보_수정_테스트() {
-        user = new User(USER_ID, NAME, "cony6@cony.com", PASSWORD);
+        user = new User(USER_ID, NAME, "cony16@cony.com", PASSWORD);
 
         enrollUser(user, response -> {
             webTestClient.put()
@@ -151,7 +151,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", user.getName())
                         .with("email", user.getEmail())
-                        .with("password", user.getPassword()))
+                        .with("password", user.getPassword())
+                        .with("passwordConfirm", user.getPassword()))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectBody()
