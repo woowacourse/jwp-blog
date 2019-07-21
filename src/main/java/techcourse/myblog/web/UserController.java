@@ -6,9 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserLoginDto;
+import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
@@ -24,7 +24,7 @@ public class UserController {
     private static final String NAME_PATTERN = "^([a-zA-Z]){2,10}$";
     private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,20}$";
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping("/login")
     public String showLogin(HttpSession httpSession) {
@@ -36,7 +36,7 @@ public class UserController {
 
     @PostMapping("/login")
     public String userLogin(UserLoginDto loginDto, HttpSession httpSession) {
-        User user = userRepository.findUserByEmail(loginDto.getEmail());
+        User user = userService.findUserByEmail(loginDto.getEmail());
         if (Objects.isNull(user)) {
             throw new UserException("아이디가 올바르지 않습니다.");
         }
@@ -46,6 +46,7 @@ public class UserController {
 
         httpSession.setAttribute(SESSION_NAME, user.getName());
         httpSession.setAttribute(SESSION_EMAIL, user.getEmail());
+
         return "redirect:/";
     }
 
@@ -61,7 +62,8 @@ public class UserController {
     public String signUp(UserDto userDto) {
         if (validateUser(userDto)) {
             User user = userDto.toEntity();
-            userRepository.save(user);
+            userService.save(user);
+
             return "redirect:/login";
         }
         throw new UserException("잘못된 입력입니다.");
@@ -92,11 +94,11 @@ public class UserController {
             throw new UserException("아이디와 비밀번호가 올바르지 않습니다.");
         }
 
-        User user = userRepository.findUserByEmail(userDto.getEmail());
+        User user = userService.findUserByEmail(userDto.getEmail());
         user.setName(userDto.getName());
         user.setPassword(userDto.getPassword());
 
-        userRepository.save(user);
+        userService.save(user);
         httpSession.setAttribute(SESSION_NAME, user.getName());
 
         return "redirect:/mypage";
@@ -104,7 +106,7 @@ public class UserController {
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userService.findAll());
         return "user-list";
     }
 
@@ -116,8 +118,8 @@ public class UserController {
 
     @DeleteMapping("/delete/user")
     public String deleteUser(HttpSession httpSession) {
-        User user = userRepository.findUserByEmail(httpSession.getAttribute(SESSION_EMAIL).toString());
-        userRepository.delete(user);
+        User user = userService.findUserByEmail(httpSession.getAttribute(SESSION_EMAIL).toString());
+        userService.delete(user);
         httpSession.invalidate();
         return "redirect:/";
     }
@@ -149,7 +151,7 @@ public class UserController {
     }
 
     private boolean validateEmail(String email) {
-        return Objects.isNull(userRepository.findUserByEmail(email));
+        return Objects.isNull(userService.findUserByEmail(email));
     }
 
 
@@ -160,7 +162,7 @@ public class UserController {
     private void initMyPage(HttpSession httpSession, Model model) {
         String email = httpSession.getAttribute(SESSION_EMAIL).toString();
 
-        User user = userRepository.findUserByEmail(email);
+        User user = userService.findUserByEmail(email);
         if (Objects.isNull(user)) {
             throw new UserException("잘못된 접근입니다.");
         }
