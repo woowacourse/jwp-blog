@@ -11,26 +11,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserTest {
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Test
     void duplicate_email() {
-        userRepository.save(User.of("john", "abcde@example.com", "p@ssW0rd", this::checkEmailDuplicate));
+        User preExists = User.of("john", "abcde@example.com", "p@ssW0rd", email -> false);
         assertThrows(User.UserCreationConstraintException.class,
-            () -> User.of("james", "abcde@example.com", "p@ssW0rd", this::checkEmailDuplicate));
-    }
-
-    private boolean checkEmailDuplicate(String email) {
-        return userRepository.findByEmail(email).isPresent();
+            () -> User.of("james", "abcde@example.com", "p@ssW0rd", preExists.getEmail()::equals));
     }
 
     @Test
     void authentication() {
-        User newUser = User.of("james", "authentication_test@email.com", "p@ssW0rd", this::checkEmailDuplicate);
+        User newUser = User.of("james", "authentication_test@email.com", "p@ssW0rd", email -> false);
         assertThat(newUser.authenticate("p@ssW0rd")).isTrue();
         assertThat(newUser.authenticate("p@ssW0rd23")).isFalse();
     }
