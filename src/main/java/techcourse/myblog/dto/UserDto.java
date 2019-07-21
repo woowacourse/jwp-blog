@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 public class UserDto {
-    private static final String NAME_PATTERN = "^[a-zA-Zㄱ-ㅎ가-힣].{2,}$";
+    private static final String NAME_PATTERN = "^[a-zA-Zㄱ-ㅎ가-힣]{2,}$";
     private static final String EMAIL_PATTERN = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$";
     private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,}$";
     private static final String CANNOT_BE_NULL_MESSAGE = "입력값이 Null일 수는 없습니다.";
