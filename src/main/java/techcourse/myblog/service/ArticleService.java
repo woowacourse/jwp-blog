@@ -26,7 +26,7 @@ public class ArticleService {
     }
 
     public Article save(ArticleDto articleDto) {
-        return articleRepository.save(Article.of(articleDto));
+        return articleRepository.save(articleDto.create());
     }
 
     public Article update(Long articleId, ArticleDto articleDto) {

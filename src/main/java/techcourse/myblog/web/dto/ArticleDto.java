@@ -1,5 +1,7 @@
 package techcourse.myblog.web.dto;
 
+import techcourse.myblog.domain.Article;
+
 import java.util.Objects;
 
 public class ArticleDto {
@@ -35,6 +37,10 @@ public class ArticleDto {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    public Article create() {
+        return new Article(title, coverUrl, contents);
     }
 
     @Override

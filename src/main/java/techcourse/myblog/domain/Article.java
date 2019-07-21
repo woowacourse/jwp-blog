@@ -27,10 +27,6 @@ public class Article {
         this.contents = contents;
     }
 
-    public static Article of(ArticleDto articleDto) {
-        return new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
-    }
-
     public Article update(ArticleDto articleDto) {
         this.title = articleDto.getTitle();
         this.coverUrl = articleDto.getCoverUrl();
