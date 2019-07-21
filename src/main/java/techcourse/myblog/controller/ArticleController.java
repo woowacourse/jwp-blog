@@ -18,7 +18,7 @@ public class ArticleController {
         this.articleRepository = articleRepository;
     }
 
-    @PostMapping("")
+    @PostMapping
     public String createArticle(ArticleDto articleDto) {
         Article article = articleRepository.save(articleDto.toArticle());
         return "redirect:/articles/" + article.getId();
