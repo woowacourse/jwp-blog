@@ -10,8 +10,6 @@ import javax.persistence.Id;
 public class Article {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-
-public class Article {
 	private Long id;
 	private String title;
 	private String contents;
