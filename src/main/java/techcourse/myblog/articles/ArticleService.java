@@ -25,7 +25,7 @@ public class ArticleService {
     public Article edit(Article editedArticle) {
         Article article = findById(editedArticle.getId());
 
-        article.update(editedArticle.getTitle(), editedArticle.getCoverUrl(), editedArticle.getContents());
+        article.update(editedArticle);
 
         return article;
     }

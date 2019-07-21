@@ -38,11 +38,11 @@ public class Article {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updateDate;
 
-    public void update(String title, String coverUrl, String contents) {
+    public void update(Article other) {
         this.updateDate = LocalDateTime.now();
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
+        this.title = other.title;
+        this.coverUrl = other.coverUrl;
+        this.contents = other.contents;
     }
 }
 

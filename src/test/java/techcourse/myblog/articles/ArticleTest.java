@@ -22,10 +22,10 @@ public class ArticleTest {
         String contents = "contents";
         String title = "title";
         String coverUrl = "coverUrl";
-
-        article.setContents(contents);
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
+//
+//        article.setContents(contents);
+//        article.setTitle(title);
+//        article.setCoverUrl(coverUrl);
 
         assertThat(article.getContents()).isEqualTo(contents);
         assertThat(article.getTitle()).isEqualTo(title);

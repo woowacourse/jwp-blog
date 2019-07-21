@@ -20,7 +20,7 @@ class ArticleControllerTests {
     @Autowired
     ArticleService articleService;
 
-    Article article;
+    private Article article;
 
     @BeforeEach
     void setUp() {
@@ -91,13 +91,13 @@ class ArticleControllerTests {
         String coverUrl = "2";
         String contents = "3";
 
-        webTestClient.put().uri("/articles/1")
+        webTestClient.put().uri("/articles/" + article.getId())
                 .body(BodyInserters.fromFormData("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/articles/1");
+                .expectHeader().valueMatches("location", ".*/articles/" + article.getId());
     }
 
     @Test
