@@ -4,7 +4,6 @@
 <head th:replace="/fragments/login-head :: loginHead"></head>
 
 <body>
-<div th:if="${error} != null" class="alert alert-danger" th:text="${error.errorMessage}"></div>
 <div class="app">
     <div class="header navbar bg-transparent no-border">
         <div class="header-container pdd-right-15">
@@ -27,6 +26,7 @@
                             <div class="mx-auto full-height col-md-4">
                                 <div class="vertical-align full-height">
                                     <div class="table-cell padding-20">
+                                        <div th:if="${error} != null" class="alert alert-danger" th:text="${error.errorMessage}"></div>
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="pdd-horizon-30 pdd-vertical-30">
