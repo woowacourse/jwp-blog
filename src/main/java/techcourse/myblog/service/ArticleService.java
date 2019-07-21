@@ -37,7 +37,6 @@ public class ArticleService {
     public Article update(long articleId, ArticleDto articleDto) {
         Article originArticle = findArticle(articleId);
         originArticle.update(articleDto.toEntity());
-        articleRepository.save(originArticle);
         return originArticle;
     }
 

@@ -33,7 +33,6 @@ public class UserService {
     public void updateUser(String userEmail, UserDto userDto) {
         User user = userRepository.findByEmail(UserEmail.of(userEmail)).orElseThrow(UserException::new);
         user.updateNameAndEmail(userDto.getName(), userDto.getEmail());
-        userRepository.save(user);
     }
 
     private User getUserByEmail(String userEmail) {
