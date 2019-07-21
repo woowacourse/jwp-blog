@@ -7,6 +7,7 @@ import techcourse.myblog.support.validation.UserGroups.All;
 import techcourse.myblog.support.validation.UserGroups.Edit;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
@@ -18,6 +19,7 @@ public class UserDto {
             groups = {Edit.class, All.class})
     private String name;
 
+    @NotBlank
     @Email
     private String email;
 
