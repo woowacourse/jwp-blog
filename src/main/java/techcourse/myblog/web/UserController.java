@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User.User;
-import techcourse.myblog.exception.UserCreationException;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -39,16 +38,11 @@ public class UserController {
 	public String save(final UserRequestDto.SignUpRequestDto signUpRequestDto, final Model model) {
 		if (userService.exitsByEmail(signUpRequestDto)) {
 			model.addAttribute(ERROR_MESSAGE_NAME, "이메일이 중복됩니다");
-			return "redirect:/signup";
+			return "user/signup";
 		}
 
-		try {
-			userService.save(signUpRequestDto);
-			return "redirect:/login";
-		} catch (UserCreationException e) {
-			model.addAttribute(ERROR_MESSAGE_NAME, e.getMessage());
-			return "redirect:/signup";
-		}
+		userService.save(signUpRequestDto);
+		return "redirect:/login";
 	}
 
 	@GetMapping("/users/{id}")
@@ -83,15 +77,11 @@ public class UserController {
 
 	@PutMapping("/users/edit")
 	public String update(final UserRequestDto.UpdateRequestDto updateRequestDto, final HttpSession session) {
-		try {
-			log.debug("updateRequestDto in update() : {}", updateRequestDto);
-			User user = userService.update(updateRequestDto);
-			session.setAttribute(SESSION_NAME, UserRequestDto.UserSessionDto.toDto(user));
-			return "redirect:/users/" + user.getId();
-		} catch (UserCreationException e) {
-			log.trace("try-catch UserCreationException");
-			return "redirect:/users/edit/" + updateRequestDto.getId();
-		}
+
+		log.debug("updateRequestDto in update() : {}", updateRequestDto);
+		User user = userService.update(updateRequestDto);
+		session.setAttribute(SESSION_NAME, UserRequestDto.UserSessionDto.toDto(user));
+		return "redirect:/users/" + user.getId();
 	}
 
 	@DeleteMapping("/users/{email}")

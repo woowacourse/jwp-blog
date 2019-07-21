@@ -51,7 +51,7 @@ public class User {
 	private void validateName(final String name) {
 		log.debug("name in User.class : {}", name);
 		if (name.length() < NAME_MIN_LENGTH || name.length() > NAME_MAX_LENGTH) {
-			throw new UserCreationException("이름은 " + NAME_MIN_LENGTH +
+			throw new UserCreationException("이름의 길이는 " + NAME_MIN_LENGTH +
 					"이상 " + NAME_MAX_LENGTH + "이하로 작성하세요");
 		}
 
@@ -63,7 +63,7 @@ public class User {
 	private void validatePassword(final String password) {
 		log.debug("password in User.class : {}", password);
 		if (password.length() < PASSWORD_MIN_LENGTH) {
-			throw new UserCreationException("이름은 " + NAME_MIN_LENGTH +
+			throw new UserCreationException("비밀번호의 길이는 " + NAME_MIN_LENGTH +
 					"이상 " + NAME_MAX_LENGTH + "이하로 작성하세요");
 		}
 

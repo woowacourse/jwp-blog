@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User.User;
 import techcourse.myblog.domain.User.UserRepository;
+import techcourse.myblog.exception.UserCreationException;
+import techcourse.myblog.exception.UserUpdateException;
 import techcourse.myblog.web.UserRequestDto;
 
 import java.util.NoSuchElementException;
@@ -24,8 +26,13 @@ public class UserService {
 	public User update(final UserRequestDto.UpdateRequestDto updateRequestDto) {
 		User user = userRepository.findByEmail(updateRequestDto.getEmail())
 				.orElseThrow(NoSuchElementException::new);
-		User userUpdated = new User(user.getId(), updateRequestDto.getName(), updateRequestDto.getEmail(), user.getPassword());
-		return userRepository.save(userUpdated);
+
+		try {
+			User userUpdated = new User(user.getId(), updateRequestDto.getName(), updateRequestDto.getEmail(), user.getPassword());
+			return userRepository.save(userUpdated);
+		} catch (UserCreationException e) {
+			throw new UserUpdateException(e.getMessage());
+		}
 	}
 
 	public User findById(final long id) {

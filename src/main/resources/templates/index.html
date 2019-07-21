@@ -128,6 +128,17 @@
         console.log(welcomeElement);
         welcomeElement.insertAdjacentHTML('beforeend', ' ' + name + '!');
     }
+
+
+    let message = "[[ ((${errorMessage} != null)? ${errorMessage} : '') ]]";
+
+    function alertMessage() {
+        if (message !== '') {
+            alert(message);
+        }
+    }
+
+    alertMessage();
 </script>
 </body>
 </html>

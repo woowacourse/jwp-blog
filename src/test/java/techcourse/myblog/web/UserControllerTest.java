@@ -78,7 +78,7 @@ public class UserControllerTest {
 						.with("email", other.getEmail())
 						.with("password", other.getPassword()))
 				.exchange()
-				.expectStatus().isFound();
+				.expectStatus().isOk();
 	}
 
 	@Test
