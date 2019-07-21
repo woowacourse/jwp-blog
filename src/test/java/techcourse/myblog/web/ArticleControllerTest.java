@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
@@ -11,10 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ArticleControllerTest {
-
-    String title = "제목";
-    String coverUrl = "이미지";
-    String contents = "내용";
+    static final String title = "제목";
+    static final String coverUrl = "이미지";
+    static final String contents = "내용";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -29,8 +29,8 @@ class ArticleControllerTest {
     @Test
     void showWritingPageTest() {
         webTestClient.get().uri("/writing")
-                .exchange()
-                .expectStatus().isOk();
+                    .exchange()
+                    .expectStatus().isOk();
     }
 
     @Test
@@ -60,16 +60,16 @@ class ArticleControllerTest {
 
     @Test
     void articleUpdateTest() {
-        String updateTitle = "제목2";
-        String updateImage = "이미지2";
-        String updateContents = "내용2";
+        final String updateTitle = "제목2";
+        final String updateImage = "이미지2";
+        final String updateContents = "내용2";
 
         webTestClient.post().uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(
                         BodyInserters.fromFormData("title", title)
-                                .with("coverUrl", coverUrl)
-                                .with("contents", contents)
+                                    .with("coverUrl", coverUrl)
+                                    .with("contents", contents)
                 )
                 .exchange()
                 .expectBody()

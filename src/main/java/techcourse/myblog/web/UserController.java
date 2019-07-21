@@ -21,10 +21,17 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    private Optional<User> ifLoggedIn(HttpSession session) {
+        return userRepository.findByEmail((String) session.getAttribute("email"));
+    }
+
     @GetMapping("/login")
-    public String loginForm(@RequestParam(required = false) String errorMessage, Model model) {
-        model.addAttribute("errorMessage", errorMessage);
-        return "login";
+    public String loginForm(@RequestParam(required = false) String errorMessage, Model model, HttpSession session) {
+        return ifLoggedIn(session).map(x -> "redirect:/")
+                                    .orElseGet(() -> {
+                                        model.addAttribute("errorMessage", errorMessage);
+                                        return "login-form";
+                                    });
     }
 
     @PostMapping("/login")
@@ -64,7 +71,7 @@ public class UserController {
     @GetMapping("/signup")
     public String signupForm(@RequestParam(required = false) String errorMessage, Model model) {
         model.addAttribute("errorMessage", errorMessage);
-        return "signup";
+        return "signup-form";
     }
 
     @PostMapping("/users")
@@ -86,10 +93,6 @@ public class UserController {
                 return new RedirectView("/signup");
             }
         });
-    }
-
-    private Optional<User> ifLoggedIn(HttpSession session) {
-        return userRepository.findByEmail((String) session.getAttribute("email"));
     }
 
     @GetMapping("/profile")

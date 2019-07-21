@@ -1,51 +1,178 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.UserRepository;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
+    private static final String testName = "donut";
+    private static final String testEmail = "donut@woowa.com";
+    private static final String testPassword = "qwer1234";
+    private static final User testUser = new User(testName, testEmail, testPassword);
+
     @Autowired
     private WebTestClient webTestClient;
+    @Autowired
+    private UserRepository userRepository;
+    private MockMvc mockMvc;
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+    private MockHttpSession session;
 
-    @Test
-    void showSignupFormTest() {
-        webTestClient.get().uri("/signup")
-                            .exchange()
-                            .expectStatus()
-                            .isOk();
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        session = new MockHttpSession();
+        session.setAttribute("email", testEmail);
+        session.setAttribute("name", testName);
+        userRepository.save(testUser);
+    }
+
+    @AfterEach
+    void tearDown() {
+        session.clearAttributes();
+        session = null;
     }
 
     @Test
-    void registerUserTest() {
-        webTestClient.post().uri("/users")
-                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .body(
-                                    BodyInserters.fromFormData("name", "donut")
-                                                .with("email", "donut@woowa.com")
-                                                .with("password", "qwer1234")
-                            ).exchange()
-                            .expectStatus()
-                            .is3xxRedirection();
+    void loginFormTest() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/login").session(session))
+                .andDo(print())
+                .andExpect(redirectedUrl("/"));
     }
 
     @Test
-    void showLoginFormTest() {
-        webTestClient.get().uri("/login")
-                            .exchange()
-                            .expectStatus()
-                            .isOk();
+    void loginTest() throws Exception {
+        mockMvc.perform(
+                post("/login").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                            .param("email", testEmail)
+                            .param("password", testPassword)
+        ).andDo(print())
+        .andExpect(redirectedUrl("/"));
+        mockMvc.perform(
+                post("/login").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                            .param("email", "wrongEmail")
+                            .param("password", "wrongPassword")
+        ).andDo(print())
+        .andExpect(redirectedUrl("/login"));
     }
 
     @Test
-    void showUsersList() {
-        webTestClient.get().uri("/users")
-                            .exchange()
-                            .expectStatus()
-                            .isOk();
+    void logoutTest() throws Exception {
+        mockMvc.perform(get("/logout").session(session))
+                .andDo(print())
+                .andExpect(redirectedUrl("/"));
+    }
+
+    @Test
+    void showUserListTest() throws Exception {
+        mockMvc.perform(get("/users"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void showSignupFormTest() throws Exception {
+        mockMvc.perform(get("/signup"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void registerUserTest() throws Exception {
+        final String newName = "도나쓰";
+        final String newEmail = "donatsu@woowa.com";
+        final String newPassword = "qwer1234";
+        final String wrongName = "도";
+        final String wrongEmail = "@";
+        final String wrongPassword = "";
+        mockMvc.perform(
+                post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                            .param("name", newName)
+                            .param("email", newEmail)
+                            .param("password", newPassword)
+        ).andDo(print())
+        .andExpect(redirectedUrl("/login"));
+        assertThat(userRepository.findByEmail(newEmail).isPresent());
+        mockMvc.perform(
+                post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                            .param("name", testName)
+                            .param("email", testEmail)
+                            .param("password", testPassword)
+        ).andDo(print())
+        .andExpect(redirectedUrl("/signup"));
+        mockMvc.perform(
+                post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                            .param("name", wrongName)
+                            .param("email", wrongEmail)
+                            .param("password", wrongPassword)
+        ).andDo(print())
+                .andExpect(redirectedUrl("/signup"));
+    }
+
+    @Test
+    void showProfileTest() throws Exception {
+        mockMvc.perform(get("/profile").session(session))
+                .andDo(print())
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/profile"))
+                .andDo(print())
+                .andExpect(redirectedUrl("/"));
+    }
+
+    @Test
+    void showProfileEditFormTest() throws Exception {
+        mockMvc.perform(get("/profile/edit").session(session))
+                .andDo(print())
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/profile/edit"))
+                .andDo(print())
+                .andExpect(redirectedUrl("/"));
+    }
+
+    @Test
+    void confirmProfileEditTest() throws Exception {
+        final String newName = "donatsu";
+        mockMvc.perform(
+                put("/profile/edit").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                    .param("name", newName)
+                                    .param("email", testEmail)
+                                    .session(session)
+        ).andDo(print())
+        .andExpect(redirectedUrl("/profile"));
+        assertThat(userRepository.findByEmail(testEmail).get().getName().equals(newName));
+
+    }
+
+    @Test
+    void cancelProfileTest() throws Exception {
+        mockMvc.perform(get("/profile"))
+                .andDo(print())
+                .andExpect(redirectedUrl("/"));
+        assertThat(userRepository.findByEmail(testEmail).isPresent());
+        mockMvc.perform(delete("/profile").session(session))
+                .andDo(print())
+                .andExpect(redirectedUrl("/"));
+        assertThat(!userRepository.findByEmail(testEmail).isPresent());
     }
 }
