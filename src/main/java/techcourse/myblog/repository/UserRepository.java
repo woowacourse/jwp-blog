@@ -1,8 +1,8 @@
 package techcourse.myblog.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserEmail;
+import techcourse.myblog.domain.User.User;
+import techcourse.myblog.domain.User.UserEmail;
 
 import java.util.Optional;
 

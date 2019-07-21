@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import techcourse.myblog.domain.ArticleException;
+import techcourse.myblog.domain.Article.ArticleException;
 import techcourse.myblog.web.ArticleController;
 
 @ControllerAdvice(assignableTypes = ArticleController.class)

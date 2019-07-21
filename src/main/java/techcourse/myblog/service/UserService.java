@@ -2,9 +2,9 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserEmail;
-import techcourse.myblog.domain.UserException;
+import techcourse.myblog.domain.User.User;
+import techcourse.myblog.domain.User.UserEmail;
+import techcourse.myblog.domain.User.UserException;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 

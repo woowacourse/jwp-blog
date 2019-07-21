@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.User;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

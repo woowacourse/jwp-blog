@@ -1,7 +1,7 @@
 package techcourse.myblog.interceptor;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import techcourse.myblog.domain.UserException;
+import techcourse.myblog.domain.User.UserException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
