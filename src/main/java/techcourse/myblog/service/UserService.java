@@ -1,13 +1,13 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserEmail;
 import techcourse.myblog.domain.UserException;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +20,13 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public UserDto addUser(UserDto userDto) {
         User user = userRepository.save(userDto.toEntity());
         return new UserDto(user);
     }
 
+    @Transactional(readOnly = true)
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
         userRepository.findAll().forEach(users::add);
@@ -37,10 +39,12 @@ public class UserService {
         user.updateNameAndEmail(userDto.getName(), userDto.getEmail());
     }
 
+    @Transactional(readOnly = true)
     private User getUserByEmail(String userEmail) {
         return userRepository.findByEmail(UserEmail.of(userEmail)).orElseThrow(UserException::new);
     }
 
+    @Transactional
     public void deleteUser(String userEmail) {
         userRepository.delete(getUserByEmail(userEmail));
     }

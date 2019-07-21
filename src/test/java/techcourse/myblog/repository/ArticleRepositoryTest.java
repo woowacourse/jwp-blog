@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import techcourse.myblog.domain.Article;
@@ -18,7 +19,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ArticleRepositoryTest {
+
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -64,18 +67,25 @@ class ArticleRepositoryTest {
 
     @Test
     void UpdateTest() {
-        ArticleDto articleDto = new ArticleDto("a100", "b", "c");
-        Article article = articleRepository.findById(1L).orElseThrow(IllegalAccessError::new);
-        article.update(articleDto.toEntity());
+        Article article = new Article("test", "test", "test");
         articleRepository.save(article);
+        ArticleDto articleDto = new ArticleDto("a100", "edit", "edit");
+        long id = article.getId();
+        article.update(articleDto.toEntity());
+        Article post = articleRepository.findById(id).orElseThrow(IllegalAccessError::new);
 
-        assertThat(articleRepository.findById(1L).get().getTitle()).isEqualTo("a100");
+        assertThat(post.getTitle()).isEqualTo(article.getTitle());
+        assertThat(post.getContents()).isNotEqualTo("test");
+        assertThat(post.getCoverUrl()).isEqualTo("edit");
     }
 
     @Test
     void deleteTest() {
-        articleRepository.deleteById(1L);
-        assertThatThrownBy(() -> articleRepository.findById(1L).orElseThrow(IllegalArgumentException::new))
+        Article article = new Article("test", "test", "test");
+        articleRepository.save(article);
+        long id = article.getId();
+        articleRepository.deleteById(id);
+        assertThatThrownBy(() -> articleRepository.findById(id).orElseThrow(IllegalArgumentException::new))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

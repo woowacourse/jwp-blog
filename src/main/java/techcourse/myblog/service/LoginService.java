@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserEmail;
 import techcourse.myblog.domain.UserException;
@@ -18,6 +19,7 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly = true)
     public UserDto loginByEmailAndPwd(UserDto userDto) {
         User user = userRepository.findByEmail(UserEmail.of(userDto.getEmail()))
                 .orElseThrow(() -> new UserException(NOT_EXIST_USER));
