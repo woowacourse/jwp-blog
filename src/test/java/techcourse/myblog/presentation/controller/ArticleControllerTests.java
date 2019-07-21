@@ -5,21 +5,23 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.service.ArticleService;
-import techcourse.myblog.domain.Article;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
 import static techcourse.myblog.presentation.controller.ArticleController.ARTICLE_MAPPING_URL;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
-    Article article;
     ArticleDto articleDto;
+    private static Long id = 0L;
     @Autowired
     private WebTestClient webTestClient;
     @Autowired
@@ -32,7 +34,6 @@ public class ArticleControllerTests {
                 .coverUrl("b")
                 .contents("c")
                 .build();
-        articleService.save(articleDto);
     }
 
     @Test
@@ -45,39 +46,38 @@ public class ArticleControllerTests {
 
     @Test
     void save_post_is3xxRedirect() {
-        webTestClient.post().uri(ARTICLE_MAPPING_URL)
-                .body(BodyInserters
-                        .fromFormData("title", article.getTitle())
-                        .with("coverUrl", article.getCoverUrl())
-                        .with("contents", article.getContents())
-                )
-                .exchange()
+        articleRequest(POST, articleDto, "")
                 .expectStatus()
                 .is3xxRedirection();
+        id++;
     }
 
     @Test
     void updateForm_get_isOk() {
-        webTestClient.get().uri(ARTICLE_MAPPING_URL + "/1/edit")
+        createArticle();
+        webTestClient.get().uri(ARTICLE_MAPPING_URL + "/" + id + "/edit")
                 .exchange().expectStatus().isOk();
     }
 
     @Test
     void update_post_is3xxRedirect() {
-        postArticle(articleDto, "/1")
+        createArticle();
+        articleRequest(PUT, articleDto, "/" + id)
                 .expectStatus()
                 .is3xxRedirection();
     }
 
     @Test
     void update_editedData_true() {
+        createArticle();
         ArticleDto editedArticleDto = ArticleDto.builder()
                 .title("edit")
                 .coverUrl("edit")
                 .contents("edit")
                 .build();
 
-        postArticle(editedArticleDto, "/1")
+        createArticle();
+        articleRequest(PUT, editedArticleDto, "/" + id)
                 .expectStatus()
                 .is3xxRedirection()
                 .expectBody().consumeWith(redirectResponse -> {
@@ -95,20 +95,25 @@ public class ArticleControllerTests {
 
     @Test
     void delete_firstArticle_is3xxRedirect() {
-        webTestClient.delete().uri(ARTICLE_MAPPING_URL + "/1")
+        webTestClient.delete().uri(ARTICLE_MAPPING_URL + "/" + id)
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection();
+
     }
 
-    private WebTestClient.ResponseSpec postArticle(final ArticleDto articleDto, String attachedUrl) {
-        return webTestClient.post()
+    private WebTestClient.ResponseSpec articleRequest(HttpMethod method, ArticleDto articleDto, String attachedUrl) {
+        return webTestClient.method(method)
                 .uri(ARTICLE_MAPPING_URL + attachedUrl)
                 .body(BodyInserters
-                        .fromFormData("name", articleDto.getTitle())
-                        .with("email", articleDto.getCoverUrl())
-                        .with("password", articleDto.getContents()))
+                        .fromFormData("title", articleDto.getTitle())
+                        .with("coverUrl", articleDto.getCoverUrl())
+                        .with("contents", articleDto.getContents()))
                 .exchange();
     }
 
+    private void createArticle() {
+        id++;
+        articleRequest(POST, articleDto, "");
+    }
 }

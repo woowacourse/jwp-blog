@@ -34,7 +34,7 @@ public class User {
 
     @Column(unique = true)
     @NotBlank
-    @Pattern(regexp = NAME_PATTERN, message = "email형식에 맞는 이름이 아닙니다.")
+    @Pattern(regexp = EMAIL_PATTERN, message = "email형식에 맞는 이름이 아닙니다.")
     private String email;
 
     @Column

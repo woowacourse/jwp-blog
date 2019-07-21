@@ -7,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.ArticleDto;
-import techcourse.myblog.domain.Article;
 import techcourse.myblog.application.service.ArticleService;
 
 import static techcourse.myblog.presentation.controller.ArticleController.ARTICLE_MAPPING_URL;
@@ -39,7 +38,7 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public RedirectView update(@PathVariable long id,ArticleDto articleDto) {
+    public RedirectView update(@PathVariable long id, ArticleDto articleDto) {
         log.info("수정할 내용 " + articleDto.getTitle() + " " + articleDto.getCoverUrl() + " " + articleDto.getContents());
         articleService.update(articleDto, id);
         return new RedirectView("/article/" + id);

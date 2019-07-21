@@ -8,6 +8,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.domain.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -16,10 +17,10 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
+    @Transactional
     public UserDto save(UserDto userDto) {
         emailDuplicateValidate(userDto);
-        userDto.setPassword(userDto.getPassword());
-        log.info("UserService.save() : " + userDto.getName() + " " + userDto.getEmail() + " " + userDto.getPassword());
+        log.debug("UserService.save() : " + userDto.getName() + " " + userDto.getEmail() + " " + userDto.getPassword());
         User user = User.builder()
                 .email(userDto.getEmail())
                 .name(userDto.getName())
@@ -52,17 +53,17 @@ public class UserService {
         return Optional.empty();
     }
 
+    @Transactional
     public String updateUserName(UserDto userDto, String name) {
         User user = userRepository.findByEmail(userDto.getEmail()).get();
         user.setName(name);
         userRepository.save(user);
-        log.info("updateUserName에서 의 name " + name);
         return user.getName();
     }
 
     public void deleteUser(UserDto userDto) {
         User user = userRepository.findByEmail(userDto.getEmail()).get();
         userRepository.delete(user);
-        log.info("delete User : " + user.toString());
+        log.debug("delete User : " + user.toString());
     }
 }
