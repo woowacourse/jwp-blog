@@ -3,53 +3,36 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserEmail;
-import techcourse.myblog.repository.UserRepository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserControllerTest {
-
-    @Autowired
-    private WebTestClient webTestClient;
-
-    @Autowired
-    private UserRepository userRepository;
+class UserControllerTest extends AuthedWebTestClient {
 
     @BeforeEach
     void setUp() {
-        userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
+        init();
     }
 
     @AfterEach
     void tearDown() {
-        userRepository.deleteAll();
+        end();
     }
 
     @Test
-    void getIndexTest() {
+    void 인덱스_페이지_GET() {
         webTestClient.get().uri("/users")
                 .exchange()
                 .expectStatus().isOk();
-
     }
 
     @Test
     void 회원가입_실패_테스트() {
         long count = userRepository.count();
-
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData("name", "a")
@@ -77,16 +60,7 @@ class UserControllerTest {
 
     @Test
     void 회원정보_수정_테스트() {
-        String cookie = webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", "andole@gmail.com")
-                        .with("password", "A!1bcdefg"))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-
-
-        webTestClient.put().uri("/users")
-                .header("Cookie", cookie)
+        put("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData("name", "mobumsaeng")
                         .with("email", "edit@gmail.com"))
@@ -97,16 +71,7 @@ class UserControllerTest {
 
     @Test
     void 회원정보_삭제_테스트() {
-        String cookie = webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", "andole@gmail.com")
-                        .with("password", "A!1bcdefg"))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-
-
-        webTestClient.delete().uri("/users")
-                .header("Cookie", cookie)
+        delete("/users")
                 .exchange().expectStatus().is3xxRedirection();
 
         assertThatThrownBy(() -> userRepository.findByEmail(UserEmail.of("andole@gmail.com")).orElseThrow(IllegalAccessError::new))
