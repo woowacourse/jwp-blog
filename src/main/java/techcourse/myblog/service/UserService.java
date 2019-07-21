@@ -8,6 +8,7 @@ import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicateEmailException;
 import techcourse.myblog.exception.FailedLoginException;
+import techcourse.myblog.exception.NoSuchUserException;
 import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class UserService {
         User user = UserAssembler.writeUser(userDto);
         userRepository.save(user);
 
-        log.info("{} User 저장 -> {}", LOG_TAG, user);
+        log.debug("{} User 저장 -> {}", LOG_TAG, user);
     }
 
     private void validateUniqueEmail(UserDto userDto) {
@@ -83,9 +84,11 @@ public class UserService {
         String password = userDto.getPassword();
 
         User user = userRepository.findUserByEmail(email);
-        User updatedUser = new User(user.getUserId(), updatedName, email, password);
-
-        userRepository.save(updatedUser);
+        if (user == null) {
+            log.debug("{} {}", LOG_TAG, "존재하지 않는 회원의 정보는 수정할 수 없음");
+            throw new NoSuchUserException();
+        }
+        userRepository.save(new User(user.getUserId(), updatedName, email, password));
     }
 
     public void deleteUser(String email) {
