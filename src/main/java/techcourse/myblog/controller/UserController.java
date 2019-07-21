@@ -8,14 +8,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import techcourse.myblog.support.validation.UserGroups;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.DuplicateEmailException;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.support.validation.UserGroups.All;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.groups.Default;
 import java.util.Optional;
 
 @Controller
@@ -28,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public String createUser(@Validated({Default.class, UserGroups.Edit.class}) UserDto userDto, BindingResult bindingResult) {
+    public String createUser(@Validated({All.class}) UserDto userDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "signup";
         }

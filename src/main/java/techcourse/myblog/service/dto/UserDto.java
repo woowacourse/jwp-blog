@@ -2,8 +2,8 @@ package techcourse.myblog.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import techcourse.myblog.support.validation.UserGroups;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.support.validation.UserGroups.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -13,9 +13,8 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 public class UserDto {
 
-    @NotBlank(groups = UserGroups.Edit.class)
     @Pattern(regexp = "^[a-zA-Z가-힣]{2,10}$", message = "이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다.",
-            groups = UserGroups.Edit.class)
+            groups = {Edit.class, All.class})
     private String name;
 
     @NotBlank
