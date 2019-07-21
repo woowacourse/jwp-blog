@@ -91,9 +91,9 @@ public class UserController {
         return "redirect:/mypage";
     }
 
-    @DeleteMapping("/mypage/delete")
-    public String deleteUser(HttpSession httpSession) {
-        userService.deleteUser((String) httpSession.getAttribute("email"));
+    @DeleteMapping("/mypage/edit/{userId}")
+    public String deleteUser(@PathVariable long userId) {
+        userService.deleteUser(userId);
         return "redirect:/logout";
     }
 

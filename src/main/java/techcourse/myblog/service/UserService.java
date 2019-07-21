@@ -91,8 +91,7 @@ public class UserService {
         userRepository.save(new User(user.getUserId(), updatedName, email, password));
     }
 
-    public void deleteUser(String email) {
-        User user = userRepository.findUserByEmail(email);
-        userRepository.deleteById(user.getUserId());
+    public void deleteUser(long userId) {
+        userRepository.deleteById(userId);
     }
 }

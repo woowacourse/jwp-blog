@@ -95,7 +95,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-md-12 text-right">
-                                        <form action="/mypage/delete" th:method="delete">
+                                        <form th:action="'/mypage/edit/' + ${user.userId}" th:method="delete">
                                             <input type="submit" class="btn btn-tumblr" value="탈퇴">
                                         </form>
                                     </div>
