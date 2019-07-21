@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.DuplicateEmailException;
+import techcourse.myblog.exception.DuplicateUserException;
 import techcourse.myblog.exception.FailedLoginException;
 import techcourse.myblog.exception.NoSuchUserException;
 import techcourse.myblog.repository.UserRepository;
@@ -37,7 +37,7 @@ public class UserService {
 
     private void validateUniqueEmail(UserDto userDto) {
         if (userRepository.countByEmail(userDto.getEmail()) > NOT_FOUND_RESULT) {
-            throw new DuplicateEmailException();
+            throw new DuplicateUserException();
         }
     }
 
@@ -49,7 +49,7 @@ public class UserService {
         User user = userRepository.findUserByEmail(email);
 
         if (user == null) {
-            throw new NoSuchElementException("잘못된 접근입니다.");
+            throw new NoSuchUserException("잘못된 접근입니다.");
         }
 
         return user;
