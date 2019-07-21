@@ -29,10 +29,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 
     private boolean loggedIn(HttpServletRequest request) {
         Optional<HttpSession> sessionOpt = Optional.ofNullable(request.getSession());
-        if (sessionOpt.isPresent()) {
-            return sessionOpt.get().getAttribute("user") != null;
-        }
-        return false;
+        return sessionOpt.filter(httpSession -> httpSession.getAttribute("user") != null).isPresent();
     }
 
     private boolean needLogout(HttpServletRequest request) {
