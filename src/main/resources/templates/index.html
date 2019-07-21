@@ -87,18 +87,7 @@
         </form>
     </div>
 </div>
-
-<footer class="content-footer">
-    <div class="footer">
-        <div class="copyright">
-            <img class="d-inline-block logo relative right-5" src="/images/logo/logo_full_dark.png">
-            <p class="pdd-left-5 mrg-top-minus-15px">Copyright © <b class="text-dark">우아한테크코스</b>. All rights reserved.</p>
-        </div>
-        <a href="https://woowabros.github.io/" target="_blank" class="btn btn-default btn-rounded bg-transparent">우아한형제들 기술블로그</a>
-    </div>
-</footer>
-
-<body th:include="fragments/common_script :: common_script"></body>
-
+<th:block th:include="fragment/common_footer :: common_footer"></th:block>
+<th:block th:include="fragments/common_script :: common_script"></th:block>
 </body>
 </html>

@@ -7,7 +7,6 @@
 </head>
 <body>
     <th:block th:include="fragments/navbar :: navbar"></th:block>
-
     <form th:action="${article==null? '/articles':'/articles/'+article.id}" th:method="${article == null ? 'post' : 'put'}"
           name="article" accept-charset="utf-8">
         <div class="about-cover card no-border">
@@ -46,10 +45,7 @@
         </div>
     </form>
 </div>
-
-
-<body th:include="fragments/common_script :: common_script"></body>
-
+<th:block th:include="fragments/common_script :: common_script"></th:block>
 <script type="text/javascript">
 
     const editor = new tui.Editor({
