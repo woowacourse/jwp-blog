@@ -17,27 +17,20 @@ public class HelloWorldControllerTests {
     private WebTestClient webTestClient;
 
     @Test
-    void passParamWithGetAndResponseBody() {
-        String blogName = "helloWorld";
+    void passParamWithGet() {
+        String blogName = "helloWrold";
         webTestClient.get().uri("/helloworld?blogName=" + blogName)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response ->
                         Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
-    }
 
-    @Test
-    void passParamWithGet() {
-        String blogName = "helloWorld";
-        webTestClient.get().uri("/helloworld2?blogName=" + blogName)
-                .exchange()
-                .expectStatus().isOk();
     }
 
     @Test
     void passParamWithPost() {
-        String blogName = "helloWorld";
+        String blogName = "helloWrold";
 
         webTestClient.post()
                 .uri("/helloworld")
