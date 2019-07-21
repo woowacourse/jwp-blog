@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +14,6 @@ import techcourse.myblog.articles.Article;
 import techcourse.myblog.articles.ArticleService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -26,18 +25,10 @@ public class MainController {
     private final ArticleService articleService;
 
     @GetMapping("/")
-    public String main(Optional<Integer> page,
-                       Optional<Integer> pageSize,
-                       Optional<String> order,
-                       Optional<String> orderType,
+    public String main(@PageableDefault(size = 5, sort = "regDate", direction = Sort.Direction.DESC) Pageable pageable,
                        Model model) {
-        log.debug("page : {}, pageSize : {}, order : {}, orderType : {}", page, pageSize, order, orderType);
 
-        final Integer currentPage = page.orElse(0);
-        final Integer size = pageSize.orElse(5);
-        final Sort.Direction sorting = Sort.Direction.fromString(order.orElse("DESC"));
-        final String sortingType = orderType.orElse("regDate");
-        Pageable pageable = PageRequest.of(currentPage, size, sorting, sortingType);
+        log.debug("page : {}, pageSize : {}, sort : {}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 
         Page<Article> articles = articleService.findAll(pageable);
 
@@ -49,8 +40,16 @@ public class MainController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
-        model.addAttribute("order", sorting);
-        model.addAttribute("orderType", sortingType);
+        String sortProperty = pageable.getSort().stream()
+                .map(Sort.Order::getProperty)
+                .findFirst().get();
+
+        Sort.Direction sort = pageable.getSort().stream()
+                .map(Sort.Order::getDirection)
+                .findFirst().get();
+
+        model.addAttribute("sortProperty", sortProperty);
+        model.addAttribute("sort", sort);
         model.addAttribute("articles", articles);
         return "index";
     }

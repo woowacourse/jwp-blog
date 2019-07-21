@@ -76,16 +76,15 @@
                             <ul class="pagination">
                                 <th:block th:each="pageNumber : ${pageNumbers}">
                                     <li th:class="${pageNumber!=articles.number+1} ? 'page-item' : 'page-item active'">
-                                        <a th:href="@{/(size=${articles.size}, page=${pageNumber-1}, order=${order}, orderType=${orderType})}"
+                                        <a th:href="@{/(size=${articles.size}, page=${pageNumber-1}, sort=${(sortProperty+','+(sort))})}"
                                            th:text="${pageNumber}" class="page-link"></a>
                                     </li>
                                 </th:block>
                             </ul>
-                            <!--TODO 중복 제거 (javascript 이용?)-->
-                            <a th:href="@{/(size=${articles.size}, page=${articles.number}, order='ASC', orderType=${orderType})}"
+                            <a th:href="@{/(size=${articles.size}, page=${articles.number}, sort=${(sortProperty+','+(sort.ASC)) })}"
                                th:text="'오름차순 정렬'" class="page-link"></a>
 
-                            <a th:href="@{/(size=${articles.size}, page=${articles.number}, order='DESC', orderType=${orderType})}"
+                            <a th:href="@{/(size=${articles.size}, page=${articles.number}, sort=${(sortProperty+','+(sort.DESC))})}"
                                th:text="'내림차순 정렬'" class="page-link"></a>
                         </nav>
 
