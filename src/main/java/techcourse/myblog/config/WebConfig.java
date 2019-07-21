@@ -7,7 +7,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import techcourse.myblog.commons.AuthInterceptor;
 import techcourse.myblog.commons.LoginInterceptor;
 
-import static techcourse.myblog.users.UserController.USER_BASE_URI;
 
 @Configuration
 @RequiredArgsConstructor
@@ -19,11 +18,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
-                .addPathPatterns(USER_BASE_URI + "/*");
+                .addPathPatterns("/users/*");
 
         registry.addInterceptor(authInterceptor)
-                .addPathPatterns(USER_BASE_URI + "/{id}")
-                .addPathPatterns(USER_BASE_URI + "/{id}/edit")
-                .excludePathPatterns(USER_BASE_URI + "/logout");
+                .addPathPatterns("/users/{id}")
+                .addPathPatterns("/users/{id}/edit")
+                .excludePathPatterns("/users/logout");
     }
 }

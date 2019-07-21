@@ -18,12 +18,12 @@ import org.springframework.web.reactive.function.BodyInserters;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.users.UserController.USER_BASE_URI;
 
 @AutoConfigureWebClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
+
     @Autowired
     WebTestClient webTestClient;
 
@@ -54,7 +54,7 @@ public class UserControllerTests {
     @Test
     @DisplayName("회원가입 Form 요청")
     void signupForm() {
-        webTestClient.get().uri(USER_BASE_URI + "/new")
+        webTestClient.get().uri("/users/new")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -148,7 +148,7 @@ public class UserControllerTests {
     }
 
     private WebTestClient.ResponseSpec postUsers(final UserDto.Register userDto) {
-        return webTestClient.post().uri(USER_BASE_URI)
+        return webTestClient.post().uri("/users")
                 .body(BodyInserters
                         .fromFormData("name", userDto.getName())
                         .with("email", userDto.getEmail())
@@ -178,7 +178,7 @@ public class UserControllerTests {
     @DisplayName("비로그인 상태에서 로그인")
     void login() {
 
-        webTestClient.post().uri(USER_BASE_URI + "/login")
+        webTestClient.post().uri("/users/login")
                 .body(BodyInserters.
                         fromFormData("email", email)
                         .with("password", password))
@@ -194,7 +194,7 @@ public class UserControllerTests {
     @Test
     @DisplayName("로그인 상태에서 로그인 접근시 차단")
     void invalidLogin() {
-        webTestClient.post().uri(USER_BASE_URI + "/login")
+        webTestClient.post().uri("/users/login")
                 .body(BodyInserters.
                         fromFormData("email", email)
                         .with("password", password))
@@ -220,7 +220,7 @@ public class UserControllerTests {
 
         userService.save(userDto);
 
-        webTestClient.get().uri(USER_BASE_URI)
+        webTestClient.get().uri("/users")
                 .exchange()
                 .expectBody()
                 .consumeWith(response -> {
@@ -235,7 +235,7 @@ public class UserControllerTests {
     @Test
     void editForm() {
 
-        webTestClient.get().uri(USER_BASE_URI + "/{id}/edit", id)
+        webTestClient.get().uri("/users/{id}/edit", id)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -249,7 +249,7 @@ public class UserControllerTests {
     @Test
     void show() {
 
-        webTestClient.get().uri(USER_BASE_URI + "/{id}", id)
+        webTestClient.get().uri("/users/{id}", id)
                 .cookie("JSESSIONID", getJSessionId())
                 .exchange()
                 .expectStatus().isOk()
@@ -264,7 +264,7 @@ public class UserControllerTests {
     @Test
     void edit() {
         String changedName = "asdf";
-        webTestClient.put().uri(USER_BASE_URI + "/{id}", id)
+        webTestClient.put().uri("/users/{id}", id)
                 .cookie("JSESSIONID", getJSessionId())
                 .body(BodyInserters.fromFormData("name", changedName))
                 .exchange()
@@ -274,7 +274,7 @@ public class UserControllerTests {
 
     @Test
     void delete() {
-        webTestClient.delete().uri(USER_BASE_URI + "/{id}", id)
+        webTestClient.delete().uri("/users/{id}", id)
                 .cookie("JSESSIONID", getJSessionId())
                 .exchange()
                 .expectStatus().is3xxRedirection()
@@ -282,7 +282,7 @@ public class UserControllerTests {
     }
 
     private String getJSessionId() {
-        return webTestClient.post().uri(USER_BASE_URI + "/login")
+        return webTestClient.post().uri("/users/login")
                 .body(BodyInserters
                         .fromFormData("email", email)
                         .with("password", password))

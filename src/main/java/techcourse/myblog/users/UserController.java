@@ -13,9 +13,8 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping(UserController.USER_BASE_URI)
+@RequestMapping("/users")
 public class UserController {
-    public static final String USER_BASE_URI = "/users";
     public static final String USER_SESSION = "user";
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);

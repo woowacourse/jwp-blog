@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-import static techcourse.myblog.users.UserController.USER_BASE_URI;
 import static techcourse.myblog.users.UserController.USER_SESSION;
 
 @Component
@@ -31,7 +30,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
 
         if (!(isLoginForm(path) || isSignup(path, method) || isSignupForm(path))) {
-            response.sendRedirect(USER_BASE_URI + "/login");
+            response.sendRedirect("/users/login");
             return false;
         }
         return true;
@@ -46,14 +45,14 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     }
 
     private boolean isSignupForm(String path) {
-        return path.equals(USER_BASE_URI+"/new");
+        return path.equals("/users/new");
     }
 
     private boolean isSignup(String path, String method) {
-        return path.equals(USER_BASE_URI) && method.equals("POST");
+        return path.equals("/users") && method.equals("POST");
     }
 
     private boolean isLoginForm(String path) {
-        return path.equals(USER_BASE_URI+"/login");
+        return path.equals("/users/login");
     }
 }
