@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -20,64 +21,17 @@ public class User {
     private String email;
     private String password;
 
-    // Static fields are not persistent
-    private static Pattern namePattern;
-    private static Pattern passwordPattern;
-    private static Pattern emailPattern;
-
-    static {
-        namePattern = Pattern.compile("^[a-zA-Z ]*$");
-        // ref. http://html5pattern.com/Passwords
-        passwordPattern = Pattern.compile("(?=^.{8,}$)((?=.*\\d)(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$");
-        emailPattern = Pattern.compile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
-    }
-
-
-    public static User of(String userName, String email, String password) {
-        User user = new User();
-        user.username = userName;
-        user.email = email;
-        user.password = password;
-        return user;
-    }
-
-    public static User of(String userName, String email, String password, Function<String, Boolean> emailDuplicateChecker) {
+    public static User of(String username, String email, String password, Function<String, Boolean> emailDuplicateChecker) {
         if (emailDuplicateChecker.apply(email)) {
             throw new UserCreationConstraintException("이미 등록된 이메일입니다.");
         }
 
-        if (isInvalidEmail(email)) {
-            throw new UserCreationConstraintException("올바르지 않은 이메일입니다.");
-        }
+        User newUser = new User();
+        newUser.email = email;
+        newUser.username = username;
+        newUser.password = password;
 
-        if (isInvalidUserName(userName)) {
-            throw new UserCreationConstraintException("올바르지 않은 이름입니다.");
-        }
-
-        if (isInvalidPassword(password)) {
-            throw new UserCreationConstraintException("올바르지 않은 비밀번호입니다.");
-        }
-
-        return of(userName, email, password);
-    }
-
-    private static boolean isInvalidUserName(String userName) {
-        if (userName.length() < 2 || userName.length() > 10) {
-            return true;
-        }
-        return !namePattern.matcher(userName).matches();
-    }
-
-    private static boolean isInvalidPassword(String password) {
-        if (password.length() < 8) {
-            return true;
-        }
-
-        return !passwordPattern.matcher(password).matches();
-    }
-
-    private static boolean isInvalidEmail(String email) {
-        return !emailPattern.matcher(email).matches();
+        return newUser;
     }
 
     public void update(User user) {

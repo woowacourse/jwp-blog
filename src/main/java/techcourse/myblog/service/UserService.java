@@ -44,7 +44,8 @@ public class UserService {
     public User update(Long id, UserUpdateRequestDto request) {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new UserUpdateException("사용자를 찾을 수 없습니다"));
-        user.update(User.of(request.getName(), user.getEmail(), user.getPassword()));
+        user.update(User.of(request.getName(), user.getEmail(), user.getPassword(),
+            email -> userRepository.findByEmail(email).isPresent()));
         userRepository.save(user);
         return user;
     }

@@ -14,7 +14,10 @@ import techcourse.myblog.web.dto.UserRequestDto;
 import techcourse.myblog.web.dto.UserUpdateRequestDto;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.util.Optional;
+import java.util.Set;
 
 import static techcourse.myblog.web.ControllerUtil.*;
 
@@ -24,10 +27,12 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
+    private final Validator validator;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, Validator validator) {
         this.userService = userService;
+        this.validator = validator;
     }
 
     @GetMapping("/signup")
@@ -41,6 +46,7 @@ public class UserController {
     @PostMapping("/users")
     public String register(UserRequestDto userRequestDto, Model model, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
         try {
+            assertValidRequest(validator.validate(userRequestDto));
             if (currentUser.isPresent()) {
                 return "redirect:/";
             }
@@ -50,6 +56,12 @@ public class UserController {
             model.addAttribute("error", true);
             model.addAttribute("message", e.getMessage());
             return "signup";
+        }
+    }
+
+    private <T> void assertValidRequest(Set<ConstraintViolation<T>> violations) {
+        if (!violations.isEmpty()) {
+            throw new IllegalArgumentException(violations.iterator().next().getMessage());
         }
     }
 
@@ -116,14 +128,21 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public String updateUser(UserUpdateRequestDto updateRequestDto, HttpSession session) {
-        if (!isLoggedIn(session)) {
-            return "redirect:/login";
+    public String updateUser(UserUpdateRequestDto updateRequestDto, HttpSession session, Model model) {
+        try {
+            assertValidRequest(validator.validate(updateRequestDto));
+            if (!isLoggedIn(session)) {
+                return "redirect:/login";
+            }
+            User user = (User) session.getAttribute(SESSION_USER_KEY);
+            User updated = userService.update(user.getId(), updateRequestDto);
+            session.setAttribute(SESSION_USER_KEY, updated);
+            return "redirect:/mypage";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", true);
+            model.addAttribute("message", e.getMessage());
+            return "mypage";
         }
-        User user = (User)session.getAttribute(SESSION_USER_KEY);
-        User updated = userService.update(user.getId(), updateRequestDto);
-        session.setAttribute(SESSION_USER_KEY, updated);
-        return "redirect:/mypage";
     }
 
     @DeleteMapping("/withdraw")
