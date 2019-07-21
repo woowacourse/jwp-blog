@@ -3,12 +3,10 @@ package techcourse.myblog.dto;
 public class UserResponseDto {
     private String email;
     private String name;
-    private String password;
 
-    public UserResponseDto(String email, String name, String password) {
+    public UserResponseDto(String email, String name) {
         this.email = email;
         this.name = name;
-        this.password = password;
     }
 
     public String getEmail() {
@@ -17,9 +15,5 @@ public class UserResponseDto {
 
     public String getName() {
         return name;
-    }
-
-    public String getPassword() {
-        return password;
     }
 }
