@@ -1,9 +1,9 @@
 package techcourse.myblog.dto;
 
-import techcourse.myblog.domain.Article;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import techcourse.myblog.domain.Article;
 
 public class ArticleDto {
     @NotBlank(message = "제목을 입력해주세요.")

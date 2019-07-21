@@ -4,8 +4,6 @@ import javax.persistence.*;
 
 @Entity
 public class Article {
-    private static final String EMPTY_TEXT = "NULL";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,11 +1,10 @@
 package techcourse.myblog.dto;
 
-import techcourse.myblog.UserInfo;
-import techcourse.myblog.domain.User;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+
+import techcourse.myblog.domain.User;
 
 public class UserDto {
     @NotBlank(message = "이름을 입력해주세요",

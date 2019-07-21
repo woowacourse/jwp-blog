@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.UserInfo;
+import techcourse.myblog.dto.UserInfo;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.model.UserRepository;
+import techcourse.myblog.repository.UserRepository;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.groups.Default;
