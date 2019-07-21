@@ -11,6 +11,7 @@ import techcourse.myblog.service.UserService;
 
 @Controller
 public class UserController {
+    public static final String SUCCESS_SIGN_UP_MESSAGE = "회원 가입이 완료되었습니다!";
     private final UserService userService;
 
     @Autowired
@@ -32,6 +33,7 @@ public class UserController {
     public String saveUser(UserSaveDto userSaveDto, Model model) {
         try {
             userService.save(userSaveDto.toEntity());
+            model.addAttribute("successMessage", SUCCESS_SIGN_UP_MESSAGE);
         } catch (UserNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());
         }
