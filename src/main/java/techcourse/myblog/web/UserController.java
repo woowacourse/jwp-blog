@@ -58,7 +58,7 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String signUp(UserDto userDto, Model model) {
+    public String signUp(UserDto userDto) {
         if (validateUser(userDto)) {
             User user = userDto.toEntity();
             userRepository.save(user);
@@ -80,7 +80,7 @@ public class UserController {
     }
 
     @PutMapping("/mypage/{id}")
-    public String completeEditMypage(HttpSession httpSession, UserDto userDto, Model model) {
+    public String completeEditMypage(HttpSession httpSession, UserDto userDto) {
         String sessionEmail = httpSession.getAttribute(SESSION_EMAIL).toString();
         String email = userDto.getEmail();
 
