@@ -54,11 +54,20 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String mypageView(HttpSession session, Model model) {
-        if (isLoggedIn(session)) {
-            model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
-            return "mypage";
+    public String myPageView(HttpSession session, Model model) {
+        if (!isLoggedIn(session)) {
+            return "redirect:/";
         }
-        return "redirect:/";
+        model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
+        return "mypage";
+    }
+
+    @GetMapping("/mypage-edit")
+    public String editMyPageView(HttpSession session, Model model) {
+        if (!isLoggedIn(session)) {
+            return "redirect:/";
+        }
+        model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
+        return "mypage-edit";
     }
 }
