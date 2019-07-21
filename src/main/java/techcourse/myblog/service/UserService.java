@@ -40,17 +40,14 @@ public class UserService {
     }
 
     @Transactional
-    public void update(User user, UserDto userDto) {
-        Optional<User> updateUser = userRepository.findById(user.getId());
-
-        updateUser.ifPresent(userDB -> {
-            userDB.modify(userDto.toUser());
-            user.modify(userDto.toUser());
-        });
+    public Optional<User> update(Long id, UserDto userDto) {
+        Optional<User> modifyUser = userRepository.findById(id);
+        modifyUser.ifPresent(user -> user.modify(userDto.toUser()));
+        return userRepository.findById(id);
     }
 
     @Transactional
-    public void deleteById(Long userId) {
-        userRepository.deleteById(userId);
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 }
