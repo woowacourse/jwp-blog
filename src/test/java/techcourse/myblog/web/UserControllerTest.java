@@ -4,16 +4,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.User;
+
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
+    private static final long USER_ID = 0L;
+    private static final String NAME = "코니";
+    private static final String PASSWORD = "@Password12";
+
+    private User user;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -34,86 +42,128 @@ class UserControllerTest {
 
     @Test
     public void 회원가입_테스트() {
-        webTestClient.post()
-                .uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("name", "name")
-                        .with("email", "email")
-                        .with("password", "password"))
-                .exchange()
-                .expectStatus().isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get()
-                            .uri(response.getResponseHeaders().getLocation())
-                            .exchange()
-                            .expectStatus()
-                            .isOk();
-                });
-    }
+        user = new User(USER_ID, NAME, "cony1@cony.com", PASSWORD);
 
-    @Test
-    public void 회원조회_페이지_테스트() {
-        webTestClient.post()
-                .uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("name", "코니코니")
-                        .with("email", "이메일이메일")
-                        .with("password", "비번비번"))
-                .exchange()
-                .expectStatus().isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get()
-                            .uri("/users")
-                            .exchange()
-                            .expectStatus()
-                            .isOk()
-                            .expectBody()
-                            .consumeWith(
-                                    res -> {
-                                        String body = new String(res.getResponseBody());
-                                        assertThat(body.contains("코니코니")).isTrue();
-                                        assertThat(body.contains("이메일이메일")).isTrue();
-                                    }
-                            );
-                });
+        enrollUser(user, response -> {
+            webTestClient.get()
+                    .uri(response.getResponseHeaders().getLocation())
+                    .exchange()
+                    .expectStatus()
+                    .isOk();
+        });
     }
 
     @Test
     public void 로그인_테스트() {
-        /** 회원 가입 **/
+        user = new User(USER_ID, NAME, "cony2@cony.com", PASSWORD);
+
+        enrollUser(user, response -> {
+            webTestClient.post()
+                    .uri("/login")
+                    .body(BodyInserters
+                            .fromFormData("email", user.getEmail())
+                            .with("password", user.getPassword()))
+                    .exchange()
+                    .expectStatus().is3xxRedirection();
+        });
+    }
+
+    @Test
+    public void 로그아웃_테스트() {
+        user = new User(USER_ID, NAME, "cony3@cony.com", PASSWORD);
+
+        enrollUser(user, response -> {
+            webTestClient.post()
+                    .uri("/login")
+                    .body(BodyInserters
+                            .fromFormData("email", user.getEmail())
+                            .with("password", user.getPassword()))
+                    .exchange()
+                    .expectStatus().is3xxRedirection()
+                    .expectBody()
+                    .consumeWith(res -> {
+                        webTestClient.get()
+                                .uri("/logout")
+                                .exchange()
+                                .expectStatus().is3xxRedirection();
+                    });
+        });
+    }
+
+    @Test
+    public void 회원조회_페이지_테스트() {
+        user = new User(USER_ID, NAME, "cony4@cony.com", PASSWORD);
+
+        enrollUser(user, response -> {
+            webTestClient.get()
+                    .uri("/users")
+                    .header("Cookie", getCookie(user))
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .consumeWith(res -> {
+                        String body = new String(res.getResponseBody());
+                        assertThat(body.contains(user.getName())).isTrue();
+                        assertThat(body.contains(user.getEmail())).isTrue();
+                    });
+        });
+    }
+
+    @Test
+    public void 마이페이지_테스트() {
+        user = new User(USER_ID, NAME, "cony5@cony.com", PASSWORD);
+
+        enrollUser(user, response -> {
+            webTestClient.get()
+                    .uri("/mypage")
+                    .header("Cookie", getCookie(user))
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .consumeWith(res -> {
+                        String body = new String(res.getResponseBody());
+                        assertThat(body.contains(user.getName())).isTrue();
+                        assertThat(body.contains(user.getEmail())).isTrue();
+                    });
+        });
+    }
+
+    @Test
+    public void 회원정보_수정_테스트() {
+        user = new User(USER_ID, NAME, "cony6@cony.com", PASSWORD);
+
+        enrollUser(user, response -> {
+            webTestClient.put()
+                    .uri("/mypage/edit")
+                    .header("Cookie", getCookie(user))
+                    .body(BodyInserters
+                            .fromFormData("name", "새로운코니")
+                            .with("email", user.getEmail())
+                            .with("password", "@Password123"))
+                    .exchange()
+                    .expectStatus().is3xxRedirection();
+        });
+    }
+
+    private void enrollUser(User user, Consumer<EntityExchangeResult<byte[]>> consumer) {
         webTestClient.post()
                 .uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("name", "코니코니")
-                        .with("email", "이메일")
-                        .with("password", "비번비번"))
+                        .fromFormData("name", user.getName())
+                        .with("email", user.getEmail())
+                        .with("password", user.getPassword()))
                 .exchange()
-                .expectStatus().isFound()
+                .expectStatus().is3xxRedirection()
                 .expectBody()
-                .consumeWith(response -> {
-                    /** 로그인 **/
-                    webTestClient.post()
-                            .uri("/login")
-                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .body(BodyInserters
-                                    .fromFormData("email", "이메일이메일")
-                                    .with("password", "비번비번"))
-                            .exchange()
-                            .expectStatus().isFound()
-                            .expectBody()
-                            .consumeWith(r -> {
-                                /** 인덱스 페이지 이동 **/
-                                webTestClient.get()
-                                        .uri(r.getRequestHeaders().getLocation())
-                                        .exchange()
-                                        .expectStatus()
-                                        .isOk();
-                            });
-                });
+                .consumeWith(consumer);
+    }
+
+    private String getCookie(User user) {
+        return webTestClient.post().uri("/login")
+                .body(BodyInserters
+                        .fromFormData("email", user.getEmail())
+                        .with("password", user.getPassword()))
+                .exchange()
+                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
     }
 }

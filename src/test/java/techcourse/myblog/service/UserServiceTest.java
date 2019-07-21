@@ -19,8 +19,8 @@ class UserServiceTest {
 
     @Test
     public void 중복된_이메일을_등록하는_경우_예외처리() {
-        User user1 = new User(0L, "코니코니", "cony@naver.com", "@Password1234");
-        User user2 = new User(0L, "코니코니", "cony@naver.com", "@Password1234");
+        User user1 = new User(0L, "코니코니", "cony@cony.com", "@Password1234");
+        User user2 = new User(0L, "코니코니", "cony@cony.com", "@Password1234");
 
         userService.createUser(UserAssembler.writeDto(user1));
 
