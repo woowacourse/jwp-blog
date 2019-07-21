@@ -3,6 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.exception.NoArticleException;
 import techcourse.myblog.repository.ArticleRepository;
 
 import javax.transaction.Transactional;
@@ -30,12 +31,12 @@ public class ArticleService {
     }
 
     public Article find(Long id) {
-        return articleRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return articleRepository.findById(id).orElseThrow(NoArticleException::new);
     }
 
     @Transactional
     public Article update(Long id, ArticleDto articleDto) {
-        Article article = articleRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Article article = articleRepository.findById(id).orElseThrow(NoArticleException::new);
         article.update(articleDto);
         return article;
     }

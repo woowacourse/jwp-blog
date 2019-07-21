@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.exception.NoArticleException;
 import techcourse.myblog.service.ArticleService;
 
 import javax.transaction.Transactional;
@@ -37,7 +38,7 @@ public class ArticleController {
         try {
             model.addAttribute("article", articleService.find(id));
             return "article";
-        } catch (IllegalArgumentException e) {
+        } catch (NoArticleException e) {
             log.error(NO_ARTICLE_MESSAGE);
             return "/";
         }
@@ -48,7 +49,7 @@ public class ArticleController {
         try {
             model.addAttribute("article", articleService.find(id));
             return "article-edit";
-        } catch (IllegalArgumentException e) {
+        } catch (NoArticleException e) {
             log.error(NO_ARTICLE_MESSAGE);
             return "/";
         }
@@ -60,7 +61,7 @@ public class ArticleController {
         try {
             model.addAttribute("article", articleService.update(id, updatedArticle));
             return "redirect:/articles/" + id;
-        } catch (IllegalArgumentException e) {
+        } catch (NoArticleException e) {
             log.error(NO_ARTICLE_MESSAGE);
             return "/";
         }

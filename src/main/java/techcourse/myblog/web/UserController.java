@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserSignUpRequestDto;
 import techcourse.myblog.dto.UserUpdateRequestDto;
+import techcourse.myblog.exception.NoUserException;
+import techcourse.myblog.exception.SignUpFailException;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -49,7 +51,7 @@ public class UserController {
         try {
             userService.create(userSignUpRequestDto);
             return "redirect:/login";
-        } catch (IllegalArgumentException e) {
+        } catch (SignUpFailException e) {
             model.addAttribute("error", e.getMessage());
             return "signup";
         }
@@ -78,7 +80,7 @@ public class UserController {
             User user = userService.update(userUpdateRequestDto, email);
             httpSession.setAttribute("user", user);
             return "redirect:/users/mypage";
-        } catch (IllegalArgumentException e) {
+        } catch (NoUserException e) {
             log.error(NO_USER_MESSAGE);
             return "redirect:/";
         }
@@ -90,7 +92,7 @@ public class UserController {
             String email = ((User) httpSession.getAttribute("user")).getEmail();
             userService.delete(email);
             httpSession.removeAttribute("user");
-        } catch (IllegalArgumentException e) {
+        } catch (NoUserException e) {
             log.error(NO_USER_MESSAGE);
         }
         return "redirect:/";

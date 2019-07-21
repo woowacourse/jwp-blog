@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserSignUpRequestDto;
 import techcourse.myblog.dto.UserUpdateRequestDto;
+import techcourse.myblog.exception.NoUserException;
+import techcourse.myblog.exception.SignUpFailException;
 import techcourse.myblog.repository.UserRepository;
 
 import javax.transaction.Transactional;
@@ -18,7 +20,7 @@ public class UserService {
 
     public void create(UserSignUpRequestDto userSignUpRequestDto) {
         if (userRepository.existsByEmail(userSignUpRequestDto.getEmail())) {
-            throw new IllegalArgumentException("중복된 이메일 입니다.");
+            throw new SignUpFailException("중복된 이메일 입니다.");
         }
         User user = new User(userSignUpRequestDto);
         userRepository.save(user);
@@ -30,13 +32,13 @@ public class UserService {
 
     @Transactional
     public User update(UserUpdateRequestDto userUpdateRequestDto, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findByEmail(email).orElseThrow(NoUserException::new);
         user.setUserName(userUpdateRequestDto.getUserName());
         return user;
     }
 
     public void delete(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findByEmail(email).orElseThrow(NoUserException::new);
         userRepository.delete(user);
     }
 }

@@ -2,13 +2,14 @@ package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.dto.UserSignUpRequestDto;
+import techcourse.myblog.exception.SignUpFailException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserTest {
     @Test
     void checkConfirmPassword() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(SignUpFailException.class, () -> {
             UserSignUpRequestDto userSignUpRequestDto = UserSignUpRequestDto.builder().userName("Martin")
                     .email("oeeen3@gmail.com")
                     .password("Aa12345!")

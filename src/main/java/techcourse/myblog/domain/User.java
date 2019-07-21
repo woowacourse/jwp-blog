@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import techcourse.myblog.dto.UserSignUpRequestDto;
+import techcourse.myblog.exception.SignUpFailException;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,7 +38,7 @@ public class User {
 
     private void checkConfirmPassword(UserSignUpRequestDto userSignUpRequestDto) {
         if (!userSignUpRequestDto.getPassword().equals(userSignUpRequestDto.getConfirmPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new SignUpFailException("비밀번호가 일치하지 않습니다.");
         }
     }
 

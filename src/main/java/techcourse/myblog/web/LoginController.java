@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.AuthenticationDto;
+import techcourse.myblog.exception.LoginFailException;
 import techcourse.myblog.service.LoginService;
 
 import javax.servlet.http.HttpSession;
@@ -33,7 +34,7 @@ public class LoginController {
             User user = loginService.login(authenticationDto);
             httpSession.setAttribute("user", user);
             return "redirect:/";
-        } catch (IllegalArgumentException e) {
+        } catch (LoginFailException e) {
             log.info("로그인 실패 : {}", e.getMessage());
             model.addAttribute("error", e.getMessage());
             return "login";
