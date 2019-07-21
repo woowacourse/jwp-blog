@@ -45,7 +45,6 @@ public class UserService {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new UserUpdateException("사용자를 찾을 수 없습니다"));
         user.update(request.getName());
-        userRepository.save(user);
         return user;
     }
 
