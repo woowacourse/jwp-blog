@@ -26,8 +26,23 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String showLoginPage() {
+    public String showLoginPage(HttpSession httpSession) {
+        if (isUserInSession(httpSession)) {
+            return "redirect:/";
+        }
         return "login";
+    }
+
+    private boolean isUserInSession(HttpSession httpSession) {
+        return httpSession.getAttribute("user") != null;
+    }
+
+    @GetMapping("/signup")
+    public String showSignUpPage(HttpSession httpSession) {
+        if (isUserInSession(httpSession)) {
+            return "redirect:/";
+        }
+        return "signup";
     }
 
     @PostMapping("/login")
@@ -42,11 +57,6 @@ public class UserController {
         User user = userService.findByEmail(userLoginDto.getEmail());
         httpSession.setAttribute("user", user);
         return "index";
-    }
-
-    @GetMapping("/signup")
-    public String showSignUpPage() {
-        return "signup";
     }
 
     @PostMapping("/users")
