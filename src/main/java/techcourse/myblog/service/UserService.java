@@ -40,11 +40,6 @@ public class UserService {
 				.orElseThrow(NoSuchElementException::new);
 	}
 
-	public User findByLoginInfo(final UserRequestDto.LoginRequestDto loginRequestDto) {
-		return userRepository.findByEmail(loginRequestDto.getEmail())
-				.orElseThrow(NoSuchElementException::new);
-	}
-
 	public boolean exitsByEmail(final UserRequestDto.SignUpRequestDto signUpRequestDto) {
 		try {
 			return userRepository.existsByEmail(signUpRequestDto.getEmail());

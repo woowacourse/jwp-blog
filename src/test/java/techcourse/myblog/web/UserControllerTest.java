@@ -13,6 +13,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.User.User;
+import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
 
 import java.util.function.Consumer;
@@ -33,6 +34,9 @@ public class UserControllerTest {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private LoginService loginService;
 
 	@BeforeEach
 	public void setUp() {
@@ -105,8 +109,8 @@ public class UserControllerTest {
 		save(user);
 
 		UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
+		User check = loginService.findByLoginRequestDto(loginRequestDto);
 
-		User check = userService.findByLoginInfo(loginRequestDto);
 		webTestClient.get().uri("/users/edit/" + check.getId())
 				.exchange()
 				.expectStatus().isOk();

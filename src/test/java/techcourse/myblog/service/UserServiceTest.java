@@ -79,14 +79,12 @@ public class UserServiceTest {
 	@Test
 	public void 이메일을_기준으로_회원_탈퇴() {
 		UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
-		userService.save(signUpRequestDto);
+		User user = userService.save(signUpRequestDto);
 
 		userService.deleteByEmail(EMAIL);
 
-		UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
-
 		assertThrows(NoSuchElementException.class, () -> {
-			userService.findByLoginInfo(loginRequestDto);
+			userService.findById(user.getId());
 		});
 	}
 

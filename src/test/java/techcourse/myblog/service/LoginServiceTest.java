@@ -35,7 +35,7 @@ public class LoginServiceTest {
 		User expected = userService.save(signUpRequestDto);
 		UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
 
-		assertEquals(expected, userService.findByLoginInfo(loginRequestDto));
+		assertEquals(expected, loginService.findByLoginRequestDto(loginRequestDto));
 	}
 
 	@Test

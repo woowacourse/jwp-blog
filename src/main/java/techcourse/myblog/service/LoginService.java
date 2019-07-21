@@ -25,4 +25,9 @@ public class LoginService {
 			return false;
 		}
 	}
+
+	public User findByLoginRequestDto(final UserRequestDto.LoginRequestDto loginRequestDto) {
+		return userRepository.findByEmail(loginRequestDto.getEmail())
+				.orElseThrow(NoSuchElementException::new);
+	}
 }

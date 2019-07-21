@@ -45,7 +45,7 @@ public class LoginController {
 	@PostMapping("/login")
 	public String login(final UserRequestDto.LoginRequestDto loginRequestDto, final HttpSession session, final Model model) {
 		if (loginService.canLogin(loginRequestDto)) {
-			User user = userService.findByLoginInfo(loginRequestDto);
+			User user = loginService.findByLoginRequestDto(loginRequestDto);
 			UserRequestDto.UserSessionDto userSessionDto = UserRequestDto.UserSessionDto.toDto(user);
 			log.debug("user {} try to login...", userSessionDto);
 			session.setAttribute(SESSION_NAME, userSessionDto);
