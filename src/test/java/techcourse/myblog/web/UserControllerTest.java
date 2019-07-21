@@ -13,10 +13,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.User.User;
-import techcourse.myblog.domain.User.UserRepository;
 import techcourse.myblog.service.UserService;
 
-import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

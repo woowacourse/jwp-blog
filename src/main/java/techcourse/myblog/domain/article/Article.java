@@ -20,7 +20,11 @@ public class Article {
 	}
 
 	public Article(long id, String title, String coverUrl, String contents) {
+		this(title, coverUrl, contents);
 		this.id = id;
+	}
+
+	public Article(String title, String coverUrl, String contents) {
 		this.title = title;
 		this.coverUrl = coverUrl;
 		this.contents = contents;
