@@ -76,7 +76,7 @@ public class UserController {
     public String addUser(UserRequestDto userRequestDto, Model model, HttpSession session) {
         SignUpDto signUpDto = userService.addUser(userRequestDto);
 
-        if (userService.addUser(userRequestDto).isSuccess()) {
+        if (signUpDto.isSuccess()) {
             SessionUtil.setAttribute(session, UserInfo.NAME, userRequestDto.getName());
             return "redirect:/";
         }

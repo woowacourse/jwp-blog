@@ -3,7 +3,6 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.ArticleException;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.utils.ModelUtil;
@@ -29,12 +28,8 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String getArticle(@PathVariable long articleId, Model model) {
-        try {
-            ModelUtil.addAttribute(model, "article", articleService.findArticle(articleId));
-            return "article";
-        } catch (ArticleException e) {
-            return "/";
-        }
+        ModelUtil.addAttribute(model, "article", articleService.findArticle(articleId));
+        return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
