@@ -41,7 +41,7 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public RedirectView update(Article article, Model model) {
+    public RedirectView update(Article article) {
         log.info("수정할 내용 " + article.getTitle() + " " + article.getCoverUrl() + " " + article.getContents());
         articleService.update(article);
         return new RedirectView("/article/" + article.getId());
@@ -59,6 +59,4 @@ public class ArticleController {
         articleService.delete(id);
         return new RedirectView("/");
     }
-
-
 }

@@ -1,6 +1,5 @@
 package techcourse.myblog.domain;
 
-
 import lombok.*;
 
 import javax.persistence.*;

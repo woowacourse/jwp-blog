@@ -22,7 +22,7 @@ public class UserService {
         log.info("UserService.save() : " + userDto.getName() + " " + userDto.getEmail() + " " + userDto.getPassword());
         User user = new User(userDto.getName(), userDto.getEmail(), userDto.getPassword());
         userRepository.save(user);
-        return new UserDto(user.getEmail(),user.getName(),user.getPassword());
+        return new UserDto(user.getEmail(), user.getName(), user.getPassword());
     }
 
     private void emailDuplicateValidate(UserDto userDto) {
