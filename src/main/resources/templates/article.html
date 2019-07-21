@@ -110,10 +110,7 @@
         </div>
     </div>
 </div>
-</body>
-
-<body th:include="fragments/common_script :: common_script"></body>
-
+<th:block th:include="fragments/common_script :: common_script"></th:block>
 <script type="text/javascript" th:inline="javascript">
     const initValue = [[ ${article.contents}]];
     const viewer = tui.Editor.factory({
@@ -134,5 +131,5 @@
         height: '200px'
     });
 </script>
-</>
+</body>
 </html>
