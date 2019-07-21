@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String createLoginForm() {
+    public String createLoginForm(UserLoginRequest userLoginRequest) {
         return "login";
     }
 
@@ -53,7 +53,6 @@ public class UserController {
         }
 
         User user = userService.saveUser(userRequest);
-        httpSession.setAttribute(USER_INFO, user);
 
         return "redirect:/login";
     }

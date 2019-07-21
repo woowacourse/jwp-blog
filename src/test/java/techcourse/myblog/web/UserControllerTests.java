@@ -96,7 +96,7 @@ public class UserControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertTrue(body.contains("email 없음"));
+                    assertTrue(body.contains("일치하는 email이 없습니다!"));
                 })
         ;
     }
@@ -112,7 +112,7 @@ public class UserControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertTrue(body.contains("비밀번호 틀림"));
+                    assertTrue(body.contains("입력한 비밀번호와 다릅니다!"));
                 })
         ;
     }

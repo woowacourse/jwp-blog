@@ -33,3 +33,8 @@
 - [X] 커스텀 익셉션 만들기
 - [ ] article-edit.html  title, coverUrl 부분 리팩터링
 - [ ] index.html에서 마크다운 적용안되는 부분 해결하기
+
+
+## TODO
+- [ ] ```th:object``` 사용으로 사용하지 않는 Dto 클래스를 인자로 가지고 있어야 하는 부분
+- [ ] 회원가입을 하면 

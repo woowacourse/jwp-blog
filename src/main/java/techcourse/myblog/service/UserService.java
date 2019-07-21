@@ -41,7 +41,7 @@ public class UserService {
 
     public User findUserByEmail(UserLoginRequest userLoginRequest) {
         User user = userRepository.findUserByEmail(userLoginRequest.getEmail())
-                .orElseThrow(() -> new LoginException("email 없음"));
+                .orElseThrow(() -> new LoginException("일치하는 email이 없습니다!"));
 
         checkPassword(userLoginRequest, user);
         return user;
@@ -49,7 +49,7 @@ public class UserService {
 
     private void checkPassword(UserLoginRequest userLoginRequest, User user) {
         if (!encryptHelper.isMatch(userLoginRequest.getPassword(), user.getPassword())) {
-            throw new LoginException("비밀번호 틀림");
+            throw new LoginException("입력한 비밀번호와 다릅니다!");
         }
     }
 
