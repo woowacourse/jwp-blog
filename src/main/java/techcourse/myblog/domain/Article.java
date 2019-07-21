@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.Objects;
 @Entity
 @NoArgsConstructor
 @Getter
+@EqualsAndHashCode(of = "id")
 public class Article {
 
     @Id
@@ -35,18 +37,5 @@ public class Article {
         this.title = article.title;
         this.coverUrl = article.coverUrl;
         this.contents = article.contents;
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return id.equals(article.id);
-    }
-    
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }
