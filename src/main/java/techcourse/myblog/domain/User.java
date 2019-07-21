@@ -44,11 +44,17 @@ public class User {
     }
 
     public boolean matchPassword(User user) {
+        if (password == null) {
+            throw new IllegalUserException("password 값이 설정되어 있지 않습니다.");
+        }
         return this.password.equals(user.password);
     }
 
     public boolean matchEmail(User user) {
-        return this.email.equals(user.email);
+        if (email == null) {
+            throw new IllegalUserException("password 값이 설정되어 있지 않습니다.");
+        }
+        return email.equals(user.email);
     }
 
     public void modifyName(String name) {
