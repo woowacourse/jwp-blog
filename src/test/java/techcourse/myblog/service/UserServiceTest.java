@@ -30,11 +30,11 @@ class UserServiceTest {
 
     @Test
     void update() {
-        saveUser();
+        User user = saveUser();
         UserUpdateRequestDto userUpdateRequestDto = new UserUpdateRequestDto();
         userUpdateRequestDto.setUserName("NewName");
 
-        User updatedUser = userService.update(userUpdateRequestDto, "martin@gmail.com");
+        User updatedUser = userService.update(userUpdateRequestDto, user.getUserId());
         assertThat(updatedUser.getUserName()).isEqualTo("NewName");
         assertThat(updatedUser.getEmail()).isEqualTo("martin@gmail.com");
         assertThat(updatedUser.getPassword()).isEqualTo("Aa12345!");
@@ -42,8 +42,8 @@ class UserServiceTest {
 
     @Test
     void delete() {
-        saveUser();
-        userService.delete("martin@gmail.com");
+        User user = saveUser();
+        userService.delete(user.getUserId());
 
         assertFalse(userRepository.findByEmail("martin@gamil.com").isPresent());
     }

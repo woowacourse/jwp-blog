@@ -32,14 +32,14 @@ public class UserService {
     }
 
     @Transactional
-    public User update(UserUpdateRequestDto userUpdateRequestDto, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new NoUserException(NO_USER_MESSAGE));
+    public User update(UserUpdateRequestDto userUpdateRequestDto, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoUserException(NO_USER_MESSAGE));
         user.setUserName(userUpdateRequestDto.getUserName());
         return user;
     }
 
-    public void delete(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new NoUserException(NO_USER_MESSAGE));
+    public void delete(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoUserException(NO_USER_MESSAGE));
         userRepository.delete(user);
     }
 }
