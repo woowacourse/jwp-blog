@@ -1,6 +1,6 @@
 plugins {
-	id 'org.springframework.boot' version '2.1.6.RELEASE'
-	id 'java'
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
+    id 'java'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -10,23 +10,24 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'com.h2database:h2'
-	compile group: 'org.projectlombok', name: 'lombok', version: '1.18.6'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.h2database:h2'
+    implementation 'org.projectlombok:lombok:1.18.8'
 
-	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
-	runtimeOnly('org.springframework.boot:spring-boot-devtools')
-	testCompile("org.junit.jupiter:junit-jupiter-params:5.4.2")
-	testImplementation 'org.junit.jupiter:junit-jupiter-api'
-	testImplemezntation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'junit'
-    }
-	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+    runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+
+    testImplementation "org.junit.jupiter:junit-jupiter-params:5.4.2"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
