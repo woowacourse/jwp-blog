@@ -11,7 +11,7 @@ public class ArticleTests {
 
     @BeforeEach
     void setUp() {
-        article = new Article("title", "url", "contents");
+        article = new Article(1L, "title", "url", "contents");
     }
 
     @Test

@@ -1,9 +1,11 @@
 package techcourse.myblog.web;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import techcourse.myblog.repository.ArticleRepository;
 
+@Controller
 public class IndexController {
     private ArticleRepository articleRepository;
 

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.dto.LogInInfoDto;
-import techcourse.myblog.dto.LoggedInUserDto;
+import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.service.LogInService;
 import techcourse.myblog.service.exception.LogInException;
 
@@ -34,9 +34,9 @@ public class LogInController {
 
     @PostMapping("/login")
     public String logIn(LogInInfoDto logInInfoDto, HttpServletRequest httpServletRequest) {
-        LoggedInUserDto loggedInUserDto = logInService.logIn(logInInfoDto);
+        UserPublicInfoDto userPublicInfoDto = logInService.logIn(logInInfoDto);
         HttpSession httpSession = httpServletRequest.getSession();
-        httpSession.setAttribute(LOGGED_IN_USER, loggedInUserDto);
+        httpSession.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
         return "redirect:/";
     }
 
