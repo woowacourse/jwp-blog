@@ -13,7 +13,9 @@ public class LoginUtil {
         return session.getAttribute(SESSION_USER_KEY) != null;
     }
 
-    public static void checkAndPutUser(Model model, Optional<User> currentUser) {
-        currentUser.ifPresent(user -> model.addAttribute(SESSION_USER_KEY, user));
+    public static void checkAndPutUser(Model model, User currentUser) {
+        if (currentUser != null) {
+            model.addAttribute(SESSION_USER_KEY, currentUser);
+        }
     }
 }

@@ -33,7 +33,7 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public String indexView(Model model, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
+    public String indexView(Model model, @SessionAttribute(name = SESSION_USER_KEY, required = false) User currentUser) {
         checkAndPutUser(model, currentUser);
         List<Article> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);

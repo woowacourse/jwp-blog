@@ -16,8 +16,6 @@ import techcourse.myblog.web.dto.UserUpdateRequestDto;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import javax.validation.Validator;
-import java.util.Optional;
 
 import static techcourse.myblog.web.LoginUtil.*;
 
@@ -43,15 +41,17 @@ public class UserController {
 
     @PostMapping("/users")
     public String register(@Valid UserRequestDto userRequestDto, BindingResult bindingResult,
-                           Model model, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
+                           Model model,
+                           @SessionAttribute(name = SESSION_USER_KEY, required = false) User currentUser) {
         try {
             checkBindingResult(bindingResult);
-            if (currentUser.isPresent()) {
+            if (currentUser != null) {
                 return "redirect:/";
             }
             userService.register(userRequestDto);
             return "redirect:/login";
         } catch (IllegalArgumentException e) {
+            logger.error("Error occurred while register user", e);
             model.addAttribute("error", true);
             model.addAttribute("message", e.getMessage());
             return "signup";
@@ -66,8 +66,8 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String loginView(@SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
-        if (currentUser.isPresent()) {
+    public String loginView(@SessionAttribute(name = SESSION_USER_KEY, required = false) User currentUser) {
+        if (currentUser == null) {
             return "redirect:/";
         }
         return "login";
@@ -83,7 +83,7 @@ public class UserController {
             session.setAttribute(SESSION_USER_KEY, user);
             return "redirect:/";
         } catch (UserAuthenticateException e) {
-            logger.info("Login failed: {}", e.getMessage());
+            logger.error("Login failed", e);
             model.addAttribute("message", e.getMessage());
         } catch (Exception e) {
             logger.error("Login error", e);
@@ -94,7 +94,8 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public String userListView(Model model, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
+    public String userListView(Model model,
+                               @SessionAttribute(name = SESSION_USER_KEY, required = false) User currentUser) {
         checkAndPutUser(model, currentUser);
         model.addAttribute("users", userService.findAll());
         return "user-list";
@@ -119,12 +120,12 @@ public class UserController {
     }
 
     @GetMapping("/mypage-edit")
-    public String myPageEditView(Model model, @SessionAttribute(SESSION_USER_KEY) Optional<User> currentUser) {
-        if (currentUser.isPresent()) {
-            model.addAttribute(SESSION_USER_KEY, currentUser.get());
-            return "mypage-edit";
+    public String myPageEditView(Model model, @SessionAttribute(name = SESSION_USER_KEY, required = false) User currentUser) {
+        if (currentUser == null) {
+            return "redirect:login";
         }
-        return "redirect:login";
+        model.addAttribute(SESSION_USER_KEY, currentUser);
+        return "mypage-edit";
     }
 
     @PutMapping("/users")
