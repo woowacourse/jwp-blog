@@ -32,7 +32,8 @@ public class UserControllerTests {
         webTestClient.post().uri("/users")
                 .body(BodyInserters.fromFormData("name", "Bob")
                         .with("email", "test@gmail.com")
-                        .with("password", "PassWord1!"))
+                        .with("password", "PassWord1!")
+                        .with("reconfirmPassword", "PassWord1!"))
                 .exchange()
                 .expectStatus()
                 .isFound()
@@ -62,7 +63,8 @@ public class UserControllerTests {
         webTestClient.post().uri("/users")
                 .body(BodyInserters.fromFormData("name", "Alice")
                         .with("email", "test@gmail.com")
-                        .with("password", "PassWord1!"))
+                        .with("password", "PassWord1!")
+                        .with("reconfirmPassword", "PassWord1!"))
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -166,9 +168,9 @@ public class UserControllerTests {
                                 String body = new String(response2.getResponseBody());
                                 assertTrue(body.contains("editName"));
                             })
-                            ;
+                    ;
                 })
-                ;
+        ;
     }
 
     @Test
@@ -177,6 +179,6 @@ public class UserControllerTests {
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection()
-                ;
+        ;
     }
 }

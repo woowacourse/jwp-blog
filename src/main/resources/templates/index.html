@@ -97,5 +97,12 @@
 
 <th:block th:include="/fragments/main-js :: mainJs"/>
 
+<script th:inline="javascript" type="text/javascript">
+    error = [[${error.errorMessage}]];
+    if(error !== null) {
+        window.alert(error)
+    }
+</script>
+
 </body>
 </html>
