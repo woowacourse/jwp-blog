@@ -67,4 +67,10 @@ public class UserController {
         model.addAttribute("users", users);
         return "user-list";
     }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession httpSession) {
+        httpSession.removeAttribute("user");
+        return "redirect:/";
+    }
 }

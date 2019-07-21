@@ -47,4 +47,28 @@ class UserControllerTests {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+    @Test
+    void login() {
+        webTestClient.post().uri("/users")
+                .body(BodyInserters
+                        .fromFormData("name", "이름")
+                        .with("email", "test@test.com")
+                        .with("password", "password"))
+                .exchange();
+
+        webTestClient.post().uri("/login")
+                .body(BodyInserters
+                        .fromFormData("email", "test@test.com")
+                        .with("password", "password"))
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void logout() {
+        webTestClient.get().uri("/logout")
+                .exchange()
+                .expectStatus().isFound();
+    }
 }
