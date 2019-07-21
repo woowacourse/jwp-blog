@@ -6,11 +6,13 @@ public class UserDto {
     private String name;
     private String email;
     private String password;
+    private String passwordConfirm;
 
-    public UserDto(String name, String email, String password) {
+    public UserDto(String name, String email, String password, String passwordConfirm) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.passwordConfirm = passwordConfirm;
     }
 
     public String getName() {
@@ -23,6 +25,10 @@ public class UserDto {
 
     public String getPassword() {
         return password;
+    }
+
+    public boolean confirmPassword() {
+        return password.equals(passwordConfirm);
     }
 
     public User toEntity() {
