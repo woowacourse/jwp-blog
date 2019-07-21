@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import techcourse.myblog.controller.template.ControllerTestTemplate;
 import techcourse.myblog.service.dto.UserDto;
 
 public class UserCommonTests extends ControllerTestTemplate {

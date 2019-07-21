@@ -1,7 +1,5 @@
 package techcourse.myblog.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,12 +10,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.support.ModelSupport;
-import techcourse.myblog.support.RedirectAttibuteSupport;
-import techcourse.myblog.support.validation.UserGroups;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.support.ModelSupport;
+import techcourse.myblog.support.RedirectAttributeSupport;
+import techcourse.myblog.support.validation.UserGroups.Edit;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -43,16 +41,18 @@ public class UserInfoController {
     }
 
     @PutMapping("/edit")
-    public RedirectView myPageEdit(HttpServletRequest request, @Validated(UserGroups.Edit.class) UserDto userDto,
-                             BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public RedirectView myPageEdit(HttpServletRequest request, @Validated(Edit.class) UserDto userDto,
+                                   BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", request.getSession().getAttribute("user"));
-            RedirectAttibuteSupport.addFlashAttribute("userDto", userDto, redirectAttributes, bindingResult);
+            RedirectAttributeSupport.addBindingResult(redirectAttributes, bindingResult, "userDto", userDto);
             return new RedirectView("/edit");
         }
 
         User user = (User) request.getSession().getAttribute("user");
-        userService.update(user, userDto);
+        userService.update(user.getId(), userDto).ifPresent(updateUser -> {
+            request.getSession().setAttribute("user", updateUser);
+        });
 
         return new RedirectView("/mypage");
     }

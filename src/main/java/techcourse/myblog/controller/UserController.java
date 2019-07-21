@@ -15,7 +15,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.service.DuplicateEmailException;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserDto;
-import techcourse.myblog.support.RedirectAttibuteSupport;
+import techcourse.myblog.support.RedirectAttributeSupport;
 import techcourse.myblog.support.validation.UserGroups.All;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,11 +30,23 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("")
+    @GetMapping
+    public String findAllUsersForm(Model model) {
+        model.addAttribute("users", userService.findAll());
+        return "user-list";
+    }
+
+    @GetMapping("/logout")
+    public RedirectView logout(HttpServletRequest httpServletRequest) {
+        httpServletRequest.getSession().removeAttribute("user");
+        return new RedirectView("/");
+    }
+
+    @PostMapping
     public RedirectView createUser(@Validated({All.class}) UserDto userDto, BindingResult bindingResult,
-                             RedirectAttributes redirectAttributes) {
+                                   RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            RedirectAttibuteSupport.addFlashAttribute("userDto", userDto, redirectAttributes, bindingResult);
+            RedirectAttributeSupport.addBindingResult(redirectAttributes, bindingResult, "userDto", userDto);
             return new RedirectView("/signup");
         }
 
@@ -42,36 +54,24 @@ public class UserController {
             userService.save(userDto);
         } catch (DuplicateEmailException e) {
             bindingResult.addError(new FieldError("userDto", "email", e.getMessage()));
-            RedirectAttibuteSupport.addFlashAttribute("userDto", userDto, redirectAttributes, bindingResult);
+            RedirectAttributeSupport.addBindingResult(redirectAttributes, bindingResult, "userDto", userDto);
             return new RedirectView("/signup");
         }
 
         return new RedirectView("/login");
     }
 
-    @GetMapping("")
-    public String findAllUsersForm(Model model) {
-        model.addAttribute("users", userService.findAll());
-        return "user-list";
-    }
-
     @PostMapping("/login")
     public RedirectView login(HttpServletRequest httpServletRequest, @ModelAttribute("userDto") UserDto userDto,
-                        BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+                              BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         Optional<User> user = userService.findByEmailAndPassword(userDto);
         if (user.isPresent()) {
             httpServletRequest.getSession().setAttribute("user", user.get());
             return new RedirectView("/");
         }
         bindingResult.addError(new FieldError("userDto", "email", "이메일이나 비밀번호가 일치하지 않습니다."));
-        RedirectAttibuteSupport.addFlashAttribute("userDto", userDto, redirectAttributes, bindingResult);
+        RedirectAttributeSupport.addBindingResult(redirectAttributes, bindingResult, "userDto", userDto);
 
         return new RedirectView("/login");
-    }
-
-    @GetMapping("/logout")
-    public RedirectView logout(HttpServletRequest httpServletRequest) {
-        httpServletRequest.getSession().removeAttribute("user");
-        return new RedirectView("/");
     }
 }
