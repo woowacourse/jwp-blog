@@ -13,7 +13,7 @@ public class User {
     public User() {
     }
 
-    public User(String email, String name, String password) {
+    public User(final String email, final String name, final String password) {
         this.email = email;
         this.name = name;
         this.password = password;
@@ -31,7 +31,7 @@ public class User {
         return password;
     }
 
-    public void update(String name) {
+    public void update(final String name) {
         this.name = name;
     }
 }

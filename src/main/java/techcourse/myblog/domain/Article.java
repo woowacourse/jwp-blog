@@ -28,7 +28,7 @@ public class Article {
         this.contents = contents;
     }
 
-    private void checkNull(String title, String coverUrl, String contents) {
+    private void checkNull(final String title, final String coverUrl, final String contents) {
         if (Objects.isNull(title) || Objects.isNull(coverUrl) || Objects.isNull(contents)) {
             throw new NullPointerException();
         }

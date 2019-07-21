@@ -7,7 +7,7 @@ import techcourse.myblog.dto.UserResponseDto;
 import java.util.Objects;
 
 public class UserAssembler {
-    public static UserResponseDto convertToDto(User user) {
+    public static UserResponseDto convertToDto(final User user) {
         if (Objects.isNull(user)) {
             throw new NullPointerException();
         }
@@ -16,7 +16,7 @@ public class UserAssembler {
         return new UserResponseDto(email, name);
     }
 
-    public static User convertToEntity(UserRequestDto userRequestDto) {
+    public static User convertToEntity(final UserRequestDto userRequestDto) {
         if (Objects.isNull(userRequestDto)) {
             throw new NullPointerException();
         }

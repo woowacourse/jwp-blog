@@ -21,7 +21,7 @@ public class ArticleService {
     private final ArticleAssembler assembler;
 
     @Autowired
-    public ArticleService(ArticleRepository articleRepository) {
+    public ArticleService(final ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
         assembler = new ArticleAssembler();
     }
@@ -60,7 +60,7 @@ public class ArticleService {
         }
     }
 
-    private void checkDto(ArticleDto articleDTO) {
+    private void checkDto(final ArticleDto articleDTO) {
         if (Objects.isNull(articleDTO)) {
             throw new ArticleDtoNotFoundException();
         }

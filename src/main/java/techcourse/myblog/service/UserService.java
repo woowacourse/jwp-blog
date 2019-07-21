@@ -21,14 +21,14 @@ import static techcourse.myblog.service.UserAssembler.convertToEntity;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
+    final private UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(final UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public void save(UserRequestDto userRequestDto) {
+    public void save(final UserRequestDto userRequestDto) {
         User user = convertToEntity(userRequestDto);
         String email = user.getEmail();
         if (userRepository.findById(email).isPresent()) {
@@ -43,19 +43,23 @@ public class UserService {
                 .collect(collectingAndThen(toList(), Collections::unmodifiableList));
     }
 
-    public UserResponseDto findByEmailAndPassword(String email, String password) {
+    public UserResponseDto findByEmailAndPassword(final String email, final String password) {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            if (!user.getPassword().equals(password)) {
-                throw new InvalidPasswordException("틀린 비밀번호입니다.");
-            }
+            validatePassword(password, user);
             return convertToDto(user);
         }
         throw new EmailNotFoundException("틀린 이메일입니다!");
     }
 
-    public UserResponseDto update(String email, String name) {
+    private void validatePassword(final String password, final User user) {
+        if (!user.getPassword().equals(password)) {
+            throw new InvalidPasswordException("틀린 비밀번호입니다.");
+        }
+    }
+
+    public UserResponseDto update(final String email, final String name) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
             User retrieveUser = userOptional.get();
@@ -66,7 +70,6 @@ public class UserService {
         throw new EmailNotFoundException("존재하지 않는 회원입니다.");
     }
 
-    // TODO: 2019-07-20 dto통합하기
     public void delete(final UserResponseDto user) {
         userRepository.deleteById(user.getEmail());
     }

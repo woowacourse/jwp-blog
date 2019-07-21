@@ -3,7 +3,6 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,16 +17,15 @@ import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
 @Controller
 public class UserController {
-    private UserService userService;
+    final private UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(final UserService userService) {
         this.userService = userService;
     }
 
@@ -61,21 +59,17 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ModelAndView registerUsers(@Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
-        ModelAndView modelAndView = new ModelAndView();
-        if (bindingResult.hasErrors()) {
-            modelAndView.setView(new RedirectView("/signup"));
-            return modelAndView;
-        }
-        modelAndView.setView(new RedirectView("/login"));
+    public ModelAndView registerUsers(final UserRequestDto userRequestDto) {
         userService.save(userRequestDto);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setView(new RedirectView("/login"));
         return modelAndView;
     }
 
     @PostMapping("/users/login")
-    public ModelAndView processLogin(HttpServletRequest request, String email, String password) {
+    public ModelAndView processLogin(final HttpServletRequest request, final String email, final String password) {
         ModelAndView modelAndView = new ModelAndView();
-        UserResponseDto userResponseDto = null;
+        UserResponseDto userResponseDto;
         try {
             userResponseDto = userService.findByEmailAndPassword(email, password);
         } catch (EmailNotFoundException | InvalidPasswordException e) {
@@ -92,7 +86,7 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public ModelAndView showMyPage(HttpSession session) {
+    public ModelAndView showMyPage(final HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("mypage");
         UserResponseDto user = (UserResponseDto) session.getAttribute("user");

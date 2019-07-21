@@ -16,10 +16,10 @@ import java.util.Objects;
 
 @Controller
 public class ArticleController {
-    private ArticleService articleService;
+    final private ArticleService articleService;
 
     @Autowired
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(final ArticleService articleService) {
         this.articleService = articleService;
     }
 
@@ -40,7 +40,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public ModelAndView createArticle(ArticleDto articleDTO) {
+    public ModelAndView createArticle(final ArticleDto articleDTO) {
         int id = articleService.save(articleDTO);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/articles/" + id));
@@ -48,13 +48,13 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}")
-    public String showArticle(@PathVariable int id, Model model) {
+    public String showArticle(@PathVariable final int id, Model model) {
         model.addAttribute("articleDTO", articleService.findById(id));
         return "article";
     }
 
     @PutMapping("/articles/{id}")
-    public ModelAndView updateArticle(@PathVariable int id, ArticleDto articleDTO) {
+    public ModelAndView updateArticle(@PathVariable final int id, final ArticleDto articleDTO) {
         articleService.update(id, articleDTO);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/articles/" + id));
@@ -62,7 +62,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{id}")
-    public ModelAndView deleteArticle(@PathVariable int id) {
+    public ModelAndView deleteArticle(@PathVariable final int id) {
         articleService.delete(id);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/"));
@@ -70,7 +70,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}/edit")
-    public String showEditPage(@PathVariable int id, Model model) {
+    public String showEditPage(@PathVariable final int id, Model model) {
         model.addAttribute("articleDTO", articleService.findById(id));
         return "article-edit";
     }
