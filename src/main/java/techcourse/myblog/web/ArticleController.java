@@ -21,6 +21,7 @@ import static techcourse.myblog.web.LoginUtil.checkAndPutUser;
 
 @Controller
 public class ArticleController {
+    private static final String EXCEPTION_MESSAGE_ARTICLE_NOT_FOUND = "게시물을 찾을 수 없습니다";
 
     private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
@@ -55,7 +56,7 @@ public class ArticleController {
     public String articleView(@PathVariable Long articleId, Model model) {
         try {
             Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> createNotFoundException(articleId));
+                .orElseThrow(ArticleController::createNotFoundException);
             model.addAttribute("article", article);
             return "article";
         } catch (NoSuchElementException e) {
@@ -66,7 +67,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}/edit")
     public String editArticleView(@PathVariable Long articleId, Model model) {
         Article article = articleRepository.findById(articleId)
-            .orElseThrow(() -> createNotFoundException(articleId));
+            .orElseThrow(ArticleController::createNotFoundException);
         model.addAttribute("article", article);
         return "article-edit";
     }
@@ -76,7 +77,7 @@ public class ArticleController {
         Article article = Article.of(articleId, reqArticle.getTitle(), reqArticle.getCoverUrl(), reqArticle.getContents());
         articleRepository.save(article);
         Article articleToShow = articleRepository.findById(articleId)
-            .orElseThrow(() -> createNotFoundException(articleId));
+            .orElseThrow(ArticleController::createNotFoundException);
         model.addAttribute("article", articleToShow);
         return "article";
     }
@@ -87,7 +88,7 @@ public class ArticleController {
         return "redirect:/";
     }
 
-    private static NoSuchElementException createNotFoundException(Long id) {
-        return new NoSuchElementException("Can't find article with id: " + id);
+    private static NoSuchElementException createNotFoundException() {
+        return new NoSuchElementException(EXCEPTION_MESSAGE_ARTICLE_NOT_FOUND);
     }
 }
