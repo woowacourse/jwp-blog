@@ -1,26 +1,38 @@
-# 나만의 블로그 서비스
+## 나만의 블로그 서비스 (1주차)
 
-## Spring Boot으로 게시글 CRUD
+### 기능 요구사항
+- 게시글 생성
+    - 게시글 작성 페이지 이동
+    - 메인페이지(index.html)에서 게시글 생성 버튼을 누르기
+    - GET /writing 으로 요청
+    - 작성 페이지(article-edit.html)로 이동
+- 게시글 작성
+    - POST /articles 으로 요청
+    - 게시글 생성 시 게시글은 ArticleRepository의 List<Article> articles에 저장한다.
+    - 게시글 페이지(article.html)로 이동
+- 게시글 목록 조회
+    - 메인 페이지 이동
+    - GET / 으로 요청으로 이동 시 메인 페이지에 게시글 목록이 노출
+- 게시글 조회
+    - 게시글 페이지 이동
+    - 메인페이지(index.html)에서 게시글을 클릭 시 게시글 페이지(article.html)으로 이동
+    - GET /articles/{articleId} 으로 요청
 
-## 필요 기능
+- 게시글 수정
+    - 게시글 수정 페이지 이동
+        - 게시글 페이지(article.html)에서 수정 버튼 누르기
+        - GET /articles/{articleId}/edit 으로 요청
+        - 게시글 수정 페이지(article-edit.html)로 이동
+    - 게시글 수정
+        - PUT /articles/{articleId} 으로 요청
+        - 게시글 페이지(article.html)로 이동
+- 게시글 삭제
+    - 게시글 페이지(article.html)에서 삭제 버튼 누르기
+    - DELETE /articles/{articleId} 으로 요청
+    - 게시글 목록 조회 페이지(index.html)로 이동
 
-1. index 서빙  
-    1.1 모든 Article을 동적으로 표현  
-    1.2 해당 Article 조회 (GET /articles/ + ID)
-    1.3 Article 생성 진입점 (GET /writing) 
-2. Article 생성 (/writing)  
-    2.1 POST /articles/new
-    
-3. Article 수정  
-    3.1 수정 템플릿 제공 (GET /articles/ + ID + /edit)
-    3.2 PUT /articles/ + ID
-    
-4. Article 삭제
-    4.1 Article (/ariticles/ + ID) 에서 DELETE 요청
-    4.2 DELETE /articles/ + ID
-    
-## 추가사항
 
-- HTML 중복 제거 -> thymeleaf fragment
-- 클래스, 스태틱 파일 수정시 자동 재시작 -> spring-boot-devtools
-- thymeleaf
+### 제약조건
+- HTML 중복제거
+- 정적 파일 수정 시 재시작 하지 않고 변경사항 반영하기
+- class 파일 수정 시 자동으로 재시작 하기
