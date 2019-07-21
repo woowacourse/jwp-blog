@@ -13,14 +13,18 @@ public class UserRequestDto {
     public static final String CONSTRAINT_USERNAME_PATTERN = "^[a-zA-Z ]*$";
     public static final String CONSTRAINT_PASSWORD_PATTERN = "((?=.*\\d)(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
 
+    private static final int CONSTRAINT_USERNAME_LENGTH_MIN = 2;
+    private static final int CONSTRAINT_USERNAME_LENGTH_MAX = 10;
+    private static final int CONSTRAINT_PASSWORD_LENGTH_MIN = 8;
+
     @NotBlank
-    @Size(min = 2, max = 10, message = CONSTRAINT_VIOLATION_USERNAME_SIZE)
+    @Size(min = CONSTRAINT_USERNAME_LENGTH_MIN, max = CONSTRAINT_USERNAME_LENGTH_MAX, message = CONSTRAINT_VIOLATION_USERNAME_SIZE)
     @Pattern(regexp = CONSTRAINT_USERNAME_PATTERN, message = CONSTRAINT_VIOLATION_USERNAME_FORMAT)
     private String name;
     @Email(message = CONSTRAINT_VIOLATION_EMAIL_FORMAT)
     private String email;
     @NotBlank
-    @Size(min = 8, message = CONSTRAINT_VIOLATION_PASSWORD_SIZE)
+    @Size(min = CONSTRAINT_PASSWORD_LENGTH_MIN, message = CONSTRAINT_VIOLATION_PASSWORD_SIZE)
     @Pattern(regexp = CONSTRAINT_PASSWORD_PATTERN, message = CONSTRAINT_VIOLATION_PASSWORD_FORMAT)
     private String password;
     private String passwordConfirm;

@@ -139,6 +139,8 @@ public class UserController {
             session.setAttribute(SESSION_USER_KEY, updated);
             return "redirect:/mypage";
         } catch (IllegalArgumentException e) {
+            logger.error("Error occurred while update user", e);
+            model.addAttribute(SESSION_USER_KEY, session.getAttribute(SESSION_USER_KEY));
             model.addAttribute("error", true);
             model.addAttribute("message", e.getMessage());
             return "mypage";

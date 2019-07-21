@@ -34,10 +34,8 @@ public class User {
         return newUser;
     }
 
-    public void update(User user) {
-        this.username = user.username;
-        this.email = user.email;
-        this.password = user.password;
+    public void update(String username) {
+        this.username = username;
     }
 
     public Long getId() {
@@ -56,8 +54,8 @@ public class User {
         return password;
     }
 
-    public boolean authenticate(String email, String password) {
-        return this.email.equals(email) && this.password.equals(password);
+    public boolean authenticate(String password) {
+        return this.password.equals(password);
     }
 
     @Override

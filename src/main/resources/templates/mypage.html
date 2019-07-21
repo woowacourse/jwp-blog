@@ -94,6 +94,7 @@
                                     </div>
                                 </div>
                                 <hr>
+                                <div th:if="${error != null}" th:text="${message}" class="alert alert-danger" role="alert"></div>
                                 <form action="/withdraw" method="post">
                                     <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">회원 탈퇴</button>
                                     <input type="hidden" name="_method" value="delete" />
