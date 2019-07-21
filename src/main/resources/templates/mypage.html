@@ -104,7 +104,7 @@
 								<p class="mrg-top-10 text-dark"><b>Name</b></p>
 							</div>
 							<div class="col-md-6">
-								<p class="mrg-top-10" th:text="${session.user.name}">Brown</p>
+								<p class="mrg-top-10" th:if="${session.user}" th:text="${session.user.name}">Brown</p>
 							</div>
 						</div>
 						<hr>
@@ -113,7 +113,7 @@
 								<p class="mrg-top-10 text-dark"><b>Email</b></p>
 							</div>
 							<div class="col-md-6">
-								<p class="mrg-top-10" th:text="${session.user.email}">gracefulBrown@woowahan.com</p>
+								<p class="mrg-top-10" th:if="${session.user}" th:text="${session.user.email}">gracefulBrown@woowahan.com</p>
 							</div>
 						</div>
 						<hr>

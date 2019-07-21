@@ -78,4 +78,20 @@ class UserControllerTests {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+    @Test
+    void mypage_confirm_페이지_이동() {
+        webTestClient.get().uri("/mypage/edit")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void mypage_edit_페이지_이동() {
+        webTestClient.post().uri("/mypage/edit")
+                .body(BodyInserters
+                        .fromFormData("password", "pwd"))
+                .exchange()
+                .expectStatus().isOk();
+    }
 }
