@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
 
-import javax.transaction.Transactional;
-
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
@@ -40,7 +38,6 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @Transactional
     @PutMapping("/{id}")
     public String showUpdatedArticle(@PathVariable Long id, ArticleDto updatedArticle, Model model) {
         model.addAttribute("article", articleService.update(id, updatedArticle));
