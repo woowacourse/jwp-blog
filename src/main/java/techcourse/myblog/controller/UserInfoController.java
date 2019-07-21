@@ -41,7 +41,7 @@ public class UserInfoController {
 
     @PutMapping("/edit")
     public String myPageEdit(HttpServletRequest request, @Validated(UserGroups.Edit.class) UserDto userDto,
-                                   BindingResult bindingResult, Model model) {
+                             BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", request.getSession().getAttribute("user"));
             return "mypage-edit";
