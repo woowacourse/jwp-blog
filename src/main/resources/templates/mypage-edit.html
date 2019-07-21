@@ -17,8 +17,9 @@
         </div>
     </div>
 
-    <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
-        <div class="row">
+    <form action="/mypage-edit" method="post">
+        <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
+            <div class="row">
             <div class="col-md-7 mx-auto">
                 <div class="card">
                     <div class="card-heading pdd-btm-5 border bottom">
@@ -31,8 +32,14 @@
                                 <p class="mrg-top-10 text-dark"> <b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" name="name" class="form-control" th:value="${loginUser.name}">
+                                <input th:value="${loginUser.name}" type="text" name="name" class="form-control"
+                                       required pattern="^[가-힣a-zA-Z]+$" minlength="2" maxlength="10">
                             </div>
+                        </div>
+                        <div class="col-md-12">
+                            <p th:if="${errorMessage}" class="mrg-top-10 text-danger">
+                                <b th:text="${errorMessage}"></b>
+                            </p>
                         </div>
                         <hr>
                         <div class="row">
@@ -96,8 +103,10 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
-    </div>
+        <input type="hidden" name="_method" value="put"/>
+    </form>
 </div>
 
 <th:block th:include="fragments/scripts"></th:block>

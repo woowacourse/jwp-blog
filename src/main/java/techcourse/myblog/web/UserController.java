@@ -74,7 +74,7 @@ public class UserController {
         return "mypage-edit";
     }
 
-    @PutMapping("/mypage")
+    @PutMapping("/mypage-edit")
     public String updateUser(@Valid UserUpdateDto userUpdateDto, BindingResult bindingResult, HttpSession session, Model model) {
         try {
             if (!isLoggedIn(session)) {
@@ -85,6 +85,7 @@ public class UserController {
             return "redirect:/mypage";
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
             return "mypage-edit";
         }
     }
