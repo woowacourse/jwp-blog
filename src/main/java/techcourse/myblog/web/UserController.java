@@ -3,6 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -88,5 +89,14 @@ public class UserController {
             model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
             return "mypage-edit";
         }
+    }
+
+    @DeleteMapping("/withdrawal")
+    public String withdrawalUser(HttpSession session) {
+        if (!isLoggedIn(session)) {
+            return "redirect:/";
+        }
+        userService.delete(session);
+        return "redirect:/";
     }
 }

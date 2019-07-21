@@ -11,10 +11,12 @@ import techcourse.myblog.exception.InvalidDataFormException;
 import techcourse.myblog.exception.UnequalPasswordException;
 import techcourse.myblog.repository.UserRepository;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Service
 public class UserService {
+    public static final String LOGIN_SESSION_KEY = "loginUser";
     private UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -53,6 +55,12 @@ public class UserService {
         checkUserDataForm(bindingResult);
         user.updateUser(userUpdateDto);
         userRepository.save(user);
+    }
+
+    public void delete(HttpSession session) {
+        Long userId = ((User) session.getAttribute(LOGIN_SESSION_KEY)).getId();
+        userRepository.deleteById(userId);
+        session.removeAttribute(LOGIN_SESSION_KEY);
     }
 
     public List<User> getUserList() {
