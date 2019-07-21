@@ -29,19 +29,6 @@ class UserControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    public static void postUser(WebTestClient webTestClient, UserDto userDto, Consumer<EntityExchangeResult<byte[]>> consumer) {
-        webTestClient.post()
-                .uri("/users")
-                .body(BodyInserters.fromFormData("name", userDto.getName())
-                        .with("email", userDto.getEmail())
-                        .with("password", userDto.getPassword())
-                        .with("passwordConfirm", userDto.getPasswordConfirm()))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(consumer);
-    }
-
     @BeforeEach
     void setUp() {
         userDto = new UserDto();
@@ -65,6 +52,28 @@ class UserControllerTest {
                         .with("passwordConfirm", userDto.getPasswordConfirm()))
                 .exchange()
                 .expectStatus();
+    }
+
+    public static void postUser(WebTestClient webTestClient, UserDto userDto, Consumer<EntityExchangeResult<byte[]>> consumer) {
+        webTestClient.post()
+                .uri("/users")
+                .body(BodyInserters.fromFormData("name", userDto.getName())
+                        .with("email", userDto.getEmail())
+                        .with("password", userDto.getPassword())
+                        .with("passwordConfirm", userDto.getPasswordConfirm()))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody()
+                .consumeWith(consumer);
+    }
+
+    private void getMyPageView(String sessionId, Consumer<EntityExchangeResult<byte[]>> consumer) {
+        webTestClient.get()
+                .uri("/mypage" + sessionId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(consumer);
     }
 
     @Test
@@ -145,18 +154,61 @@ class UserControllerTest {
     @Test
     @DisplayName("로그인을 유지하고 회원 정보 페이지에서 유저의 이름과 이메일을 확인한다.")
     void myPageViewTest() {
+        userDto.setEmail("mypage@test.com");
+        loginDto.setEmail("mypage@test.com");
+
         postUser(webTestClient, userDto, postUserResponse -> {
             String sessionId = getSessionId(postUserResponse);
             postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {
-                webTestClient.get()
-                        .uri("/mypage" + sessionId)
+                getMyPageView(sessionId, myPage ->
+                        assertThat(new String(myPage.getResponseBody()))
+                                .contains("test")
+                                .contains("mypage@test.com"));
+            });
+        });
+    }
+
+    @Test
+    @DisplayName("회원 정보를 수정하고 mypage에서 수정된 이름을 확인한다.")
+    void editMyPageTest() {
+        String updateName = "kimhyojae";
+        userDto.setEmail("edit@test.com");
+        loginDto.setEmail("edit@test.com");
+
+        postUser(webTestClient, userDto, postUserResponse -> {
+            String sessionId = getSessionId(postUserResponse);
+            postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {
+                webTestClient.put()
+                        .uri("/mypage-edit" + sessionId)
+                        .body(BodyInserters.fromFormData("name", updateName))
+                        .exchange()
+                        .expectStatus().is3xxRedirection()
+                        .expectBody()
+                        .consumeWith(updateUser ->
+                                getMyPageView(sessionId, myPage -> assertThat(new String(myPage.getResponseBody()))
+                                        .contains(updateName)));
+            });
+        });
+    }
+
+    @Test
+    @DisplayName("회원 정보 수정 시 잘못된 이름을 입력하면 에러 메시지를 띄웁니다.")
+    void editMyPageFailTest() {
+        String invalidName = "123";
+        userDto.setEmail("fail@test.com");
+        loginDto.setEmail("fail@test.com");
+
+        postUser(webTestClient, userDto, postUserResponse -> {
+            String sessionId = getSessionId(postUserResponse);
+            postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {
+                webTestClient.put()
+                        .uri("/mypage-edit" + sessionId)
+                        .body(BodyInserters.fromFormData("name", invalidName))
                         .exchange()
                         .expectStatus().isOk()
                         .expectBody()
-                        .consumeWith(myPage ->
-                                assertThat(new String(myPage.getResponseBody()))
-                                        .contains("test")
-                                        .contains("test@test.com"));
+                        .consumeWith(test -> assertThat(new String(test.getResponseBody()))
+                                .contains("이름은 한글 또는 영어만 입력이 가능합니다."));
             });
         });
     }
