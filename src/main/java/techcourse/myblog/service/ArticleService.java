@@ -26,12 +26,13 @@ public class ArticleService {
     }
 
     public Article save(ArticleDto articleDto) {
-        return articleRepository.save(Article.of(articleDto));
+        return articleRepository.save(
+                new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents()));
     }
 
     public Article update(Long articleId, ArticleDto articleDto) {
         Article selectedArticle = findById(articleId);
-        return articleRepository.save(selectedArticle.update(articleDto));
+        return articleRepository.save(selectedArticle.update(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents()));
     }
 
     public void delete(Long articleId) {
