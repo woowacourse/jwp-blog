@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.application.service.ArticleService;
 
@@ -25,12 +26,9 @@ public class ArticleController {
     }
 
     @PostMapping
-    public RedirectView save(Article article) {
-        log.info(article.getTitle() + " " + article.getCoverUrl() + " " + article.getContents());
-        log.warn("A WARN Message");
-        log.error("An ERROR Message");
-        articleService.save(article);
-        return new RedirectView("/article/" + article.getId());
+    public RedirectView save(ArticleDto articleDto) {
+        log.info(articleDto.getTitle() + " " + articleDto.getCoverUrl() + " " + articleDto.getContents());
+        return new RedirectView("/article/" + articleService.save(articleDto));
     }
 
     @GetMapping("/{id}")
@@ -41,10 +39,10 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public RedirectView update(Article article, Model model) {
-        log.info("수정할 내용 " + article.getTitle() + " " + article.getCoverUrl() + " " + article.getContents());
-        articleService.update(article);
-        return new RedirectView("/article/" + article.getId());
+    public RedirectView update(@PathVariable long id,ArticleDto articleDto) {
+        log.info("수정할 내용 " + articleDto.getTitle() + " " + articleDto.getCoverUrl() + " " + articleDto.getContents());
+        articleService.update(articleDto, id);
+        return new RedirectView("/article/" + id);
     }
 
     @GetMapping("/{id}/edit")
@@ -59,6 +57,4 @@ public class ArticleController {
         articleService.delete(id);
         return new RedirectView("/");
     }
-
-
 }

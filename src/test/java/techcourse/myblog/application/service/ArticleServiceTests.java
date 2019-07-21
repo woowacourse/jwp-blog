@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
@@ -20,23 +21,23 @@ public class ArticleServiceTests {
 
     @Test
     void save_Test() {
-        Article article = Article.builder()
+        ArticleDto articleDto = ArticleDto.builder()
                 .title("a")
                 .coverUrl("b")
                 .contents("c")
                 .build();
-        articleService.save(article);
+        articleService.save(articleDto);
         assertThat(articleRepository.findById((long) 1)).isNotNull();
     }
 
     @Test
     void delete_Test() {
-        Article article = Article.builder()
+        ArticleDto articleDto = ArticleDto.builder()
                 .title("a")
                 .coverUrl("b")
                 .contents("c")
                 .build();
-        articleService.save(article);
+        articleService.save(articleDto);
         articleService.delete((long) 1);
         assertThat(articleRepository.findById((long) 1).isPresent()).isEqualTo(false);
     }

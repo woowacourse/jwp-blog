@@ -1,30 +1,30 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.error.NullArticleElementException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Java6Assertions.assertThatThrownBy;
 
 class ArticleTest {
 
     @Test
-    public void title_null_exeption() {
-        assertThatThrownBy(() -> {
-            new Article(0, "", "url", "contents");
-        }).isInstanceOf(NullArticleElementException.class);
+    public void article_update_success() {
+        Article article = Article.builder()
+                .title("a")
+                .coverUrl("b")
+                .contents("c")
+                .build();
+        ArticleDto editedData = ArticleDto.builder()
+                .title("aa")
+                .coverUrl("bb")
+                .contents("cc")
+                .build();
+        article.update(editedData);
+        assertThat(article.getTitle()).isEqualTo(editedData.getTitle());
+        assertThat(article.getContents()).isEqualTo(editedData.getContents());
+        assertThat(article.getCoverUrl()).isEqualTo(editedData.getCoverUrl());
     }
 
-    @Test
-    public void contents_null_exeption() {
-        assertThatThrownBy(() -> {
-            new Article(0, "title", "url", "");
-        }).isInstanceOf(NullArticleElementException.class);
-    }
-
-    @Test
-    public void url_null_exeption() {
-        assertThatThrownBy(() -> {
-            new Article(0, "title", "", "contents");
-        }).isInstanceOf(NullArticleElementException.class);
-    }
 }

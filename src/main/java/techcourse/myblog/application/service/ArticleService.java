@@ -2,29 +2,39 @@ package techcourse.myblog.application.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.error.NotFoundArticleIdException;
+
+import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
-    public Article save(Article article) {
+    public Long save(ArticleDto articleDto) {
+        Article article = Article.builder()
+                .title(articleDto.getTitle())
+                .coverUrl(articleDto.getCoverUrl())
+                .contents(articleDto.getContents())
+                .build();
         articleRepository.save(article);
-        return article;
+        return article.getId();
     }
 
     public Article findById(long id) {
-        return articleRepository.findById(id).get();
+        return articleRepository.findById(id).orElseThrow(() -> new NotFoundArticleIdException("게시글을 찾을 수 없습니다."));
     }
-
     public Iterable<Article> findAll() {
         return articleRepository.findAll();
     }
 
-    public Article update(Article article) {
-        articleRepository.save(article);
+    public Article update(ArticleDto articleDto, long id) {
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() -> new NotFoundArticleIdException("게시글을 찾을 수 없습니다."));
+        article.update(articleDto);
         return article;
     }
 

@@ -20,7 +20,11 @@ public class UserService {
         emailDuplicateValidate(userDto);
         userDto.setPassword(userDto.getPassword());
         log.info("UserService.save() : " + userDto.getName() + " " + userDto.getEmail() + " " + userDto.getPassword());
-        User user = new User(userDto.getName(), userDto.getEmail(), userDto.getPassword());
+        User user = User.builder()
+                .email(userDto.getEmail())
+                .name(userDto.getName())
+                .password(userDto.getPassword())
+                .build();
         userRepository.save(user);
         return new UserDto(user.getEmail(),user.getName(),user.getPassword());
     }
