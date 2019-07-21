@@ -5,7 +5,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserUpdateDto;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -69,5 +72,20 @@ public class UserController {
         }
         model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
         return "mypage-edit";
+    }
+
+    @PutMapping("/mypage")
+    public String updateUser(@Valid UserUpdateDto userUpdateDto, BindingResult bindingResult, HttpSession session, Model model) {
+        try {
+            if (!isLoggedIn(session)) {
+                return "redirect:/";
+            }
+            User user = (User) session.getAttribute(LOGIN_SESSION_KEY);
+            userService.update(user, userUpdateDto, bindingResult);
+            return "redirect:/mypage";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "mypage-edit";
+        }
     }
 }
