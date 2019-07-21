@@ -253,4 +253,90 @@ class UserControllerTest {
                     assertThat(body).contains(SIGN_UP_FAIL_MESSAGE, PASSWORD_CONFIRM_FAIL_MESSAGE);
                 });
     }
+
+    @Test
+    @DisplayName("로그인한 유저가 자신의 프로필을 변경하는 경우 변경에 성공한다.")
+    void updateUserWhenLogIn() {
+        String jssesionId = LogInControllerTest.logIn(webTestClient, "update@test.test", VALID_PASSWORD);
+
+        webTestClient.put()
+                .uri("/users/2")
+                .cookie("JSESSIONID", jssesionId)
+                .body(BodyInserters.fromFormData("name", "updated")
+                        .with("email", "update@test.test"))
+                .exchange()
+                .expectStatus().isFound();
+
+        webTestClient.get()
+                .uri("/mypage/2")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body).contains("updated");
+                });
+    }
+
+    @Test
+    @DisplayName("로그인 되어있지 않을 때 프로필을 변경하는 경우 변경되지 않는다.")
+    void updateUserWhenLogOut() {
+        webTestClient.put()
+                .uri("/users/1")
+                .body(BodyInserters.fromFormData("name", "updated")
+                        .with("email", "update@test.test"))
+                .exchange()
+                .expectStatus().isFound();
+
+        webTestClient.get()
+                .uri("/mypage/1")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body).contains("test");
+                });
+    }
+
+    @Test
+    @DisplayName("로그인한 유저가 자신의 프로필을 삭제하는 경우 삭제에 성공한다.")
+    void deleteUserWhenLogIn() {
+        String jssesionId = LogInControllerTest.logIn(webTestClient, "delete@test.test", VALID_PASSWORD);
+
+        webTestClient.delete()
+                .uri("/users/3")
+                .cookie("JSESSIONID", jssesionId)
+                .exchange()
+                .expectStatus().isFound();
+
+        webTestClient.get()
+                .uri("/users")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body).doesNotContain("delete@test.test");
+                });
+    }
+
+    @Test
+    @DisplayName("로그인 되어있지 않을 때 회원 탈퇴하려는 경우 실패한다.")
+    void deleteUserWhenLogOut() {
+        webTestClient.delete()
+                .uri("/users/1")
+                .exchange()
+                .expectStatus().isFound();
+
+        webTestClient.get()
+                .uri("/users")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body).contains("test@test.test");
+                });
+    }
 }

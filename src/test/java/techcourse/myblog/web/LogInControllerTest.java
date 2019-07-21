@@ -10,14 +10,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import java.net.URI;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
 import static techcourse.myblog.service.exception.LogInException.LOGIN_FAIL_MESSAGE;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LogInControllerTest {
+    public static final String USER_NAME = "test";
+    public static final String USER_EMAIL = "test@test.test";
+    public static final String USER_PASSWORD = VALID_PASSWORD;
+
     @LocalServerPort
     int randomPortNumber;
 
@@ -45,41 +47,16 @@ class LogInControllerTest {
     @Test
     @DisplayName("로그인 성공 시 메인 화면을 띄우고 우측 상단에 사용자 이름을 띄운다.")
     void successLogIn() {
-        String name = "testName";
-        String email = "logintest1@woowa.com";
-        String password = VALID_PASSWORD;
-        String passwordConfirm = VALID_PASSWORD;
+        String jsessiontId = logInAsBaseUser(webTestClient);
 
-        webTestClient.post()
-                .uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password)
-                        .with("passwordConfirm", passwordConfirm))
+        webTestClient.get()
+                .uri("/")
+                .cookie("JSESSIONID", jsessiontId)
                 .exchange()
-                .expectStatus().isFound();
-
-        webTestClient.post()
-                .uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectStatus().isFound()
                 .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get()
-                            .uri(location)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                String body = new String(res.getResponseBody());
-                                assertThat(body).contains(name);
-                            });
+                .consumeWith(res -> {
+                    String body = new String(res.getResponseBody());
+                    assertThat(body).contains(USER_NAME);
                 });
     }
 
@@ -116,6 +93,19 @@ class LogInControllerTest {
                     String body = new String(response.getResponseBody());
                     assertThat(body).contains(LOGIN_FAIL_MESSAGE);
                 });
+    }
+
+    public static String logIn(WebTestClient webTestClient, String email, String password) {
+        return webTestClient.post().uri("/login")
+                .body(BodyInserters.fromFormData("email", email)
+                        .with("password", password))
+                .exchange()
+                .returnResult(String.class)
+                .getResponseCookies().get("JSESSIONID").get(0).getValue();
+    }
+
+    public static String logInAsBaseUser(WebTestClient webTestClient) {
+        return logIn(webTestClient, USER_EMAIL, USER_PASSWORD);
     }
 
     @AfterEach

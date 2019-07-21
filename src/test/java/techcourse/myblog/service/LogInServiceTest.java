@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.dto.LogInInfoDto;
-import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.LogInException;
 

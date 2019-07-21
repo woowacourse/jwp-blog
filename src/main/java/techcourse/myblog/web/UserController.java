@@ -68,7 +68,7 @@ public class UserController {
 
     private boolean isLoggedInUser(HttpSession httpSession, Long id) {
         UserPublicInfoDto loggedInUser = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
-        return loggedInUser.getId().equals(id);
+        return (loggedInUser != null) && loggedInUser.getId().equals(id);
     }
 
     @ExceptionHandler(NotFoundUserException.class)

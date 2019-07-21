@@ -39,6 +39,7 @@ public class ArticleControllerTests {
                 .param("title", SAMPLE_TITLE)
                 .param("coverUrl", SAMPLE_COVER_URL)
                 .param("contents", SAMPLE_CONTENTS)
+                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                 .post(baseUrl + "/articles")
                 .getHeader("Location");
     }
@@ -60,6 +61,7 @@ public class ArticleControllerTests {
     @Test
     void showCreatePageWhenUserLogIn() {
         webTestClient.get().uri("/articles/new")
+                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -79,6 +81,7 @@ public class ArticleControllerTests {
 
         webTestClient.post()
                 .uri("/articles")
+                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", newTitle)
@@ -120,6 +123,7 @@ public class ArticleControllerTests {
     void showEditPage() {
         webTestClient.get()
                 .uri(setUpArticleUrl + "/edit")
+                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -139,6 +143,7 @@ public class ArticleControllerTests {
 
         webTestClient.put()
                 .uri(setUpArticleUrl)
+                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", newTitle)
@@ -166,13 +171,14 @@ public class ArticleControllerTests {
     void deleteArticle() {
         webTestClient.delete()
                 .uri(setUpArticleUrl)
+                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus().isFound();
 
         webTestClient.get()
                 .uri(setUpArticleUrl)
                 .exchange()
-                .expectStatus().is5xxServerError();
+                .expectStatus().isFound();
     }
 
     @AfterEach
