@@ -4,6 +4,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -15,6 +17,7 @@ import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -37,13 +40,9 @@ public class ArticleControllerTests extends ControllerTestTemplate {
         requestExpect(GET, "/articles/writing").isOk();
     }
 
-    @Test
-    void create_article() {
-        String titleKo = "목적의식 있는 연습을 통한 효과적인 학습";
-        String coverUrlKo = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-        String contentsKo = "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 '선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?'였다.";
-        Article article = new Article(titleKo, coverUrlKo, contentsKo);
-
+    @ParameterizedTest(name = "{index}: {4}")
+    @MethodSource("articlesStream")
+    void 게시글_작성_테스트(Article article) {
         requestExpect(POST, "/articles/write", parser(article))
                 .isFound()
                 .expectBody()
@@ -53,15 +52,13 @@ public class ArticleControllerTests extends ControllerTestTemplate {
                                 applyEscapeArticle(article)));
     }
 
-    @Test
-    void create_article_en() {
-        requestExpect(POST, "/articles/write", parser(articleDto.toArticle()))
-                .isFound()
-                .expectBody()
-                .consumeWith(response ->
-                        bodyCheck(
-                                requestExpect(GET, getRedirectedUri(response)).isOk(),
-                                applyEscapeArticle(articleDto.toArticle())));
+    static Stream<Article> articlesStream() throws Throwable {
+        return Stream.of(
+                new Article("article_en", "url_en", "contents_en"),
+                new Article("목적의식 있는 연습을 통한 효과적 학습",
+                        "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg",
+                        "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 '선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?'였다.")
+        );
     }
 
     private Article applyEscapeArticle(Article article) {
