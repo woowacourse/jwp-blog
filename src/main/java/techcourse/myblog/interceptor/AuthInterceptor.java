@@ -1,4 +1,4 @@
-package techcourse.myblog.commons;
+package techcourse.myblog.interceptor;
 
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
