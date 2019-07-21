@@ -16,8 +16,9 @@ import java.util.List;
 
 @Service
 public class UserService {
-    public static final String LOGIN_SESSION_KEY = "loginUser";
-    private UserRepository userRepository;
+    private static final String LOGIN_SESSION_KEY = "loginUser";
+
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
