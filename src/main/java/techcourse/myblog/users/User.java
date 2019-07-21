@@ -7,7 +7,6 @@ import javax.persistence.*;
 @Entity
 @Builder
 @Getter
-@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,4 +26,8 @@ public class User {
 
     @Column
     private String password;
+
+    void update(final User other) {
+        this.name = other.name;
+    }
 }

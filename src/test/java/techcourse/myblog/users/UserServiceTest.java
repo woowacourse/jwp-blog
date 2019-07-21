@@ -53,7 +53,7 @@ class UserServiceTest {
         UserDto.Update updateDto = new UserDto.Update("newName");
         UserDto.Response expected = userService.update(id, updateDto);
 
-        assertEquals(expected, expected);
+        assertEquals(updateDto.getName(), expected.getName());
     }
 
     @Test

@@ -1,7 +1,6 @@
 package techcourse.myblog.users;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,17 +11,16 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
-    public static final String EMAIL_DUPLICATE_MESSAGE = "이미 사용중인 이메일입니다.";
-    public static final String PASSWORD_INVALID_MESSAGE = "비밀번호와 비밀번호 확인이 일치하지 않습니다.";
+    static final String EMAIL_DUPLICATE_MESSAGE = "이미 사용중인 이메일입니다.";
+    static final String PASSWORD_INVALID_MESSAGE = "비밀번호와 비밀번호 확인이 일치하지 않습니다.";
 
     private final UserRepository userRepository;
 
     public Long save(UserDto.Register userDto) {
         verifyDuplicateEmail(userDto.getEmail());
         verifyPassword(userDto);
-        User user = new User();
 
-        BeanUtils.copyProperties(userDto, user);
+        User user = userDto.toUser();
 
         return userRepository.save(user).getId();
     }
@@ -40,43 +38,33 @@ public class UserService {
     }
 
     public UserDto.Response login(UserDto.Register userDto) {
-        UserDto.Response userResponseDto = new UserDto.Response();
         User user = userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword())
                 .orElseThrow(() -> new ValidUserException("존재하지 않는 이메일 또는 비밀번호가 틀립니다.", "password"));
 
-        BeanUtils.copyProperties(user, userResponseDto);
-        return userResponseDto;
+        return UserDto.Response.createByUser(user);
     }
 
     public List<UserDto.Response> findAllExceptPassword() {
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map(user -> {
-                    UserDto.Response responseDto = new UserDto.Response();
-                    BeanUtils.copyProperties(user, responseDto);
-                    return responseDto;
-                }).collect(Collectors.toList());
+                .map(UserDto.Response::createByUser)
+                .collect(Collectors.toList());
     }
 
     public UserDto.Response findById(Long id) {
-        UserDto.Response userResponseDto = new UserDto.Response();
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Can't find User : " + id));
 
-        BeanUtils.copyProperties(user, userResponseDto);
-
-        return userResponseDto;
+        return UserDto.Response.createByUser(user);
     }
 
     public UserDto.Response update(Long id, UserDto.Update userDto) {
-        UserDto.Response userResponseDto = new UserDto.Response();
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Can't find User : " + id));
-        user.setName(userDto.getName());
 
-        BeanUtils.copyProperties(user, userResponseDto);
+        user.update(userDto.toUser());
 
-        return userResponseDto;
+        return UserDto.Response.createByUser(user);
     }
 
     public void deleteById(Long id) {
