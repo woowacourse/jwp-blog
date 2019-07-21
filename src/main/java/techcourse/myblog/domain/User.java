@@ -30,8 +30,8 @@ public class User {
         return new User(userDto.getName(), userDto.getEmail(), userDto.getPassword());
     }
 
-    public User update(UserDto userDto) {
-        this.name = userDto.getName();
+    public User update(User user) {
+        this.name = user.getName();
         return this;
     }
 

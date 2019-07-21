@@ -1,5 +1,7 @@
 package techcourse.myblog.web.dto;
 
+import techcourse.myblog.domain.User;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -51,6 +53,10 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public User create() {
+        return new User(name, email, password);
     }
 
     @Override

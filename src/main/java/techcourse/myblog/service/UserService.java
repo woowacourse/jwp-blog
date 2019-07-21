@@ -33,7 +33,7 @@ public class UserService {
 
     public User update(UserDto userDto) {
         User user = findByEmail(userDto.getEmail());
-        return userRepository.save(user.update(userDto));
+        return userRepository.save(user.update(userDto.create()));
     }
 
     public void remove(String email) {
