@@ -155,10 +155,11 @@ public class UserController {
     @DeleteMapping("/users/{email}")
     public RedirectView removeUser(@PathVariable String email, HttpSession session) {
         User user = (User) session.getAttribute("user");
+
         if (user != null && user.matchEmail(email)) {
             userRepository.delete(user);
+            session.invalidate();
         }
-        session.invalidate();
         return new RedirectView("/");
     }
 }

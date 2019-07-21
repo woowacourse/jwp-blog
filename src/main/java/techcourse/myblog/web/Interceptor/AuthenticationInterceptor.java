@@ -28,8 +28,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
     }
 
     private boolean loggedIn(HttpServletRequest request) {
-        Optional<HttpSession> sessionOpt = Optional.ofNullable(request.getSession());
-        return sessionOpt.filter(httpSession -> httpSession.getAttribute("user") != null).isPresent();
+        return request.getSession().getAttribute("user") != null;
     }
 
     private boolean needLogout(HttpServletRequest request) {
@@ -51,9 +50,10 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        Optional<HttpSession> sessionOpt = Optional.ofNullable(request.getSession());
-        sessionOpt.ifPresent(session -> {
-                    Object user = session.getAttribute("user");
+        Optional<HttpSession> sessionOptional = Optional.ofNullable(request.getSession());
+
+        sessionOptional.ifPresent(session -> {
+                    Object user = request.getSession().getAttribute("user");
 
                     if (!request.getRequestURI().equals("/logout") && user != null) {
                         modelAndView.addObject("user", user);

@@ -8,12 +8,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.StatusAssertions;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import techcourse.myblog.domain.User;
@@ -174,7 +171,7 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그아웃상태_탈퇴시도_실패() {
-        requestExpect(DELETE, "users", parser(savedUserDto)).isFound();
+        requestExpect(DELETE, "/users/" + savedUserDto.getEmail()).isFound();
         assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isTrue();
     }
 
@@ -183,14 +180,14 @@ class UserControllerTests extends ControllerTestTemplate {
         UserDto victim = new UserDto("victim", "victim@email", "password");
         userRepository.save(victim.toUser());
 
-        loginAndRequest(DELETE, "users", parser(victim)).isFound();
+        loginAndRequest(DELETE, "/users/" + victim.getEmail()).isFound();
         assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isTrue();
         assertThat(userRepository.findByEmail(victim.getEmail()).isPresent()).isTrue();
     }
 
     @Test
     void 로그인상태_자기자신_탈퇴시도_성공() {
-        loginAndRequest(DELETE, "users", parser(savedUserDto)).isFound();
+        loginAndRequest(DELETE, "/users/" + savedUserDto.getEmail()).isFound();
         assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isFalse();
     }
 
@@ -207,7 +204,7 @@ class UserControllerTests extends ControllerTestTemplate {
 
     private StatusAssertions loginAndRequest(HttpMethod method, String path) {
         return requestExpect(
-                makeRequestSpec(GET, path)
+                makeRequestSpec(method, path)
                         .cookie("JSESSIONID", getLoginSessionId()));
     }
 
