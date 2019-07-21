@@ -124,7 +124,7 @@
 <script>
     const password = document.getElementById("user-password-input");
     const confirm_password = document.getElementById("user-password-confirm-input");
-    
+
     function checkPassword() {
         if (password.value !== confirm_password.value) {
             confirm_password.setCustomValidity('비밀번호가 일치하지 않습니다.');
@@ -132,7 +132,7 @@
         }
         confirm_password.setCustomValidity('');
     }
-    
+
     password.onchange = checkPassword;
     confirm_password.onkeyup = checkPassword;
 </script>

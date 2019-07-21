@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport"
@@ -42,7 +42,7 @@
 		<div class="header-container">
 			<ul class="nav-left mrg-left-0">
 				<li>
-					<a href="index.html">
+					<a href="/">
 						<div class="logo logo-dark d-none" style="background-image: url('images/logo/logo_full_dark.png')"></div>
 						<div class="logo logo-white" style="background-image: url('images/logo/logo_full_white.png')"></div>
 					</a>
@@ -67,7 +67,7 @@
 						</li>
 						<li role="separator" class="divider"></li>
 						<li class="text-dark">
-							<a href="index.html">
+							<a href="/">
 								<i class="ti-power-off pdd-right-10"></i>
 								<span class="text-dark">로그아웃</span>
 							</a>
@@ -94,15 +94,15 @@
 					</div>
 					<div class="card-body">
 						<ul class="list-unstyled list-info">
-							<li>
+							<li th:each="user: ${users}">
 								<div class="pdd-vertical-10">
 									<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
 									     alt="">
 									<div class="info">
-										<a href="" class="title no-pdd-vertical text-semibold inline-block lh-1">Brown</a>
+										<a href="" class="title no-pdd-vertical text-semibold inline-block lh-1" th:text="${user.name}">Brown</a>
 										<span class="sub-title">
-                                            <span>gracefulBrown@woowahan.com</span>
-                                        </span>
+                      <span th:text="${user.email}">gracefulBrown@woowahan.com</span>
+										</span>
 									</div>
 								</div>
 							</li>

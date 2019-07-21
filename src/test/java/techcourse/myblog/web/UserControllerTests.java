@@ -40,4 +40,11 @@ class UserControllerTests {
                 .exchange()
                 .expectStatus().isOk();
     }
+
+    @Test
+    void 회원목록_페이지_이동() {
+        webTestClient.get().uri("/users")
+                .exchange()
+                .expectStatus().isOk();
+    }
 }
