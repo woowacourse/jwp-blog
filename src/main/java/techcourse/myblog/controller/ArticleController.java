@@ -8,6 +8,7 @@ import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.ArticleWriteService;
 import techcourse.myblog.service.dto.ArticleDto;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
@@ -23,7 +24,7 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String createArticle(ArticleDto articleDto) {
+    public String createArticle(@Valid ArticleDto articleDto) {
         Article article = articleWriteService.save(articleDto);
         return "redirect:/articles/" + article.getId();
     }
@@ -49,7 +50,7 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
-    public String updateArticle(@PathVariable Long articleId, ArticleDto articleDto) {
+    public String updateArticle(@PathVariable Long articleId, @Valid ArticleDto articleDto) {
         articleWriteService.update(articleId, articleDto);
         return "redirect:/articles/" + articleId;
     }
