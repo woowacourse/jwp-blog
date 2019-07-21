@@ -1,10 +1,10 @@
 package techcourse.myblog.service.dto;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import techcourse.myblog.support.validation.UserGroups.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -36,21 +36,21 @@ public class UserDtoTest {
     @Test
     void 올바르지_않은_문자가들어간_이름_테스트() {
         UserDto userDto = new UserDto("aaa!!", "abcd@naver.com", "aA!123456789");
-        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto);
+        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto, Edit.class);
         assertFalse(violations.isEmpty());
     }
 
     @Test
     void 두_글자_미만의_이름_테스트() {
         UserDto userDto = new UserDto("a", "abcd@naver.com", "aA!123456789");
-        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto);
+        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto, Edit.class);
         assertFalse(violations.isEmpty());
     }
 
     @Test
     void 열_글자_초과의_이름_테스트() {
         UserDto userDto = new UserDto("abcdfabcdfe", "abcd@naver.com", "aA!123456789");
-        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto);
+        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto, Edit.class);
         assertFalse(violations.isEmpty());
     }
 
