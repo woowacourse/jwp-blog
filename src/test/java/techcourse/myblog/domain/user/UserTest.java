@@ -1,6 +1,7 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.user;
 
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.domain.User.User;
 import techcourse.myblog.exception.UserCreationException;
 
 import static org.junit.jupiter.api.Assertions.*;

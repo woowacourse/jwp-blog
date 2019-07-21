@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.User.User;
 import techcourse.myblog.exception.UserCreationException;
 import techcourse.myblog.service.UserService;
 
@@ -27,46 +27,6 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@GetMapping("/login")
-	public String login(final HttpSession session) {
-		if (isSessionNull(session)) {
-			return "/user/login";
-		}
-		return "redirect:/";
-	}
-
-	private boolean isSessionNull(HttpSession session) {
-		return session.getAttribute(SESSION_NAME) == null;
-	}
-
-	@PostMapping("/login")
-	public String login(final UserDto.LoginInfo loginInfo, final HttpSession session, final Model model) {
-		if (userService.canLogin(loginInfo)) {
-			User user = userService.findByLoginInfo(loginInfo);
-			log.debug("login user : {}", user);
-			UserDto.SessionUserInfo sessionUserInfo = UserDto.SessionUserInfo.toDto(user);
-			log.debug("session user : {}", sessionUserInfo);
-			session.setAttribute(SESSION_NAME, sessionUserInfo);
-			return "/index";
-		}
-		model.addAttribute(ERROR_MESSAGE_NAME, "비밀번호를 올바르게 입력하시거나 회원가입을 해주세요");
-		return "/user/login";
-	}
-
-	@GetMapping("/logout")
-	public String logout(final HttpSession session) {
-		session.removeAttribute(SESSION_NAME);
-		return "/index";
-	}
-
-	@GetMapping("/signup")
-	public String signUp(final HttpSession session) {
-		if (isSessionNull(session)) {
-			return "/user/signup";
-		}
-		return "redirect:/";
-	}
-
 	@GetMapping("/users")
 	public String find(final Model model) {
 		final Iterable<User> users = userService.findAll();
@@ -76,29 +36,29 @@ public class UserController {
 	}
 
 	@PostMapping("/users")
-	public String save(final UserDto.SignUpUserInfo signUpUserInfo, final Model model) {
-		if (userService.exitsByEmail(signUpUserInfo)) {
+	public String save(final UserRequestDto.SignUpRequestDto signUpRequestDto, final Model model) {
+		if (userService.exitsByEmail(signUpRequestDto)) {
 			model.addAttribute(ERROR_MESSAGE_NAME, "이메일이 중복됩니다");
-			return "/user/signup";
+			return "redirect:/signup";
 		}
 
 		try {
-			userService.save(signUpUserInfo);
+			userService.save(signUpRequestDto);
 			return "redirect:/login";
 		} catch (UserCreationException e) {
 			model.addAttribute(ERROR_MESSAGE_NAME, e.getMessage());
-			return "/user/signup";
+			return "redirect:/signup";
 		}
 	}
 
 	@GetMapping("/users/{id}")
 	public String myPage(@PathVariable Long id, final Model model, final HttpSession session) {
-		UserDto.SessionUserInfo sessionUserInfo = (UserDto.SessionUserInfo) session.getAttribute(SESSION_NAME);
+		UserRequestDto.UserSessionDto userSessionDto = (UserRequestDto.UserSessionDto) session.getAttribute(SESSION_NAME);
 
-		log.debug("session value : {}", sessionUserInfo);
+		log.debug("session value : {}", userSessionDto);
 		log.debug("id : {}", id);
 
-		if (isSessionMatch(id, sessionUserInfo)) {
+		if (isSessionMatch(id, userSessionDto)) {
 			User user = userService.findById(id);
 			model.addAttribute("user", user);
 			log.debug("{} to /mypage", user);
@@ -107,10 +67,10 @@ public class UserController {
 		return "redirect:/users";
 	}
 
-	private boolean isSessionMatch(@PathVariable Long id, UserDto.SessionUserInfo sessionUserInfo) {
+	private boolean isSessionMatch(@PathVariable Long id, UserRequestDto.UserSessionDto userSessionDto) {
 		log.debug("id in isSessionMatch() : {}", id);
-		log.debug("session in isSessionMatch() : {}", sessionUserInfo);
-		return sessionUserInfo != null && sessionUserInfo.isSameId(id);
+		log.debug("session in isSessionMatch() : {}", userSessionDto);
+		return userSessionDto != null && userSessionDto.isSameId(id);
 	}
 
 	@GetMapping("/users/edit/{id}")
@@ -122,15 +82,15 @@ public class UserController {
 	}
 
 	@PutMapping("/users/edit")
-	public String update(final UserDto.UpdateInfo updateInfo, final HttpSession session) {
+	public String update(final UserRequestDto.UpdateRequestDto updateRequestDto, final HttpSession session) {
 		try {
-			log.debug("updateInfo in update() : {}", updateInfo);
-			User user = userService.update(updateInfo);
-			session.setAttribute(SESSION_NAME, UserDto.SessionUserInfo.toDto(user));
+			log.debug("updateRequestDto in update() : {}", updateRequestDto);
+			User user = userService.update(updateRequestDto);
+			session.setAttribute(SESSION_NAME, UserRequestDto.UserSessionDto.toDto(user));
 			return "redirect:/users/" + user.getId();
 		} catch (UserCreationException e) {
 			log.trace("try-catch UserCreationException");
-			return "redirect:/users/edit/" + updateInfo.getId();
+			return "redirect:/users/edit/" + updateRequestDto.getId();
 		}
 	}
 

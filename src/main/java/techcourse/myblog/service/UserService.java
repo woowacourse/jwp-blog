@@ -1,19 +1,15 @@
 package techcourse.myblog.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.web.UserDto;
+import techcourse.myblog.domain.User.User;
+import techcourse.myblog.domain.User.UserRepository;
+import techcourse.myblog.web.UserRequestDto;
 
 import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
-	private static final Logger log = LoggerFactory.getLogger(UserService.class);
-
 	private final UserRepository userRepository;
 
 	@Autowired
@@ -21,14 +17,14 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public User save(final UserDto.SignUpUserInfo signUpUserInfo) {
-		return userRepository.save(signUpUserInfo.toUser());
+	public User save(final UserRequestDto.SignUpRequestDto signUpRequestDto) {
+		return userRepository.save(signUpRequestDto.toUser());
 	}
 
-	public User update(final UserDto.UpdateInfo updateInfo) {
-		User user = userRepository.findByEmail(updateInfo.getEmail())
+	public User update(final UserRequestDto.UpdateRequestDto updateRequestDto) {
+		User user = userRepository.findByEmail(updateRequestDto.getEmail())
 				.orElseThrow(NoSuchElementException::new);
-		User userUpdated = new User(user.getId(), updateInfo.getName(), updateInfo.getEmail(), user.getPassword());
+		User userUpdated = new User(user.getId(), updateRequestDto.getName(), updateRequestDto.getEmail(), user.getPassword());
 		return userRepository.save(userUpdated);
 	}
 
@@ -37,31 +33,14 @@ public class UserService {
 				.orElseThrow(NoSuchElementException::new);
 	}
 
-	public User findByLoginInfo(final UserDto.LoginInfo loginInfo) {
-		return userRepository.findByEmail(loginInfo.getEmail())
+	public User findByLoginInfo(final UserRequestDto.LoginRequestDto loginRequestDto) {
+		return userRepository.findByEmail(loginRequestDto.getEmail())
 				.orElseThrow(NoSuchElementException::new);
 	}
 
-	public Iterable<User> findAll() {
-		return userRepository.findAll();
-	}
-
-	public void deleteAll() {
-		userRepository.deleteAll();
-	}
-
-	public boolean exitsByEmail(final UserDto.SignUpUserInfo signUpUserInfo) {
+	public boolean exitsByEmail(final UserRequestDto.SignUpRequestDto signUpRequestDto) {
 		try {
-			return userRepository.existsByEmail(signUpUserInfo.getEmail());
-		} catch (NoSuchElementException e) {
-			return false;
-		}
-	}
-
-	public boolean canLogin(final UserDto.LoginInfo loginInfo) {
-		try {
-			User user = userRepository.findByEmail(loginInfo.getEmail()).orElseThrow(NoSuchElementException::new);
-			return user.isSamePassword(loginInfo.getPassword());
+			return userRepository.existsByEmail(signUpRequestDto.getEmail());
 		} catch (NoSuchElementException e) {
 			return false;
 		}
@@ -70,5 +49,13 @@ public class UserService {
 	public void deleteByEmail(final String email) {
 		User user = userRepository.findByEmail(email).orElseThrow(NoSuchElementException::new);
 		userRepository.deleteById(user.getId());
+	}
+
+	public Iterable<User> findAll() {
+		return userRepository.findAll();
+	}
+
+	public void deleteAll() {
+		userRepository.deleteAll();
 	}
 }

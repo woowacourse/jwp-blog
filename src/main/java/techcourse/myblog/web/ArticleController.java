@@ -5,8 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleRepository;
+
+import java.util.NoSuchElementException;
 
 @Controller
 public class ArticleController {
@@ -30,35 +32,35 @@ public class ArticleController {
 	}
 
 	@PostMapping("/articles")
-	public RedirectView addArticle(final Article articleParam) {
+	public String save(final Article articleParam) {
 		Article article = articleRepository.save(articleParam);
-		return new RedirectView("/articles/" + article.getId());
+		return "redirect:/articles/" + article.getId();
 	}
 
 	@GetMapping("/articles/{articleId}")
-	public String showArticleById(@PathVariable final long articleId, final Model model) {
-		Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+	public String findById(@PathVariable final long articleId, final Model model) {
+		Article article = articleRepository.findById(articleId).orElseThrow(NoSuchElementException::new);
 		model.addAttribute("article", article);
 		return "/article/article";
 	}
 
 	@PutMapping("/articles/{articleId}")
-	public RedirectView updateArticle(@PathVariable final long articleId, final Article articleParam) {
-		articleRepository.update(articleParam);
+	public String update(@PathVariable final long articleId, final Article articleParam) {
 		articleParam.setId(articleId);
-		Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-		return new RedirectView("/articles/" + article.getId());
+		articleRepository.save(articleParam);
+		Article article = articleRepository.findById(articleId).orElseThrow(NoSuchElementException::new);
+		return "redirect:/articles/" + article.getId();
 	}
 
 	@DeleteMapping("/articles/{articleId}")
-	public RedirectView deleteArticle(@PathVariable final long articleId) {
+	public String delete(@PathVariable final long articleId) {
 		articleRepository.deleteById(articleId);
-		return new RedirectView("/");
+		return "redirect:/";
 	}
 
 	@GetMapping("/articles/{articleId}/edit")
-	public String toEditPage(@PathVariable final long articleId, final Model model) {
-		Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+	public String editPage(@PathVariable final long articleId, final Model model) {
+		Article article = articleRepository.findById(articleId).orElseThrow(NoSuchElementException::new);
 		model.addAttribute("article", article);
 		return "/article/article-edit";
 	}

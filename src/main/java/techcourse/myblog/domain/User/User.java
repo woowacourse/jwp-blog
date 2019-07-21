@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.User;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

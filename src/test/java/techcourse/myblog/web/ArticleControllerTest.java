@@ -11,7 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.article.ArticleRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,13 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 public class ArticleControllerTest {
-	private static final String ROOT_URL = "/";
-	private static final String EDIT_URL = "/articles/6/edit";
-	private static final String WRITING_URL = "/writing";
-	private static final String ARTICLE_URL = "/articles";
-	private static final String SPECIFIC_ARTICLE_URL = "/articles/1";
-	private static final String SPECIFIC_ARTICLE_DELETE_URL = "/articles/2";
-
 	private static final String ARTICLE_DELIMITER
 			= "<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tab-centered-1\">";
 
@@ -38,6 +31,8 @@ public class ArticleControllerTest {
 	private static final String COVER_URL_VALUE = "https://img.com";
 	private static final String CONTENTS_VALUE = "TEST_CONTENTS";
 
+	private static long testId = 0;
+
 	@Autowired
 	private ArticleRepository articleRepository;
 
@@ -45,36 +40,22 @@ public class ArticleControllerTest {
 	private WebTestClient webTestClient;
 
 	@BeforeEach
-	void setUp() {
+	public void setUp() {
 		articleRepository.deleteAll();
 	}
 
 	@Test
-	@DisplayName("새로운글을_쓸때_테스트")
+	@DisplayName("새로운_Article을_쓸때_테스트")
 	public void showWritingPage() {
 		webTestClient.get()
-				.uri(WRITING_URL)
+				.uri("/writing")
 				.exchange()
 				.expectStatus()
 				.isOk();
 	}
 
 	@Test
-	@DisplayName("Article을_추가할때_redirect하는지_테스트")
-	public void addArticleTest() {
-		webTestClient.post()
-				.uri(ARTICLE_URL)
-				.body(BodyInserters
-						.fromFormData(TITLE_NAME, TITLE_VALUE)
-						.with(COVER_URL_NAME, COVER_URL_VALUE)
-						.with(CONTENTS_NAME, CONTENTS_VALUE))
-				.exchange()
-				.expectStatus()
-				.isFound();
-	}
-
-	@Test
-	@DisplayName("Article의_목록을_조회하는지_테스트")
+	@DisplayName("Article_목록_조회_테스트")
 	public void indexTest() {
 		final int count = 3;
 		addArticleTest();
@@ -82,7 +63,7 @@ public class ArticleControllerTest {
 		addArticleTest();
 
 		webTestClient.get()
-				.uri(ROOT_URL)
+				.uri("/")
 				.exchange()
 				.expectStatus().isOk()
 				.expectBody()
@@ -93,24 +74,39 @@ public class ArticleControllerTest {
 	}
 
 	@Test
-	@DisplayName("ArticleId에_맞는_Article을_조회할때_테스트")
+	@DisplayName("Article_추가_테스트")
+	public void addArticleTest() {
+		testId++;
+		webTestClient.post()
+				.uri("/articles/")
+				.body(BodyInserters
+						.fromFormData(TITLE_NAME, TITLE_VALUE)
+						.with(COVER_URL_NAME, COVER_URL_VALUE)
+						.with(CONTENTS_NAME, CONTENTS_VALUE))
+				.exchange()
+				.expectStatus()
+				.isFound();
+	}
+
+	@Test
+	@DisplayName("Article_개별조회_테스트")
 	public void showArticleById() {
 		addArticleTest();
 
 		webTestClient.get()
-				.uri(SPECIFIC_ARTICLE_URL)
+				.uri("/articles/" + testId)
 				.exchange()
 				.expectStatus()
 				.isOk();
 	}
 
 	@Test
-	@DisplayName("ArticleId에_맞는_Article을_변경하는지_테스트")
+	@DisplayName("Article_변경_테스트")
 	public void updateArticleById() {
 		addArticleTest();
 
 		webTestClient.get()
-				.uri(EDIT_URL)
+				.uri("/articles/" + testId + "/edit")
 				.exchange()
 				.expectStatus().isOk()
 				.expectBody()
@@ -123,12 +119,12 @@ public class ArticleControllerTest {
 	}
 
 	@Test
-	@DisplayName("Article을_삭제할때_redirect하는지_테스트")
+	@DisplayName("Article_삭제_테스트")
 	public void deleteArticle() {
 		addArticleTest();
 
 		webTestClient.delete()
-				.uri(SPECIFIC_ARTICLE_DELETE_URL)
+				.uri("/articles/" + testId)
 				.exchange()
 				.expectStatus()
 				.isFound();

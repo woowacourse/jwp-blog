@@ -1,12 +1,12 @@
 package techcourse.myblog.web;
 
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.User.User;
 
 import javax.validation.constraints.NotNull;
 
-public class UserDto {
+public class UserRequestDto {
 
-	public static class LoginInfo {
+	public static class LoginRequestDto {
 
 		@NotNull
 		private String email;
@@ -14,10 +14,10 @@ public class UserDto {
 		@NotNull
 		private String password;
 
-		public LoginInfo() {
+		public LoginRequestDto() {
 		}
 
-		public LoginInfo(String email, String password) {
+		public LoginRequestDto(String email, String password) {
 			this.email = email;
 			this.password = password;
 		}
@@ -39,7 +39,7 @@ public class UserDto {
 		}
 	}
 
-	public static class SignUpUserInfo {
+	public static class SignUpRequestDto {
 
 		@NotNull
 		private String name;
@@ -50,10 +50,10 @@ public class UserDto {
 		@NotNull
 		private String password;
 
-		public SignUpUserInfo() {
+		public SignUpRequestDto() {
 		}
 
-		public SignUpUserInfo(String name, String email, String password) {
+		public SignUpRequestDto(String name, String email, String password) {
 			this.name = name;
 			this.email = email;
 			this.password = password;
@@ -88,7 +88,7 @@ public class UserDto {
 		}
 	}
 
-	public static class SessionUserInfo {
+	public static class UserSessionDto {
 
 		@NotNull
 		private Long id;
@@ -99,18 +99,18 @@ public class UserDto {
 		@NotNull
 		private String email;
 
-		public SessionUserInfo() {
+		public UserSessionDto() {
 
 		}
 
-		public SessionUserInfo(final long id, final String name, final String email) {
+		public UserSessionDto(final long id, final String name, final String email) {
 			this.id = id;
 			this.name = name;
 			this.email = email;
 		}
 
-		public static SessionUserInfo toDto(final User user) {
-			return new SessionUserInfo(user.getId(), user.getName(), user.getEmail());
+		public static UserSessionDto toDto(final User user) {
+			return new UserSessionDto(user.getId(), user.getName(), user.getEmail());
 		}
 
 		public boolean isSameId(final Long id) {
@@ -143,7 +143,7 @@ public class UserDto {
 
 		@Override
 		public String toString() {
-			return "SessionUserInfo{" +
+			return "UserSessionDto{" +
 					"id=" + id +
 					", name='" + name + '\'' +
 					", email='" + email + '\'' +
@@ -151,7 +151,7 @@ public class UserDto {
 		}
 	}
 
-	public class UpdateInfo {
+	public class UpdateRequestDto {
 		@NotNull
 		private Long id;
 
@@ -187,7 +187,7 @@ public class UserDto {
 
 		@Override
 		public String toString() {
-			return "UpdateInfo{" +
+			return "UpdateRequestDto{" +
 					"id=" + id +
 					", name='" + name + '\'' +
 					", email='" + email + '\'' +

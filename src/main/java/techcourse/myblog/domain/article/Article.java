@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.article;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
