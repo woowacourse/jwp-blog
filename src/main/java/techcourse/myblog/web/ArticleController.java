@@ -108,12 +108,12 @@ public class ArticleController {
     }
 
     @ExceptionHandler(NotFoundArticleException.class)
-    public String handleNotFoundArticleException(Model model, Exception e) {
+    public String handleNotFoundArticleException() {
         return "redirect:/";
     }
 
     @ExceptionHandler(NotFoundUserException.class)
-    public String handleNotFoundUserException(Model model, Exception e) {
+    public String handleNotFoundUserException() {
         return "redirect:/";
     }
 }

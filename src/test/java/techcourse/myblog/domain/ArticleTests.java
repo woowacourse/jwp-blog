@@ -14,6 +14,8 @@ public class ArticleTests {
         article = new Article(1L, "title", "url", "contents");
     }
 
+
+
     @Test
     void updateArticle() {
         String newTitle = "new Title";

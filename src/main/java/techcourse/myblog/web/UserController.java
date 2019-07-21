@@ -72,7 +72,7 @@ public class UserController {
     }
 
     @ExceptionHandler(NotFoundUserException.class)
-    public String handleNotFoundUserException(Model model, Exception e) {
+    public String handleNotFoundUserException() {
         return "redirect:/";
     }
 

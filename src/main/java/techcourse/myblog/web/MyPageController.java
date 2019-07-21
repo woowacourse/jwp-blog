@@ -25,7 +25,7 @@ public class MyPageController {
     }
 
     @GetMapping("/mypage/{id}")
-    public String showMyPage(@PathVariable("id") long id, Model model, HttpServletRequest httpServletRequest) {
+    public String showMyPage(@PathVariable("id") long id, Model model) {
         User user = userRepository.findById(id)
                 .orElseThrow(NotFoundUserException::new);
         model.addAttribute("user", new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail()));
@@ -33,7 +33,8 @@ public class MyPageController {
     }
 
     @GetMapping("/mypage/{id}/edit")
-    public String showMyPageEdit(@PathVariable("id") long id, Model model, HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
+    public String showMyPageEdit(@PathVariable("id") long id, Model model,
+                                 HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
         String errorMessage = (String) redirectAttributes.getFlashAttributes().get("errorMessage");
         if (errorMessage != null) {
             model.addAttribute("errorMessage", errorMessage);
@@ -49,12 +50,12 @@ public class MyPageController {
 
     private boolean isLoggedInUserMYPage(HttpServletRequest httpServletRequest, User user) {
         HttpSession httpSession = httpServletRequest.getSession();
-        UserPublicInfoDto loggedInUser = (UserPublicInfoDto) httpSession.getAttribute("loggedInUser");
+        UserPublicInfoDto loggedInUser = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
         return (loggedInUser != null) && (user.getId().equals(loggedInUser.getId()));
     }
 
     @ExceptionHandler(NotFoundUserException.class)
-    public String handleNotFoundUserException(Model model, Exception e) {
+    public String handleNotFoundUserException() {
         return "redirect:/";
     }
 }

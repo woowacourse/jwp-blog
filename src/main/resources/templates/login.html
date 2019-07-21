@@ -48,7 +48,8 @@
                                                     </div>
                                                     <form action="/login" method="post">
                                                         <div class="form-group">
-                                                            <input type="email" name="email" class="form-control" placeholder="Email">
+                                                            <input type="email" name="email" class="form-control"
+                                                                   placeholder="Email">
                                                         </div>
                                                         <div class="form-group">
                                                             <input type="password" name="password" class="form-control"
@@ -61,7 +62,8 @@
                                                         <div class="pull-right mrg-left-10">
                                                             <a href="">Forgot Password?</a>
                                                         </div>
-                                                        <div th:text="${errorMessage}" class="alert alert-danger" role="alert">
+                                                        <div th:text="${errorMessage}" class="alert alert-danger"
+                                                             role="alert">
                                                         </div>
                                                         <div class="mrg-top-20 text-right">
                                                             <button type="submit" class="btn btn-tumblr">로그인</button>
@@ -93,6 +95,7 @@
     } else {
         $('.alert').alert('close')
     }
+
 </script>
 </body>
 </html>
