@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static techcourse.myblog.users.UserController.USER_BASE_URI;
+import static techcourse.myblog.users.UserController.USER_SESSION;
 
 @Component
 public class LoginInterceptor extends HandlerInterceptorAdapter {
@@ -21,7 +22,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         HttpSession session = request.getSession();
         String path = request.getRequestURI();
         String method = request.getMethod();
-        boolean isLogin = session.getAttribute("user") != null;
+        boolean isLogin = session.getAttribute(USER_SESSION) != null;
 
         log.debug("PATH : {} METHOD : {} LOGIN : {} ", path, method, isLogin);
 
