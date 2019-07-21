@@ -99,9 +99,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     var initValue = "";
-    [# th
-    :
-    if= "${article} != null" ]
+    [# th:if= "${article} != null" ]
     initValue = /*[[${article.contents}]]*/ 'default';
     [/]
     const editor = new tui.Editor({
