@@ -1,5 +1,8 @@
 package techcourse.myblog.web.dto;
 
+import techcourse.myblog.web.validator.AuthInfo;
+
+@AuthInfo
 public class LoginRequestDto {
     private String email;
     private String password;

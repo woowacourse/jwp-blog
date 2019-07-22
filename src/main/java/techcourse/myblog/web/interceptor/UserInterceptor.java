@@ -14,6 +14,9 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            @Nullable ModelAndView modelAndView) {
-        modelAndView.addObject("user", request.getSession().getAttribute("user"));
+        Object user = request.getSession().getAttribute("user");
+        if (user != null) {
+            modelAndView.addObject("user", user);
+        }
     }
 }

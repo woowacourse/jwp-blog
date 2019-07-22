@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.UserAuthenticateException;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.web.dto.LoginRequestDto;
 import techcourse.myblog.web.dto.UserRequestDto;
@@ -44,54 +43,39 @@ public class UserController {
     public String register(@Valid UserRequestDto userRequestDto, BindingResult bindingResult,
                            Model model,
                            @SessionAttribute(name = SESSION_USER_KEY, required = false) User currentUser) {
-        try {
-            checkBindingResult(bindingResult);
-            if (currentUser != null) {
-                return "redirect:/";
-            }
-            userService.register(userRequestDto);
-            return "redirect:/login";
-        } catch (IllegalArgumentException e) {
-            logger.error("Error occurred while register user", e);
+        if (bindingResult.hasErrors()) {
             model.addAttribute("error", true);
-            model.addAttribute("message", e.getMessage());
+            model.addAttribute("message", bindingResult.getAllErrors().get(0).getDefaultMessage());
             return "signup";
         }
-    }
-
-    private <T> void checkBindingResult(BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException(
-                bindingResult.getAllErrors().get(0).getDefaultMessage());
+        if (currentUser != null) {
+            return "redirect:/";
         }
+        userService.register(userRequestDto);
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
     public String loginView(@SessionAttribute(name = SESSION_USER_KEY, required = false) User currentUser) {
-        if (currentUser == null) {
+        if (currentUser != null) {
             return "redirect:/";
         }
         return "login";
     }
 
     @PostMapping("/login")
-    public String login(LoginRequestDto requestDto, Model model, HttpSession session) {
-        try {
-            if (isLoggedIn(session)) {
-                return "redirect:/";
-            }
-            User user = userService.authenticate(requestDto);
-            session.setAttribute(SESSION_USER_KEY, user);
-            return "redirect:/";
-        } catch (UserAuthenticateException e) {
-            logger.error("Login failed", e);
-            model.addAttribute("message", e.getMessage());
-        } catch (Exception e) {
-            logger.error("Login error", e);
-            model.addAttribute("message", "서버 에러입니다");
+    public String login(@Valid LoginRequestDto requestDto, BindingResult bindingResult, Model model, HttpSession session) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("error", true);
+            model.addAttribute("message", bindingResult.getAllErrors().get(0).getDefaultMessage());
+            return "login";
         }
-        model.addAttribute("error", true);
-        return "redirect:/login";
+        if (isLoggedIn(session)) {
+            return "redirect:/";
+        }
+        session.setAttribute(SESSION_USER_KEY, userService.findByEmail(requestDto.getEmail())
+            .orElseThrow(null));
+        return "redirect:/";
     }
 
     @GetMapping("/users")
@@ -127,21 +111,18 @@ public class UserController {
 
     @PutMapping("/users")
     public String updateUser(@Valid UserUpdateRequestDto updateRequestDto, BindingResult bindingResult, HttpSession session, Model model) {
-        try {
-            checkBindingResult(bindingResult);
-            if (!isLoggedIn(session)) {
-                return "redirect:/login";
-            }
-            User user = (User) session.getAttribute(SESSION_USER_KEY);
-            User updated = userService.update(user.getId(), updateRequestDto);
-            session.setAttribute(SESSION_USER_KEY, updated);
-            return "redirect:/mypage";
-        } catch (IllegalArgumentException e) {
-            logger.error("Error occurred while update user", e);
+        if (bindingResult.hasErrors()) {
             model.addAttribute("error", true);
-            model.addAttribute("message", e.getMessage());
+            model.addAttribute("message", bindingResult.getAllErrors().get(0).getDefaultMessage());
             return "mypage";
         }
+        if (!isLoggedIn(session)) {
+            return "redirect:/login";
+        }
+        User user = (User) session.getAttribute(SESSION_USER_KEY);
+        User updated = userService.update(user.getId(), updateRequestDto);
+        session.setAttribute(SESSION_USER_KEY, updated);
+        return "redirect:/mypage";
     }
 
     @DeleteMapping("/withdraw")

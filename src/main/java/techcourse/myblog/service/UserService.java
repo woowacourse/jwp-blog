@@ -10,6 +10,7 @@ import techcourse.myblog.web.dto.UserRequestDto;
 import techcourse.myblog.web.dto.UserUpdateRequestDto;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -51,6 +52,11 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public void delete(Long id) {

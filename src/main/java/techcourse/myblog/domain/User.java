@@ -1,10 +1,11 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.*;
-import javax.validation.constraints.Email;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 @Entity
 public class User {
