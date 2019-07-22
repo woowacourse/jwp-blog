@@ -44,6 +44,7 @@ public class UserController {
             throw new UserException("패스워드가 올바르지 않습니다.");
         }
 
+        httpSession.setAttribute("SESSION",user);
         httpSession.setAttribute(SESSION_NAME, user.getName());
         httpSession.setAttribute(SESSION_EMAIL, user.getEmail());
         return "redirect:/";
@@ -93,8 +94,7 @@ public class UserController {
         }
 
         User user = userRepository.findUserByEmail(userDto.getEmail());
-        user.setName(userDto.getName());
-        user.setPassword(userDto.getPassword());
+        user.update(userDto);
 
         userRepository.save(user);
         httpSession.setAttribute(SESSION_NAME, user.getName());
@@ -114,7 +114,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @DeleteMapping("/delete/user")
+    @DeleteMapping("/user")
     public String deleteUser(HttpSession httpSession) {
         User user = userRepository.findUserByEmail(httpSession.getAttribute(SESSION_EMAIL).toString());
         userRepository.delete(user);
