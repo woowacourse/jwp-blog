@@ -19,8 +19,8 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public String goIndex(Model model) {
-        model.addAttribute("articles", articleService.findAll());
+    public String goIndex(@RequestParam(defaultValue = "1") int page, Model model) {
+        model.addAttribute("articles", articleService.findAll(page));
         return "index";
     }
 

@@ -69,6 +69,21 @@
                                     </a>
                                 </th:block>
                             </div>
+
+                            <nav aria-label="...">
+                                <ul class="pagination justify-content-center">
+                                    <li th:class="${articles.first} ? 'page-item disabled' : 'page-item'">
+                                        <a th:href="@{/(page=${articles.number})}" class="page-link">
+                                            Prev
+                                        </a>
+                                    </li>
+                                    <li th:class="${articles.last} ? 'page-item disabled' : 'page-item'">
+                                        <a th:href="@{/(page=${articles.number + 2})}" class="page-link">
+                                            Next
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="tab-centered-2">
                             <div class="pdd-horizon-15 pdd-vertical-20">
