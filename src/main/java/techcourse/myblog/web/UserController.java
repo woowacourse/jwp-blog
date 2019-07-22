@@ -29,11 +29,7 @@ public class UserController {
     }
 
     @GetMapping("/accounts/signup")
-    public String showSignupPage(Model model, HttpSession httpSession) {
-        if (httpSession.getAttribute("user") != null) {
-            return "redirect:/";
-        }
-
+    public String showSignupPage(Model model) {
         model.addAttribute("userRequestDto", new UserRequestDto());
         return "signup";
     }
@@ -56,11 +52,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String showLoginPage(HttpServletRequest request) {
-        if (request.getSession().getAttribute("user") != null) {
-            return "redirect:/";
-        }
-
+    public String showLoginPage() {
         return "login";
     }
 
