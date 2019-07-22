@@ -26,7 +26,7 @@ public class AccountControllerTest {
     private String defaultName = "default";
     private String defaultPassword = testPassword;
     private String defaultEmail = "default@default.com";
-
+    private LoginControllerTest loginControllerTest;
 
     @Autowired
     private UserRepository userRepository;
@@ -34,6 +34,7 @@ public class AccountControllerTest {
     @Autowired
     public AccountControllerTest(WebTestClient webTestClient) {
         this.webTestClient = webTestClient;
+        this.loginControllerTest = new LoginControllerTest(this.webTestClient, this.userRepository);
     }
 
     @BeforeEach
@@ -191,64 +192,6 @@ public class AccountControllerTest {
     }
 
     @Test
-    void 로그인_테스트() {
-        String email = "aa@login.com";
-        testSignupProcess(testName, testPassword, email)
-                .expectStatus()
-                .isFound();
-
-        testSuccessLogin(email, testPassword);
-    }
-
-    @Test
-    void showLoginPage() {
-        webTestClient.get().uri("/login")
-                .exchange()
-                .expectStatus()
-                .isOk()
-        ;
-    }
-
-    @Test
-    void showLoginPage_로그인_상태일_경우() {
-        String cookie = getLoginCookie(defaultEmail, defaultPassword);
-
-        webTestClient.get().uri("/login").header("Cookie",cookie)
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
-                })
-        ;
-    }
-
-    @Test
-    void 로그인_테스트_실패_아이디_틀림() {
-        String wrongEmail = "aa";
-
-        testFailLogin(defaultPassword, wrongEmail);
-    }
-
-    @Test
-    void 로그인_테스트_실패_비밀번호_틀림() {
-        String wrongPW = "aa";
-
-        testFailLogin(wrongPW, defaultEmail);
-    }
-
-    @Test
-    void 로그아웃_성공() {
-        testSuccessLogout();
-    }
-
-    @Test
-    void 로그아웃_실패_로그인_안했을_경우() {
-        testFailLogout();
-    }
-
-    @Test
     void 마이페이지_접근() {
         webTestClient.get().uri("/accounts/profile/" + defaultId)
                 .exchange()
@@ -262,7 +205,7 @@ public class AccountControllerTest {
 
     @Test
     void 본인_마이페이지_수정_페이지_접근() {
-        String cookie = getLoginCookie(defaultEmail, defaultPassword);
+        String cookie = loginControllerTest.getLoginCookie(defaultEmail, defaultPassword);
 
         webTestClient.get().uri("/accounts/profile/edit").header("Cookie", cookie)
                 .exchange()
@@ -290,7 +233,7 @@ public class AccountControllerTest {
 
     @Test
     void 마이페이지_수정_후_저장_성공() {
-        String cookie = getLoginCookie(defaultEmail, defaultPassword);
+        String cookie = loginControllerTest.getLoginCookie(defaultEmail, defaultPassword);
 
         webTestClient.put().uri("/accounts/profile/edit").header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -350,7 +293,7 @@ public class AccountControllerTest {
         String email = "delete@user.com";
 
         testSignupProcess(name, password, email);
-        String cookie = getLoginCookie(email, password);
+        String cookie = loginControllerTest.getLoginCookie(email, password);
         webTestClient.delete().uri("/accounts/user").header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
@@ -368,18 +311,18 @@ public class AccountControllerTest {
         ;
     }
 
-    private String getLoginCookie(String email, String password) {
-        return webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-    }
+//    private String getLoginCookie(String email, String password) {
+//        return webTestClient.post().uri("/login")
+//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//                .body(BodyInserters
+//                        .fromFormData("email", email)
+//                        .with("password", password))
+//                .exchange()
+//                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+//    }
 
 
-    private WebTestClient.ResponseSpec testSignupProcess(String name, String password, String email) {
+    protected WebTestClient.ResponseSpec testSignupProcess(String name, String password, String email) {
         return webTestClient.post()
                 .uri("/accounts/user")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -403,60 +346,60 @@ public class AccountControllerTest {
                 ;
     }
 
-    private void testSuccessLogin(String email, String password) {
-        webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
-                })
-        ;
-    }
-
-    private void testFailLogin(String wrongPW, String testEmail) {
-        String errorMessgae = "아이디나 비밀번호가 잘못되었습니다.";
-        webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", testEmail)
-                        .with("password", wrongPW))
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody().consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(errorMessgae)).isTrue();
-        });
-        ;
-    }
-
-    private void testSuccessLogout() {
-        String cookie = getLoginCookie(defaultEmail, defaultPassword);
-
-        webTestClient.get().uri("/logout").header("Cookie", cookie)
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .expectBody()
-                .consumeWith(innerResponse -> {
-                    assertThat(innerResponse.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
-                });
-    }
-
-    private void testFailLogout() {
-        webTestClient.get().uri("/logout")
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isTrue();
-                });
-    }
+//    private void testSuccessLogin(String email, String password) {
+//        webTestClient.post().uri("/login")
+//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//                .body(BodyInserters
+//                        .fromFormData("email", email)
+//                        .with("password", password))
+//                .exchange()
+//                .expectStatus()
+//                .isFound()
+//                .expectBody()
+//                .consumeWith(response -> {
+//                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
+//                })
+//        ;
+//    }
+//
+//    private void testFailLogin(String wrongPW, String testEmail) {
+//        String errorMessgae = "아이디나 비밀번호가 잘못되었습니다.";
+//        webTestClient.post().uri("/login")
+//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//                .body(BodyInserters
+//                        .fromFormData("email", testEmail)
+//                        .with("password", wrongPW))
+//                .exchange()
+//                .expectStatus()
+//                .isOk()
+//                .expectBody().consumeWith(response -> {
+//                    String body = new String(response.getResponseBody());
+//                    assertThat(body.contains(errorMessgae)).isTrue();
+//        });
+//        ;
+//    }
+//
+//    private void testSuccessLogout() {
+//        String cookie = getLoginCookie(defaultEmail, defaultPassword);
+//
+//        webTestClient.get().uri("/logout").header("Cookie", cookie)
+//                .exchange()
+//                .expectStatus()
+//                .isFound()
+//                .expectBody()
+//                .consumeWith(innerResponse -> {
+//                    assertThat(innerResponse.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
+//                });
+//    }
+//
+//    private void testFailLogout() {
+//        webTestClient.get().uri("/logout")
+//                .exchange()
+//                .expectStatus()
+//                .isFound()
+//                .expectBody()
+//                .consumeWith(response -> {
+//                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isTrue();
+//                });
+//    }
 }

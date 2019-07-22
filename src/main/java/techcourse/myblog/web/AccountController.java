@@ -66,37 +66,6 @@ public class AccountController {
         return "user-list";
     }
 
-    @GetMapping("/login")
-    public String showLoginPage(HttpServletRequest request) {
-        if (request.getSession().getAttribute("user") != null) {
-            return "redirect:/";
-        }
-
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String processLogin(UserForm userForm, HttpServletRequest request, Model model) {
-        String errorMessage = "아이디나 비밀번호가 잘못되었습니다.";
-        Optional<User> user = userRepository.findByEmail(userForm.getEmail());
-        if (!user.isPresent() || !userForm.getPassword().equals(user.get().getPassword())) {
-            model.addAttribute("error", errorMessage);
-            return "login";
-        }
-
-        request.getSession().setAttribute("user", user.get());
-        return "redirect:/";
-
-    }
-
-    @GetMapping("/logout")
-    public String processLogout(HttpServletRequest request) {
-        log.debug(">>> session : {}", request.getSession().getAttribute("user"));
-
-        request.getSession().removeAttribute("user");
-        return "redirect:/";
-    }
-
     @GetMapping("/accounts/profile/{id}")
     public String showProfilePage(@PathVariable Long id, Model model) {
         User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
