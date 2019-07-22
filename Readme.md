@@ -1,13 +1,14 @@
 ## TODO
 
-- 게시글 생성
-- 게시글 조회
-- 게시글 수정
-- 게시글 삭제 
-- HTML 중복제거
-- 정적 파일 수정 시 재시작 하지 않고 변경사항 반영하기
-- class 파일 수정 시 자동으로 재시작 하기
-
+- 컨트롤러 네이밍({id}삭제)
+- domain validation
+- 패키지 구조
+- interceptor 중복 로직(argument resolver)
+- 어셈블러 (translation layer)
+- controller advice
+- 테스트코드 추상화
+- basic auth
+- 쿠키와 세션
 
 
 # 게시글 생성/조회기능 구현하기

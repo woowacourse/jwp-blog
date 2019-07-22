@@ -66,14 +66,14 @@ public class UserController {
         return "mypage-edit";
     }
 
-    @PutMapping("/{id}")
-    public String edit(@PathVariable Long id, @Valid UserDto.Update userDto) {
-        UserDto.Response responseDto = userService.update(id, userDto);
-        return "redirect:/users/" + id;
+    @PutMapping
+    public String edit(@Valid UserDto.Update userDto, HttpSession session) {
+        UserDto.Response responseDto = userService.update(((UserDto.Response)session.getAttribute("user")).getId(), userDto);
+        return "redirect:/users/" + responseDto.getId();
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id, HttpSession session){
+    public String delete(@PathVariable Long id, HttpSession session) {
         userService.deleteById(id);
         session.removeAttribute("user");
         return "redirect:/";

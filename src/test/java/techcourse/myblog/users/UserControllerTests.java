@@ -1,26 +1,23 @@
 package techcourse.myblog.users;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.BodyInserters;
-
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureWebClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
+    public static int count = 0;
     @Autowired
     WebTestClient webTestClient;
-
     @Autowired
     UserService userService;
-
-    public static int count = 0;
     String email = "email@google.co.kr";
     String name = "name";
     String password = "P@ssw0rd";
@@ -127,7 +124,8 @@ public class UserControllerTests {
     }
 
     @Test
-    void userListTest() {
+    @DisplayName("유저 리스트 출력 테스트")
+    void list() {
         String email1 = "asdf@google.co.kr";
         String name1 = "asdfsadfasdf";
         String password1 = "!234Qwer";
@@ -168,6 +166,7 @@ public class UserControllerTests {
     }
 
     @Test
+    @DisplayName("수정 페이지 테스트")
     void show() {
         Long id = saveUserWithEmail();
 
@@ -183,11 +182,12 @@ public class UserControllerTests {
     }
 
     @Test
-    void edit() {
+    @DisplayName("회원 정보 수정 테스트")
+    void update() {
         Long id = saveUserWithEmail();
         String changedName = "asdf";
 
-        webTestClient.put().uri("/users/{id}", id)
+        webTestClient.put().uri("/users")
                 .cookie("JSESSIONID", getJSessionId())
                 .body(BodyInserters.fromFormData("name", changedName))
                 .exchange()
@@ -203,7 +203,7 @@ public class UserControllerTests {
                 .cookie("JSESSIONID", getJSessionId())
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location",".*/");
+                .expectHeader().valueMatches("location", ".*/");
     }
 
     private String getJSessionId() {
@@ -218,7 +218,7 @@ public class UserControllerTests {
 
     private Long saveUserWithEmail() {
         email += ++count;
-        UserDto.Register userDto =  UserDto.Register.builder()
+        UserDto.Register userDto = UserDto.Register.builder()
                 .email(email)
                 .name(name)
                 .password(password)
