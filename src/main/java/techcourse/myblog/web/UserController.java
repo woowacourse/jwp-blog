@@ -39,11 +39,11 @@ public class UserController {
 	public String signUp(@Valid UserDto newUser, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			List<FieldError> errors = bindingResult.getFieldErrors();
-			model.addAttribute("errors", errors.get(0).getField() + "입력 오류 입니다.");
+			model.addAttribute("error", errors.get(0).getField() + "입력 오류 입니다.");
 			return "/signup";
 		}
 		if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
-			model.addAttribute("errors", "이미 존재하는 email입니다.");
+			model.addAttribute("error", "이미 존재하는 email입니다.");
 			return "/signup";
 		}
 
