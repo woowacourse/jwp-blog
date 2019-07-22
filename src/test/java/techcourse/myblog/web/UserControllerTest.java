@@ -168,8 +168,8 @@ class UserControllerTest extends ControllerTest {
     @DisplayName("회원 정보 수정 시 잘못된 이름을 입력하면 에러 메시지를 띄웁니다.")
     void editMyPageFailTest() {
         String invalidName = "123";
-        userDto.setEmail("fail@test.com");
-        loginDto.setEmail("fail@test.com");
+        userDto.setEmail("error@test.com");
+        loginDto.setEmail("error@test.com");
 
         postUser(webTestClient, userDto, postUserResponse -> {
             String sessionId = getSessionId(postUserResponse);
@@ -202,6 +202,41 @@ class UserControllerTest extends ControllerTest {
                         .expectBody()
                         .consumeWith(withdrawal -> getIndexView(webTestClient, sessionId, index ->
                                 assertThat(new String(index.getResponseBody())).doesNotContain("김효재")));
+            });
+        });
+    }
+
+    @Test
+    @DisplayName("비로그인 시 회원 정보 페이지로 이동하면 실패하여 메인페이지로 이동한다.")
+    void myPageFailTest() {
+        webTestClient.get()
+                .uri("/mypage")
+                .exchange()
+                .expectStatus().is3xxRedirection();
+    }
+
+    @Test
+    @DisplayName("비로그인 시 회원 정보 수정 페이지로 이동하면 실패하여 메인페이지로 이동한다.")
+    void myPageEditFailTest() {
+        webTestClient.get()
+                .uri("/mypage-edit")
+                .exchange()
+                .expectStatus().is3xxRedirection();
+    }
+
+    @Test
+    @DisplayName("로그인 후에 가입 페이지로 이동하면 실패하여 메인페이지로 이동한다.")
+    void signUpFailTest() {
+        userDto.setEmail("fail@test.com");
+        loginDto.setEmail("fail@test.com");
+
+        postUser(webTestClient, userDto, postUserResponse -> {
+            String sessionId = getSessionId(postUserResponse);
+            postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {
+                webTestClient.get()
+                        .uri("/signup" + sessionId)
+                        .exchange()
+                        .expectStatus().is3xxRedirection();
             });
         });
     }
