@@ -39,7 +39,8 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "login";
         }
-        Optional<User> user = userService.checkUser(loginDto);
+        // TODO: 2019-07-22 IllegalArgumentException -> Controller advice!!
+        Optional<User> user = userService.login(loginDto);
         if (user.isPresent()) {
             httpSession.setAttribute("user", user.get());
             return "redirect:/";
@@ -66,10 +67,10 @@ public class UserController {
     }
 
     @PutMapping("/mypage/edit")
-    public String updateUser(UserDto userDto, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
-        userDto.setEmail(user.getEmail());
-        httpSession.setAttribute("user", userService.update(userDto));
+    public String updateUser(UserDto updatedUser, HttpSession httpSession) {
+        // TODO: 2019-07-22 Controller Advice
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
+        httpSession.setAttribute("user", userService.update(email, updatedUser));
         return "redirect:/mypage";
     }
 
