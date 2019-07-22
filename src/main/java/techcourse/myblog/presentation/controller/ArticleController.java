@@ -26,13 +26,11 @@ public class ArticleController {
 
     @PostMapping
     public RedirectView save(ArticleDto articleDto) {
-        log.info(articleDto.getTitle() + " " + articleDto.getCoverUrl() + " " + articleDto.getContents());
-        return new RedirectView("/article/" + articleService.save(articleDto));
+        return new RedirectView("/article/" + articleService.save(articleDto).getId());
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
-        log.info("" + id);
         model.addAttribute("article", articleService.findById(id));
         return "article";
     }
@@ -52,7 +50,6 @@ public class ArticleController {
 
     @DeleteMapping("/{id}")
     public RedirectView delete(@PathVariable long id) {
-        log.info(String.valueOf(id));
         articleService.delete(id);
         return new RedirectView("/");
     }

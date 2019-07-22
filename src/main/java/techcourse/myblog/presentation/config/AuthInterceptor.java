@@ -15,10 +15,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (request.getRequestURI().equals("/user/login") && request.getMethod().equals("POST")) {
             return true;
         }
-
-        log.error(String.valueOf(request.getSession().getAttribute("user")));
         UserDto userDtoSession = (UserDto) request.getSession().getAttribute("user");
-
         if (userDtoSession == null) {
             response.sendRedirect("/user");
             return false;

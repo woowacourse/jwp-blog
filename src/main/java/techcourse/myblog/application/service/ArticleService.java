@@ -7,26 +7,25 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.error.NotFoundArticleIdException;
 
-import javax.transaction.Transactional;
-
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
-    public Long save(ArticleDto articleDto) {
+    public Article save(ArticleDto articleDto) {
         Article article = Article.builder()
                 .title(articleDto.getTitle())
                 .coverUrl(articleDto.getCoverUrl())
                 .contents(articleDto.getContents())
                 .build();
         articleRepository.save(article);
-        return article.getId();
+        return article;
     }
 
     public Article findById(long id) {
         return articleRepository.findById(id).orElseThrow(() -> new NotFoundArticleIdException("게시글을 찾을 수 없습니다."));
     }
+
     public Iterable<Article> findAll() {
         return articleRepository.findAll();
     }

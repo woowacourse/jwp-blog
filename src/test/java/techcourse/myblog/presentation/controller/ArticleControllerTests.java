@@ -11,6 +11,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.service.ArticleService;
+import techcourse.myblog.domain.Article;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.springframework.http.HttpMethod.POST;
@@ -20,8 +21,9 @@ import static techcourse.myblog.presentation.controller.ArticleController.ARTICL
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
-    ArticleDto articleDto;
     private static Long id = 0L;
+    private Article article;
+    private ArticleDto articleDto;
     @Autowired
     private WebTestClient webTestClient;
     @Autowired
@@ -34,6 +36,7 @@ public class ArticleControllerTests {
                 .coverUrl("b")
                 .contents("c")
                 .build();
+        article = articleService.save(articleDto);
     }
 
     @Test
@@ -54,30 +57,26 @@ public class ArticleControllerTests {
 
     @Test
     void updateForm_get_isOk() {
-        createArticle();
-        webTestClient.get().uri(ARTICLE_MAPPING_URL + "/" + id + "/edit")
+        webTestClient.get().uri(ARTICLE_MAPPING_URL + "/" + article.getId() + "/edit")
                 .exchange().expectStatus().isOk();
     }
 
     @Test
     void update_post_is3xxRedirect() {
-        createArticle();
-        articleRequest(PUT, articleDto, "/" + id)
+        articleRequest(PUT, articleDto, "/" + article.getId())
                 .expectStatus()
                 .is3xxRedirection();
     }
 
     @Test
     void update_editedData_true() {
-        createArticle();
         ArticleDto editedArticleDto = ArticleDto.builder()
                 .title("edit")
                 .coverUrl("edit")
                 .contents("edit")
                 .build();
 
-        createArticle();
-        articleRequest(PUT, editedArticleDto, "/" + id)
+        articleRequest(PUT, editedArticleDto, "/" + article.getId())
                 .expectStatus()
                 .is3xxRedirection()
                 .expectBody().consumeWith(redirectResponse -> {
@@ -95,7 +94,8 @@ public class ArticleControllerTests {
 
     @Test
     void delete_firstArticle_is3xxRedirect() {
-        webTestClient.delete().uri(ARTICLE_MAPPING_URL + "/" + id)
+        Article editedArticle = articleService.save(articleDto);
+        webTestClient.delete().uri(ARTICLE_MAPPING_URL + "/" + editedArticle.getId())
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection();
@@ -110,10 +110,5 @@ public class ArticleControllerTests {
                         .with("coverUrl", articleDto.getCoverUrl())
                         .with("contents", articleDto.getContents()))
                 .exchange();
-    }
-
-    private void createArticle() {
-        id++;
-        articleRequest(POST, articleDto, "");
     }
 }
