@@ -12,13 +12,13 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.domain.User.UserRequestDto.*;
-import static techcourse.myblog.web.AccountController.EMAIL_DUPLICATION_ERROR_MSG;
-import static techcourse.myblog.web.AccountController.LOGIN_ERROR_MSG;
+import static techcourse.myblog.web.UserController.EMAIL_DUPLICATION_ERROR_MSG;
+import static techcourse.myblog.web.UserController.LOGIN_ERROR_MSG;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AccountControllerTest {
+public class UserControllerTest {
     private WebTestClient webTestClient;
     private int testId = 1;
     private String testName = "abcdeFGHI";
@@ -26,7 +26,7 @@ public class AccountControllerTest {
     private String testEmail = "abc@hi.com";
 
     @Autowired
-    public AccountControllerTest(WebTestClient webTestClient) {
+    public UserControllerTest(WebTestClient webTestClient) {
         this.webTestClient = webTestClient;
         testSignup(testName, testPassword, testEmail);  // 테스트용 사용자 회원가입. setup과 달리 테스트 시작 전 한번만 수행된다.
     }

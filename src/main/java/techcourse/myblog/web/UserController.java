@@ -18,13 +18,13 @@ import java.util.Optional;
 
 @Slf4j
 @Controller
-public class AccountController {
+public class UserController {
     public static final String EMAIL_DUPLICATION_ERROR_MSG = "이메일 중복입니다.";
     public static final String LOGIN_ERROR_MSG = "아이디나 비밀번호가 잘못되었습니다.";
     private UserRepository userRepository;
 
     @Autowired
-    public AccountController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
