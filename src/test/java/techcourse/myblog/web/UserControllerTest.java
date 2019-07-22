@@ -172,7 +172,7 @@ public class UserControllerTest {
             if ("/users".equals(path) || "/users/mypage".equals(path) || "/users/mypage/edit".equals(path)) {
                 return exchange.getSession()
                         .doOnNext(webSession ->
-                                webSession.getAttributes().put("user", new User("Martin", "martin@gmail.com", "Aa12345!")))
+                                webSession.getAttributes().put(LoginUtil.USER_SESSION_KEY, new User("Martin", "martin@gmail.com", "Aa12345!")))
                         .then();
             }
             return null;

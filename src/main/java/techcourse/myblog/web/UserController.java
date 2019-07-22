@@ -63,17 +63,17 @@ public class UserController {
             return "mypage-edit";
         }
 
-        Long userId = ((User) httpSession.getAttribute("user")).getUserId();
+        Long userId = ((User) httpSession.getAttribute(LoginUtil.USER_SESSION_KEY)).getUserId();
         User user = userService.update(userUpdateRequestDto, userId);
-        httpSession.setAttribute("user", user);
+        httpSession.setAttribute(LoginUtil.USER_SESSION_KEY, user);
         return "redirect:/users/mypage";
     }
 
     @DeleteMapping("/mypage")
     public String deleteUser(HttpSession httpSession) {
-        Long userId = ((User) httpSession.getAttribute("user")).getUserId();
+        Long userId = ((User) httpSession.getAttribute(LoginUtil.USER_SESSION_KEY)).getUserId();
         userService.delete(userId);
-        httpSession.removeAttribute("user");
+        httpSession.removeAttribute(LoginUtil.USER_SESSION_KEY);
         return "redirect:/";
     }
 }

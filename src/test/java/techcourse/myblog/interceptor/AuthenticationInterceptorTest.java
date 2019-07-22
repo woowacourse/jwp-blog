@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.web.LoginUtil;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -21,7 +22,7 @@ class AuthenticationInterceptorTest {
             if ("/users".equals(path) || "/users/mypage".equals(path) || "/users/mypage/edit".equals(path)) {
                 return exchange.getSession()
                         .doOnNext(webSession ->
-                                webSession.getAttributes().put("user", new User("Martin", "martin@gmail.com", "Aa12345!")))
+                                webSession.getAttributes().put(LoginUtil.USER_SESSION_KEY, new User("Martin", "martin@gmail.com", "Aa12345!")))
                         .then();
             }
             return null;

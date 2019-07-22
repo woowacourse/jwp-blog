@@ -25,13 +25,13 @@ public class LoginController {
     @PostMapping("/login/check")
     public String login(AuthenticationDto authenticationDto, HttpSession httpSession) {
         User user = loginService.login(authenticationDto);
-        httpSession.setAttribute("user", user);
+        httpSession.setAttribute(LoginUtil.USER_SESSION_KEY, user);
         return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
-        httpSession.removeAttribute("user");
+        httpSession.removeAttribute(LoginUtil.USER_SESSION_KEY);
         return "redirect:/";
     }
 }
