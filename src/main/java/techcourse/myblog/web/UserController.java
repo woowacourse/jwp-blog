@@ -27,7 +27,7 @@ public class UserController {
 	}
 
 	@GetMapping("/users")
-	public String find(final Model model) {
+	public String findAll(final Model model) {
 		final Iterable<User> users = userService.findAll();
 		log.debug("users : {}", users);
 		model.addAttribute("users", users);

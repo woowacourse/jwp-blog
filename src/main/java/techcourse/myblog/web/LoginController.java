@@ -22,11 +22,9 @@ public class LoginController {
 	private static final String ERROR_MESSAGE_NAME = "errorMessage";
 
 	private final LoginService loginService;
-	private final UserService userService;
 
 	@Autowired
-	public LoginController(final UserService userService, final LoginService loginService) {
-		this.userService = userService;
+	public LoginController(final LoginService loginService) {
 		this.loginService = loginService;
 	}
 
