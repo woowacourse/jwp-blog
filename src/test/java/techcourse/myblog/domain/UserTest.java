@@ -3,13 +3,11 @@ package techcourse.myblog.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserUpdateDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserTest {
     private User user;
 
