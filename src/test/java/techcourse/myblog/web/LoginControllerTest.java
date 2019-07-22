@@ -7,21 +7,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.dto.UserDto;
 
-import java.util.function.Consumer;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.web.UserControllerTest.getIndexView;
-import static techcourse.myblog.web.UserControllerTest.postUser;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class LoginControllerTest {
+class LoginControllerTest extends ControllerTest {
     private UserDto userDto;
     private LoginDto loginDto;
 
@@ -40,22 +34,6 @@ class LoginControllerTest {
 
         loginDto.setEmail("test@test.com");
         loginDto.setPassword("PassW0rd@");
-    }
-
-    public static void postLogin(WebTestClient webTestClient, LoginDto loginDto, String sessionId, Consumer<EntityExchangeResult<byte[]>> consumer) {
-        webTestClient.post()
-                .uri("/login" + sessionId)
-                .body(BodyInserters
-                        .fromFormData("email", loginDto.getEmail())
-                        .with("password", loginDto.getPassword()))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(consumer);
-    }
-
-    public static String getSessionId(EntityExchangeResult<byte[]> postUserResponse) {
-        return ";jsessionid=" + postUserResponse.getResponseCookies().getFirst("JSESSIONID").getValue();
     }
 
     @Test

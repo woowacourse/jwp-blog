@@ -7,22 +7,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.dto.UserDto;
 
-import java.util.function.Consumer;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.web.LoginControllerTest.getSessionId;
-import static techcourse.myblog.web.LoginControllerTest.postLogin;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserControllerTest {
+class UserControllerTest extends ControllerTest {
     private UserDto userDto;
     private LoginDto loginDto;
 
@@ -52,37 +47,6 @@ class UserControllerTest {
                         .with("passwordConfirm", userDto.getPasswordConfirm()))
                 .exchange()
                 .expectStatus();
-    }
-
-    public static void postUser(WebTestClient webTestClient, UserDto userDto, Consumer<EntityExchangeResult<byte[]>> consumer) {
-        webTestClient.post()
-                .uri("/users")
-                .body(BodyInserters.fromFormData("name", userDto.getName())
-                        .with("email", userDto.getEmail())
-                        .with("password", userDto.getPassword())
-                        .with("passwordConfirm", userDto.getPasswordConfirm()))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(consumer);
-    }
-
-    private void getMyPageView(String sessionId, Consumer<EntityExchangeResult<byte[]>> consumer) {
-        webTestClient.get()
-                .uri("/mypage" + sessionId)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(consumer);
-    }
-
-    public static void getIndexView(WebTestClient webTestClient, String sessionId, Consumer<EntityExchangeResult<byte[]>> consumer) {
-        webTestClient.get()
-                .uri("/" + sessionId)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(consumer);
     }
 
     @Test
@@ -169,7 +133,7 @@ class UserControllerTest {
         postUser(webTestClient, userDto, postUserResponse -> {
             String sessionId = getSessionId(postUserResponse);
             postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {
-                getMyPageView(sessionId, myPage ->
+                getMyPageView(webTestClient, sessionId, myPage ->
                         assertThat(new String(myPage.getResponseBody()))
                                 .contains("test")
                                 .contains("mypage@test.com"));
@@ -194,8 +158,8 @@ class UserControllerTest {
                         .expectStatus().is3xxRedirection()
                         .expectBody()
                         .consumeWith(updateUser ->
-                                getMyPageView(sessionId, myPage -> assertThat(new String(myPage.getResponseBody()))
-                                        .contains(updateName)));
+                                getMyPageView(webTestClient, sessionId, myPage ->
+                                        assertThat(new String(myPage.getResponseBody())).contains(updateName)));
             });
         });
     }
