@@ -9,18 +9,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.web.support.LoginSessionManager;
 import techcourse.myblog.web.support.UserSessionInfo;
-
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
 
     private final UserService userService;
+    private final LoginSessionManager loginSessionManager;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, LoginSessionManager loginSessionManager) {
         this.userService = userService;
+        this.loginSessionManager = loginSessionManager;
     }
 
     @GetMapping("/users")
@@ -40,32 +41,21 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String addUser(UserDto userDto, HttpSession session) {
-        createSession(session, userService.addUser(userDto));
+    public String addUser(UserDto userDto) {
         return "redirect:/login";
     }
 
     @PutMapping("/users")
-    public String updateUser(UserDto userDto, HttpSession session, UserSessionInfo userSessionInfo) {
+    public String updateUser(UserDto userDto, UserSessionInfo userSessionInfo) {
         userService.updateUser(userSessionInfo.getEmail(), userDto);
-        createSession(session, userDto);
+        loginSessionManager.setLoginSession(userDto.getName(), userDto.getEmail());
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/users")
-    public String deleteUser(HttpSession session, UserSessionInfo userSessionInfo) {
+    public String deleteUser(UserSessionInfo userSessionInfo) {
         userService.deleteUser(userSessionInfo.getEmail());
-        removeSession(session);
+        loginSessionManager.clearSession();
         return "redirect:/";
-    }
-
-    private void createSession(HttpSession session, UserDto userDto) {
-        session.setAttribute("userName", userDto.getName());
-        session.setAttribute("userEmail", userDto.getEmail());
-    }
-
-    private void removeSession(HttpSession session) {
-        session.removeAttribute("userName");
-        session.removeAttribute("userEmail");
     }
 }

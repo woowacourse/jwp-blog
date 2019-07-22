@@ -4,7 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article.Article;
+import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.List;
 
@@ -16,10 +18,15 @@ class ArticleServiceTest {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private ArticleRepository articleRepository;
+
     private Article article;
 
     @BeforeEach
+    @Transactional
     void setUp() {
+        articleRepository.deleteAll();
         article = new Article("t1", "c1", "c1");
     }
 

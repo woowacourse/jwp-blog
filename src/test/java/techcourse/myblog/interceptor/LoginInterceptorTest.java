@@ -1,21 +1,10 @@
 package techcourse.myblog.interceptor;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.web.AuthedWebTestClient;
 
 class LoginInterceptorTest extends AuthedWebTestClient {
 
-    @BeforeEach
-    void setUp() {
-        init();
-    }
-
-    @AfterEach
-    void tearDown() {
-        end();
-    }
 
     @Test
     void 인터셉터_동작() {

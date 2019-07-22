@@ -22,6 +22,7 @@ public class AuthedWebTestClient {
     @Autowired
     protected UserRepository userRepository;
 
+
     protected void init() {
         userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
     }

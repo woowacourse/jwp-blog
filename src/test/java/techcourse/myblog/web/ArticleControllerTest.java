@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -16,8 +18,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTestClient extends AuthedWebTestClient {
-    private static final Logger log = LoggerFactory.getLogger(ArticleControllerTestClient.class);
+public class ArticleControllerTest extends AuthedWebTestClient {
+    private static final Logger log = LoggerFactory.getLogger(ArticleControllerTest.class);
 
     private String title = "제목";
     private String contents = "contents";
@@ -26,6 +28,15 @@ public class ArticleControllerTestClient extends AuthedWebTestClient {
     @Autowired
     private ArticleRepository articleRepository;
 
+    @BeforeEach
+    void setUp() {
+        init();
+    }
+
+    @AfterEach
+    void tearDown() {
+        end();
+    }
 
     @Test
     void index() {

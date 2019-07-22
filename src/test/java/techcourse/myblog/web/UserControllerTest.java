@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class UserControllerTest extends AuthedWebTestClient {
 
+
     @BeforeEach
     void setUp() {
         init();
@@ -25,7 +26,7 @@ class UserControllerTest extends AuthedWebTestClient {
 
     @Test
     void 인덱스_페이지_GET() {
-        webTestClient.get().uri("/users")
+        get("/users")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -39,14 +40,13 @@ class UserControllerTest extends AuthedWebTestClient {
                         .with("password", "b")
                         .with("email", "c"))
                 .exchange()
-                .expectStatus().isAccepted();
+                .expectStatus().is3xxRedirection();
 
         assertThat(userRepository.count()).isEqualTo(count);
     }
 
     @Test
     void 회원가입_성공_테스트() {
-        long count = userRepository.count();
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData("name", "andole")
@@ -54,8 +54,7 @@ class UserControllerTest extends AuthedWebTestClient {
                         .with("email", "test@test.com"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".+\\/login.+");
-        assertThat(userRepository.count()).isNotEqualTo(count);
+                .expectHeader().valueMatches("Location", ".+\\/login");
     }
 
     @Test

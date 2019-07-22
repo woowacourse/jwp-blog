@@ -5,16 +5,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.LoginService;
-
-import javax.servlet.http.HttpSession;
+import techcourse.myblog.web.support.LoginSessionManager;
 
 @Controller
 public class LoginController {
 
     private final LoginService loginService;
+    private final LoginSessionManager loginSessionManager;
 
-    public LoginController(LoginService loginService) {
+    public LoginController(LoginService loginService, LoginSessionManager loginSessionManager) {
         this.loginService = loginService;
+        this.loginSessionManager = loginSessionManager;
     }
 
     @GetMapping("/login")
@@ -23,25 +24,20 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-    public String logout(HttpSession session) {
-        session.removeAttribute("userName");
-        session.removeAttribute("userEmail");
+    public String logout() {
+        loginSessionManager.clearSession();
         return "redirect:/";
     }
 
     @PostMapping("/login")
-    public String login(UserDto userDto, HttpSession session) {
-        setLoginSession(session, loginService.loginByEmailAndPwd(userDto));
+    public String login(UserDto userDto) {
+        UserDto resultDto = loginService.loginByEmailAndPwd(userDto);
+        loginSessionManager.setLoginSession(resultDto.getName(), resultDto.getEmail());
         return "redirect:/";
     }
 
     @GetMapping("/signup")
     public String signupForm() {
         return "signup";
-    }
-
-    private void setLoginSession(HttpSession session, UserDto userDto) {
-        session.setAttribute("userName", userDto.getName());
-        session.setAttribute("userEmail", userDto.getEmail());
     }
 }

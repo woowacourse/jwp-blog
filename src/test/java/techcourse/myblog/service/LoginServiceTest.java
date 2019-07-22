@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User.User;
 import techcourse.myblog.domain.User.UserException;
 import techcourse.myblog.dto.UserDto;
@@ -22,7 +23,9 @@ class LoginServiceTest {
     private UserRepository userRepository;
 
     @BeforeEach
+    @Transactional
     void setUp() {
+        userRepository.deleteAll();
         userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
     }
 
