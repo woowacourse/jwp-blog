@@ -29,7 +29,7 @@ class UserControllerTest {
         postUser(UserRequestDto.of("john", DEFAULT_USER.getEmail(), "p@ssW0rd23", "p@ssW0rd23"),
             postResponse -> {
                 String body = new String(postResponse.getResponseBody());
-                assertThat(body).contains("이미 등록된 이메일입니다");
+                assertThat(body).contains(UserRequestDto.CONSTRAINT_VIOLATION_EMAIL_UNIQUE);
             });
     }
 

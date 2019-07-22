@@ -11,6 +11,7 @@ public class UserRequestDto {
     public static final String CONSTRAINT_VIOLATION_PASSWORD_SIZE = "비밀번호는 8자 이상이어야 합니다";
     public static final String CONSTRAINT_VIOLATION_PASSWORD_FORMAT = "비밀번호 형식을 확인해주세요";
     public static final String CONSTRAINT_VIOLATION_PASSWORD_EQUALITY = "비밀번호가 같지 않습니다";
+    public static final String CONSTRAINT_VIOLATION_EMAIL_UNIQUE = "이미 존재하는 이메일입니다";
 
     public static final String CONSTRAINT_USERNAME_PATTERN = "^[a-zA-Z ]*$";
     public static final String CONSTRAINT_PASSWORD_PATTERN = "((?=.*\\d)(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
@@ -23,7 +24,7 @@ public class UserRequestDto {
     @Size(min = CONSTRAINT_USERNAME_LENGTH_MIN, max = CONSTRAINT_USERNAME_LENGTH_MAX, message = CONSTRAINT_VIOLATION_USERNAME_SIZE)
     @Pattern(regexp = CONSTRAINT_USERNAME_PATTERN, message = CONSTRAINT_VIOLATION_USERNAME_FORMAT)
     private String name;
-    @UniqueEmail
+    @UniqueEmail(message = CONSTRAINT_VIOLATION_EMAIL_UNIQUE)
     @Email(message = CONSTRAINT_VIOLATION_EMAIL_FORMAT)
     private String email;
     @NotBlank
