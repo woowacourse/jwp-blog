@@ -1,15 +1,11 @@
 package techcourse.myblog.web.dto;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,24 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @SpringBootTest
 public class UserRequestDtoTest {
 
-    private static ValidatorFactory validatorFactory;
-
+    @Autowired
     private Validator validator;
-
-    @BeforeAll
-    static void init() {
-        validatorFactory = Validation.buildDefaultValidatorFactory();
-    }
-
-    @AfterAll
-    static void cleanup() {
-        validatorFactory.close();
-    }
-
-    @BeforeEach
-    void before() {
-        validator = validatorFactory.getValidator();
-    }
 
     @Test
     void create() {
