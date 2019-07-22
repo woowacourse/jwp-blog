@@ -98,9 +98,9 @@
 <th:block th:include="/fragments/main-js :: mainJs"/>
 
 <script th:inline="javascript" type="text/javascript">
-    error = [[${error.errorMessage}]];
+    const error = [[${error}]];
     if(error !== null) {
-        window.alert(error)
+        window.alert([[${error.errorMessage}]])
     }
 </script>
 

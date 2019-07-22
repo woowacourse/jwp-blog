@@ -34,8 +34,7 @@ public class ArticleService {
 
     @Transactional
     public Article editArticle(ArticleRequest articleRequest, long articleId) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
+        Article article = findById(articleId);
         article.updateArticle(articleRequest.toArticle());
         return article;
     }

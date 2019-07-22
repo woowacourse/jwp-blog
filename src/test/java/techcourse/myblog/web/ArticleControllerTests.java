@@ -82,9 +82,10 @@ public class ArticleControllerTests {
         webTestClient.get()
                 .uri("/articles/" + "2")
                 .exchange()
-                .expectStatus().is5xxServerError();
+                .expectStatus()
+                .is3xxRedirection()
+        ;
     }
-
 
     @Test
     void 게시글수정페이지() {
