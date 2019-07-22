@@ -1,5 +1,7 @@
 package techcourse.myblog.web.dto;
 
+import techcourse.myblog.web.validator.UniqueEmail;
+
 import javax.validation.constraints.*;
 
 public class UserRequestDto {
@@ -21,6 +23,7 @@ public class UserRequestDto {
     @Size(min = CONSTRAINT_USERNAME_LENGTH_MIN, max = CONSTRAINT_USERNAME_LENGTH_MAX, message = CONSTRAINT_VIOLATION_USERNAME_SIZE)
     @Pattern(regexp = CONSTRAINT_USERNAME_PATTERN, message = CONSTRAINT_VIOLATION_USERNAME_FORMAT)
     private String name;
+    @UniqueEmail
     @Email(message = CONSTRAINT_VIOLATION_EMAIL_FORMAT)
     private String email;
     @NotBlank

@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Objects;
-import java.util.function.Function;
 
 @Entity
 public class User {
@@ -16,11 +15,7 @@ public class User {
     private String email;
     private String password;
 
-    public static User of(String username, String email, String password, Function<String, Boolean> emailDuplicateChecker) {
-        if (emailDuplicateChecker.apply(email)) {
-            throw new UserCreationConstraintException("이미 등록된 이메일입니다.");
-        }
-
+    public static User of(String username, String email, String password) {
         User newUser = new User();
         newUser.email = email;
         newUser.username = username;

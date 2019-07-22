@@ -17,19 +17,15 @@ public class UserRepositoryTest {
 
     @Test
     void create() {
-        User user = User.of("name", "email", "password", this::checkEmailDuplicate);
+        User user = User.of("name", "email", "password");
         assertThat(userRepository.save(user).getId()).isNotNull();
     }
 
     @Test
     void findByEmail() {
-        User user = userRepository.save(User.of("john", "email@gmail.com", "p1Assw@rd", this::checkEmailDuplicate));
+        User user = userRepository.save(User.of("john", "email@gmail.com", "p1Assw@rd"));
         Optional<User> maybeFound = userRepository.findByEmail(user.getEmail());
         assertThat(maybeFound.isPresent()).isTrue();
         assertThat(maybeFound.get()).isEqualTo(user);
-    }
-
-    private boolean checkEmailDuplicate(String email) {
-        return userRepository.findByEmail(email).isPresent();
     }
 }

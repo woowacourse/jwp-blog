@@ -24,8 +24,7 @@ public class UserService {
     }
 
     public Long register(UserRequestDto request) {
-        User newUser = User.of(request.getName(), request.getEmail(), request.getPassword(),
-            email -> userRepository.findByEmail(email).isPresent());
+        User newUser = User.of(request.getName(), request.getEmail(), request.getPassword());
         userRepository.save(newUser);
         return newUser.getId();
     }
