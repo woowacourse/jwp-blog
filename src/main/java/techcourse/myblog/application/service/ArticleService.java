@@ -2,6 +2,7 @@ package techcourse.myblog.application.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.application.converter.ArticleConverter;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
 import techcourse.myblog.domain.Article;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Service
 public class ArticleService {
-
+    private final ArticleConverter articleConverter = ArticleConverter.getInstance();
     private final ArticleRepository articleRepository;
 
     public ArticleService(ArticleRepository articleRepository) {
@@ -21,11 +22,7 @@ public class ArticleService {
 
     @Transactional
     public Long save(ArticleDto articleDto) {
-        return articleRepository.save(new Article.ArticleBuilder()
-                .contents(articleDto.getContents())
-                .coverUrl(articleDto.getCoverUrl())
-                .title(articleDto.getTitle())
-                .build()).getId();
+        return articleRepository.save(articleConverter.convertFromDto(articleDto)).getId();
     }
 
     @Transactional(readOnly = true)
@@ -33,7 +30,7 @@ public class ArticleService {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new NotExistArticleIdException("존재하지 않는 Article 입니다."));
 
-        return ArticleDto.of(article);
+        return articleConverter.convertFromEntity(article);
     }
 
     @Transactional
@@ -53,10 +50,6 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public List<ArticleDto> findAll() {
-        List<ArticleDto> articles = new ArrayList<>();
-
-        articleRepository.findAll().forEach(article -> articles.add(ArticleDto.of(article)));
-
-        return articles;
+        return articleConverter.createFromEntities(articleRepository.findAll());
     }
 }

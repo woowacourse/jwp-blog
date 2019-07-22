@@ -8,7 +8,6 @@ import javax.validation.constraints.Pattern;
 
 @Entity
 public class User {
-
     @Id
     @NotBlank
     @Email

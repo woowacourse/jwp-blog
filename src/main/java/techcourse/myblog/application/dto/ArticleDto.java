@@ -15,13 +15,6 @@ public class ArticleDto {
         this.contents = contents;
     }
 
-    public static ArticleDto of(Article article) {
-        return new ArticleDto(article.getId(),
-                article.getTitle(),
-                article.getCoverUrl(),
-                article.getContents());
-    }
-
     public String getTitle() {
         return title;
     }

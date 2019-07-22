@@ -28,10 +28,6 @@ public class UserDto {
     public UserDto() {
     }
 
-    public static UserDto of(User user) {
-        return new UserDto(user.getEmail(), user.getName(), user.getPassword());
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
