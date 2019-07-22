@@ -11,8 +11,8 @@ import techcourse.myblog.service.exception.LoginException;
 import techcourse.myblog.support.util.EncryptHelper;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -72,24 +72,24 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    public Optional<FieldError> addSingUpError(UserRequest userRequest) {
-        Optional<FieldError> error = Optional.empty();
+    public List<FieldError> addSingUpError(UserRequest userRequest) {
+       List<FieldError> errors = new ArrayList<>();
 
         if (isDuplicatedEmail(userRequest.getEmail())) {
-            error = Optional.of(new FieldError(
+            errors.add(new FieldError(
                     "userRequest",
                     "email",
                     "이메일이 중복입니다!"));
         }
 
         if (doesNotMatchPassword(userRequest.getPassword(), userRequest.getReconfirmPassword())) {
-            error = Optional.of(new FieldError(
+            errors.add(new FieldError(
                     "userRequest",
                     "reconfirmPassword",
                     "비밀번호가 일치하지 않습니다!"));
         }
 
-        return error;
+       return errors;
     }
 
     private boolean isDuplicatedEmail(String email) {

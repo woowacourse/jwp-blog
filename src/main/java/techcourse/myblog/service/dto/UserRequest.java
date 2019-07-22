@@ -1,9 +1,13 @@
 package techcourse.myblog.service.dto;
 
+import techcourse.myblog.support.validator.EmailConstraint;
+import techcourse.myblog.support.validator.EqualFields;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+@EqualFields(baseField = "password", matchField = "reconfirmPassword")
 public class UserRequest {
     @NotBlank(message = "이름을 작성해주세요!")
     @Pattern(regexp = "[^ !@#$%^&*(),.?\\\":{}|<>0-9]{2,10}",
@@ -12,6 +16,7 @@ public class UserRequest {
 
     @NotBlank(message = "이메일을 작성해주세요!")
     @Email(message = "이메일 양식을 지켜주세요!")
+    @EmailConstraint
     private String email;
 
     @NotBlank(message = "비밀번호를 작성해주세요!")

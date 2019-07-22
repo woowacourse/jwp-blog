@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -46,13 +45,13 @@ public class UserController {
             return "signup";
         }
 
-        Optional<FieldError> signUpError = userService.addSingUpError(userRequest);
-        if (signUpError.isPresent()) {
-            bindingResult.addError(signUpError.get());
+        List<FieldError> signUpErrors = userService.addSingUpError(userRequest);
+        if(!signUpErrors.isEmpty()) {
+            signUpErrors.forEach(bindingResult::addError);
             return "signup";
         }
 
-        User user = userService.saveUser(userRequest);
+        userService.saveUser(userRequest);
 
         return "redirect:/login";
     }
