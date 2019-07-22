@@ -1,1 +1,4 @@
-https://blogdeveloperspot.blogspot.com/2018/12/spring-boot-2-jpa-mysql-column-unique.html
+# [adv] 추가학습주제 2주차
+
+##JDBC vs JPA
+

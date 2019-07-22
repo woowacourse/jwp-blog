@@ -5,9 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
@@ -16,72 +19,45 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
+@TestPropertySource("classpath:application_test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
-    private static final String ARTICLE_DELIMITER
-            = "<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tab-centered-1\">";
-    private static final Article ARTICLE_SAMPLE;
     private static String title = "TEST";
     private static String coverUrl = "https://img.com";
     private static String contents = "testtest";
     private static String categoryId = "1";
 
-    static {
-        ARTICLE_SAMPLE = new Article(0, title, coverUrl, contents, 0);
-    }
-
     @Autowired
     private WebTestClient webTestClient;
 
-    @Test
-    public void index() {
-        final int count = 3;
-        addArticle();
-        addArticle();
-        addArticle();
+    private static long articleId;
 
-        webTestClient.get()
-                .uri("/")
+    @BeforeEach
+    void setUp() {
+        webTestClient.post()
+                .uri("/articles/new")
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents)
+                        .with("categoryId", categoryId))
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertEquals(count, StringUtils.countOccurrencesOf(body, ARTICLE_DELIMITER));
-                });
-    }
-
-    @Test
-    public void indexTestByCategory() {
-        final int count = 2;
-        addArticle();
-        addArticle();
-
-        webTestClient.get()
-                .uri("/1")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertEquals(count, StringUtils.countOccurrencesOf(body, ARTICLE_DELIMITER));
+                .expectHeader()
+                .value("location", s -> {
+                    articleId = Long.parseLong(s.split("/")[4]);
                 });
     }
 
     @Test
     public void showArticleById() {
-       addArticle();
-
-        webTestClient.get().uri("/articles/1")
+        webTestClient.get().uri("/articles/" + articleId)
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     public void updateArticleById() {
-        addArticle();
-
-        webTestClient.get().uri("/articles/1/edit")
+        webTestClient.get().uri("/articles/" + articleId + "/edit")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -110,18 +86,15 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents)
                         .with("categoryId", categoryId))
-                .exchange()
-                .expectStatus().isFound();
+                .exchange().expectStatus().isFound();
     }
 
-    @Test
-    public void deleteArticle() {
-        addArticle();
-
+    @AfterEach
+    void tearDown() {
+        //deleteArticle
         webTestClient.delete()
-                .uri("/articles/1")
+                .uri("/articles/" + articleId)
                 .exchange()
                 .expectStatus().isFound();
     }
-
 }

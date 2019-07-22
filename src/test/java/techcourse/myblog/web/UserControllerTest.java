@@ -6,12 +6,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 
 @ExtendWith(SpringExtension.class)
+@TestPropertySource("classpath:application_test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
     private static final String name = "미스터코";
@@ -45,6 +47,16 @@ class UserControllerTest {
                 .valueMatches("location", "http://localhost:" + localServerPort + "/login")
                 .expectStatus()
                 .is3xxRedirection();
+    }
+
+    @Test
+    public void 회원로그인() {
+        webTestClient.post()
+                .uri("/login")
+                .body(BodyInserters
+                        .fromFormData("email", email)
+                        .with("password", password))
+                .exchange().expectStatus().isOk();
     }
 
     @Test
