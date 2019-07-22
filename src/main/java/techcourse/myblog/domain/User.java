@@ -31,6 +31,15 @@ public class User {
         this.password = password;
     }
 
+    public void modify(User user) {
+        this.name = user.getName();
+        this.password = user.getPassword();
+    }
+
+    public boolean authenticate(String password) {
+        return this.password.equals(password);
+    }
+
     public String getEmail() {
         return email;
     }
@@ -41,11 +50,6 @@ public class User {
 
     public String getPassword() {
         return password;
-    }
-
-    public void modify(User user) {
-        this.name = user.getName();
-        this.password = user.getPassword();
     }
 
     @Override

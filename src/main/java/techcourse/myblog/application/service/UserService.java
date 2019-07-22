@@ -43,17 +43,20 @@ public class UserService {
 
     @Valid
     @Transactional(readOnly = true)
+    private User findUserById(String email) {
+        return userRepository.findById(email)
+                .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login"));
+    }
+
     public UserDto findById(String email) {
-        return userConverter.convertFromEntity(userRepository.findById(email)
-                .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login")));
+        return userConverter.convertFromEntity(findUserById(email));
     }
 
     @Transactional(readOnly = true)
     public void login(LoginDto loginDto) {
-        String requestPassword = loginDto.getPassword();
-        String expectedPassword = findById(loginDto.getEmail()).getPassword();
-
-        if (!requestPassword.equals(expectedPassword)) {
+        String password = loginDto.getPassword();
+        User user = findUserById(loginDto.getEmail());
+        if (!user.authenticate(password)) {
             throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
         }
     }
