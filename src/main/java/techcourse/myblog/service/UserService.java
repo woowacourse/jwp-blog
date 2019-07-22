@@ -6,6 +6,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -15,15 +16,15 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public boolean ifLoggedIn(HttpSession session) {
-        return userRepository.findByEmail((String) session.getAttribute("email")).isPresent();
+    public Optional<User> ifLoggedIn(HttpSession session) {
+        return userRepository.findByEmail((String) session.getAttribute("email"));
     }
 
     public boolean tryRender(Model model, HttpSession session) {
-        return userRepository.findByEmail((String) session.getAttribute("email")).map(user -> {
-                                                                                    model.addAttribute("user", user);
-                                                                                    return true;
-                                                                                }).orElse(false);
+        return ifLoggedIn(session).map(user -> {
+                                        model.addAttribute("user", user);
+                                        return true;
+                                    }).orElse(false);
     }
 
     public boolean tryLogin(String email, String password, HttpSession session) {
@@ -58,7 +59,7 @@ public class UserService {
     }
 
     public UserQueryResult tryUpdate(String name, String email, HttpSession session) {
-        return userRepository.findByEmail((String) session.getAttribute("email")).map(user -> {
+        return ifLoggedIn(session).map(user -> {
             if (!user.getEmail().equals(email) && userRepository.findByEmail(email).isPresent()) {
                 return UserQueryResult.EMAIL_ALREADY_TAKEN;
             }
@@ -74,9 +75,9 @@ public class UserService {
     }
 
     public void tryDelete(HttpSession session) {
-        userRepository.findByEmail((String) session.getAttribute("email")).ifPresent(user -> {
-                                                                            userRepository.delete(user);
-                                                                            session.invalidate();
-                                                                        });
+        ifLoggedIn(session).ifPresent(user -> {
+                                userRepository.delete(user);
+                                session.invalidate();
+                            });
     }
 }

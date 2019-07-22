@@ -24,14 +24,14 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public long write(String title, String coverUrl, String contents) {
-        return articleRepository.save(new Article(title, coverUrl, contents)).getId();
+    public long write(Article toWrite) {
+        return articleRepository.save(toWrite).getId();
     }
 
-    public boolean tryUpdate(long articleId, Article article) {
+    public boolean tryUpdate(long articleId, Article toUpdate) {
         return articleRepository.findById(articleId).map(ifExists -> {
-                                                            article.setId(articleId);
-                                                            articleRepository.save(article);
+                                                            toUpdate.setId(articleId);
+                                                            articleRepository.save(toUpdate);
                                                             return true;
                                                         }).orElse(false);
     }

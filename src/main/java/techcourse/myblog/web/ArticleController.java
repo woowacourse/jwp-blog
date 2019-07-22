@@ -28,7 +28,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public RedirectView write(String title, String coverUrl, String contents) {
-        return new RedirectView("/articles/" + articleService.write(title, coverUrl, contents));
+        return new RedirectView("/articles/" + articleService.write(new Article(title, coverUrl, contents)));
     }
 
     @GetMapping("/articles/{articleId}")

@@ -23,11 +23,11 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginForm(@RequestParam(required = false) String errorMessage, Model model, HttpSession session) {
-        if (userService.ifLoggedIn(session)) {
-            return "redirect:/";
-        }
-        model.addAttribute("errorMessage", errorMessage);
-        return "login-form";
+        return userService.ifLoggedIn(session).map(ifExists -> "redirect:/")
+                                            .orElseGet(() -> {
+                                                model.addAttribute("errorMessage", errorMessage);
+                                                return "login-form";
+                                            });
     }
 
     @PostMapping("/login")
