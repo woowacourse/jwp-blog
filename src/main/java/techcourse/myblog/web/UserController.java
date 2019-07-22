@@ -99,7 +99,7 @@ public class UserController {
             return new RedirectView("/login");
         }
 
-        if (!loginUser.get().matchPassword(userDto.getPassword())) {
+        if (!loginUser.get().authenticate(userDto.toUser())) {
             redirectAttributes.addFlashAttribute("errors", Arrays.asList(
                     new FieldError("userDto", "password", WRONG_PASSWORD_MESSAGE)));
             return new RedirectView("/login");

@@ -43,11 +43,11 @@ public class User {
         return password;
     }
 
-    public boolean matchPassword(String password) {
+    public boolean authenticate(User user) {
         if (this.password == null) {
             throw new IllegalUserException("password 값이 설정되어 있지 않습니다.");
         }
-        return this.password.equals(password);
+        return matchEmail(user.getEmail()) && password.equals(user.getPassword());
     }
 
     public boolean matchEmail(String email) {
