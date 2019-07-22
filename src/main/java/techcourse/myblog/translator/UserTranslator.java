@@ -1,6 +1,5 @@
 package techcourse.myblog.translator;
 
-import org.springframework.stereotype.Component;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 

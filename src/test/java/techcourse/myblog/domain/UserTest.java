@@ -1,33 +1,53 @@
 package techcourse.myblog.domain;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UserTest {
-    String rightName = "donut";
-    String wrongName = "lfksjn slkgbsdkj asKLb zsdkjg;eg";
-    String rightEmail = "donut@woowa.com";
-    String wrongEmail = "donut.com@asd";
-    String rightPassword = "qwer1234!";
-    String wrongPassword = "666";
 
-    @Test
-    void validationNameTest() {
-        assertThatThrownBy(() -> new User(wrongName, rightEmail, rightPassword));
-        assertThat(new User(rightName, rightEmail, rightPassword));
+    private User user;
+    private Long testId = 1L;
+    private String testName = "pkch";
+    private String testEmail = "pkch@woowa.com";
+    private String testPassword = "qwerqwer";
+
+    @BeforeEach
+    void setUp() {
+        user = User.builder()
+                .id(testId)
+                .name(testName)
+                .email(testEmail)
+                .password(testPassword)
+                .build();
     }
 
     @Test
-    void validationEmailTest() {
-        assertThatThrownBy(() -> new User(rightName, wrongEmail, rightPassword));
-        assertThat(new User(rightName, rightEmail, rightPassword));
+    void 생성_테스트() {
+        User testUser = User.builder()
+                .id(testId)
+                .name(testName)
+                .email(testEmail)
+                .password(testPassword)
+                .build();
+        assertThat(user).isEqualTo(testUser);
     }
 
     @Test
-    void validationPasswordTest() {
-        assertThatThrownBy(() -> new User(rightName, rightEmail, wrongPassword));
-        assertThat(new User(rightName, rightEmail, rightPassword));
+    void 인증_이메일과_비밀번호가_일치할_때_테스트() {
+        assertTrue(user.authenticate("pkch@woowa.com", "qwerqwer"));
+    }
+
+    @Test
+    void 인증_비밀번호가_다를_때_테스트() {
+        assertFalse(user.authenticate("pkch@woowa.com", "12345678"));
+    }
+
+    @Test
+    void 인증_이메일이_다를_때_테스트() {
+        assertFalse(user.authenticate("park@woowa.com", "qwerqwer"));
     }
 }

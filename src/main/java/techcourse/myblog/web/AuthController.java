@@ -42,7 +42,7 @@ public class AuthController {
         Optional<User> maybeUser = userRepository.findByEmail(userDto.getEmail());
         User user = maybeUser.orElseThrow(() -> new NotExistUserException("해당 이메일로 가입한 유저가 없습니다."));
 
-        if (user.authenticate(userDto.getPassword())) {
+        if (user.authenticate(userDto.getEmail(), userDto.getPassword())) {
             session.setAttribute("username", user.getName());
             session.setAttribute("email", user.getEmail());
             return new RedirectView("/");
