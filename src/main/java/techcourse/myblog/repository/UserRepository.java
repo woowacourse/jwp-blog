@@ -7,8 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    @Query("select u from User u where u.email = ?1")
-    User findUserByEmailAddress(String email);
 
     @Transactional
     @Modifying
@@ -21,4 +19,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     int updateUserByEmailAddress(String userName, String password, String email);
 
     User findByEmail(String email);
+
 }
