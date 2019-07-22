@@ -49,7 +49,7 @@ public class AccountController {
         return "redirect:/";
     }
 
-    @DeleteMapping("/accounts/delete")
+    @DeleteMapping("/accounts/user")
     public String deleteUser(HttpServletRequest request) {
         log.debug(">>> deleteUser: request : {}", request);
         log.debug(">>> deleteUser: requestMethod : {}", request.getMethod());
