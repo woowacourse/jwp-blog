@@ -17,10 +17,12 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Article> findAll() {
         return articleRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Article findById(Long articleId) {
         return articleRepository.findById(articleId)
                 .orElseThrow(IllegalArgumentException::new);
