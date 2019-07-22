@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +11,8 @@ import techcourse.myblog.service.ArticleService;
 
 @Controller
 public class ArticleController {
+	private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
+
 	private final ArticleService articleService;
 
 	@Autowired
@@ -43,7 +47,12 @@ public class ArticleController {
 
 	@PutMapping("/articles/{articleId}")
 	public String update(@PathVariable final long articleId, final Article articleParam) {
-		long id = articleService.update(articleParam, articleId);
+		log.debug("articleId in update : {}", articleId);
+		log.debug("articleParam in update : {}", articleParam);
+
+		long id = articleService.update(articleId, articleParam);
+
+		log.debug("after update) articleId : {}", id);
 		return "redirect:/articles/" + id;
 	}
 

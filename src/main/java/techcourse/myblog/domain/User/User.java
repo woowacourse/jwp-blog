@@ -45,7 +45,8 @@ public class User {
 
 	public User update(final String name) {
 		validateName(name);
-		return new User(this.id, name, this.email, this.password);
+		this.name = name;
+		return this;
 	}
 
 	private void validate(final String name, final String password) {

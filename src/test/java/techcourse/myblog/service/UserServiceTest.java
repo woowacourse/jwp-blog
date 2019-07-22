@@ -77,11 +77,14 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void 회원_정보_변경() {
+	public void 회원_수정() {
+		final String modifyName = NAME + "eun";
 		UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
 		User expected = userService.save(signUpRequestDto);
+		expected.setName(modifyName);
 
-		UserRequestDto.UpdateRequestDto updateRequestDto = new UserRequestDto.UpdateRequestDto(expected.getId(), NAME, EMAIL);
+		UserRequestDto.UpdateRequestDto updateRequestDto
+				= new UserRequestDto.UpdateRequestDto(expected.getId(), modifyName, EMAIL);
 		userService.update(updateRequestDto);
 
 		User actual = userService.findById(expected.getId());

@@ -55,9 +55,9 @@ public class ArticleServiceTest {
 		expected.setTitle("MODIFY");
 		expected.setContents("CHANGE");
 
-		long actual = articleService.update(expected, expected.getId());
-
-		assertEquals(expected.getId(), actual);
+		long actualId = articleService.update(expected.getId(), expected);
+		Article actual = articleService.findById(actualId);
+		assertEquals(expected, actual);
 	}
 
 	@Test

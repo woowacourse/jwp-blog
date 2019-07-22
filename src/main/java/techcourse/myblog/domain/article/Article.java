@@ -34,11 +34,11 @@ public class Article {
 		return (this.id == id);
 	}
 
-	public void update(final Article article) {
-		this.id = article.id;
+	public Article update(final Article article) {
 		this.title = article.title;
 		this.coverUrl = article.coverUrl;
 		this.contents = article.contents;
+		return this;
 	}
 
 	public long getId() {

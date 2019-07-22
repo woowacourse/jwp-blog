@@ -40,11 +40,11 @@ public class ArticleTest {
 	}
 
 	@Test
-	@DisplayName("Article에_대한_변경_테스트")
+	@DisplayName("Article_갱신")
 	public void update() {
-		Article expected = SAMPLE_ARTICLE;
-		Article actual = new Article(2L, "NEED CHANGE", "http://urlurl.com"
+		Article actual = new Article(1L, "NEED CHANGE", "http://urlurl.com"
 				, "Content need change");
+		Article expected = SAMPLE_ARTICLE;
 		actual.update(expected);
 
 		assertEquals(expected, actual);
