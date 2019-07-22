@@ -45,13 +45,13 @@ public class UserController {
     }
 
     @GetMapping
-    public String showUsers(Model model) {
+    public String show(Model model) {
         model.addAttribute("users", userService.getUsers());
         return "user-list";
     }
 
     @DeleteMapping
-    public String deleteUser(HttpServletRequest request) {
+    public String delete(HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         userService.delete(user.getEmail());

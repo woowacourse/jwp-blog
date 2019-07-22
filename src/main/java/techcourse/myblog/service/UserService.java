@@ -62,7 +62,7 @@ public class UserService {
     }
 
     public void delete(String email) {
-        userRepository.deleteUserByEmailAddress(email);
+        userRepository.removeByEmail(email);
     }
 
     public User update(UserDTO userDTO) {
