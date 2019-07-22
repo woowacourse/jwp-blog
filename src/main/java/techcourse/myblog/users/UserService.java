@@ -64,7 +64,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Can't find User : " + id));
 
-        user.update(userDto.toUser());
+        user.update(userDto.toUser(user));
 
         return UserDto.Response.createByUser(user);
     }

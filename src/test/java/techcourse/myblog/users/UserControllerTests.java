@@ -140,16 +140,6 @@ public class UserControllerTests {
                 });
     }
 
-    private WebTestClient.ResponseSpec postUsers(final UserDto.Register userDto) {
-        return webTestClient.post().uri("/users")
-                .body(BodyInserters
-                        .fromFormData("name", userDto.getName())
-                        .with("email", userDto.getEmail())
-                        .with("password", userDto.getPassword())
-                        .with("confirmPassword", userDto.getConfirmPassword()))
-                .exchange();
-    }
-
     @Test
     @DisplayName("비로그인 상태에서 로그인 form 접근")
     void loginForm() {
@@ -260,6 +250,16 @@ public class UserControllerTests {
                 .exchange()
                 .returnResult(String.class)
                 .getResponseCookies().get("JSESSIONID").get(0).getValue();
+    }
+
+    private WebTestClient.ResponseSpec postUsers(final UserDto.Register userDto) {
+        return webTestClient.post().uri("/users")
+                .body(BodyInserters
+                        .fromFormData("name", userDto.getName())
+                        .with("email", userDto.getEmail())
+                        .with("password", userDto.getPassword())
+                        .with("confirmPassword", userDto.getConfirmPassword()))
+                .exchange();
     }
 
     @AfterEach

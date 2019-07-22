@@ -1,9 +1,6 @@
 package techcourse.myblog.users;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -13,8 +10,9 @@ import static techcourse.myblog.users.User.*;
 
 public class UserDto {
 
-    @Data
     @Builder
+    @Getter
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Register {
@@ -46,9 +44,8 @@ public class UserDto {
         }
     }
 
-    @Data
+    @Getter
     @NoArgsConstructor
-    @AllArgsConstructor
     public static class Response {
         private Long id;
         private String email;
@@ -65,7 +62,8 @@ public class UserDto {
         }
     }
 
-    @Data
+    @Getter
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Update {
@@ -73,8 +71,12 @@ public class UserDto {
         @Pattern(regexp = NAME_REGEX, message = NAME_NOT_MATCH_MESSAGE)
         private String name;
 
-        public User toUser() {
-            return new User(name);
+        User toUser(User user) {
+            return User.builder()
+                    .name(name)
+                    .password(user.getPassword())
+                    .email(user.getEmail())
+                    .build();
         }
 
     }

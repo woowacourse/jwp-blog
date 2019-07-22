@@ -20,7 +20,6 @@ public class User {
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);
     private static final Pattern NAME_PATTERN = Pattern.compile(NAME_REGEX);
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,10 +35,6 @@ public class User {
 
     static String authenticate(final String password) {
         return password;
-    }
-
-    public User(final String name) {
-        this.name = name;
     }
 
     @Builder
