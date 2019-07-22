@@ -55,7 +55,7 @@ public class ArticleControllerTests {
     @Test
     void showArticles() {
         checkStatus(webTestClient.post(), "/articles");
-        Article article = articleService.findArticleByTitle(title);
+        Article article = articleService.findByTitle(title);
 
         uniContents = contents;
 
@@ -81,7 +81,7 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(this::checkBodyResponse);
 
-        Article article = articleService.findArticleByTitle(title);
+        Article article = articleService.findByTitle(title);
 
         deleteMethod(article.getId());
     }
@@ -95,7 +95,7 @@ public class ArticleControllerTests {
 
         checkStatus(webTestClient.post(), "/articles");
 
-        Article article = articleService.findArticleByTitle(title);
+        Article article = articleService.findByTitle(title);
 
         checkStatus(webTestClient.put(), "/articles/" + article.getId())
                 .expectBody()
@@ -108,7 +108,7 @@ public class ArticleControllerTests {
     @Test
     void deleteTest() {
         checkStatus(webTestClient.post(), "/articles");
-        Article article = articleService.findArticleByTitle(title);
+        Article article = articleService.findByTitle(title);
 
         deleteMethod(article.getId());
 

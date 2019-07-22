@@ -1,26 +1,26 @@
 package techcourse.myblog.web;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.service.ArticleService;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class ArticleController {
-    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
     private final ArticleService articleService;
 
     @GetMapping("/")
     public String showArticles(Model model) {
-        List<Article> articles = articleService.findAllArticle();
+        List<Article> articles = articleService.findAll();
         model.addAttribute("articles", articles);
         return "index";
     }
@@ -32,9 +32,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String writeArticle(ArticleDto articleDto, Model model) {
-        Article article = articleDto.toEntity();
-        Article newArticle = articleService.saveArticle(article);
-
+        Article newArticle = articleService.write(articleDto);
         model.addAttribute("article", newArticle);
 
         return "article";
@@ -47,23 +45,16 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}")
-    public String showArticleById(@PathVariable int articleId, Model model) {
-        try {
-            model.addAttribute("article", articleService.findById(articleId));
-        } catch (ArticleNotFoundException e) {
-            model.addAttribute("message", e);
-            return "redirect:/err";
-        }
+    public String showArticleById(@PathVariable int articleId, Model model) throws ArticleNotFoundException {
+        model.addAttribute("article", articleService.findById(articleId));
         return "article";
     }
 
     @PutMapping("/articles/{articleId}")
     public String updateArticle(@PathVariable int articleId, ArticleDto articleDto, Model model) {
-        Article article = articleDto.toEntity();
-        article.setId(articleId);
+        Article updatedArticle = articleService.update(articleDto, articleId);
+        model.addAttribute("article", updatedArticle);
 
-        Article newArticle = articleService.saveArticle(article);
-        model.addAttribute("article", newArticle);
         return "article";
     }
 

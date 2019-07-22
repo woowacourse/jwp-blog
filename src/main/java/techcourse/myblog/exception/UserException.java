@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.exception;
 
 public class UserException extends IllegalArgumentException {
     public UserException(String s) {
