@@ -10,12 +10,16 @@ import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.dto.ArticleDto;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
 
 @ExtendWith(SpringExtension.class)
 public class ArticleControllerTests extends WebClientGenerator {

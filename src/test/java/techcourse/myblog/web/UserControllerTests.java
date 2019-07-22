@@ -12,10 +12,10 @@ import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.Objects;
+
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
-
-import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
