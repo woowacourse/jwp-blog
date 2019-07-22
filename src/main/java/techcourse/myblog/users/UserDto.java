@@ -74,9 +74,8 @@ public class UserDto {
         private String name;
 
         public User toUser() {
-            return User.builder()
-                    .name(name)
-                    .build();
+            return new User(name);
         }
+
     }
 }

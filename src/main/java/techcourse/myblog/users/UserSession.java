@@ -8,7 +8,7 @@ public class UserSession {
     private String email;
     private String name;
 
-    UserSession(User user) {
+    private UserSession(User user) {
         id = user.getId();
         email = user.getEmail();
         name = user.getName();

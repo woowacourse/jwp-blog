@@ -25,21 +25,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     static String authenticate(final String password) {
         return password;
     }
 
-    void update(final User other) {
-        this.name = other.name;
+    public User(final String name) {
+        this.name = name;
     }
 
     @Builder
@@ -53,14 +53,18 @@ public class User {
     }
 
     private void validatePassword(final String password) {
-        if(PASSWORD_PATTERN.matcher(password).find()){
+        if (!PASSWORD_PATTERN.matcher(password).find()) {
             throw new IllegalArgumentException(PASSWORD_NOT_MATCH_MESSAGE);
         }
     }
 
     private void validateName(final String name) {
-        if (NAME_PATTERN.matcher(name).find()){
+        if (!NAME_PATTERN.matcher(name).find()) {
             throw new IllegalArgumentException(NAME_NOT_MATCH_MESSAGE);
         }
+    }
+
+    void update(final User other) {
+        this.name = other.name;
     }
 }
