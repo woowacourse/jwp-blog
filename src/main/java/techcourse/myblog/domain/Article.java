@@ -21,7 +21,7 @@ public class Article {
     @Lob
     private String contents;
 
-    @Column(nullable = false)
+    @Column
     private String coverUrl;
 
     public Article(String title, String contents, String coverUrl) {
@@ -31,8 +31,8 @@ public class Article {
     }
 
     public void update(Article article) {
-        this.title = article.title;
-        this.contents = article.contents;
-        this.coverUrl = article.coverUrl;
+        this.title = article.getTitle();
+        this.contents = article.getContents();
+        this.coverUrl = article.getCoverUrl();
     }
 }

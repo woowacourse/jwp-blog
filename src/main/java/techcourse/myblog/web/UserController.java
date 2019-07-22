@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserLoginDto;
@@ -63,7 +64,7 @@ public class UserController {
     public String signUp(@Valid UserDto userDto, BindingResult bindingResult) {
         checkBindingError(bindingResult);
 
-        User user = userDto.toEntity();
+        User user = UserAssembler.writeUser(userDto);
         userRepository.save(user);
         return "redirect:/login";
     }
