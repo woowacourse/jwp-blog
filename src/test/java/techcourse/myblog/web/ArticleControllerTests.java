@@ -5,15 +5,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -78,7 +76,8 @@ public class ArticleControllerTests {
     }
 
     @Test
-    public void addArticle() {
+    public void addDeleteArticle() {
+        AtomicLong addId = new AtomicLong();
         webTestClient.post()
                 .uri("/articles/new")
                 .body(BodyInserters
@@ -86,7 +85,17 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents)
                         .with("categoryId", categoryId))
-                .exchange().expectStatus().isFound();
+                .exchange()
+                .expectHeader()
+                .value("location", s -> {
+                    addId.set(Long.parseLong(s.split("/")[4]));
+                });
+
+        webTestClient.delete()
+                .uri("/articles/" + addId.get())
+                .exchange()
+                .expectStatus().isFound();
+
     }
 
     @AfterEach
