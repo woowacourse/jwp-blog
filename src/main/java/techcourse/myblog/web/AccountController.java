@@ -6,9 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserForm;
-import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.domain.User.User;
+import techcourse.myblog.domain.User.UserForm;
+import techcourse.myblog.domain.User.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

@@ -11,7 +11,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.domain.UserForm.*;
+import static techcourse.myblog.domain.User.UserForm.*;
 import static techcourse.myblog.web.AccountController.EMAIL_DUPLICATION_ERROR_MSG;
 import static techcourse.myblog.web.AccountController.LOGIN_ERROR_MSG;
 
