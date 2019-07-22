@@ -56,10 +56,10 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String updateArticle(@PathVariable int articleId, ArticleWriteDto articleWriteDto, Model model) {
-        Article dbArticle = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-        dbArticle.update(ArticleAssembler.writeArticle(articleWriteDto));
-        articleRepository.save(dbArticle);
-        model.addAttribute("article", dbArticle);
+        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+        article.update(ArticleAssembler.writeArticle(articleWriteDto));
+        articleRepository.save(article);
+        model.addAttribute("article", article);
         return "article";
     }
 
