@@ -55,6 +55,10 @@ public class ArticleDto {
 	}
 
 	public Article valueOfArticle() {
+		return new Article(this.title, this.contents, this.coverUrl);
+	}
+
+	public Article valueOfArticle(Long articleId) {
 		return new Article(this.id, this.title, this.contents, this.coverUrl);
 	}
 }
