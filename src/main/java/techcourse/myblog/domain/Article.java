@@ -12,7 +12,6 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @NoArgsConstructor
-@Builder
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +23,7 @@ public class Article {
 
     private String contents;
 
+    @Builder
     private Article(long id, String title, String coverUrl, String contents) {
         this.id = id;
         this.title = title;
