@@ -22,10 +22,7 @@ public class UserControllerTests {
     @Autowired
     WebTestClient webTestClient;
 
-    @Autowired
-    UserService userService;
-
-    private Long id;
+    private String id;
     private String email;
     private String name;
     private String password;
@@ -43,7 +40,7 @@ public class UserControllerTests {
                 .confirmPassword(password)
                 .build();
 
-        id = userService.save(userDto);
+        id = postUsers(userDto).returnResult(String.class).getResponseBody().blockFirst();
     }
 
     @Test
@@ -202,19 +199,6 @@ public class UserControllerTests {
     @DisplayName("유저리스트 보기")
     void userList() {
 
-        String email1 = "asdf@google.co.kr";
-        String name1 = "asdfsadfasdf";
-        String password1 = "!234Qwer";
-
-        UserDto.Register userDto = UserDto.Register.builder()
-                .email(email1)
-                .name(name1)
-                .password(password1)
-                .confirmPassword(password1)
-                .build();
-
-        userService.save(userDto);
-
         webTestClient.get().uri("/users")
                 .exchange()
                 .expectBody()
@@ -222,8 +206,6 @@ public class UserControllerTests {
                     String body = new String(response.getResponseBody());
                     assertThat(body.contains(name)).isTrue();
                     assertThat(body.contains(email)).isTrue();
-                    assertThat(body.contains(name1)).isTrue();
-                    assertThat(body.contains(email1)).isTrue();
                 });
     }
 
@@ -267,15 +249,6 @@ public class UserControllerTests {
                 .expectHeader().valueMatches("location", ".*/users/" + id);
     }
 
-    @Test
-    void delete() {
-        webTestClient.delete().uri("/users/{id}", id)
-                .cookie("JSESSIONID", getJSessionId())
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/");
-    }
-
     private String getJSessionId() {
         return webTestClient.post().uri("/users/login")
                 .body(BodyInserters
@@ -288,10 +261,10 @@ public class UserControllerTests {
 
     @AfterEach
     void tearDown() {
-        try {
-            userService.deleteById(id);
-        } catch (Exception e) {
-
-        }
+        webTestClient.delete().uri("/users/{id}", id)
+                .cookie("JSESSIONID", getJSessionId())
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/");
     }
 }
