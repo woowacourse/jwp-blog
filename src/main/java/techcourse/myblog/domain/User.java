@@ -7,10 +7,8 @@ import techcourse.myblog.dto.UserSignUpRequestDto;
 import techcourse.myblog.dto.UserUpdateRequestDto;
 import techcourse.myblog.exception.SignUpFailException;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 
 @Getter
 @Entity
@@ -19,8 +17,17 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+
+    @Pattern(regexp = "^[a-zA-Z]{2,10}$")
+    @Column(nullable = false)
     private String userName;
+
+    @Pattern(regexp = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$")
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Pattern(regexp = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$")
+    @Column(nullable = false)
     private String password;
 
     public User(UserSignUpRequestDto userSignUpRequestDto) {
