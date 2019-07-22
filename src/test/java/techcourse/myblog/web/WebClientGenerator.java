@@ -5,6 +5,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -34,5 +35,15 @@ public class WebClientGenerator {
                 .uri(uri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(data));
+    }
+
+    protected String responseBody(WebTestClient.ResponseSpec responseSpec) {
+        return responseSpec
+                .expectBody()
+                .returnResult()
+                .toString();
+    }
+    protected String getRedirectedUri(EntityExchangeResult<byte[]> response) {
+        return response.getResponseHeaders().get("Location").get(0);
     }
 }

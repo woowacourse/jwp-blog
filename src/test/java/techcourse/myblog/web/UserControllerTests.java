@@ -8,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.StatusAssertions;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
@@ -99,6 +102,14 @@ class UserControllerTests extends WebClientGenerator {
                 });
     }
 
+    private MultiValueMap<String, String> parser(UserDto userDto) {
+        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+        multiValueMap.add("email", userDto.getEmail());
+        multiValueMap.add("name", userDto.getName());
+        multiValueMap.add("password", userDto.getPassword());
+        return multiValueMap;
+    }
+
     @Test
     void 이름_길이_규칙_위반() {
         name = "k";
@@ -106,11 +117,18 @@ class UserControllerTests extends WebClientGenerator {
 
         response(POST, "/users", parser(userDto))
                 .expectStatus()
-                .isOk()
+                .isFound()
                 .expectBody()
-                .consumeWith(res -> assertBodyContainsTrue(res, "이름은 2~10자, 숫자나 특수문자가 포함될 수 없습니다."));
+                .consumeWith(response ->
+                        assertRedirectBodyContains(response, "이름은 2~10자, 숫자나 특수문자가 포함될 수 없습니다.")
+                );
 
         assertFalse(userRepository.findByEmail(email).isPresent());
+    }
+
+    private void assertRedirectBodyContains(EntityExchangeResult<byte[]> response, String message) {
+        String redirectBody = responseBody(response(GET, getRedirectedUri(response)));
+        assertTrue(redirectBody.contains(message));
     }
 
     @Test
@@ -120,16 +138,13 @@ class UserControllerTests extends WebClientGenerator {
 
         response(POST, "/users", parser(userDto))
                 .expectStatus()
-                .isOk()
+                .isFound()
                 .expectBody()
-                .consumeWith(res -> assertBodyContainsTrue(res, "이메일 양식을 지켜주세요."));
+                .consumeWith(response ->
+                        assertRedirectBodyContains(response, "이메일 양식을 지켜주세요.")
+                );
 
         assertFalse(userRepository.findByEmail(email).isPresent());
-    }
-
-    private void assertBodyContainsTrue(EntityExchangeResult<byte[]> res, String bodyContents) {
-        String body = new String(Objects.requireNonNull(res.getResponseBody()));
-        assertThat(body.contains(bodyContents)).isTrue();
     }
 
     @Test
@@ -139,9 +154,11 @@ class UserControllerTests extends WebClientGenerator {
 
         response(POST, "/users", parser(userDto))
                 .expectStatus()
-                .isOk()
+                .isFound()
                 .expectBody()
-                .consumeWith(res -> assertBodyContainsTrue(res, "비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요."));
+                .consumeWith(response ->
+                        assertRedirectBodyContains(response, "비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요.")
+                );
 
         assertFalse(userRepository.findByEmail(email).isPresent());
     }
@@ -155,13 +172,15 @@ class UserControllerTests extends WebClientGenerator {
                 .expectStatus()
                 .isFound();
 
+        assertTrue(userRepository.findByEmail(email).isPresent());
+
         response(POST, "/users", parser(userDto))
                 .expectStatus()
-                .isOk()
+                .isFound()
                 .expectBody()
-                .consumeWith(res -> assertBodyContainsTrue(res, "이미 존재하는 email입니다."));
-
-        assertTrue(userRepository.findByEmail(email).isPresent());
+                .consumeWith(response ->
+                        assertRedirectBodyContains(response, "이미 존재하는 email입니다.")
+                );
     }
 
     @Test
@@ -182,7 +201,11 @@ class UserControllerTests extends WebClientGenerator {
 
         response(POST, "/login", parser(userDto))
                 .expectStatus()
-                .isFound();;
+                .isFound()
+                .expectBody()
+                .consumeWith(response ->
+                        assertRedirectBodyContains(response, name)
+                );
     }
 
     @Test
@@ -193,9 +216,11 @@ class UserControllerTests extends WebClientGenerator {
 
         response(POST, "/login", parser(userDto))
                 .expectStatus()
-                .isOk()
+                .isFound()
                 .expectBody()
-                .consumeWith(res -> assertBodyContainsTrue(res, "이메일을 확인해주세요."));
+                .consumeWith(response ->
+                        assertRedirectBodyContains(response, "이메일을 확인해주세요.")
+                );
     }
 
     @Test
@@ -210,9 +235,11 @@ class UserControllerTests extends WebClientGenerator {
         UserDto userDtoWrongPassword = new UserDto(name, forLoginEmail, "abcdeghf");
         response(POST, "/login", parser(userDtoWrongPassword))
                 .expectStatus()
-                .isOk()
+                .isFound()
                 .expectBody()
-                .consumeWith(res -> assertBodyContainsTrue(res, "비밀번호를 확인해주세요."));
+                .consumeWith(response ->
+                        assertRedirectBodyContains(response, "비밀번호를 확인해주세요.")
+                );
     }
 
     @Test
@@ -224,6 +251,20 @@ class UserControllerTests extends WebClientGenerator {
 
         loggedInAndRequest(userDto, "/signup")
                 .isFound();
+    }
+
+    private StatusAssertions loggedInAndRequest(UserDto userDto, String path) {
+        MultiValueMap<String, ResponseCookie> cookies
+                = response(POST, "/login", parser(userDto))
+                .expectStatus()
+                .isFound()
+                .returnResult(Void.class)
+                .getResponseCookies();
+
+        return requestCookie(GET, path, new LinkedMultiValueMap<>())
+                .cookie("JSESSIONID", Objects.requireNonNull(cookies.getFirst("JSESSIONID")).getValue())
+                .exchange()
+                .expectStatus();
     }
 
     @Test
@@ -262,27 +303,5 @@ class UserControllerTests extends WebClientGenerator {
     @AfterEach
     void 초기화() {
         userRepository.deleteAll();
-    }
-
-    private StatusAssertions loggedInAndRequest(UserDto userDto, String path) {
-        MultiValueMap<String, ResponseCookie> cookies
-                = response(POST, "/login", parser(userDto))
-                .expectStatus()
-                .isFound()
-                .returnResult(Void.class)
-                .getResponseCookies();
-
-        return requestCookie(GET, path, new LinkedMultiValueMap<>())
-                .cookie("JSESSIONID", Objects.requireNonNull(cookies.getFirst("JSESSIONID")).getValue())
-                .exchange()
-                .expectStatus();
-    }
-
-    private MultiValueMap<String, String> parser(UserDto userDto) {
-        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-        multiValueMap.add("email", userDto.getEmail());
-        multiValueMap.add("name", userDto.getName());
-        multiValueMap.add("password", userDto.getPassword());
-        return multiValueMap;
     }
 }

@@ -58,6 +58,14 @@ public class ArticleControllerTests extends WebClientGenerator {
                 .consumeWith(response -> assertEqualToResponseArticle(response, savedArticle));
     }
 
+    private MultiValueMap<String, String> parser(Article article) {
+        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+        multiValueMap.add("title", article.getTitle());
+        multiValueMap.add("coverUrl", article.getCoverUrl());
+        multiValueMap.add("contents", article.getContents());
+        return multiValueMap;
+    }
+
     private void assertEqualToResponseArticle(EntityExchangeResult<byte[]> response, Article article) {
         String createdArticle = responseBody(response(GET, getRedirectedUri(response)));
         assertThat(createdArticle.contains(article.getTitle())).isTrue();
@@ -66,7 +74,7 @@ public class ArticleControllerTests extends WebClientGenerator {
     }
 
     @Test
-    void create_article_en2() {
+    void create_article_en() {
         response(POST, "/articles/write", parser(articleDto.toArticle()))
                 .expectStatus()
                 .isFound()
@@ -114,24 +122,5 @@ public class ArticleControllerTests extends WebClientGenerator {
         response(DELETE, "/articles/" + article.getId())
                 .expectStatus()
                 .isFound();
-    }
-
-    private String getRedirectedUri(EntityExchangeResult<byte[]> response) {
-        return response.getResponseHeaders().get("Location").get(0);
-    }
-
-    private String responseBody(WebTestClient.ResponseSpec responseSpec) {
-        return responseSpec
-                .expectBody()
-                .returnResult()
-                .toString();
-    }
-
-    private MultiValueMap<String, String> parser(Article article) {
-        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-        multiValueMap.add("title", article.getTitle());
-        multiValueMap.add("coverUrl", article.getCoverUrl());
-        multiValueMap.add("contents", article.getContents());
-        return multiValueMap;
     }
 }
