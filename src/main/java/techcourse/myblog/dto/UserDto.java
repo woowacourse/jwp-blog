@@ -15,7 +15,7 @@ public class UserDto {
 
     @NotBlank(message = NO_INPUT_MESSAGE,
             groups={UserInfo.class})
-    @Pattern(regexp = "[^ !@#$%^&*(),.?\\\":{}|<>0-9]{2,10}",
+    @Pattern(regexp = "[^ \\-!@#$%^&*(),.?\\\":{}|<>0-9]{2,10}",
             message = NAME_CONSTRAINT_MESSAGE,
             groups={UserInfo.class})
     private String name;
@@ -58,5 +58,9 @@ public class UserDto {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
