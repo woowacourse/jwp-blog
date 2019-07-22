@@ -8,7 +8,7 @@
     </appender>
 
     <!-- 자바 패키지별 log level을 설정한다. -->
-    <logger name="test" level="ERROR" />
+    <logger name="main" level="INFO" />
 
     <logger name="test" level="INFO" />
 
