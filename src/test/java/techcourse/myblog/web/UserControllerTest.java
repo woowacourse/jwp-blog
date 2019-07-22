@@ -20,15 +20,16 @@ class UserControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
+    private static final UserRequestDto DEFAULT_USER =
+        UserRequestDto.of("John", "john@example.com", "p@ssW0rd", "p@ssW0rd");
+
+
     @Test
     void duplicate_email_alert() {
-        postUser(UserRequestDto.of("john", "abcde@example.com", "p@ssW0rd", "p@ssW0rd"),
+        postUser(UserRequestDto.of("john", DEFAULT_USER.getEmail(), "p@ssW0rd23", "p@ssW0rd23"),
             postResponse -> {
-                postUser(UserRequestDto.of("kim", "abcde@example.com", "p@ssW0rd123", "p@ssW0rd123"),
-                    anotherPostResponse -> {
-                        String body = new String(anotherPostResponse.getResponseBody());
-                        assertThat(body).contains("이미 등록된 이메일입니다.");
-                    });
+                String body = new String(postResponse.getResponseBody());
+                assertThat(body).contains("이미 등록된 이메일입니다");
             });
     }
 
@@ -47,41 +48,34 @@ class UserControllerTest {
 
     @Test
     void user_list_view() {
-        UserRequestDto userRequestDto = UserRequestDto.of("john", "test_user_list_view@example.com", "p@ssW0rd", "p@ssW0rd");
-        postUser(userRequestDto, postResponse -> {
-            webTestClient.get().uri("/users")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody().consumeWith(postResponse2 -> {
-                assertThat(new String(postResponse2.getResponseBody()))
-                    .contains(userRequestDto.getName())
-                    .contains(userRequestDto.getEmail());
-            });
+        webTestClient.get().uri("/users")
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody().consumeWith(postResponse2 -> {
+            assertThat(new String(postResponse2.getResponseBody()))
+                .contains(DEFAULT_USER.getName())
+                .contains(DEFAULT_USER.getEmail());
         });
     }
 
     @Test
     void login_logout() {
-        UserRequestDto user = UserRequestDto.of("john", "login_logout_test@example.com", "p@ssW0rd", "p@ssW0rd");
-        postUser(user, postUserResponse -> {
-            String sid = getSessionString(postUserResponse);
-
-            postLogin(user, sid, loginResponse -> {
-                getRedirection(loginResponse, loginRedirectResponse -> {
-                    assertThat(new String(loginRedirectResponse.getResponseBody()))
-                        .contains(user.getName());
-                    webTestClient.get().uri("/logout" + sid)
-                        .exchange()
-                        .expectStatus().is3xxRedirection()
-                        .expectBody()
-                        .consumeWith(logoutResponse -> {
-                            getRedirection(logoutResponse, logoutRedirectResponse -> {
-                                assertThat(new String(logoutRedirectResponse.getResponseBody()))
-                                    .doesNotContain(user.getName())
-                                    .contains("Welcome Brown!");
-                            });
+        postLogin(DEFAULT_USER, null, loginResponse -> {
+            String sid = getSessionString(loginResponse);
+            getRedirection(loginResponse, loginRedirectResponse -> {
+                assertThat(new String(loginRedirectResponse.getResponseBody()))
+                    .contains(DEFAULT_USER.getName());
+                webTestClient.get().uri("/logout" + sid)
+                    .exchange()
+                    .expectStatus().is3xxRedirection()
+                    .expectBody()
+                    .consumeWith(logoutResponse -> {
+                        getRedirection(logoutResponse, logoutRedirectResponse -> {
+                            assertThat(new String(logoutRedirectResponse.getResponseBody()))
+                                .doesNotContain(DEFAULT_USER.getName())
+                                .contains("Welcome Brown!");
                         });
-                });
+                    });
             });
         });
     }
@@ -109,16 +103,12 @@ class UserControllerTest {
 
     @Test
     void mypage() {
-        UserRequestDto user = UserRequestDto.of("john", "mypage_test@example.com", "p@ssW0rd", "p@ssW0rd");
-        postUser(user, postUserResponse -> {
-            String sid = getSessionString(postUserResponse);
-
-            postLogin(user, sid, loginResponse -> {
-                getMypage(sid, mypageResponse -> {
-                    assertThat(new String(mypageResponse.getResponseBody()))
-                        .contains(user.getEmail())
-                        .contains(user.getName());
-                });
+        postLogin(DEFAULT_USER, null, loginResponse -> {
+            String sid = getSessionString(loginResponse);
+            getMypage(sid, mypageResponse -> {
+                assertThat(new String(mypageResponse.getResponseBody()))
+                    .contains(DEFAULT_USER.getEmail())
+                    .contains(DEFAULT_USER.getName());
             });
         });
     }
@@ -134,24 +124,20 @@ class UserControllerTest {
 
     @Test
     void mypage_put() {
-        UserRequestDto user = UserRequestDto.of("john", "user_put_test@example.com", "p@ssW0rd", "p@ssW0rd");
-        postUser(user, postUserResponse -> {
-            String sid = getSessionString(postUserResponse);
-
-            postLogin(user, sid, loginResponse -> {
-                webTestClient.put().uri("/users" + sid)
-                    .body(BodyInserters.fromFormData("name", "park"))
-                    .exchange()
-                    .expectStatus().is3xxRedirection()
-                    .expectBody()
-                    .consumeWith(mypagePutResponse -> {
-                        getMypage(sid, mypageResponse -> {
-                            assertThat(new String(mypageResponse.getResponseBody()))
-                                .contains("park")
-                                .contains(user.getEmail());
-                        });
+        postLogin(DEFAULT_USER, null, loginResponse -> {
+            String sid = getSessionString(loginResponse);
+            webTestClient.put().uri("/users" + sid)
+                .body(BodyInserters.fromFormData("name", "park"))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody()
+                .consumeWith(mypagePutResponse -> {
+                    getMypage(sid, mypageResponse -> {
+                        assertThat(new String(mypageResponse.getResponseBody()))
+                            .contains("park")
+                            .contains(DEFAULT_USER.getEmail());
                     });
-            });
+                });
         });
     }
 
