@@ -1,6 +1,7 @@
 package techcourse.myblog.dto;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -14,18 +15,26 @@ public class UserDto {
     private static final String ERROR_MESSAGE_ABOUT_EMAIL = "이메일 형식이 아닙니다.";
     private static final String ERROR_MESSAGE_ABOUT_PASSWORD_PATTERN = "비밀번호는 8글자 이상으로 특수문자, 숫자, 소문자, 대문자가 포함되어야 합니다.";
 
+    @NotBlank
     @Size(min = MIN_NAME_SIZE, max = MAX_NAME_SIZE, message = ERROR_MESSAGE_ABOUT_NAME_SIZE)
     @Pattern(regexp = NAME_PATTERN, message = ERROR_MESSAGE_ABOUT_NAME_PATTERN)
     private String name;
 
+    @NotBlank
     @Email(message = ERROR_MESSAGE_ABOUT_EMAIL)
     private String email;
 
+    @NotBlank
     @Pattern(regexp = PASSWORD_PATTERN, message = ERROR_MESSAGE_ABOUT_PASSWORD_PATTERN)
     private String password;
 
+    @NotBlank
     @Pattern(regexp = PASSWORD_PATTERN, message = ERROR_MESSAGE_ABOUT_PASSWORD_PATTERN)
     private String passwordConfirm;
+
+    public boolean isEqualInputPassword() {
+        return this.password.equals(this.passwordConfirm);
+    }
 
     public String getName() {
         return name;

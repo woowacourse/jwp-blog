@@ -41,7 +41,7 @@ public class UserService {
     }
 
     private void checkEqualPassword(UserDto userDto) {
-        if (!userDto.getPassword().equals(userDto.getPasswordConfirm())) {
+        if (!userDto.isEqualInputPassword()) {
             throw new UnequalPasswordException();
         }
     }
