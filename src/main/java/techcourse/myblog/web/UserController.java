@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
@@ -34,9 +35,7 @@ public class UserController {
 
     @PostMapping("/login")
     public String userLogin(@Valid UserLoginDto loginDto, BindingResult bindingResult, HttpSession httpSession) {
-        if (bindingResult.hasErrors()) {
-            throw new UserException("아이디 또는 비밀번호가 올바르지 않습니다.");
-        }
+        checkBindingError(bindingResult);
 
         User user = userRepository.findUserByEmail(loginDto.getEmail());
         if (Objects.isNull(user)) {
@@ -58,9 +57,7 @@ public class UserController {
 
     @PostMapping("/join")
     public String signUp(@Valid UserDto userDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new UserException("잘못된 입력입니다.");
-        }
+        checkBindingError(bindingResult);
 
         User user = userDto.toEntity();
         userRepository.save(user);
@@ -81,17 +78,13 @@ public class UserController {
 
     @PutMapping("/mypage/save")
     public String completeEditMypage(HttpSession httpSession, @Valid UserDto userDto, BindingResult bindingResult) {
+        checkBindingError(bindingResult);
         String sessionEmail = httpSession.getAttribute(SESSION_EMAIL).toString();
         String email = userDto.getEmail();
 
         if (!sessionEmail.equals(email)) {
             throw new UserException("잘못된 접근입니다.");
         }
-
-        if (bindingResult.hasErrors()) {
-            throw new UserException("아이디와 비밀번호가 올바르지 않습니다.");
-        }
-
         User user = userRepository.findUserByEmail(userDto.getEmail());
         user.update(userDto);
         userRepository.save(user);
@@ -124,6 +117,13 @@ public class UserController {
     public String handleUserException(UserException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute(ERROR_MESSAGE, e.getMessage());
         return "redirect:/err";
+    }
+
+    private void checkBindingError(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            FieldError fieldError = bindingResult.getFieldError();
+            throw new UserException(fieldError.getDefaultMessage());
+        }
     }
 
     private boolean checkLogedIn(HttpSession httpSession) {
