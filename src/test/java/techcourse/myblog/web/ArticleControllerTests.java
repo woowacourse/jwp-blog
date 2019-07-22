@@ -1,16 +1,12 @@
 package techcourse.myblog.web;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.UserRepository;
 
 import java.util.Iterator;
 
@@ -18,18 +14,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests extends LoginTemplate {
     private String title = "제목";
     private String contents = "contents";
     private String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
 
-    @Autowired
-    private WebTestClient webTestClient;
-    @Autowired
-    private ArticleRepository articleRepository;
-    @Autowired
-    private UserRepository userRepository;
+    @BeforeEach
+    void setUp() {
+        registeredWebTestClient();
+    }
 
     @Test
     void index() {

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserException;
+import techcourse.myblog.exception.SignUpException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -23,7 +23,7 @@ class UserRepositoryTest {
 
     @Test
     void register_bad_case() {
-        assertThatThrownBy(() -> new User("z", "b", "c")).isInstanceOf(UserException.class);
+        assertThatThrownBy(() -> new User("z", "b", "c")).isInstanceOf(SignUpException.class);
     }
 
     @Test

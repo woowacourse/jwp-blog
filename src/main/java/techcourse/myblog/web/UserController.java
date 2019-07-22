@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import techcourse.myblog.dto.LoginDto;
-import techcourse.myblog.dto.SignUpDto;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
@@ -36,19 +35,16 @@ public class UserController {
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         SessionUtil.removeAttribute(session, UserInfo.NAME);
+        SessionUtil.removeAttribute(session, UserInfo.EMAIL);
         return "redirect:/";
     }
 
     @PostMapping("/login")
-    public String login(UserRequestDto userRequestDto, Model model, HttpSession session) {
-        LoginDto dto = loginService.loginByEmailAndPwd(userRequestDto);
-        if (dto.isSuccess()) {
-            SessionUtil.setAttribute(session, UserInfo.NAME, dto.getName());
-            SessionUtil.setAttribute(session, UserInfo.EMAIL, userRequestDto.getEmail());
-            return "redirect:/";
-        }
-        ModelUtil.addAttribute(model, "error", dto.getMessage());
-        return "login";
+    public String login(UserRequestDto userRequestDto, HttpSession session) {
+        User user = loginService.loginByEmailAndPwd(userRequestDto);
+        SessionUtil.setAttribute(session, UserInfo.NAME, user.getName());
+        SessionUtil.setAttribute(session, UserInfo.EMAIL, user.getEmail());
+        return "redirect:/";
     }
 
     @GetMapping("/users")
@@ -72,16 +68,12 @@ public class UserController {
         return "mypage-edit";
     }
 
-    @PostMapping("/users")
-    public String addUser(UserRequestDto userRequestDto, Model model, HttpSession session) {
-        SignUpDto signUpDto = userService.addUser(userRequestDto);
-
-        if (signUpDto.isSuccess()) {
-            SessionUtil.setAttribute(session, UserInfo.NAME, userRequestDto.getName());
-            return "redirect:/";
-        }
-        ModelUtil.addAttribute(model, "error", signUpDto.getMessage());
-        return "signup";
+    @PostMapping("/signup")
+    public String addUser(UserRequestDto userRequestDto, HttpSession session) {
+        User user = userService.addUser(userRequestDto);
+        SessionUtil.setAttribute(session, UserInfo.NAME, user.getName());
+        SessionUtil.setAttribute(session, UserInfo.EMAIL, user.getEmail());
+        return "redirect:/";
     }
 
     @PutMapping("/users")

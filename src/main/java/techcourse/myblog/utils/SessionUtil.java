@@ -11,9 +11,9 @@ public class SessionUtil {
     private static final String AFTER_SESSION = "After Session : {} ";
 
     public static void setAttribute(HttpSession session, String attribute, String info) {
-        log.info(BEFORE_SESSION, session);
+        log.info(BEFORE_SESSION, session.getAttribute(info));
         session.setAttribute(attribute, info);
-        log.info(AFTER_SESSION, session);
+        log.info(AFTER_SESSION, session.getAttribute(info));
     }
 
     public static void removeAttribute(HttpSession session, String attribute) {

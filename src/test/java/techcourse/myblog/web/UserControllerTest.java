@@ -3,29 +3,20 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.repository.UserRepository;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest extends LoginTemplate {
-    @Autowired
-    private WebTestClient webTestClient;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
+        registeredWebTestClient();
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData("name", "andole")
@@ -46,13 +37,14 @@ public class UserControllerTest extends LoginTemplate {
     void 회원가입_실패_테스트() {
         long count = userRepository.count();
 
-        webTestClient.post().uri("/users")
+        webTestClient.post().uri("/signup")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData("name", "a")
                         .with("password", "b")
                         .with("email", "c"))
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk();
 
         assertThat(userRepository.count()).isEqualTo(count);
     }
@@ -60,13 +52,14 @@ public class UserControllerTest extends LoginTemplate {
     @Test
     void 회원가입_성공_테스트() {
         long count = userRepository.count();
-        webTestClient.post().uri("/users")
+        webTestClient.post().uri("/signup")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData("name", "andole")
                         .with("password", "A!1bcdefg")
                         .with("email", "test@test.com"))
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus()
+                .is3xxRedirection();
         assertThat(userRepository.count()).isNotEqualTo(count);
     }
 

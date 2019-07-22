@@ -43,5 +43,4 @@ public class UserRequestDto {
     public User toEntity() {
         return new User(this.name, this.password, this.email);
     }
-
 }

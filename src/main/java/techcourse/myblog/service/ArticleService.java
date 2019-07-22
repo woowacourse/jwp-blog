@@ -2,8 +2,8 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleException;
 import techcourse.myblog.dto.ArticleRequestDto;
+import techcourse.myblog.exception.ArticleException;
 import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.List;

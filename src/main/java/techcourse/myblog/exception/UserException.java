@@ -1,7 +1,6 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.exception;
 
 public class UserException extends RuntimeException {
-
     public UserException() {
     }
 
