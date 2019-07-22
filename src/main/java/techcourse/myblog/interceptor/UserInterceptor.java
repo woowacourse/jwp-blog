@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 public class UserInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (request.getRequestURI().equals("/accounts/user") && request.getMethod().equals("DELETE")) {
+        if ("/accounts/user".equals(request.getRequestURI()) && "DELETE".equals(request.getMethod())) {
             return true;
         }
 
