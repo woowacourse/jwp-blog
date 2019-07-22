@@ -47,7 +47,7 @@ public class UserService {
                 .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login")));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public void login(LoginDto loginDto) {
         String requestPassword = loginDto.getPassword();
         String expectedPassword = findById(loginDto.getEmail()).getPassword();
