@@ -31,18 +31,12 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String createSignupForm(UserDto userDto, HttpSession session) {
-        if (session.getAttribute("user") != null) {
-            return "redirect:/";
-        }
+    public String createSignupForm(UserDto userDto) {
         return "signup";
     }
 
     @GetMapping("/login")
-    public String createLoginForm(UserDto userDto, HttpSession session) {
-        if (session.getAttribute("user") != null) {
-            return "redirect:/";
-        }
+    public String createLoginForm(UserDto userDto) {
         return "login";
     }
 
@@ -59,22 +53,12 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String myPage(Model model, HttpSession session) {
-        Object user = session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/";
-        }
-        model.addAttribute("user", user);
+    public String myPage() {
         return "mypage";
     }
 
     @GetMapping("/mypage/edit")
-    public String createMyPageForm(UserDto userDto, HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/";
-        }
-        model.addAttribute("user", user);
+    public String createMyPageForm(UserDto userDto) {
         return "mypage-edit";
     }
 
@@ -127,7 +111,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public RedirectView removeUser(UserDto userDto, HttpSession session) { //탈퇴
+    public RedirectView removeUser(UserDto userDto, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user != null && user.matchEmail(user)) {
             userRepository.delete(user);

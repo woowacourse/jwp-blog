@@ -52,7 +52,6 @@ public class User {
 
     private void validPasswordFormat(String password) {
         if (!password.matches("[a-zA-Z0-9!@#$%^&*(),.?\\\":{}|<>]{8,}")) {
-            log.debug("[Exception] >> InvalidPasswordFormatException");
             throw new InvalidPasswordFormatException("비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요.");
         }
     }
