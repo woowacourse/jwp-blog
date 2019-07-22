@@ -128,8 +128,6 @@ public class UserControllerTests {
 
     @Test
     void userListTest() {
-        Long id = saveUserWithEmail();
-
         String email1 = "asdf@google.co.kr";
         String name1 = "asdfsadfasdf";
         String password1 = "!234Qwer";
@@ -144,6 +142,7 @@ public class UserControllerTests {
         userService.save(userDto);
 
         webTestClient.get().uri("/users")
+                .cookie("JSESSIONID", getJSessionId())
                 .exchange()
                 .expectBody().consumeWith(response -> {
             String body = new String(response.getResponseBody());
@@ -173,6 +172,7 @@ public class UserControllerTests {
         Long id = saveUserWithEmail();
 
         webTestClient.get().uri("/users/{id}", id)
+                .cookie("JSESSIONID", getJSessionId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(response -> {
@@ -188,6 +188,7 @@ public class UserControllerTests {
         String changedName = "asdf";
 
         webTestClient.put().uri("/users/{id}", id)
+                .cookie("JSESSIONID", getJSessionId())
                 .body(BodyInserters.fromFormData("name", changedName))
                 .exchange()
                 .expectStatus().is3xxRedirection()
@@ -199,9 +200,20 @@ public class UserControllerTests {
         Long id = saveUserWithEmail();
 
         webTestClient.delete().uri("/users/{id}", id)
+                .cookie("JSESSIONID", getJSessionId())
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location",".*/");
+    }
+
+    private String getJSessionId() {
+        return webTestClient.post().uri("users/login")
+                .body(BodyInserters
+                        .fromFormData("email", email)
+                        .with("password", password))
+                .exchange()
+                .returnResult(String.class)
+                .getResponseCookies().get("JSESSIONID").get(0).getValue();
     }
 
     private Long saveUserWithEmail() {
