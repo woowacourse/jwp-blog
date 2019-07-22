@@ -6,9 +6,7 @@ import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.exception.SignUpException;
 import techcourse.myblog.exception.UserException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.utils.SessionUtil;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -38,18 +36,17 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void updateUser(UserRequestDto userRequestDto, HttpSession session) {
-        User user = getUserBySession(session);
+    public void updateUser(UserRequestDto userRequestDto, String email) {
+        User user = getUserByEmail(email);
         user.updateNameAndEmail(userRequestDto.getName(), userRequestDto.getEmail());
         userRepository.save(user);
     }
 
-    private User getUserBySession(HttpSession session) {
-        return userRepository.findByEmail(SessionUtil.getAttribute(session, "userEmail").toString())
-                .orElseThrow(UserException::new);
+    private User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(UserException::new);
     }
 
-    public void deleteUser(HttpSession session) {
-        userRepository.delete(getUserBySession(session));
+    public void deleteUser(String email) {
+        userRepository.delete(getUserByEmail(email));
     }
 }

@@ -9,7 +9,7 @@ import techcourse.myblog.utils.ModelUtil;
 
 @Controller
 public class ArticleController {
-    private ArticleService articleService;
+    private final ArticleService articleService;
 
     public ArticleController(ArticleService articleService) {
         this.articleService = articleService;

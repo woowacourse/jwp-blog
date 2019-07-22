@@ -18,8 +18,8 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
-    private UserService userService;
-    private LoginService loginService;
+    private final UserService userService;
+    private final LoginService loginService;
 
     @Autowired
     public UserController(UserService userService, LoginService loginService) {
@@ -84,7 +84,8 @@ public class UserController {
 
     @PutMapping("/users")
     public String updateUser(UserRequestDto userRequestDto, HttpSession session) {
-        userService.updateUser(userRequestDto, session);
+        String email = String.valueOf(SessionUtil.getAttribute(session, UserInfo.EMAIL));
+        userService.updateUser(userRequestDto, email);
         SessionUtil.setAttribute(session, UserInfo.NAME, userRequestDto.getName());
         SessionUtil.setAttribute(session, UserInfo.EMAIL, userRequestDto.getEmail());
         return "redirect:/mypage";
@@ -92,7 +93,8 @@ public class UserController {
 
     @DeleteMapping("/users")
     public String deleteUser(HttpSession session) {
-        userService.deleteUser(session);
+        String email = String.valueOf(SessionUtil.getAttribute(session, UserInfo.EMAIL));
+        userService.deleteUser(email);
         SessionUtil.removeAttribute(session, UserInfo.NAME);
         SessionUtil.removeAttribute(session, UserInfo.EMAIL);
         return "redirect:/";
