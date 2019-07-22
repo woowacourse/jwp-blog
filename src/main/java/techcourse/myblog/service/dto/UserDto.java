@@ -33,7 +33,6 @@ public class UserDto {
 
     public User toEntity() {
         checkConfirmPassword();
-
         return User.builder()
                 .userName(userName)
                 .email(email)

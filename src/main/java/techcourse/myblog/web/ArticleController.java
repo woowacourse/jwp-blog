@@ -1,7 +1,6 @@
 package techcourse.myblog.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import groovy.util.logging.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,11 +8,10 @@ import techcourse.myblog.article.Article;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.dto.ArticleDto;
 
+@Slf4j
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
-    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
-
     private ArticleService articleService;
 
     ArticleController(ArticleService articleService) {

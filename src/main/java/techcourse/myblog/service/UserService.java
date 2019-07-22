@@ -69,7 +69,7 @@ public class UserService {
         }
         String email = ((User) httpSession.getAttribute("user")).getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(NotFoundObjectException::new);
-        user.setUserName(userUpdateRequestDto.getUserName());
+        user.changeUserName(userUpdateRequestDto.getUserName());
         return user;
     }
 

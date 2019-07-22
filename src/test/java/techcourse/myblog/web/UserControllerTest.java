@@ -47,13 +47,6 @@ public class UserControllerTest {
         checkInvalidUserMessage(responseSpec, "중복된 이메일 입니다.");
     }
 
-    public void checkInvalidUserMessage(WebTestClient.ResponseSpec responseSpec, String message) {
-        responseSpec.expectBody().consumeWith(res -> {
-            String body = new String(res.getResponseBody());
-            assertThat(body.contains(message)).isTrue();
-        });
-    }
-
     @Test
     void 유저_이름_확인() {
         WebTestClient.ResponseSpec responseSpec = getResponseSpec("J", email, password, password)
@@ -119,6 +112,14 @@ public class UserControllerTest {
         removeSession();
     }
 
+    private void checkInvalidUserMessage(WebTestClient.ResponseSpec responseSpec, String message) {
+        responseSpec.expectBody().consumeWith(res -> {
+            String body = new String(res.getResponseBody());
+            assertThat(body.contains(message)).isTrue();
+        });
+    }
+
+
     private void create_user(String userName, String email, String password) {
         webTestClient.post().uri("/users/new")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -135,7 +136,7 @@ public class UserControllerTest {
             if ("/users/mypage".equals(path) || "/users/mypage/edit".equals(path)) {
                 return exchange.getSession()
                         .doOnNext(webSession ->
-                                webSession.getAttributes().put("user", new User("buddy", "buddyCU@buddy.com", "Aa12345!")))
+                                webSession.getAttributes().put("user", new User("buddy", "buddy@buddy.com", "Aa12345!")))
                         .then();
             }
             return null;
