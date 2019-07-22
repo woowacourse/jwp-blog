@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import techcourse.myblog.users.UserDto;
+import techcourse.myblog.users.User;
+import techcourse.myblog.users.UserSession;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LoginInterceptorTest {
@@ -13,12 +14,19 @@ class LoginInterceptorTest {
     private WebTestClient webTestClient;
 
     private void createSession() {
+        User user = User.builder()
+                .email("email@emaai")
+                .password("P@ssw0rd")
+                .name("name")
+                .build();
+
+        UserSession userSession = UserSession.createByUser(user);
+
         webTestClient = WebTestClient.bindToWebHandler(exchange -> exchange.getSession()
                 .doOnNext(webSession ->
-                        webSession.getAttributes().put("user", new UserDto.Response(1L, "asd", "asd")))
+                        webSession.getAttributes().put("user", userSession))
                 .then()).build();
     }
-
 
     @Test
     void 로그인_안하고_users_접근시_Redirection() {

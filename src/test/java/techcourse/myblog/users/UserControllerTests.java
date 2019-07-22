@@ -201,6 +201,7 @@ public class UserControllerTests {
     void userList() {
 
         webTestClient.get().uri("/users")
+                .cookie("JSESSIONID", getJSessionId())
                 .exchange()
                 .expectBody()
                 .consumeWith(response -> {
@@ -214,6 +215,7 @@ public class UserControllerTests {
     void editForm() {
 
         webTestClient.get().uri("/users/{id}/edit", id)
+                .cookie("JSESSIONID", getJSessionId())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
