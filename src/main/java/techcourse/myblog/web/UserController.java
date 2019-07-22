@@ -12,6 +12,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Controller
@@ -118,6 +119,7 @@ public class UserController {
         }).orElse("redirect:/");
     }
 
+    @Transactional
     @PutMapping("/profile/edit")
     public RedirectView profileEdit(
             String name,
@@ -131,8 +133,7 @@ public class UserController {
                 return new RedirectView("/profile/edit");
             }
             try {
-                user.setName(name);
-                user.setEmail(email);
+                user.update(name, email);
                 session.setAttribute("name", name);
                 session.setAttribute("email", email);
                 return new RedirectView("/profile");

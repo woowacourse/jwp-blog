@@ -28,12 +28,14 @@ public class User {
         this.password = validatePassword(password);
     }
 
-    public String getName() {
-        return this.name;
+    public User update(String name, String email) {
+        this.name = validateName(name);
+        this.email = validateEmail(email);
+        return this;
     }
 
-    public void setName(String name) {
-        this.name = validateName(name);
+    public String getName() {
+        return this.name;
     }
 
     private String validateName(String input) {
@@ -47,10 +49,6 @@ public class User {
         return this.email;
     }
 
-    public void setEmail(String email) {
-        this.email = validateEmail(email);
-    }
-
     private String validateEmail(String input) {
         return Optional.ofNullable(input).filter(x -> x.contains("@"))
                                         .filter(x -> x.substring(x.indexOf("@")).contains("."))
@@ -59,10 +57,6 @@ public class User {
 
     public String getPassword() {
         return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = validatePassword(password);
     }
 
     private String validatePassword(String input) {

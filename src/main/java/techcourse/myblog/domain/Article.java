@@ -36,24 +36,12 @@ public class Article {
         return this.title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getCoverUrl() {
         return this.coverUrl;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
     public String getContents() {
         return this.contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
     }
 
     @Override

@@ -25,8 +25,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public RedirectView write(Article article) {
-        Article written = articleRepository.save(article);
+    public RedirectView write(String title, String coverUrl, String contents) {
+        Article written = articleRepository.save(new Article(title, coverUrl, contents));
         return new RedirectView("/articles/" + written.getId());
     }
 
