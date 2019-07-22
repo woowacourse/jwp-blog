@@ -1,8 +1,10 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.article;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

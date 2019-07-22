@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.category;
 
 public class CategoryDto {
     private long categoryId;

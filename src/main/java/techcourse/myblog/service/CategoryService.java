@@ -2,9 +2,9 @@ package techcourse.myblog.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.Category;
-import techcourse.myblog.domain.CategoryDto;
-import techcourse.myblog.domain.CategoryRepository;
+import techcourse.myblog.domain.category.Category;
+import techcourse.myblog.domain.category.CategoryDto;
+import techcourse.myblog.domain.category.CategoryRepository;
 
 import java.util.ArrayList;
 import java.util.List;

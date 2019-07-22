@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.UserDto;
+import techcourse.myblog.domain.user.UserDto;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 

@@ -5,9 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import techcourse.myblog.domain.CategoryDto;
-import techcourse.myblog.domain.CategoryRepository;
-import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.domain.category.CategoryDto;
 import techcourse.myblog.service.CategoryService;
 
 @Controller

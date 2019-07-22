@@ -1,7 +1,8 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.user;
 
 import lombok.Builder;
 import lombok.ToString;
+import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import techcourse.myblog.domain.ArticleDto;
-import techcourse.myblog.domain.CategoryDto;
+import techcourse.myblog.domain.article.ArticleDto;
+import techcourse.myblog.domain.category.CategoryDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CategoryService;
 
