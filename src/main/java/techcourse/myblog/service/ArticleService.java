@@ -10,6 +10,7 @@ import techcourse.myblog.repository.ArticleRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 @Service
 public class ArticleService {
     private static final String NOT_EXSIT_ARTICLE = "해당 아티클이 없습니다.";

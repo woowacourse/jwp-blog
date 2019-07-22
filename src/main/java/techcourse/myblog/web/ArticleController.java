@@ -2,27 +2,31 @@ package techcourse.myblog.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article.Article;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.PageableArticleService;
 
 @Controller
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
-    private final ArticleService articleService;
+    private final PageableArticleService articleService;
 
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(PageableArticleService articleService) {
         this.articleService = articleService;
     }
 
     @GetMapping("/")
-    public String index(Model model) {
-        log.info("START {} ", model);
-        model.addAttribute("articles", articleService.findAll());
+    public String index(Model model,
+                        @PageableDefault(sort = {"id"}, size = 3, direction = Sort.Direction.DESC) Pageable pageable) {
+        log.debug("Pageable : {}", pageable);
+        model.addAttribute("articles", articleService.findAllPage(pageable));
         return "index";
     }
 

@@ -42,6 +42,7 @@ public class UserController {
 
     @PostMapping("/users")
     public String addUser(UserDto userDto) {
+        userService.addUser(userDto);
         return "redirect:/login";
     }
 
