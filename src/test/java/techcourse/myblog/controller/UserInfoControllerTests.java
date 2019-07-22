@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.controller.common.UserCommonTests;
 import techcourse.myblog.service.dto.UserDto;
 
 public class UserInfoControllerTests extends UserCommonTests {

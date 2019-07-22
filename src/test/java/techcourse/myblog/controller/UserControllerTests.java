@@ -3,6 +3,7 @@ package techcourse.myblog.controller;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import techcourse.myblog.controller.common.UserCommonTests;
 import techcourse.myblog.service.dto.UserDto;
 
 public class UserControllerTests extends UserCommonTests {
