@@ -176,16 +176,6 @@ class UserControllerTests extends ControllerTestTemplate {
     }
 
     @Test
-    void 로그인상태_다른User_탈퇴시도_실패() {
-        UserDto victim = new UserDto("victim", "victim@email", "password");
-        userRepository.save(victim.toUser());
-
-        loginAndRequest(DELETE, "/users").isFound();
-        assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isTrue();
-        assertThat(userRepository.findByEmail(victim.getEmail()).isPresent()).isTrue();
-    }
-
-    @Test
     void 로그인상태_자기자신_탈퇴시도_성공() {
         loginAndRequest(DELETE, "/users").isFound();
         assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isFalse();
