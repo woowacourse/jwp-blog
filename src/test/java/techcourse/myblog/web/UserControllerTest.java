@@ -26,15 +26,19 @@ public class UserControllerTest {
         webTestClient.get().uri("/users/signup").exchange().expectStatus().isOk();
     }
 
+    private WebTestClient.ResponseSpec getResponseSpec(String userName, String email, String password, String confirmPassword) {
+        return webTestClient.post().uri("/users/new")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("userName", userName)
+                        .with("email", email)
+                        .with("password", password)
+                        .with("confirmPassword", confirmPassword)
+                ).exchange();
+    }
+
     @Test
     void 유저_생성() {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "Brown")
-                        .with("email", "brown@gmail.com")
-                        .with("password", password)
-                        .with("confirmPassword", password)
-                ).exchange()
+        getResponseSpec("Brown", "brown@gmail.com", password, password)
                 .expectStatus().isFound();
     }
 
@@ -42,29 +46,19 @@ public class UserControllerTest {
     void 중복_이메일_확인() {
         create_user(userName, "buddy@buddy.com", password);
 
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", userName)
-                        .with("email", "buddy@buddy.com")
-                        .with("password", password)
-                        .with("confirmPassword", password))
-                .exchange().expectStatus().isBadRequest()
+        getResponseSpec(userName, "buddy@buddy.com", password, password)
+                .expectStatus().isBadRequest()
                 .expectBody().consumeWith(res -> {
             String body = new String(res.getResponseBody());
             assertThat(body.contains("중복된 이메일 입니다.")).isTrue();
         });
+
     }
 
     @Test
     void 유저_이름_확인() {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", "J")
-                        .with("email", email)
-                        .with("password", password)
-                        .with("confirmPassword", password)
-                ).exchange()
-                .expectStatus().isBadRequest()
+
+        getResponseSpec("J", email, password, password).expectStatus().isBadRequest()
                 .expectBody().consumeWith(res -> {
             String body = new String(res.getResponseBody());
             assertThat(body.contains("형식에 맞는 이름이 아닙니다.")).isTrue();
@@ -73,13 +67,8 @@ public class UserControllerTest {
 
     @Test
     void 유저_패스워드_확인() {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", userName)
-                        .with("email", email)
-                        .with("password", "A")
-                        .with("confirmPassword", "A")
-                ).exchange()
+        getResponseSpec(userName, email, "A", "A")
+                .expectStatus().isBadRequest()
                 .expectBody().consumeWith(res -> {
             String body = new String(res.getResponseBody());
             assertThat(body.contains("형식에 맞는 비밀번호가 아닙니다.")).isTrue();
@@ -88,13 +77,8 @@ public class UserControllerTest {
 
     @Test
     void 유저_패스워드_컨펌패스워드_매치_확인() {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", userName)
-                        .with("email", email)
-                        .with("password", password)
-                        .with("confirmPassword", "Ss12345!")
-                ).exchange()
+
+        getResponseSpec(userName, email, password, "Ss12345!")
                 .expectStatus().isBadRequest()
                 .expectBody().consumeWith(res -> {
             String body = new String(res.getResponseBody());
@@ -180,6 +164,5 @@ public class UserControllerTest {
             return null;
         }).build();
     }
-
 
 }
