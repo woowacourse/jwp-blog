@@ -1,8 +1,17 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import lombok.Getter;
+import techcourse.myblog.domain.exception.InvalidEmailFormatException;
+import techcourse.myblog.domain.exception.InvalidPasswordFormatException;
 
 @Entity
+@Getter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,25 +31,23 @@ public class User {
     }
 
     public User(String name, String email, String password) {
+        validEmailFormat(email);
+        validPasswordFormat(password);
         this.name = name;
         this.email = email;
         this.password = password;
     }
 
-    public Long getId() {
-        return id;
+    private void validEmailFormat(String email) {
+        if (!email.contains("@")) {
+            throw new InvalidEmailFormatException("이메일 양식을 지켜주세요.");
+        }
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
+    private void validPasswordFormat(String password) {
+        if (!password.matches("[a-zA-Z0-9!@#$%^&*(),.?\\\":{}|<>]{8,}")) {
+            throw new InvalidPasswordFormatException("비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요.");
+        }
     }
 
     public boolean matchPassword(User user) {
