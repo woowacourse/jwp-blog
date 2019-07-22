@@ -31,4 +31,7 @@ dependencies {
 	implementation 'mysql:mysql-connector-java'
 
 	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+
+	implementation "org.hibernate.validator:hibernate-validator"
+	implementation "org.apache.tomcat.embed:tomcat-embed-el"
 }

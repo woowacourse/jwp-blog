@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.LoginDTO;
 import techcourse.myblog.controller.dto.UserDTO;
 import techcourse.myblog.exception.EmailRepetitionException;
@@ -21,11 +22,13 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public void save(UserDTO userDTO) {
+    @Transactional
+    public int save(UserDTO userDTO) {
         if (isDuplicateEmail(userDTO)) {
-            throw new EmailRepetitionException("이메일이 중복입니다.");
+            throw new EmailRepetitionException("이미 사용중인 이메일입니다.", "email");
         }
         userRepository.save(new User(userDTO.getUserName(), userDTO.getEmail(), userDTO.getPassword()));
+        return 1;
     }
 
     public User getLoginUser(LoginDTO loginDTO) {

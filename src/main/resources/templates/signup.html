@@ -26,28 +26,35 @@
                                                             <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                                 회원가입</h2>
                                                         </div>
-                                                        <form action="/users" method="post" name="userForm">
+                                                        <form action="/users" method="post" name="userForm" th:object="${userDTO}">
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark"
                                                                        for="userName">Username</label>
                                                                 <input class="form-control" id="userName"
                                                                        name="userName"
+                                                                       th:field="*{userName}"
                                                                        type="text">
+                                                                <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" style="color:red">errorMessage</span>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark" for="email">Email
                                                                     Address</label>
-                                                                <input class="form-control" id="email" name="email"
+                                                                <input class="form-control" id="email"
+                                                                       name="email"
+                                                                       th:field="*{email}"
                                                                        type="email">
+                                                                <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red">errorMessage</span>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark"
                                                                        for="password">Password</label>
                                                                 <input class="form-control" id="password"
                                                                        name="password"
+                                                                       th:field="*{password}"
                                                                        onkeyup="checkPassword()"
                                                                        placeholder="Password"
                                                                        type="password">
+                                                                <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red">errorMessage</span>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Confirm
@@ -87,42 +94,11 @@
     </th:block>
 </div>
 <th:block layout:fragment="addScript">
-    <script th:if="${signUpStatus != null}" th:inline="javascript">
-        /* <![CDATA[ */
-        const error = [[ ${signUpStatus}]];
-        alert(error)
-        /* ]]> */
-    </script>
-    <script th:inline="javascript" th:unless="${signUpStatus != null}">
-    </script>
+
     <script>
         function checkUserForm() {
-            var namePattern = /^[a-z]{2,10}$/i;
-            var passwordPattern = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-            var email = document.getElementById("email");
-            var username = document.getElementById("userName");
             var password = document.getElementById("password");
             var confirmPassword = document.getElementById("confirmPassword");
-
-            if (email.validity.typeMismatch) {
-                email.setCustomValidity("이메일 형식이 아닙니다.");
-            } else {
-                email.setCustomValidity("");
-            }
-
-            if (!namePattern.test(username.value)) {
-                username.setCustomValidity("아이디는 2~10자의 영문자 이어야 합니다.");
-            } else {
-                username.setCustomValidity("");
-            }
-
-            if (!passwordPattern.test(password.value)) {
-                password.setCustomValidity("비밀번호는 8자이상의 소문자, 대문자, 숫자, 특수문자의 조합입니다.");
-                document.querySelector('input[name="password"]').value = "";
-                document.querySelector('input[name="confirmPassword"]').value = "";
-            } else {
-                password.setCustomValidity("");
-            }
 
             if (confirmPassword.value !== password.value) {
                 confirmPassword.setCustomValidity("비밀번호와 확인 비밀번호가 일치하지 않습니다.");
@@ -141,7 +117,8 @@
                 document.getElementById('message').style.color = 'red';
                 document.getElementById('message').innerHTML = 'not matching';
             }
-        }
+        };
+
     </script>
 </th:block>
 </body>

@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.controller.dto.LoginDTO;
 import techcourse.myblog.controller.dto.UserDTO;
@@ -15,11 +17,11 @@ import techcourse.myblog.exception.UserNotExistException;
 import techcourse.myblog.model.User;
 import techcourse.myblog.service.UserService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/users")
+@SessionAttributes("user")
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -37,13 +39,16 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String signUpForm(String signUpStatus, Model model) {
-        model.addAttribute("signUpStatus", signUpStatus);
+    public String signUpForm(UserDTO userDTO) {
         return "signup";
     }
 
     @PostMapping
-    public String create(@ModelAttribute UserDTO userDTO, RedirectAttributes redirectAttributes) {
+    public String create(@Valid UserDTO userDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            log.error(bindingResult.getFieldError().getDefaultMessage());
+            return "signup";
+        }
         try {
             userService.save(userDTO);
             return "redirect:/users/login";
@@ -55,12 +60,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute LoginDTO loginDTO, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public String login(LoginDTO loginDTO, RedirectAttributes redirectAttributes, Model model) {
         try {
             User user = userService.getLoginUser(loginDTO);
-            log.info("userName : {}", user.getUserName());
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
+            model.addAttribute("user", user);
             return "redirect:/";
         } catch (UserNotExistException | LoginFailException e) {
             log.error(e.getMessage());
@@ -70,9 +73,8 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        session.invalidate();
+    public String logout(SessionStatus sessionStatus) {
+        sessionStatus.setComplete();
         return "redirect:/";
     }
 
@@ -83,34 +85,27 @@ public class UserController {
     }
 
     @DeleteMapping
-    public String deleteUser(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+    public String deleteUser(@ModelAttribute User user, SessionStatus sessionStatus) {
         userService.delete(user.getEmail());
-        session.invalidate();
+        sessionStatus.setComplete();
         return "redirect:/";
     }
 
     @GetMapping("/mypage")
-    public String myPage(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+    public String myPage(@ModelAttribute("user") User user, Model model) {
         model.addAttribute("user", user);
         return "mypage";
     }
 
     @PostMapping("/mypage")
-    public String updateProfile(@ModelAttribute UserDTO userDTO, HttpServletRequest request) {
+    public String updateProfile(@Valid UserDTO userDTO, Model model) {
         User user = userService.update(userDTO);
-        HttpSession session = request.getSession();
-        session.setAttribute("user", user);
+        model.addAttribute("user", user);
         return "redirect:/users/mypage";
     }
 
     @GetMapping("/mypage-edit")
-    public String myPageEdit(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+    public String myPageEdit(@ModelAttribute("user") User user, Model model) {
         model.addAttribute("user", user);
         return "mypage-edit";
     }
