@@ -1,13 +1,16 @@
 package techcourse.myblog.domain.User;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class UserForm {
     public static final String NAME_ERROR_MSG = "2글자 이상, 10글자 이하로 입력하세요. 숫자와 특수문자는 입력할 수 없습니다.";
@@ -15,7 +18,7 @@ public class UserForm {
     public static final String EMAIL_ERROR_MSG = "이메일의 형식에 맞춰 입력하세요.";
     private static final long BLANK_USER_ID = 0;
 
-    private long id;
+    private long id = BLANK_USER_ID;
     @Pattern(regexp = "^[a-zA-Z가-힣]{2,10}$", message = NAME_ERROR_MSG)
     private String name;
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~`!@#$%\\^&*()-]).{8,}$", message = PASSWORD_ERROR_MSG)
