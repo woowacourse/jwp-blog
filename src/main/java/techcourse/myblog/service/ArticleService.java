@@ -42,8 +42,9 @@ public class ArticleService {
         return findArticle;
     }
 
-    public void deleteById(Long articleId) {
+    public Long deleteById(Long articleId) {
         articleRepository.deleteById(articleId);
+        return articleId;
     }
 
     public void setActionOfArticle(Model model, String actionRoute, String formMethod) {
