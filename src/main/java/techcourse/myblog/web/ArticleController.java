@@ -28,13 +28,13 @@ public class ArticleController {
 
     @GetMapping("/{id}")
     public String showArticle(@PathVariable Long id, Model model) {
-        model.addAttribute("article", articleService.find(id));
+        model.addAttribute("article", articleService.findById(id));
         return "article";
     }
 
     @GetMapping("/{id}/edit")
     public String updateArticle(@PathVariable Long id, Model model) {
-        model.addAttribute("article", articleService.find(id));
+        model.addAttribute("article", articleService.findById(id));
         return "article-edit";
     }
 

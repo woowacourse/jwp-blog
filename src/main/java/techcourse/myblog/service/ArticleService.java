@@ -32,7 +32,7 @@ public class ArticleService {
         return article.getId();
     }
 
-    public Article find(Long id) {
+    public Article findById(Long id) {
         return articleRepository.findById(id).orElseThrow(() -> new NoArticleException(NO_ARTICLE_MESSAGE));
     }
 

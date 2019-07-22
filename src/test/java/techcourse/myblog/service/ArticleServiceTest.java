@@ -38,7 +38,7 @@ class ArticleServiceTest {
     @Test
     void find() {
         Article savedArticle = articleRepository.save(article);
-        Article foundArticle = articleService.find(savedArticle.getId());
+        Article foundArticle = articleService.findById(savedArticle.getId());
         assertThat(savedArticle.getTitle()).isEqualTo(foundArticle.getTitle());
         assertThat(savedArticle.getCoverUrl()).isEqualTo(foundArticle.getCoverUrl());
         assertThat(savedArticle.getContents()).isEqualTo(foundArticle.getContents());
