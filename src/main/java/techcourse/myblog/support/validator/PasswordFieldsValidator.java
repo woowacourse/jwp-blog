@@ -33,6 +33,7 @@ public class PasswordFieldsValidator implements ConstraintValidator<EqualFields,
         }
         return true;
     }
+
     private Object getFieldValue(Object object, String fieldName) throws Exception {
         Class<?> clazz = object.getClass();
         Field passwordField = clazz.getDeclaredField(fieldName);

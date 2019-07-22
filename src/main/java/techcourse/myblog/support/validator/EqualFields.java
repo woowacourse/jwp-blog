@@ -12,8 +12,12 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = PasswordFieldsValidator.class)
 public @interface EqualFields {
     String message() default "두 필드가 서로 다릅니다";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
+
     String baseField();
+
     String matchField();
 }

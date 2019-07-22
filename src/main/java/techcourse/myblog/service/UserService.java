@@ -73,7 +73,7 @@ public class UserService {
     }
 
     public List<FieldError> addSingUpError(UserRequest userRequest) {
-       List<FieldError> errors = new ArrayList<>();
+        List<FieldError> errors = new ArrayList<>();
 
         if (isDuplicatedEmail(userRequest.getEmail())) {
             errors.add(new FieldError(
@@ -89,7 +89,7 @@ public class UserService {
                     "비밀번호가 일치하지 않습니다!"));
         }
 
-       return errors;
+        return errors;
     }
 
     private boolean isDuplicatedEmail(String email) {

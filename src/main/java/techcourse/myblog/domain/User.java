@@ -42,7 +42,7 @@ public class User {
     }
 
     private void isEmpty(String string) {
-        if(EMPTY.equals(string) || string == null) {
+        if (EMPTY.equals(string) || string == null) {
             throw new IllegalArgumentException("아무것도 입력하지 않았습니다.");
         }
     }

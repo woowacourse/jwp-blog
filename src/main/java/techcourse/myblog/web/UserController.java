@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.UserEditRequest;
 import techcourse.myblog.service.dto.UserLoginRequest;
 import techcourse.myblog.service.dto.UserRequest;
 import techcourse.myblog.service.dto.UserResponse;
@@ -46,7 +47,7 @@ public class UserController {
         }
 
         List<FieldError> signUpErrors = userService.addSingUpError(userRequest);
-        if(!signUpErrors.isEmpty()) {
+        if (!signUpErrors.isEmpty()) {
             signUpErrors.forEach(bindingResult::addError);
             return "signup";
         }
@@ -75,13 +76,13 @@ public class UserController {
     }
 
     @GetMapping("/mypage-edit")
-    public String myPageEditForm() {
+    public String myPageEditForm(UserEditRequest userEditRequest) {
         return "mypage-edit";
     }
 
     @PostMapping("/login")
     public String login(@Valid UserLoginRequest userLoginRequest, BindingResult bindingResult, HttpSession httpSession) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return "login";
         }
 
@@ -100,9 +101,11 @@ public class UserController {
     }
 
     @PutMapping("/users/{userId}")
-    public String editUser(@PathVariable("userId") Long userId, HttpServletRequest request) {
-        String name = request.getParameter("name");
-        User user = userService.editUserName(userId, name);
+    public String editUser(@PathVariable("userId") Long userId, @Valid UserEditRequest userEditRequest, BindingResult bindingResult, HttpServletRequest request) {
+        if (bindingResult.hasErrors()) {
+            return "mypage-edit";
+        }
+        User user = userService.editUserName(userId, userEditRequest.getName());
         request.getSession().setAttribute(USER_INFO, user);
 
         return "redirect:/";
