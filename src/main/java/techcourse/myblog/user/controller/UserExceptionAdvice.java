@@ -5,11 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import techcourse.myblog.user.exception.DuplicatedUserException;
-import techcourse.myblog.user.exception.InvalidEditFormException;
-import techcourse.myblog.user.exception.InvalidSignUpFormException;
-import techcourse.myblog.user.exception.NotFoundUserException;
-import techcourse.myblog.user.exception.NotMatchPasswordException;
+import techcourse.myblog.argumentresolver.UserSession;
+import techcourse.myblog.user.exception.*;
 
 @ControllerAdvice
 public class UserExceptionAdvice {
@@ -22,7 +19,8 @@ public class UserExceptionAdvice {
 
     @ExceptionHandler(InvalidEditFormException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handelInvalidEditFormException(InvalidEditFormException e, Model model) {
+    public String handelInvalidEditFormException(InvalidEditFormException e, UserSession session, Model model) {
+        model.addAttribute("user", session);
         model.addAttribute("errorMessage", e.getMessage());
         return "mypage";
     }

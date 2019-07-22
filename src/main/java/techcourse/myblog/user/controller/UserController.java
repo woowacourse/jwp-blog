@@ -6,12 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.argumentresolver.UserSession;
 import techcourse.myblog.user.dto.UserDto;
 import techcourse.myblog.user.exception.InvalidEditFormException;
 import techcourse.myblog.user.exception.InvalidSignUpFormException;
 import techcourse.myblog.user.service.UserService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
@@ -43,18 +43,16 @@ public class UserController {
     }
 
     @GetMapping("/mypage/{userId}")
-    public String renderMypage(@PathVariable long userId, Model model) {
+    public String renderMyPage(@PathVariable long userId, Model model) {
         UserDto.Response user = userService.findById(userId);
         model.addAttribute("user", user);
         return "mypage";
     }
 
     @GetMapping("/mypage/{userId}/edit")
-    public String renderEditMypage(@PathVariable long userId, HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false);
+    public String renderEditMyPage(@PathVariable long userId, UserSession session, Model model) {
         UserDto.Response user = userService.findById(userId);
-        UserDto.Response sessionUser = (UserDto.Response) session.getAttribute("user");
-        if (!sessionUser.getEmail().equals(user.getEmail())) {
+        if (!session.getEmail().equals(user.getEmail())) {
             return "redirect:/";
         }
         model.addAttribute("user", user);
@@ -62,24 +60,20 @@ public class UserController {
     }
 
     @PutMapping("/users/{userId}")
-    public RedirectView updateUser(@PathVariable long userId, HttpServletRequest request,
+    public RedirectView updateUser(@PathVariable long userId, HttpSession session,
                                    @Valid UserDto.Update userDto, BindingResult result) {
         if (result.hasErrors()) {
-            request.setAttribute("user", userService.findById(userId));
             throw new InvalidEditFormException(result.getFieldError().getDefaultMessage());
         }
         UserDto.Response updatedUser = userService.update(userId, userDto);
-        HttpSession session = request.getSession(false);
         session.setAttribute("user", updatedUser);
         return new RedirectView("/mypage/" + userId);
     }
 
     @DeleteMapping("/users/{userId}")
-    public RedirectView deleteUser(@PathVariable long userId, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+    public RedirectView deleteUser(@PathVariable long userId, UserSession session) {
         UserDto.Response user = userService.findById(userId);
-        UserDto.Response sessionUser = (UserDto.Response) session.getAttribute("user");
-        if (!sessionUser.getEmail().equals(user.getEmail())) {
+        if (!session.getEmail().equals(user.getEmail())) {
             return new RedirectView("/");
         }
         userService.deleteById(userId);

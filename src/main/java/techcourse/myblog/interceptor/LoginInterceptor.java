@@ -1,7 +1,6 @@
 package techcourse.myblog.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -18,7 +17,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         HttpSession session = request.getSession();
         Object loginSession = session.getAttribute("user");
 
-        if(loginSession == null) {
+        if (loginSession == null) {
             log.info("fail to access request location by interceptor");
             response.sendRedirect("/login");
             return false;
