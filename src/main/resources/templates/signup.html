@@ -25,36 +25,32 @@
                                                         <div class="mrg-btm-30">
                                                             <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                                 회원가입</h2>
+                                                            <span th:if="${error != null}" th:text="${error}" style="color:red">errorMessage</span>
+                                                            <span th:unless="${error != null}" id="error" style="color:red"></span>
                                                         </div>
-                                                        <form action="/users" method="post" name="userForm" th:object="${userDTO}">
+                                                        <form action="/users" method="post" name="userForm">
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark"
                                                                        for="userName">Username</label>
                                                                 <input class="form-control" id="userName"
                                                                        name="userName"
-                                                                       th:field="*{userName}"
                                                                        type="text">
-                                                                <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}" style="color:red">errorMessage</span>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark" for="email">Email
                                                                     Address</label>
                                                                 <input class="form-control" id="email"
                                                                        name="email"
-                                                                       th:field="*{email}"
                                                                        type="email">
-                                                                <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red">errorMessage</span>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark"
                                                                        for="password">Password</label>
                                                                 <input class="form-control" id="password"
                                                                        name="password"
-                                                                       th:field="*{password}"
                                                                        onkeyup="checkPassword()"
                                                                        placeholder="Password"
                                                                        type="password">
-                                                                <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red">errorMessage</span>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Confirm
@@ -69,7 +65,7 @@
                                                             <div class="form-group">
                                                                 <button class="btn btn-info btn-block border-radius-6 font-size-16 text-white"
                                                                         onclick="checkUserForm()"
-                                                                        type="submit">
+                                                                        type="button">
                                                                     가입하기
                                                                 </button>
                                                             </div>
@@ -94,20 +90,21 @@
     </th:block>
 </div>
 <th:block layout:fragment="addScript">
-
     <script>
-        function checkUserForm() {
+        var checkUserForm = function () {
             var password = document.getElementById("password");
             var confirmPassword = document.getElementById("confirmPassword");
 
             if (confirmPassword.value !== password.value) {
-                confirmPassword.setCustomValidity("비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+                document.getElementById("error").innerHTML = "페스워드랑 확인 패스워드가 서로 불일치 합니다.";
                 document.querySelector('input[name="password"]').value = "";
                 document.querySelector('input[name="confirmPassword"]').value = "";
+                return false;
             } else {
-                password.setCustomValidity("");
+                document.querySelector('form[name="userForm"]').submit();
+                return true;
             }
-        }
+        };
 
         var checkPassword = function () {
             if (document.userForm.password.value === document.userForm.confirmPassword.value) {

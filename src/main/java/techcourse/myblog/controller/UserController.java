@@ -11,9 +11,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.controller.dto.LoginDTO;
 import techcourse.myblog.controller.dto.UserDTO;
-import techcourse.myblog.exception.EmailRepetitionException;
-import techcourse.myblog.exception.LoginFailException;
-import techcourse.myblog.exception.UserNotExistException;
+import techcourse.myblog.exception.UserFromException;
 import techcourse.myblog.model.User;
 import techcourse.myblog.service.UserService;
 
@@ -39,37 +37,24 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String signUpForm(UserDTO userDTO) {
+    public String signUpForm() {
         return "signup";
     }
 
     @PostMapping
-    public String create(@Valid UserDTO userDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String create(@Valid UserDTO userDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            log.error(bindingResult.getFieldError().getDefaultMessage());
-            return "signup";
+            throw new UserFromException(bindingResult.getFieldError().getDefaultMessage());
         }
-        try {
-            userService.save(userDTO);
-            return "redirect:/users/login";
-        } catch (EmailRepetitionException e) {
-            log.error(e.getMessage());
-            redirectAttributes.addAttribute("signUpStatus", e.getMessage());
-            return "redirect:/users/signup";
-        }
+        userService.save(userDTO);
+        return "redirect:/users/login";
     }
 
     @PostMapping("/login")
-    public String login(LoginDTO loginDTO, RedirectAttributes redirectAttributes, Model model) {
-        try {
-            User user = userService.getLoginUser(loginDTO);
-            model.addAttribute("user", user);
-            return "redirect:/";
-        } catch (UserNotExistException | LoginFailException e) {
-            log.error(e.getMessage());
-            redirectAttributes.addAttribute("loginError", e.getMessage());
-            return "redirect:/users/login";
-        }
+    public String login(LoginDTO loginDTO, Model model) {
+        User user = userService.getLoginUser(loginDTO);
+        model.addAttribute("user", user);
+        return "redirect:/";
     }
 
     @GetMapping("/logout")

@@ -25,7 +25,7 @@ public class UserService {
     @Transactional
     public int save(UserDTO userDTO) {
         if (isDuplicateEmail(userDTO)) {
-            throw new EmailRepetitionException("이미 사용중인 이메일입니다.", "email");
+            throw new EmailRepetitionException("이미 사용중인 이메일입니다.");
         }
         userRepository.save(new User(userDTO.getUserName(), userDTO.getEmail(), userDTO.getPassword()));
         return 1;
@@ -33,22 +33,22 @@ public class UserService {
 
     public User getLoginUser(LoginDTO loginDTO) {
         User findUser = checkUser(loginDTO);
-        if (checkPassword(loginDTO.getPassword(), findUser.getPassword())) {
-            return findUser;
+        if (!checkPassword(loginDTO.getPassword(), findUser.getPassword())) {
+            throw new LoginFailException("아이디와 비밀번호가 일치하지 않습니다.");
         }
-        throw new LoginFailException("아이디와 비밀번호가 일치하지 않습니다.");
-    }
-
-    private boolean checkPassword(String password, String checkPassword) {
-        return password.equals(checkPassword);
+        return findUser;
     }
 
     private User checkUser(LoginDTO loginDTO) {
-        User findUser = userRepository.findUserByEmailAddress(loginDTO.getEmail());
+        User findUser = userRepository.findByUserEmailAddress(loginDTO.getEmail());
         if (findUser != null) {
             return findUser;
         }
         throw new UserNotExistException("해당 아이디를 가진 유저는 존재하지 않습니다.");
+    }
+
+    private boolean checkPassword(String password, String checkPassword) {
+        return password.equals(checkPassword);
     }
 
     public List<User> getUsers() {
@@ -56,7 +56,7 @@ public class UserService {
     }
 
     public boolean isDuplicateEmail(UserDTO userDTO) {
-        return userRepository.findUserByEmailAddress(userDTO.getEmail()) != null;
+        return userRepository.findByUserEmailAddress(userDTO.getEmail()) != null;
     }
 
     public void delete(String email) {
@@ -71,6 +71,6 @@ public class UserService {
         if (result == 0) {
             throw new UserNotExistException("유저정보가 없습니다.");
         }
-        return userRepository.findUserByEmailAddress(userDTO.getEmail());
+        return userRepository.findByUserEmailAddress(userDTO.getEmail());
     }
 }
