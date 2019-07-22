@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import java.util.Optional;
+
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.request.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
@@ -29,29 +31,46 @@ public class ArticleController {
 
 	@PostMapping("articles")
 	public String saveArticle(ArticleDto articleDto) {
-		Article article = articleDto.valueOfArticle(); //TODO: 여기선 아이디 없음.
+		Article article = articleDto.valueOfArticle();
 		Long id = articleRepository.save(article).getId();
 		return "redirect:/articles/" + id;
 	}
 
 	@GetMapping("articles/{articleId}")
 	public String getArticle(@PathVariable Long articleId, Model model) {
-		model.addAttribute("article", articleRepository.findById(articleId).get());
-		return "article";
+		if (getArticleWhenExists(articleId, model)) {
+			return "article";
+		}
+		return addError(model);
 	}
 
 	@GetMapping("articles/{articleId}/edit")
 	public String editArticle(@PathVariable Long articleId, Model model) {
-		model.addAttribute("article", articleRepository.findById(articleId).get());
-		return "article-edit";
+		if (getArticleWhenExists(articleId, model)) {
+			return "article-edit";
+		}
+		return addError(model);
+	}
+
+	private boolean getArticleWhenExists(Long articleId, Model model) {
+		Optional<Article> article = articleRepository.findById(articleId);
+		if (article.isPresent()) {
+			model.addAttribute("article", article.get());
+			return true;
+		}
+		return false;
+	}
+
+	private String addError(Model model) {
+		model.addAttribute("error", "유효하지 않은 게시글 번호입니다.");
+		return "index";
 	}
 
 	@PutMapping("articles/{articleId}")
-	public String modifyArticle(@PathVariable Long articleId, ArticleDto articleDto, Model model) {
-		Article article = articleDto.valueOfArticle(); //TODO: 메소드를 하나 더 만들지 말지 고려해보기
+	public String modifyArticle(@PathVariable Long articleId, ArticleDto articleDto) {
+		Article article = articleDto.valueOfArticle(articleId);
 		articleRepository.save(article);
-		model.addAttribute("article", articleRepository.findById(articleId).get());
-		return "article";
+		return "redirect:/articles/" + articleId;
 	}
 
 	@DeleteMapping("articles/{articleId}")

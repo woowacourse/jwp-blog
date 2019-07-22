@@ -101,5 +101,15 @@
 </div>
 <th:block th:include="common/footer"></th:block>
 <th:block th:include="common/js"></th:block>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    var erorr = /*[[${error}]]*/ '';
+    if(erorr != null) {
+        alert(erorrs);
+    }
+
+    /*]]>*/
+</script>
 </body>
 </html>
