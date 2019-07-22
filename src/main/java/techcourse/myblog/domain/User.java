@@ -7,9 +7,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import techcourse.myblog.domain.exception.InvalidEmailFormatException;
 import techcourse.myblog.domain.exception.InvalidPasswordFormatException;
 
+@Slf4j
 @Entity
 @Getter
 public class User {
@@ -31,11 +33,15 @@ public class User {
     }
 
     public User(String name, String email, String password) {
-        validEmailFormat(email);
-        validPasswordFormat(password);
-        this.name = name;
-        this.email = email;
-        this.password = password;
+        try {
+            validEmailFormat(email);
+            validPasswordFormat(password);
+            this.name = name;
+            this.email = email;
+            this.password = password;
+        } catch (RuntimeException e) {
+            log.error("User Validation Error", e);
+        }
     }
 
     private void validEmailFormat(String email) {
@@ -46,6 +52,7 @@ public class User {
 
     private void validPasswordFormat(String password) {
         if (!password.matches("[a-zA-Z0-9!@#$%^&*(),.?\\\":{}|<>]{8,}")) {
+            log.debug("[Exception] >> InvalidPasswordFormatException");
             throw new InvalidPasswordFormatException("비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요.");
         }
     }
