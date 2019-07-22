@@ -83,7 +83,7 @@ public class ArticleControllerTests {
                 .uri("/articles/" + "2")
                 .exchange()
                 .expectStatus()
-                .is3xxRedirection()
+                .isOk()
         ;
     }
 

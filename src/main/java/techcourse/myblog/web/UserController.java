@@ -3,7 +3,6 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserService;
@@ -43,12 +42,6 @@ public class UserController {
     public String saveUser(@Valid UserRequest userRequest, BindingResult bindingResult) {
         // 회원 가입 입력 형식 유효성 검사
         if (bindingResult.hasErrors()) {
-            return "signup";
-        }
-
-        List<FieldError> signUpErrors = userService.addSingUpError(userRequest);
-        if (!signUpErrors.isEmpty()) {
-            signUpErrors.forEach(bindingResult::addError);
             return "signup";
         }
 

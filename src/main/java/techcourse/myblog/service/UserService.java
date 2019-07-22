@@ -1,7 +1,6 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.validation.FieldError;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.service.dto.UserLoginRequest;
@@ -11,7 +10,6 @@ import techcourse.myblog.service.exception.LoginException;
 import techcourse.myblog.support.util.EncryptHelper;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -70,33 +68,5 @@ public class UserService {
 
     public void deleteById(Long userId) {
         userRepository.deleteById(userId);
-    }
-
-    public List<FieldError> addSingUpError(UserRequest userRequest) {
-        List<FieldError> errors = new ArrayList<>();
-
-        if (isDuplicatedEmail(userRequest.getEmail())) {
-            errors.add(new FieldError(
-                    "userRequest",
-                    "email",
-                    "이메일이 중복입니다!"));
-        }
-
-        if (doesNotMatchPassword(userRequest.getPassword(), userRequest.getReconfirmPassword())) {
-            errors.add(new FieldError(
-                    "userRequest",
-                    "reconfirmPassword",
-                    "비밀번호가 일치하지 않습니다!"));
-        }
-
-        return errors;
-    }
-
-    private boolean isDuplicatedEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    private boolean doesNotMatchPassword(String password, String reconfirmPassword) {
-        return !password.equals(reconfirmPassword);
     }
 }
