@@ -40,7 +40,7 @@ public class UserController {
     @PostMapping
     public ModelAndView signUp(UserDto userDto) {
         userService.save(userDto);
-        return new ModelAndView("redirect:/" + USER_MAPPING_URL);
+        return new ModelAndView("redirect:" + USER_MAPPING_URL);
     }
 
     @PostMapping("/login")

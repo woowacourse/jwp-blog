@@ -56,7 +56,7 @@ public class UserService {
     @Transactional
     public String updateUserName(UserDto userDto, String name) {
         User user = userRepository.findByEmail(userDto.getEmail()).get();
-        user.setName(name);
+        user.updateName(name);
         userRepository.save(user);
         return user.getName();
     }

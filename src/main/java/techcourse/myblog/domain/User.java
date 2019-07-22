@@ -9,7 +9,6 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Getter
-@Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
@@ -46,4 +45,7 @@ public class User {
         return this.password.equals(password);
     }
 
+    public void updateName(final String name) {
+        this.name = name;
+    }
 }

@@ -51,8 +51,9 @@ class UserControllerTest {
         userRequest(POST, userDto, "/logout")
                 .expectStatus()
                 .is3xxRedirection();
-
     }
+
+
 
     private WebTestClient.ResponseSpec userRequest(HttpMethod method, final UserDto userDto, String attachedUrl) {
         return webTestClient.method(method)
@@ -64,5 +65,13 @@ class UserControllerTest {
                 .exchange();
     }
 
+    private WebTestClient.ResponseSpec signupRequest(String name, String password, String email ){
+        UserDto userDto = UserDto.builder()
+                .name(name)
+                .password(password)
+                .email(email)
+                .build();
+        return userRequest(POST, userDto, "./signup");
+    }
 
 }
