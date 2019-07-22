@@ -20,6 +20,8 @@ import javax.servlet.http.HttpSession;
 public class UserController {
     private final UserService userService;
     private final LoginService loginService;
+    @Autowired
+    private HttpSession session;
 
     @Autowired
     public UserController(UserService userService, LoginService loginService) {
@@ -28,22 +30,23 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login(HttpSession session) {
-        if (SessionUtil.isNewSession(session)) {
+    public String login() {
+        ;
+        if (SessionUtil.isNull(session)) {
             return "login";
         }
         return "redirect:/";
     }
 
     @PostMapping("/logout")
-    public String logout(HttpSession session) {
+    public String logout() {
         SessionUtil.removeAttribute(session, UserInfo.NAME);
         SessionUtil.removeAttribute(session, UserInfo.EMAIL);
         return "redirect:/";
     }
 
     @PostMapping("/login")
-    public String login(UserRequestDto userRequestDto, HttpSession session) {
+    public String login(UserRequestDto userRequestDto) {
         User user = loginService.loginByEmailAndPwd(userRequestDto);
         SessionUtil.setAttribute(session, UserInfo.NAME, user.getName());
         SessionUtil.setAttribute(session, UserInfo.EMAIL, user.getEmail());
@@ -57,8 +60,8 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String signupForm(HttpSession session) {
-        if (SessionUtil.isNewSession(session)) {
+    public String signupForm() {
+        if (SessionUtil.isNull(session)) {
             return "signup";
         }
         return "redirect:/";
@@ -75,7 +78,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String addUser(UserRequestDto userRequestDto, HttpSession session) {
+    public String addUser(UserRequestDto userRequestDto) {
         User user = userService.addUser(userRequestDto);
         SessionUtil.setAttribute(session, UserInfo.NAME, user.getName());
         SessionUtil.setAttribute(session, UserInfo.EMAIL, user.getEmail());
@@ -83,7 +86,7 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public String updateUser(UserRequestDto userRequestDto, HttpSession session) {
+    public String updateUser(UserRequestDto userRequestDto) {
         String email = String.valueOf(SessionUtil.getAttribute(session, UserInfo.EMAIL));
         userService.updateUser(userRequestDto, email);
         SessionUtil.setAttribute(session, UserInfo.NAME, userRequestDto.getName());
@@ -92,7 +95,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public String deleteUser(HttpSession session) {
+    public String deleteUser() {
         String email = String.valueOf(SessionUtil.getAttribute(session, UserInfo.EMAIL));
         userService.deleteUser(email);
         SessionUtil.removeAttribute(session, UserInfo.NAME);

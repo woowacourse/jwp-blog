@@ -2,6 +2,7 @@ package techcourse.myblog.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import techcourse.myblog.web.UserInfo;
 
 import javax.servlet.http.HttpSession;
 
@@ -28,7 +29,7 @@ public class SessionUtil {
         return sessionInfo;
     }
 
-    public static boolean isNewSession(HttpSession session) {
-        return session.isNew();
+    public static boolean isNull(HttpSession session) {
+        return session.getAttribute(UserInfo.NAME) == null;
     }
 }
