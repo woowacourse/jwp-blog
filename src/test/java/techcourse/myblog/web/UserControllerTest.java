@@ -1,79 +1,126 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import techcourse.myblog.domain.User;
 
-import java.util.function.Consumer;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserControllerTest {
+class UserControllerTest {
+	@Autowired
+	private WebApplicationContext webApplicationContext;
 
-    @Autowired
-    private WebTestClient webTestClient;
+	private MockMvc mockMvc;
+	private MockHttpSession session;
+	private String name = "aiden";
+	private String email = "aiden@gmail.com";
+	private String password = "12WoowaBros@";
 
-    @Test
-    void signUp_test() {
-        signUpExchange(entityExchangeResult -> {
-        });
-    }
+	@BeforeEach
+	void setUp() {
+		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+		session = new MockHttpSession();
+		session.setAttribute("user", new User(name, email, password));
+	}
 
-    private WebTestClient.BodyContentSpec signUpExchange(Consumer<EntityExchangeResult<byte[]>> consumer) {
-        return webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", "aiden")
-                        .with("email", "aiden@naver.com")
-                        .with("password", "aidenAIDEN1!"))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/login.*")
-                .expectBody().consumeWith(consumer);
-    }
+	@AfterEach
+	void tearDown() {
+		session.clearAttributes();
+		session = null;
+	}
 
-    @Test
-    void login_test_true() {
-        signUpExchange(entityExchangeResult -> {
-            webTestClient.post().uri("/login")
-                    .body(BodyInserters.fromFormData("email", "aiden@naver.com")
-                            .with("password", "aidenAIDEN1!")
-                    ).exchange()
-                    .expectStatus().is3xxRedirection()
-                    .expectHeader().valueMatches("Location", ".*localhost:[0-9]+/;.*");
-        });
-    }
+	@Test
+	void 로그인_폼_테스트() throws Exception {
+		mockMvc.perform(get("/login"))
+				.andDo(print())
+				.andExpect(status().isOk());
+		mockMvc.perform(get("/login").session(session))
+				.andDo(print())
+				.andExpect(redirectedUrl("/"));
+	}
 
-    @Test
-    void login_test_false() {
-        signUpExchange(entityExchangeResult -> {
-            webTestClient.post().uri("/login")
-                    .body(BodyInserters.fromFormData("email", "aiden@naver.com")
-                            .with("password", "aidenAIDEN1")
-                    ).exchange()
-                    .expectStatus().isOk();
-        });
-    }
+	@Test
+	void 회원가입_테스트() throws Exception {
+		signUp().andExpect(redirectedUrl("/login"));
+	}
 
-    @Test
-    void update_test() {
-        String name = "whale";
-        signUpExchange(entityExchangeResult -> {
-            webTestClient.post().uri("/login")
-                    .body(BodyInserters.fromFormData("email", "aiden@naver.com")
-                            .with("password", "aidenAIDEN1!")
-                    ).exchange()
-                    .expectStatus().is3xxRedirection()
-                    .expectBody()
-                    .consumeWith(entityExchangeResult1 -> {
-                        webTestClient.put().uri("/mypage/edit")
-                                .body(BodyInserters.fromFormData("name", name))
-                                .exchange()
-                                .expectStatus().is3xxRedirection()
-                                .expectHeader().valueMatches("Location", ".*/mypage.*");
-                    });
-        });
-    }
+	private ResultActions signUp() throws Exception {
+		return mockMvc.perform(
+				post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+						.param("name", name)
+						.param("email", email)
+						.param("password", password)
+		).andDo(print());
+	}
+
+	@Test
+	void 로그인_성공_테스트() throws Exception {
+		signUp();
+		mockMvc.perform(
+				post("/login").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+						.param("email", email)
+						.param("password", password)
+		).andDo(print())
+				.andExpect(redirectedUrl("/"));
+	}
+
+	@Test
+	void 로그인_실패_테스트() throws Exception {
+		mockMvc.perform(
+				post("/login").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+						.param("email", "wrong" + email)
+						.param("password", password)
+		).andDo(print())
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	void 회원_조회_테스트() throws Exception {
+		mockMvc.perform(get("/users").session(session))
+				.andDo(print())
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	void 회원_정보_조회() throws Exception {
+		mockMvc.perform(get("/mypage/edit").session(session))
+				.andDo(print())
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	void 회원_정보_수정() throws Exception {
+		signUp();
+		mockMvc.perform(
+				put("/mypage/edit")
+						.param("name", "whale")
+						.session(session)
+		).andDo(print())
+				.andExpect(redirectedUrl("/mypage"));
+	}
+
+	@Test
+	void 회원_정보_삭제() throws Exception {
+		signUp();
+		mockMvc.perform(
+				delete("/mypage/edit")
+						.session(session)
+		).andDo(print())
+				.andExpect(redirectedUrl("/logout"));
+	}
 }
