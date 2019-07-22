@@ -1,7 +1,5 @@
 package techcourse.myblog.application.dto;
 
-import techcourse.myblog.domain.User;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -26,6 +24,10 @@ public class UserDto {
     }
 
     public UserDto() {
+    }
+
+    public boolean compareEmail(String email) {
+        return email.equals(this.email);
     }
 
     public void setEmail(String email) {

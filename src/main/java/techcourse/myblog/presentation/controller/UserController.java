@@ -84,7 +84,7 @@ public class UserController {
         RedirectView redirectView = new RedirectView();
         String email = (String) httpSession.getAttribute("email");
 
-        if (user.getEmail().equals(email)) {
+        if (user.compareEmail(email)) {
             user.setEmail(email);
             userService.modify(user);
 
@@ -99,7 +99,7 @@ public class UserController {
         RedirectView redirectView = new RedirectView("/");
         String email = (String) httpSession.getAttribute("email");
 
-        if (user.getEmail().equals(email)) {
+        if (user.compareEmail(email)) {
             userService.removeById(email);
             httpSession.invalidate();
         }
