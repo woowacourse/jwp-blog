@@ -1,11 +1,13 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.web.controller.dto.UserDto;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
@@ -14,9 +16,19 @@ public class User {
     @GeneratedValue
     private Long id;
 
+    @Size(min = 2, max = 10)
+    @NotBlank
+    @Pattern(regexp = "^(?!.*[~`!@#$%\\^&*()-])(?!.*\\d).{2,10}$", message = "이름 사이즈는 2~10 크기 입니다.")
+    private String name;
+
+    @Email
     @Column(unique = true)
     private String email;
-    private String name;
+
+    @Size(min = 8, max = 14)
+    @NotBlank
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-z])(?=.*[A-Z]).{8,14}$",
+            message = "숫자, 특수문자와 대소문자를 포함한 8~14 크기입니다.")
     private String password;
 
     public User() {
@@ -28,17 +40,13 @@ public class User {
         this.password = password;
     }
 
-    public static User of(UserDto userDto) {
-        return new User(userDto.getName(), userDto.getEmail(), userDto.getPassword());
-    }
-
-    public User update(UserDto userDto) {
-        this.name = userDto.getName();
+    public User update(User updatedUser) {
+        this.name = updatedUser.name;
         return this;
     }
 
-    public boolean equalPassword(String password) {
-        return this.password.equals(password);
+    public boolean authenticate(String email, String password) {
+        return this.email.equals(email) && this.password.equals(password);
     }
 
     public Long getId() {
