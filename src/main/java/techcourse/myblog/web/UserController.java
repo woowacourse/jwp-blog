@@ -29,7 +29,7 @@ public class UserController {
 
 	@GetMapping("/signup")
 	public String signUpPage(HttpSession httpSession) {
-		if (httpSession.getAttribute("email") != null) {
+		if (!confirmSession(httpSession, "email")) {
 			return "redirect:/";
 		}
 		return "signup";
@@ -65,7 +65,7 @@ public class UserController {
 
 	@GetMapping("/mypage")
 	public String mypage(HttpSession httpSession, Model model) {
-		if (httpSession.getAttribute("email") == null) {
+		if (confirmSession(httpSession, "email")) {
 			return "redirect:/";
 		}
 		model.addAttribute("user", userRepository.findByEmail(httpSession.getAttribute("email").toString()).get());
@@ -74,7 +74,7 @@ public class UserController {
 
 	@GetMapping("/mypage/edit")
 	public String mypageEdit(HttpSession httpSession, Model model) {
-		if (httpSession.getAttribute("email") == null) {
+		if (confirmSession(httpSession, "email")) {
 			return "redirect:/";
 		}
 		model.addAttribute("user", userRepository.findByEmail(httpSession.getAttribute("email").toString()).get());
@@ -83,15 +83,16 @@ public class UserController {
 
 	@GetMapping("/leave")
 	public String leave(HttpSession httpSession) {
-		if (httpSession.getAttribute("email") == null) {
+		if (confirmSession(httpSession, "email")) {
 			return "redirect:/";
 		}
 		return "leave-user";
 	}
 
+
 	@DeleteMapping("/leave")
 	public String leaveUser(HttpSession httpSession, Model model, String password) {
-		if (httpSession.getAttribute("email") == null) {
+		if (confirmSession(httpSession, "email")) {
 			return "redirect:/";
 		}
 		String email = httpSession.getAttribute("email").toString();
@@ -106,6 +107,10 @@ public class UserController {
 
 		model.addAttribute("error", "비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
 		return "leave-user";
+	}
+
+	private boolean confirmSession(HttpSession httpSession, String attribute) {
+		return (httpSession.getAttribute("email") == null);
 	}
 
 	@PutMapping("/edit")
