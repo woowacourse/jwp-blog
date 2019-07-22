@@ -11,6 +11,7 @@ import techcourse.myblog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.StatusAssertions;
@@ -36,20 +37,9 @@ class UserControllerTests {
 	}
 
 	@Test
-	void getSignUpPage() {
-		webTestClient.get().uri("/signup")
-				.exchange()
-				.expectStatus()
-				.isOk();
-	}
-
-	@Test
 	void signUpSuccess() {
-		getStatusAssertionsForSignup("tiber", "tiber@naver.com", "asdfASDF123@!#$")
-				.isFound()
-				.expectHeader()
-				.valueMatches("Location", ".+/login");
-
+		StatusAssertions statusAssertions = requestForSignUp("tiber", "tiber@naver.com", "asdfASDF123@!#$");
+		checkRedirect(statusAssertions, "Location", ".+/login");
 		assertTrue(userRepository.findByEmail("tiber@naver.com").isPresent());
 	}
 
@@ -57,9 +47,7 @@ class UserControllerTests {
 	@EmptySource
 	@ValueSource(strings = {"t", "abcdefghijk", "tiber1", "tiber!"})
 	void signUpFailureDueToUsernameValue(String name) {
-		getStatusAssertionsForSignup(name, "tiber@naver.com", "asdfASDF1@")
-				.isOk();
-
+		requestForSignUp(name, "tiber@naver.com", "asdfASDF1@").isOk();
 		assertFalse(userRepository.findByEmail("tiber@naver.com").isPresent());
 	}
 
@@ -67,9 +55,7 @@ class UserControllerTests {
 	@EmptySource
 	@ValueSource(strings = {"t", "tibernavercom", "tibernaver.com"})
 	void signUpFailureDueToEmailValue(String email) {
-		getStatusAssertionsForSignup("tiber", email, "asdfASDF1@")
-				.isOk();
-
+		requestForSignUp("tiber", email, "asdfASDF1@").isOk();
 		assertFalse(userRepository.findByEmail(email).isPresent());
 	}
 
@@ -78,13 +64,11 @@ class UserControllerTests {
 	@ValueSource(strings = {"aA1!", "12345678", "abcedfgh", "ABCDEFGH", "!@#$%^&*", "aaaAAA111",
 			"aaa111!@#", "aaaAAA$%^", "AAA111%^&"})
 	void signUpFailureDueToPasswordValue(String password) {
-		getStatusAssertionsForSignup("tiber", "tiber@naver.com", password)
-				.isOk();
-
+		requestForSignUp("tiber", "tiber@naver.com", password).isOk();
 		assertFalse(userRepository.findByEmail("tiber@naver.com").isPresent());
 	}
 
-	private StatusAssertions getStatusAssertionsForSignup(String username, String email, String password) {
+	private StatusAssertions requestForSignUp(String username, String email, String password) {
 		return webTestClient.post()
 				.uri("/users")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -98,43 +82,42 @@ class UserControllerTests {
 
 	@Test
 	void users() {
-		webTestClient.get()
-				.uri("/users")
-				.exchange()
-				.expectStatus()
-				.isFound()
-				.expectHeader()
-				.valueMatches("Location", ".+/user-list");
+		StatusAssertions statusAssertions = request(HttpMethod.GET, "/users");
+		checkRedirect(statusAssertions, "Location", ".+/user-list");
+	}
+
+	@Test
+	void getSignUpPage() {
+		request(HttpMethod.GET, "/signup").isOk();
 	}
 
 	@Test
 	void userList() {
-		webTestClient.get()
-				.uri("/user-list")
-				.exchange()
-				.expectStatus()
-				.isOk();
+		request(HttpMethod.GET, "/user-list").isOk();
 	}
 
 	@Test
 	void moveMyPageFailureDueToNotLogin() {
-		webTestClient.get()
-				.uri("/mypage")
-				.exchange()
-				.expectStatus()
-				.isFound()
-				.expectHeader()
-				.valueMatches("Location", ".+/");
+		StatusAssertions statusAssertions = request(HttpMethod.GET, "/mypage");
+		checkRedirect(statusAssertions, "Location", ".+/");
 	}
 
 	@Test
 	void moveMyPageEditFailureDueToNotLogin() {
-		webTestClient.get()
-				.uri("/mypage/edit")
+		StatusAssertions statusAssertions = request(HttpMethod.GET, "/mypage/edit");
+		checkRedirect(statusAssertions, "Location", ".+/");
+	}
+
+	private StatusAssertions request(HttpMethod httpMethod, String requestURI) {
+		return webTestClient.method(httpMethod)
+				.uri(requestURI)
 				.exchange()
-				.expectStatus()
-				.isFound()
+				.expectStatus();
+	}
+
+	private void checkRedirect(StatusAssertions statusAssertions, String name, String redirectURLRegex) {
+		statusAssertions.isFound()
 				.expectHeader()
-				.valueMatches("Location", ".+/");
+				.valueMatches(name, redirectURLRegex);
 	}
 }

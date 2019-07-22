@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
@@ -38,45 +39,32 @@ class LoginControllerTests {
 		user.saveUser(userDto);
 		userRepository.save(user);
 	}
-
+	//TODO: SESSION TEST 수정 필요
 	@Test
 	void loginSuccess() {
-		webTestClient.post()
-				.uri("/login")
-				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-				.body(BodyInserters
-						.fromFormData("email", "tiber@naver.com")
-						.with("password", "asdfASDF1@"))
-				.exchange()
-				.expectStatus()
-				.isFound()
+		requestForLogin("tiber@naver.com", "asdfASDF1@").isFound()
 				.expectHeader()
 				.valueMatches("Set-Cookie", "JSESSIONID=.+");
 	}
 
 	@Test
 	void loginFailureDueToWrongEmail() {
-		webTestClient.post()
-				.uri("/login")
-				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-				.body(BodyInserters
-						.fromFormData("email", "ssosso@naver.com")
-						.with("password", "asdfASDF1@"))
-				.exchange()
-				.expectStatus()
-				.isOk();
+		requestForLogin("ssosso@naver.com", "asdfASDF1@").isOk();
 	}
 
 	@Test
 	void loginFailureDueToWrongPassword() {
-		webTestClient.post()
+		requestForLogin("tiber@naver.com", "wrongPassword").isOk();
+	}
+
+	private StatusAssertions requestForLogin(String email, String requestURI) {
+		return webTestClient.post()
 				.uri("/login")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.body(BodyInserters
-						.fromFormData("email", "tiber@naver.com")
-						.with("password", "wrongPassword"))
+						.fromFormData("email", email)
+						.with("password", requestURI))
 				.exchange()
-				.expectStatus()
-				.isOk();
+				.expectStatus();
 	}
 }

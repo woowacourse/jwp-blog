@@ -8,8 +8,10 @@ import techcourse.myblog.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
@@ -30,89 +32,67 @@ public class ArticleControllerTests {
 	private ArticleRepository articleRepository;
 
 	@Test
-	void index() {
-		webTestClient.get().uri("/")
-				.exchange()
-				.expectStatus()
-				.isOk();
+	void moveIndexPage() {
+		request(HttpMethod.GET, "/").isOk();
 	}
 
 	@Test
-	void articleForm() {
-		webTestClient.get().uri("/writing")
-				.exchange()
-				.expectStatus()
-				.isOk();
-	}
-
-	@Test
-	void saveArticle() {
-		webTestClient.post()
-				.uri("/articles")
-				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-				.body(BodyInserters
-						.fromFormData("title", title)
-						.with("coverUrl", coverUrl)
-						.with("contents", contents))
-				.exchange()
-				.expectStatus()
-				.isFound()
-				.expectHeader()
-				.valueMatches("Location", ".+/articles/[0-9]+");
-	}
-
-	@Test
-	void updateArticle() {
-		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
-
-		webTestClient.put()
-				.uri("/articles/" + articleId)
-				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-				.body(BodyInserters
-						.fromFormData("title", "updatedTitle")
-						.with("coverUrl", "updatedCoverUrl")
-						.with("contents", "updatedContents"))
-				.exchange()
-				.expectStatus()
-				.isFound()
-				.expectHeader()
-				.valueMatches("Location", ".+/articles/[1-9]+");
-	}
-
-	@Test
-	void lookUpArticle() {
-		articleRepository.save(new Article(title, contents, coverUrl));
-
-		webTestClient.get()
-				.uri("/")
-				.exchange()
-				.expectStatus()
-				.isOk();
+	void moveArticleWritingForm() {
+		request(HttpMethod.GET, "/writing").isOk();
 	}
 
 	@Test
 	void findByIndex() {
 		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
-
-		webTestClient.get()
-				.uri("/articles/" + articleId)
-				.exchange()
-				.expectStatus()
-				.isOk();
+		request(HttpMethod.GET, "/articles" + articleId).isOk();
 	}
 
 	@Test
 	void deleteArticle() {
 		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
-
-		webTestClient.delete()
-				.uri("/articles/" + articleId)
-				.exchange()
-				.expectStatus()
-				.isFound()
-				.expectHeader()
-				.valueMatches("Location", ".+/");
-
+		StatusAssertions statusAssertions = request(HttpMethod.DELETE, "/articles/"+articleId);
+		checkRedirect(statusAssertions, "Location", ".+/");
 		assertThat(articleRepository.findById(articleId)).isEmpty();
 	}
+	
+	private StatusAssertions request(HttpMethod httpMethod, String requestURI) {
+		return webTestClient
+				.method(httpMethod)
+				.uri(requestURI)
+				.exchange()
+				.expectStatus();
+	}
+
+	@Test
+	void saveArticle() {
+		StatusAssertions statusAssertions = articlePutOrPostRequest(HttpMethod.POST, "/articles", title, coverUrl, contents);
+		checkRedirect(statusAssertions, "Location", ".+/articles/[1-9][0-9]*");
+	}
+
+	@Test
+	void updateArticle() {
+		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+		StatusAssertions statusAssertions = articlePutOrPostRequest(HttpMethod.PUT, "/articles/" + articleId, "updatedTitle", "updatedCoverUrl", "updatedContents");
+		checkRedirect(statusAssertions, "Location", ".+/articles/[1-9][0-9]*");
+	}
+
+	private void checkRedirect(StatusAssertions statusAssertions, String name, String redirectURLRegex) {
+		statusAssertions.isFound()
+				.expectHeader()
+				.valueMatches(name, redirectURLRegex);
+	}
+
+	private StatusAssertions articlePutOrPostRequest(HttpMethod httpMethod, String requestURI, String title, String coverURL, String contents) {
+		return webTestClient
+				.method(httpMethod)
+				.uri(requestURI)
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.body(BodyInserters
+						.fromFormData("title", title)
+						.with("coverUrl", coverURL)
+						.with("contents", contents))
+				.exchange()
+				.expectStatus();
+	}
+
 }
