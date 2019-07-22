@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-<form th:method="put" action="/accounts/profile/edit" th:object="${userForm}" accept-charset="utf-8">
+<form th:method="put" action="/accounts/profile/edit" th:object="${userRequestDto}" accept-charset="utf-8">
     <input type="hidden" th:field="*{password}">
     <input type="hidden" th:field="*{id}">
     <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">

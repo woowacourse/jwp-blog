@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User.User;
-import techcourse.myblog.domain.User.UserForm;
+import techcourse.myblog.domain.User.UserRequestDto;
 import techcourse.myblog.domain.User.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,17 +34,17 @@ public class AccountController {
             return "redirect:/";
         }
 
-        model.addAttribute("userForm", new UserForm());
+        model.addAttribute("userRequestDto", new UserRequestDto());
         return "signup";
     }
 
     @PostMapping("/accounts/users")
-    public String processSignup(Model model, @Valid UserForm userForm, Errors errors) {
+    public String processSignup(Model model, @Valid UserRequestDto userRequestDto, Errors errors) {
         if (errors.hasErrors()) {
             return "signup";
         }
 
-        User user = userForm.toUser();
+        User user = userRequestDto.toUser();
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             errors.rejectValue("email", "0", EMAIL_DUPLICATION_ERROR_MSG);
             return "signup";
@@ -65,9 +65,9 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public String processLogin(UserForm userForm, HttpServletRequest request, Model model) {
-        Optional<User> user = userRepository.findByEmail(userForm.getEmail());
-        if (!user.isPresent() || !userForm.getPassword().equals(user.get().getPassword())) {
+    public String processLogin(UserRequestDto userRequestDto, HttpServletRequest request, Model model) {
+        Optional<User> user = userRepository.findByEmail(userRequestDto.getEmail());
+        if (!user.isPresent() || !userRequestDto.getPassword().equals(user.get().getPassword())) {
             model.addAttribute("error", LOGIN_ERROR_MSG);
             return "login";
         }
@@ -93,19 +93,19 @@ public class AccountController {
 
     @GetMapping("/accounts/profile/edit")
     public String showProfileEditPage(Model model, HttpSession session) {
-        model.addAttribute("userForm", new UserForm((User) session.getAttribute("user")));
+        model.addAttribute("userRequestDto", new UserRequestDto((User) session.getAttribute("user")));
         return "mypage-edit";
     }
 
     @PutMapping("/accounts/profile/edit")
-    public String processUpdateProfile(Model model, @Valid UserForm userForm, Errors errors, HttpServletRequest request) {
+    public String processUpdateProfile(Model model, @Valid UserRequestDto userRequestDto, Errors errors, HttpServletRequest request) {
         if (errors.hasErrors()) {
             return "mypage-edit";
         }
-        userRepository.save(userForm.toUser());
-        request.getSession().setAttribute("user", userForm.toUser());
+        userRepository.save(userRequestDto.toUser());
+        request.getSession().setAttribute("user", userRequestDto.toUser());
 
-        return "redirect:/accounts/profile/" + userForm.getId();
+        return "redirect:/accounts/profile/" + userRequestDto.getId();
     }
 
     @GetMapping("/users")

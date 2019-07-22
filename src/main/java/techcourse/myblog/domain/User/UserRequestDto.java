@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserForm {
+public class UserRequestDto {
     public static final String NAME_ERROR_MSG = "2글자 이상, 10글자 이하로 입력하세요. 숫자와 특수문자는 입력할 수 없습니다.";
     public static final String PASSWORD_ERROR_MSG = "소문자, 대문자, 숫자, 특수문자가 조합된 8글자 이상을 입력하세요.";
     public static final String EMAIL_ERROR_MSG = "이메일의 형식에 맞춰 입력하세요.";
@@ -27,7 +27,7 @@ public class UserForm {
     @Column(unique=true)
     private String email;
 
-    public UserForm(User user) {
+    public UserRequestDto(User user) {
         this.id = user.getId();
         this.name = user.getName();
         this.password = user.getPassword();
