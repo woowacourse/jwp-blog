@@ -15,7 +15,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @Controller
 public class ArticleController {
-    private static final Logger log = getLogger(ArticleController.class);
+    private static final Logger LOG = getLogger(ArticleController.class);
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -33,10 +33,10 @@ public class ArticleController {
     @PostMapping("/articles")
     public String createArticle(@ModelAttribute("article") final ArticleDto articleDto) {
         final Article article = new Article(articleDto);
-        log.trace("{}", article);
+        LOG.trace("{}", article);
         articleRepository.save(article);
         return "redirect:/articles/" + article.getId();
-    } // 현재 이후 라인의 코드는 작동 여부 보증 안 됨.
+    }
 
     @GetMapping("/articles/{id}")
     public ModelAndView showArticle(@PathVariable final Long id) {
