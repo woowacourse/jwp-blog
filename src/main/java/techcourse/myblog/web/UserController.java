@@ -38,6 +38,12 @@ public class UserController {
         return "signup";
     }
 
+    @GetMapping("/users")
+    public String userList(final Model model) {
+        model.addAttribute("users", userRepository.findAll());
+        return "user-list";
+    }
+
     @Transactional
     @PostMapping("/users")
     public String signup(final Model model, @Valid UserDto userDto) {
