@@ -57,9 +57,10 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String updateArticle(@PathVariable int articleId, Article article, Model model) {
-        article.setId(articleId);
-        Article newArticle = articleRepository.save(article);
-        model.addAttribute("article", newArticle);
+        Article dbArticle = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+        dbArticle.update(article);
+        articleRepository.save(dbArticle);
+        model.addAttribute("article", dbArticle);
         return "article";
     }
 
