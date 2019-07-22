@@ -14,8 +14,14 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
+    private ArticleRepository articleRepository;
+
     @Autowired
-    ArticleRepository articleRepository;
+    public HomeController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
+
+    ;
 
     private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 

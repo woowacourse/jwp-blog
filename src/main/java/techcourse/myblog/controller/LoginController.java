@@ -18,8 +18,12 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
+    private LoginService loginService;
+
     @Autowired
-    LoginService loginService;
+    public LoginController(LoginService loginService) {
+        this.loginService = loginService;
+    }
 
     @GetMapping("/login")
     public String loginForm(String loginError, Model model) {

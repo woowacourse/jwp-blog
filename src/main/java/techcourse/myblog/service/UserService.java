@@ -17,9 +17,14 @@ import java.util.List;
 @Service
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private UserRepository userRepository;
 
     @Autowired
-    UserRepository userRepository;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    ;
 
     public void save(UserDTO userDTO){
         if (isDuplicateEmail(userDTO)){

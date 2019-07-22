@@ -10,9 +10,13 @@ import techcourse.myblog.repository.UserRepository;
 
 @Service
 public class LoginService {
-
+    private UserRepository userRepository;
     @Autowired
-    UserRepository userRepository;
+    public LoginService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    ;
 
     public User getLoginUser(LoginDTO loginDTO) {
         User findUser = checkUser(loginDTO);

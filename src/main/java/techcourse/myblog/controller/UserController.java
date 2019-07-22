@@ -19,9 +19,12 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/users")
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private UserService userService;
 
     @Autowired
-    UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/signup")
     public String createForm(String signUpStatus, Model model) {

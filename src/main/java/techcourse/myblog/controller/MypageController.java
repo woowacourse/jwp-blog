@@ -15,8 +15,12 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class MypageController {
+    private UserService userService;
+
     @Autowired
-    UserService userService;
+    public MypageController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/mypage")
     public String myPage(HttpServletRequest request, Model model) {

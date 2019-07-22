@@ -10,8 +10,14 @@ import techcourse.myblog.repository.ArticleRepository;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
-    @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    public ArticleController(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
+
+    ;
 
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable("articleId") int articleId, Model model) {
