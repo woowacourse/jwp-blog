@@ -1,7 +1,5 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -28,15 +26,6 @@ public class ArticleControllerTestClient extends AuthedWebTestClient {
     @Autowired
     private ArticleRepository articleRepository;
 
-    @BeforeEach
-    void setUp() {
-        init();
-    }
-
-    @AfterEach
-    void tearDown() {
-        end();
-    }
 
     @Test
     void index() {
