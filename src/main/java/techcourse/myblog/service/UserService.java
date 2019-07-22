@@ -8,14 +8,15 @@ import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
-import techcourse.myblog.service.exception.UserArgumentException;
+import techcourse.myblog.domain.exception.UserArgumentException;
+import techcourse.myblog.service.exception.UserDeleteException;
 import techcourse.myblog.service.exception.UserUpdateException;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static techcourse.myblog.service.exception.UserArgumentException.EMAIL_DUPLICATION_MESSAGE;
-import static techcourse.myblog.service.exception.UserArgumentException.PASSWORD_CONFIRM_FAIL_MESSAGE;
+import static techcourse.myblog.domain.exception.UserArgumentException.EMAIL_DUPLICATION_MESSAGE;
+import static techcourse.myblog.domain.exception.UserArgumentException.PASSWORD_CONFIRM_FAIL_MESSAGE;
 
 @Service
 public class UserService {
@@ -70,7 +71,11 @@ public class UserService {
 
     @Transactional
     public void delete(Long id) {
-        articleRepository.deleteByUserId(id);
-        userRepository.deleteById(id);
+        try {
+            articleRepository.deleteByUserId(id);
+            userRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new UserDeleteException(e.getMessage());
+        }
     }
 }

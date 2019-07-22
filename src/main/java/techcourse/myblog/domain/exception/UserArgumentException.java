@@ -1,4 +1,4 @@
-package techcourse.myblog.service.exception;
+package techcourse.myblog.domain.exception;
 
 public class UserArgumentException extends RuntimeException {
     public static final String EMAIL_DUPLICATION_MESSAGE = "Email duplication!";

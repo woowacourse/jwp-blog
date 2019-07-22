@@ -9,6 +9,7 @@ import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
+import techcourse.myblog.service.exception.UserDeleteException;
 import techcourse.myblog.service.exception.UserUpdateException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,7 +72,7 @@ public class UserController {
         return (loggedInUser != null) && loggedInUser.getId().equals(id);
     }
 
-    @ExceptionHandler(NotFoundUserException.class)
+    @ExceptionHandler({NotFoundUserException.class, UserDeleteException.class})
     public String handleNotFoundUserException() {
         return "redirect:/";
     }

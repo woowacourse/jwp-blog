@@ -1,6 +1,6 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.service.exception.UserArgumentException;
+import techcourse.myblog.domain.exception.UserArgumentException;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static techcourse.myblog.service.exception.UserArgumentException.*;
+import static techcourse.myblog.domain.exception.UserArgumentException.*;
 
 @Entity
 public class User {

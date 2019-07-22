@@ -1,7 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.service.exception.UserArgumentException;
+import techcourse.myblog.domain.exception.UserArgumentException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
