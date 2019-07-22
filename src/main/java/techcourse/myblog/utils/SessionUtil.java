@@ -27,4 +27,8 @@ public class SessionUtil {
         log.info("Session : {} ", sessionInfo);
         return sessionInfo;
     }
+
+    public static boolean isNewSession(HttpSession session) {
+        return session.isNew();
+    }
 }

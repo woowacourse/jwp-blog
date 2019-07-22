@@ -28,8 +28,11 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login() {
-        return "login";
+    public String login(HttpSession session) {
+        if (SessionUtil.isNewSession(session)) {
+            return "login";
+        }
+        return "redirect:/";
     }
 
     @PostMapping("/logout")
@@ -54,8 +57,11 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String signupForm() {
-        return "signup";
+    public String signupForm(HttpSession session) {
+        if (SessionUtil.isNewSession(session)) {
+            return "signup";
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/mypage")
