@@ -23,10 +23,6 @@ public class User {
 	public User() {
 	}
 
-	public User(UserDto userDto) {
-		saveUser(userDto);
-	}
-
 	public void saveUser(UserDto userDto) {
 		this.username = userDto.getUsername();
 		this.password = userDto.getPassword();

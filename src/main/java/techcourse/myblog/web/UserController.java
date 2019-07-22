@@ -47,7 +47,8 @@ public class UserController {
 			return "/signup";
 		}
 
-		User user = new User(newUser);
+		User user = new User();
+		user.saveUser(newUser);
 		userRepository.save(user);
 		return "redirect:/login";
 	}
