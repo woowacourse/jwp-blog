@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.article.dto.ArticleDto;
 import techcourse.myblog.article.service.ArticleService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 @Controller
 @RequiredArgsConstructor
 public class ArticleController {
@@ -23,48 +20,37 @@ public class ArticleController {
     }
 
     @GetMapping("/writing")
-    public String renderCreatePage(HttpServletRequest request) {
-        if (checkSession(request)) return "redirect:/login";
+    public String renderCreatePage() {
         return "article-edit";
     }
 
     @PostMapping("/articles")
-    public String createArticle(ArticleDto.Create articleDto, HttpServletRequest request) {
-        if (checkSession(request)) return "redirect:/login";
+    public String createArticle(ArticleDto.Create articleDto) {
         long newArticleId = articleService.save(articleDto);
         return "redirect:/articles/" + newArticleId;
     }
 
     @GetMapping("/articles/{articleId}")
-    public String readArticle(@PathVariable long articleId, HttpServletRequest request, Model model) {
-        if (checkSession(request)) return "redirect:/login";
+    public String readArticle(@PathVariable long articleId, Model model) {
         model.addAttribute("article", articleService.findById(articleId));
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String renderUpdatePage(@PathVariable long articleId, HttpServletRequest request, Model model) {
-        if (checkSession(request)) return "redirect:/login";
+    public String renderUpdatePage(@PathVariable long articleId, Model model) {
         model.addAttribute("article", articleService.findById(articleId));
         return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable long articleId, ArticleDto.Update articleDto, HttpServletRequest request) {
-        if (checkSession(request)) return "redirect:/login";
+    public String updateArticle(@PathVariable long articleId, ArticleDto.Update articleDto) {
         long updatedArticleId = articleService.update(articleId, articleDto);
         return "redirect:/articles/" + updatedArticleId;
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable long articleId, HttpServletRequest request) {
-        if (checkSession(request)) return "redirect:/login";
+    public String deleteArticle(@PathVariable long articleId) {
         articleService.deleteById(articleId);
         return "redirect:/";
-    }
-
-    private boolean checkSession(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        return session == null;
     }
 }

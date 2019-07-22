@@ -17,12 +17,8 @@ public class LoginController {
     private final UserService userService;
 
     @GetMapping("/login")
-    public String renderLoginPage(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return "login";
-        }
-        return "redirect:/";
+    public String renderLoginPage() {
+        return "login";
     }
 
     @PostMapping("/login")
@@ -36,9 +32,7 @@ public class LoginController {
     @GetMapping("/logout")
     public RedirectView logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
+        session.invalidate();
         return new RedirectView("/");
     }
 }

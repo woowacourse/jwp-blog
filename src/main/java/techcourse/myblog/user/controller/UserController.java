@@ -22,22 +22,15 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/signup")
-    public String renderSignUpPage(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return "signup";
-        }
-        return "redirect:/";
+    public String renderSignUpPage() {
+        return "signup";
     }
 
     @PostMapping("/users")
-    public RedirectView createUser(
-            @Valid UserDto.Create userDto, BindingResult bindingResult) {
-
+    public RedirectView createUser(@Valid UserDto.Create userDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidSignUpFormException(bindingResult.getFieldError().getDefaultMessage());
         }
-
         userService.save(userDto);
         return new RedirectView("/login");
     }
@@ -59,9 +52,6 @@ public class UserController {
     @GetMapping("/mypage/{userId}/edit")
     public String renderEditMypage(@PathVariable long userId, HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
-        if (session == null) {
-            return "redirect:/login";
-        }
         UserDto.Response user = userService.findById(userId);
         UserDto.Response sessionUser = (UserDto.Response) session.getAttribute("user");
         if (!sessionUser.getEmail().equals(user.getEmail())) {
@@ -87,9 +77,6 @@ public class UserController {
     @DeleteMapping("/users/{userId}")
     public RedirectView deleteUser(@PathVariable long userId, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) {
-            return new RedirectView("/login");
-        }
         UserDto.Response user = userService.findById(userId);
         UserDto.Response sessionUser = (UserDto.Response) session.getAttribute("user");
         if (!sessionUser.getEmail().equals(user.getEmail())) {
