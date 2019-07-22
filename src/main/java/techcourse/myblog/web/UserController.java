@@ -36,6 +36,7 @@ public class UserController {
 
 	@PostMapping("/users")
 	public String save(final UserRequestDto.SignUpRequestDto signUpRequestDto, final Model model) {
+		//TODO 수정할 수 있으면 할 것
 		if (userService.exitsByEmail(signUpRequestDto)) {
 			model.addAttribute(ERROR_MESSAGE_NAME, "이메일이 중복됩니다");
 			return "user/signup";

@@ -2,62 +2,62 @@ package techcourse.myblog.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User.User;
 import techcourse.myblog.domain.User.UserRepository;
-import techcourse.myblog.exception.UserCreationException;
-import techcourse.myblog.exception.UserUpdateException;
 import techcourse.myblog.web.UserRequestDto;
 
 import java.util.NoSuchElementException;
 
+@Transactional
 @Service
 public class UserService {
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-	@Autowired
-	public UserService(final UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+    @Autowired
+    public UserService(final UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-	public User save(final UserRequestDto.SignUpRequestDto signUpRequestDto) {
-		return userRepository.save(signUpRequestDto.toUser());
-	}
+    public User save(final UserRequestDto.SignUpRequestDto signUpRequestDto) {
+        return userRepository.save(signUpRequestDto.toUser());
+    }
 
-	public User update(final UserRequestDto.UpdateRequestDto updateRequestDto) {
-		User user = userRepository.findByEmail(updateRequestDto.getEmail())
-				.orElseThrow(NoSuchElementException::new);
+    public User update(final UserRequestDto.UpdateRequestDto updateRequestDto) {
+        User user = findByEmail(updateRequestDto.getEmail());
+        return user.update(updateRequestDto.getName());
+    }
 
-		try {
-			User userUpdated = new User(user.getId(), updateRequestDto.getName(), updateRequestDto.getEmail(), user.getPassword());
-			return userRepository.save(userUpdated);
-		} catch (UserCreationException e) {
-			throw new UserUpdateException(e.getMessage());
-		}
-	}
+    private User findByEmail(final String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(NoSuchElementException::new);
+    }
 
-	public User findById(final long id) {
-		return userRepository.findById(id)
-				.orElseThrow(NoSuchElementException::new);
-	}
+    @Transactional(readOnly = true)
+    public User findById(final long id) {
+        return userRepository.findById(id)
+                .orElseThrow(NoSuchElementException::new);
+    }
 
-	public boolean exitsByEmail(final UserRequestDto.SignUpRequestDto signUpRequestDto) {
-		try {
-			return userRepository.existsByEmail(signUpRequestDto.getEmail());
-		} catch (NoSuchElementException e) {
-			return false;
-		}
-	}
+    public boolean exitsByEmail(final UserRequestDto.SignUpRequestDto signUpRequestDto) {
+        try {
+            return userRepository.existsByEmail(signUpRequestDto.getEmail());
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
 
-	public void deleteByEmail(final String email) {
-		User user = userRepository.findByEmail(email).orElseThrow(NoSuchElementException::new);
-		userRepository.deleteById(user.getId());
-	}
+    public void deleteByEmail(final String email) {
+        User user = findByEmail(email);
+        userRepository.deleteById(user.getId());
+    }
 
-	public Iterable<User> findAll() {
-		return userRepository.findAll();
-	}
+    @Transactional(readOnly = true)
+    public Iterable<User> findAll() {
+        return userRepository.findAll();
+    }
 
-	public void deleteAll() {
-		userRepository.deleteAll();
-	}
+    public void deleteAll() {
+        userRepository.deleteAll();
+    }
 }

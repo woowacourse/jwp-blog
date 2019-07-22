@@ -31,7 +31,7 @@ public class ArticleService {
 		Article article = articleRepository.findById(id)
 				.orElseThrow(NoSuchElementException::new);
 		article.update(articleParam);
-		return articleRepository.save(article).getId();
+		return article.getId();
 	}
 
 	public void deleteById(final long id) {

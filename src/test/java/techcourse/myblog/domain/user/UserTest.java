@@ -1,5 +1,6 @@
 package techcourse.myblog.domain.user;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.User.User;
 import techcourse.myblog.exception.UserCreationException;
@@ -20,14 +21,25 @@ public class UserTest {
 	}
 
 	@Test
-	public void 이름이_형식에_안맞을때_예외발생() {
+	@DisplayName("수정_테스트")
+	public void updateTest() {
+		final String modifyName = NAME + "mo";
+		User actual = new User(ID, NAME, EMAIL, PASSWORD);
+		actual = actual.update(modifyName);
+
+		User expected = new User(ID, modifyName, EMAIL, PASSWORD);
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void 이름이_형식을_위반할때_예외발생() {
 		assertThrows(UserCreationException.class, () -> {
 			new User(ID, "123", EMAIL, PASSWORD);
 		});
 	}
 
 	@Test
-	public void 비밀번호가_형식에_안맞을때_예외발생() {
+	public void 비밀번호가_형식을_위반할때_예외발생() {
 		assertThrows(UserCreationException.class, () -> {
 			new User(ID, NAME, EMAIL, "1234");
 		});

@@ -45,7 +45,7 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void 회원_조회_By_ID() {
+	public void ID로_회원_조회() {
 		UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
 		User expected = userService.save(signUpRequestDto);
 
@@ -77,7 +77,19 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void 이메일을_기준으로_회원_탈퇴() {
+	public void 회원_정보_변경() {
+		UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
+		User expected = userService.save(signUpRequestDto);
+
+		UserRequestDto.UpdateRequestDto updateRequestDto = new UserRequestDto.UpdateRequestDto(expected.getId(), NAME, EMAIL);
+		userService.update(updateRequestDto);
+
+		User actual = userService.findById(expected.getId());
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void 회원_탈퇴() {
 		UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
 		User user = userService.save(signUpRequestDto);
 

@@ -151,7 +151,8 @@ public class UserRequestDto {
 		}
 	}
 
-	public class UpdateRequestDto {
+	public static class UpdateRequestDto {
+
 		@NotNull
 		private Long id;
 
@@ -160,6 +161,16 @@ public class UserRequestDto {
 
 		@NotNull
 		private String email;
+
+		public UpdateRequestDto() {
+
+		}
+
+		public UpdateRequestDto(Long id, String name, String email) {
+			this.id = id;
+			this.name = name;
+			this.email = email;
+		}
 
 		public Long getId() {
 			return id;

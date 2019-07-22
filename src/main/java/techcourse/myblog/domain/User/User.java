@@ -43,6 +43,11 @@ public class User {
 		this.password = password;
 	}
 
+	public User update(final String name) {
+		validateName(name);
+		return new User(this.id, name, this.email, this.password);
+	}
+
 	private void validate(final String name, final String password) {
 		validateName(name);
 		validatePassword(password);
