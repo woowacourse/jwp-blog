@@ -42,7 +42,7 @@ public class UserController {
             throw new UserException("아이디가 올바르지 않습니다.");
         }
 
-        if (user.checkPassword(loginDto.getPassword())) {
+        if (!user.checkPassword(loginDto.getPassword())) {
             throw new UserException("올바르지 않은 비밀번호 입니다.");
         }
 
