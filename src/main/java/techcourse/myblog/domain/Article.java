@@ -13,7 +13,7 @@ import javax.persistence.Id;
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String title;
     private String contents;
     private String coverUrl;
