@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
+
     private final ArticleRepository articleRepository;
 
     @GetMapping("/")
