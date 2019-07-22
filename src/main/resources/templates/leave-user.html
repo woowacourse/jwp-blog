@@ -41,7 +41,7 @@
                                                             <button class="btn btn-tumblr" type="submit">회원탈퇴</button>
                                                         </div>
                                                     </form>
-                                                    <div class="alert alert-danger" id="erorrs" role="alert" th:if="${errors}" th:text="${errors}"></div>
+                                                    <div class="alert alert-danger" id="erorr" role="alert" th:if="${error}" th:text="${error}"></div>
                                                 </div>
                                             </div>`
                                         </div>
@@ -59,7 +59,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
 
-    var result = /*[[${result}]]*/ 'default';
+    var result = /*[[${result}]]*/ '';
     if(result != null) {
         alert(result);
         location.href = "/";

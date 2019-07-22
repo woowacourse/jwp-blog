@@ -104,7 +104,7 @@ public class UserController {
 			return "leave-user";
 		}
 
-		model.addAttribute("errors", "비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
+		model.addAttribute("error", "비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
 		return "leave-user";
 	}
 
