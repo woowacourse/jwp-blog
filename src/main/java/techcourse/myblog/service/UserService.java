@@ -3,12 +3,12 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.exception.NotFoundUserException;
 import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.web.controller.dto.LoginDto;
 import techcourse.myblog.web.controller.dto.UserDto;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -36,18 +36,18 @@ public class UserService {
 
     @Transactional
     public User update(String email, UserDto updatedUser) {
-        User user = findByEmail(email).orElseThrow(IllegalArgumentException::new);
+        User user = findByEmail(email).orElseThrow(NotFoundUserException::new);
         return user.update(updatedUser.getName());
     }
 
     public void remove(String email) {
-        User user = findByEmail(email).orElseThrow(NoSuchElementException::new);
+        User user = findByEmail(email).orElseThrow(NotFoundUserException::new);
         userRepository.delete(user);
     }
 
     @Transactional(readOnly = true)
     public Optional<User> login(LoginDto loginDto) {
-        User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(NotFoundUserException::new);
         if (user.authenticate(loginDto.getEmail(), loginDto.getPassword())) {
             return Optional.of(user);
         }
