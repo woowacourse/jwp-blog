@@ -19,8 +19,8 @@ import javax.validation.Valid;
 
 @Controller
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+    private static String redirectIndex = "redirect:/";
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -28,10 +28,12 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginForm(HttpSession httpSession, LoginDto loginDto) {
-        if (httpSession.getAttribute("user") != null) {
-            return "redirect:/";
-        }
+        if (checkSession(httpSession)) return redirectIndex;
         return "login";
+    }
+
+    private boolean checkSession(HttpSession httpSession) {
+        return httpSession.getAttribute("user") != null;
     }
 
     @PostMapping("/login")
@@ -57,25 +59,19 @@ public class UserController {
 
     @GetMapping("/mypage")
     public String showMyPage(HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
-        }
+        if (!checkSession(httpSession)) return redirectIndex;
         return "mypage";
     }
 
     @GetMapping("/mypage/edit")
     public String showMyPageEdit(HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
-        }
+        if (!checkSession(httpSession)) return redirectIndex;
         return "mypage-edit";
     }
 
     @PutMapping("/mypage/edit")
     public String updateUser(UserDto userDto, HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
-        }
+        if (!checkSession(httpSession)) return redirectIndex;
         User user = (User) httpSession.getAttribute("user");
         userDto.setEmail(user.getEmail());
         httpSession.setAttribute("user", userService.update(userDto));
@@ -85,9 +81,7 @@ public class UserController {
 
     @DeleteMapping("/mypage/edit")
     public String deleteUser(HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
-        }
+        if (!checkSession(httpSession)) return redirectIndex;
         User user = (User) httpSession.getAttribute("user");
         userService.remove(user.getEmail());
         return "redirect:/logout";
@@ -95,9 +89,7 @@ public class UserController {
 
     @GetMapping("/users")
     public String users(Model model, HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
-            return "redirect:/";
-        }
+        if (!checkSession(httpSession)) return redirectIndex;
         model.addAttribute("users", userService.findAll());
         return "user-list";
     }
@@ -107,7 +99,6 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "signup";
         }
-
         if (userService.exists(userDto.getEmail())) {
             model.addAttribute("errorMessage", "중복된 이메일입니다.");
             return "signup";
@@ -118,9 +109,7 @@ public class UserController {
 
     @GetMapping("/signup")
     public String singUp(UserDto userDto, HttpSession httpSession) {
-        if (httpSession.getAttribute("user") != null) {
-            return "redirect:/";
-        }
+        if (checkSession(httpSession)) return redirectIndex;
         return "signup";
     }
 }
