@@ -3,6 +3,7 @@ package techcourse.myblog.web;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
@@ -11,9 +12,8 @@ import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserLoginDto;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Controller
 @AllArgsConstructor
@@ -21,8 +21,6 @@ public class UserController {
     private static final String ERROR_MESSAGE = "message";
     private static final String SESSION_NAME = "name";
     private static final String SESSION_EMAIL = "signedEmail";
-    private static final String NAME_PATTERN = "^([a-zA-Z]){2,10}$";
-    private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,20}$";
 
     private final UserRepository userRepository;
 
@@ -35,16 +33,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String userLogin(UserLoginDto loginDto, HttpSession httpSession) {
+    public String userLogin(@Valid UserLoginDto loginDto, BindingResult bindingResult, HttpSession httpSession) {
+        if (bindingResult.hasErrors()) {
+            throw new UserException("아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
+
         User user = userRepository.findUserByEmail(loginDto.getEmail());
         if (Objects.isNull(user)) {
             throw new UserException("아이디가 올바르지 않습니다.");
         }
-        if (!user.checkPassword(loginDto.getPassword())) {
-            throw new UserException("패스워드가 올바르지 않습니다.");
-        }
 
-        httpSession.setAttribute("SESSION",user);
         httpSession.setAttribute(SESSION_NAME, user.getName());
         httpSession.setAttribute(SESSION_EMAIL, user.getEmail());
         return "redirect:/";
@@ -59,13 +57,14 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String signUp(UserDto userDto) {
-        if (validateUser(userDto)) {
-            User user = userDto.toEntity();
-            userRepository.save(user);
-            return "redirect:/login";
+    public String signUp(@Valid UserDto userDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new UserException("잘못된 입력입니다.");
         }
-        throw new UserException("잘못된 입력입니다.");
+
+        User user = userDto.toEntity();
+        userRepository.save(user);
+        return "redirect:/login";
     }
 
     @GetMapping("/mypage")
@@ -81,7 +80,7 @@ public class UserController {
     }
 
     @PutMapping("/mypage/save")
-    public String completeEditMypage(HttpSession httpSession, UserDto userDto) {
+    public String completeEditMypage(HttpSession httpSession, @Valid UserDto userDto, BindingResult bindingResult) {
         String sessionEmail = httpSession.getAttribute(SESSION_EMAIL).toString();
         String email = userDto.getEmail();
 
@@ -89,13 +88,12 @@ public class UserController {
             throw new UserException("잘못된 접근입니다.");
         }
 
-        if (!(validateName(userDto.getName()) && validatePassword(userDto.getPassword()))) {
+        if (bindingResult.hasErrors()) {
             throw new UserException("아이디와 비밀번호가 올바르지 않습니다.");
         }
 
         User user = userRepository.findUserByEmail(userDto.getEmail());
         user.update(userDto);
-
         userRepository.save(user);
         httpSession.setAttribute(SESSION_NAME, user.getName());
 
@@ -127,31 +125,6 @@ public class UserController {
         redirectAttributes.addFlashAttribute(ERROR_MESSAGE, e.getMessage());
         return "redirect:/err";
     }
-
-    private boolean validateUser(UserDto userDto) {
-        return validateName(userDto.getName())
-                && validatePassword(userDto.getPassword())
-                && validateEmail(userDto.getEmail());
-    }
-
-    private boolean validateName(String name) {
-        Pattern pattern = Pattern.compile(NAME_PATTERN);
-        Matcher matcher = pattern.matcher(name);
-
-        return matcher.matches();
-    }
-
-    private boolean validatePassword(String password) {
-        Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
-        Matcher matcher = pattern.matcher(password);
-
-        return matcher.matches();
-    }
-
-    private boolean validateEmail(String email) {
-        return Objects.isNull(userRepository.findUserByEmail(email));
-    }
-
 
     private boolean checkLogedIn(HttpSession httpSession) {
         return !Objects.isNull(httpSession.getAttribute(SESSION_EMAIL));
