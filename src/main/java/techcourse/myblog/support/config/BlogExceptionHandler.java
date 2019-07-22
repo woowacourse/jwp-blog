@@ -29,9 +29,9 @@ public class BlogExceptionHandler {
     }
 
     @ExceptionHandler(NoArticleException.class)
-    public String handleNoArticleException(NoArticleException e, RedirectAttributes redirectAttributes) {
+    public String handleNoArticleException(NoArticleException e, Model model) {
         ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
-        redirectAttributes.addFlashAttribute("error", errorMessage);
-        return "redirect:/";
+        model.addAttribute("error", errorMessage);
+        return "404";
     }
 }
