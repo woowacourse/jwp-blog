@@ -61,8 +61,7 @@ public class UserService {
     public void modify(@Valid UserDto userDto) {
         User user = userRepository.findById(userDto.getEmail())
                 .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/"));
-        user.updateName(userDto.getName());
-        user.updatePassword(userDto.getPassword());
+        user.modify(userConverter.convertFromDto(userDto));
     }
 
     @Transactional

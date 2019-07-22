@@ -8,7 +8,6 @@ import techcourse.myblog.application.service.exception.NotExistArticleIdExceptio
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,9 +42,7 @@ public class ArticleService {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new NotExistArticleIdException(""));
 
-        article.changeContents(articleDto.getContents());
-        article.changeCoverUrl(articleDto.getCoverUrl());
-        article.changeTitle(articleDto.getTitle());
+        article.modify(articleConverter.convertFromDto(articleDto));
     }
 
     @Transactional(readOnly = true)

@@ -42,11 +42,8 @@ public class User {
         return password;
     }
 
-    public void updatePassword(String password) {
-        this.password = password;
-    }
-
-    public void updateName(String name) {
-        this.name = name;
+    public void modify(User user) {
+        this.name = user.getName();
+        this.password = user.getPassword();
     }
 }
