@@ -32,7 +32,7 @@
                                                                 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
-                                                    <form action="/users" method="post" name="userinfo"
+                                                    <form action="/signup" method="post" name="userinfo"
                                                           onsubmit="validate(event)">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
@@ -66,6 +66,10 @@
                                                         <span>이미 회원이신가요?</span>
                                                         <a class="text-info pointer mrg-left-5"
                                                            href="login">로그인</a>
+                                                    </div>
+                                                    <div>
+                                                        <th:block th:if="${error} != null"
+                                                                  th:include="/common/error"></th:block>
                                                     </div>
                                                 </div>
                                             </div>
