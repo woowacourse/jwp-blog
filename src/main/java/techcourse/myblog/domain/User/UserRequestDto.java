@@ -1,6 +1,5 @@
 package techcourse.myblog.domain.User;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,7 +23,6 @@ public class UserRequestDto {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~`!@#$%\\^&*()-]).{8,}$", message = PASSWORD_ERROR_MSG)
     private String password;
     @Email(message = EMAIL_ERROR_MSG)
-    @Column(unique=true)
     private String email;
 
     public UserRequestDto(User user) {

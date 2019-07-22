@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/accounts/users")
-    public String processSignup(Model model, @Valid UserRequestDto userRequestDto, Errors errors) {
+    public String processSignup(@Valid UserRequestDto userRequestDto, Errors errors) {
         if (errors.hasErrors()) {
             return "signup";
         }
