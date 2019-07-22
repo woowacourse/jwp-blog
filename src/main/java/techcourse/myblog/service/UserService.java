@@ -6,7 +6,6 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 
 @Service
 public class UserService {
@@ -58,7 +57,6 @@ public class UserService {
                                                 });
     }
 
-    @Transactional
     public UserQueryResult tryUpdate(String name, String email, HttpSession session) {
         return userRepository.findByEmail((String) session.getAttribute("email")).map(user -> {
             if (!user.getEmail().equals(email) && userRepository.findByEmail(email).isPresent()) {

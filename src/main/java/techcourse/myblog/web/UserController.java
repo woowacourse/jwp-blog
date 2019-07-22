@@ -15,8 +15,6 @@ import javax.transaction.Transactional;
 
 @Controller
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
-
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -102,6 +100,7 @@ public class UserController {
         return userService.tryRender(model, session) ? "mypage-edit" : "redirect:/";
     }
 
+    @Transactional
     @PutMapping("/profile/edit")
     public RedirectView profileEdit(
             String name,

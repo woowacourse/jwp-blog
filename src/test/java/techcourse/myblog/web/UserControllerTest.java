@@ -172,7 +172,6 @@ class UserControllerTest {
                                     .param("email", testEmail)
         ).andDo(print())
         .andExpect(redirectedUrl("/login"));
-
     }
 
     @Test
