@@ -44,7 +44,7 @@ public class UserService {
         return UserAssembler.writeDtos(userRepository.findAll());
     }
 
-    public User findUserByEmailAndPassword(String email) {
+    public User findUserByEmail(String email) {
         User user = userRepository.findUserByEmail(email);
 
         if (user == null) {
@@ -59,12 +59,13 @@ public class UserService {
         String email = userDto.getEmail();
         String password = userDto.getPassword();
 
-        User user = userRepository.findUserByEmail(email);
+        User user = userRepository.findUserByEmail(email); // 이 부분
         if (user == null) {
             log.debug("{} {}", LOG_TAG, "존재하지 않는 회원의 정보는 수정할 수 없음");
             throw new NoSuchUserException();
         }
-        userRepository.save(new User(user.getUserId(), updatedName, email, password));
+        userRepository.save(new User(user.getUserId(), updatedName, email, password)); // 이 부분의
+        // TODO 쿼리가 어떻게 날아가는지 확인해보기
     }
 
     public void deleteUser(long userId) {

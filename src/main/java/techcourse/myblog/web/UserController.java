@@ -59,7 +59,7 @@ public class UserController {
         String email = (String) httpSession.getAttribute("email");
 
         if (email != null) {
-            User user = userService.findUserByEmailAndPassword(email);
+            User user = userService.findUserByEmail(email);
             model.addAttribute("user", UserAssembler.writeDto(user));
 
             return "mypage";
@@ -73,7 +73,7 @@ public class UserController {
         String email = (String) httpSession.getAttribute("email");
 
         if (email != null) {
-            User user = userService.findUserByEmailAndPassword(email);
+            User user = userService.findUserByEmail(email);
             model.addAttribute("user", UserAssembler.writeDto(user));
 
             return "mypage-edit";
