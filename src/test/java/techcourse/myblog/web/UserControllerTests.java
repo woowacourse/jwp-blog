@@ -15,7 +15,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.domain.repository.UserRepository;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpMethod.*;
 import static techcourse.myblog.dto.UserDto.*;
-import static techcourse.myblog.web.UserController.*;
+import static techcourse.myblog.service.UserService.*;
 
 @ExtendWith(SpringExtension.class)
 class UserControllerTests extends ControllerTestTemplate {
@@ -180,14 +180,14 @@ class UserControllerTests extends ControllerTestTemplate {
         UserDto victim = new UserDto("victim", "victim@email", "password");
         userRepository.save(victim.toUser());
 
-        loginAndRequest(DELETE, "/users/" + victim.getEmail()).isFound();
+        loginAndRequest(DELETE, "/users").isFound();
         assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isTrue();
         assertThat(userRepository.findByEmail(victim.getEmail()).isPresent()).isTrue();
     }
 
     @Test
     void 로그인상태_자기자신_탈퇴시도_성공() {
-        loginAndRequest(DELETE, "/users/" + savedUserDto.getEmail()).isFound();
+        loginAndRequest(DELETE, "/users").isFound();
         assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isFalse();
     }
 
