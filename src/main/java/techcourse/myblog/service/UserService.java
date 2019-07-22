@@ -51,7 +51,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Optional<User> login(LoginDto loginDto) {
-        User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(NotFoundUserException::new);
+        User user = userRepository.findByEmail(loginDto.getEmail())
+                .orElseThrow(() -> new NotFoundUserException("이메일과 비밀번호를 다시 확인해주세요."));
         if (user.authenticate(loginDto.getEmail(), loginDto.getPassword())) {
             return Optional.of(user);
         }
