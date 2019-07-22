@@ -5,11 +5,19 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
+@Getter
+@Setter
 @EqualsAndHashCode(of = {"id"})
 @ToString
-@Data
-@NoArgsConstructor
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String name;
+    private String password;
+    private String email;
+
     public User(String name, String password, String email) {
         this.name = name;
         this.password = password;
@@ -22,10 +30,4 @@ public class User {
         this.password = password;
         this.email = email;
     }
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String name;
-    private String password;
-    private String email;
 }
