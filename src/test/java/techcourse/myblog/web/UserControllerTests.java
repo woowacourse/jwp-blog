@@ -3,6 +3,9 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import techcourse.myblog.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +45,7 @@ class UserControllerTests {
 
 	@Test
 	void signUpSuccess() {
-		getStatusAssertionsForSignup("tiber", "tiber@naver.com", "asdfASDF1@")
+		getStatusAssertionsForSignup("tiber", "tiber@naver.com", "asdfASDF123@!#$")
 				.isFound()
 				.expectHeader()
 				.valueMatches("Location", ".+/login");
@@ -50,25 +53,32 @@ class UserControllerTests {
 		assertTrue(userRepository.findByEmail("tiber@naver.com").isPresent());
 	}
 
-	@Test
-	void signUpFailureDueToUsernameValue() {
-		getStatusAssertionsForSignup("t", "tiber@naver.com", "asdfASDF1@")
+	@ParameterizedTest
+	@EmptySource
+	@ValueSource(strings = {"t", "abcdefghijk", "tiber1", "tiber!"})
+	void signUpFailureDueToUsernameValue(String name) {
+		getStatusAssertionsForSignup(name, "tiber@naver.com", "asdfASDF1@")
 				.isOk();
 
 		assertFalse(userRepository.findByEmail("tiber@naver.com").isPresent());
 	}
 
-	@Test
-	void signUpFailureDueToEmailValue() {
-		getStatusAssertionsForSignup("tiber", "tibernaver.com", "asdfASDF1@")
+	@ParameterizedTest
+	@EmptySource
+	@ValueSource(strings = {"t", "tibernavercom", "tibernaver.com"})
+	void signUpFailureDueToEmailValue(String email) {
+		getStatusAssertionsForSignup("tiber", email, "asdfASDF1@")
 				.isOk();
 
-		assertFalse(userRepository.findByEmail("tibernaver.com").isPresent());
+		assertFalse(userRepository.findByEmail(email).isPresent());
 	}
 
-	@Test
-	void signUpFailureDueToPasswordValue() {
-		getStatusAssertionsForSignup("tiber", "tiber@naver.com", "aB1")
+	@ParameterizedTest
+	@EmptySource
+	@ValueSource(strings = {"aA1!", "12345678", "abcedfgh", "ABCDEFGH", "!@#$%^&*", "aaaAAA111",
+			"aaa111!@#", "aaaAAA$%^", "AAA111%^&"})
+	void signUpFailureDueToPasswordValue(String password) {
+		getStatusAssertionsForSignup("tiber", "tiber@naver.com", password)
 				.isOk();
 
 		assertFalse(userRepository.findByEmail("tiber@naver.com").isPresent());
