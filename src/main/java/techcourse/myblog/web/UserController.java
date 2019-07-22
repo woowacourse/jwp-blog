@@ -10,6 +10,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.*;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.translator.ModelTranslator;
 import techcourse.myblog.translator.UserTranslator;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +23,11 @@ import java.util.Optional;
 public class UserController {
 
     private final UserRepository userRepository;
-    private final UserTranslator userTranslator;
+    private final ModelTranslator<User, UserDto> userTranslator;
 
-    public UserController(final UserRepository userRepository, final UserTranslator userTranslator) {
+    public UserController(final UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.userTranslator = userTranslator;
+        this.userTranslator = new UserTranslator();
     }
 
     @GetMapping

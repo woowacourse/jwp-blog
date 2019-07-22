@@ -11,6 +11,7 @@ import techcourse.myblog.exception.ArticleInputException;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.translator.ArticleTranslator;
+import techcourse.myblog.translator.ModelTranslator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -19,11 +20,11 @@ import javax.validation.Valid;
 public class ArticleController {
 
     private final ArticleRepository articleRepository;
-    private final ArticleTranslator articleTranslator;
+    private final ModelTranslator<Article, ArticleDto> articleTranslator;
 
-    public ArticleController(final ArticleRepository articleRepository, final ArticleTranslator articleTranslator) {
+    public ArticleController(final ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
-        this.articleTranslator = articleTranslator;
+        this.articleTranslator = new ArticleTranslator();
     }
 
     @GetMapping("/")

@@ -1,10 +1,8 @@
 package techcourse.myblog.translator;
 
-import org.springframework.stereotype.Component;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
 
-@Component
 public class ArticleTranslator implements ModelTranslator<Article, ArticleDto> {
     @Override
     public Article toEntity(final Article article, final ArticleDto articleDto) {
