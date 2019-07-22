@@ -5,13 +5,13 @@ import techcourse.myblog.dto.request.UserDto;
 import techcourse.myblog.dto.request.UserEditProfileDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserTests {
 	@Test
 	void saveWithUserDto() {
 		UserDto userDto = createUserDto();
-
 		User user = new User();
 		user.saveUser(userDto);
 
@@ -22,12 +22,14 @@ public class UserTests {
 
 	@Test
 	void matchPassword() {
-		UserDto userDto = createUserDto();
-
-		User user = new User();
-		user.saveUser(userDto);
-
+		User user = createUser();
 		assertTrue(user.matchPassword("asdfASDF1@"));
+	}
+
+	@Test
+	void dontMatchPassword() {
+		User user = createUser();
+		assertFalse(user.matchPassword("dontMatchPassword!"));
 	}
 
 	@Test

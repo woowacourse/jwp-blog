@@ -24,4 +24,5 @@ dependencies {
         exclude group: 'junit'
     }
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+	testCompile("org.junit.jupiter:junit-jupiter-params:5.4.2")
 }
