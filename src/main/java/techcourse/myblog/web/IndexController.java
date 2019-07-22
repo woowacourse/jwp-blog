@@ -4,8 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.BlogName;
+import techcourse.myblog.repository.ArticleRepository;
 
 @Controller
 public class IndexController {

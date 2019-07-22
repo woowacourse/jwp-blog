@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,11 +8,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.repository.ArticleRepository;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Controller
 public class ArticleController {
+    private static final Logger log = getLogger(ArticleController.class);
+
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -28,6 +33,7 @@ public class ArticleController {
     @PostMapping("/articles")
     public String createArticle(@ModelAttribute("article") final ArticleDto articleDto) {
         final Article article = new Article(articleDto);
+        log.trace("{}", article);
         articleRepository.save(article);
         return "redirect:/articles/" + article.getId();
     } // 현재 이후 라인의 코드는 작동 여부 보증 안 됨.
@@ -48,7 +54,7 @@ public class ArticleController {
     @PutMapping("/articles/{articleId}")
     public RedirectView editArticle(@PathVariable final Long articleId, @ModelAttribute("article") final ArticleDto articleDto) {
         final Article article = articleRepository.findById(articleId).get();
-        article.changeArticle(articleDto);
+        article.write(articleDto);
         articleRepository.save(article);
         return new RedirectView("/articles/" + article.getId());
     }
