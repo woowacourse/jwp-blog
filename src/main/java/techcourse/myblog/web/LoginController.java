@@ -18,7 +18,6 @@ import java.util.Optional;
 public class LoginController {
     UserRepository userRepository;
 
-    @Autowired
     public LoginController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

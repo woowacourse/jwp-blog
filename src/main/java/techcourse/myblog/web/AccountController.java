@@ -13,14 +13,12 @@ import techcourse.myblog.domain.UserRepository;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Controller
 public class AccountController {
     private UserRepository userRepository;
 
-    @Autowired
     public AccountController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

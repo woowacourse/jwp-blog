@@ -9,7 +9,6 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-@ToString
 @EqualsAndHashCode
 public class Article {
     @Id

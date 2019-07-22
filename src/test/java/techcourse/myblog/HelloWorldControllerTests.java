@@ -47,21 +47,4 @@ public class HelloWorldControllerTests {
                         Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
 
     }
-
-   /* @Test
-    void passParamWithPost2() {
-        String blogName = "helloWrold";
-        Map<String, String> params = new HashMap();
-        params.put("blogName", blogName);
-
-        webTestClient.post()
-                .uri("/helloworld")
-                .body(Mono.just(params), Map.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response ->
-                        Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
-
-    }*/
 }
