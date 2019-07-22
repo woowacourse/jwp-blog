@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.exception.NotFoundUserException;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.web.controller.dto.LoginDto;
 import techcourse.myblog.web.controller.dto.UserDto;
+import techcourse.myblog.web.exception.CouldNotRegisterException;
+import techcourse.myblog.web.exception.LoginFailException;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -25,29 +28,25 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String signUp(UserDto userDto) {
+    public String signUp() {
         return "signup";
     }
 
     @GetMapping("/login")
-    public String loginForm(LoginDto loginDto) {
+    public String loginForm() {
         return "login";
     }
 
     @PostMapping("/login")
     public String login(@Valid LoginDto loginDto, BindingResult bindingResult, HttpSession httpSession, Model model) {
         if (bindingResult.hasErrors()) {
-            return "login";
-        }
-        // TODO: 2019-07-22 IllegalArgumentException -> Controller advice!!
-        Optional<User> user = userService.login(loginDto);
-        if (user.isPresent()) {
-            httpSession.setAttribute("user", user.get());
-            return "redirect:/";
+            throw new LoginFailException(bindingResult.getFieldError().getDefaultMessage());
         }
 
-        model.addAttribute("errorMessage", "이메일과 비밀번호를 다시 확인해주세요.");
-        return "login";
+        Optional<User> user = userService.login(loginDto);
+        httpSession.setAttribute("user",
+                user.orElseThrow(() -> new NotFoundUserException("이메일과 비밀번호를 다시 확인해주세요.")));
+        return "redirect:/";
     }
 
     @GetMapping("/logout")
@@ -89,16 +88,15 @@ public class UserController {
 
 
     @PostMapping("/user")
-    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
+    public String createUser(@Valid UserDto userDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "signup";
-        }
-
-        if (userService.findByEmail(userDto.getEmail()).isPresent()) {
-            model.addAttribute("errorMessage", "중복된 이메일입니다.");
-            return "signup";
+            throw new CouldNotRegisterException(getErrorMessage(bindingResult));
         }
         userService.save(userDto);
         return "redirect:/login";
+    }
+
+    private String getErrorMessage(BindingResult bindingResult) {
+        return bindingResult.getFieldError().getField() + "이(가) " + bindingResult.getFieldError().getDefaultMessage();
     }
 }

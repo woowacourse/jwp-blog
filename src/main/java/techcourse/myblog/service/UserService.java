@@ -7,6 +7,7 @@ import techcourse.myblog.domain.exception.NotFoundUserException;
 import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.web.controller.dto.LoginDto;
 import techcourse.myblog.web.controller.dto.UserDto;
+import techcourse.myblog.web.exception.CouldNotRegisterException;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +27,9 @@ public class UserService {
     }
 
     public User save(UserDto userDto) {
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            throw new CouldNotRegisterException("중복된 이메일입니다.");
+        }
         return userRepository.save(new User(userDto.getName(), userDto.getEmail(), userDto.getPassword()));
     }
 

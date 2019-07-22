@@ -1,22 +1,29 @@
 package techcourse.myblog.web.exceptionhandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import techcourse.myblog.domain.exception.NotFoundUserException;
-import techcourse.myblog.web.controller.dto.LoginDto;
+import techcourse.myblog.web.exception.CouldNotRegisterException;
+import techcourse.myblog.web.exception.LoginFailException;
 
 @ControllerAdvice
 public class ExceptionController {
-    private static final Logger log = LoggerFactory.getLogger(ExceptionController.class);
-
     @ExceptionHandler(NotFoundUserException.class)
     public String abc(NotFoundUserException e, Model model) {
-        model.addAttribute("loginDto", new LoginDto());
-        model.addAttribute("errorMessage", "이메일과 비밀번호를 다시 확인해주세요.");
-        log.error(e.getMessage());
+        model.addAttribute("errorMessage", e.getMessage());
         return "login";
+    }
+
+    @ExceptionHandler(LoginFailException.class)
+    public String failLogin(LoginFailException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "login";
+    }
+
+    @ExceptionHandler(CouldNotRegisterException.class)
+    public String failSignUp(CouldNotRegisterException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "signup";
     }
 }
