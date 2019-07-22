@@ -96,7 +96,6 @@ public class UserController {
             return new RedirectView("/");
         }
         userService.deleteById(userId);
-        session.invalidate();
-        return new RedirectView("/");
+        return new RedirectView("/logout");
     }
 }
