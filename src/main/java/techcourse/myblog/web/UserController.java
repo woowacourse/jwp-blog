@@ -92,7 +92,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @DeleteMapping("/delete/user")
+    @DeleteMapping("/user")
     public String deleteUser(HttpSession httpSession) {
         String email = httpSession.getAttribute(SESSION_EMAIL).toString();
 
