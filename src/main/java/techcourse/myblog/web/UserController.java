@@ -75,7 +75,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public RedirectView registerUser(
+    public RedirectView signup(
             String name,
             String email,
             String password,
@@ -119,7 +119,7 @@ public class UserController {
     }
 
     @PutMapping("/profile/edit")
-    public RedirectView profileEditConfirm(
+    public RedirectView profileEdit(
             String name,
             String email,
             HttpSession session,

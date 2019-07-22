@@ -48,7 +48,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    void showWritingFormTest() throws Exception {
+    void writingFormTest() throws Exception {
         mockMvc.perform(get("/writing"))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -135,7 +135,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    void articleDeleteTest() throws Exception {
+    void deleteTest() throws Exception {
         final Article written = articleRepository.save(testArticle);
         mockMvc.perform(delete("/articles/" + written.getId()));
         assertThat(articleRepository.count()).isEqualTo(0L);

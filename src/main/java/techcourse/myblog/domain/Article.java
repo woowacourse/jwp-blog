@@ -11,6 +11,7 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String title;
     private String coverUrl;
     private String contents;
@@ -63,14 +64,14 @@ public class Article {
         if (!(o instanceof Article)) {
             return false;
         }
-        Article article = (Article) o;
-        return Objects.equals(this.title, article.title) &&
-                Objects.equals(this.coverUrl, article.coverUrl) &&
-                Objects.equals(this.contents, article.contents);
+        Article rhs = (Article) o;
+        return Objects.equals(this.title, rhs.title) &&
+                Objects.equals(this.coverUrl, rhs.coverUrl) &&
+                Objects.equals(this.contents, rhs.contents);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this,id, this.title, this.coverUrl, this.contents);
+        return Objects.hash(this.id, this.title, this.coverUrl, this.contents);
     }
 }

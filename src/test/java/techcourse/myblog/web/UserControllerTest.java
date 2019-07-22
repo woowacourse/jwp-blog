@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -28,12 +27,10 @@ class UserControllerTest {
     private static final User testUser = new User(testName, testEmail, testPassword);
 
     @Autowired
-    private WebTestClient webTestClient;
-    @Autowired
     private UserRepository userRepository;
-    private MockMvc mockMvc;
     @Autowired
     private WebApplicationContext webApplicationContext;
+    private MockMvc mockMvc;
     private MockHttpSession session;
 
     @BeforeEach
@@ -49,6 +46,7 @@ class UserControllerTest {
     void tearDown() {
         session.clearAttributes();
         session = null;
+        userRepository.deleteAll();
     }
 
     @Test
@@ -85,21 +83,21 @@ class UserControllerTest {
     }
 
     @Test
-    void showUserListTest() throws Exception {
+    void userListTest() throws Exception {
         mockMvc.perform(get("/users"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
-    void showSignupFormTest() throws Exception {
+    void signupFormTest() throws Exception {
         mockMvc.perform(get("/signup"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
-    void registerUserTest() throws Exception {
+    void signupTest() throws Exception {
         final String newName = "도나쓰";
         final String newEmail = "donatsu@woowa.com";
         final String newPassword = "qwer1234";
@@ -141,7 +139,7 @@ class UserControllerTest {
     }
 
     @Test
-    void showProfileEditFormTest() throws Exception {
+    void profileEditFormTest() throws Exception {
         mockMvc.perform(get("/profile/edit").session(session))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -151,8 +149,15 @@ class UserControllerTest {
     }
 
     @Test
-    void confirmProfileEditTest() throws Exception {
+    void profileEditTest() throws Exception {
         final String newName = "donatsu";
+        mockMvc.perform(
+                put("/profile/edit").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                    .param("name", testName)
+                                    .param("email", "wrongEmail")
+                                    .session(session)
+        ).andDo(print())
+        .andExpect(redirectedUrl("/profile/edit"));
         mockMvc.perform(
                 put("/profile/edit").contentType(MediaType.APPLICATION_FORM_URLENCODED)
                                     .param("name", newName)
@@ -161,6 +166,12 @@ class UserControllerTest {
         ).andDo(print())
         .andExpect(redirectedUrl("/profile"));
         assertThat(userRepository.findByEmail(testEmail).get().getName().equals(newName));
+        mockMvc.perform(
+                put("/profile/edit").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                    .param("name", testName)
+                                    .param("email", testEmail)
+        ).andDo(print())
+        .andExpect(redirectedUrl("/login"));
 
     }
 
