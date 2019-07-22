@@ -1,11 +1,21 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Entity
+@RequiredArgsConstructor
 @Getter
+@EqualsAndHashCode
+@ToString
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +30,6 @@ public class Article {
     @Column(nullable = false)
     private String contents;
 
-    public Article() {
-    }
-
     public Article(String title, String coverUrl, String contents) {
         this.title = title;
         this.contents = contents;
@@ -33,15 +40,5 @@ public class Article {
         title = article.getTitle();
         coverUrl = article.getCoverUrl();
         contents = article.getContents();
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", contents='" + contents + '\'' +
-                '}';
     }
 }

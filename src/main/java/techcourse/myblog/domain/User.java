@@ -6,14 +6,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import techcourse.myblog.domain.exception.InvalidEmailFormatException;
 import techcourse.myblog.domain.exception.InvalidPasswordFormatException;
 
 @Slf4j
 @Entity
+@RequiredArgsConstructor
 @Getter
+@EqualsAndHashCode
+@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +34,6 @@ public class User {
 
     @Column(nullable = false)
     private String password;
-
-    public User() {
-    }
 
     public User(String name, String email, String password) {
         try {
