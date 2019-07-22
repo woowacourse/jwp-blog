@@ -31,16 +31,16 @@ class UserRepositoryTest {
 
     @Test
     void 유저_이메일_정보로_유저_찾기() {
-        assertThat(userRepository.findUserByEmailAddress(TEST_EMAIL_1).getUserName()).isEqualTo(TEST_USERNAME_1);
-        assertThat(userRepository.findUserByEmailAddress(TEST_EMAIL_1).getEmail()).isEqualTo(TEST_EMAIL_1);
-        assertThat(userRepository.findUserByEmailAddress(TEST_EMAIL_1).getPassword()).isEqualTo(TEST_PASSWORD_1);
+        assertThat(userRepository.findByEmail(TEST_EMAIL_1).getUserName()).isEqualTo(TEST_USERNAME_1);
+        assertThat(userRepository.findByEmail(TEST_EMAIL_1).getEmail()).isEqualTo(TEST_EMAIL_1);
+        assertThat(userRepository.findByEmail(TEST_EMAIL_1).getPassword()).isEqualTo(TEST_PASSWORD_1);
     }
 
     @Test
     void 유저_정보_수정() {
         userRepository.updateUserByEmailAddress(TEST_USERNAME_2, TEST_PASSWORD_2, TEST_EMAIL_1);
-        assertThat(userRepository.findUserByEmailAddress(TEST_EMAIL_1).getUserName()).isEqualTo(TEST_USERNAME_2);
-        assertThat(userRepository.findUserByEmailAddress(TEST_EMAIL_1).getPassword()).isEqualTo(TEST_PASSWORD_2);
+        assertThat(userRepository.findByEmail(TEST_EMAIL_1).getUserName()).isEqualTo(TEST_USERNAME_2);
+        assertThat(userRepository.findByEmail(TEST_EMAIL_1).getPassword()).isEqualTo(TEST_PASSWORD_2);
     }
 
     @AfterEach

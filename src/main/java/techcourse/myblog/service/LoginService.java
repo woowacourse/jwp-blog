@@ -11,6 +11,7 @@ import techcourse.myblog.repository.UserRepository;
 @Service
 public class LoginService {
     private UserRepository userRepository;
+
     @Autowired
     public LoginService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -31,7 +32,7 @@ public class LoginService {
     }
 
     private User checkUser(LoginDTO loginDTO) {
-        User findUser = userRepository.findUserByEmailAddress(loginDTO.getEmail());
+        User findUser = userRepository.findByEmail(loginDTO.getEmail());
         if (findUser != null) {
             return findUser;
         }

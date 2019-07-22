@@ -128,7 +128,6 @@ public class ArticleControllerTests {
                 });
     }
 
-
     @Test
     void articleDelete() {
         webTestClient.post().uri("/articles/write")

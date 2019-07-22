@@ -14,7 +14,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
-
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -26,12 +25,9 @@ class UserControllerTest {
     private static final String EMAIL_2 = "test2@test.com";
     private static final String PASSWORD_1 = "1234";
     private static final String PASSWORD_2 = "12345";
-
-
-    private String cookie;
-
     @Autowired
     WebTestClient webTestClient;
+    private String cookie;
 
     @BeforeEach
     void setUp() {
@@ -66,7 +62,6 @@ class UserControllerTest {
                 .exchange()
                 .expectStatus().isOk();
     }
-
 
     @Test
     void 유저_조회_페이지에_주입한_유저정보가_있는지_확인() {

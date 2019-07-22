@@ -41,11 +41,9 @@ public class UserSerivceTest {
 
     @Test
     void 이메일로_중복아닌지_테스트() {
-        UserDTO userDTOTest = new UserDTO(TEST_USERNAME,TEST_EMAIL_2, TEST_PASSWORD_1);
+        UserDTO userDTOTest = new UserDTO(TEST_USERNAME, TEST_EMAIL_2, TEST_PASSWORD_1);
         assertThat(userService.isDuplicateEmail(userDTOTest)).isFalse();
     }
-
-
 
     @AfterEach
     void tearDown() {
