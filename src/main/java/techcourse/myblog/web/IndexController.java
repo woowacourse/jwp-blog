@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.domain.ArticleRepository;
 
 import javax.servlet.http.HttpSession;
 
@@ -18,7 +18,7 @@ public class IndexController {
     }
 
     @GetMapping("/")
-    public String index(Model model, HttpSession httpSession) {
+    public String index(HttpSession httpSession, Model model) {
         model.addAttribute("articles", articleRepository.findAll());
         model.addAttribute("user", httpSession.getAttribute("user"));
 

@@ -12,7 +12,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.domain.ArticleRepository;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.springframework.http.HttpMethod.*;

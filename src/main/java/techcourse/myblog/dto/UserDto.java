@@ -9,7 +9,7 @@ import techcourse.myblog.domain.User;
 public class UserDto {
     @NotBlank(message = "이름을 입력해주세요",
             groups={UserInfo.class})
-    @Pattern(regexp = "[^ !@#$%^&*(),.?\\\":{}|<>0-9]{2,10}",
+    @Pattern(regexp = "[^ \\-!@#$%^&*(),.?\":{}|<>0-9]{2,10}",
             message = "이름은 2~10자, 숫자나 특수문자가 포함될 수 없습니다.",
             groups={UserInfo.class})
     private String name;

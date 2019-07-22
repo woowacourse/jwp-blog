@@ -15,7 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserInfo;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.domain.UserRepository;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.groups.Default;
