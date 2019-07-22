@@ -2,6 +2,10 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="common/header"></th:block>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
     <link rel="stylesheet" href="/css/article-edit.css">
 </head>
 <body>
@@ -75,7 +79,7 @@
 </div>
 
 <th:block th:replace="common/js"></th:block>
-<th:block th:replace="common/jsEditor"></th:block>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tui-editor/1.4.3/tui-editor-Editor-full.min.js" integrity="sha256-7dF+yqM5APBwOEeHoAf0FtdD9tsSoDul+jRXwySCJ1A=" crossorigin="anonymous"></script>
 <script type="text/javascript">
     const contents = document.getElementById("article-contents").value;
 
