@@ -8,12 +8,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Builder
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Article {
 
@@ -37,6 +35,13 @@ public class Article {
     @LastModifiedDate
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updateDate;
+
+    @Builder
+    private Article(final String title, final String contents, final String coverUrl) {
+        this.title = title;
+        this.contents = contents;
+        this.coverUrl = coverUrl;
+    }
 
     public void update(Article other) {
         this.updateDate = LocalDateTime.now();
