@@ -12,8 +12,12 @@ import java.util.Optional;
 @Component
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public UniqueEmailValidator(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void initialize(UniqueEmail constraintAnnotation) {
