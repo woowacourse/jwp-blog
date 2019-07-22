@@ -41,16 +41,16 @@ public class LoginController {
 		if (bindingResult.hasErrors()) {
 			List<FieldError> errors = bindingResult.getFieldErrors();
 			model.addAttribute("errors", errors.get(0).getField() + "입력 오류 입니다.");
-			return "/login";
+			return "login";
 		}
 		Optional<User> loginUser = userRepository.findByEmail(userLoginDto.getEmail());
 		if (!loginUser.isPresent()) {
 			model.addAttribute("errors", "없는 아이디입니다. 회원가입을 진행해주세요.");
-			return "/login";
+			return "login";
 		}
 		if (!loginUser.get().matchPassword(userLoginDto.getPassword())) {
 			model.addAttribute("errors", "비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
-			return "/login";
+			return "login";
 		}
 
 		httpSession.setAttribute("email", loginUser.get().getEmail());
