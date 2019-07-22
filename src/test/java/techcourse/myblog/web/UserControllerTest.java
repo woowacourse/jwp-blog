@@ -21,19 +21,14 @@ public class UserControllerTest {
     @Autowired
     WebTestClient webTestClient;
 
-    @Test
-    void 회원가입_페이지() {
-        webTestClient.get().uri("/users/signup").exchange().expectStatus().isOk();
+    public WebTestClient.ResponseSpec getRequest(String uri) {
+        return webTestClient.get().uri(uri).exchange();
     }
 
-    private WebTestClient.ResponseSpec getResponseSpec(String userName, String email, String password, String confirmPassword) {
-        return webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", userName)
-                        .with("email", email)
-                        .with("password", password)
-                        .with("confirmPassword", confirmPassword)
-                ).exchange();
+    @Test
+    void 회원가입_페이지() {
+        getRequest("/users/signup")
+                .expectStatus().isOk();
     }
 
     @Test
@@ -46,52 +41,47 @@ public class UserControllerTest {
     void 중복_이메일_확인() {
         create_user(userName, "buddy@buddy.com", password);
 
-        getResponseSpec(userName, "buddy@buddy.com", password, password)
-                .expectStatus().isBadRequest()
-                .expectBody().consumeWith(res -> {
-            String body = new String(res.getResponseBody());
-            assertThat(body.contains("중복된 이메일 입니다.")).isTrue();
-        });
+        WebTestClient.ResponseSpec responseSpec = getResponseSpec(userName, "buddy@buddy.com", password, password)
+                .expectStatus().isBadRequest();
 
+        checkInvalidUserMessage(responseSpec, "중복된 이메일 입니다.");
+    }
+
+    public void checkInvalidUserMessage(WebTestClient.ResponseSpec responseSpec, String message) {
+        responseSpec.expectBody().consumeWith(res -> {
+            String body = new String(res.getResponseBody());
+            assertThat(body.contains(message)).isTrue();
+        });
     }
 
     @Test
     void 유저_이름_확인() {
-
-        getResponseSpec("J", email, password, password).expectStatus().isBadRequest()
-                .expectBody().consumeWith(res -> {
-            String body = new String(res.getResponseBody());
-            assertThat(body.contains("형식에 맞는 이름이 아닙니다.")).isTrue();
-        });
+        WebTestClient.ResponseSpec responseSpec = getResponseSpec("J", email, password, password)
+                .expectStatus().isBadRequest();
+        checkInvalidUserMessage(responseSpec, "형식에 맞는 이름이 아닙니다.");
     }
 
     @Test
     void 유저_패스워드_확인() {
-        getResponseSpec(userName, email, "A", "A")
-                .expectStatus().isBadRequest()
-                .expectBody().consumeWith(res -> {
-            String body = new String(res.getResponseBody());
-            assertThat(body.contains("형식에 맞는 비밀번호가 아닙니다.")).isTrue();
-        });
+        WebTestClient.ResponseSpec responseSpec = getResponseSpec(userName, email, "A", "A")
+                .expectStatus().isBadRequest();
+        checkInvalidUserMessage(responseSpec, "형식에 맞는 비밀번호가 아닙니다.");
     }
 
     @Test
     void 유저_패스워드_컨펌패스워드_매치_확인() {
 
-        getResponseSpec(userName, email, password, "Ss12345!")
-                .expectStatus().isBadRequest()
-                .expectBody().consumeWith(res -> {
-            String body = new String(res.getResponseBody());
-            assertThat(body.contains("비밀번호가 일치하지 않습니다.")).isTrue();
-        });
+        WebTestClient.ResponseSpec responseSpec = getResponseSpec(userName, email, password, "Ss12345!")
+                .expectStatus().isBadRequest();
+
+        checkInvalidUserMessage(responseSpec, "비밀번호가 일치하지 않습니다.");
     }
 
     @Test
     void 유점_리스트_확인() {
         create_user("Martin", "martin@gmail.com", password);
 
-        webTestClient.get().uri("/users")
-                .exchange()
+        getRequest("/users")
                 .expectStatus()
                 .isOk()
                 .expectBody().consumeWith(res -> {
@@ -103,28 +93,28 @@ public class UserControllerTest {
 
     @Test
     void 로그인_전_마이페이지_접근() {
-        webTestClient.get().uri("/users/mypage").exchange()
+        getRequest("/users/mypage")
                 .expectStatus().isBadRequest();
     }
 
     @Test
     void 로그인_후_마이페이지_접근() {
         setSession();
-        webTestClient.get().uri("/users/mypage").exchange()
+        getRequest("/users/mypage")
                 .expectStatus().isOk();
         removeSession();
     }
 
     @Test
     void 로그인_전_회원수정페이지_접근() {
-        webTestClient.get().uri("/users/mypage/edit").exchange()
+        getRequest("/users/mypage/edit")
                 .expectStatus().isBadRequest();
     }
 
     @Test
     void 로그인_후_회원수정페이지_접근() {
         setSession();
-        webTestClient.get().uri("/users/mypage/edit").exchange()
+        getRequest("/users/mypage/edit")
                 .expectStatus().isOk();
         removeSession();
     }
@@ -163,6 +153,16 @@ public class UserControllerTest {
             }
             return null;
         }).build();
+    }
+
+    private WebTestClient.ResponseSpec getResponseSpec(String userName, String email, String password, String confirmPassword) {
+        return webTestClient.post().uri("/users/new")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("userName", userName)
+                        .with("email", email)
+                        .with("password", password)
+                        .with("confirmPassword", confirmPassword)
+                ).exchange();
     }
 
 }
