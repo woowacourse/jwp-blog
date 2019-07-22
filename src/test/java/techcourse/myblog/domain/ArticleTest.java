@@ -2,10 +2,8 @@ package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.application.dto.ArticleDto;
-import techcourse.myblog.error.NullArticleElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Java6Assertions.assertThatThrownBy;
 
 class ArticleTest {
 

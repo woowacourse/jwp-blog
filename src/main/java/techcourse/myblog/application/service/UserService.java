@@ -4,8 +4,8 @@ package techcourse.myblog.application.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.User;
 import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
 import javax.transaction.Transactional;
@@ -27,7 +27,7 @@ public class UserService {
                 .password(userDto.getPassword())
                 .build();
         userRepository.save(user);
-        return new UserDto(user.getEmail(),user.getName(),user.getPassword());
+        return new UserDto(user.getEmail(), user.getName(), user.getPassword());
     }
 
     private void emailDuplicateValidate(UserDto userDto) {

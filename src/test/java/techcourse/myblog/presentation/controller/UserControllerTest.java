@@ -1,6 +1,5 @@
 package techcourse.myblog.presentation.controller;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +41,14 @@ class UserControllerTest {
     @Test
     void signUp_post_is3xxRedirect() {
         userDto = new UserDto("kangmin789@abc.com", "abc", "asdASD12!@");
-        userRequest(POST,userDto, "").expectStatus().is3xxRedirection();
+        userRequest(POST, userDto, "").expectStatus().is3xxRedirection();
 
     }
 
     @Test
     void logout_post_is3xxRedirect() {
         userDto = new UserDto("kangmin789@abc.com", "abc", "asdASD12!@");
-        userRequest(POST,userDto , "/logout")
+        userRequest(POST, userDto, "/logout")
                 .expectStatus()
                 .is3xxRedirection();
 

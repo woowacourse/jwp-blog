@@ -114,15 +114,12 @@ v>
 </body>
 <script th:inline="javascript">
     const initValue = [[${article.contents}]];
-
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
         viewer: true,
         height: '100%',
         initialValue: initValue
     });
-
-
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',

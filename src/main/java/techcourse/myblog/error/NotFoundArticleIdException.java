@@ -1,7 +1,7 @@
 package techcourse.myblog.error;
 
 public class NotFoundArticleIdException extends RuntimeException {
-    public NotFoundArticleIdException(String msg){
+    public NotFoundArticleIdException(String msg) {
         super(msg);
     }
 }
