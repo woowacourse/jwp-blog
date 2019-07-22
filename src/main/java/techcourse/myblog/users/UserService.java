@@ -37,13 +37,13 @@ public class UserService {
         }
     }
 
-    public UserDto.Response login(UserDto.Register userDto) {
+    public UserSession login(UserDto.Register userDto) {
         String decodedPassword = User.authenticate(userDto.getPassword());
 
         User user = userRepository.findByEmailAndPassword(userDto.getEmail(), decodedPassword)
                 .orElseThrow(() -> new ValidUserException("존재하지 않는 이메일 또는 비밀번호가 틀립니다.", "password"));
 
-        return UserDto.Response.createByUser(user);
+        return UserSession.createByUser(user);
     }
 
     public List<UserDto.Response> findAllExceptPassword() {

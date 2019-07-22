@@ -44,9 +44,9 @@ public class UserController {
     public String login(UserDto.Register userDto, HttpSession session) {
         log.debug(userDto.toString());
 
-        UserDto.Response userResponseDto = userService.login(userDto);
-        session.setAttribute("user", userResponseDto);
-        return userResponseDto.getName();
+        UserSession userSession = userService.login(userDto);
+        session.setAttribute(USER_SESSION, userSession);
+        return userSession.getName();
     }
 
     @GetMapping("/logout")
@@ -80,7 +80,7 @@ public class UserController {
     @PutMapping("/{id}")
     public String edit(@PathVariable Long id, @Valid UserDto.Update userDto) {
         UserDto.Response responseDto = userService.update(id, userDto);
-        return "redirect:/users/" + id;
+        return "redirect:/users/" + responseDto.getId();
     }
 
     @DeleteMapping("/{id}")

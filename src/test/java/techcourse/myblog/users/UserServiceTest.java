@@ -28,7 +28,7 @@ class UserServiceTest {
 
     @Test
     void login() {
-        UserDto.Response login = userService.login(register);
+        UserSession login = userService.login(register);
 
         assertEquals(register.getEmail(), login.getEmail());
         assertEquals(register.getName(), login.getName());
