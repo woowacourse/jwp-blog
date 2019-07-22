@@ -2,8 +2,6 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserSignUpRequestDto;
@@ -34,13 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/new")
-    public String createUser(@Valid UserSignUpRequestDto userSignUpRequestDto, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            FieldError fieldError = bindingResult.getFieldError();
-            model.addAttribute("error", fieldError.getDefaultMessage());
-            return "signup";
-        }
-
+    public String createUser(@Valid UserSignUpRequestDto userSignUpRequestDto) {
         userService.create(userSignUpRequestDto);
         return "redirect:/login";
     }
@@ -56,13 +48,7 @@ public class UserController {
     }
 
     @PutMapping("/mypage/edit")
-    public String editUserInfo(@Valid UserUpdateRequestDto userUpdateRequestDto, BindingResult bindingResult, HttpSession httpSession, Model model) {
-        if (bindingResult.hasErrors()) {
-            FieldError fieldError = bindingResult.getFieldError();
-            model.addAttribute("error", fieldError.getDefaultMessage());
-            return "mypage-edit";
-        }
-
+    public String editUserInfo(@Valid UserUpdateRequestDto userUpdateRequestDto, HttpSession httpSession) {
         Long userId = ((User) httpSession.getAttribute(LoginUtil.USER_SESSION_KEY)).getUserId();
         User user = userService.update(userUpdateRequestDto, userId);
         httpSession.setAttribute(LoginUtil.USER_SESSION_KEY, user);
