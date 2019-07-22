@@ -34,7 +34,7 @@ public class UserService {
     @Transactional
     public User update(UserUpdateRequestDto userUpdateRequestDto, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoUserException(NO_USER_MESSAGE));
-        user.setUserName(userUpdateRequestDto.getUserName());
+        user.update(userUpdateRequestDto);
         return user;
     }
 

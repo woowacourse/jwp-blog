@@ -3,7 +3,6 @@ package techcourse.myblog.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import techcourse.myblog.dto.ArticleDto;
 
 import javax.persistence.Entity;
@@ -13,7 +12,6 @@ import javax.persistence.Id;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class Article {
     @Id

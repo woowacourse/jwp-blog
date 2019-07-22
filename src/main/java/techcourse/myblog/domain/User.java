@@ -3,8 +3,8 @@ package techcourse.myblog.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import techcourse.myblog.dto.UserSignUpRequestDto;
+import techcourse.myblog.dto.UserUpdateRequestDto;
 import techcourse.myblog.exception.SignUpFailException;
 
 import javax.persistence.Entity;
@@ -13,7 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor
 public class User {
@@ -36,6 +35,7 @@ public class User {
         this.password = password;
     }
 
+
     private void checkConfirmPassword(UserSignUpRequestDto userSignUpRequestDto) {
         if (!userSignUpRequestDto.getPassword().equals(userSignUpRequestDto.getConfirmPassword())) {
             throw new SignUpFailException("비밀번호가 일치하지 않습니다.");
@@ -44,5 +44,9 @@ public class User {
 
     public boolean matchPassword(String password) {
         return this.password.equals(password);
+    }
+
+    public void update(UserUpdateRequestDto userUpdateRequestDto) {
+        this.userName = userUpdateRequestDto.getUserName();
     }
 }
