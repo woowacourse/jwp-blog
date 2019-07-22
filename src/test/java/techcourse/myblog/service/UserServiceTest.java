@@ -24,7 +24,7 @@ class UserServiceTest {
     void setUp() {
         beforeUser = userService.save(new UserDto("aiden",
                 flagNo + "aiden1@naver.com",
-                "aiden3"));
+                "qweQWE123!@#"));
         flagNo++;
     }
 
@@ -37,14 +37,14 @@ class UserServiceTest {
     @Test
     void save() {
         User newUser = userService.save(
-                new UserDto("whale", "whale@naver.com", "whale2"));
+                new UserDto("whale", "whale@naver.com", "Whale21@!"));
         assertThat(userService.findByEmail(newUser.getEmail())
                 .orElseThrow(IllegalArgumentException::new)).isEqualTo(newUser);
     }
 
     @Test
     void update() {
-        User updatedUser = userService.update(
+        User updatedUser = userService.update(beforeUser.getEmail(),
                 new UserDto("pobi", beforeUser.getEmail(), beforeUser.getPassword()));
         assertThat(userService.findByEmail(beforeUser.getEmail())
                 .orElseThrow(IllegalArgumentException::new)).isEqualTo(updatedUser);
