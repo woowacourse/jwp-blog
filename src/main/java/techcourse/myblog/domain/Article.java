@@ -18,7 +18,7 @@ public class Article {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 3000)
+    @Lob
     private String contents;
 
     @Column(nullable = false)
