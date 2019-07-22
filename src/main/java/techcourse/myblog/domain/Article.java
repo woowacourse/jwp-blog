@@ -1,7 +1,5 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.dto.ArticleDto;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,18 +15,18 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public static Article of(ArticleDto articleDto) {
+    public static Article of(String title, String coverUrl, String contents) {
         Article article = new Article();
-        article.title = articleDto.getTitle();
-        article.coverUrl = articleDto.getCoverUrl();
-        article.contents = articleDto.getContents();
+        article.title = title;
+        article.coverUrl = coverUrl;
+        article.contents = contents;
         return article;
     }
 
-    public void updateArticle(ArticleDto articleDto) {
-        this.title = articleDto.getTitle();
-        this.coverUrl = articleDto.getCoverUrl();
-        this.contents = articleDto.getContents();
+    public void updateArticle(Article article) {
+        this.title = article.getTitle();
+        this.coverUrl = article.getCoverUrl();
+        this.contents = article.getContents();
     }
 
     public Long getArticleId() {

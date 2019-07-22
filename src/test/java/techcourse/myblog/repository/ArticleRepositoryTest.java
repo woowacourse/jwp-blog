@@ -26,23 +26,19 @@ class ArticleRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        ArticleDto articleDto = new ArticleDto();
-        articleDto.setTitle("test title");
-        articleDto.setCoverUrl("test coverUrl");
-        articleDto.setContents("test contents");
-
-        article = articleRepository.save(Article.of(articleDto));
+        article = articleRepository.save(Article.of("test title",
+                "test coverUrl",
+                "test contents")
+        );
     }
 
     @Test
     @DisplayName("게시물을 생성하고 저장한다.")
     void createTest() {
-        ArticleDto articleDto = new ArticleDto();
-        articleDto.setTitle("saveTest title");
-        articleDto.setCoverUrl("saveTest coverUrl");
-        articleDto.setContents("saveTest contents");
-
-        Article test = articleRepository.save(Article.of(articleDto));
+        Article test = articleRepository.save(Article.of("saveTest title",
+                "saveTest coverUrl",
+                "saveTest contents")
+        );
 
         assertThat(test).isNotNull();
     }
@@ -73,7 +69,10 @@ class ArticleRepositoryTest {
         articleDto.setCoverUrl("update coverUrl");
         articleDto.setContents("update contents");
 
-        findArticle.updateArticle(articleDto);
+        findArticle.updateArticle(Article.of(articleDto.getTitle(),
+                articleDto.getCoverUrl(),
+                articleDto.getContents()
+        ));
         Article updateArticle = articleRepository.save(findArticle);
 
         assertThat(updateArticle.getTitle()).isEqualTo("update title");

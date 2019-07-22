@@ -12,7 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.exception.CouldNotFindArticleIdException;
 import techcourse.myblog.repository.ArticleRepository;
 
@@ -32,12 +31,10 @@ public class ArticleControllerTest {
 
     @BeforeEach
     void setUp() {
-        ArticleDto articleDto = new ArticleDto();
-        articleDto.setTitle("test title");
-        articleDto.setCoverUrl("test coverUrl");
-        articleDto.setContents("test contents");
-
-        article = articleRepository.save(Article.of(articleDto));
+        article = articleRepository.save(Article.of("test title",
+                "test coverUrl",
+                "test contents")
+        );
     }
 
     private WebTestClient.ResponseSpec requestGetTest(String testUrl) {

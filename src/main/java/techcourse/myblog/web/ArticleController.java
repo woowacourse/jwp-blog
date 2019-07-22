@@ -64,9 +64,9 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String updateArticle(@PathVariable Long articleId, ArticleDto articleDto) {
-        articleService.update(articleId, articleDto);
+        Article updateArticle = articleService.update(articleId, articleDto);
 
-        return "redirect:/articles/" + articleId;
+        return "redirect:/articles/" + updateArticle.getArticleId();
     }
 
     @DeleteMapping("/articles/{articleId}")

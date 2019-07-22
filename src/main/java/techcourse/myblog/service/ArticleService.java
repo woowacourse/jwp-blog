@@ -7,6 +7,8 @@ import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.exception.CouldNotFindArticleIdException;
 import techcourse.myblog.repository.ArticleRepository;
 
+import javax.transaction.Transactional;
+
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
@@ -16,7 +18,10 @@ public class ArticleService {
     }
 
     public Article save(ArticleDto articleDto) {
-        Article article = Article.of(articleDto);
+        Article article = Article.of(articleDto.getTitle(),
+                articleDto.getCoverUrl(),
+                articleDto.getContents()
+        );
 
         return articleRepository.save(article);
     }
@@ -26,11 +31,15 @@ public class ArticleService {
                 .orElseThrow(CouldNotFindArticleIdException::new);
     }
 
-    public void update(Long articleId, ArticleDto articleDto) {
+    @Transactional
+    public Article update(Long articleId, ArticleDto articleDto) {
         Article findArticle = findArticleById(articleId);
 
-        findArticle.updateArticle(articleDto);
-        articleRepository.save(findArticle);
+        findArticle.updateArticle(
+                Article.of(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents())
+        );
+
+        return findArticle;
     }
 
     public void deleteById(Long articleId) {

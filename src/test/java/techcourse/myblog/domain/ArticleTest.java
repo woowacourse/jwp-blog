@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import techcourse.myblog.dto.ArticleDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,27 +13,17 @@ class ArticleTest {
 
     @BeforeEach
     void setUp() {
-        ArticleDto articleDto = new ArticleDto();
-        articleDto.setTitle("test title");
-        articleDto.setCoverUrl("test coverUrl");
-        articleDto.setContents("test contents");
-
-        article = Article.of(articleDto);
+        article = Article.of("test title", "test coverUrl", "test contents");
     }
 
     @Test
     @DisplayName("게시물을 업데이트한다.")
     void updateTest() {
-        // Given
-        ArticleDto articleDto = new ArticleDto();
-        articleDto.setTitle("update title");
-        articleDto.setCoverUrl("update coverUrl");
-        articleDto.setContents("update contents");
+        article.updateArticle(Article.of("update title",
+                "update coverUrl",
+                "update contents")
+        );
 
-        // When
-        article.updateArticle(articleDto);
-
-        // Then
         assertThat(article.getTitle()).isEqualTo("update title");
         assertThat(article.getCoverUrl()).isEqualTo("update coverUrl");
         assertThat(article.getContents()).isEqualTo("update contents");
