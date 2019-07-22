@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static techcourse.myblog.domain.exception.UserArgumentException.*;
@@ -16,12 +15,13 @@ public class User {
     private static final int MIN_NAME_LENGTH = 2;
     private static final int MAX_NAME_LENGTH = 10;
     private static final int MIN_PASSWORD_LENGTH = 8;
-    private static final String KOREAN_ENGLISH_REGEX = "^[(ㄱ-ㅎ가-힣a-zA-Z)]+$";
-    private static final String LOWER_CASE_REGEX = "[(a-z)]+";
-    private static final String UPPER_CASE_REGEX = "[(A-Z)]+";
-    private static final String NUMBER_REGEX = "[(0-9)]+";
-    private static final String SPECIAL_CHARACTER_REGEX = "[ `~!@#[$]%\\^&[*]\\(\\)_-[+]=\\{\\}\\[\\][|]'\":;,.<>/?]+";
-    private static final String KOREAN_REGEX = "[(ㄱ-ㅎ가-힣)]+";
+    private static final Pattern KOREAN_ENGLISH_PATTERN = Pattern.compile("^[(ㄱ-ㅎ가-힣a-zA-Z)]+$");
+    private static final Pattern LOWER_CASE_PATTERN = Pattern.compile("[(a-z)]+");
+    private static final Pattern UPPER_CASE_PATTERN = Pattern.compile("[(A-Z)]+");
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("[(0-9)]+");
+    private static final Pattern SPECIAL_CHARACTER_PATTERN =
+            Pattern.compile("[ `~!@#[$]%\\^&[*]\\(\\)_-[+]=\\{\\}\\[\\][|]'\":;,.<>/?]+");
+    private static final Pattern KOREAN_PATTERN = Pattern.compile("[(ㄱ-ㅎ가-힣)]+");
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,7 +55,7 @@ public class User {
     }
 
     private void checkValidNameCharacters(String name) {
-        if (!matchRegex(name, KOREAN_ENGLISH_REGEX)) {
+        if (!matchRegex(name, KOREAN_ENGLISH_PATTERN)) {
             throw new UserArgumentException(NAME_INCLUDE_INVALID_CHARACTERS_MESSAGE);
         }
     }
@@ -72,19 +72,17 @@ public class User {
     }
 
     private void checkValidPasswordCharacters(String password) {
-        if (!matchRegex(password, LOWER_CASE_REGEX)
-                || !matchRegex(password, UPPER_CASE_REGEX)
-                || !matchRegex(password, NUMBER_REGEX)
-                || !matchRegex(password, SPECIAL_CHARACTER_REGEX)
-                || matchRegex(password, KOREAN_REGEX)) {
+        if (!matchRegex(password, LOWER_CASE_PATTERN)
+                || !matchRegex(password, UPPER_CASE_PATTERN)
+                || !matchRegex(password, NUMBER_PATTERN)
+                || !matchRegex(password, SPECIAL_CHARACTER_PATTERN)
+                || matchRegex(password, KOREAN_PATTERN)) {
             throw new UserArgumentException(INVALID_PASSWORD_MESSAGE);
         }
     }
 
-    private boolean matchRegex(String input, String regex) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
-        return matcher.find();
+    private boolean matchRegex(String input, Pattern pattern) {
+        return pattern.matcher(input).find();
     }
 
     public Long getId() {
