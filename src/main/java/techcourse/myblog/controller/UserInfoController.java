@@ -15,6 +15,7 @@ import techcourse.myblog.service.UserWriteService;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.support.ModelSupport;
 import techcourse.myblog.support.RedirectAttributeSupport;
+import techcourse.myblog.support.argument.resolver.SessionInfo;
 import techcourse.myblog.support.validation.UserGroups.Edit;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,9 +35,9 @@ public class UserInfoController {
     }
 
     @GetMapping("/edit")
-    public String myPageEditForm(HttpServletRequest request, Model model) {
+    public String myPageEditForm(Model model, SessionInfo sessionInfo) {
         ModelSupport.addObjectDoesNotContain(model, "userDto", new UserDto("", "", ""));
-        model.addAttribute("user", request.getSession().getAttribute("user"));
+        model.addAttribute("user", sessionInfo.getUser());
         return "mypage-edit";
     }
 
@@ -44,7 +45,7 @@ public class UserInfoController {
     public RedirectView myPageEdit(HttpServletRequest request, @Validated(Edit.class) UserDto userDto,
                                    BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("user", request.getSession().getAttribute("user"));
+            model.addAttribute("user", new SessionInfo().getUser());
             RedirectAttributeSupport.addBindingResult(redirectAttributes, bindingResult, "userDto", userDto);
             return new RedirectView("/edit");
         }
@@ -58,8 +59,8 @@ public class UserInfoController {
     }
 
     @DeleteMapping("/withdraw")
-    public RedirectView myPageDelete(HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("user");
+    public RedirectView myPageDelete(SessionInfo sessionInfo) {
+        User user = sessionInfo.getUser();
         userWriteService.deleteById(user.getId());
         return new RedirectView("/users/logout");
     }
