@@ -126,24 +126,4 @@ public class UserControllerTest extends LoginTemplate {
         assertThatThrownBy(() -> userRepository.findByEmail("andole@gmail.com").orElseThrow(IllegalAccessError::new))
                 .isInstanceOf(IllegalAccessError.class);
     }
-
-    @Test
-    void 로그인_되어있을때_로그인_페이지_접근() {
-        loggedInGetRequest("login")
-                .exchange()
-                .expectStatus()
-                .is3xxRedirection()
-                .expectHeader()
-                .valueMatches("location", ".+/");
-    }
-
-    @Test
-    void 로그인_되어있을때_회원가입_페이지_접근() {
-        loggedInGetRequest("signup")
-                .exchange()
-                .expectStatus()
-                .is3xxRedirection()
-                .expectHeader()
-                .valueMatches("location", ".+/");
-    }
 }

@@ -31,11 +31,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
-        ;
-        if (SessionUtil.isNull(session)) {
-            return "login";
-        }
-        return "redirect:/";
+        return "login";
     }
 
     @PostMapping("/logout")
@@ -61,10 +57,7 @@ public class UserController {
 
     @GetMapping("/signup")
     public String signupForm() {
-        if (SessionUtil.isNull(session)) {
-            return "signup";
-        }
-        return "redirect:/";
+        return "signup";
     }
 
     @GetMapping("/mypage")

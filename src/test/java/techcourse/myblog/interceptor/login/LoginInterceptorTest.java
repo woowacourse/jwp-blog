@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.interceptor.login;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LoginInterceptorConfigTest {
+public class LoginInterceptorTest {
     @Autowired
     private WebTestClient webTestClient;
 

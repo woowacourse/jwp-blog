@@ -8,10 +8,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 
-import java.util.Iterator;
+import java.util.stream.StreamSupport;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @ExtendWith(SpringExtension.class)
 public class ArticleControllerTests extends LoginTemplate {
@@ -48,11 +48,15 @@ public class ArticleControllerTests extends LoginTemplate {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus()
+                .is3xxRedirection();
 
-        Iterator<Article> articles = articleRepository.findAll().iterator();
-        Article article = articles.next();
-        assertThat(article.getTitle()).isEqualTo(title);
+        assertDoesNotThrow(() -> {
+            StreamSupport.stream(articleRepository.findAll().spliterator(), true)
+                    .filter(article -> article.getTitle().equals(title))
+                    .findFirst()
+                    .orElseThrow(IllegalArgumentException::new);
+        });
     }
 
     @Test

@@ -13,13 +13,13 @@ import techcourse.myblog.repository.UserRepository;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SignUpTemplate {
     @Autowired
-    WebTestClient webTestClient;
+    public WebTestClient webTestClient;
     @Autowired
-    UserRepository userRepository;
+    public UserRepository userRepository;
     @Autowired
-    ArticleRepository articleRepository;
+    public ArticleRepository articleRepository;
 
-    void registeredWebTestClient() {
+    public void registeredWebTestClient() {
         webTestClient.post()
                 .uri("/signup")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
