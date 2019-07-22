@@ -15,6 +15,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.users.User.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
@@ -75,9 +76,9 @@ public class UserControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains(UserDto.EMAIL_NOT_MATCH_MESSAGE)).isTrue();
-                    assertThat(body.contains(UserDto.NAME_NOT_MATCH_MESSAGE)).isTrue();
-                    assertThat(body.contains(UserDto.PASSWORD_NOT_MATCH_MESSAGE)).isTrue();
+                    assertThat(body.contains(EMAIL_NOT_MATCH_MESSAGE)).isTrue();
+                    assertThat(body.contains(NAME_NOT_MATCH_MESSAGE)).isTrue();
+                    assertThat(body.contains(PASSWORD_NOT_MATCH_MESSAGE)).isTrue();
                 });
     }
 
@@ -98,14 +99,14 @@ public class UserControllerTests {
 
     static Stream<Arguments> invalidParameters() throws Throwable {
         return Stream.of(
-                Arguments.of("name", "asfas", "P@assw0rd", UserDto.EMAIL_NOT_MATCH_MESSAGE, "email 양식"),
-                Arguments.of("a", "asdf@asd", "P@assw0rd", UserDto.NAME_NOT_MATCH_MESSAGE, "name 2자 미만"),
-                Arguments.of("qwertasdfzp", "asdf@asd", "P@assw0rd", UserDto.NAME_NOT_MATCH_MESSAGE, "name 10자 초과"),
-                Arguments.of("12ad", "asdf@asd", "P@assw0rd", UserDto.NAME_NOT_MATCH_MESSAGE, "name 숫자 포함"),
-                Arguments.of("name", "asdf@asd", "Passw0rd", UserDto.PASSWORD_NOT_MATCH_MESSAGE, "password 특수문자 제외"),
-                Arguments.of("name", "asdf@asd", "P@ssword", UserDto.PASSWORD_NOT_MATCH_MESSAGE, "password 숫자 제외"),
-                Arguments.of("name", "asdf@asd", "p@ssw0rd", UserDto.PASSWORD_NOT_MATCH_MESSAGE, "password 대문자 제외"),
-                Arguments.of("name", "asdf@asd", "P@SSW0RD", UserDto.PASSWORD_NOT_MATCH_MESSAGE, "password 소문자 제외")
+                Arguments.of("name", "asfas", "P@assw0rd", EMAIL_NOT_MATCH_MESSAGE, "email 양식"),
+                Arguments.of("a", "asdf@asd", "P@assw0rd", NAME_NOT_MATCH_MESSAGE, "name 2자 미만"),
+                Arguments.of("qwertasdfzp", "asdf@asd", "P@assw0rd", NAME_NOT_MATCH_MESSAGE, "name 10자 초과"),
+                Arguments.of("12ad", "asdf@asd", "P@assw0rd", NAME_NOT_MATCH_MESSAGE, "name 숫자 포함"),
+                Arguments.of("name", "asdf@asd", "Passw0rd", PASSWORD_NOT_MATCH_MESSAGE, "password 특수문자 제외"),
+                Arguments.of("name", "asdf@asd", "P@ssword", PASSWORD_NOT_MATCH_MESSAGE, "password 숫자 제외"),
+                Arguments.of("name", "asdf@asd", "p@ssw0rd", PASSWORD_NOT_MATCH_MESSAGE, "password 대문자 제외"),
+                Arguments.of("name", "asdf@asd", "P@SSW0RD", PASSWORD_NOT_MATCH_MESSAGE, "password 소문자 제외")
         );
     }
 
