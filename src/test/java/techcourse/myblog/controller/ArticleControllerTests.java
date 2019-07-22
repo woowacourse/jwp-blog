@@ -2,26 +2,22 @@ package techcourse.myblog.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.MyblogApplicationTests;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.repository.ArticleRepository;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static techcourse.myblog.controller.ArticleController.ARTICLE_MAPPING_URL;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTests {
+public class ArticleControllerTests extends MyblogApplicationTests {
     Article article;
     @Autowired
     private WebTestClient webTestClient;
     @Autowired
-    private ArticleService articleService;
+    private ArticleRepository articleRepository;
 
     @BeforeEach
     void setUp() {
@@ -30,7 +26,7 @@ public class ArticleControllerTests {
                 .contents("a")
                 .coverUrl("a")
                 .build();
-        articleService.save(article);
+        articleRepository.save(article);
     }
 
     @Test

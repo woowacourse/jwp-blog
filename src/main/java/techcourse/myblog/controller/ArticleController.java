@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.repository.ArticleRepository;
 
 import static techcourse.myblog.controller.ArticleController.ARTICLE_MAPPING_URL;
 
@@ -17,7 +17,7 @@ import static techcourse.myblog.controller.ArticleController.ARTICLE_MAPPING_URL
 @Slf4j
 public class ArticleController {
     public static final String ARTICLE_MAPPING_URL = "/article";
-    private final ArticleService articleService;
+    private final ArticleRepository articleRepository;
 
     @GetMapping("/writing")
     public String createForm() {
@@ -26,37 +26,35 @@ public class ArticleController {
 
     @PostMapping
     public RedirectView save(Article article) {
-        log.info(article.getTitle() + " " + article.getCoverUrl() + " " + article.getContents());
-        log.warn("A WARN Message");
-        log.error("An ERROR Message");
-        articleService.save(article);
+        log.debug(article.toString());
+        articleRepository.save(article);
         return new RedirectView("/article/" + article.getId());
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable long id, Model model) {
-        log.info("" + id);
-        model.addAttribute("article", articleService.findById(id));
+        log.debug("show : " + id);
+        model.addAttribute("article", articleRepository.findById(id).get());
         return "article";
     }
 
     @PutMapping("/{id}")
     public RedirectView update(Article article) {
-        log.info("수정할 내용 " + article.getTitle() + " " + article.getCoverUrl() + " " + article.getContents());
-        articleService.update(article);
+        log.debug("update - Controller : " + article.toString());
+        articleRepository.save(article);
         return new RedirectView("/article/" + article.getId());
     }
 
     @GetMapping("/{id}/edit")
     public String updateForm(@PathVariable long id, Model model) {
-        model.addAttribute("article", articleService.findById(id));
+        model.addAttribute("article", articleRepository.findById(id).get());
         return "article-edit";
     }
 
     @DeleteMapping("/{id}")
     public RedirectView delete(@PathVariable long id) {
-        log.info(String.valueOf(id));
-        articleService.delete(id);
+        log.debug(String.valueOf(id));
+        articleRepository.deleteById(id);
         return new RedirectView("/");
     }
 }

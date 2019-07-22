@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.repository.ArticleRepository;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,12 +14,12 @@ import javax.servlet.http.HttpSession;
 @RequiredArgsConstructor
 @Slf4j
 public class IndexController {
-    private final ArticleService articleService;
+    private final ArticleRepository articleRepository;
 
     @GetMapping("/")
     public String index(HttpSession session, Model model) {
-        model.addAttribute("articles", articleService.findAll());
-        log.info(String.valueOf(session.getAttribute("user")));
+        model.addAttribute("articles", articleRepository.findAll());
+        log.debug("index : from index");
 
         UserDto userDto = (UserDto) session.getAttribute("user");
 

@@ -16,7 +16,6 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        log.error(String.valueOf(request.getSession().getAttribute("user")));
         UserDto userDtoSession = (UserDto) request.getSession().getAttribute("user");
 
         if (userDtoSession == null) {

@@ -4,19 +4,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import techcourse.myblog.MyblogApplicationTests;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserServiceTests {
+public class UserServiceTests extends MyblogApplicationTests {
     UserDto userDto;
     @Autowired
     private UserService userService;
@@ -75,7 +71,8 @@ public class UserServiceTests {
     @Test
     @DisplayName("이름을 바꿀때 잘 바뀌는 지 테스트")
     void updateUserName_test() {
-        assertThat(userService.updateUserName(userDto, "로비")).isEqualTo("로비");
+        userDto.setName("로비");
+        assertThat(userService.updateUserName(userDto)).isEqualTo("로비");
     }
 
     @AfterEach

@@ -19,7 +19,7 @@
             </ul>
             <ul class="nav-right">
                 <li class="user-profile">
-                    <a href="login.html">
+                    <a href="/user">
                         <div class="user-info login-btn pointer mrg-right-10">
                             <span class="name pdd-right-5 text-white">Login</span>
                         </div>
@@ -58,7 +58,7 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
                             <div th:each="article : ${articles}" class="pdd-horizon-15 pdd-vertical-20">
-                                <a th:href="@{'/articles/' + ${article.id}}" class="card article-container">
+                                <a th:href="@{'/article/' + ${article.id}}" class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
                                             <div class="background-holder has-content"

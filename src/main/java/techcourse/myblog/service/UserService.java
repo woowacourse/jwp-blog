@@ -18,8 +18,7 @@ public class UserService {
 
     public UserDto save(UserDto userDto) {
         emailDuplicateValidate(userDto);
-        userDto.setPassword(userDto.getPassword());
-        log.info("UserService.save() : " + userDto.getName() + " " + userDto.getEmail() + " " + userDto.getPassword());
+        log.debug("UserService.save() : " + userDto.toString());
         User user = new User(userDto.getName(), userDto.getEmail(), userDto.getPassword());
         userRepository.save(user);
         return new UserDto(user.getEmail(), user.getName(), user.getPassword());
@@ -48,17 +47,17 @@ public class UserService {
         return Optional.empty();
     }
 
-    public String updateUserName(UserDto userDto, String name) {
+    public String updateUserName(UserDto userDto) {
         User user = userRepository.findByEmail(userDto.getEmail()).get();
-        user.setName(name);
+        String updatedName = user.updateName(userDto);
         userRepository.save(user);
-        log.info("updateUserName에서 의 name " + name);
+        log.debug("updateUserName : " + updatedName + " " + userDto.toString());
         return user.getName();
     }
 
     public void deleteUser(UserDto userDto) {
         User user = userRepository.findByEmail(userDto.getEmail()).get();
         userRepository.delete(user);
-        log.info("delete User : " + user.toString());
+        log.debug("delete User : " + user.toString());
     }
 }

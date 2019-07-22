@@ -4,17 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.Optional;
 
 import static techcourse.myblog.controller.UserController.USER_MAPPING_URL;
-import static techcourse.myblog.domain.User.*;
+import static techcourse.myblog.dto.UserDto.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class UserController {
 
     @GetMapping
     public String loginForm() {
+        log.debug("/user : loginForm");
         return "login";
     }
 
@@ -40,11 +42,15 @@ public class UserController {
     }
 
     @PostMapping
-    public ModelAndView signUp(UserDto userDto) {
+    public ModelAndView signUp(@Valid UserDto userDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return addErrorMessageToModel(bindingResult.getFieldError().getDefaultMessage());
+        }
+
         Optional<UserDto> maybeUserDto = userService.getUserDtoByEmail(userDto.getEmail());
-        log.info("Controller-signUp Post");
+        log.debug(USER_MAPPING_URL + "post : " + userDto.toString());
         if (maybeUserDto.isPresent()) {
-            return getAndInsertModelAndView(DUPLICATE_EMAIL_ERROR_MESSAGE);
+            return addErrorMessageToModel(DUPLICATE_EMAIL_ERROR_MESSAGE);
         }
         userService.save(userDto);
         return new ModelAndView("redirect:/" + USER_MAPPING_URL);
@@ -52,29 +58,29 @@ public class UserController {
 
     @PostMapping("/login")
     public ModelAndView login(UserDto userDto, HttpSession session) {
-        log.info("/user/login 에서의 로그 " + userDto.getName() + " " + userDto.getEmail() + " " + userDto.getPassword());
+        log.debug(USER_MAPPING_URL + "/login post : " + userDto.toString());
         Optional<UserDto> maybeUserDto = userService.getUserDtoByEmail(userDto.getEmail());
 
         if (!maybeUserDto.isPresent()) {
-            log.info("Contoller-login : 중복 이메일 체크");
-            return getAndInsertModelAndView(NO_EMAIL_ERROR_MESSAGE);
+            log.debug("Contoller-login : 중복 이메일 체크");
+            return addErrorMessageToModel(NO_EMAIL_ERROR_MESSAGE);
         }
 
         try {
             userService.checkPassword(userDto);
-            log.info(" Contoller-login : 패스워드 체크까지 했음");
+            log.debug(USER_MAPPING_URL + "/login post : from userService.checkPassword");
             session.setAttribute("user", maybeUserDto.get());
             return new ModelAndView("redirect:/");
         } catch (IllegalArgumentException e) {
-            log.info("Contoller-login : 캐치블록");
-            return getAndInsertModelAndView(e.getMessage());
+            log.debug(USER_MAPPING_URL + "/login post : catch block");
+            return addErrorMessageToModel(e.getMessage());
         }
     }
 
     @GetMapping("/show")
     public String show(HttpSession session, Model model) {
         UserDto userDto = (UserDto) session.getAttribute("user");
-        log.info("/user/show 에서의 로그 : " + userDto.toString());
+        log.debug(USER_MAPPING_URL + "/show get : " + userDto.toString());
         model.addAttribute("user", userDto);
         return "mypage";
     }
@@ -82,37 +88,37 @@ public class UserController {
     @GetMapping("/edit")
     public String editForm(HttpSession session, Model model) {
         UserDto userDto = (UserDto) session.getAttribute("user");
-        log.info("/user/edit 에서의 로그 : " + userDto.toString());
+        log.debug(USER_MAPPING_URL + "/edit get : " + userDto.toString());
         model.addAttribute("namePattern", NAME_PATTERN);
         return "mypage-edit";
     }
 
     @PutMapping("/edit")
-    public RedirectView edit(HttpSession session, String name) {
+    public String edit(HttpSession session, String name) {
         UserDto userDto = (UserDto) session.getAttribute("user");
         userDto.setName(name);
         session.setAttribute("user", userDto);
-        log.info(userDto.getName() + " " + userDto.getEmail() + " " + userDto.getPassword());
-        userService.updateUserName(userDto, name);
-        return new RedirectView(USER_MAPPING_URL + "/show");
+        log.debug(USER_MAPPING_URL + "/edit put : " + userDto.toString());
+        userService.updateUserName(userDto);
+        return "redirect:/" + USER_MAPPING_URL + "/show";
     }
 
     @PostMapping("/logout")
-    public RedirectView logout(HttpSession session) {
+    public String logout(HttpSession session) {
         session.removeAttribute("user");
-        return new RedirectView("/");
+        return "redirect:/";
     }
 
     @DeleteMapping("/delete")
-    public RedirectView delete(HttpSession session) {
+    public String delete(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute("user");
-        log.info("delete 까지 옴 : " + userDto.toString());
+        log.debug(USER_MAPPING_URL + "/delete delete : " + userDto.toString());
         session.removeAttribute("user");
         userService.deleteUser(userDto);
-        return new RedirectView("/");
+        return "redirect:/";
     }
 
-    private ModelAndView getAndInsertModelAndView(String errorMessage) {
+    private ModelAndView addErrorMessageToModel(String errorMessage) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("error", errorMessage);
         modelAndView.setViewName("login");
