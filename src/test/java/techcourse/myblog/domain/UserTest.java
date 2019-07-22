@@ -21,7 +21,7 @@ class UserTest {
         userDto.setPassword("PassW0rd@");
         userDto.setPasswordConfirm("PassW0rd@");
 
-        user = User.of(userDto);
+        user = User.of(userDto.getName(), userDto.getEmail(), userDto.getPassword());
     }
 
     @Test
@@ -32,7 +32,7 @@ class UserTest {
         userUpdateDto.setName("update");
 
         // When
-        user.updateUser(userUpdateDto);
+        user.updateUser(userUpdateDto.getName());
 
         // Then
         assertThat(user.getName()).isEqualTo("update");

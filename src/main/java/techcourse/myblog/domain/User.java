@@ -1,8 +1,5 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.dto.UserUpdateDto;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,16 +16,16 @@ public class User {
     private String email;
     private String password;
 
-    public static User of(UserDto userDto) {
+    public static User of(String name, String email, String password) {
         User user = new User();
-        user.name = userDto.getName();
-        user.email = userDto.getEmail();
-        user.password = userDto.getPassword();
+        user.name = name;
+        user.email = email;
+        user.password = password;
         return user;
     }
 
-    public void updateUser(UserUpdateDto userUpdateDto) {
-        this.name = userUpdateDto.getName();
+    public void updateUser(String name) {
+        this.name = name;
     }
 
     public Long getId() {

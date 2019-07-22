@@ -35,7 +35,10 @@ class UserRepositoryTest {
         userDto.setPassword("PassW0rd@");
         userDto.setPasswordConfirm("PassW0rd@");
 
-        user = userRepository.save(User.of(userDto));
+        user = userRepository.save(User.of(userDto.getName(),
+                userDto.getEmail(),
+                userDto.getPassword())
+        );
     }
 
     @Test
@@ -47,7 +50,10 @@ class UserRepositoryTest {
         userDto.setPassword("PassW0rd@");
         userDto.setPasswordConfirm("PassW0rd@");
 
-        User newCreateUser = userRepository.save(User.of(userDto));
+        User newCreateUser = userRepository.save(User.of(userDto.getName(),
+                userDto.getEmail(),
+                userDto.getPassword())
+        );
 
         assertThat(newCreateUser).isNotNull();
     }
@@ -83,7 +89,7 @@ class UserRepositoryTest {
         UserUpdateDto userUpdateDto = new UserUpdateDto();
         userUpdateDto.setName("kimhyojae");
 
-        user.updateUser(userUpdateDto);
+        user.updateUser(userUpdateDto.getName());
         User updateUser = userRepository.save(user);
 
         assertThat(updateUser.getName()).isEqualTo("kimhyojae");

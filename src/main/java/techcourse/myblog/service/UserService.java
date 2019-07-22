@@ -28,7 +28,7 @@ public class UserService {
         checkUserDataForm(bindingResult);
         checkEqualPassword(userDto);
         checkDuplicateEmail(userDto.getEmail());
-        User user = User.of(userDto);
+        User user = User.of(userDto.getName(), userDto.getEmail(), userDto.getPassword());
         userRepository.save(user);
     }
 
@@ -54,7 +54,7 @@ public class UserService {
 
     public void update(User user, UserUpdateDto userUpdateDto, BindingResult bindingResult) {
         checkUserDataForm(bindingResult);
-        user.updateUser(userUpdateDto);
+        user.updateUser(userUpdateDto.getName());
         userRepository.save(user);
     }
 
