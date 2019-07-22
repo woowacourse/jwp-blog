@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.domain.repository.ArticleRepository;
 
 import javax.validation.Valid;
 import java.util.Optional;
