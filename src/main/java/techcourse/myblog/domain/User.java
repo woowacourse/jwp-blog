@@ -16,7 +16,6 @@ public class User {
     @GeneratedValue
     private Long id;
 
-    @Size(min = 2, max = 10)
     @NotBlank
     @Pattern(regexp = "^(?!.*[~`!@#$%\\^&*()-])(?!.*\\d).{2,10}$", message = "이름 사이즈는 2~10 크기 입니다.")
     private String name;
@@ -40,8 +39,8 @@ public class User {
         this.password = password;
     }
 
-    public User update(User updatedUser) {
-        this.name = updatedUser.name;
+    public User update(String updatedName) {
+        this.name = updatedName;
         return this;
     }
 

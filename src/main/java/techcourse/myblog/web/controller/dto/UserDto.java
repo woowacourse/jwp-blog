@@ -7,7 +7,6 @@ import javax.validation.constraints.Size;
 
 public class UserDto {
 
-    @Size(min = 2, max = 10)
     @NotBlank
     @Pattern(regexp = "^(?!.*[~`!@#$%\\^&*()-])(?!.*\\d).{2,10}$", message = "이름 사이즈는 2~10 크기 입니다.")
     private String name;
