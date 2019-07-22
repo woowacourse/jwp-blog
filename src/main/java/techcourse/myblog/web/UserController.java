@@ -126,14 +126,13 @@ public class UserController {
             RedirectAttributes redirectAttributes
     ) {
         return ifLoggedIn(session).map(user -> {
-            if (!email.equals(user.getEmail()) && userRepository.findByEmail(email).isPresent()) {
+            if (!user.getEmail().equals(email) && userRepository.findByEmail(email).isPresent()) {
                 redirectAttributes.addFlashAttribute("errorMessage", "이미 등록된 이메일입니다.");
                 return new RedirectView("/profile/edit");
             }
             try {
                 user.setName(name);
                 user.setEmail(email);
-                userRepository.save(user);
                 session.setAttribute("name", name);
                 session.setAttribute("email", email);
                 return new RedirectView("/profile");
