@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.user.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -15,10 +16,45 @@ public class LoginControllerTest {
     @Autowired
     WebTestClient webTestClient;
 
+    void setSession() {
+        webTestClient = WebTestClient.bindToWebHandler(exchange -> {
+            String path = exchange.getRequest().getURI().getPath();
+            if ("/users/mypage".equals(path) || "/users/mypage/edit".equals(path) || "/login".equals(path)) {
+                return exchange.getSession()
+                        .doOnNext(webSession ->
+                                webSession.getAttributes().put("user", new User("buddy", "buddyCU@buddy.com", "Aa12345!")))
+                        .then();
+            }
+            return null;
+        }).build();
+    }
+
+    void removeSession() {
+        webTestClient = WebTestClient.bindToWebHandler(exchange -> {
+            String path = exchange.getRequest().getURI().getPath();
+            if ("/users/mypage".equals(path) || "/users/mypage/edit".equals(path) || "/login".equals(path)) {
+                return exchange.getSession()
+                        .doOnNext(webSession ->
+                                webSession.getAttributes().remove("user"))
+                        .then();
+            }
+            return null;
+        }).build();
+    }
+
+
     @Test
     void 로그인_페이지_접근() {
         webTestClient.get().uri("/login").exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void 로그인_페이지_접근2() {
+        setSession();
+        webTestClient.get().uri("/login").exchange()
+                .expectStatus().isOk();
+        removeSession();
     }
 
     @Test

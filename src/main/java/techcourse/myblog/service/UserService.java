@@ -32,7 +32,7 @@ public class UserService {
 
     public void createNewUser(BindingResult bindingResult, UserDto userDto) {
         checkValidUserInformation(bindingResult, userDto);
-        User user = new User(userDto);
+        User user = userDto.toEntity();
         userRepository.save(user);
         log.info("새로운 {} 유저가 가입했습니다.", user.getUserName());
     }

@@ -1,10 +1,9 @@
 package techcourse.myblog.user;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import techcourse.myblog.exception.NotValidUserInfoException;
-import techcourse.myblog.service.dto.UserDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,21 +23,15 @@ public class User {
     private String email;
     private String password;
 
-    public User(UserDto userDto) {
-        this(userDto.getUserName(), userDto.getEmail(), userDto.getPassword());
-        checkConfirmPassword(userDto);
-    }
+//    public User(User user) {
+//        this(user.userName, user.email, user.password);
+//    }
 
+    @Builder
     public User(String userName, String email, String password) {
         this.userName = userName;
         this.email = email;
         this.password = password;
-    }
-
-    private void checkConfirmPassword(UserDto userDto) {
-        if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-            throw new NotValidUserInfoException("비밀번호가 일치하지 않습니다.");
-        }
     }
 
     public boolean matchPassword(String password) {

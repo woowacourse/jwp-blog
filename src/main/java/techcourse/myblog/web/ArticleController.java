@@ -6,21 +6,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.article.Article;
-import techcourse.myblog.article.ArticleRepository;
-import techcourse.myblog.exception.NotFoundObjectException;
+import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.dto.ArticleDto;
-
-import javax.transaction.Transactional;
 
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
-    private final ArticleRepository articleRepository;
+    private ArticleService articleService;
 
-    ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     @GetMapping("/writing")
@@ -30,42 +27,35 @@ public class ArticleController {
 
     @PostMapping
     public String createArticle(ArticleDto articleDto, Model model) {
-        Article article = Article.builder()
-                .title(articleDto.getTitle())
-                .coverUrl(articleDto.getCoverUrl())
-                .contents(articleDto.getContents())
-                .build();
-        articleRepository.save(article);
+        Article article = articleService.createArticle(articleDto);
         model.addAttribute("article", article);
         return "redirect:/articles/" + article.getArticleId();
     }
 
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable Long articleId, Model model) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new);
+        Article article = articleService.findArticle(articleId);
         model.addAttribute("article", article);
         return "article";
     }
 
     @GetMapping("/{articleId}/edit")
-    public String updateArticle(@PathVariable Long articleId, Model model) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new);
+    public String showUpdateArticle(@PathVariable Long articleId, Model model) {
+        Article article = articleService.findArticle(articleId);
         model.addAttribute("article", article);
         return "article-edit";
     }
 
-    @Transactional
     @PutMapping("/{articleId}")
-    public String showUpdatedArticle(@PathVariable Long articleId, ArticleDto updatedArticle, Model model) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new);
-        article.update(updatedArticle);
-        model.addAttribute("article", updatedArticle);
+    public String updateArticle(@PathVariable Long articleId, ArticleDto updateArticleDto, Model model) {
+        Article updateArticle = articleService.updateArticle(articleId, updateArticleDto.toEntity());
+        model.addAttribute("article", updateArticle);
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable Long articleId) {
-        articleRepository.deleteById(articleId);
+        articleService.deleteArticle(articleId);
         return "redirect:/";
     }
 

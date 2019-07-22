@@ -6,8 +6,6 @@ import techcourse.myblog.service.dto.AuthenticationDto;
 import techcourse.myblog.user.User;
 import techcourse.myblog.user.UserRepository;
 
-import javax.servlet.http.HttpSession;
-
 @Service
 public class LoginService {
 
@@ -17,7 +15,7 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
-    public User login(AuthenticationDto authenticationDto, HttpSession httpSession) {
+    public User login(AuthenticationDto authenticationDto) {
         User user = userRepository.findByEmail(authenticationDto.getEmail())
                 .orElseThrow(LoginException::notFoundEmail);
         checkValidLogin(authenticationDto, user);

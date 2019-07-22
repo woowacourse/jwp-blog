@@ -33,7 +33,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(AuthenticationDto authenticationDto, HttpSession httpSession) {
-        User user = loginService.login(authenticationDto, httpSession);
+        User user = loginService.login(authenticationDto);
         httpSession.setAttribute("user", user);
         return "redirect:/";
     }

@@ -3,6 +3,8 @@ package techcourse.myblog.service.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import techcourse.myblog.exception.NotValidUserInfoException;
+import techcourse.myblog.user.User;
 
 import javax.validation.constraints.Pattern;
 
@@ -23,10 +25,19 @@ public class UserDto {
     @Pattern(regexp = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$", message = "형식에 맞는 비밀번호가 아닙니다.")
     private String confirmPassword;
 
-    public UserDto(String userName, String email, String password, String confirmPassword) {
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
+    private void checkConfirmPassword() {
+        if (!password.equals(confirmPassword)) {
+            throw new NotValidUserInfoException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    public User toEntity() {
+        checkConfirmPassword();
+
+        return User.builder()
+                .userName(userName)
+                .email(email)
+                .password(password)
+                .build();
     }
 }
