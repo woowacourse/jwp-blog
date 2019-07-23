@@ -53,7 +53,7 @@ public class UserController {
             return addErrorMessageToModel(DUPLICATE_EMAIL_ERROR_MESSAGE);
         }
         userService.save(userDto);
-        return new ModelAndView("redirect:/" + USER_MAPPING_URL);
+        return new ModelAndView("redirect:" + USER_MAPPING_URL);
     }
 
     @PostMapping("/login")
@@ -61,8 +61,7 @@ public class UserController {
         log.debug(USER_MAPPING_URL + "/login post : " + userDto.toString());
         Optional<UserDto> maybeUserDto = userService.getUserDtoByEmail(userDto.getEmail());
 
-        if (!maybeUserDto.isPresent()) {
-            log.debug("Contoller-login : 중복 이메일 체크");
+        if (!maybeUserDto.isPresent()) { //아이디 존재하지 않으면
             return addErrorMessageToModel(NO_EMAIL_ERROR_MESSAGE);
         }
 

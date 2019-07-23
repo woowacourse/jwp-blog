@@ -10,6 +10,8 @@ import javax.validation.constraints.Size;
 @ToString
 @Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @RequiredArgsConstructor()
 @EqualsAndHashCode(of = "id")
 public class User {

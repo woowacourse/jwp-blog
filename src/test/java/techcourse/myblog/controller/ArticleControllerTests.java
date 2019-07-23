@@ -1,33 +1,24 @@
 package techcourse.myblog.controller;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.MyblogApplicationTests;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.repository.ArticleRepository;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static techcourse.myblog.controller.ArticleController.ARTICLE_MAPPING_URL;
 
+@AutoConfigureMockMvc
 public class ArticleControllerTests extends MyblogApplicationTests {
     Article article;
     @Autowired
-    private WebTestClient webTestClient;
+    MockMvc mvc;
     @Autowired
-    private ArticleRepository articleRepository;
-
-    @BeforeEach
-    void setUp() {
-        article = Article.builder()
-                .title("a")
-                .contents("a")
-                .coverUrl("a")
-                .build();
-        articleRepository.save(article);
-    }
+    private WebTestClient webTestClient;
 
     @Test
     void createForm_call_isOk() {
@@ -102,6 +93,4 @@ public class ArticleControllerTests extends MyblogApplicationTests {
                 .expectStatus()
                 .is3xxRedirection();
     }
-
-
 }
