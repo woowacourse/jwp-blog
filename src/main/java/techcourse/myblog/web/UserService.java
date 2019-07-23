@@ -7,6 +7,7 @@ import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserLoginDto;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -47,5 +48,13 @@ public class UserService {
     public void delete(String userEmail) {
         User user = userRepository.findUserByEmail(userEmail);
         userRepository.delete(user);
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
     }
 }
