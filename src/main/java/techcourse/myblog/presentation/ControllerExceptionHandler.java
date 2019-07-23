@@ -13,7 +13,7 @@ import static techcourse.myblog.presentation.UserController.LOGIN_ERROR_MSG;
 @ControllerAdvice
 public class ControllerExceptionHandler {
     @ExceptionHandler(ArticleNotFoundException.class)
-    public String handleArticleNotFoundException(ArticleNotFoundException e, HttpServletResponse response, Model model) {
+    public String handleArticleNotFoundException(ArticleNotFoundException e, HttpServletResponse response) {
         response.setStatus(404);
         return "error404";
     }
