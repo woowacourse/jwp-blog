@@ -2,13 +2,13 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.exception.UserArgumentException;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
-import techcourse.myblog.domain.exception.UserArgumentException;
 import techcourse.myblog.service.exception.UserDeleteException;
 import techcourse.myblog.service.exception.UserUpdateException;
 
@@ -30,6 +30,11 @@ public class UserService {
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public UserPublicInfoDto findById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(NotFoundUserException::new);
+        return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
     }
 
     public void save(UserDto userDto) {

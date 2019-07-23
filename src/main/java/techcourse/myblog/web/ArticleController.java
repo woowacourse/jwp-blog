@@ -3,14 +3,13 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserPublicInfoDto;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.exception.NotFoundArticleException;
 import techcourse.myblog.service.exception.NotFoundUserException;
+import techcourse.myblog.web.exception.NotLoggedInException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,92 +18,72 @@ import javax.servlet.http.HttpSession;
 public class ArticleController {
     private static final String LOGGED_IN_USER = "loggedInUser";
 
-    private ArticleRepository articleRepository;
-    private UserRepository userRepository;
+    private ArticleService articleService;
+    private UserService userService;
 
-    public ArticleController(final ArticleRepository articleRepository, final UserRepository userRepository) {
-        this.articleRepository = articleRepository;
-        this.userRepository = userRepository;
+    public ArticleController(ArticleService articleService, UserService userService) {
+        this.articleService = articleService;
+        this.userService = userService;
     }
 
     @GetMapping("/articles")
     public String showArticles(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
+        model.addAttribute("articles", articleService.findAll());
         return "index";
     }
 
     @GetMapping("/articles/new")
     public String showCreatePage(HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        if (httpSession.getAttribute(LOGGED_IN_USER) == null) {
-            return "redirect:/login";
-        }
+        getLoggedInUser(httpServletRequest);
         return "article-edit";
     }
 
     @GetMapping("/articles/{id}")
     public String showArticle(@PathVariable("id") Long id, Model model) {
-        Article article = articleRepository.findById(id)
-                .orElseThrow(NotFoundArticleException::new);
-        ArticleDto articleDto = new ArticleDto(article.getId(), article.getTitle(),
-                article.getCoverUrl(), article.getContents());
+        ArticleDto articleDto = articleService.findById(id);
         model.addAttribute("article", articleDto);
 
-        User user = userRepository.findById(article.getUserId())
-                .orElseThrow(NotFoundUserException::new);
-        UserPublicInfoDto userPublicInfoDto = new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
+        UserPublicInfoDto userPublicInfoDto = userService.findById(articleDto.getUserId());
         model.addAttribute("articleUser", userPublicInfoDto);
         return "article";
     }
 
     @GetMapping("/articles/{id}/edit")
     public String showEditPage(@PathVariable("id") Long id, Model model, HttpServletRequest httpServletRequest) {
-        Article article = articleRepository.findById(id)
-                .orElseThrow(NotFoundArticleException::new);
-        if (isLoggedInUserArticle(httpServletRequest, article)) {
-            ArticleDto articleDto = new ArticleDto(article.getId(), article.getTitle(), article.getCoverUrl(), article.getContents());
+        ArticleDto articleDto = articleService.findById(id);
+        if (getLoggedInUser(httpServletRequest).getId().equals(articleDto.getUserId())) {
             model.addAttribute("article", articleDto);
+            return "article-edit";
         }
-        return "article-edit";
+        return "redirect:/login";
     }
 
     @PostMapping("/articles")
     public String createArticle(ArticleDto articleDto, HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        UserPublicInfoDto userPublicInfoDto = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
-        if (userPublicInfoDto == null) {
-            return "redirect:/login";
-        }
-        articleDto.setUserId(userPublicInfoDto.getId());
-        Article persistArticle = articleRepository.save(articleDto.toEntity());
-        return "redirect:/articles/" + persistArticle.getId();
+        articleDto.setUserId(getLoggedInUser(httpServletRequest).getId());
+        ArticleDto savedArticleDto = articleService.save(articleDto);
+        return "redirect:/articles/" + savedArticleDto.getId();
     }
 
     @PutMapping("/articles/{id}")
     public String editArticle(@PathVariable("id") long id, ArticleDto articleDto, HttpServletRequest httpServletRequest) {
-        articleRepository.findById(id).ifPresent(article -> {
-            if (isLoggedInUserArticle(httpServletRequest, article)) {
-                article.updateArticle(articleDto);
-                articleRepository.save(article);
-            }
-        });
+        articleService.update(id, getLoggedInUser(httpServletRequest).getId(), articleDto);
         return "redirect:/articles/" + id;
     }
 
     @DeleteMapping("/articles/{id}")
     public String deleteArticle(@PathVariable("id") long id, HttpServletRequest httpServletRequest) {
-        articleRepository.findById(id).ifPresent(article -> {
-            if (isLoggedInUserArticle(httpServletRequest, article)) {
-                articleRepository.deleteById(id);
-            }
-        });
+        articleService.delete(id, getLoggedInUser(httpServletRequest).getId());
         return "redirect:/";
     }
 
-    private boolean isLoggedInUserArticle(HttpServletRequest httpServletRequest, Article article) {
+    private UserPublicInfoDto getLoggedInUser(HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
         UserPublicInfoDto user = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
-        return (user != null) && article.matchUserId(user.getId());
+        if (user == null) {
+            throw new NotLoggedInException();
+        }
+        return user;
     }
 
     @ExceptionHandler(NotFoundArticleException.class)
@@ -116,4 +95,10 @@ public class ArticleController {
     public String handleNotFoundUserException() {
         return "redirect:/";
     }
+
+    @ExceptionHandler(NotLoggedInException.class)
+    public String handleNotLoggedInException() {
+        return "redirect:/login";
+    }
+
 }

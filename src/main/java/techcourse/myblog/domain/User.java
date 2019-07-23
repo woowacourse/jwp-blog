@@ -1,8 +1,5 @@
 package techcourse.myblog.domain;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.annotation.PersistenceConstructor;
 import techcourse.myblog.domain.exception.UserArgumentException;
 
 import javax.persistence.Entity;

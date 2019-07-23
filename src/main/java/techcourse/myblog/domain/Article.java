@@ -1,7 +1,5 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.dto.ArticleDto;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,10 +25,10 @@ public class Article {
         this.contents = contents;
     }
 
-    public void updateArticle(ArticleDto articleDto) {
-        this.title = articleDto.getTitle();
-        this.coverUrl = articleDto.getCoverUrl();
-        this.contents = articleDto.getContents();
+    public void updateArticle(Article article) {
+        this.title = article.getTitle();
+        this.coverUrl = article.getCoverUrl();
+        this.contents = article.getContents();
     }
 
     public boolean matchUserId(Long userId) {
