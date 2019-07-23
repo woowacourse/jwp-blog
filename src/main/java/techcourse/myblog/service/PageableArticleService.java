@@ -1,9 +1,7 @@
 package techcourse.myblog.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article.Article;
@@ -24,7 +22,6 @@ public class PageableArticleService {
 
     @Transactional(readOnly = true)
     public List<Article> findAllPage(Pageable pageable) {
-        Pageable pageable1 = PageRequest.of(0, 3, Sort.by("id").descending());
         Page<Article> page = articlePageableRepository.findAll(pageable);
         return page.getContent();
     }
