@@ -48,11 +48,6 @@ public class UserService {
     }
 
     public boolean exists(String email) {
-        try {
-            findByEmail(email);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+        return userRepository.existsByEmail(email);
     }
 }

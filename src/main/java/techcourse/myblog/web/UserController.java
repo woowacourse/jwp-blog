@@ -1,7 +1,5 @@
 package techcourse.myblog.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,97 +17,97 @@ import javax.validation.Valid;
 
 @Controller
 public class UserController {
-    private final UserService userService;
-    private static String redirectIndex = "redirect:/";
+	private static String redirectIndex = "redirect:/";
+	private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
 
-    @GetMapping("/login")
-    public String loginForm(HttpSession httpSession, LoginDto loginDto) {
-        if (checkSession(httpSession)) return redirectIndex;
-        return "login";
-    }
+	@GetMapping("/login")
+	public String loginForm(HttpSession httpSession, LoginDto loginDto) {
+		if (checkSession(httpSession)) return redirectIndex;
+		return "login";
+	}
 
-    private boolean checkSession(HttpSession httpSession) {
-        return httpSession.getAttribute("user") != null;
-    }
+	private boolean checkSession(HttpSession httpSession) {
+		return httpSession.getAttribute("user") != null;
+	}
 
-    @PostMapping("/login")
-    public String login(@Valid LoginDto loginDto, BindingResult bindingResult, HttpSession httpSession, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "login";
-        }
-        try {
-            User user = userService.login(loginDto);
-            httpSession.setAttribute("user", user);
-            return "redirect:/";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("errorMessage", "이메일과 비밀번호를 다시 확인해주세요.");
-            return "login";
-        }
-    }
+	@PostMapping("/login")
+	public String login(@Valid LoginDto loginDto, BindingResult bindingResult, HttpSession httpSession, Model model) {
+		if (bindingResult.hasErrors()) {
+			return "login";
+		}
+		try {
+			User user = userService.login(loginDto);
+			httpSession.setAttribute("user", user);
+			return "redirect:/";
+		} catch (IllegalArgumentException e) {
+			model.addAttribute("errorMessage", "이메일과 비밀번호를 다시 확인해주세요.");
+			return "login";
+		}
+	}
 
-    @GetMapping("/logout")
-    public String logout(HttpSession httpSession) {
-        httpSession.invalidate();
-        return "redirect:/";
-    }
+	@GetMapping("/logout")
+	public String logout(HttpSession httpSession) {
+		httpSession.invalidate();
+		return "redirect:/";
+	}
 
-    @GetMapping("/mypage")
-    public String showMyPage(HttpSession httpSession) {
-        if (!checkSession(httpSession)) return redirectIndex;
-        return "mypage";
-    }
+	@GetMapping("/mypage")
+	public String showMyPage(HttpSession httpSession) {
+		if (!checkSession(httpSession)) return redirectIndex;
+		return "mypage";
+	}
 
-    @GetMapping("/mypage/edit")
-    public String showMyPageEdit(HttpSession httpSession) {
-        if (!checkSession(httpSession)) return redirectIndex;
-        return "mypage-edit";
-    }
+	@GetMapping("/mypage/edit")
+	public String showMyPageEdit(HttpSession httpSession) {
+		if (!checkSession(httpSession)) return redirectIndex;
+		return "mypage-edit";
+	}
 
-    @PutMapping("/mypage/edit")
-    public String updateUser(UserDto userDto, HttpSession httpSession) {
-        if (!checkSession(httpSession)) return redirectIndex;
-        User user = (User) httpSession.getAttribute("user");
-        userDto.setEmail(user.getEmail());
-        httpSession.setAttribute("user", userService.update(userDto));
+	@PutMapping("/mypage/edit")
+	public String updateUser(UserDto userDto, HttpSession httpSession) {
+		if (!checkSession(httpSession)) return redirectIndex;
+		User user = (User) httpSession.getAttribute("user");
+		userDto.setEmail(user.getEmail());
+		httpSession.setAttribute("user", userService.update(userDto));
 
-        return "redirect:/mypage";
-    }
+		return "redirect:/mypage";
+	}
 
-    @DeleteMapping("/mypage/edit")
-    public String deleteUser(HttpSession httpSession) {
-        if (!checkSession(httpSession)) return redirectIndex;
-        User user = (User) httpSession.getAttribute("user");
-        userService.remove(user.getEmail());
-        return "redirect:/logout";
-    }
+	@DeleteMapping("/mypage/edit")
+	public String deleteUser(HttpSession httpSession) {
+		if (!checkSession(httpSession)) return redirectIndex;
+		User user = (User) httpSession.getAttribute("user");
+		userService.remove(user.getEmail());
+		return "redirect:/logout";
+	}
 
-    @GetMapping("/users")
-    public String users(Model model, HttpSession httpSession) {
-        if (!checkSession(httpSession)) return redirectIndex;
-        model.addAttribute("users", userService.findAll());
-        return "user-list";
-    }
+	@GetMapping("/users")
+	public String users(Model model, HttpSession httpSession) {
+		if (!checkSession(httpSession)) return redirectIndex;
+		model.addAttribute("users", userService.findAll());
+		return "user-list";
+	}
 
-    @PostMapping("/users")
-    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "signup";
-        }
-        if (userService.exists(userDto.getEmail())) {
-            model.addAttribute("errorMessage", "중복된 이메일입니다.");
-            return "signup";
-        }
-        userService.save(userDto);
-        return "redirect:/login";
-    }
+	@PostMapping("/users")
+	public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
+		if (bindingResult.hasErrors()) {
+			return "signup";
+		}
+		if (userService.exists(userDto.getEmail())) {
+			model.addAttribute("errorMessage", "중복된 이메일입니다.");
+			return "signup";
+		}
+		userService.save(userDto);
+		return "redirect:/login";
+	}
 
-    @GetMapping("/signup")
-    public String singUp(UserDto userDto, HttpSession httpSession) {
-        if (checkSession(httpSession)) return redirectIndex;
-        return "signup";
-    }
+	@GetMapping("/signup")
+	public String singUp(UserDto userDto, HttpSession httpSession) {
+		if (checkSession(httpSession)) return redirectIndex;
+		return "signup";
+	}
 }
