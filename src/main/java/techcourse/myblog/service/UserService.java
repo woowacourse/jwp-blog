@@ -1,14 +1,13 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserSignUpRequestDto;
 import techcourse.myblog.dto.UserUpdateRequestDto;
 import techcourse.myblog.exception.NoUserException;
 import techcourse.myblog.exception.SignUpFailException;
 import techcourse.myblog.repository.UserRepository;
-
-import javax.transaction.Transactional;
 
 @Service
 public class UserService {

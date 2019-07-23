@@ -5,19 +5,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.ArticlePagingRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Deprecated
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ArticleServiceTest {
+class ArticlePagingServiceTest {
     @Autowired
-    private ArticleService articleService;
+    private ArticlePagingService articlePagingService;
 
     @Autowired
-    private ArticleRepository articleRepository;
+    private ArticlePagingRepository articlePagingRepository;
 
     private static Article article;
 
@@ -32,14 +31,14 @@ class ArticleServiceTest {
     @Test
     void create() {
         ArticleDto articleDto = new ArticleDto("title", "coverUrl", "contents");
-        Long articleId = articleService.create(articleDto);
-        assertTrue(articleRepository.findById(articleId).isPresent());
+        Long articleId = articlePagingService.create(articleDto);
+        assertTrue(articlePagingRepository.findById(articleId).isPresent());
     }
 
     @Test
     void find() {
-        Article savedArticle = articleRepository.save(article);
-        Article foundArticle = articleService.findById(savedArticle.getId());
+        Article savedArticle = articlePagingRepository.save(article);
+        Article foundArticle = articlePagingService.findById(savedArticle.getId());
         assertThat(savedArticle.getTitle()).isEqualTo(foundArticle.getTitle());
         assertThat(savedArticle.getCoverUrl()).isEqualTo(foundArticle.getCoverUrl());
         assertThat(savedArticle.getContents()).isEqualTo(foundArticle.getContents());
@@ -47,9 +46,9 @@ class ArticleServiceTest {
 
     @Test
     void update() {
-        Article savedArticle = articleRepository.save(article);
+        Article savedArticle = articlePagingRepository.save(article);
         ArticleDto articleDto = new ArticleDto("UpdateTitle", "UpdateCoverUrl", "UpdateContents");
-        Article updatedArticle = articleService.update(savedArticle.getId(), articleDto);
+        Article updatedArticle = articlePagingService.update(savedArticle.getId(), articleDto);
         assertThat(updatedArticle.getTitle()).isEqualTo(articleDto.getTitle());
         assertThat(updatedArticle.getCoverUrl()).isEqualTo(articleDto.getCoverUrl());
         assertThat(updatedArticle.getContents()).isEqualTo(articleDto.getContents());
@@ -57,8 +56,8 @@ class ArticleServiceTest {
 
     @Test
     void delete() {
-        articleRepository.save(article);
-        articleService.delete(article.getId());
-        assertThat(articleRepository.findById(article.getId())).isEmpty();
+        articlePagingRepository.save(article);
+        articlePagingService.delete(article.getId());
+        assertThat(articlePagingRepository.findById(article.getId())).isEmpty();
     }
 }

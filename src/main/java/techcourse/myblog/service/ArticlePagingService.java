@@ -1,25 +1,28 @@
 package techcourse.myblog.service;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.exception.NoArticleException;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.ArticlePagingRepository;
 
-@Deprecated
+import java.util.List;
+
 @Service
-public class ArticleService {
+public class ArticlePagingService {
     private static final String NO_ARTICLE_MESSAGE = "존재하지 않는 게시글 입니다.";
 
-    private final ArticleRepository articleRepository;
+    private final ArticlePagingRepository articlePagingRepository;
 
-    public ArticleService(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public ArticlePagingService(ArticlePagingRepository articlePagingRepository) {
+        this.articlePagingRepository = articlePagingRepository;
     }
 
-    public Iterable<Article> findAll() {
-        return articleRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<Article> findAll(Pageable pageable) {
+        return articlePagingRepository.findAll(pageable).getContent();
     }
 
     public Long create(ArticleDto articleDto) {
@@ -28,22 +31,23 @@ public class ArticleService {
                 .coverUrl(articleDto.getCoverUrl())
                 .contents(articleDto.getContents())
                 .build();
-        articleRepository.save(article);
+        articlePagingRepository.save(article);
         return article.getId();
     }
 
+    @Transactional(readOnly = true)
     public Article findById(Long id) {
-        return articleRepository.findById(id).orElseThrow(() -> new NoArticleException(NO_ARTICLE_MESSAGE));
+        return articlePagingRepository.findById(id).orElseThrow(() -> new NoArticleException(NO_ARTICLE_MESSAGE));
     }
 
     @Transactional
     public Article update(Long id, ArticleDto articleDto) {
-        Article article = articleRepository.findById(id).orElseThrow(() -> new NoArticleException(NO_ARTICLE_MESSAGE));
+        Article article = articlePagingRepository.findById(id).orElseThrow(() -> new NoArticleException(NO_ARTICLE_MESSAGE));
         article.update(articleDto);
         return article;
     }
 
     public void delete(Long id) {
-        articleRepository.deleteById(id);
+        articlePagingRepository.deleteById(id);
     }
 }
