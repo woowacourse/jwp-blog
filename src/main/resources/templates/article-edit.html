@@ -2,11 +2,11 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="common/header"></th:block>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css">
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css">
-    <link rel="stylesheet" href="/css/article-edit.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+    <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css" rel="stylesheet">
+    <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css" rel="stylesheet">
+    <link href="/css/article-edit.css" rel="stylesheet">
 </head>
 <body>
 <div>
@@ -17,15 +17,26 @@
         </div>
     </div>
 
-    <form th:action="@{/articles/{id}(id = ${article} ? ${article.id} : '')}" name="article" th:method="${article} ? PUT : POST" th:object="${article}" accept-charset="utf-8">
+    <form accept-charset="utf-8" name="article" th:action="@{/articles/{id}(id = ${article} ? ${article.id} : '')}"
+          th:method="${article} ? PUT : POST" th:object="${article}">
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom" placeholder="제목을 입력해주세요" autocomplete="off" th:if="${article}" th:value="${article.title}">
-                        <input type="text" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom" placeholder="제목을 입력해주세요" autocomplete="off" th:unless="${article}">
-                        <input type="text" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20" placeholder="배경 url을 입력해주세요" autocomplete="off" th:if="${article}" th:value="${article.coverUrl}">
-                        <input type="text" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20" placeholder="배경 url을 입력해주세요" autocomplete="off" th:unless="${article}">
+                        <input autocomplete="off"
+                               class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
+                               name="title" placeholder="제목을 입력해주세요" th:if="${article}" th:value="${article.title}"
+                               type="text">
+                        <input autocomplete="off"
+                               class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
+                               name="title" placeholder="제목을 입력해주세요" th:unless="${article}" type="text">
+                        <input autocomplete="off"
+                               class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
+                               name="coverUrl" placeholder="배경 url을 입력해주세요" th:if="${article}"
+                               th:value="${article.coverUrl}" type="text">
+                        <input autocomplete="off"
+                               class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
+                               name="coverUrl" placeholder="배경 url을 입력해주세요" th:unless="${article}" type="text">
                     </div>
                 </div>
             </div>
@@ -35,15 +46,16 @@
             <div class="row">
                 <div class="col-lg-1 col-md-1"></div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
-                    <input id="article-contents" name="contents" type="hidden" th:value="${article == null ? '' : article.contents}">
+                    <input id="article-contents" name="contents" th:value="${article == null ? '' : article.contents}"
+                           type="hidden">
                     <div id="editSection"></div>
                 </div>
                 <div class="col-lg-1 col-md-1">
                     <div class="btn-group btn-group-vertical">
-                        <button id="save-btn" type="submit" class="btn btn-default">
+                        <button class="btn btn-default" id="save-btn" type="submit">
                             <i class="ti-save"></i>
                         </button>
-                        <a href="/" class="btn btn-default" th:if="${article}" th:onclick="sendDelete()">
+                        <a class="btn btn-default" href="/" th:if="${article}" th:onclick="sendDelete()">
                             <i class="ti-close"></i>
                         </a>
                     </div>
@@ -54,7 +66,8 @@
 </div>
 
 <th:block th:replace="common/js"></th:block>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tui-editor/1.4.3/tui-editor-Editor-full.min.js" integrity="sha256-7dF+yqM5APBwOEeHoAf0FtdD9tsSoDul+jRXwySCJ1A=" crossorigin="anonymous"></script>
+<script crossorigin="anonymous" integrity="sha256-7dF+yqM5APBwOEeHoAf0FtdD9tsSoDul+jRXwySCJ1A="
+        src="https://cdnjs.cloudflare.com/ajax/libs/tui-editor/1.4.3/tui-editor-Editor-full.min.js"></script>
 <script type="text/javascript">
     const contents = document.getElementById("article-contents").value;
 
@@ -75,6 +88,7 @@
         document.querySelector("input[name='_method']").value = "DELETE";
         document.querySelector("form[name='article']").submit();
     };
+
 </script>
 </body>
 </html>

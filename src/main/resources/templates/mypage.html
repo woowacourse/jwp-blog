@@ -2,11 +2,11 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="common/header"></th:block>
-    <link rel="stylesheet" href="css/mypage.css">
+    <link href="css/mypage.css" rel="stylesheet">
 </head>
 <body>
 <div>
-    <header id="header" class="header navbar bg-transparent no-border">
+    <header class="header navbar bg-transparent no-border" id="header">
         <div class="header-container">
             <th:block th:replace="common/logo"></th:block>
             <th:block th:replace="common/user-profile"></th:block>
@@ -27,14 +27,15 @@
                 <div class="card">
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
-                        <a href="/mypage/edit" class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
+                        <a class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5"
+                           href="/mypage/edit">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </a>
                     </div>
                     <div class="card-block">
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"> <b>Name</b></p>
+                                <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
                                 <p class="mrg-top-10" th:text="${user.username}">Brown</p>
@@ -43,7 +44,7 @@
                         <hr>
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"> <b>Email</b></p>
+                                <p class="mrg-top-10 text-dark"><b>Email</b></p>
                             </div>
                             <div class="col-md-6">
                                 <p class="mrg-top-10" th:text="${user.email}">gracefulBrown@woowahan.com</p>
@@ -52,18 +53,19 @@
                         <hr>
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"> <b>Avatar</b></p>
+                                <p class="mrg-top-10 text-dark"><b>Avatar</b></p>
                             </div>
                             <div class="col-md-6">
                                 <div>
-                                    <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" width="117" alt="">
+                                    <img alt="" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
+                                         width="117">
                                 </div>
                             </div>
                         </div>
                         <hr>
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"> <b>SNS</b></p>
+                                <p class="mrg-top-10 text-dark"><b>SNS</b></p>
                             </div>
                             <div class="col-md-12">
                                 <div class="row">

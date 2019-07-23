@@ -30,12 +30,6 @@ public class User {
         this.email = userDto.getEmail();
     }
 
-//    public boolean checkUserAuth(final LoginDto loginDto) {
-//        return
-//                this.email == loginDto.getEmail() &&
-//                this.password == loginDto.getPassword();
-//    }
-
     public Long getId() {
         return id;
     }

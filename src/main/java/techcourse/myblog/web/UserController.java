@@ -143,7 +143,13 @@ public class UserController {
     }
 
     @PutMapping(ROUTE_MYPAGE + ROUTE_EDIT)
-    public String mypageEdit(final HttpSession session, final MyPageEditDto dto) {
+    public String mypageEdit(final Model model, final HttpSession session, @Valid final MyPageEditDto dto, final BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            final FieldError error = bindingResult.getFieldError();
+            LOG.debug("수정 중 오류 발생: {}", error.getField());
+            model.addAttribute(ERROR, error.getField());
+            return PAGE_MYPAGE_EDIT;
+        }
         try {
             final User loginUser = (User) session.getAttribute(USER);
             final User user = userRepository.findById(loginUser.getId()).get();
