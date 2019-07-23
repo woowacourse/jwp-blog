@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import org.hibernate.validator.constraints.Length;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.exception.SignUpException;
 
@@ -18,10 +19,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
+    @Column(nullable = false)
+    @Length(min = 2, max = 10)
     private String name;
+    @Column(nullable = false)
+    @Length(min = 8)
     private String password;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     protected User() {
