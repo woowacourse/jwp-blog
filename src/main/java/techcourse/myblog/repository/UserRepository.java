@@ -12,4 +12,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Transactional
     @Modifying
     void deleteByEmail(String email);
+
+    boolean existsByEmail(String email);
 }

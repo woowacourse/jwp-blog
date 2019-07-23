@@ -16,9 +16,11 @@ import javax.persistence.Id;
 @Getter
 @Entity
 public class Article {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String coverUrl;
     private String contents;

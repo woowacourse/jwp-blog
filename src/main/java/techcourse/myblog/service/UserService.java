@@ -17,7 +17,7 @@ public class UserService {
     }
 
     public User save(User user) {
-        if (existsEmail(user.getEmail())) {
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new UserDuplicateException(ERROR_DUPLICATE_EMAIL_MESSAGE);
         }
         return userRepository.save(user);
