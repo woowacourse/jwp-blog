@@ -21,7 +21,6 @@ public class UserService {
         return userRepository.findUsersByEmail(email).size() != USER_NOT_EXIST;
     }
 
-
     public User updateName(long id, String name) {
         User user = userRepository.findUserById(id);
         user.setName(name);
