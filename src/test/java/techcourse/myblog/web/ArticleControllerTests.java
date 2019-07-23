@@ -1,157 +1,118 @@
 package techcourse.myblog.web;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.domain.repository.ArticleRepository;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTests {
-    @Autowired
-    private WebTestClient webTestClient;
-
+public class ArticleControllerTests extends ControllerTestTemplate {
     @Autowired
     private ArticleRepository articleRepository;
 
-    private String title = "title";
-    private String coverUrl = "coverUrl";
-    private String contents = "contents";
+    private ArticleDto articleDto = new ArticleDto("title", "coverUrl", "contents");
+    private Article savedArticle;
 
-    @Test
-    void index() {
-        requestGet("/").expectStatus().isOk();
+    @BeforeEach
+    void setup() {
+        savedArticle = articleRepository.save(articleDto.toArticle());
     }
 
     @Test
     void articleForm() {
-        requestGet("/writing").expectStatus().isOk();
+        requestExpect(GET, "/articles/writing").isOk();
     }
 
-    @Test
-    void create_article() {
-        String titleKo = "목적의식 있는 연습을 통한 효과적인 학습";
-        String coverUrlKo = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-        String contentsKo = "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 '선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?'였다.";
-        Article article = new Article(articleRepository.nextId(), titleKo, coverUrlKo, contentsKo);
-        Article articleApplyEscape = new Article(articleRepository.nextId(), titleKo, coverUrlKo, StringEscapeUtils.escapeJava(contentsKo));
-
-        requestPost("/write", createArticleForm(article))
-                .expectStatus().isFound()
+    @ParameterizedTest(name = "{index}: {4}")
+    @MethodSource("articlesStream")
+    void 게시글_작성_테스트(Article article) {
+        requestExpect(POST, "/articles/write", parser(article))
+                .isFound()
                 .expectBody()
                 .consumeWith(response ->
-                    checkContainArticle(requestGet(response.getResponseHeaders().get("Location").get(0)), articleApplyEscape)
-                );
+                        bodyCheck(
+                                requestExpect(GET, getRedirectedUri(response)).isOk(),
+                                applyEscapeArticle(article)));
     }
 
-    @Test
-    void create_article_en() {
-        Article article = new Article(articleRepository.nextId(), title, coverUrl, contents);
+    static Stream<Article> articlesStream() throws Throwable {
+        return Stream.of(
+                new Article("article_en", "url_en", "contents_en"),
+                new Article("목적의식 있는 연습을 통한 효과적 학습",
+                        "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg",
+                        "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 '선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?'였다.")
+        );
+    }
 
-        requestPost("/write", createArticleForm(article))
-                .expectStatus().isFound()
-                .expectBody()
-                .consumeWith(response ->
-                    checkContainArticle(requestGet(response.getResponseHeaders().get("Location").get(0)), article)
-                );
+    private Article applyEscapeArticle(Article article) {
+        return new Article(article.getTitle(), article.getCoverUrl(), StringEscapeUtils.escapeJava(article.getContents()));
     }
 
     @Test
     void 게시글_페이지_정상_조회() {
-        Article article = insertArticle(title, coverUrl, contents);
-        checkContainArticle(requestGet("/articles/" + article.getId()), article);
+        bodyCheck(
+                requestExpect(GET, "/articles/" + savedArticle.getId()).isOk(), savedArticle
+        );
     }
 
     @Test
     void 존재하지_않는_게시글_조회_에러() {
-        requestGet("/articles/" + articleRepository.nextId())
-                .expectStatus().is5xxServerError();
+        requestExpect(GET, "/articles/0").isEqualTo(INTERNAL_SERVER_ERROR);
     }
 
     @Test
     void 게시글_수정페이지_이동() {
-        Article article = insertArticle(title, coverUrl, contents);
-        requestGet("/articles/" + article.getId() + "/edit")
-                .expectStatus().isOk();
+        requestExpect(GET, "/articles/" + savedArticle.getId()).isOk();
     }
 
     @Test
     void 게시글_수정() {
-        Article article = insertArticle(title, coverUrl, contents);
-        Article editedArticle = new Article(article.getId(), "new title", coverUrl, contents);
+        Article article = articleRepository.save(articleDto.toArticle());
+        Article editedArticle = new Article("new title", "new url", "new contents");
 
-        checkContainArticle(
-                requestPut("/articles/" + article.getId(), createArticleForm(editedArticle)),
-                editedArticle);
+        requestExpect(PUT, "/articles/" + article.getId(), parser(editedArticle))
+                .isFound()
+                .expectBody()
+                .consumeWith(response ->
+                        bodyCheck(requestExpect(GET, getRedirectedUri(response)).isOk(), editedArticle));
     }
 
     @Test
     void 게시글_삭제() {
-        Article article = insertArticle(title, coverUrl, contents);
-
-        webTestClient.delete()
-                .uri("/articles/" + article.getId())
-                .exchange()
-                .expectStatus().isFound()
-        ;
+        requestExpect(DELETE, "/articles/" + savedArticle.getId()).isFound();
     }
 
-    private Article insertArticle(String title, String url, String contents) {
-        Article article = new Article(articleRepository.nextId(), title, url, contents);
-        articleRepository.insert(article);
-        return article;
+    private void bodyCheck(WebTestClient.ResponseSpec responseSpec, Article article) {
+        List<String> contents = new ArrayList<>();
+        contents.add(article.getTitle());
+        contents.add(article.getCoverUrl());
+        contents.add(article.getContents());
+
+        super.bodyCheck(responseSpec, contents);
     }
 
-    private void checkContainArticle(WebTestClient.ResponseSpec responseSpec, Article article) {
-        responseSpec
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(article.getTitle())).isTrue();
-                    assertThat(body.contains(article.getCoverUrl())).isTrue();
-                    assertThat(body.contains(article.getContents())).isTrue();
-                });
-    }
-
-    private BodyInserters.FormInserter<String> createArticleForm(Article article) {
-        return BodyInserters
-                .fromFormData("title", article.getTitle())
-                .with("coverUrl", article.getCoverUrl())
-                .with("contents", article.getContents());
-    }
-
-    private WebTestClient.ResponseSpec requestGet(String uri) {
-        return webTestClient.get()
-                .uri(uri)
-                .exchange()
-                ;
-    }
-
-    private WebTestClient.ResponseSpec requestPost(String uri, BodyInserters.FormInserter<String> form) {
-        return webTestClient.post()
-                .uri(uri)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(form)
-                .exchange()
-                ;
-    }
-
-    private WebTestClient.ResponseSpec requestPut(String uri, BodyInserters.FormInserter<String> form) {
-        return webTestClient.put()
-                .uri(uri)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(form)
-                .exchange()
-                ;
+    private MultiValueMap<String, String> parser(Article article) {
+        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+        multiValueMap.add("title", article.getTitle());
+        multiValueMap.add("coverUrl", article.getCoverUrl());
+        multiValueMap.add("contents", article.getContents());
+        return multiValueMap;
     }
 }
