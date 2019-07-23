@@ -37,10 +37,10 @@ public class AccountControllerTest {
         this.loginControllerTest = new LoginControllerTest(this.webTestClient, this.userRepository);
     }
 
-    @BeforeEach
-    void setUp() {
-        testSignupProcess(defaultName, defaultPassword, defaultEmail);
-    }
+//    @BeforeEach
+//    void setUp() {
+//        testSignupProcess(defaultName, defaultPassword, defaultEmail);
+//    }
 
     @Test
     void showSignupPageTest() {

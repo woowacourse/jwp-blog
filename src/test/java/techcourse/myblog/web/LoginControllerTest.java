@@ -33,10 +33,10 @@ public class LoginControllerTest {
         this.userRepository = userRepository;
     }
 
-    @BeforeEach
-    void setUp() {
-        userRepository.save(new User(defaultId, defaultName, defaultPassword, defaultEmail));
-    }
+//    @BeforeEach
+//    void setUp() {
+//        userRepository.save(new User(defaultId, defaultName, defaultPassword, defaultEmail));
+//    }
 
     @Test
     void 로그인_테스트() {
