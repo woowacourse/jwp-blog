@@ -22,9 +22,9 @@ import static techcourse.myblog.domain.User.*;
 @RequestMapping(USER_MAPPING_URL)
 @Slf4j
 public class UserController {
+    public static final String WRONG_LOGIN_VALUE_MESSAGE = "없는 이메일이거나 틀린 비밀번호 입니다.";
     public static final String USER_MAPPING_URL = "/user";
     public final UserService userService;
-
     @GetMapping
     public String loginForm() {
         return "login";
@@ -53,7 +53,7 @@ public class UserController {
             return new ModelAndView("redirect:/");
         } catch (IllegalArgumentException e) {
             ModelAndView modelAndView = new ModelAndView();
-            modelAndView.addObject("error", "없는 이메일이거나 틀린 비밀번호 입니다.");
+            modelAndView.addObject("error", WRONG_LOGIN_VALUE_MESSAGE);
             modelAndView.setViewName("login");
             return modelAndView;
         }

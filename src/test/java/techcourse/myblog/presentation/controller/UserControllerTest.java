@@ -11,21 +11,32 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 import static techcourse.myblog.presentation.controller.UserController.USER_MAPPING_URL;
+import static techcourse.myblog.presentation.controller.UserController.WRONG_LOGIN_VALUE_MESSAGE;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
+    private final String DUMMY_EMAIL = "abcd@abc.com";
+    private final String DUMMY_NAME = "abcd";
+    private final String DUMMY_PASSWORD = "asdASD12!@";
+    private final String WRONG_EMAIL = "wrong@wrong.com";
+    private final String WRONG_PASSWORD = "asdASD12!@wrong";
     UserDto userDto;
 
     @Autowired
     WebTestClient webTestClient;
+    private String cookie;
+
 
     @BeforeEach
-    void setup(){
-        cookie = getCookie();
+    void setup() {
+        signupRequest(DUMMY_EMAIL, DUMMY_NAME, DUMMY_PASSWORD);
+        cookie = getCookie(DUMMY_EMAIL, DUMMY_PASSWORD);
     }
 
     @Test
@@ -47,9 +58,45 @@ class UserControllerTest {
     }
 
     @Test
-    void signUp_post_is3xxRedirect() {
+    void signUp_duplicatedEmail_exception() {
+        signupRequest(DUMMY_EMAIL, DUMMY_NAME, DUMMY_PASSWORD)
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertTrue(body.contains("중복된 이메일 입니다."));
+                });
+    }
+
+    @Test
+    void signUp_newID_is3xxRedirect() {
         signupRequest("kangmin7@abc.com", "abc", "asdASD12!@")
                 .expectStatus().is3xxRedirection();
+    }
+
+    @Test
+    void login_wrongId_redirectToMain() {
+        loginRequest(WRONG_EMAIL, WRONG_PASSWORD)
+                .expectStatus().isOk()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(WRONG_LOGIN_VALUE_MESSAGE));
+        });
+    }
+
+    @Test
+    void login_ifSuccessHaveCookie_true() {
+        webTestClient.get().uri("/")
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus().isOk()
+        ;
+    }
+
+    @Test
+    void login_successEditPageGet_isOk(){
+
     }
 
     @Test
@@ -60,19 +107,26 @@ class UserControllerTest {
                 .is3xxRedirection();
     }
 
-    @Test
-    void login_wrongId_redirectToMain() {
-
+    private String getCookie(String email, String password) {
+        return loginRequest(email, password)
+                .expectStatus()
+                .isFound()
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .getFirst("Set-Cookie");
     }
 
-
-    private WebTestClient.ResponseSpec commonRequest(HttpMethod method, final UserDto userDto, String attachedUrl) {
+    private WebTestClient.ResponseSpec commonRequest(HttpMethod method, final UserDto userDto, String attatchedUrl) {
         return webTestClient.method(method)
-                .uri(USER_MAPPING_URL + attachedUrl)
+                .uri(USER_MAPPING_URL + attatchedUrl)
                 .body(fromFormData("name", userDto.getName())
                         .with("email", userDto.getEmail())
                         .with("password", userDto.getPassword()))
                 .exchange();
+    }
+
+    private WebTestClient.ResponseSpec commonRequest(HttpMethod method, final UserDto userDto) {
+        return commonRequest(method, userDto, "");
     }
 
     private WebTestClient.ResponseSpec signupRequest(String email, String name, String password) {
@@ -81,7 +135,7 @@ class UserControllerTest {
                 .password(password)
                 .email(email)
                 .build();
-        return commonRequest(POST, userDto, "");
+        return commonRequest(POST, userDto);
     }
 
     private WebTestClient.ResponseSpec loginRequest(String email, String password) {
@@ -89,22 +143,12 @@ class UserControllerTest {
                 .email(email)
                 .password(password)
                 .build();
-        return webTestClient.put()
+        return webTestClient.post()
                 .uri(USER_MAPPING_URL + "/login")
                 .body(fromFormData("email", loginDto.getEmail())
                         .with("password", loginDto.getPassword()))
                 .exchange();
     }
 
-    private String getCookie() {
-        return webTestClient.post().uri("/login")
-                .body(fromFormData("email", "")
-                        .with("adg", "adg"))
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .getFirst("Set-Cookie");
-    }
+
 }
