@@ -12,54 +12,45 @@ import org.springframework.web.reactive.function.BodyInserters;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-class UserControllerTests {
+class LoginControllerTests {
+
     @Autowired
     private WebTestClient webTestClient;
 
     @Test
-    void 회원가입_성공() {
+    void login_페이지_이동() {
+        webTestClient.get().uri("/login")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void signUp_페이지_이동() {
+        webTestClient.get().uri("/signup")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void login() {
         webTestClient.post().uri("/users")
                 .body(BodyInserters
                         .fromFormData("name", "이름")
                         .with("email", "test@test.com")
+                        .with("password", "password"))
+                .exchange();
+
+        webTestClient.post().uri("/login")
+                .body(BodyInserters
+                        .fromFormData("email", "test@test.com")
                         .with("password", "password"))
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void 회원목록_페이지_이동() {
-        webTestClient.get().uri("/users")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    void mypage_페이지_이동() {
-        webTestClient.get().uri("/mypage")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    void mypage_confirm_페이지_이동() {
-        webTestClient.get().uri("/mypage/edit")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    void mypage_edit_페이지_이동() {
-        webTestClient.post().uri("/mypage/edit")
-                .body(BodyInserters
-                        .fromFormData("password", "pwd"))
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    void mypage_delete() {
-        webTestClient.delete().uri("/mypage")
+    void logout() {
+        webTestClient.get().uri("/logout")
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
