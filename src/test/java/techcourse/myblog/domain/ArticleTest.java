@@ -1,13 +1,16 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.domain.Article.Article;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-class ArticleTest {
+public class ArticleTest {
     @Test
-    void 기본_백그라운드_URL() {
-        Article article = new Article("title", "content", "");
-        assertThat(article.getCoverUrl()).isEqualTo("/images/default/bg.jpg");
+    void updateTest() {
+        Article origin = new Article("title", "contents", "coverUrl");
+        Article updated = new Article("updateTitle", "updateContents", "updateCoverUrl");
+        origin.update(updated);
+        assertThat(origin).isEqualTo(updated);
     }
 }

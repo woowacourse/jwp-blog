@@ -1,43 +1,36 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
-<head>
-    <th:block th:include="fragment/common_head"></th:block>
+<head> '
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:include="common/meta"></th:block>
+    <th:block th:include="common/css"></th:block>
     <link href="/css/article.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
     <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css" rel="stylesheet">
     <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css" rel="stylesheet">
 </head>
-
 <body>
 <div>
-    <header th:replace="fragment/common_navbar :: navbar">
-    </header>
-
-    <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg" th:style="'background:url(' + ${article.coverUrl} + ');'">
-            <div class="padding-30">
-                <h1 class="text-center cover-title" th:text="${article.title}"></h1>
-            </div>
-        </div>
-    </div>
-
+    <th:block th:include="/common/navbar"></th:block>
+    <th:block th:include="/common/article_cover"></th:block>
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a class="float-right pointer btn btn-icon" th:href="'/articles/' + ${id} + '/edit'">
+                <a class="float-right pointer btn btn-icon"
+                   th:href="@{/articles/{articleId}/edit(articleId=${article.id})}">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
-                <form method="post" th:action="'/articles/' + ${id}">
-                    <input name="_method" type="hidden" value="DELETE"/>
+
+                <form accept-charset="utf-8" method="post" name="article"
+                      th:action="${#strings.concat('/articles/', article.id)}">
+                    <input name="_method" type="hidden" value="DELETE">
                     <button class="btn btn-default" id="delete-btn" type="submit">
                         <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
                     </button>
                 </form>
-                <div id="viewerSection">
-                    <p th:text="${article.contents}"></p>
-                </div>
+
+                <div id="viewerSection"></div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
                 <div class="profile-container row mrg-top-30 mrg-btm-30">
@@ -45,30 +38,46 @@
                         <img class="width-80px border-radius-round"
                              src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                     </div>
-                    <th:block th:include="fragment/common_brown"></th:block>
-                </div>
-            </div>
-            <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
-                <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
-                    <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info">2</span>
-                </div>
-                <div class="comment">
-                    <ul class="list-unstyled list-info">
-                        <th:block th:include="fragment/common_jun_comment"></th:block>
-                        <th:block th:include="fragment/common_jun"></th:block>
-                    </ul>
-                    <div class="add-comment">
-                        <div id="editSection"></div>
+                    <div class="col-md-10 col-sm-7">
+                        <span class="font-size-16 text-bold pdd-btm-5" th:text="${session.name}"></span>
+                        <span class="font-size-12 text-gray" th:text="${session.email}"></span>
+                        <p class="font-size-13 text-dimgray lh-1-3">
+                            백엔드 개발자: 설계.테스트.생산성.클린코드.멘토링에 관심이 많음 <br>
+                            Woowahantechcourse Organizer / Coach / Husband
+                        </p>
+                        <th:block th:include="/common/user_icon"></th:block>
                     </div>
                 </div>
             </div>
+            <th:block th:include="/common/article_comment"></th:block>
         </div>
     </div>
 </div>
-<th:block th:include="fragment/common_footer"></th:block>
-<th:block th:include="fragment/common_js"></th:block>
-<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-</body>
 
+<th:block th:include="common/js"></th:block>
+<script th:inline="javascript">
+    const initValue = [[${article.contents}]];
+
+    const viewer = tui.Editor.factory({
+        el: document.querySelector('#viewerSection'),
+        viewer: true,
+        height: '100%',
+        initialValue: initValue
+    })
+
+    const editor = new tui.Editor({
+        el: document.querySelector('#editSection'),
+        initialEditType: 'markdown',
+        previewStyle: 'horizontal',
+        events: {
+            change: function () {
+            }
+        },
+        height: '200px'
+    });
+
+
+
+</script>
+</body>
 </html>

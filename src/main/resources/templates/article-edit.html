@@ -1,52 +1,56 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="fragment/common_head"></th:block>
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:include="common/meta"></th:block>
+    <th:block th:include="common/css"></th:block>
+    <link href="/css/index.css" rel="stylesheet">
     <link href="/css/article-edit.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
     <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css" rel="stylesheet">
     <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css" rel="stylesheet">
 </head>
+<body>
 <div>
-    <header th:replace="fragment/common_navbar :: navbar"></header>
-    <form accept-charset="utf-8" method="post" name="article"
-          th:action="${id} == null ? '/articles/' : '/articles/' + ${id}">
-        <input name="_method" th:value="${id} == null ? 'POST' : 'PUT'" type="hidden"/>
+    <th:block th:include="common/navbar"></th:block>
+    <form accept-charset="utf-8"
+          method="post" name="article"
+          th:action="${#strings.isEmpty(article)? '/articles': #strings.concat('/articles/', article.id)}">
+        <input name="_method" th:if="not ${#strings.isEmpty(article)}" type="hidden" value="PUT">
         <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg" style="ground-image: url('images/pages/index/study.jpg')">
+            <div class="cover-img overlay-dark bg" th:style="
+            'background:url('+ ${#strings.isEmpty(article)? '/images/pages/index/bg.jpg' : article.coverUrl} + ');'">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
+                        <input th:value="${#strings.isEmpty(article) ? '' : article.id}" type="hidden">
                         <input autocomplete="off"
                                class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
                                name="title"
-                               placeholder="제목을 입력해주세요" th:value="${article} != null ? ${article.title} : ''"
+                               th:placeholder="${#strings.isEmpty(article)? '제목을 입력해주세요' : article.title}"
                                type="text">
                         <input autocomplete="off"
                                class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
                                name="coverUrl"
-                               placeholder="배경 url을 입력해주세요"
-                               th:value="${article} != null ? ${article.coverUrl} : ''"
+                               th:placeholder="${#strings.isEmpty(article)? '배경 url을 입력해주세요' : article.coverUrl}"
                                type="text">
                     </div>
                 </div>
             </div>
         </div>
-
-
         <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
             <div class="row">
                 <div class="col-lg-1 col-md-1"></div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input id="article-contents" name="contents" type="hidden">
-                    <div id="editSection"></div>
+                    <div id="editSection" th:text="${#strings.isEmpty(article)? '' : article.contents}"></div>
                 </div>
                 <div class="col-lg-1 col-md-1">
                     <div class="btn-group btn-group-vertical">
                         <button class="btn btn-default" id="save-btn" type="submit">
                             <i class="ti-save"></i>
                         </button>
-                        <a class="btn btn-default" href="index.html">
+                        <a class="btn btn-default" href="/">
                             <i class="ti-close"></i>
                         </a>
                     </div>
@@ -55,10 +59,7 @@
         </div>
     </form>
 </div>
-<th:block th:include="fragment/common_footer"></th:block>
-<th:block th:include="fragment/common_js"></th:block>
-<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-<script src="/js/index.js"></script>
+<th:block th:include="common/js"></th:block>
 <script type="text/javascript">
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
@@ -69,47 +70,10 @@
                 document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
             }
         },
-        initialValue: "[[${article} != null ? ${article.contents} : '']]",
         height: 'calc(100vh - 360px)'
     });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
+</body>
 </html>
