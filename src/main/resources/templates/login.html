@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="ko"
       layout:decorate="~{layout/layout}"
-      lang="ko">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <th:block layout:fragment="content">
     <div class="app">
         <div class="header navbar bg-transparent no-border">
@@ -38,12 +38,14 @@
                                                         </div>
                                                         <form action="/auth/login" method="post">
                                                             <div class="form-group">
-                                                                <input type="email" class="form-control" name="email"
-                                                                       placeholder="Email">
+                                                                <input class="form-control" name="email"
+                                                                       placeholder="Email"
+                                                                       type="email">
                                                             </div>
                                                             <div class="form-group">
-                                                                <input type="password" class="form-control" name="password"
-                                                                       placeholder="Password">
+                                                                <input class="form-control" name="password"
+                                                                       placeholder="Password"
+                                                                       type="password">
                                                             </div>
                                                             <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
                                                                 <input id="agreement" name="agreement" type="checkbox">
@@ -53,7 +55,8 @@
                                                                 <a href="">Forgot Password?</a>
                                                             </div>
                                                             <div class="mrg-top-20 text-right">
-                                                                <button type="submit" class="btn btn-tumblr">로그인</button>
+                                                                <button class="btn btn-tumblr" type="submit">로그인
+                                                                </button>
                                                             </div>
                                                             <div class="alert alert-danger" role="alert"
                                                                  th:if="${errorMessage} != null"
@@ -64,8 +67,8 @@
                                                              th:text="${errorMessage}"></div>
                                                         <div class="text-dark">
                                                             <span>아직 회원이 아니신가요?</span>
-                                                            <a href="/users/signup"
-                                                               class="text-info pointer mrg-left-5">회원가입</a>
+                                                            <a class="text-info pointer mrg-left-5"
+                                                               href="/users/signup">회원가입</a>
                                                         </div>
                                                     </div>
                                                 </div>

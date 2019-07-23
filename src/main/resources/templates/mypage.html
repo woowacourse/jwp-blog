@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="ko"
       layout:decorate="~{layout/layout}"
-      lang="ko">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="/css/mypage.css">
+    <link href="/css/mypage.css" rel="stylesheet">
 </head>
 
 <th:block layout:fragment="content">
@@ -19,14 +19,14 @@
             </div>
         </div>
 
-        <div th:object="${user}" class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
+        <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30" th:object="${user}">
             <div class="row">
                 <div class="col-md-7 mx-auto">
                     <div class="card">
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
-                            <a th:href="@{/users/{email}/edit(email=*{email})}"
-                               class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
+                            <a class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5"
+                               th:href="@{/users/{email}/edit(email=*{email})}">
                                 <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                             </a>
                         </div>
@@ -55,8 +55,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div>
-                                        <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
-                                             width="117" alt="">
+                                        <img alt=""
+                                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
+                                             width="117">
                                     </div>
                                 </div>
                             </div>

@@ -11,13 +11,10 @@ import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.NotExistUserException;
 import techcourse.myblog.exception.NotMatchAuthenticationException;
 import techcourse.myblog.exception.UserLoginInputException;
-import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.AuthService;
-import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/auth")

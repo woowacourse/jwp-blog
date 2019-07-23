@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="ko"
       layout:decorate="~{layout/layout}"
-      lang="ko">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 
 <th:block layout:fragment="content">
     <div class="app">
@@ -37,26 +37,34 @@
                                                             <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                                 회원가입</h2>
                                                         </div>
-                                                        <form id="form" action="/users" method="post">
+                                                        <form action="/users" id="form" method="post">
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Username</label>
-                                                                <input type="text" name="name" class="form-control" required minlength="2" maxlength="10" pattern="[a-zA-Z가-힣]+">
+                                                                <input class="form-control" maxlength="10" minlength="2"
+                                                                       name="name" pattern="[a-zA-Z가-힣]+" required
+                                                                       type="text">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Email
                                                                     Address</label>
-                                                                <input type="email" name="email" class="form-control" required>
+                                                                <input class="form-control" name="email" required
+                                                                       type="email">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Password</label>
-                                                                <input id="password" type="password" name="password"
-                                                                       class="form-control" placeholder="Password" minlength="8" required pattern="[a-zA-Z0-9~!@#$%^&*]+">
+                                                                <input class="form-control" id="password" minlength="8"
+                                                                       name="password" pattern="[a-zA-Z0-9~!@#$%^&*]+"
+                                                                       placeholder="Password" required
+                                                                       type="password">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Confirm
                                                                     Password</label>
-                                                                <input id="password-confirm" type="password" class="form-control"
-                                                                       placeholder="Password" minlength="8" required pattern="[a-zA-Z0-9~!@#$%^&*]+">
+                                                                <input class="form-control" id="password-confirm"
+                                                                       minlength="8"
+                                                                       pattern="[a-zA-Z0-9~!@#$%^&*]+"
+                                                                       placeholder="Password" required
+                                                                       type="password">
                                                             </div>
                                                             <div id="not-match"></div>
                                                             <div class="alert alert-danger" role="alert"
@@ -64,15 +72,15 @@
                                                                  th:text="${errorMessage}">
                                                             </div>
                                                             <div class="form-group">
-                                                                <button type="submit"
-                                                                        class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
+                                                                <button class="btn btn-info btn-block border-radius-6 font-size-16 text-white"
+                                                                        type="submit">
                                                                     가입하기
                                                                 </button>
                                                             </div>
                                                         </form>
                                                         <div class="text-dark">
                                                             <span>이미 회원이신가요?</span>
-                                                            <a href="login.html" class="text-info pointer mrg-left-5">로그인</a>
+                                                            <a class="text-info pointer mrg-left-5" href="login.html">로그인</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -94,13 +102,16 @@
         const passwordConfirm = document.getElementById('password-confirm');
         const signupForm = document.getElementById('form');
 
-        signupForm.addEventListener('submit', e => {
-            if (password.value !== passwordConfirm.value) {
-                alert('비밀번호를 확인해주세요!');
-                e.preventDefault();
-                return false;
-            }
-        });
+        signupForm.addEventListener('submit', e = > {
+            if(password.value !== passwordConfirm.value
+        )
+        {
+            alert('비밀번호를 확인해주세요!');
+            e.preventDefault();
+            return false;
+        }
+        })
+        ;
     </script>
 </th:block>
 </html>

@@ -20,6 +20,16 @@ class UserControllerTest {
 
     private UserDto testUserDto;
 
+    static WebTestClient.ResponseSpec 회원_등록(WebTestClient webTestClient, UserDto userDto) {
+        return webTestClient.post().uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(
+                        BodyInserters.fromFormData("name", userDto.getName())
+                                .with("email", userDto.getEmail())
+                                .with("password", userDto.getPassword())
+                ).exchange();
+    }
+
     @BeforeEach
     void setUp() {
         testUserDto = new UserDto();
@@ -173,15 +183,5 @@ class UserControllerTest {
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".*/auth/login");
-    }
-
-    static WebTestClient.ResponseSpec 회원_등록(WebTestClient webTestClient, UserDto userDto) {
-        return webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(
-                        BodyInserters.fromFormData("name", userDto.getName())
-                                .with("email", userDto.getEmail())
-                                .with("password", userDto.getPassword())
-                ).exchange();
     }
 }

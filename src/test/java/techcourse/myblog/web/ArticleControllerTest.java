@@ -10,8 +10,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.dto.UserDto;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static techcourse.myblog.web.AuthControllerTest.*;
-import static techcourse.myblog.web.UserControllerTest.*;
+import static techcourse.myblog.web.AuthControllerTest.로그인_세션_ID;
+import static techcourse.myblog.web.UserControllerTest.회원_등록;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ArticleControllerTest {

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="ko"
       layout:decorate="~{layout/layout}"
-      lang="ko">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="/css/mypage.css">
+    <link href="/css/mypage.css" rel="stylesheet">
 </head>
 
 <th:block layout:fragment="content">
@@ -21,11 +21,11 @@
         <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
             <div class="row">
                 <div class="col-md-7 mx-auto">
-                    <div th:object="${user}" class="card">
+                    <div class="card" th:object="${user}">
                         <form th:action="@{/users/{email}(email=*{email})}" th:method="put">
                             <div class="card-heading pdd-btm-5 border bottom">
                                 <h4 class="card-title d-inline-block">profile</h4>
-                                <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정
+                                <button class="btn btn-info float-right mrg-btm-0 relative bottom-5" type="submit">수정
                                 </button>
                             </div>
                             <div class="card-block">
@@ -34,7 +34,7 @@
                                         <p class="mrg-top-10 text-dark"><b>Name</b></p>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="text" name="name" class="form-control" th:value="*{name}">
+                                        <input class="form-control" name="name" th:value="*{name}" type="text">
                                     </div>
                                 </div>
                                 <hr>
@@ -53,12 +53,13 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div>
-                                            <label for="img-upload" class="pointer">
-                                                <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
-                                                     width="117" alt="">
+                                            <label class="pointer" for="img-upload">
+                                                <img alt=""
+                                                     src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
+                                                     width="117">
                                                 <span class="btn btn-default display-block no-mrg-btm">Choose file</span>
-                                                <input class="d-none" type="file" name="uploadedimages0" multiple
-                                                       id="img-upload">
+                                                <input class="d-none" id="img-upload" multiple name="uploadedimages0"
+                                                       type="file">
                                             </label>
                                         </div>
                                     </div>
@@ -79,7 +80,7 @@
                                                 <span class="font-size-14 mrg-left-10 text-dark text-bold">Github</span>
                                             </div>
                                             <div class="col-md-8 text-right">
-                                                <input type="text" class="form-control"
+                                                <input class="form-control" type="text"
                                                        value="https://www.github.com/profile">
                                             </div>
                                         </div>
@@ -94,7 +95,7 @@
                                                 <span class="mrg-left-10 font-size-14 text-dark text-bold">Facebook</span>
                                             </div>
                                             <div class="col-md-8 text-right">
-                                                <input type="text" class="form-control"
+                                                <input class="form-control" type="text"
                                                        value="https://www.facebook.com/profile">
                                             </div>
                                         </div>
