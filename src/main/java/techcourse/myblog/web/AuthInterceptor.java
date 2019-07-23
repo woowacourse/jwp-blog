@@ -5,7 +5,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static techcourse.myblog.domain.User.UserService.LOGGED_IN_USER_SESSION_KEY;
+import static techcourse.myblog.service.UserService.LOGGED_IN_USER_SESSION_KEY;
 
 public class AuthInterceptor implements HandlerInterceptor {
     @Override

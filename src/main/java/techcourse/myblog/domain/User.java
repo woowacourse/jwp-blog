@@ -1,6 +1,7 @@
-package techcourse.myblog.domain.User;
+package techcourse.myblog.domain;
 
 import lombok.*;
+import techcourse.myblog.service.UserRequestDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -32,5 +33,12 @@ public class User {
         this.name = userRequestDto.getName();
         this.password = userRequestDto.getPassword();
         this.email = userRequestDto.getEmail();
+    }
+
+    public boolean isMatch(UserRequestDto userRequestDto) {
+        if (email.equals(userRequestDto.getEmail()) && password.equals(userRequestDto.getPassword())) {
+            return true;
+        }
+        return false;
     }
 }

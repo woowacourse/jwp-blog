@@ -1,7 +1,8 @@
-package techcourse.myblog.domain.User;
+package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.web.ArticleNotFoundException;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.persistence.UserRepository;
 
 import javax.transaction.Transactional;
 
@@ -18,5 +19,13 @@ public class UserService {
     public void update(String email, UserRequestDto userRequestDto) {
         User user = userRepository.findByEmail(email).orElseThrow(ArticleNotFoundException::new);
         user.update(userRequestDto);
+    }
+
+    public User authenticate(UserRequestDto userRequestDto) {
+        User user = userRepository.findByEmail(userRequestDto.getEmail()).orElseThrow(AuthenticationFailException::new);
+        if (user.isMatch(userRequestDto)) {
+            return user;
+        }
+        throw new AuthenticationFailException();
     }
 }

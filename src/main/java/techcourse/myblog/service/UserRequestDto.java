@@ -1,8 +1,9 @@
-package techcourse.myblog.domain.User;
+package techcourse.myblog.service;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import techcourse.myblog.domain.User;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;

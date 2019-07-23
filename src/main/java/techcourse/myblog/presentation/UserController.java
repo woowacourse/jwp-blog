@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.presentation;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,18 +6,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.User.User;
-import techcourse.myblog.domain.User.UserRequestDto;
-import techcourse.myblog.domain.User.UserRepository;
-import techcourse.myblog.domain.User.UserService;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.service.UserRequestDto;
+import techcourse.myblog.persistence.UserRepository;
+import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
-import static techcourse.myblog.domain.User.UserService.LOGGED_IN_USER_SESSION_KEY;
+import static techcourse.myblog.service.UserService.LOGGED_IN_USER_SESSION_KEY;
 
 @Slf4j
 @Controller
@@ -40,14 +40,16 @@ public class UserController {
     }
 
     @PostMapping("/accounts/users")
-    public String processSignup(@Valid UserRequestDto userRequestDto, Errors errors) {
+    public String processSignup(@Valid UserRequestDto userRequestDto, Errors errors, HttpServletResponse response) {
         if (errors.hasErrors()) {
+            response.setStatus(400);
             return "signup";
         }
 
         User user = userRequestDto.toUser();
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             errors.rejectValue("email", "0", EMAIL_DUPLICATION_ERROR_MSG);
+            response.setStatus(400);
             return "signup";
         }
 
@@ -62,16 +64,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String processLogin(UserRequestDto userRequestDto, HttpServletRequest request, Model model) {
-        Optional<User> user = userRepository.findByEmail(userRequestDto.getEmail());
-        if (!user.isPresent() || !userRequestDto.getPassword().equals(user.get().getPassword())) {
-            model.addAttribute("error", LOGIN_ERROR_MSG);
-            return "login";
-        }
-
-        request.getSession().setAttribute(LOGGED_IN_USER_SESSION_KEY, user.get());
+    public String processLogin(UserRequestDto userRequestDto, HttpServletRequest request) {
+        request.getSession().setAttribute(LOGGED_IN_USER_SESSION_KEY, userService.authenticate(userRequestDto));
         return "redirect:" + request.getHeader("Referer");
-
     }
 
     @GetMapping("/logout")

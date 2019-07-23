@@ -11,9 +11,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.domain.User.UserRequestDto.*;
-import static techcourse.myblog.web.UserController.EMAIL_DUPLICATION_ERROR_MSG;
-import static techcourse.myblog.web.UserController.LOGIN_ERROR_MSG;
+import static techcourse.myblog.service.UserRequestDto.*;
+import static techcourse.myblog.presentation.UserController.EMAIL_DUPLICATION_ERROR_MSG;
+import static techcourse.myblog.presentation.UserController.LOGIN_ERROR_MSG;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
@@ -238,7 +238,7 @@ public class UserControllerTest {
     private void testSignupFail(String name, String password, String email, String errorMsg) {
         testSignup(name, password, email)
                 .expectStatus()
-                .isOk()
+                .is4xxClientError()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
@@ -270,7 +270,7 @@ public class UserControllerTest {
                         .with("password", password))
                 .exchange()
                 .expectStatus()
-                .isOk()
+                .is4xxClientError()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
