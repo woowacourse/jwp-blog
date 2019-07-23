@@ -26,7 +26,7 @@ public class UserService {
         if (maybeUser.isPresent()) {
             return UserDto.from(maybeUser.get());
         }
-        throw new IllegalArgumentException("유저를 찾을 수 없습니다.");
+        throw new IllegalArgumentException("아이디, 비밀번호 확인!");
     }
 
     public UserDto create(UserDto userDto) {
@@ -34,7 +34,7 @@ public class UserService {
             User user = userRepository.save(userDto.toEntity());
             return UserDto.from(user);
         } catch (Exception e) {
-            throw new IllegalArgumentException("아이디, 이메일, 비밀번호 확인!");
+            throw new IllegalArgumentException("회원 가입 오류!");
         }
     }
 

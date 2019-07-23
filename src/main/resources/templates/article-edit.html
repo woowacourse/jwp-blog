@@ -126,6 +126,12 @@
     const list = document.querySelectorAll("#categories li");
     list.forEach(category => {category.addEventListener("click", handleClick)});
 
+    const contents = "[[ ${error} ]]";
+
+    if (contents != "") {
+        alert(contents);
+    }
+
 </script>
 </body>
 </html>

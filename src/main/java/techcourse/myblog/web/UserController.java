@@ -8,7 +8,6 @@ import techcourse.myblog.domain.user.UserDto;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 
 @Controller
@@ -23,12 +22,8 @@ public class UserController {
 
     @PostMapping("/signup")
     public String addUser(UserDto userDto, Model model) {
-        Optional<UserDto> maybeUserDto = userService.create(userDto);
-        if (maybeUserDto.isPresent()) {
-            return "redirect:/login";
-        }
-        model.addAttribute("error", "error");
-        return "signup";
+        userService.create(userDto);
+        return "redirect:/login";
     }
 
     @GetMapping("/login")
@@ -38,16 +33,9 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(UserDto userDto, HttpSession session, Model model) {
-        Optional<UserDto> maybeUserDto = userService.findUser(userDto);
-
-        if (maybeUserDto.isPresent()) {
-            UserDto toUserDto = maybeUserDto.get();
-            session.setAttribute("userId", toUserDto.getId());
-
-            return "redirect:/";
-        }
-        model.addAttribute("error", "error");
-        return "login";
+        UserDto findUserDto = userService.findUser(userDto);
+        session.setAttribute("userId", findUserDto.getId());
+        return "redirect:/";
     }
 
     @GetMapping("/logout")
@@ -61,41 +49,28 @@ public class UserController {
     @GetMapping("/users")
     public String showUserListPage(Model model) {
         model.addAttribute("users", userService.readAll());
-
         return "user-list";
     }
 
     @GetMapping("users/{id}/mypage")
     public String showMypage(@PathVariable final long id, Model model) {
-        Optional<UserDto> maybeUserDto = userService.readWithoutPasswordById(id);
-
-        if (maybeUserDto.isPresent()) {
-            model.addAttribute("userData", maybeUserDto.get());
-
-            return "mypage";
-        }
-
-        return "redirect:/";
+        UserDto userDto = userService.readWithoutPasswordById(id);
+        model.addAttribute("userData", userDto);
+        return "mypage";
     }
 
     @GetMapping("/users/mypage-edit")
     public String showMypageEdit(HttpSession session, Model model) {
         Object userId = session.getAttribute("userId");
-
-        Optional<UserDto> maybeUserDto = userService.readWithoutPasswordById((long) userId);
-
-        if (maybeUserDto.isPresent()) {
-            model.addAttribute("userData", maybeUserDto.get());
-            return "mypage-edit";
-        }
-        return "redirect:/";
+        UserDto userDto = userService.readWithoutPasswordById((long) userId);
+        model.addAttribute("userData", userDto);
+        return "mypage-edit";
     }
 
     @PutMapping("/users/mypage-edit")
     public String updateUser(HttpSession session, UserDto userDto) {
         Object userId = session.getAttribute("userId");
         UserDto updateUserDto = userService.updateUser((long) userId, userDto);
-
         return "redirect:/users/" + updateUserDto.getId() + "/mypage";
     }
 
@@ -103,7 +78,6 @@ public class UserController {
     public String deleteUser(HttpSession session) {
         Object userId = session.getAttribute("userId");
         userService.deleteById((long) userId);
-
         return "redirect:/logout";
     }
 }

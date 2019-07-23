@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import techcourse.myblog.domain.user.UserDto;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +31,9 @@ public class UserInfoInterceptor implements HandlerInterceptor {
         }
 
         if (userId != null && modelAndView != null) {
-            userService.readWithoutPasswordById((long) userId)
-                    .ifPresent(userDto -> modelAndView.getModel().put("userInfo", userDto));
+            UserDto userDto = userService.readWithoutPasswordById((long) userId);
+
+            modelAndView.getModel().put("userInfo", userDto);
         }
     }
 }
