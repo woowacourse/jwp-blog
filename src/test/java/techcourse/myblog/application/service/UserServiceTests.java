@@ -30,7 +30,7 @@ public class UserServiceTests {
         UserDto userDto = new UserDto(email, name, password);
         assertDoesNotThrow(() -> userService.save(userDto));
 
-        userService.removeById(email);
+        userService.removeById(userDto, email);
     }
 
     @Test
@@ -43,8 +43,7 @@ public class UserServiceTests {
         assertDoesNotThrow(() -> userService.save(userDto));
         assertThrows(DuplicatedIdException.class, () -> userService.save(userDto));
 
-        System.out.println("gg");
-        userService.removeById(email);
+        userService.removeById(userDto, email);
     }
 
     @Test
@@ -60,7 +59,7 @@ public class UserServiceTests {
         assertThat(foundUser.getEmail()).isEqualTo(email);
         assertThat(foundUser.getName()).isEqualTo(name);
         assertThat(foundUser.getPassword()).isEqualTo(password);
-        userService.removeById(email);
+        userService.removeById(userDto, email);
     }
 
     @Test
@@ -79,7 +78,7 @@ public class UserServiceTests {
         UserDto userDto = new UserDto(email, name, password);
         userService.save(userDto);
 
-        assertDoesNotThrow(() -> userService.removeById(email));
+        assertDoesNotThrow(() -> userService.removeById(userDto, email));
     }
 
     @Test
@@ -93,7 +92,7 @@ public class UserServiceTests {
 
         assertDoesNotThrow(() -> userService.login(LoginDto.of(userDto)));
 
-        userService.removeById(email);
+        userService.removeById(userDto, email);
     }
 
     @Test
@@ -119,6 +118,6 @@ public class UserServiceTests {
         userDto.setPassword("zinozinozi");
         assertThrows(NotMatchPasswordException.class, () -> userService.login(LoginDto.of(userDto)));
 
-        userService.removeById(email);
+        userService.removeById(userDto, email);
     }
 }

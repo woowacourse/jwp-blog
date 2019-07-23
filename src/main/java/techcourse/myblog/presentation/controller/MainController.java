@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class MainController {
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
-    
+
     private final ArticleService articleService;
 
     public MainController(final ArticleService articleService) {
