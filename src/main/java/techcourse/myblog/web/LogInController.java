@@ -1,14 +1,11 @@
 package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.dto.LogInInfoDto;
 import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.service.LogInService;
-import techcourse.myblog.service.exception.LogInException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -45,11 +42,5 @@ public class LogInController {
         HttpSession httpSession = httpServletRequest.getSession();
         httpSession.removeAttribute(LOGGED_IN_USER);
         return "redirect:/";
-    }
-
-    @ExceptionHandler(LogInException.class)
-    public String handleLogInException(Model model, Exception e) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "login";
     }
 }

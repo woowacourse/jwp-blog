@@ -85,20 +85,4 @@ public class ArticleController {
         }
         return user;
     }
-
-    @ExceptionHandler(NotFoundArticleException.class)
-    public String handleNotFoundArticleException() {
-        return "redirect:/";
-    }
-
-    @ExceptionHandler(NotFoundUserException.class)
-    public String handleNotFoundUserException() {
-        return "redirect:/";
-    }
-
-    @ExceptionHandler(NotLoggedInException.class)
-    public String handleNotLoggedInException() {
-        return "redirect:/login";
-    }
-
 }
