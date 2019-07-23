@@ -68,7 +68,6 @@ public class ArticleControllerTests {
 
     @Test
     void findArticleByIdTest() {
-
         webTestClient.post().uri("/articles/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("id", "0")
