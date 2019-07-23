@@ -1,5 +1,6 @@
 package techcourse.myblog.domain.article;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.Entity;
@@ -23,12 +24,36 @@ public class Article {
     public Article() {
     }
 
+    @Builder
     public Article(long id, String title, String coverUrl, String contents, long categoryId) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
         this.categoryId = categoryId;
+    }
+
+    public void update(ArticleDto articleDto) {
+        this.title = articleDto.getTitle();
+        this.coverUrl = articleDto.getCoverUrl();
+        this.contents = articleDto.getContents();
+        this.categoryId = articleDto.getCategoryId();
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                ", categoryId=" + categoryId +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, coverUrl, contents, categoryId);
     }
 
     @Override
@@ -41,21 +66,5 @@ public class Article {
                 Objects.equals(title, article.title) &&
                 Objects.equals(coverUrl, article.coverUrl) &&
                 Objects.equals(contents, article.contents);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents, categoryId);
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", contents='" + contents + '\'' +
-                ", categoryId=" + categoryId +
-                '}';
     }
 }

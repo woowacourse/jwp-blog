@@ -8,8 +8,6 @@ import techcourse.myblog.domain.article.ArticleDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CategoryService;
 
-import java.util.Optional;
-
 @Controller
 public class ArticleController {
     @Autowired
@@ -33,13 +31,9 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String showArticleById(@PathVariable long articleId, Model model) {
-        Optional<ArticleDto> maybeArticleDto = articleService.readById(articleId);
-
-        if (maybeArticleDto.isPresent()) {
-            model.addAttribute("article", maybeArticleDto.get());
-            return "article";
-        }
-        return "error";
+        ArticleDto articleDto = articleService.readById(articleId);
+        model.addAttribute("article", articleDto);
+        return "article";
     }
 
     @PutMapping("/articles/{articleId}")
@@ -51,14 +45,11 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}/edit")
     public String updateArticle(@PathVariable long articleId, Model model) {
-        Optional<ArticleDto> maybeArticleDto = articleService.readById(articleId);
+        ArticleDto articleDto = articleService.readById(articleId);
 
-        if (maybeArticleDto.isPresent()) {
-            model.addAttribute("article", maybeArticleDto.get());
-            model.addAttribute("categories", categoryService.readAll());
-            return "article-edit";
-        }
-        return "error";
+        model.addAttribute("article", articleDto);
+        model.addAttribute("categories", categoryService.readAll());
+        return "article-edit";
     }
 
     @DeleteMapping("articles/{articleId}")

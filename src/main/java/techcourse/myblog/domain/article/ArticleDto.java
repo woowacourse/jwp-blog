@@ -1,5 +1,6 @@
 package techcourse.myblog.domain.article;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,7 @@ public class ArticleDto {
     public ArticleDto() {
     }
 
+    @Builder
     public ArticleDto(long id, String title, String coverUrl, String contents, long categoryId) {
         this.id = id;
         this.title = title;
@@ -24,15 +26,21 @@ public class ArticleDto {
     }
 
     public static ArticleDto from(Article article) {
-        return new ArticleDto(article.getId(),
-                article.getTitle(),
-                article.getCoverUrl(),
-                article.getContents(),
-                article.getCategoryId());
+        return ArticleDto.builder()
+                .id(article.getId())
+                .title(article.getTitle())
+                .coverUrl(article.getCoverUrl())
+                .contents(article.getContents())
+                .categoryId(article.getCategoryId()).build();
     }
 
     public Article toEntity() {
-        return new Article(this.id, this.title, this.coverUrl, this.contents, this.categoryId);
+        return Article.builder()
+                .id(this.id)
+                .title(this.title)
+                .coverUrl(this.coverUrl)
+                .contents(this.contents)
+                .categoryId(this.categoryId).build();
     }
 
     @Override

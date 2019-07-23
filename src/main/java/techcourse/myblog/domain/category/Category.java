@@ -1,5 +1,6 @@
 package techcourse.myblog.domain.category;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ public class Category {
     public Category() {
     }
 
+    @Builder
     public Category(long categoryId, String categoryName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;

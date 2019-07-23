@@ -6,6 +6,7 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleDto;
 import techcourse.myblog.domain.article.ArticleRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,19 +21,21 @@ public class ArticleService {
         return article.getId();
     }
 
-    public Optional<ArticleDto> readById(long articleId) {
+    public ArticleDto readById(long articleId) {
         Optional<Article> maybeArticle = articleRepository.findById(articleId);
-        return maybeArticle.map(article -> ArticleDto.from(article));
+        if (maybeArticle.isPresent()) {
+            return ArticleDto.from(maybeArticle.get());
+        }
+        throw new IllegalArgumentException("게시글을 읽을 수 없습니다.");
     }
 
+    @Transactional
     public ArticleDto updateByArticle(long articleId, ArticleDto articleDto) {
         Optional<Article> maybeArticle = articleRepository.findById(articleId);
         if (maybeArticle.isPresent()) {
-            ArticleDto findArticleDto = ArticleDto.from(maybeArticle.get());
-            articleDto.setId(findArticleDto.getId());
+            maybeArticle.get().update(articleDto);
 
-            Article article = articleRepository.save(articleDto.toEntity());
-            return ArticleDto.from(article);
+            return readById(articleId);
         }
         throw new IllegalArgumentException("업데이트 할 수 없습니다.");
     }
