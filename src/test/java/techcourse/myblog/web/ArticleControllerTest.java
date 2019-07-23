@@ -30,13 +30,26 @@ public class ArticleControllerTest extends ControllerTest {
     private WebTestClient webTestClient;
 
     private Article article;
+    private UserDto userDto;
+    private LoginDto loginDto;
 
     @BeforeEach
     void setUp() {
+        userDto = new UserDto();
+        loginDto = new LoginDto();
+
         article = articleRepository.save(Article.of("test title",
                 "test coverUrl",
                 "test contents")
         );
+
+        userDto.setName("test");
+        userDto.setEmail("test@test.com");
+        userDto.setPassword("PassW0rd@");
+        userDto.setPasswordConfirm("PassW0rd@");
+
+        loginDto.setEmail("test@test.com");
+        loginDto.setPassword("PassW0rd@");
     }
 
     private WebTestClient.ResponseSpec requestGetTest(String testUrl) {
@@ -84,16 +97,6 @@ public class ArticleControllerTest extends ControllerTest {
     @Test
     @DisplayName("새로운 Article 생성시 article-edit 페이지를 되돌려준다.")
     void articleCreationPageTest() {
-        UserDto userDto = new UserDto();
-        userDto.setName("test");
-        userDto.setEmail("test@test.com");
-        userDto.setPassword("PassW0rd@");
-        userDto.setPasswordConfirm("PassW0rd@");
-
-        LoginDto loginDto = new LoginDto();
-        loginDto.setEmail("test@test.com");
-        loginDto.setPassword("PassW0rd@");
-
         postUser(webTestClient, userDto, postUserResponse -> {
             String sessionId = getSessionId(postUserResponse);
             postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {
@@ -105,14 +108,23 @@ public class ArticleControllerTest extends ControllerTest {
     @Test
     @DisplayName("게시글에서 수정 버튼을 누르는 경우 id에 해당하는 edit 페이지를 되돌려준다.")
     void articleEditPageTest() {
-        requestGetTest("/articles/" + article.getArticleId() + "/edit")
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(article.getTitle())).isTrue();
-                    assertThat(body.contains(article.getCoverUrl())).isTrue();
-                    assertThat(body.contains(article.getContents())).isTrue();
-                });
+        userDto.setEmail("edit@test.com");
+        loginDto.setEmail("edit@test.com");
+
+        postUser(webTestClient, userDto, postUserResponse -> {
+            String sessionId = getSessionId(postUserResponse);
+            postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {
+                requestGetTest("/articles/" + article.getArticleId() + "/edit" + sessionId)
+                        .expectBody()
+                        .consumeWith(response -> {
+                            String body = new String(response.getResponseBody());
+                            assertThat(body.contains(article.getTitle())).isTrue();
+                            assertThat(body.contains(article.getCoverUrl())).isTrue();
+                            assertThat(body.contains(article.getContents())).isTrue();
+                        });
+            });
+        });
+
     }
 
     @Test

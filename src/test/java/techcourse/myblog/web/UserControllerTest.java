@@ -12,6 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,6 +24,9 @@ class UserControllerTest extends ControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
@@ -112,15 +116,20 @@ class UserControllerTest extends ControllerTest {
         userDto.setPassword("PassW0rd@");
         userDto.setPasswordConfirm("PassW0rd@");
 
+        loginDto.setEmail("user@test.com");
+
         postUser(webTestClient, userDto, postUserResponse -> {
-            webTestClient.get()
-                    .uri("/users")
-                    .exchange()
-                    .expectStatus().isOk()
-                    .expectBody()
-                    .consumeWith(result -> assertThat(new String(result.getResponseBody()))
-                            .contains(userDto.getName())
-                            .contains(userDto.getEmail()));
+            String sessionId = getSessionId(postUserResponse);
+            postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {
+                webTestClient.get()
+                        .uri("/users" + sessionId)
+                        .exchange()
+                        .expectStatus().isOk()
+                        .expectBody()
+                        .consumeWith(result -> assertThat(new String(result.getResponseBody()))
+                                .contains(userDto.getName())
+                                .contains(userDto.getEmail()));
+            });
         });
     }
 
@@ -145,8 +154,8 @@ class UserControllerTest extends ControllerTest {
     @DisplayName("회원 정보를 수정하고 mypage에서 수정된 이름을 확인한다.")
     void editMyPageTest() {
         String updateName = "kimhyojae";
-        userDto.setEmail("edit@test.com");
-        loginDto.setEmail("edit@test.com");
+        userDto.setEmail("mypageEdit@test.com");
+        loginDto.setEmail("mypageEdit@test.com");
 
         postUser(webTestClient, userDto, postUserResponse -> {
             String sessionId = getSessionId(postUserResponse);

@@ -15,7 +15,6 @@ import techcourse.myblog.service.UserService;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import static techcourse.myblog.web.ControllerUtil.isLoggedIn;
 import static techcourse.myblog.web.ControllerUtil.putLoginUser;
 
 @Controller
@@ -29,11 +28,8 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, HttpSession session, Model model) {
+    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
         try {
-            if (isLoggedIn(session)) {
-                return "redirect:/";
-            }
             userService.save(userDto, bindingResult);
             return "redirect:/login";
         } catch (IllegalArgumentException e) {
@@ -43,10 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String signUpView(HttpSession session) {
-        if (isLoggedIn(session)) {
-            return "redirect:/";
-        }
+    public String signUpView() {
         return "signup";
     }
 
@@ -59,18 +52,12 @@ public class UserController {
 
     @GetMapping("/mypage")
     public String myPageView(HttpSession session, Model model) {
-        if (!isLoggedIn(session)) {
-            return "redirect:/";
-        }
         model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
         return "mypage";
     }
 
     @GetMapping("/mypage-edit")
     public String editMyPageView(HttpSession session, Model model) {
-        if (!isLoggedIn(session)) {
-            return "redirect:/";
-        }
         model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
         return "mypage-edit";
     }
@@ -78,9 +65,6 @@ public class UserController {
     @PutMapping("/mypage-edit")
     public String updateUser(@Valid UserUpdateDto userUpdateDto, BindingResult bindingResult, HttpSession session, Model model) {
         try {
-            if (!isLoggedIn(session)) {
-                return "redirect:/";
-            }
             User user = (User) session.getAttribute(LOGIN_SESSION_KEY);
             userService.update(user, userUpdateDto, bindingResult);
             return "redirect:/mypage";
@@ -93,9 +77,6 @@ public class UserController {
 
     @DeleteMapping("/withdrawal")
     public String withdrawalUser(HttpSession session) {
-        if (!isLoggedIn(session)) {
-            return "redirect:/";
-        }
         userService.delete(session);
         return "redirect:/";
     }

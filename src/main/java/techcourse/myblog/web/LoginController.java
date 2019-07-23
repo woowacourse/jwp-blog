@@ -10,8 +10,6 @@ import techcourse.myblog.service.LoginService;
 
 import javax.servlet.http.HttpSession;
 
-import static techcourse.myblog.web.ControllerUtil.isLoggedIn;
-
 @Controller
 public class LoginController {
     private final LoginService loginService;
@@ -33,19 +31,13 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String loginView(HttpSession session) {
-        if (isLoggedIn(session)) {
-            return "redirect:/";
-        }
+    public String loginView() {
         return "login";
     }
 
     @GetMapping("/logout")
     public String logoutView(HttpSession session) {
-        if (isLoggedIn(session)) {
-            session.removeAttribute("loginUser");
-            return "redirect:/";
-        }
+        session.removeAttribute("loginUser");
         return "redirect:/login";
     }
 }

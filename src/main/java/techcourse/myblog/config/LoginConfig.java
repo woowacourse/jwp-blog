@@ -12,8 +12,13 @@ public class LoginConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginInterceptor())
                 .addPathPatterns("/write")
                 .addPathPatterns("/articles/new")
+                .addPathPatterns("/articles/*/edit")
                 .addPathPatterns("/mypage")
                 .addPathPatterns("/mypage-edit")
-                .addPathPatterns("/withdrawal");
+                .addPathPatterns("/withdrawal")
+                .addPathPatterns("/login")
+                .addPathPatterns("/signup")
+                .addPathPatterns("/users")
+                .addPathPatterns("/logout");
     }
 }

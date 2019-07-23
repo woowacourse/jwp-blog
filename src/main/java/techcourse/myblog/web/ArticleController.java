@@ -5,15 +5,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.exception.CouldNotFindArticleIdException;
+import techcourse.myblog.service.ArticleService;
 
 import javax.servlet.http.HttpSession;
 
-import static techcourse.myblog.web.ControllerUtil.putLoginUser;
-
 @Controller
 public class ArticleController {
+    private static final String LOGIN_SESSION_KEY = "loginUser";
     private final ArticleService articleService;
 
     public ArticleController(ArticleService articleService) {
@@ -28,7 +27,7 @@ public class ArticleController {
 
     @GetMapping("/articles/new")
     public String editNewArticleView(HttpSession session, Model model) {
-        putLoginUser(session, model);
+        model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
         articleService.setActionOfArticle(model,
                 "/write",
                 "post"
@@ -39,7 +38,7 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}/edit")
     public String editArticleView(@PathVariable Long articleId, HttpSession session, Model model) {
-        putLoginUser(session, model);
+        model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
         Article findArticle = articleService.findArticleById(articleId);
         articleService.setActionOfArticle(model,
                 "/articles/" + articleId,
@@ -53,7 +52,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}")
     public String searchArticleView(@PathVariable Long articleId, HttpSession session, Model model) {
         try {
-            putLoginUser(session, model);
+            model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
             Article findArticle = articleService.findArticleById(articleId);
             model.addAttribute("article", findArticle);
             return "article";
