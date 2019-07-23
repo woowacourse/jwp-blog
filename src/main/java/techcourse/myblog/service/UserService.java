@@ -6,6 +6,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -58,9 +59,10 @@ public class UserService {
                                                 });
     }
 
+    @Transactional
     public UserQueryResult tryUpdate(String name, String email, HttpSession session) {
         return ifLoggedIn(session).map(user -> {
-            if (!user.getEmail().equals(email) && userRepository.findByEmail(email).isPresent()) {
+            if (user.emailNotChanged(email) && userRepository.findByEmail(email).isPresent()) {
                 return UserQueryResult.EMAIL_ALREADY_TAKEN;
             }
             try {

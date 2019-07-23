@@ -65,11 +65,11 @@ class ArticleControllerTest {
         .andExpect(status().is3xxRedirection());
         assertThat(articleRepository.count() != 0).isTrue();
         boolean[] isWritten = { false };
-        articleRepository.findAll().forEach(article -> {
+        articleRepository.findAll().forEach(article ->
             isWritten[0] |= article.getTitle().equals(testTitle)
                     & article.getCoverUrl().equals(testCoverUrl)
-                    & article.getContents().equals(testContents);
-        });
+                    & article.getContents().equals(testContents)
+        );
         assertThat(isWritten[0]).isTrue();
     }
 

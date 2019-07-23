@@ -55,6 +55,10 @@ public class User {
                                         .orElseThrow(IllegalArgumentException::new);
     }
 
+    public boolean emailNotChanged(String email) {
+        return this.email.equals(email);
+    }
+
     public String getPassword() {
         return this.password;
     }

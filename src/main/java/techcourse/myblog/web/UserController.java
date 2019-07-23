@@ -1,7 +1,5 @@
 package techcourse.myblog.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +9,6 @@ import techcourse.myblog.service.UserQueryResult;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 
 @Controller
 public class UserController {
@@ -100,7 +97,6 @@ public class UserController {
         return userService.tryRender(model, session) ? "mypage-edit" : "redirect:/";
     }
 
-    @Transactional
     @PutMapping("/profile/edit")
     public RedirectView profileEdit(
             String name,
