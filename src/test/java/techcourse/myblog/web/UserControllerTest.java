@@ -109,7 +109,7 @@ public class UserControllerTest {
         save(user);
 
         UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
-        User check = loginService.findByLoginRequestDto(loginRequestDto);
+        User check = loginService.login(loginRequestDto);
 
         webTestClient.get().uri("/users/edit/" + check.getId())
                 .exchange()

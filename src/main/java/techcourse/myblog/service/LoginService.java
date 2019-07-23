@@ -17,17 +17,11 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
-    public boolean canLogin(final UserRequestDto.LoginRequestDto loginRequestDto) {
-        try {
-            User user = userRepository.findByEmail(loginRequestDto.getEmail())
-                    .orElseThrow(NoSuchElementException::new);
-            return user.isSamePassword(loginRequestDto.getPassword());
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+    public User login(final UserRequestDto.LoginRequestDto loginRequestDto) {
+        return findByLoginRequestDto(loginRequestDto);
     }
 
-    public User findByLoginRequestDto(final UserRequestDto.LoginRequestDto loginRequestDto) {
+    private User findByLoginRequestDto(final UserRequestDto.LoginRequestDto loginRequestDto) {
         return userRepository.findByEmail(loginRequestDto.getEmail())
                 .orElseThrow(NoSuchElementException::new);
     }

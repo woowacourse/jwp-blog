@@ -9,7 +9,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.domain.User.User;
 import techcourse.myblog.web.UserRequestDto;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -30,26 +30,20 @@ public class LoginServiceTest {
     }
 
     @Test
-    public void 회원_조회_By_LoginInfo() {
-        UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
-        User expected = userService.save(signUpRequestDto);
-        UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
-
-        assertEquals(expected, loginService.findByLoginRequestDto(loginRequestDto));
-    }
-
-    @Test
     public void 로그인_가능() {
         UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
-        userService.save(signUpRequestDto);
+        User expected = userService.save(signUpRequestDto);
 
         UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
-        assertTrue(loginService.canLogin(loginRequestDto));
+        assertEquals(expected, loginService.login(loginRequestDto));
     }
 
     @Test
     public void 로그인_불가능() {
+        UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
+        User expected = userService.save(signUpRequestDto);
+
         UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
-        assertFalse(loginService.canLogin(loginRequestDto));
+        assertEquals(expected, loginService.login(loginRequestDto));
     }
 }
