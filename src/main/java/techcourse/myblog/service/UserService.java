@@ -16,7 +16,6 @@ import java.util.Optional;
 public class UserService {
     public static final String NOT_EXIST_USER_MESSAGE = "존재하지 않는 user 입니다";
     public static final String DUPLICATED_USER_MESSAGE = "이미 존재하는 email입니다";
-    public static final String WRONG_PASSWORD_MESSAGE = "비밀번호를 확인해주세요";
 
     private final UserRepository userRepository;
 
@@ -25,11 +24,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User save(User user) {
+    public User save(UserDto user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new DuplicatedEmailException(DUPLICATED_USER_MESSAGE);
         }
-        return userRepository.save(user);
+        return userRepository.save(user.toUser());
     }
 
     @Transactional(readOnly = true)

@@ -33,7 +33,7 @@ public class UserController {
 
     @PostMapping("/users")
     public RedirectView createUser(@ModelAttribute("/signup") @Validated({Default.class, UserInfo.class}) UserDto userDto) {
-        userService.save(userDto.toUser());
+        userService.save(userDto);
 
         return new RedirectView("/login");
     }
