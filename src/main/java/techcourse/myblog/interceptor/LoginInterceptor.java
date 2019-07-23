@@ -13,23 +13,23 @@ import javax.servlet.http.HttpSession;
 
 @Component
 public class LoginInterceptor extends HandlerInterceptorAdapter {
-    private static final Logger log = LoggerFactory.getLogger(LoginInterceptor.class);
+	private static final Logger log = LoggerFactory.getLogger(LoginInterceptor.class);
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        final HttpSession session = request.getSession();
-        final String uri = request.getRequestURI();
-        final String methodName = request.getMethod();
-        log.info("preHandle... {} : {}", LoginInterceptor.class, methodName, uri);
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		final HttpSession session = request.getSession();
+		final String uri = request.getRequestURI();
+		final String methodName = request.getMethod();
+		log.info("preHandle... {} : {}", LoginInterceptor.class, methodName, uri);
 
-        Object sessionDto = session.getAttribute(Constants.SESSION_USER_NAME);
-        final boolean isLogin = !ObjectUtils.isEmpty(sessionDto);
+		Object sessionDto = session.getAttribute(Constants.SESSION_USER_NAME);
+		final boolean isLogin = !ObjectUtils.isEmpty(sessionDto);
 
-        if (isLogin) {
-            response.sendRedirect("/");
-            return false;
-        }
+		if (isLogin) {
+			response.sendRedirect("/");
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 }

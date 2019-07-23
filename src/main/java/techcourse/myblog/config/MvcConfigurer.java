@@ -10,17 +10,17 @@ import techcourse.myblog.web.Constants;
 @Configuration
 public class MvcConfigurer implements WebMvcConfigurer {
 
-    private final LoginInterceptor loginInterceptor;
+	private final LoginInterceptor loginInterceptor;
 
-    @Autowired
-    public MvcConfigurer(final LoginInterceptor loginInterceptor) {
-        this.loginInterceptor = loginInterceptor;
-    }
+	@Autowired
+	public MvcConfigurer(final LoginInterceptor loginInterceptor) {
+		this.loginInterceptor = loginInterceptor;
+	}
 
-    @Override
-    public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor)
-                .addPathPatterns(Constants.LOGIN_URL)
-                .addPathPatterns(Constants.SIGNUP_URL);
-    }
+	@Override
+	public void addInterceptors(final InterceptorRegistry registry) {
+		registry.addInterceptor(loginInterceptor)
+				.addPathPatterns(Constants.LOGIN_URL)
+				.addPathPatterns(Constants.SIGNUP_URL);
+	}
 }
