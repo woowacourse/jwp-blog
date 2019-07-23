@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User.User;
 import techcourse.myblog.domain.User.UserRequestDto;
 import techcourse.myblog.domain.User.UserRepository;
+import techcourse.myblog.domain.User.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,11 +22,13 @@ import java.util.Optional;
 public class UserController {
     public static final String EMAIL_DUPLICATION_ERROR_MSG = "이메일 중복입니다.";
     public static final String LOGIN_ERROR_MSG = "아이디나 비밀번호가 잘못되었습니다.";
-    private UserRepository userRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @GetMapping("/accounts/signup")
@@ -90,11 +93,12 @@ public class UserController {
     }
 
     @PutMapping("/accounts/profile/edit")
-    public String processUpdateProfile(Model model, @Valid UserRequestDto userRequestDto, Errors errors, HttpServletRequest request) {
+    public String processUpdateProfile(@Valid UserRequestDto userRequestDto, Errors errors, HttpServletRequest request) {
         if (errors.hasErrors()) {
             return "mypage-edit";
         }
-        userRepository.save(userRequestDto.toUser());
+        //userRepository.save(userRequestDto.toUser());
+        userService.update(userRequestDto.getEmail(), userRequestDto);
         request.getSession().setAttribute("user", userRequestDto.toUser());
 
         return "redirect:/accounts/profile/" + userRequestDto.getId();

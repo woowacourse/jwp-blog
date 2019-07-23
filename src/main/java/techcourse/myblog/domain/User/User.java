@@ -30,4 +30,10 @@ public class User {
         this.password = password;
         this.email = email;
     }
+
+    public void update(UserRequestDto userRequestDto) {
+        this.name = userRequestDto.getName();
+        this.password = userRequestDto.getPassword();
+        this.email = userRequestDto.getEmail();
+    }
 }
