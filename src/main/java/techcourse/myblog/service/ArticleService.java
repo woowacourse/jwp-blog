@@ -1,5 +1,10 @@
 package techcourse.myblog.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.converter.ToArticle;
@@ -9,11 +14,10 @@ import techcourse.myblog.exception.ArticleException;
 import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class ArticleService {
+    private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
     private static final String NOT_EXIST_ARTICLE = "해당 기사가 없습니다.";
     private final ArticleRepository articleRepository;
     private final ToArticle toArticle;
@@ -23,9 +27,12 @@ public class ArticleService {
         this.toArticle = toArticle;
     }
 
+    @Transactional(readOnly = true)
     public List<Article> findAll() {
-        return StreamSupport.stream(articleRepository.findAll().spliterator(), true)
-                .collect(Collectors.toList());
+        PageRequest request = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        Page<Article> page = articleRepository.findAll(request);
+        log.info("page : {} ", page.getContent());
+        return page.getContent();
     }
 
     @Transactional(readOnly = true)
