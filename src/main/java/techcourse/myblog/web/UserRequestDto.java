@@ -3,6 +3,7 @@ package techcourse.myblog.web;
 import techcourse.myblog.domain.User.User;
 
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 public class UserRequestDto {
 
@@ -99,54 +100,56 @@ public class UserRequestDto {
         @NotNull
         private String email;
 
+        @NotNull
+        private String password;
+
         public SessionDto() {
 
         }
 
-        public SessionDto(final long id, final String name, final String email) {
-            this.id = id;
+        public SessionDto(final String name, final String email, final String password) {
             this.name = name;
             this.email = email;
+            this.password = password;
         }
 
         public static SessionDto toDto(final User user) {
-            return new SessionDto(user.getId(), user.getName(), user.getEmail());
-        }
-
-        public boolean isSameId(final Long id) {
-            return this.id.compareTo(id) == 0;
+            return new SessionDto(user.getName(), user.getEmail(), user.getPassword());
         }
 
         public Long getId() {
             return id;
         }
 
-        public void setId(Long id) {
-            this.id = id;
-        }
-
         public String getName() {
             return name;
         }
 
-        public void setName(String name) {
-            this.name = name;
-        }
 
         public String getEmail() {
             return email;
         }
 
-        public void setEmail(String email) {
-            this.email = email;
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof SessionDto)) return false;
+            SessionDto that = (SessionDto) o;
+            return Objects.equals(email, that.email) &&
+                    Objects.equals(password, that.password);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(email, password);
         }
 
         @Override
         public String toString() {
             return "SessionDto{" +
-                    "id=" + id +
-                    ", name='" + name + '\'' +
+                    "name='" + name + '\'' +
                     ", email='" + email + '\'' +
+                    ", password='" + password + '\'' +
                     '}';
         }
     }

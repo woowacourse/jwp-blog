@@ -17,7 +17,7 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
-    public boolean authenticate(final UserRequestDto.LoginRequestDto loginRequestDto) {
+    public boolean canLogin(final UserRequestDto.LoginRequestDto loginRequestDto) {
         try {
             User user = userRepository.findByEmail(loginRequestDto.getEmail())
                     .orElseThrow(NoSuchElementException::new);

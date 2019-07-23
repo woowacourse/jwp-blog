@@ -48,30 +48,31 @@ public class UserController {
     @GetMapping("/users/{id}")
     public String myPage(@PathVariable Long id, final Model model, final HttpSession session) {
         UserRequestDto.SessionDto sessionDto = (UserRequestDto.SessionDto) session.getAttribute(SESSION_NAME);
+        User user = userService.findById(id);
+        log.debug("before authenticate...");
 
-        log.debug("session value : {}", sessionDto);
-        log.debug("id : {}", id);
-
-        if (isSessionMatch(id, sessionDto)) {
-            User user = userService.findById(id);
+        if (isSessionMatch(user, sessionDto)) {
+            log.debug("authenticate...");
+            log.debug("mypage/{} : User={}", id, user);
+            log.debug("mypage/{} : Session={}", id, sessionDto);
             model.addAttribute("user", user);
-            log.debug("{} to /mypage", user);
+            session.setAttribute(Constants.SESSION_USER_NAME, sessionDto);
             return "mypage";
         }
         return "redirect:/users";
     }
 
-    private boolean isSessionMatch(@PathVariable Long id, UserRequestDto.SessionDto sessionDto) {
-        log.debug("id in isSessionMatch() : {}", id);
-        log.debug("session in isSessionMatch() : {}", sessionDto);
-        return (sessionDto != null) && (sessionDto.isSameId(id));
+    private boolean isSessionMatch(User user, UserRequestDto.SessionDto sessionDto) {
+
+        return (sessionDto != null) && (sessionDto.equals(UserRequestDto.SessionDto.toDto(user)));
     }
 
     @GetMapping("/users/edit/{id}")
     public String editPage(@PathVariable Long id, final Model model, final HttpSession session) {
         UserRequestDto.SessionDto sessionDto = (UserRequestDto.SessionDto) session.getAttribute(SESSION_NAME);
-        if (isSessionMatch(id, sessionDto)) {
-            User user = userService.findById(id);
+        User user = userService.findById(id);
+
+        if (isSessionMatch(user, sessionDto)) {
             model.addAttribute("user", user);
             log.debug("{} to /mypage-edit", user);
             return "mypage-edit";

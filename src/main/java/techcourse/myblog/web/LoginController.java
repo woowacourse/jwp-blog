@@ -28,23 +28,18 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String login(final HttpSession session) {
-        if (isSessionNull(session)) {
-            return "/user/login";
-        }
-        return "redirect:/";
-    }
-
-    private boolean isSessionNull(final HttpSession session) {
-        return session.getAttribute(SESSION_NAME) == null;
+    public String login() {
+        return "/user/login";
     }
 
     @PostMapping("/login")
     public String login(final UserRequestDto.LoginRequestDto loginRequestDto, final HttpSession session, final Model model) {
-        if (loginService.authenticate(loginRequestDto)) {
+        log.debug("before login...");
+        if (loginService.canLogin(loginRequestDto)) {
+            log.debug("login...");
             User user = loginService.findByLoginRequestDto(loginRequestDto);
             UserRequestDto.SessionDto sessionDto = UserRequestDto.SessionDto.toDto(user);
-            log.debug("user {} try to login...", sessionDto);
+            log.debug("user {} transform to {}", user, sessionDto);
             session.setAttribute(SESSION_NAME, sessionDto);
             return "/index";
         }
@@ -54,18 +49,12 @@ public class LoginController {
 
     @GetMapping("/logout")
     public String logout(final HttpSession session) {
-        if (isSessionNull(session)) {
-            return "redirect:/";
-        }
         session.removeAttribute(SESSION_NAME);
         return "redirect:/";
     }
 
     @GetMapping("/signup")
-    public String signUp(final HttpSession session) {
-        if (isSessionNull(session)) {
-            return "/user/signup";
-        }
-        return "redirect:/";
+    public String signUp() {
+        return "/user/signup";
     }
 }
