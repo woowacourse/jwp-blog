@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <form th:action="@{/articles/{id}(id = ${article} ? ${article.id} : '')}" name="article" th:method="${article} ? PUT : POST" th:object="${article}" accept-charset="utf-8" >
+    <form th:action="@{/articles/{id}(id = ${article} ? ${article.id} : '')}" name="article" th:method="${article} ? PUT : POST" th:object="${article}" accept-charset="utf-8">
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">

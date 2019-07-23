@@ -7,8 +7,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.LoginDto;
+import techcourse.myblog.dto.MyPageEditDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
@@ -30,8 +32,12 @@ public class UserController {
     private static final String ROUTE_USERS = "/users";
     private static final String ROUTE_LOGIN = "/login";
     private static final String ROUTE_LOGOUT = "/logout";
+    private static final String ROUTE_MYPAGE = "/mypage";
+    private static final String ROUTE_EDIT = "/edit";
     private static final String PAGE_LOGIN = "login";
     private static final String PAGE_USER_LIST = "user-list";
+    private static final String PAGE_MYPAGE = "mypage";
+    private static final String PAGE_MYPAGE_EDIT = "mypage-edit";
     private static final String DUPLICATED_EMAIL = "이미 가입되어 있는 이메일 주소입니다. 다른 이메일 주소를 입력해 주세요.";
     private static final String WRONG_LOGIN = "잘못된 이메일 주소 또는 패스워드를 입력하셨습니다.";
 
@@ -43,6 +49,13 @@ public class UserController {
 
     private boolean isDuplicatedEmail(final String email) {
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    private String loginFirstOr(final String elsePage, final HttpSession session) {
+        if (session.getAttribute(USER) == null) {
+            return REDIRECT + ROUTE_LOGIN;
+        }
+        return elsePage;
     }
 
     @GetMapping(ROUTE_SIGNUP)
@@ -112,5 +125,35 @@ public class UserController {
         LOG.debug("사용자 로그아웃");
         session.setAttribute(USER, null);
         return REDIRECT + ROUTE_ROOT;
+    }
+
+    @GetMapping(ROUTE_MYPAGE)
+    public String myPage(final Model model, final HttpSession session) {
+        final User user = (User) session.getAttribute(USER);
+        model.addAttribute("user", user);
+        return loginFirstOr(PAGE_MYPAGE, session);
+    }
+
+    @GetMapping(ROUTE_MYPAGE + ROUTE_EDIT)
+    public String mypageEditor(final Model model, final HttpSession session) {
+        final User user = (User) session.getAttribute(USER);
+        model.addAttribute("user", user);
+        return loginFirstOr(PAGE_MYPAGE_EDIT, session);
+    }
+
+    @PutMapping(ROUTE_MYPAGE + ROUTE_EDIT)
+    public String mypageEdit(final Model model, final HttpSession session, final MyPageEditDto dto) {
+        try {
+            final User loginUser = (User) session.getAttribute(USER);
+            final User user = userRepository.findById(loginUser.getId()).get();
+            LOG.debug("user: {}", user);
+            LOG.debug("DTO: {}", dto);
+            user.setUsername(dto.getUsername());
+            userRepository.save(user);
+            session.setAttribute(USER, user);
+            return REDIRECT + ROUTE_MYPAGE;
+        } catch (Exception e) {
+            return REDIRECT + ROUTE_LOGIN;
+        }
     }
 }
