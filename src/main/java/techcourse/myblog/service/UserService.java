@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.exception.SignUpException;
@@ -21,6 +22,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional(rollbackFor = SignUpException.class)
     public User addUser(UserRequestDto userRequestDto) {
         checkRegisteredEmail(userRequestDto);
         return userRepository.save(userRequestDto.toEntity());
@@ -32,21 +34,23 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<User> findAll() {
         return StreamSupport.stream(userRepository.findAll().spliterator(), true)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(rollbackFor = UserException.class)
     public void updateUser(UserRequestDto userRequestDto, String email) {
         User user = getUserByEmail(email);
         user.updateNameAndEmail(userRequestDto.getName(), userRequestDto.getEmail());
-        userRepository.save(user);
     }
 
     private User getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new UserException(NOT_FOUND_EMAIL));
     }
 
+    @Transactional(rollbackFor = UserException.class)
     public void deleteUser(String email) {
         userRepository.delete(getUserByEmail(email));
     }

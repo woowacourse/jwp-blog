@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.exception.LoginException;
@@ -17,6 +18,7 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly = true)
     public User loginByEmailAndPwd(UserRequestDto userRequestDto) {
         User user = getUser(userRequestDto);
         checkMatchPassword(user, userRequestDto);

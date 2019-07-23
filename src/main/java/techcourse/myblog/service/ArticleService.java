@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.exception.ArticleException;
@@ -24,24 +25,27 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public Article findArticle(long articleId) {
         return articleRepository.findById(articleId)
                 .orElseThrow(() -> new ArticleException(NOT_EXIST_ARTICLE));
     }
 
+    @Transactional
     public Long save(ArticleRequestDto articleRequestDto) {
         Article article = articleRequestDto.toEntity();
         articleRepository.save(article);
         return article.getId();
     }
 
+    @Transactional(rollbackFor = ArticleException.class)
     public Article update(long articleId, ArticleRequestDto articleRequestDto) {
         Article originArticle = findArticle(articleId);
         originArticle.update(articleRequestDto.toEntity());
-        articleRepository.save(originArticle);
         return originArticle;
     }
 
+    @Transactional(rollbackFor = IllegalArgumentException.class)
     public void delete(long articleId) {
         articleRepository.deleteById(articleId);
     }
