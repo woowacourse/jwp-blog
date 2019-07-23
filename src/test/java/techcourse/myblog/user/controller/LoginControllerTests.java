@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.user.UserDataForTest;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -22,9 +23,9 @@ public class LoginControllerTests {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!")
-                        .with("name", "name"))
+                        .fromFormData("email", UserDataForTest.USER_EMAIL)
+                        .with("password", UserDataForTest.USER_PASSWORD)
+                        .with("name", UserDataForTest.USER_NAME))
                 .exchange();
     }
 
@@ -40,8 +41,8 @@ public class LoginControllerTests {
         webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!"))
+                        .fromFormData("email", UserDataForTest.USER_EMAIL)
+                        .with("password", UserDataForTest.USER_PASSWORD))
                 .exchange()
                 .expectStatus().isFound();
     }
@@ -54,7 +55,7 @@ public class LoginControllerTests {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("email", noneEmail)
-                        .with("password", "password"))
+                        .with("password", UserDataForTest.USER_PASSWORD))
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -66,7 +67,7 @@ public class LoginControllerTests {
         webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
+                        .fromFormData("email", UserDataForTest.USER_EMAIL)
                         .with("password", wrongPassword))
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -80,7 +81,7 @@ public class LoginControllerTests {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("email", invalidFormEmail)
-                        .with("password", "password1234!"))
+                        .with("password", UserDataForTest.USER_PASSWORD))
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -92,7 +93,7 @@ public class LoginControllerTests {
         webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
+                        .fromFormData("email", UserDataForTest.USER_EMAIL)
                         .with("password", invalidFormPassword))
                 .exchange()
                 .expectStatus().isBadRequest();
