@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,8 +20,9 @@ import javax.validation.groups.Default;
 
 import lombok.RequiredArgsConstructor;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.exception.UserLoginException;
 import techcourse.myblog.domain.UserService;
+import techcourse.myblog.domain.exception.DuplicatedUserException;
+import techcourse.myblog.domain.exception.UserLoginException;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserInfo;
 
@@ -45,25 +45,42 @@ public class UserController {
         }
     }
 
+    @GetMapping("/users")
+    public String userList(Model model) {
+        List<User> users = userService.findAll();
+        model.addAttribute("users", users);
+        return "user-list";
+    }
+
     @PostMapping("/users")
-    public RedirectView saveUser(@Validated({Default.class, UserInfo.class}) UserDto userDto,
-                                 BindingResult bindingResult,
-                                 RedirectAttributes redirectAttributes) {
+    public RedirectView save(@Validated({Default.class, UserInfo.class}) UserDto userDto,
+                             BindingResult bindingResult,
+                             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userDto", userDto);
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return new RedirectView("/signup");
+            return redirectErrorView(bindingResult, redirectAttributes, "/signup");
         }
 
         try {
             userService.save(userDto.toUser());
-        } catch (DataIntegrityViolationException e) {
-            bindingResult.addError(new FieldError("userDto", "email", "이미 존재하는 email입니다."));
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return new RedirectView("/signup");
+        } catch (DuplicatedUserException e) {
+            bindingResult.addError(new FieldError("userDto", e.getName(), e.getMessage()));
+            return redirectErrorView(bindingResult, redirectAttributes, "/signup");
         }
 
         return new RedirectView("/login");
+    }
+
+    private RedirectView redirectErrorView(BindingResult bindingResult, RedirectAttributes redirectAttributes, String to) {
+        redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+        return new RedirectView(to);
+    }
+
+    @DeleteMapping("/users")
+    public RedirectView delete(UserDto userDto, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        userService.delete(user);
+        return logout(session);
     }
 
     @GetMapping("/login")
@@ -72,17 +89,25 @@ public class UserController {
         return "login";
     }
 
+    @PostMapping("/login")
+    public RedirectView login(UserDto userDto,
+                              BindingResult bindingResult,
+                              HttpSession session,
+                              RedirectAttributes redirectAttributes) {
+        try {
+            User user = userService.login(userDto);
+            session.setAttribute("user", user);
+            return new RedirectView("/");
+        } catch (UserLoginException e) {
+            bindingResult.addError(new FieldError("userDto", e.getName(), e.getMessage()));
+            return redirectErrorView(bindingResult, redirectAttributes, "/login");
+        }
+    }
+
     @GetMapping("/logout")
     public RedirectView logout(HttpSession session) {
         session.invalidate();
         return new RedirectView("/");
-    }
-
-    @GetMapping("/users")
-    public String userList(Model model) {
-        List<User> users = userService.getAll();
-        model.addAttribute("users", users);
-        return "user-list";
     }
 
     @GetMapping("/mypage")
@@ -97,43 +122,18 @@ public class UserController {
     }
 
     @PutMapping("/mypage")
-    public RedirectView updateUser(@Validated(UserInfo.class) UserDto userDto,
-                                   BindingResult bindingResult,
-                                   HttpSession session,
-                                   RedirectAttributes redirectAttributes) {
+    public RedirectView update(@Validated(UserInfo.class) UserDto userDto,
+                               HttpSession session,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("user");
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("user", user);
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return new RedirectView("/mypage/edit");
+            return redirectErrorView(bindingResult, redirectAttributes, "/mypage/edit");
         }
 
-        userService.update(user, userDto.toUser());
+        session.setAttribute("user", userService.update(user, userDto.getName()));
         return new RedirectView("/mypage");
-    }
-
-    @PostMapping("/login")
-    public RedirectView login(UserDto userDto,
-                        BindingResult bindingResult,
-                        HttpSession session,
-                        RedirectAttributes redirectAttributes) {
-        try {
-            User user = userService.login(userDto);
-            session.setAttribute("user", user);
-            return new RedirectView("/");
-        } catch (UserLoginException e) {
-            bindingResult.addError(new FieldError("userDto", e.getName(), e.getMessage()));
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return new RedirectView("/login");
-        }
-    }
-
-    @DeleteMapping("/users")
-    public RedirectView removeUser(UserDto userDto, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        session.invalidate();
-        userService.delete(user);
-        return new RedirectView("/");
     }
 }
