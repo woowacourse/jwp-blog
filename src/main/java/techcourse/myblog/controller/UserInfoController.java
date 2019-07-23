@@ -15,8 +15,6 @@ import techcourse.myblog.support.RedirectAttributeSupport;
 import techcourse.myblog.support.argument.resolver.SessionInfo;
 import techcourse.myblog.support.validation.UserGroups.Edit;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Controller
 @RequestMapping("/mypage")
 public class UserInfoController {
