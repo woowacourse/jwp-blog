@@ -1,31 +1,16 @@
 package techcourse.myblog.dto;
 
+import lombok.Getter;
+
+@Getter
 public class ArticleDto {
-    private String title;
-    private String coverUrl;
-    private String contents;
+    private final String title;
+    private final String coverUrl;
+    private final String contents;
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
+    public ArticleDto(String title, String coverUrl, String contents) {
         this.title = title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public void setContents(String contents) {
         this.contents = contents;
     }
 }
