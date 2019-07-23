@@ -14,6 +14,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class UserService {
     private static final String REGISTERED_EMAIL = "이미 등록된 이메일 입니다.";
+    private static final String NOT_FOUND_EMAIL = "이메일을 찾을 수 없습니다.";
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -43,7 +44,7 @@ public class UserService {
     }
 
     private User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(UserException::new);
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserException(NOT_FOUND_EMAIL));
     }
 
     public void deleteUser(String email) {
