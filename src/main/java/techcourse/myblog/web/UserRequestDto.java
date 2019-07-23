@@ -100,9 +100,6 @@ public class UserRequestDto {
         @NotNull
         private String email;
 
-        @NotNull
-        private String password;
-
         public SessionDto() {
 
         }
@@ -111,7 +108,6 @@ public class UserRequestDto {
             this.id = id;
             this.name = name;
             this.email = email;
-            this.password = password;
         }
 
         public static SessionDto toDto(final User user) {
@@ -126,7 +122,6 @@ public class UserRequestDto {
             return name;
         }
 
-
         public String getEmail() {
             return email;
         }
@@ -134,15 +129,16 @@ public class UserRequestDto {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof SessionDto)) return false;
+            if (o == null || getClass() != o.getClass()) return false;
             SessionDto that = (SessionDto) o;
-            return Objects.equals(email, that.email) &&
-                    Objects.equals(password, that.password);
+            return Objects.equals(id, that.id) &&
+                    Objects.equals(name, that.name) &&
+                    Objects.equals(email, that.email);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(email, password);
+            return Objects.hash(id, name, email);
         }
 
         @Override
@@ -151,7 +147,6 @@ public class UserRequestDto {
                     "id=" + id +
                     ", name='" + name + '\'' +
                     ", email='" + email + '\'' +
-                    ", password='" + password + '\'' +
                     '}';
         }
     }

@@ -61,7 +61,6 @@ public class UserController {
     }
 
     private boolean authenticate(User user, UserRequestDto.SessionDto sessionDto) {
-
         return (sessionDto != null) && (sessionDto.equals(UserRequestDto.SessionDto.toDto(user)));
     }
 

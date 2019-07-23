@@ -8,8 +8,6 @@ import techcourse.myblog.exception.NoSuchUserException;
 import techcourse.myblog.exception.PasswordMismatchException;
 import techcourse.myblog.web.UserRequestDto;
 
-import java.util.NoSuchElementException;
-
 @Service
 public class LoginService {
     private final UserRepository userRepository;
