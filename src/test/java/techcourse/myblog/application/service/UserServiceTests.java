@@ -8,8 +8,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.error.DuplicatedEmailException;
+import techcourse.myblog.error.WrongPasswordException;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,51 +33,54 @@ public class UserServiceTests {
                 .email("kangmin789@naver.com")
                 .password("asdASD12!@")
                 .build();
-
         userService.save(userDto);
+
     }
 
     @Test
-    @DisplayName("save가 잘 되었는지 테스트")
-    void save_Test() {
+    void save_findByID_isNotNull() {
         assertThat(userRepository.findById((long) 1)).isNotNull();
     }
 
     @Test
-    @DisplayName("패스워드가 일치할 떄 true를 반환하는지 테스트")
-    void checkPassword_Match_Test() {
-        UserDto newUserDto = UserDto.builder().name("김강민")
+    void save_checkDuplicatedEmail_exception() {
+        UserDto userDto = UserDto.builder().name("abc")
                 .email("kangmin789@naver.com")
                 .password("asdASD12!@")
                 .build();
-        assertThat(userService.checkPassword(newUserDto)).isTrue();
+        assertThrows(DuplicatedEmailException.class, () ->  userService.save(userDto));
     }
 
     @Test
-    @DisplayName("패스워드가 불일치할 떄 익셉션을 던지는 지 테스트")
-    void checkPassword_isNotMatch_Test() {
-        UserDto newUserDto = UserDto.builder().name("김강민")
+    void checkPassword_isMatch_true() {
+        LoginDto loginDto = LoginDto.builder()
                 .email("kangmin789@naver.com")
-                .password("asdASD12")
+                .password("asdASD12!@")
                 .build();
-        assertThrows(IllegalArgumentException.class, () -> userService.checkPassword(newUserDto));
+        assertThat(userService.checkPassword(loginDto)).isTrue();
     }
 
     @Test
-    @DisplayName("이메일이 존재할 떄 해당 이메일을 잘 가져오는 지 테스트")
-    void getUserDtoByEmail_isPresent_Test() {
+    void checkPassword_isNotMatch_exception() {
+        LoginDto loginDto = LoginDto.builder()
+                .email("kangmin789@naver.com")
+                .password("asdASD12!@1")
+                .build();
+        assertThrows(WrongPasswordException.class, () -> userService.checkPassword(loginDto));
+    }
+
+    @Test
+    void getUserDtoByEmail_isPresent_true() {
         assertThat(userService.getUserDtoByEmail(userDto.getEmail()).isPresent()).isTrue();
     }
 
     @Test
-    @DisplayName("이메일이 존재하지 않을 때 해당 이메일을 잘 가져오지 않는 지 테스트")
-    void getUserDtoByEmail_isEmpty_Test() {
-        assertThat(!userService.getUserDtoByEmail("abc@naver.com").isPresent()).isTrue();
+    void getUserDtoByEmail_isNotPresent_false() {
+        assertThat(userService.getUserDtoByEmail("abc@naver.com").isPresent()).isFalse();
     }
 
     @Test
-    @DisplayName("이름을 바꿀때 잘 바뀌는 지 테스트")
-    void updateUserName_test() {
+    void updateUserName_otherData_true() {
         assertThat(userService.updateUserName(userDto, "로비")).isEqualTo("로비");
     }
 

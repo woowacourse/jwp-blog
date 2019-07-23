@@ -49,7 +49,7 @@ public class ArticleControllerTests {
 
     @Test
     void save_post_is3xxRedirect() {
-        articleRequest(POST, articleDto, "")
+        commonRequest(POST, articleDto, "")
                 .expectStatus()
                 .is3xxRedirection();
         id++;
@@ -63,7 +63,7 @@ public class ArticleControllerTests {
 
     @Test
     void update_post_is3xxRedirect() {
-        articleRequest(PUT, articleDto, "/" + article.getId())
+        commonRequest(PUT, articleDto, "/" + article.getId())
                 .expectStatus()
                 .is3xxRedirection();
     }
@@ -76,7 +76,7 @@ public class ArticleControllerTests {
                 .contents("edit")
                 .build();
 
-        articleRequest(PUT, editedArticleDto, "/" + article.getId())
+        commonRequest(PUT, editedArticleDto, "/" + article.getId())
                 .expectStatus()
                 .is3xxRedirection()
                 .expectBody().consumeWith(redirectResponse -> {
@@ -102,7 +102,7 @@ public class ArticleControllerTests {
 
     }
 
-    private WebTestClient.ResponseSpec articleRequest(HttpMethod method, ArticleDto articleDto, String attachedUrl) {
+    private WebTestClient.ResponseSpec commonRequest(HttpMethod method, ArticleDto articleDto, String attachedUrl) {
         return webTestClient.method(method)
                 .uri(ARTICLE_MAPPING_URL + attachedUrl)
                 .body(BodyInserters

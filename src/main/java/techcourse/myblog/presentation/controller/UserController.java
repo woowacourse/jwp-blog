@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.UserService;
 
@@ -44,10 +45,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ModelAndView login(UserDto userDto, HttpSession session) {
-        Optional<UserDto> maybeUserDto = userService.getUserDtoByEmail(userDto.getEmail());
+    public ModelAndView login(LoginDto loginDto, HttpSession session) {
+        Optional<UserDto> maybeUserDto = userService.getUserDtoByEmail(loginDto.getEmail());
         try {
-            userService.checkPassword(userDto);
+            userService.checkPassword(loginDto);
             session.setAttribute("user", maybeUserDto.get());
             return new ModelAndView("redirect:/");
         } catch (IllegalArgumentException e) {
@@ -95,5 +96,4 @@ public class UserController {
         userService.deleteUser(userDto);
         return new RedirectView("/");
     }
-
 }

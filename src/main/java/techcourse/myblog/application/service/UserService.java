@@ -4,9 +4,12 @@ package techcourse.myblog.application.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.error.DuplicatedEmailException;
+import techcourse.myblog.error.WrongPasswordException;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -32,16 +35,16 @@ public class UserService {
 
     private void emailDuplicateValidate(UserDto userDto) {
         if (userRepository.existsByEmail(userDto.getEmail())) {
-            throw new IllegalArgumentException();
+            throw new DuplicatedEmailException("중복된 이메일 입니다.");
         }
     }
 
-    public boolean checkPassword(UserDto userDto) {
-        Optional<User> maybeUser = userRepository.findByEmail(userDto.getEmail());
-        if (maybeUser.isPresent() && maybeUser.get().isSamePassword(userDto.getPassword())) {
+    public boolean checkPassword(LoginDto loginDto) {
+        Optional<User> maybeUser = userRepository.findByEmail(loginDto.getEmail());
+        if (maybeUser.isPresent() && maybeUser.get().isSamePassword(loginDto.getPassword())) {
             return true;
         }
-        throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
+        throw new WrongPasswordException("비밀번호가 틀렸습니다.");
     }
 
     public Optional<UserDto> getUserDtoByEmail(String email) {
