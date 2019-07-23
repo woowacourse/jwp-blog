@@ -88,8 +88,8 @@ public class UserController {
             throw new BindException(bindingResult);
         }
 
-        userService.updateUser(userDto);
-        httpSession.setAttribute("name", userDto.getName());
+        User user = userService.updateUser(userDto);
+        httpSession.setAttribute("name", user.getName());
         return "redirect:/mypage";
     }
 

@@ -7,7 +7,6 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicateUserException;
-import techcourse.myblog.exception.FailedLoginException;
 import techcourse.myblog.exception.NoSuchUserException;
 import techcourse.myblog.repository.UserRepository;
 
@@ -16,7 +15,7 @@ import java.util.List;
 @Service
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
-    private static final String LOG_TAG= "[UserService]";
+    private static final String LOG_TAG = "[UserService]";
     private static final int NOT_FOUND_RESULT = 0;
 
     private final UserRepository userRepository;
@@ -49,7 +48,7 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchUserException("잘못된 접근입니다."));
     }
 
-    public void updateUser(UserDto userDto) {
+    public User updateUser(UserDto userDto) {
         String updatedName = userDto.getName();
         String email = userDto.getEmail();
         String password = userDto.getPassword();
@@ -60,7 +59,7 @@ public class UserService {
                     return new NoSuchUserException();
                 });
 
-        userRepository.save(new User(user.getUserId(), updatedName, email, password)); // 이 부분의
+        return userRepository.save(new User(user.getUserId(), updatedName, email, password)); // 이 부분의
         // TODO 쿼리가 어떻게 날아가는지 확인해보기
     }
 
