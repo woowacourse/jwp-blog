@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -22,7 +23,6 @@ import java.util.stream.Stream;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
-@ExtendWith(SpringExtension.class)
 public class ArticleControllerTests extends ControllerTestTemplate {
     @Autowired
     private ArticleRepository articleRepository;
@@ -40,7 +40,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
         requestExpect(GET, "/articles/writing").isOk();
     }
 
-    @ParameterizedTest(name = "{index}: {4}")
+    @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("articlesStream")
     void 게시글_작성_테스트(Article article) {
         requestExpect(POST, "/articles/write", parser(article))

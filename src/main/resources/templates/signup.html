@@ -63,6 +63,9 @@
                                                                    placeholder="Password" onchange="passwordOnChangeHandler()">
                                                             <span id="password-check-error-message" style="color:red"></span>
                                                         </div>
+                                                        <div style="padding-bottom: 20px;" th:if="${error}">
+                                                            <span th:text = "${error}" style="color:red"></span>
+                                                        </div>
                                                         <div class="form-group">
                                                             <button onclick ="return isSamePasswordAndCheckPassword()" type="submit"
                                                                     class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
