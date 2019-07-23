@@ -9,7 +9,7 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-@EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

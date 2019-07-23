@@ -8,8 +8,16 @@ import javax.persistence.*;
 @Getter
 @ToString
 @EqualsAndHashCode(of = {"id"})
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private String password;
+    @Column(unique = true)
+    private String email;
+
     public User(String name, String password, String email) {
         this.name = name;
         this.password = password;
@@ -23,11 +31,5 @@ public class User {
         this.email = email;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String password;
-    private String email;
 }
 

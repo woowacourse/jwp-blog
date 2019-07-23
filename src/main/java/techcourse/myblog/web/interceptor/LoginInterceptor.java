@@ -1,4 +1,4 @@
-package techcourse.myblog.interceptor;
+package techcourse.myblog.web.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
