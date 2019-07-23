@@ -1,7 +1,5 @@
 package techcourse.myblog.dto;
 
-import techcourse.myblog.domain.Article;
-
 public class ArticleRequestDto {
     private String title;
     private String contents;
@@ -38,9 +36,5 @@ public class ArticleRequestDto {
 
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
-    }
-
-    public Article toEntity() {
-        return new Article(title, contents, coverUrl);
     }
 }

@@ -2,6 +2,7 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.converter.ToArticle;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.exception.ArticleException;
@@ -15,9 +16,11 @@ import java.util.stream.StreamSupport;
 public class ArticleService {
     private static final String NOT_EXIST_ARTICLE = "해당 기사가 없습니다.";
     private final ArticleRepository articleRepository;
+    private final ToArticle toArticle;
 
-    public ArticleService(ArticleRepository articleRepository) {
+    public ArticleService(ArticleRepository articleRepository, ToArticle toArticle) {
         this.articleRepository = articleRepository;
+        this.toArticle = toArticle;
     }
 
     public List<Article> findAll() {
@@ -32,16 +35,16 @@ public class ArticleService {
     }
 
     @Transactional
-    public Long save(ArticleRequestDto articleRequestDto) {
-        Article article = articleRequestDto.toEntity();
+    public Article save(ArticleRequestDto articleRequestDto) {
+        Article article = toArticle.convert(articleRequestDto);
         articleRepository.save(article);
-        return article.getId();
+        return article;
     }
 
     @Transactional(rollbackFor = ArticleException.class)
     public Article update(long articleId, ArticleRequestDto articleRequestDto) {
         Article originArticle = findArticle(articleId);
-        originArticle.update(articleRequestDto.toEntity());
+        originArticle.update(toArticle.convert(articleRequestDto));
         return originArticle;
     }
 

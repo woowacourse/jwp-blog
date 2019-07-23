@@ -3,6 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.model.ModelUtil;
 import techcourse.myblog.service.ArticleService;
@@ -40,8 +41,8 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String saveArticle(ArticleRequestDto articleRequestDto) {
-        Long articleId = articleService.save(articleRequestDto);
-        return "redirect:/articles/" + articleId;
+        Article article = articleService.save(articleRequestDto);
+        return "redirect:/articles/" + article.getId();
     }
 
     @PutMapping("/articles/{articleId}")
