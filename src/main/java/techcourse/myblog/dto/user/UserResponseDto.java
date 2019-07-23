@@ -4,7 +4,7 @@ public class UserResponseDto {
     private String email;
     private String name;
 
-    public UserResponseDto(String email, String name) {
+    public UserResponseDto(final String email, final String name) {
         this.email = email;
         this.name = name;
     }

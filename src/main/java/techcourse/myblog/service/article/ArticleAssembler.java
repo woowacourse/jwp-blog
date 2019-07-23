@@ -10,7 +10,7 @@ public class ArticleAssembler {
         if (Objects.isNull(article)) {
             throw new NullPointerException();
         }
-        int id = article.getId();
+        Long id = article.getId();
         String title = article.getTitle();
         String coverUrl = article.getCoverUrl();
         String contents = article.getContents();

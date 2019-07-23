@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 public class ArticleServiceTest {
     private ArticleAssembler assembler;
     private ArticleDto articleDto;
-    private int id;
+    private Long id;
 
     @Autowired
     private ArticleService service;
@@ -75,7 +75,7 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_삭제_확인() {
-        int id = service.save(articleDto);
+        Long id = service.save(articleDto);
         service.delete(id);
         assertThatExceptionOfType(ArticleNotFoundException.class)
                 .isThrownBy(() -> service.findById(id));

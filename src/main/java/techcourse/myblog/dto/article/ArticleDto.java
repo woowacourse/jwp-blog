@@ -1,24 +1,31 @@
 package techcourse.myblog.dto.article;
 
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class ArticleDto {
-    private int id;
+    private Long id;
+
+    @NotNull
     private String title;
+
+    @NotNull
     private String coverUrl;
+
+    @NotNull
     private String contents;
 
-    public ArticleDto(String title, String coverUrl, String contents) {
+    public ArticleDto(final String title, final String coverUrl, final String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 

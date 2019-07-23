@@ -41,20 +41,20 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public ModelAndView createArticle(final ArticleDto articleDTO) {
-        int id = articleService.save(articleDTO);
+        Long id = articleService.save(articleDTO);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/articles/" + id));
         return modelAndView;
     }
 
     @GetMapping("/articles/{id}")
-    public String showArticle(@PathVariable final int id, Model model) {
+    public String showArticle(@PathVariable final Long id, Model model) {
         model.addAttribute("articleDTO", articleService.findById(id));
         return "article";
     }
 
     @PutMapping("/articles/{id}")
-    public ModelAndView updateArticle(@PathVariable final int id, final ArticleDto articleDTO) {
+    public ModelAndView updateArticle(@PathVariable final Long id, final ArticleDto articleDTO) {
         articleService.update(id, articleDTO);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/articles/" + id));
@@ -62,7 +62,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{id}")
-    public ModelAndView deleteArticle(@PathVariable final int id) {
+    public ModelAndView deleteArticle(@PathVariable final Long id) {
         articleService.delete(id);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/"));
@@ -70,7 +70,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}/edit")
-    public String showEditPage(@PathVariable final int id, Model model) {
+    public String showEditPage(@PathVariable final Long id, Model model) {
         model.addAttribute("articleDTO", articleService.findById(id));
         return "article-edit";
     }

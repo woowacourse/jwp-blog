@@ -33,7 +33,8 @@ public class ArticleService {
                 .collect(Collectors.toList()));
     }
 
-    public ArticleDto findById(final int id) {
+    public ArticleDto findById(final Long id) {
+        checkNull(id);
         Optional<Article> article = articleRepository.findById(id);
         if (article.isPresent()) {
             return convertToDto(article.get());
@@ -41,16 +42,17 @@ public class ArticleService {
         throw new ArticleNotFoundException();
     }
 
-    public int save(ArticleDto articleDTO) {
-        checkDto(articleDTO);
+    public Long save(final ArticleDto articleDTO) {
+        checkNull(articleDTO);
         Article article = convertToEntity(articleDTO);
         Article persistArticle = articleRepository.save(article);
         return persistArticle.getId();
     }
 
     @Transactional
-    public void update(final int id, final ArticleDto articleDTO) {
-        checkDto(articleDTO);
+    public void update(final Long id, final ArticleDto articleDTO) {
+        checkNull(id);
+        checkNull(articleDTO);
         Article article = convertToEntity(articleDTO);
         Optional<Article> articleOptional = articleRepository.findById(id);
         if (articleOptional.isPresent()) {
@@ -60,13 +62,20 @@ public class ArticleService {
         }
     }
 
-    private void checkDto(final ArticleDto articleDTO) {
+    private void checkNull(final Long id) {
+        if (Objects.isNull(id)) {
+            throw new NullPointerException();
+        }
+    }
+
+    private void checkNull(final ArticleDto articleDTO) {
         if (Objects.isNull(articleDTO)) {
             throw new ArticleDtoNotFoundException();
         }
     }
 
-    public void delete(final int id) {
+    public void delete(final Long id) {
+        checkNull(id);
         articleRepository.deleteById(id);
     }
 }

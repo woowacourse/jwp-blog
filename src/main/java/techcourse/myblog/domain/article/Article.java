@@ -2,10 +2,7 @@ package techcourse.myblog.domain.article;
 
 import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 
@@ -13,9 +10,15 @@ import java.util.Objects;
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String coverUrl;
+
+    @Column(nullable = false)
     private String contents;
 
     public Article() {
@@ -43,7 +46,7 @@ public class Article {
         this.contents = article.getContents();
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -64,7 +67,7 @@ public class Article {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return id == article.id &&
+        return Objects.equals(id, article.id) &&
                 Objects.equals(title, article.title) &&
                 Objects.equals(coverUrl, article.coverUrl) &&
                 Objects.equals(contents, article.contents);
