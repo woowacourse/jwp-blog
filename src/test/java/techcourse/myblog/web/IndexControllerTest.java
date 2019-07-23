@@ -13,7 +13,7 @@ class IndexControllerTest extends WebClientGenerator {
 
     @Test
     void index() {
-        response(GET, "/")
+        responseSpec(GET, "/")
                 .expectStatus()
                 .isOk();
     }

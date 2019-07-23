@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
-import org.springframework.test.web.reactive.server.StatusAssertions;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -44,42 +44,42 @@ class UserControllerTest extends WebClientGenerator {
 
     @Test
     void 로그인_페이지_요청() {
-        response(GET, "/login")
+        responseSpec(GET, "/login")
                 .expectStatus()
                 .isOk();
     }
 
     @Test
     void 회원목록_페이지_요청() {
-        response(GET, "/users")
+        responseSpec(GET, "/users")
                 .expectStatus()
                 .isOk();;
     }
 
     @Test
     void 회원가입_페이지_요청() {
-        response(GET, "/signup")
+        responseSpec(GET, "/signup")
                 .expectStatus()
                 .isOk();
     }
 
     @Test
     void 로그아웃() {
-        response(GET, "/logout")
+        responseSpec(GET, "/logout")
                 .expectStatus()
                 .isFound();
     }
 
     @Test
     void 비로그인시_회원_정보_페이지_요청_불가() {
-        response(GET, "/mypage")
+        responseSpec(GET, "/mypage")
                 .expectStatus()
                 .isFound();
     }
 
     @Test
     void 비로그인시_회원_정보_수정_페이지_요청_불가() {
-        response(GET, "/mypage/edit")
+        responseSpec(GET, "/mypage/edit")
                 .expectStatus()
                 .isFound();
     }
@@ -88,7 +88,7 @@ class UserControllerTest extends WebClientGenerator {
     void 회원가입_성공() {
         UserDto userDto = new UserDto(name, email, password);
 
-        response(POST, "/users", parser(userDto))
+        responseSpec(POST, "/users", parser(userDto))
                 .expectStatus()
                 .isFound();
         userRepository.findByEmail(email)
@@ -112,7 +112,7 @@ class UserControllerTest extends WebClientGenerator {
         name = "k";
         UserDto userDto = new UserDto(name, email, password);
 
-        response(POST, "/users", parser(userDto))
+        responseSpec(POST, "/users", parser(userDto))
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -124,7 +124,7 @@ class UserControllerTest extends WebClientGenerator {
     }
 
     private void assertRedirectBodyContains(EntityExchangeResult<byte[]> response, String message) {
-        String redirectBody = responseBody(response(GET, getRedirectedUri(response)));
+        String redirectBody = responseBody(responseSpec(GET, getRedirectedUri(response)));
         assertTrue(redirectBody.contains(message));
     }
 
@@ -133,7 +133,7 @@ class UserControllerTest extends WebClientGenerator {
         email = "email";
         UserDto userDto = new UserDto(name, email, password);
 
-        response(POST, "/users", parser(userDto))
+        responseSpec(POST, "/users", parser(userDto))
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -149,7 +149,7 @@ class UserControllerTest extends WebClientGenerator {
         password = "1234567";
         UserDto userDto = new UserDto(name, email, password);
 
-        response(POST, "/users", parser(userDto))
+        responseSpec(POST, "/users", parser(userDto))
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -165,13 +165,13 @@ class UserControllerTest extends WebClientGenerator {
         email = "registered1@email";
         UserDto userDto = new UserDto(name, email, password);
 
-        response(POST, "/users", parser(userDto))
+        responseSpec(POST, "/users", parser(userDto))
                 .expectStatus()
                 .isFound();
 
         assertTrue(userRepository.findByEmail(email).isPresent());
 
-        response(POST, "/users", parser(userDto))
+        responseSpec(POST, "/users", parser(userDto))
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -182,7 +182,7 @@ class UserControllerTest extends WebClientGenerator {
 
     @Test
     void 회원목록_페이지() {
-        response(GET, "/users")
+        responseSpec(GET, "/users")
                 .expectStatus()
                 .isOk();
     }
@@ -192,11 +192,11 @@ class UserControllerTest extends WebClientGenerator {
         final String forLoginEmail = "registered2@email";
 
         UserDto userDto = new UserDto(name, forLoginEmail, password);
-        response(POST, "/users", parser(userDto))
+        responseSpec(POST, "/users", parser(userDto))
                 .expectStatus()
                 .isFound();
 
-        response(POST, "/login", parser(userDto))
+        responseSpec(POST, "/login", parser(userDto))
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -211,7 +211,7 @@ class UserControllerTest extends WebClientGenerator {
 
         UserDto userDto = new UserDto(name, notSignedUpEmail, password);
 
-        response(POST, "/login", parser(userDto))
+        responseSpec(POST, "/login", parser(userDto))
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -225,12 +225,12 @@ class UserControllerTest extends WebClientGenerator {
         final String forLoginEmail = "registered3@email";
 
         UserDto userDto = new UserDto(name, forLoginEmail, password);
-        response(POST, "/users", parser(userDto))
+        responseSpec(POST, "/users", parser(userDto))
                 .expectStatus()
                 .isFound();
 
         UserDto userDtoWrongPassword = new UserDto(name, forLoginEmail, "abcdeghf");
-        response(POST, "/login", parser(userDtoWrongPassword))
+        responseSpec(POST, "/login", parser(userDtoWrongPassword))
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -242,17 +242,18 @@ class UserControllerTest extends WebClientGenerator {
     @Test
     void 로그인_상태에서_회원가입_요청시_리다이렉트() {
         UserDto userDto = new UserDto("루피", "luffy1@pirates.com", "12345678");
-        response(POST, "/users", parser(userDto))
+        responseSpec(POST, "/users", parser(userDto))
                 .expectStatus()
                 .isFound();
 
-        loggedInAndRequest(userDto, "/signup")
+        logInResponseSpec(userDto, "/signup")
+                .expectStatus()
                 .isFound();
     }
 
-    private StatusAssertions loggedInAndRequest(UserDto userDto, String path) {
+    private WebTestClient.ResponseSpec logInResponseSpec(UserDto userDto, String path) {
         MultiValueMap<String, ResponseCookie> cookies
-                = response(POST, "/login", parser(userDto))
+                = responseSpec(POST, "/login", parser(userDto))
                 .expectStatus()
                 .isFound()
                 .returnResult(Void.class)
@@ -260,40 +261,42 @@ class UserControllerTest extends WebClientGenerator {
 
         return requestCookie(GET, path, new LinkedMultiValueMap<>())
                 .cookie("JSESSIONID", Objects.requireNonNull(cookies.getFirst("JSESSIONID")).getValue())
-                .exchange()
-                .expectStatus();
+                .exchange();
     }
 
     @Test
     void 로그인_상태에서_로그인_페이지_요청시_리다이렉트() {
         UserDto userDto = new UserDto("루피", "luffy2@pirates.com", "12345678");
-        response(POST, "/users", parser(userDto))
+        responseSpec(POST, "/users", parser(userDto))
                 .expectStatus()
                 .isFound();
 
-        loggedInAndRequest(userDto, "/login")
+        logInResponseSpec(userDto, "/login")
+                .expectStatus()
                 .isFound();
     }
 
     @Test
     void 로그인_상태에서_마이페이지_요청시_성공() {
         UserDto userDto = new UserDto("루피", "luffy3@pirates.com", "12345678");
-        response(POST, "/users", parser(userDto))
+        responseSpec(POST, "/users", parser(userDto))
                 .expectStatus()
                 .isFound();
 
-        loggedInAndRequest(userDto, "/mypage")
+        logInResponseSpec(userDto, "/mypage")
+                .expectStatus()
                 .isOk();
     }
 
     @Test
     void 로그인_상태에서_정보수정페이지_요청시_성공() {
         UserDto userDto = new UserDto("루피", "luffy4@pirates.com", "12345678");
-        response(POST, "/users", parser(userDto))
+        responseSpec(POST, "/users", parser(userDto))
                 .expectStatus()
                 .isFound();
 
-        loggedInAndRequest(userDto, "/mypage/edit")
+        logInResponseSpec(userDto, "/mypage/edit")
+                .expectStatus()
                 .isOk();
     }
 

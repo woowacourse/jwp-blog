@@ -17,12 +17,12 @@ public class WebClientGenerator {
     @Autowired
     private WebTestClient webTestClient;
 
-    protected WebTestClient.ResponseSpec response(HttpMethod method, String uri) {
-        return response(method, uri, new LinkedMultiValueMap<>());
+    protected WebTestClient.ResponseSpec responseSpec(HttpMethod method, String uri) {
+        return responseSpec(method, uri, new LinkedMultiValueMap<>());
     }
 
-    protected WebTestClient.ResponseSpec response(HttpMethod method, String uri,
-                                                  MultiValueMap<String, String> data) {
+    protected WebTestClient.ResponseSpec responseSpec(HttpMethod method, String uri,
+                                                      MultiValueMap<String, String> data) {
         return webTestClient.method(method)
                 .uri(uri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

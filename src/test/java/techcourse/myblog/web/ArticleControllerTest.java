@@ -38,7 +38,7 @@ public class ArticleControllerTest extends WebClientGenerator {
 
     @Test
     void articleForm() {
-        response(GET, "/articles/writing", new LinkedMultiValueMap<>())
+        responseSpec(GET, "/articles/writing", new LinkedMultiValueMap<>())
                 .expectStatus()
                 .isOk();
     }
@@ -51,7 +51,7 @@ public class ArticleControllerTest extends WebClientGenerator {
         Article article = new Article(titleKo, coverUrlKo, contentsKo);
         Article savedArticle = new Article(titleKo, coverUrlKo, StringEscapeUtils.escapeJava(contentsKo));
 
-        response(POST, "/articles/write", parser(article))
+        responseSpec(POST, "/articles/write", parser(article))
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -67,7 +67,7 @@ public class ArticleControllerTest extends WebClientGenerator {
     }
 
     private void assertEqualToResponseArticle(EntityExchangeResult<byte[]> response, Article article) {
-        String createdArticle = responseBody(response(GET, getRedirectedUri(response)));
+        String createdArticle = responseBody(responseSpec(GET, getRedirectedUri(response)));
         assertThat(createdArticle.contains(article.getTitle())).isTrue();
         assertThat(createdArticle.contains(article.getCoverUrl())).isTrue();
         assertThat(createdArticle.contains(article.getContents())).isTrue();
@@ -75,7 +75,7 @@ public class ArticleControllerTest extends WebClientGenerator {
 
     @Test
     void create_article_en() {
-        response(POST, "/articles/write", parser(articleDto.toArticle()))
+        responseSpec(POST, "/articles/write", parser(articleDto.toArticle()))
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -84,21 +84,21 @@ public class ArticleControllerTest extends WebClientGenerator {
 
     @Test
     void 게시글_페이지_정상_조회() {
-        responseBody(response(GET, "/articles/" + saved.getId(), new LinkedMultiValueMap<>())
+        responseBody(responseSpec(GET, "/articles/" + saved.getId(), new LinkedMultiValueMap<>())
                 .expectStatus()
                 .isOk());
     }
 
     @Test
     void 존재하지_않는_게시글_조회_에러() {
-        response(GET, "/articles/0")
+        responseSpec(GET, "/articles/0")
                 .expectStatus()
                 .is5xxServerError();
     }
 
     @Test
     void 게시글_수정페이지_이동() {
-        response(GET, "/articles/" + saved.getId())
+        responseSpec(GET, "/articles/" + saved.getId())
                 .expectStatus()
                 .isOk();
     }
@@ -108,7 +108,7 @@ public class ArticleControllerTest extends WebClientGenerator {
         Article article = articleRepository.save(articleDto.toArticle());
         Article editedArticle = new Article("new title", "new url", "new contents");
 
-        response(PUT, "/articles/" + article.getId(), parser(editedArticle))
+        responseSpec(PUT, "/articles/" + article.getId(), parser(editedArticle))
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -119,7 +119,7 @@ public class ArticleControllerTest extends WebClientGenerator {
     void 게시글_삭제() {
         Article article = articleRepository.save(articleDto.toArticle());
 
-        response(DELETE, "/articles/" + article.getId())
+        responseSpec(DELETE, "/articles/" + article.getId())
                 .expectStatus()
                 .isFound();
     }
