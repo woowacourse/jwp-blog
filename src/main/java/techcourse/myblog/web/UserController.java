@@ -8,18 +8,31 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.NoSuchElementException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Controller
 public class UserController {
     private static final Logger LOG = getLogger(UserController.class);
+    private static final String USER = "user";
+    private static final String ERROR = "error";
+    private static final String REDIRECT = "redirect:";
+    private static final String ROUTE_ROOT = "/";
+    private static final String ROUTE_SIGNUP = "/signup";
+    private static final String ROUTE_USERS = "/users";
+    private static final String ROUTE_LOGIN = "/login";
+    private static final String PAGE_LOGIN = "login";
+    private static final String PAGE_USER_LIST = "user-list";
     private static final String DUPLICATED_EMAIL = "이미 가입되어 있는 이메일 주소입니다. 다른 이메일 주소를 입력해 주세요.";
+    private static final String WRONG_LOGIN = "잘못된 이메일 주소 또는 패스워드를 입력하셨습니다.";
 
     private final UserRepository userRepository;
 
@@ -27,42 +40,74 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    private boolean hasDuplicatedEmail(final String email) {
+    private boolean isDuplicatedEmail(final String email) {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    @GetMapping("/signup")
+    @GetMapping(ROUTE_SIGNUP)
     public String singupPage() {
         return "signup";
     }
 
-    @GetMapping("/users")
+    @GetMapping(ROUTE_USERS)
     public String userList(final Model model) {
         model.addAttribute("users", userRepository.findAll());
-        return "user-list";
+        return PAGE_USER_LIST;
     }
 
     @Transactional
-    @PostMapping("/users")
+    @PostMapping(ROUTE_USERS)
     public String signup(final Model model, @Valid UserDto userDto, final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             final FieldError error = bindingResult.getFieldError();
-            LOG.info("클라이언트에서 전송된 필드에 오류 있음: {}", error.getField());
-            model.addAttribute("error", error.getField());
-            return "/signup";
+            LOG.debug("클라이언트에서 전송된 필드에 오류 있음: {}", error.getField());
+            model.addAttribute(ERROR, error.getField());
+            return ROUTE_SIGNUP;
         }
-        if (hasDuplicatedEmail(userDto.getEmail())) {
-            LOG.info("중복 이메일 계정: {}", userDto.getEmail());
-            model.addAttribute("error", DUPLICATED_EMAIL);
-            return "/signup";
+        if (isDuplicatedEmail(userDto.getEmail())) {
+            LOG.debug("중복 이메일 계정: {}", userDto.getEmail());
+            model.addAttribute(ERROR, DUPLICATED_EMAIL);
+            return ROUTE_SIGNUP;
         }
         final User user = new User(userDto);
         userRepository.save(user);
-        LOG.info("회원 가입 성공");
-        LOG.info("username: {}", userDto.getUsername());
-        LOG.info("password: {}", userDto.getPassword());
-        LOG.info("email: {}", userDto.getEmail());
-//        return "redirect:/login";
-        return "login";
+        LOG.debug("회원 가입 성공");
+        LOG.debug("username: {}", userDto.getUsername());
+        LOG.debug("password: {}", userDto.getPassword());
+        LOG.debug("email: {}", userDto.getEmail());
+        return REDIRECT + PAGE_LOGIN;
+    }
+
+//    private boolean hasSession(final HttpServletRequest request) {
+//        final HttpSession session = request.getSession(false);
+//        return session != null && session.getAttribute("email") != null;
+//    }
+
+    @GetMapping(ROUTE_LOGIN)
+    public String loginPage(final HttpSession session) {
+        LOG.debug("user attr: {}", session.getAttribute(USER));
+        if (session.getAttribute(USER) != null) {
+            return REDIRECT + ROUTE_ROOT;
+        }
+        return PAGE_LOGIN;
+    }
+
+    @PostMapping(ROUTE_LOGIN)
+    public String userLogin(final Model model, final LoginDto loginDto, final HttpSession session) {
+        LOG.debug("로그인 시도 시작");
+        try {
+            final User existUser = userRepository.findByEmailAndPassword(loginDto.getEmail(), loginDto.getPassword()).get();
+            session.setAttribute(USER, existUser);
+            LOG.debug("로그인 성공!");
+            return REDIRECT + ROUTE_ROOT;
+        } catch (NoSuchElementException e) {
+            LOG.debug("이메일 주소 또는 패스워드 오류: {}", e.getMessage());
+            model.addAttribute(ERROR, WRONG_LOGIN);
+            return ROUTE_LOGIN;
+        } catch (Exception e) {
+            LOG.debug("로그인 오류: {}", e.getMessage());
+            model.addAttribute(ERROR, e.getMessage());
+            return ROUTE_LOGIN;
+        }
     }
 }
