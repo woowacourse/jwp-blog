@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +14,6 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
