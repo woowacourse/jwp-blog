@@ -1,5 +1,6 @@
 package techcourse.myblog.application.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.converter.ArticleConverter;
@@ -15,6 +16,7 @@ public class ArticleService {
     private final ArticleConverter articleConverter = ArticleConverter.getInstance();
     private final ArticleRepository articleRepository;
 
+    @Autowired
     public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
