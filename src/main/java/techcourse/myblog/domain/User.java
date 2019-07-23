@@ -2,10 +2,7 @@ package techcourse.myblog.domain;
 
 import techcourse.myblog.exception.InvalidUserDataException;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -19,8 +16,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userId;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String password;
 
     public User() {
