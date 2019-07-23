@@ -9,7 +9,6 @@ import techcourse.myblog.web.UserRequestDto;
 
 import java.util.NoSuchElementException;
 
-@Transactional
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -23,6 +22,7 @@ public class UserService {
         return userRepository.save(signUpRequestDto.toUser());
     }
 
+    @Transactional
     public User update(final UserRequestDto.UpdateRequestDto updateRequestDto) {
         User user = findByEmail(updateRequestDto.getEmail());
         return user.update(updateRequestDto.getName());
