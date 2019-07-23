@@ -1,23 +1,41 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.dto.UserDto;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static techcourse.myblog.web.AuthControllerTest.*;
+import static techcourse.myblog.web.UserControllerTest.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ArticleControllerTest {
 
-    String title = "제목";
-    String coverUrl = "이미지";
-    String contents = "내용";
+    private static final String TEST_LOGIN_ID = "pkch@woowa.com";
+    private static final String TEST_LOGIN_PASSWORD = "qwerqwer";
+
+    private String title = "제목";
+    private String coverUrl = "이미지";
+    private String contents = "내용";
+    private String jSessionId;
 
     @Autowired
     private WebTestClient webTestClient;
+
+    @BeforeEach
+    void setUp() {
+        UserDto testUserDto = new UserDto();
+        testUserDto.setName("pkch");
+        testUserDto.setEmail(TEST_LOGIN_ID);
+        testUserDto.setPassword(TEST_LOGIN_PASSWORD);
+        회원_등록(webTestClient, testUserDto);
+        jSessionId = 로그인_세션_ID(webTestClient, TEST_LOGIN_ID, TEST_LOGIN_PASSWORD);
+    }
 
     @Test
     void indexTest() {
@@ -29,6 +47,7 @@ class ArticleControllerTest {
     @Test
     void showWritingPageTest() {
         webTestClient.get().uri("/writing")
+                .header("cookie", jSessionId)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -37,6 +56,7 @@ class ArticleControllerTest {
     void articleCreateReadTest() {
         webTestClient.post().uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .header("cookie", jSessionId)
                 .body(
                         BodyInserters.fromFormData("title", title)
                                 .with("coverUrl", coverUrl)
@@ -66,6 +86,7 @@ class ArticleControllerTest {
 
         webTestClient.post().uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .header("cookie", jSessionId)
                 .body(
                         BodyInserters.fromFormData("title", title)
                                 .with("coverUrl", coverUrl)
@@ -99,6 +120,7 @@ class ArticleControllerTest {
     void articleDelete() {
         webTestClient.post().uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .header("cookie", jSessionId)
                 .body(
                         BodyInserters.fromFormData("title", title)
                                 .with("coverUrl", coverUrl)
