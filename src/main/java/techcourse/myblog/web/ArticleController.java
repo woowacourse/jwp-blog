@@ -7,8 +7,6 @@ import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.service.exception.NotFoundArticleException;
-import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.web.exception.NotLoggedInException;
 
 import javax.servlet.http.HttpServletRequest;

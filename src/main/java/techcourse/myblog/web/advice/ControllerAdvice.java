@@ -12,7 +12,8 @@ import javax.servlet.http.HttpSession;
 
 @org.springframework.web.bind.annotation.ControllerAdvice("techcourse.myblog.web")
 public class ControllerAdvice {
-    @ExceptionHandler({NotFoundUserException.class, UserDeleteException.class, NotFoundArticleException.class})
+    @ExceptionHandler({NotFoundUserException.class, UserDeleteException.class,
+            NotFoundArticleException.class, NotFoundUserException.class})
     public String handleNotFoundUserException() {
         return "redirect:/";
     }

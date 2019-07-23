@@ -2,13 +2,11 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.service.exception.NotFoundUserException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -47,10 +45,5 @@ public class MyPageController {
         HttpSession httpSession = httpServletRequest.getSession();
         UserPublicInfoDto loggedInUser = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
         return (loggedInUser != null) && (id.equals(loggedInUser.getId()));
-    }
-
-    @ExceptionHandler(NotFoundUserException.class)
-    public String handleNotFoundUserException() {
-        return "redirect:/";
     }
 }
