@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +35,6 @@ public class AccountControllerTest {
         this.webTestClient = webTestClient;
         this.loginControllerTest = new LoginControllerTest(this.webTestClient, this.userRepository);
     }
-
-//    @BeforeEach
-//    void setUp() {
-//        testSignupProcess(defaultName, defaultPassword, defaultEmail);
-//    }
 
     @Test
     void showSignupPageTest() {
