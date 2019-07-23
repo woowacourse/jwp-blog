@@ -29,6 +29,7 @@ public class UserController {
     private static final String ROUTE_SIGNUP = "/signup";
     private static final String ROUTE_USERS = "/users";
     private static final String ROUTE_LOGIN = "/login";
+    private static final String ROUTE_LOGOUT = "/logout";
     private static final String PAGE_LOGIN = "login";
     private static final String PAGE_USER_LIST = "user-list";
     private static final String DUPLICATED_EMAIL = "이미 가입되어 있는 이메일 주소입니다. 다른 이메일 주소를 입력해 주세요.";
@@ -78,11 +79,6 @@ public class UserController {
         return REDIRECT + PAGE_LOGIN;
     }
 
-//    private boolean hasSession(final HttpServletRequest request) {
-//        final HttpSession session = request.getSession(false);
-//        return session != null && session.getAttribute("email") != null;
-//    }
-
     @GetMapping(ROUTE_LOGIN)
     public String loginPage(final HttpSession session) {
         LOG.debug("user attr: {}", session.getAttribute(USER));
@@ -109,5 +105,12 @@ public class UserController {
             model.addAttribute(ERROR, e.getMessage());
             return ROUTE_LOGIN;
         }
+    }
+
+    @GetMapping(ROUTE_LOGOUT)
+    public String userLogout(final HttpSession session) {
+        LOG.debug("사용자 로그아웃");
+        session.setAttribute(USER, null);
+        return REDIRECT + ROUTE_ROOT;
     }
 }
