@@ -117,6 +117,12 @@ public class UserController {
         return "redirect:/";
     }
 
+    @GetMapping("/users")
+    public String users(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "user-list";
+    }
+
     private ModelAndView addErrorMessageToModel(String errorMessage) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("error", errorMessage);

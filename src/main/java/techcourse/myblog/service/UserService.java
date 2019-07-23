@@ -60,4 +60,8 @@ public class UserService {
         userRepository.delete(user);
         log.debug("delete User : " + user.toString());
     }
+
+    public Object getAllUsers() {
+        return userRepository.findAll();
+    }
 }
