@@ -1,7 +1,6 @@
 package techcourse.myblog.presentation.controller;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,8 +13,7 @@ import techcourse.myblog.presentation.controller.exception.InvalidUpdateExceptio
 
 import java.util.stream.Collectors;
 
-@ControllerAdvice
-@Controller
+@ControllerAdvice(basePackages = {"techcourse.myblog.presentation.controller"})
 public class UserExceptionHandlers {
     @ExceptionHandler(DuplicatedIdException.class)
     public RedirectView handleDuplicatedIdError(RedirectAttributes redirectAttributes, DuplicatedIdException e) {
