@@ -39,19 +39,16 @@ public class UserInfoController {
     }
 
     @PutMapping("/edit")
-    public RedirectView myPageEdit(HttpServletRequest request,
-                                   @ModelAttribute("/mypage/edit") @Validated(Edit.class) UserDto userDto,
-                                   BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public RedirectView myPageEdit(@ModelAttribute("/mypage/edit") @Validated(Edit.class) UserDto userDto,
+                                   BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes,
+                                   SessionInfo sessionInfo) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("user", new SessionInfo().getUser());
+            model.addAttribute("user", sessionInfo.getUser());
             RedirectAttributeSupport.addBindingResult(redirectAttributes, bindingResult, "userDto", userDto);
             return new RedirectView("/edit");
         }
 
-        User user = (User) request.getSession().getAttribute("user");
-        userWriteService.update(user.getId(), userDto).ifPresent(updateUser -> {
-            request.getSession().setAttribute("user", updateUser);
-        });
+        userWriteService.update(sessionInfo.getUser(), userDto);
 
         return new RedirectView("/mypage");
     }

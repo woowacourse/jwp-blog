@@ -26,4 +26,9 @@ public class UserReadService {
     public Optional<User> findByEmailAndPassword(UserDto userDto) {
         return userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
     }
+
+    @Transactional
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
 }

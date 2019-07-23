@@ -30,10 +30,10 @@ public class UserWriteService {
     }
 
     @Transactional
-    public Optional<User> update(Long id, UserDto userDto) {
-        Optional<User> modifyUser = userRepository.findById(id);
-        modifyUser.ifPresent(user -> user.modify(userDto.toUser()));
-        return userRepository.findById(id);
+    public void update(User user, UserDto userDto) {
+        Optional<User> beforeChangeUser = userRepository.findById(user.getId());
+        beforeChangeUser.ifPresent(modifyUser -> modifyUser.modify(userDto.toUser()));
+        user.modify(userDto.toUser());
     }
 
     @Transactional
