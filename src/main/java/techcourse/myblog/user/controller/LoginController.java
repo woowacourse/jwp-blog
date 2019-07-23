@@ -29,7 +29,7 @@ public class LoginController {
 
     @GetMapping("/logout")
     public RedirectView logout(HttpSession session) {
-        session.invalidate();
+        session.removeAttribute("user");
         return new RedirectView("/");
     }
 }
