@@ -18,7 +18,10 @@ public class LoginService {
     }
 
     public boolean matchEmailAndPassword(String email, String password) {
-        return loginRepository.findUserByEmail(email).matchPassword(password);
+        if (loginRepository.findUserByEmail(email) != null) {
+            return loginRepository.findUserByEmail(email).matchPassword(password);
+        }
+        return false;
     }
 
     public User findUserByEmail(String email) {
