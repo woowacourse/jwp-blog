@@ -19,6 +19,9 @@ import java.util.List;
 public class ArticleService {
     private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
     private static final String NOT_EXIST_ARTICLE = "해당 기사가 없습니다.";
+    private static final String ID = "id";
+    private static final int VIEW_ARTICLE_COUNT = 10;
+    private static final int START_PAGE = 0;
     private final ArticleRepository articleRepository;
     private final ToArticle toArticle;
 
@@ -29,7 +32,7 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public List<Article> findAll() {
-        PageRequest request = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        PageRequest request = PageRequest.of(START_PAGE, VIEW_ARTICLE_COUNT, Sort.Direction.DESC, ID);
         Page<Article> page = articleRepository.findAll(request);
         log.info("page : {} ", page.getContent());
         return page.getContent();
