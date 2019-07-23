@@ -20,8 +20,12 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <!-- 기본 log level을 설정한다. -->
-    <root level="INFO">
+    <logger name="techcourse.myblog.error" level="DEBUG" >
         <appender-ref ref="STDOUT" />
-    </root>
+    </logger>
+
+    <!-- 기본 log level을 설정한다. -->
+    <!--<root level="INFO">-->
+        <!--<appender-ref ref="STDOUT" />-->
+    <!--</root>-->
 </configuration>
