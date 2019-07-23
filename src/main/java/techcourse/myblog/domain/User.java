@@ -10,6 +10,7 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
+@Setter
 @Entity
 @ToString
 public class User {
