@@ -39,6 +39,9 @@ class LoginControllerTest extends ControllerTest {
     @Test
     @DisplayName("로그인에 성공한다.")
     void loginTest() {
+        userDto.setEmail("login@test.com");
+        loginDto.setEmail("login@test.com");
+
         postUser(webTestClient, userDto, postUserResponse -> {
             String sessionId = getSessionId(postUserResponse);
             postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {

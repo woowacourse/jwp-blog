@@ -12,6 +12,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.dto.LoginDto;
+import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.CouldNotFindArticleIdException;
 import techcourse.myblog.repository.ArticleRepository;
 
@@ -20,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTest {
+public class ArticleControllerTest extends ControllerTest {
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -82,7 +84,22 @@ public class ArticleControllerTest {
     @Test
     @DisplayName("새로운 Article 생성시 article-edit 페이지를 되돌려준다.")
     void articleCreationPageTest() {
-        requestGetTest("/articles/new");
+        UserDto userDto = new UserDto();
+        userDto.setName("test");
+        userDto.setEmail("test@test.com");
+        userDto.setPassword("PassW0rd@");
+        userDto.setPasswordConfirm("PassW0rd@");
+
+        LoginDto loginDto = new LoginDto();
+        loginDto.setEmail("test@test.com");
+        loginDto.setPassword("PassW0rd@");
+
+        postUser(webTestClient, userDto, postUserResponse -> {
+            String sessionId = getSessionId(postUserResponse);
+            postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {
+                requestGetTest("articles/new" + sessionId);
+            });
+        });
     }
 
     @Test
