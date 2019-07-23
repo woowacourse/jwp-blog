@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User.User;
 import techcourse.myblog.service.LoginService;
-import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
 
@@ -42,7 +41,7 @@ public class LoginController {
 
 	@PostMapping("/login")
 	public String login(final UserRequestDto.LoginRequestDto loginRequestDto, final HttpSession session, final Model model) {
-		if (loginService.canLogin(loginRequestDto)) {
+		if (loginService.authenticate(loginRequestDto)) {
 			User user = loginService.findByLoginRequestDto(loginRequestDto);
 			UserRequestDto.UserSessionDto userSessionDto = UserRequestDto.UserSessionDto.toDto(user);
 			log.debug("user {} try to login...", userSessionDto);

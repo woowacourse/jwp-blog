@@ -65,15 +65,19 @@ public class UserController {
 	private boolean isSessionMatch(@PathVariable Long id, UserRequestDto.UserSessionDto userSessionDto) {
 		log.debug("id in isSessionMatch() : {}", id);
 		log.debug("session in isSessionMatch() : {}", userSessionDto);
-		return userSessionDto != null && userSessionDto.isSameId(id);
+		return (userSessionDto != null) && (userSessionDto.isSameId(id));
 	}
 
 	@GetMapping("/users/edit/{id}")
-	public String editPage(@PathVariable Long id, final Model model) {
-		User user = userService.findById(id);
-		model.addAttribute("user", user);
-		log.debug("{} to /mypage-edit", user);
-		return "mypage-edit";
+	public String editPage(@PathVariable Long id, final Model model, final HttpSession session) {
+		UserRequestDto.UserSessionDto userSessionDto = (UserRequestDto.UserSessionDto) session.getAttribute(SESSION_NAME);
+		if (isSessionMatch(id, userSessionDto)) {
+			User user = userService.findById(id);
+			model.addAttribute("user", user);
+			log.debug("{} to /mypage-edit", user);
+			return "mypage-edit";
+		}
+		return "redirect:/users";
 	}
 
 	@PutMapping("/users/edit")

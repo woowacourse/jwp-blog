@@ -30,6 +30,7 @@ public class ArticleService {
 	}
 
 	public long update(final long id, final Article articleParam) {
+		//TODO Assembler Pattern을 이용
 		Article article = findById(id);
 		article.update(articleParam);
 		return article.getId();

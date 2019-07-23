@@ -36,16 +36,14 @@ public class UserServiceTest {
 	@Test
 	public void 회원_추가() {
 		UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
-		User actual = userService.save(signUpRequestDto);
-
-		User expected = signUpRequestDto.toUser();
-		expected.setId(actual.getId());
+		User expected = userService.save(signUpRequestDto);
+		User actual = userService.findById(expected.getId());
 
 		assertEquals(expected, actual);
 	}
 
 	@Test
-	public void ID로_회원_조회() {
+	public void 회원_조회() {
 		UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
 		User expected = userService.save(signUpRequestDto);
 
@@ -81,7 +79,7 @@ public class UserServiceTest {
 		final String modifyName = NAME + "eun";
 		UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
 		User expected = userService.save(signUpRequestDto);
-		expected.setName(modifyName);
+		expected.update(new User(modifyName, EMAIL, PASSWORD));
 
 		UserRequestDto.UpdateRequestDto updateRequestDto
 				= new UserRequestDto.UpdateRequestDto(expected.getId(), modifyName, EMAIL);

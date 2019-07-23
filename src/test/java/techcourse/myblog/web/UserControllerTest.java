@@ -122,6 +122,6 @@ public class UserControllerTest {
 		save(user);
 		webTestClient.delete().uri("/users/{email}", EMAIL)
 				.exchange()
-				.expectStatus().isFound();
+				.expectStatus().isOk();
 	}
 }

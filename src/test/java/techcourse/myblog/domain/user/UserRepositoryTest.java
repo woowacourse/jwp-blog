@@ -32,11 +32,11 @@ public class UserRepositoryTest {
 	@Test
 	@DisplayName("Email을_기준으로_조회")
 	public void findByEmail() {
-		User expected = new User("테스트", "test@woowahan.com", "12345678");
+		User expected = new User(1L, "테스트", "test@woowahan.com", "12345678");
 		userRepository.save(expected);
 
-		User actual = userRepository.findByEmail(expected.getEmail()).orElseThrow(IllegalArgumentException::new);
-		expected.setId(actual.getId());
+		User actual = userRepository.findByEmail(expected.getEmail())
+				.orElseThrow(IllegalArgumentException::new);
 		assertEquals(expected, actual);
 	}
 }

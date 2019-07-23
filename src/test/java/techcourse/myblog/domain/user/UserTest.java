@@ -14,7 +14,7 @@ public class UserTest {
 	private static final String PASSWORD = "12345678aA";
 
 	@Test
-	public void 정상_생성_테스트() {
+	public void 동시성_테스트() {
 		User user = new User(ID, NAME, EMAIL, PASSWORD);
 		User other = new User(ID, NAME, EMAIL, PASSWORD);
 		assertEquals(user, other);

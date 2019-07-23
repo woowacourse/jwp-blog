@@ -45,12 +45,12 @@ public class LoginServiceTest {
 
 		UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
 
-		assertTrue(loginService.canLogin(loginRequestDto));
+		assertTrue(loginService.authenticate(loginRequestDto));
 	}
 
 	@Test
 	public void 로그인_불가능() {
 		UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
-		assertFalse(loginService.canLogin(loginRequestDto));
+		assertFalse(loginService.authenticate(loginRequestDto));
 	}
 }
