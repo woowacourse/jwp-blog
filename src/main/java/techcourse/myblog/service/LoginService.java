@@ -7,7 +7,6 @@ import techcourse.myblog.exception.FailedLoginException;
 import techcourse.myblog.repository.UserRepository;
 
 @Service
-
 public class LoginService {
     private static final int NOT_FOUND_RESULT = 0;
 

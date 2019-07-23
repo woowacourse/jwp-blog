@@ -1,20 +1,16 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.dto.UserDto;
 
-import java.util.function.Consumer;
-
-// TODO 회원가입을 테스트해야 하는데 메서드가 무작위로 실행돼서 회원이 이미 등록된 상태에서 실행되는 문제는 어떡한담
-
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
     private static final String CUSTOM_USER_ID = "1";
@@ -22,10 +18,17 @@ class UserControllerTest {
     private static final String VALID_EMAIL = "valid@email.com";
     private static final String VALID_PASSWORD = "ValidPassword!123";
 
-    private BodyInserters.FormInserter<String> validUserData = getBodyInserters(VALID_NAME, VALID_EMAIL, VALID_PASSWORD);
+    private static char userIdentifier = 'a';
+
+    private BodyInserters.FormInserter<String> validUserData;
 
     @Autowired
     private WebTestClient webTestClient;
+
+    @BeforeEach
+    void setUp() {
+        validUserData = getBodyInserters(getValidName(), getValidEmail(), getValidPassword());
+    }
 
     @Test
     public void 회원가입_페이지_테스트() {
@@ -36,13 +39,27 @@ class UserControllerTest {
 
     @Test
     public void 유효한_정보로_회원가입_하는_경우_테스트() {
-        postSignup(validUserData, response ->
-                webTestClient.get()
-                        .uri(response.getResponseHeaders().getLocation())
-                        .exchange()
-                        .expectStatus()
-                        .isOk()
-        );
+        // given
+        UserDto user = new UserDto();
+        user.setName(getValidName());
+        user.setEmail(getValidEmail());
+        user.setPassword(getValidPassword());
+
+        EntityExchangeResult<byte[]> signupResponse = postSignup(validUserData);
+
+        // when
+        webTestClient.get()
+                .uri(signupResponse.getResponseHeaders().getLocation())
+                .exchange()
+                .expectStatus()
+                // then
+                .isOk()
+        ;
+
+        /*webTestClient.post().uri()
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .header(, "Base64Utils")
+                .exchange()*/
     }
 
     @Test
@@ -52,7 +69,7 @@ class UserControllerTest {
         webTestClient.post()
                 .uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(getBodyInserters(invalidName, VALID_EMAIL, VALID_PASSWORD))
+                .body(getBodyInserters(invalidName, getValidEmail(), getValidPassword()))
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -64,7 +81,7 @@ class UserControllerTest {
         webTestClient.post()
                 .uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(getBodyInserters(VALID_NAME, invalidEmail, VALID_PASSWORD))
+                .body(getBodyInserters(getValidName(), invalidEmail, getValidPassword()))
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -81,23 +98,26 @@ class UserControllerTest {
                 .expectStatus().isBadRequest();
     }
 
+//    @Ignore
 //    @Test
 //    public void 회원수정_페이지가_잘_출력되는지_테스트() {
-//        /** 회원가입 **/
-//        postSignup(validUserData, response ->
-//                /** TODO 로그인 **/
-//                /** 회원수정 **/
-//                webTestClient.get()
-//                        .uri("/mypage/edit")
-//                        .exchange()
-//                        .expectStatus().isOk()
-//                        .expectBody()
-//                        .consumeWith(res -> {
-//                            String body = new String(res.getResponseBody());
-//                            assertThat(body.contains(VALID_NAME)).isTrue();
-//                            assertThat(body.contains(VALID_EMAIL)).isTrue();
-//                        })
-//        );
+//        // given
+//        postSignup(validUserData);
+//        /** TODO 로그인 상태 **/
+//
+//        // when
+//        /** 회원수정 **/
+//        webTestClient.get()
+//                .uri("/mypage/edit")
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectBody()
+//                .consumeWith(res -> {
+//                    // then
+//                    String body = new String(res.getResponseBody());
+//                    assertThat(body.contains(getValidEmail())).isTrue();
+//                    assertThat(body.contains(getValidEmail())).isTrue();
+//                });
 //    }
 
     @Test
@@ -113,39 +133,41 @@ class UserControllerTest {
         String name = "효진쓰";
         String password = "@Password123";
 
-        /** 회원가입 **/
-        postSignup(validUserData, response ->
-                /** TODO 로그인 **/
-                /** 회원정보 수정 **/
-                webTestClient.put()
-                        .uri("/mypage/edit")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .body(getBodyInserters(name, VALID_EMAIL, password))
-                        .exchange()
-                        .expectStatus().isFound()
-        );
+        // given
+        postSignup(validUserData);
+        /** TODO 로그인 상태 **/
+
+        // then
+        webTestClient.put()
+                .uri("/mypage/edit")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(getBodyInserters(name, getValidEmail(), password))
+                .exchange()
+                .expectStatus().isFound();
     }
 
+//    @Ignore
 //    @Test
 //    public void 회원조회_페이지가_잘_출력되는지_테스트() {
-//        /** 회원가입 **/
-//        postSignup(validUserData, response ->
-//                /** TODO 로그인 **/
-//                /** 회원조회 **/
-//                webTestClient.get()
-//                        .uri("/users")
-//                        .exchange()
-//                        .expectStatus()
-//                        .isOk()
-//                        .expectBody()
-//                        .consumeWith(
-//                                res -> {
-//                                    String body = new String(res.getResponseBody());
-//                                    assertThat(body.contains(VALID_NAME)).isTrue();
-//                                    assertThat(body.contains(VALID_EMAIL)).isTrue();
-//                                }
-//                        )
-//        );
+//        // given
+//        postSignup(validUserData);
+//        /** TODO 로그인 상태 **/
+//
+//        // when
+//        webTestClient.get()
+//                .uri("/users")
+//                .exchange()
+//                .expectStatus()
+//                .isOk()
+//                .expectBody()
+//                .consumeWith(
+//                        res -> {
+//                            // then
+//                            String body = new String(res.getResponseBody());
+//                            assertThat(body.contains(getValidEmail())).isTrue();
+//                            assertThat(body.contains(getValidEmail())).isTrue();
+//                        }
+//                );
 //    }
 
     @Test
@@ -158,27 +180,45 @@ class UserControllerTest {
 
     @Test
     public void 회원탈퇴_테스트() {
-        /** 회원가입 **/
-        postSignup(validUserData, response ->
-                /** TODO 로그인 **/
-                /** 회원탈퇴 **/
-                webTestClient.delete()
-                        .uri("/mypage/edit/{userId}", CUSTOM_USER_ID)
-                        .attribute("", VALID_EMAIL)
-                        .exchange()
-                        .expectStatus().isFound()
-        );
+        // given
+        postSignup(validUserData);
+        /** TODO 로그인 **/
+
+        // when
+        webTestClient.delete()
+                .uri("/mypage/edit/{userId}", CUSTOM_USER_ID)
+                .attribute("", VALID_EMAIL)
+                .exchange()
+                .expectStatus().isFound(); // then
     }
 
-    private void postSignup(BodyInserters.FormInserter<String> userData, Consumer<EntityExchangeResult<byte[]>> consumer) {
-        webTestClient.post()
+    @AfterEach
+    void tearDown() {
+        userIdentifier++;
+    }
+
+    private String getValidName() {
+        return VALID_NAME + userIdentifier;
+    }
+
+    private String getValidEmail() {
+        return VALID_EMAIL + userIdentifier;
+    }
+
+    private String getValidPassword() {
+        return VALID_PASSWORD + userIdentifier;
+    }
+
+    private EntityExchangeResult<byte[]> postSignup(BodyInserters.FormInserter<String> userData) {
+        return webTestClient.post()
                 .uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(userData)
                 .exchange()
                 .expectStatus().isFound()
                 .expectBody()
-                .consumeWith(consumer);
+                .returnResult()
+                ;
     }
 
     private BodyInserters.FormInserter<String> getBodyInserters(String name, String email, String password) {
