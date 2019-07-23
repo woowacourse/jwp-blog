@@ -33,8 +33,8 @@ public class UserDto {
                 .name(user.getName())
                 .password(user.getPassword())
                 .email(user.getEmail())
-                .snsFacebookEmail(user.getSnsInfo(0) == null ? null : user.getSnsInfo(0).getEmail())
-                .snsGithubEmail(user.getSnsInfo(1) == null ? null : user.getSnsInfo(1).getEmail())
+                .snsFacebookEmail(user.getSnsEmailBySnsCode(0))
+                .snsGithubEmail(user.getSnsEmailBySnsCode(1))
                 .build();
     }
 
@@ -43,8 +43,8 @@ public class UserDto {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .snsFacebookEmail(user.getSnsInfo(0) == null ? null : user.getSnsInfo(0).getEmail())
-                .snsGithubEmail(user.getSnsInfo(1) == null ? null : user.getSnsInfo(1).getEmail())
+                .snsFacebookEmail(user.getSnsEmailBySnsCode(0))
+                .snsGithubEmail(user.getSnsEmailBySnsCode(1))
                 .build();
     }
 
@@ -57,11 +57,12 @@ public class UserDto {
                 .build();
 
         if (snsFacebookEmail != null) {
-            user.addSnsInfo(SnsInfo.builder().email(snsFacebookEmail).user(user).build());
+            user.addSns(snsFacebookEmail, 0L);
         }
         if (snsGithubEmail != null) {
-            user.addSnsInfo(SnsInfo.builder().email(snsGithubEmail).user(user).build());
+            user.addSns(snsGithubEmail, 1L);
         }
+
         return user;
     }
 
@@ -74,9 +75,4 @@ public class UserDto {
                 '}';
     }
 
-    public void updateUserInfo(UserDto userDto) {
-        name = userDto.getName();
-        snsFacebookEmail = userDto.snsFacebookEmail;
-        snsGithubEmail = userDto.snsGithubEmail;
-    }
 }

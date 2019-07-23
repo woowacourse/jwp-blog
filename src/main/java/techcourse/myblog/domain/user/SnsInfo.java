@@ -1,6 +1,7 @@
 package techcourse.myblog.domain.user;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.ToString;
 import techcourse.myblog.domain.user.User;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 
 @ToString(exclude = "user")
+@Getter
 @Entity
 public class SnsInfo {
     @Id
@@ -15,6 +17,7 @@ public class SnsInfo {
     private long id;
     @Email
     private String email;
+    private long snsCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -24,20 +27,13 @@ public class SnsInfo {
     }
 
     @Builder
-    public SnsInfo(String email, User user) {
+    public SnsInfo(String email, User user, long snsCode) {
         this.email = email;
         this.user = user;
+        this.snsCode = snsCode;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public User getUser() {
-        return user;
+    public void updateSnsInfo(String snsFacebookEmail) {
+        this.email = snsFacebookEmail;
     }
 }

@@ -1,14 +1,17 @@
 package techcourse.myblog.domain.user;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
+@Getter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,35 +38,37 @@ public class User {
         this.password = password;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void addSnsInfo(SnsInfo snsInfo) {
+    public void addSns(String snsEmail, Long snsCode) {
         if (snsInfos == null) {
             snsInfos = new ArrayList();
         }
-
-        snsInfos.add(snsInfo);
+        snsInfos.add(SnsInfo.builder()
+                .snsCode(snsCode)
+                .email(snsEmail)
+                .user(this).build());
     }
 
-    public SnsInfo getSnsInfo(int idx) {
-        if (snsInfos == null) return null;
-        if (idx < 0 || snsInfos.size() <= idx) return null;
+    public String getSnsEmailBySnsCode(long snsCode) {
+        Optional<SnsInfo> maybeSnsInfo = getSnsInfo(snsCode);
 
-        return snsInfos.get(idx);
+        if (maybeSnsInfo.isPresent()) {
+            return maybeSnsInfo.get().getEmail();
+        }
+        return "";
+    }
+
+    public Optional<SnsInfo> getSnsInfo(long snsCode) {
+        return snsInfos.stream()
+                .filter(snsInfo -> snsCode == snsInfo.getSnsCode())
+                .findFirst();
+    }
+
+    public void updateInfo(UserDto userDto) {
+        this.name = userDto.getName();
+    }
+
+    public void deleteSnsInfo(SnsInfo snsInfo) {
+        snsInfos.remove(snsInfo);
     }
 
     @Override
