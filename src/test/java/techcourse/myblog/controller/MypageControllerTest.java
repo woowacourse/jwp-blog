@@ -18,9 +18,14 @@ class MypageControllerTest {
     private static final String EMAIL_1 = "test1@test.com";
     private static final String PASSWORD_1 = "1234";
     private static final String PASSWORD_2 = "12345";
-    @Autowired
-    WebTestClient webTestClient;
+
+    private WebTestClient webTestClient;
     private String cookie;
+
+    @Autowired
+    public MypageControllerTest(WebTestClient webTestClient) {
+        this.webTestClient = webTestClient;
+    }
 
     @BeforeEach
     void setUp() {

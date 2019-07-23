@@ -11,8 +11,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class HomeControllerTest {
     private static final String LOGIN_TEXT = "Login";
 
-    @Autowired
     WebTestClient webTestClient;
+
+    @Autowired
+    public HomeControllerTest(WebTestClient webTestClient) {
+        this.webTestClient = webTestClient;
+    }
 
     @Test
     void 로그인_하지_않았을때_초기_페이지에_로그인_텍스트가_있는지_확인() {

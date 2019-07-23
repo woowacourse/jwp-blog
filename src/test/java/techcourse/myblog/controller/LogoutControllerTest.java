@@ -18,9 +18,13 @@ class LogoutControllerTest {
     private static final String PASSWORD_1 = "1234";
     private static final String LOGIN_TEXT = "Login";
 
-    @Autowired
-    WebTestClient webTestClient;
+    private WebTestClient webTestClient;
     private String cookie;
+
+    @Autowired
+    public LogoutControllerTest(WebTestClient webTestClient) {
+        this.webTestClient = webTestClient;
+    }
 
     @BeforeEach
     void setUp() {

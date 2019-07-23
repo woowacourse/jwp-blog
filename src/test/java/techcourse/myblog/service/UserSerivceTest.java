@@ -17,8 +17,12 @@ public class UserSerivceTest {
     private static final String TEST_USERNAME = "test1";
     private static final UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
 
+    private UserService userService;
+
     @Autowired
-    UserService userService;
+    public UserSerivceTest(UserService userService) {
+        this.userService = userService;
+    }
 
     @BeforeEach
     void setUp() {

@@ -17,8 +17,12 @@ class UserRepositoryTest {
     private static final String TEST_PASSWORD_2 = "%T^Y&U*I";
     private static final String TEST_USERNAME_2 = "test2";
 
-    @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    public UserRepositoryTest(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @BeforeEach
     void setUp() {

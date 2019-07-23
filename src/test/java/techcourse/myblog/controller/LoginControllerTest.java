@@ -20,10 +20,13 @@ public class LoginControllerTest {
     private static final String PASSWORD_1 = "1234";
     private static final String PASSWORD_2 = "12345";
 
-    @Autowired
-    WebTestClient webTestClient;
-
+    private WebTestClient webTestClient;
     private String cookie;
+
+    @Autowired
+    public LoginControllerTest(WebTestClient webTestClient) {
+        this.webTestClient = webTestClient;
+    }
 
     @BeforeEach
     void setUp() {

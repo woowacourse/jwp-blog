@@ -23,11 +23,14 @@ public class LoginServiceTest {
     private static final String TEST_USERNAME = "test1";
     private static final UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
 
-    @Autowired
-    UserService userService;
+    private UserService userService;
+    private LoginService loginService;
 
     @Autowired
-    LoginService loginService;
+    public LoginServiceTest(UserService userService, LoginService loginService) {
+        this.userService = userService;
+        this.loginService = loginService;
+    }
 
     @BeforeEach
     void setUp() {
