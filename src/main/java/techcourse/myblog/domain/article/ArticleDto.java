@@ -1,5 +1,10 @@
 package techcourse.myblog.domain.article;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ArticleDto {
     private long id;
     private String title;
@@ -26,48 +31,8 @@ public class ArticleDto {
                 article.getCategoryId());
     }
 
-    public Article toArticle() {
+    public Article toEntity() {
         return new Article(this.id, this.title, this.coverUrl, this.contents, this.categoryId);
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
-    public long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,12 +22,23 @@ public class UserLoginControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
+    @LocalServerPort
+    private int localServerPort;
+
     @BeforeEach
     void setUp() {
         webTestClient = WebTestClient.bindToWebHandler(exchange -> exchange.getSession()
                 .doOnNext(webSession ->
                         webSession.getAttributes().put("userId", 1L))
                 .then()).build();
+    }
+
+    @Test
+    public void 회원로그인() {
+        webTestClient.get()
+                .uri("/login")
+                .exchange()
+                .expectStatus().isFound();
     }
 
     @Test

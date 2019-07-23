@@ -32,6 +32,6 @@ public class CategoryService {
     }
 
     public void create(CategoryDto categoryDto) {
-        categoryRepository.save(categoryDto.toCategory());
+        categoryRepository.save(categoryDto.toEntity());
     }
 }

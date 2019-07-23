@@ -1,8 +1,11 @@
 package techcourse.myblog.domain.category;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,14 +19,6 @@ public class Category {
     public Category(long categoryId, String categoryName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
-    }
-
-    public long getCategoryId() {
-        return categoryId;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
     }
 
     @Override

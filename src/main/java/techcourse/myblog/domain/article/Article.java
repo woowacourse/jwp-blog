@@ -1,5 +1,7 @@
 package techcourse.myblog.domain.article;
 
+import lombok.Getter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,6 +9,7 @@ import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
+@Getter
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,26 +29,6 @@ public class Article {
         this.coverUrl = coverUrl;
         this.contents = contents;
         this.categoryId = categoryId;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public long getCategoryId() {
-        return categoryId;
     }
 
     @Override

@@ -1,5 +1,10 @@
 package techcourse.myblog.domain.category;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CategoryDto {
     private long categoryId;
     private String categoryName;
@@ -11,28 +16,12 @@ public class CategoryDto {
         return new CategoryDto(category.getCategoryId(), category.getCategoryName());
     }
 
-    public Category toCategory() {
+    public Category toEntity() {
         return new Category(categoryId, categoryName);
     }
 
     public CategoryDto(long categoryId, String categoryName) {
         this.categoryId = categoryId;
-        this.categoryName = categoryName;
-    }
-
-    public long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
 

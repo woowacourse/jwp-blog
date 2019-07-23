@@ -16,7 +16,7 @@ public class ArticleService {
     private ArticleRepository articleRepository;
 
     public long createArticle(ArticleDto articleDto) {
-        Article article = articleRepository.save(articleDto.toArticle());
+        Article article = articleRepository.save(articleDto.toEntity());
         return article.getId();
     }
 
@@ -31,7 +31,7 @@ public class ArticleService {
             ArticleDto findArticleDto = ArticleDto.from(maybeArticle.get());
             articleDto.setId(findArticleDto.getId());
 
-            Article article = articleRepository.save(articleDto.toArticle());
+            Article article = articleRepository.save(articleDto.toEntity());
             return ArticleDto.from(article);
         }
         throw new IllegalArgumentException("업데이트 할 수 없습니다.");

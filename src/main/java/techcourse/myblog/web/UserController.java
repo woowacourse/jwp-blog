@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String showLoginPage(UserDto userDto, HttpSession session, Model model) {
+    public String login(UserDto userDto, HttpSession session, Model model) {
         Optional<UserDto> maybeUserDto = userService.findUser(userDto);
 
         if (maybeUserDto.isPresent()) {
@@ -78,13 +78,11 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/users/{id}/mypage-edit")
-    public String showMypageEdit(@PathVariable final long id, HttpSession session, Model model) {
+    @GetMapping("/users/mypage-edit")
+    public String showMypageEdit(HttpSession session, Model model) {
         Object userId = session.getAttribute("userId");
-        if (id != (long) userId) {
-            return "redirect:/";
-        }
-        Optional<UserDto> maybeUserDto = userService.readWithoutPasswordById(id);
+
+        Optional<UserDto> maybeUserDto = userService.readWithoutPasswordById((long) userId);
 
         if (maybeUserDto.isPresent()) {
             model.addAttribute("userData", maybeUserDto.get());
@@ -93,24 +91,18 @@ public class UserController {
         return "redirect:/";
     }
 
-    @PutMapping("/users/{id}/mypage-edit")
-    public String updateUser(@PathVariable final long id, HttpSession session, UserDto userDto) {
+    @PutMapping("/users/mypage-edit")
+    public String updateUser(HttpSession session, UserDto userDto) {
         Object userId = session.getAttribute("userId");
-        if (id != (long) userId) {
-            return "redirect:/";
-        }
-        UserDto updateUserDto = userService.updateUser(id, userDto);
+        UserDto updateUserDto = userService.updateUser((long) userId, userDto);
 
         return "redirect:/users/" + updateUserDto.getId() + "/mypage";
     }
 
-    @DeleteMapping("/users/{id}/mypage-edit")
-    public String deleteUser(@PathVariable final long id, HttpSession session) {
+    @DeleteMapping("/users/mypage-edit")
+    public String deleteUser(HttpSession session) {
         Object userId = session.getAttribute("userId");
-        if (userId == null || id != (long) userId) {
-            return "redirect:/";
-        }
-        userService.deleteById(id);
+        userService.deleteById((long) userId);
 
         return "redirect:/logout";
     }

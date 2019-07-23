@@ -17,17 +17,14 @@ class CategoryControllerTest {
     WebTestClient webTestClient;
 
     @Test
-    public void addCategory() {
+    public void addDeleteCategory() {
         webTestClient.post()
                 .uri("/categories/add")
                 .body(BodyInserters.fromFormData("categoryName", "java"))
                 .exchange()
                 .expectStatus()
                 .isFound();
-    }
 
-    @Test
-    void deleteCategories() {
         webTestClient.get()
                 .uri("/categories/delete/1")
                 .exchange()
