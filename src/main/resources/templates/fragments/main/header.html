@@ -38,7 +38,7 @@
                     <li role="separator" class="divider"></li>
                     <li class="text-dark">
                         <!--TODO 링크도 바꿈-->
-                        <a href="index.html" th:href="${session.signedEmail} ? @{/logout} :@{/login} ">
+                        <a href="index.html" th:href="${session.signedEmail} ? @{/logout} :@{/login/page} ">
                             <i class="ti-power-off pdd-right-10"></i>
                             <span th:text="${session.signedEmail}? '로그아웃'  : '로그인'"
                                   class="text-dark">로그아웃</span>
