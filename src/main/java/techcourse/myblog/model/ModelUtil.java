@@ -1,4 +1,4 @@
-package techcourse.myblog.utils;
+package techcourse.myblog.model;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

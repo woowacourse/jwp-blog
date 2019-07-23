@@ -41,17 +41,19 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = UserException.class)
-    public void updateUser(UserRequestDto userRequestDto, String email) {
-        User user = getUserByEmail(email);
+    public User updateUser(UserRequestDto userRequestDto, User origin) {
+        User user = getUserByEmail(origin);
         user.updateNameAndEmail(userRequestDto.getName(), userRequestDto.getEmail());
+        return user;
     }
 
-    private User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserException(NOT_FOUND_EMAIL));
+    private User getUserByEmail(User user) {
+        return userRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new UserException(NOT_FOUND_EMAIL));
     }
 
     @Transactional(rollbackFor = UserException.class)
-    public void deleteUser(String email) {
-        userRepository.delete(getUserByEmail(email));
+    public void deleteUser(User user) {
+        userRepository.delete(getUserByEmail(user));
     }
 }

@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
+import techcourse.myblog.model.ModelUtil;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.utils.ModelUtil;
-import techcourse.myblog.utils.SessionUtil;
+import techcourse.myblog.session.SessionUtil;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import static techcourse.myblog.session.SessionContext.USER;
 
 @Controller
 public class UserController {
@@ -38,8 +40,7 @@ public class UserController {
 
     @PostMapping("/logout")
     public String logout() {
-        SessionUtil.removeAttribute(session, UserInfo.NAME);
-        SessionUtil.removeAttribute(session, UserInfo.EMAIL);
+        SessionUtil.removeAttribute(session, USER);
         return "redirect:/";
     }
 
@@ -50,8 +51,7 @@ public class UserController {
         }
 
         User user = loginService.loginByEmailAndPwd(userRequestDto);
-        SessionUtil.setAttribute(session, UserInfo.NAME, user.getName());
-        SessionUtil.setAttribute(session, UserInfo.EMAIL, user.getEmail());
+        SessionUtil.setAttribute(session, USER, user);
         return "redirect:/";
     }
 
@@ -83,8 +83,7 @@ public class UserController {
         }
 
         User user = userService.addUser(userRequestDto);
-        SessionUtil.setAttribute(session, UserInfo.NAME, user.getName());
-        SessionUtil.setAttribute(session, UserInfo.EMAIL, user.getEmail());
+        SessionUtil.setAttribute(session, USER, user);
         return "redirect:/";
     }
 
@@ -94,19 +93,17 @@ public class UserController {
             return "mypage";
         }
 
-        String email = String.valueOf(SessionUtil.getAttribute(session, UserInfo.EMAIL));
-        userService.updateUser(userRequestDto, email);
-        SessionUtil.setAttribute(session, UserInfo.NAME, userRequestDto.getName());
-        SessionUtil.setAttribute(session, UserInfo.EMAIL, userRequestDto.getEmail());
+        User origin = (User) SessionUtil.getAttribute(session, USER);
+        User user = userService.updateUser(userRequestDto, origin);
+        SessionUtil.setAttribute(session, USER, user);
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/users")
     public String deleteUser() {
-        String email = String.valueOf(SessionUtil.getAttribute(session, UserInfo.EMAIL));
-        userService.deleteUser(email);
-        SessionUtil.removeAttribute(session, UserInfo.NAME);
-        SessionUtil.removeAttribute(session, UserInfo.EMAIL);
+        User user = (User) SessionUtil.getAttribute(session, USER);
+        userService.deleteUser(user);
+        SessionUtil.removeAttribute(session, USER);
         return "redirect:/";
     }
 }

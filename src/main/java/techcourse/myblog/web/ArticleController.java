@@ -4,8 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.ArticleRequestDto;
+import techcourse.myblog.model.ModelUtil;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.utils.ModelUtil;
 
 @Controller
 public class ArticleController {

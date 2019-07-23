@@ -1,8 +1,8 @@
-package techcourse.myblog.utils;
+package techcourse.myblog.session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import techcourse.myblog.web.UserInfo;
+import techcourse.myblog.model.ModelUtil;
 
 import javax.servlet.http.HttpSession;
 
@@ -11,10 +11,10 @@ public class SessionUtil {
     private static final String BEFORE_SESSION = "Before Session : {} ";
     private static final String AFTER_SESSION = "After Session : {} ";
 
-    public static void setAttribute(HttpSession session, String attribute, String info) {
-        log.info(BEFORE_SESSION, session.getAttribute(info));
+    public static void setAttribute(HttpSession session, String attribute, Object info) {
+        log.info(BEFORE_SESSION, session.getAttribute(attribute));
         session.setAttribute(attribute, info);
-        log.info(AFTER_SESSION, session.getAttribute(info));
+        log.info(AFTER_SESSION, session.getAttribute(attribute));
     }
 
     public static void removeAttribute(HttpSession session, String attribute) {
@@ -30,6 +30,6 @@ public class SessionUtil {
     }
 
     public static boolean isNull(HttpSession session) {
-        return session.getAttribute(UserInfo.NAME) == null;
+        return session.getAttribute(SessionContext.USER) == null;
     }
 }

@@ -29,7 +29,7 @@
                                     <p class="mrg-top-10 text-dark"><b>Name</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="name" th:value="${session.userName}" type="text">
+                                    <input class="form-control" name="name" th:value="${session.user.name}" type="text">
                                 </div>
                             </div>
                             <hr>
@@ -38,7 +38,7 @@
                                     <p class="mrg-top-10 text-dark"><b>Email</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="email" th:value="${session.userEmail}"
+                                    <input class="form-control" name="email" th:value="${session.user.email}"
                                            type="text">
                                 </div>
                             </div>
