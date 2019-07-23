@@ -8,7 +8,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SessionInterceptor extends HandlerInterceptorAdapter {
+public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
