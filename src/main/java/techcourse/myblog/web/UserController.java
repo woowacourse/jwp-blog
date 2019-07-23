@@ -3,6 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import techcourse.myblog.utils.ModelUtil;
 import techcourse.myblog.utils.SessionUtil;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 public class UserController {
@@ -42,7 +44,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserRequestDto userRequestDto) {
+    public String login(@Valid UserRequestDto userRequestDto, BindingResult result) {
+        if (result.hasErrors()) {
+            return "login";
+        }
+
         User user = loginService.loginByEmailAndPwd(userRequestDto);
         SessionUtil.setAttribute(session, UserInfo.NAME, user.getName());
         SessionUtil.setAttribute(session, UserInfo.EMAIL, user.getEmail());
@@ -71,7 +77,11 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String addUser(UserRequestDto userRequestDto) {
+    public String addUser(@Valid UserRequestDto userRequestDto, BindingResult result) {
+        if (result.hasErrors()) {
+            return "signup";
+        }
+
         User user = userService.addUser(userRequestDto);
         SessionUtil.setAttribute(session, UserInfo.NAME, user.getName());
         SessionUtil.setAttribute(session, UserInfo.EMAIL, user.getEmail());
@@ -79,7 +89,11 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public String updateUser(UserRequestDto userRequestDto) {
+    public String updateUser(@Valid UserRequestDto userRequestDto, BindingResult result) {
+        if (result.hasErrors()) {
+            return "mypage";
+        }
+
         String email = String.valueOf(SessionUtil.getAttribute(session, UserInfo.EMAIL));
         userService.updateUser(userRequestDto, email);
         SessionUtil.setAttribute(session, UserInfo.NAME, userRequestDto.getName());
