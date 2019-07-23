@@ -27,7 +27,7 @@ class UserServiceTest {
     private static long userId = 1;
 
     @Autowired
-    private techcourse.myblog.user.service.UserService userService;
+    private UserService userService;
 
     @Autowired
     private ModelMapper modelMapper;
