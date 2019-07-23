@@ -4,10 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
@@ -42,7 +39,8 @@ public class UserInfoController {
     }
 
     @PutMapping("/edit")
-    public RedirectView myPageEdit(HttpServletRequest request, @Validated(Edit.class) UserDto userDto,
+    public RedirectView myPageEdit(HttpServletRequest request,
+                                   @ModelAttribute("/mypage/edit") @Validated(Edit.class) UserDto userDto,
                                    BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", new SessionInfo().getUser());
