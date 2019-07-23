@@ -13,6 +13,8 @@ public class AuthenticationConfig implements WebMvcConfigurer {
                 .addPathPatterns("/users")
                 .addPathPatterns("/users/mypage/edit")
                 .addPathPatterns("/users/mypage")
+                .addPathPatterns("/articles/new")
+                .addPathPatterns("/articles/*/edit")
                 .excludePathPatterns("/");
     }
 
