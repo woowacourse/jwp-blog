@@ -16,6 +16,7 @@ import java.util.Objects;
 
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.web.test.WebClientGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -24,7 +25,7 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 @ExtendWith(SpringExtension.class)
-class UserControllerTests extends WebClientGenerator {
+class UserControllerTest extends WebClientGenerator {
 
     @Autowired
     private UserRepository userRepository;

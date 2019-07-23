@@ -13,6 +13,7 @@ import org.springframework.util.MultiValueMap;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.web.test.WebClientGenerator;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.springframework.http.HttpMethod.DELETE;
@@ -21,7 +22,7 @@ import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 
 @ExtendWith(SpringExtension.class)
-public class ArticleControllerTests extends WebClientGenerator {
+public class ArticleControllerTest extends WebClientGenerator {
     @Autowired
     private ArticleRepository articleRepository;
 
