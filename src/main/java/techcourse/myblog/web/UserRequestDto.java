@@ -104,14 +104,14 @@ public class UserRequestDto {
 
         }
 
-        public SessionDto(final Long id, final String name, final String email, final String password) {
+        public SessionDto(final Long id, final String name, final String email) {
             this.id = id;
             this.name = name;
             this.email = email;
         }
 
         public static SessionDto toDto(final User user) {
-            return new SessionDto(user.getId(), user.getName(), user.getEmail(), user.getPassword());
+            return new SessionDto(user.getId(), user.getName(), user.getEmail());
         }
 
         public Long getId() {
