@@ -44,7 +44,8 @@ public class UserController {
     public String login(UserDto.Register userDto, HttpSession session) {
         log.debug(userDto.toString());
 
-        UserSession userSession = userService.login(userDto);
+        UserSession userSession = UserSession.createByUser(userService.login(userDto));
+
         session.setAttribute(USER_SESSION, userSession);
         return userSession.getName();
     }
