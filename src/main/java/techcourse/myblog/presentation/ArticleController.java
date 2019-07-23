@@ -1,13 +1,16 @@
-package techcourse.myblog.web;
+package techcourse.myblog.presentation;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.persistence.ArticleRepository;
+import techcourse.myblog.service.ArticleNotFoundException;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 public class ArticleController {
     private ArticleRepository articleRepository;
@@ -22,7 +25,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String saveArticlePage(Article article, Model model) {
+    public String saveArticlePage(Article article) {
         articleRepository.save(article);
         return "redirect:/articles/" + article.getId();
     }
@@ -35,26 +38,26 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String showArticleEditingPage(@PathVariable int articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId));
+    public String showArticleEditingPage(@PathVariable long articleId, Model model) {
+        model.addAttribute("article", articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new));
         return "article-edit";
     }
 
     @GetMapping("/articles/{articleId}")
-    public String showArticleByIdPage(@PathVariable int articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId));
+    public String showArticleByIdPage(@PathVariable long articleId, Model model) {
+        model.addAttribute("article", articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new));
         return "article";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticleByIdPage(@PathVariable int articleId, Article article, Model model) {
-        articleRepository.update(articleId, article);
-        return "redirect:/articles/" + articleId;
+    public String updateArticleByIdPage(Article article) {
+        articleRepository.save(article);
+        return "redirect:/articles/" + article.getId();
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticleByIdPage(@PathVariable int articleId) {
-        articleRepository.delete(articleId);
+    public String deleteArticleByIdPage(@PathVariable long articleId) {
+        articleRepository.deleteById(articleId);
         return "redirect:/";
     }
 }

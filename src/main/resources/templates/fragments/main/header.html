@@ -24,23 +24,60 @@
                     <img class="profile-img img-fluid"
                          src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
                     <div class="user-info text-white">
-                        <span class="name pdd-right-5">Brown</span>
+                        <span class="name pdd-right-5" th:text="${session.user != null ? session.user.getName() : 'GUEST'}">GUEST</span>
                     </div>
                 </a>
-                <ul class="dropdown-menu">
-                    <li class="text-dark">
-                        <a href="mypage.html">
-                            <i class="ti-user pdd-right-10"></i>
-                            <span class="text-dark">마이 페이지</span>
-                        </a>
-                    </li>
-                    <li role="separator" class="divider"></li>
-                    <li class="text-dark">
-                        <a href="index.html">
-                            <i class="ti-power-off pdd-right-10"></i>
-                            <span class="text-dark">로그아웃</span>
-                        </a>
-                    </li>
+                <ul>
+                    <div th:if="${session.user}" class="dropdown-menu">
+                        <li class="text-dark">
+                            <a th:href="${'/accounts/profile/' + session.user.getId()}">
+                                <i class="ti-user pdd-right-10"></i>
+                                <span class="text-dark">마이페이지</span>
+                            </a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li class="text-dark">
+                            <a href="/logout">
+                                <i class="ti-user pdd-right-10"></i>
+                                <span class="text-dark">로그아웃</span>
+                            </a>
+                        </li>
+                        <li class="text-dark">
+                            <a href="/users">
+                                <i class="ti-power-off pdd-right-10"></i>
+                                <span class="text-dark">회원 목록</span>
+                            </a>
+                        </li>
+                        <li class="text-dark">
+                            <form th:method="delete" action="/accounts/delete">
+                                <button type="submit">
+                                    <i class="ti-power-off pdd-right-10"></i>
+                                    <span class="text-dark">회원 탈퇴</span>
+                                </button>
+                            </form>
+                        </li>
+                    </div>
+                    <div th:unless="${session.user}" class="dropdown-menu">
+                        <li class="text-dark">
+                            <a href='/login'>
+                                <i class="ti-user pdd-right-10"></i>
+                                <span class="text-dark">로그인</span>
+                            </a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li class="text-dark">
+                            <a href="/accounts/signup">
+                                <i class="ti-power-off pdd-right-10"></i>
+                                <span class="text-dark">회원가입</span>
+                            </a>
+                        </li>
+                        <li class="text-dark">
+                            <a href="/users">
+                                <i class="ti-power-off pdd-right-10"></i>
+                                <span class="text-dark">회원 목록</span>
+                            </a>
+                        </li>
+                    </div>
                 </ul>
             </li>
         </ul>
