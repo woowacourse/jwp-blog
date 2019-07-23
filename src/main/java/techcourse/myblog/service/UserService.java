@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.exception.WrongEmailAndPasswordException;
 import techcourse.myblog.web.dto.LoginDto;
 import techcourse.myblog.web.dto.UserDto;
 
@@ -40,11 +41,11 @@ public class UserService {
         userRepository.delete(findByEmail(email));
     }
 
-    public User login(LoginDto loginDto) throws IllegalArgumentException {
+    public User login(LoginDto loginDto) throws WrongEmailAndPasswordException {
         if (userRepository.existsByEmailAndPassword(loginDto.getEmail(), loginDto.getPassword())) {
             return findByEmail(loginDto.getEmail());
         }
-        throw new IllegalArgumentException("비밀번호 다르다.");
+        throw new WrongEmailAndPasswordException("Email과 Password를 다시 확인해주세요.");
     }
 
     public boolean exists(String email) {

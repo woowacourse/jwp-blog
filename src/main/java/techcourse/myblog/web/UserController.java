@@ -17,7 +17,7 @@ import javax.validation.Valid;
 
 @Controller
 public class UserController {
-	private static String redirectIndex = "redirect:/";
+	private static String REDIRECT_INDEX = "redirect:/";
 	private final UserService userService;
 
 	public UserController(UserService userService) {
@@ -26,7 +26,7 @@ public class UserController {
 
 	@GetMapping("/login")
 	public String loginForm(HttpSession httpSession, LoginDto loginDto) {
-		if (checkSession(httpSession)) return redirectIndex;
+		if (checkSession(httpSession)) return REDIRECT_INDEX;
 		return "login";
 	}
 
@@ -39,14 +39,10 @@ public class UserController {
 		if (bindingResult.hasErrors()) {
 			return "login";
 		}
-		try {
-			User user = userService.login(loginDto);
-			httpSession.setAttribute("user", user);
-			return "redirect:/";
-		} catch (IllegalArgumentException e) {
-			model.addAttribute("errorMessage", "이메일과 비밀번호를 다시 확인해주세요.");
-			return "login";
-		}
+		User user = userService.login(loginDto);
+
+		httpSession.setAttribute("user", user);
+		return "redirect:/";
 	}
 
 	@GetMapping("/logout")
@@ -57,19 +53,19 @@ public class UserController {
 
 	@GetMapping("/mypage")
 	public String showMyPage(HttpSession httpSession) {
-		if (!checkSession(httpSession)) return redirectIndex;
+		if (!checkSession(httpSession)) return REDIRECT_INDEX;
 		return "mypage";
 	}
 
 	@GetMapping("/mypage/edit")
 	public String showMyPageEdit(HttpSession httpSession) {
-		if (!checkSession(httpSession)) return redirectIndex;
+		if (!checkSession(httpSession)) return REDIRECT_INDEX;
 		return "mypage-edit";
 	}
 
 	@PutMapping("/mypage/edit")
 	public String updateUser(UserDto userDto, HttpSession httpSession) {
-		if (!checkSession(httpSession)) return redirectIndex;
+		if (!checkSession(httpSession)) return REDIRECT_INDEX;
 		User user = (User) httpSession.getAttribute("user");
 		userDto.setEmail(user.getEmail());
 		httpSession.setAttribute("user", userService.update(userDto));
@@ -79,7 +75,7 @@ public class UserController {
 
 	@DeleteMapping("/mypage/edit")
 	public String deleteUser(HttpSession httpSession) {
-		if (!checkSession(httpSession)) return redirectIndex;
+		if (!checkSession(httpSession)) return REDIRECT_INDEX;
 		User user = (User) httpSession.getAttribute("user");
 		userService.remove(user.getEmail());
 		return "redirect:/logout";
@@ -87,7 +83,7 @@ public class UserController {
 
 	@GetMapping("/users")
 	public String users(Model model, HttpSession httpSession) {
-		if (!checkSession(httpSession)) return redirectIndex;
+		if (!checkSession(httpSession)) return REDIRECT_INDEX;
 		model.addAttribute("users", userService.findAll());
 		return "user-list";
 	}
@@ -107,7 +103,7 @@ public class UserController {
 
 	@GetMapping("/signup")
 	public String singUp(UserDto userDto, HttpSession httpSession) {
-		if (checkSession(httpSession)) return redirectIndex;
+		if (checkSession(httpSession)) return REDIRECT_INDEX;
 		return "signup";
 	}
 }
