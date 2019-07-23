@@ -1,9 +1,8 @@
 package techcourse.myblog.web;
 
-import java.util.Optional;
-
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.request.ArticleDto;
+import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.repository.ArticleRepository;
 
 import org.springframework.stereotype.Controller;
@@ -38,32 +37,20 @@ public class ArticleController {
 
 	@GetMapping("articles/{articleId}")
 	public String getArticle(@PathVariable Long articleId, Model model) {
-		if (getArticleWhenExists(articleId, model)) {
-			return "article";
-		}
-		return addError(model);
+		getArticleWhenExists(articleId, model);
+		return "article";
 	}
 
 	@GetMapping("articles/{articleId}/edit")
 	public String editArticle(@PathVariable Long articleId, Model model) {
-		if (getArticleWhenExists(articleId, model)) {
-			return "article-edit";
-		}
-		return addError(model);
+		getArticleWhenExists(articleId, model);
+		return "article-edit";
 	}
 
-	private boolean getArticleWhenExists(Long articleId, Model model) {
-		Optional<Article> article = articleRepository.findById(articleId);
-		if (article.isPresent()) {
-			model.addAttribute("article", article.get());
-			return true;
-		}
-		return false;
-	}
-
-	private String addError(Model model) {
-		model.addAttribute("error", "유효하지 않은 게시글 번호입니다.");
-		return "index";
+	private void getArticleWhenExists(Long articleId, Model model) {
+		Article article = articleRepository.findById(articleId)
+				.orElseThrow(NotFoundArticleException::new);
+		model.addAttribute("article", article);
 	}
 
 	@PutMapping("articles/{articleId}")
