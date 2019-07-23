@@ -14,7 +14,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.reactive.function.BodyInserters;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
@@ -39,7 +42,7 @@ class LoginControllerTests {
 		user.saveUser(userDto);
 		userRepository.save(user);
 	}
-	//TODO: SESSION TEST 수정 필요
+
 	@Test
 	void loginSuccess() {
 		requestForLogin("tiber@naver.com", "asdfASDF1@").isFound()
@@ -66,5 +69,16 @@ class LoginControllerTests {
 						.with("password", requestURI))
 				.exchange()
 				.expectStatus();
+	}
+
+	@Test
+	void loginFailureDueToExistLogin() {
+		webTestClient.post().uri("/login")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.header("Authorization", "Basic " + Base64Utils
+						.encodeToString(("tiber@naver.com:asdfASDF1@").getBytes(UTF_8)))
+				.exchange()
+				.expectStatus()
+				.isOk();
 	}
 }
