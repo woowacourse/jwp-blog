@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserLoginDto;
 import techcourse.myblog.web.UserService;
+import techcourse.myblog.web.UserSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,8 +46,9 @@ public class BasicAuthInterceptor extends HandlerInterceptorAdapter {
         userLoginDto.setEmail(email);
         userLoginDto.setPassword(password);
 
-        userService.login(userLoginDto);
-
+        User user = userService.login(userLoginDto);
+        UserSession userSession = new UserSession(user);
+        request.getSession().setAttribute("user", userSession);
         return true;
     }
 }
