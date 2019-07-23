@@ -2,8 +2,7 @@ package techcourse.myblog.service;
 
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.request.UserLoginDto;
-import techcourse.myblog.exception.NotFoundEmailException;
-import techcourse.myblog.exception.NotMatchPasswordException;
+import techcourse.myblog.exception.LoginException;
 import techcourse.myblog.repository.UserRepository;
 
 import org.springframework.stereotype.Service;
@@ -18,9 +17,9 @@ public class LoginService {
 
 	public User login(UserLoginDto userLoginDto) {
 		User loginUser = userRepository.findByEmail(userLoginDto.getEmail())
-				.orElseThrow(NotFoundEmailException::new);
+				.orElseThrow(LoginException::new);
 		if (!loginUser.matchPassword(userLoginDto.getPassword())) {
-			throw new NotMatchPasswordException();
+			throw new LoginException();
 		}
 		return loginUser;
 	}

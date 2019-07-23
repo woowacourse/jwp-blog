@@ -1,14 +1,13 @@
 package techcourse.myblog.web;
 
 import java.util.List;
-import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.request.UserDto;
 import techcourse.myblog.dto.request.UserEditProfileDto;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.UserService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,10 +20,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @Controller
 public class UserController {
-	private final UserRepository userRepository;
+	private final UserService userService;
 
-	public UserController(UserRepository userRepository) {
-		this.userRepository = userRepository;
+	public UserController(final UserService userService) {
+		this.userService = userService;
 	}
 
 	@GetMapping("/signup")
@@ -36,20 +35,13 @@ public class UserController {
 	}
 
 	@PostMapping("/users")
-	public String signUp(@Valid UserDto newUser, BindingResult bindingResult, Model model) {
+	public String signUp(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 			List<FieldError> errors = bindingResult.getFieldErrors();
 			model.addAttribute("error", errors.get(0).getField() + "입력 오류 입니다.");
 			return "/signup";
 		}
-		if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
-			model.addAttribute("error", "이미 존재하는 email입니다.");
-			return "/signup";
-		}
-
-		User user = new User();
-		user.saveUser(newUser);
-		userRepository.save(user);
+		userService.signUp(userDto);
 		return "redirect:/login";
 	}
 
@@ -60,26 +52,39 @@ public class UserController {
 
 	@GetMapping("/user-list")
 	public String userList(Model model) {
-		model.addAttribute("users", userRepository.findAll());
+		model.addAttribute("users", userService.findAll());
 		return "user-list";
 	}
 
 	@GetMapping("/mypage")
 	public String mypage(HttpSession httpSession, Model model) {
-		if (confirmSession(httpSession, "email")) {
+		if (getUserInformation(httpSession, model)) {
 			return "redirect:/";
 		}
-		model.addAttribute("user", userRepository.findByEmail(httpSession.getAttribute("email").toString()).get());
 		return "mypage";
 	}
 
 	@GetMapping("/mypage/edit")
 	public String mypageEdit(HttpSession httpSession, Model model) {
-		if (confirmSession(httpSession, "email")) {
+		if (getUserInformation(httpSession, model)) {
 			return "redirect:/";
 		}
-		model.addAttribute("user", userRepository.findByEmail(httpSession.getAttribute("email").toString()).get());
 		return "mypage-edit";
+	}
+
+	private boolean getUserInformation(HttpSession httpSession, Model model) {
+		if (confirmSession(httpSession, "email")) {
+			return true;
+		}
+		User user = userService.findUser((String) httpSession.getAttribute("email"));
+		model.addAttribute("user", user);
+		return false;
+	}
+
+	@PutMapping("/edit")
+	public String editUser(@Valid UserEditProfileDto userEditProfileDto, HttpSession httpSession) {
+		userService.editUser((String) httpSession.getAttribute("email"), userEditProfileDto);
+		return "redirect:/mypage";
 	}
 
 	@GetMapping("/leave")
@@ -96,32 +101,13 @@ public class UserController {
 		if (confirmSession(httpSession, "email")) {
 			return "redirect:/";
 		}
-		String email = httpSession.getAttribute("email").toString();
-		Optional<User> user = userRepository.findByEmail(email);
-
-		if (user.get().matchPassword(password)) {
-			model.addAttribute("result", "회원 탈퇴가 완료되었습니다.");
-			userRepository.delete(user.get());
-			httpSession.invalidate();
-			return "leave-user";
-		}
-
-		model.addAttribute("error", "비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
+		userService.leaveUser((String) httpSession.getAttribute("email"), password);
+		model.addAttribute("result", "회원 탈퇴가 완료되었습니다.");
+		httpSession.invalidate();
 		return "leave-user";
 	}
 
 	private boolean confirmSession(HttpSession httpSession, String attribute) {
 		return (httpSession.getAttribute("email") == null);
-	}
-
-	@PutMapping("/edit")
-	public String editUser(@Valid UserEditProfileDto userEditProfileDto, HttpSession httpSession, Model model) {
-		String email = httpSession.getAttribute("email").toString();
-		User user = userRepository.findByEmail(email).get();
-		user.editUser(userEditProfileDto);
-		userRepository.save(user);
-
-		model.addAttribute("user", user);
-		return "redirect:/mypage";
 	}
 }
