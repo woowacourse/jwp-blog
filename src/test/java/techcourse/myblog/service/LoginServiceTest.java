@@ -14,42 +14,42 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LoginServiceTest {
-	private static final String NAME = "yusi";
-	private static final String EMAIL = "temp@mail.com";
-	private static final String PASSWORD = "12345abc";
+    private static final String NAME = "yusi";
+    private static final String EMAIL = "temp@mail.com";
+    private static final String PASSWORD = "12345abc";
 
-	@Autowired
-	private LoginService loginService;
+    @Autowired
+    private LoginService loginService;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@BeforeEach
-	public void setUp() {
-		userService.deleteAll();
-	}
+    @BeforeEach
+    public void setUp() {
+        userService.deleteAll();
+    }
 
-	@Test
-	public void 회원_조회_By_LoginInfo() {
-		UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
-		User expected = userService.save(signUpRequestDto);
-		UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
+    @Test
+    public void 회원_조회_By_LoginInfo() {
+        UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
+        User expected = userService.save(signUpRequestDto);
+        UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
 
-		assertEquals(expected, loginService.findByLoginRequestDto(loginRequestDto));
-	}
+        assertEquals(expected, loginService.findByLoginRequestDto(loginRequestDto));
+    }
 
-	@Test
-	public void 로그인_가능() {
-		UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
-		userService.save(signUpRequestDto);
+    @Test
+    public void 로그인_가능() {
+        UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
+        userService.save(signUpRequestDto);
 
-		UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
-		assertTrue(loginService.authenticate(loginRequestDto));
-	}
+        UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
+        assertTrue(loginService.canLogin(loginRequestDto));
+    }
 
-	@Test
-	public void 로그인_불가능() {
-		UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
-		assertFalse(loginService.authenticate(loginRequestDto));
-	}
+    @Test
+    public void 로그인_불가능() {
+        UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
+        assertFalse(loginService.canLogin(loginRequestDto));
+    }
 }

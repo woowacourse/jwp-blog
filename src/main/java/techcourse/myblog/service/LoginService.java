@@ -10,25 +10,25 @@ import java.util.NoSuchElementException;
 
 @Service
 public class LoginService {
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-	@Autowired
-	public LoginService(final UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+    @Autowired
+    public LoginService(final UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-	public boolean authenticate(final UserRequestDto.LoginRequestDto loginRequestDto) {
-		try {
-			User user = userRepository.findByEmail(loginRequestDto.getEmail())
-					.orElseThrow(NoSuchElementException::new);
-			return user.isSamePassword(loginRequestDto.getPassword());
-		} catch (NoSuchElementException e) {
-			return false;
-		}
-	}
+    public boolean canLogin(final UserRequestDto.LoginRequestDto loginRequestDto) {
+        try {
+            User user = userRepository.findByEmail(loginRequestDto.getEmail())
+                    .orElseThrow(NoSuchElementException::new);
+            return user.isSamePassword(loginRequestDto.getPassword());
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
 
-	public User findByLoginRequestDto(final UserRequestDto.LoginRequestDto loginRequestDto) {
-		return userRepository.findByEmail(loginRequestDto.getEmail())
-				.orElseThrow(NoSuchElementException::new);
-	}
+    public User findByLoginRequestDto(final UserRequestDto.LoginRequestDto loginRequestDto) {
+        return userRepository.findByEmail(loginRequestDto.getEmail())
+                .orElseThrow(NoSuchElementException::new);
+    }
 }
