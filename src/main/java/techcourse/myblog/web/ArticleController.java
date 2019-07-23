@@ -37,7 +37,7 @@ public class ArticleController {
     public String writeArticle(ArticleWriteDto articleWriteDto, Model model) {
         Article article = articleRepository.save(ArticleAssembler.writeArticle(articleWriteDto));
         model.addAttribute("article", article);
-        return "article";
+        return "redirect:/articles/" + article.getId();
     }
 
     @GetMapping("/articles/{articleId}/edit")
