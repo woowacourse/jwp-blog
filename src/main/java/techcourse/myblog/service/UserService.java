@@ -62,7 +62,7 @@ public class UserService {
     @Transactional
     public UserQueryResult tryUpdate(String name, String email, HttpSession session) {
         return ifLoggedIn(session).map(user -> {
-            if (user.emailNotChanged(email) && userRepository.findByEmail(email).isPresent()) {
+            if (user.emailChanged(email) && userRepository.findByEmail(email).isPresent()) {
                 return UserQueryResult.EMAIL_ALREADY_TAKEN;
             }
             try {

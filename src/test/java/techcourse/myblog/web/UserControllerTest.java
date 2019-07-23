@@ -4,12 +4,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
@@ -20,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 class UserControllerTest {
     private static final String testName = "donut";
     private static final String testEmail = "donut@woowa.com";
@@ -29,13 +29,11 @@ class UserControllerTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;
     private MockHttpSession session;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         session = new MockHttpSession();
         session.setAttribute("email", testEmail);
         session.setAttribute("name", testName);
@@ -111,7 +109,7 @@ class UserControllerTest {
                             .param("password", newPassword)
         ).andDo(print())
         .andExpect(redirectedUrl("/login"));
-        assertThat(userRepository.findByEmail(newEmail).isPresent());
+        assertThat(userRepository.findByEmail(newEmail).isPresent()).isTrue();
         mockMvc.perform(
                 post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED)
                             .param("name", testName)
@@ -165,7 +163,7 @@ class UserControllerTest {
                                     .session(session)
         ).andDo(print())
         .andExpect(redirectedUrl("/profile"));
-        assertThat(userRepository.findByEmail(testEmail).get().getName().equals(newName));
+        assertThat(userRepository.findByEmail(testEmail).get().getName().equals(newName)).isTrue();
         mockMvc.perform(
                 put("/profile/edit").contentType(MediaType.APPLICATION_FORM_URLENCODED)
                                     .param("name", testName)
@@ -179,10 +177,10 @@ class UserControllerTest {
         mockMvc.perform(get("/profile"))
                 .andDo(print())
                 .andExpect(redirectedUrl("/"));
-        assertThat(userRepository.findByEmail(testEmail).isPresent());
+        assertThat(userRepository.findByEmail(testEmail).isPresent()).isTrue();
         mockMvc.perform(delete("/profile").session(session))
                 .andDo(print())
                 .andExpect(redirectedUrl("/"));
-        assertThat(!userRepository.findByEmail(testEmail).isPresent());
+        assertThat(userRepository.findByEmail(testEmail).isPresent()).isFalse();
     }
 }
