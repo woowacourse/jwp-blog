@@ -28,18 +28,18 @@ class LogInServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("name", "email@woowa.com", VALID_PASSWORD);
+        user = new User("name", "login1@woowa.com", VALID_PASSWORD);
         userRepository.save(user);
     }
 
     @Test
     @DisplayName("이메일과 비밀번호를 넘겨받아 로그인에 성공한다.")
     void loginSuccess() {
-        LogInInfoDto logInInfoDto = new LogInInfoDto("email@woowa.com", VALID_PASSWORD);
+        LogInInfoDto logInInfoDto = new LogInInfoDto("login1@woowa.com", VALID_PASSWORD);
 
         UserPublicInfoDto userPublicInfoDto = logInService.logIn(logInInfoDto);
         assertThat(userPublicInfoDto.getName()).isEqualTo("name");
-        assertThat(userPublicInfoDto.getEmail()).isEqualTo("email@woowa.com");
+        assertThat(userPublicInfoDto.getEmail()).isEqualTo("login1@woowa.com");
     }
 
     @Test
@@ -53,7 +53,7 @@ class LogInServiceTest {
     @Test
     @DisplayName("비밀번호가 다른 경우 로그인에 실패한다.")
     void logInFailWhenDifferentPassword() {
-        LogInInfoDto logInInfoDto = new LogInInfoDto("email@woowa.com", VALID_PASSWORD + "diff");
+        LogInInfoDto logInInfoDto = new LogInInfoDto("login1@woowa.com", VALID_PASSWORD + "diff");
 
         assertThatThrownBy(() -> logInService.logIn(logInInfoDto)).isInstanceOf(LogInException.class);
     }
