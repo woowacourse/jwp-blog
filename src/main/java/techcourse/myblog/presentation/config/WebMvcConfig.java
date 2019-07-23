@@ -7,12 +7,11 @@ import techcourse.myblog.presentation.interceptor.SessionInterceptor;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new SessionInterceptor())
                 .addPathPatterns("/mypage")
                 .addPathPatterns("/mypage/edit")
-                .addPathPatterns("/logout"); //로그인 쪽은 예외처리를 한다.
+                .addPathPatterns("/logout");
     }
 }

@@ -85,7 +85,6 @@ public class UserController {
         String email = (String) httpSession.getAttribute("email");
 
         if (user.compareEmail(email)) {
-            user.setEmail(email);
             userService.modify(user);
 
             redirectView.setUrl("/mypage");
