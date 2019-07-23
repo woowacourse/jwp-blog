@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class UserController {
     private static final String SUCCESS_SIGN_UP_MESSAGE = "회원 가입이 완료되었습니다!";
-    public static final String ERROR_MISMATCH_PASSWORD_MESSAGE = "비밀번호가 일치하지 않습니다!";
+    private static final String ERROR_MISMATCH_PASSWORD_MESSAGE = "비밀번호가 일치하지 않습니다!";
     private final UserService userService;
 
     @Autowired
