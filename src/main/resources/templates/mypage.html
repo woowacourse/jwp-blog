@@ -21,18 +21,18 @@
                 <div class="card">
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
-                        <a href="mypage-edit.html"
-                           class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
+                        <a href="/accounts/profile/edit"
+                           class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5" th:if="${session.user != null && session.user.getId() == user.id}">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </a>
                     </div>
                     <div class="card-block">
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"><b>Name</b></p>
+                                <p class="mrg-top-10"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10">Brown</p>
+                                <p class="mrg-top-10" th:text="${user.name}">Brown</p>
                             </div>
                         </div>
                         <hr>
@@ -41,7 +41,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10">gracefulBrown@woowahan.com</p>
+                                <p class="mrg-top-10" th:text="${user.email}">gracefulBrown@woowahan.com</p>
                             </div>
                         </div>
                         <hr>

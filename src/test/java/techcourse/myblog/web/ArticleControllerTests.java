@@ -196,4 +196,22 @@ public class ArticleControllerTests {
                 .expectStatus()
                 .is3xxRedirection();
     }
+
+
+    @Test
+    void 첫_페이지_방문_시_사용자_이름_GUEST_확인() {
+        webTestClient.get()
+                .uri("/")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains("GUEST")).isTrue();
+                    assertThat(body.contains("로그인")).isTrue();
+                    assertThat(body.contains("회원가입")).isTrue();
+                    assertThat(body.contains("로그아웃")).isFalse();
+                });
+    }
 }

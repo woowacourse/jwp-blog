@@ -2,12 +2,14 @@
 <html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <head th:include="fragments/main/main_head :: mainHead"></head>
+    <link rel="stylesheet" href="/css/article-edit.css">
+    <link rel="stylesheet" href="/css/article.css">
 </head>
 <body>
 <div>
     <div th:replace="fragments/main/header :: header"></div>
     <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg" th:style="'background-image: url(' + ${article.coverUrl} + ');'">
+        <div class="cover-img overlay-dark bg" th:style="'background-image: url(' + ${article.coverUrl} + '), url(\'/images/pages/index/study.jpg\');'">
             <div class="padding-30">
                 <h1 class="text-center cover-title" th:text="${article.title}"></h1>
             </div>
