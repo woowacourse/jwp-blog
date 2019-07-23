@@ -42,6 +42,9 @@
                                                             <input type="password" class="form-control" placeholder="Password" required th:field="*{password}">
                                                             <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></span>
                                                         </div>
+                                                        <div style="padding-bottom: 20px;" th:if="${error}">
+                                                            <span th:text = "${error}" style="color:red"></span>
+                                                        </div>
                                                         <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
                                                             <input id="agreement" name="agreement" type="checkbox">
                                                             <label for="agreement">로그인 유지</label>
@@ -72,6 +75,5 @@
 </div>
 
 <th:block th:include="includes/js :: common_js"></th:block>
-
 </body>
 </html>

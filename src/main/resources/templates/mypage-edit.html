@@ -30,6 +30,9 @@
                             <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정</button>
                         </div>
                         <div class="card-block">
+                            <div style="padding-bottom: 20px;" th:if="${error}">
+                                <span th:text = "${error}" style="color:red"></span>
+                            </div>
                             <div class="row">
                                 <div class="col-md-3">
                                     <p class="mrg-top-10 text-dark"> <b>Name</b></p>

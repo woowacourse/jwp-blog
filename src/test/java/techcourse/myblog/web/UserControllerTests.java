@@ -3,29 +3,28 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.domain.repository.UserRepository;
+import techcourse.myblog.dto.UserDto;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpMethod.*;
+import static techcourse.myblog.domain.User.AUTH_FAIL_MESSAGE;
 import static techcourse.myblog.dto.UserDto.*;
 import static techcourse.myblog.service.UserService.*;
 
-@ExtendWith(SpringExtension.class)
 class UserControllerTests extends ControllerTestTemplate {
     @Autowired
     private UserRepository userRepository;
@@ -38,9 +37,9 @@ class UserControllerTests extends ControllerTestTemplate {
     @BeforeEach
     void setup() {
         name = "name";
-        email = "email@email";
-        password = "password";
-        savedUserDto = new UserDto("savedName", "saved@email", "savedPassword");
+        email = "email@email.com";
+        password = "passw0RD!";
+        savedUserDto = new UserDto("savedName", "saved@email.com", "savedPassw0RD!");
         userRepository.save(savedUserDto.toUser());
     }
 
@@ -60,7 +59,7 @@ class UserControllerTests extends ControllerTestTemplate {
         requestExpect(POST, "/users", parser(userDto)).isFound();
     }
 
-    @ParameterizedTest(name = "{index}: {4}")
+    @ParameterizedTest(name = "{index}: {3}")
     @MethodSource("invalidParameters")
     void 회원가입_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
         requestExpect(POST, "/users", parser(new UserDto(name, email, password)))
@@ -74,10 +73,10 @@ class UserControllerTests extends ControllerTestTemplate {
 
     static Stream<Arguments> invalidParameters() throws Throwable {
         return Stream.of(
-                Arguments.of("wrong!name", "e@mail", "p@ssw0rd", NAME_CONSTRAINT_MESSAGE),
-                Arguments.of("name", "wrong", "p@ssw00rd", EMAIL_CONSTRAINT_MESSAGE),
-                Arguments.of("name", "e@mail", "잘못된패스워드", PASSWORD_CONSTRAINT_MESSAGE),
-                Arguments.of("name", "saved@email", "password", DUPLICATED_USER_MESSAGE)
+                Arguments.of("wrong!name", "e@mail.com", "p@ssw0RD!", NAME_CONSTRAINT_MESSAGE),
+                Arguments.of("name", "wrong", "p@ssw00RD!", EMAIL_CONSTRAINT_MESSAGE),
+                Arguments.of("name", "e@mail.com", "잘못된패스워드", PASSWORD_CONSTRAINT_MESSAGE),
+                Arguments.of("name", "saved@email.com", "passw0RD!", DUPLICATED_USER_MESSAGE)
         );
     }
 
@@ -105,7 +104,7 @@ class UserControllerTests extends ControllerTestTemplate {
                         getRedirectedUri(response).equals("/"));
     }
 
-    @ParameterizedTest(name = "{index}: {4}")
+    @ParameterizedTest(name = "{index}: {3}")
     @MethodSource("invalidLoginParameters")
     void 로그인_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
         requestExpect(POST, "/login", parser(new UserDto(name, email, password)))
@@ -119,8 +118,8 @@ class UserControllerTests extends ControllerTestTemplate {
 
     static Stream<Arguments> invalidLoginParameters() throws Throwable {
         return Stream.of(
-                Arguments.of(null, "e@mail", "p@ssw0rd", WRONG_EMAIL_MESSAGE),
-                Arguments.of(null, "saved@email", "p@ssw00rd", WRONG_PASSWORD_MESSAGE)
+                Arguments.of(null, "e@mail.com", "p@sswsavedPassw0RD!", NOT_EXIST_USER_MESSAGE),
+                Arguments.of(null, "saved@email.com", "edPassw0RD!", AUTH_FAIL_MESSAGE)
         );
     }
 
@@ -199,11 +198,11 @@ class UserControllerTests extends ControllerTestTemplate {
     }
 
     private String getLoginSessionId() {
-        return requestExpect(POST, "/login", parser(savedUserDto))
+        return Objects.requireNonNull(requestExpect(POST, "/login", parser(savedUserDto))
                 .isFound()
                 .returnResult(Void.class)
                 .getResponseCookies()
-                .getFirst("JSESSIONID")
+                .getFirst("JSESSIONID"))
                 .getValue();
     }
 
