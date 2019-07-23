@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserForm;
 import techcourse.myblog.domain.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,10 +26,10 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String processLogin(UserForm userForm, HttpServletRequest request, Model model) {
+    public String processLogin(UserDto userDto, HttpServletRequest request, Model model) {
         String errorMessage = "아이디나 비밀번호가 잘못되었습니다.";
-        Optional<User> user = userRepository.findByEmail(userForm.getEmail());
-        if (!user.isPresent() || !userForm.getPassword().equals(user.get().getPassword())) {
+        Optional<User> user = userRepository.findByEmail(userDto.getEmail());
+        if (!user.isPresent() || !userDto.getPassword().equals(user.get().getPassword())) {
             model.addAttribute("error", errorMessage);
             return "login";
         }

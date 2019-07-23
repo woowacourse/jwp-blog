@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserForm;
 import techcourse.myblog.domain.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,18 +23,18 @@ public class AccountController {
 
     @GetMapping("/accounts/signup")
     public String showSignupPage(Model model) {
-        model.addAttribute("userForm", new UserForm());
+        model.addAttribute("userDto", new UserDto());
         return "signup";
     }
 
     @PostMapping("/accounts/user")
-    public String processSignup(@Valid UserForm userForm, Errors errors) {
-        log.debug(">>> UserForm : {} Error : {}", userForm, errors);
+    public String processSignup(@Valid UserDto userDto, Errors errors) {
+        log.debug(">>> UserDto : {} Error : {}", userDto, errors);
         if (errors.hasErrors()) {
             return "signup";
         }
 
-        User user = userForm.toUser();
+        User user = userDto.toUser();
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             errors.rejectValue("email", "0", "이메일 중복입니다.");
             return "signup";
@@ -73,18 +72,18 @@ public class AccountController {
 
     @GetMapping("/accounts/profile/edit")
     public String showProfileEditPage(Model model) {
-        model.addAttribute("userForm", new UserForm());
+        model.addAttribute("userDto", new UserDto());
         return "mypage-edit";
     }
 
     @PutMapping("/accounts/profile/edit")
-    public String processUpdateProfile(HttpServletRequest request, @Valid UserForm userForm, Errors errors) {
+    public String processUpdateProfile(HttpServletRequest request, @Valid UserDto userDto, Errors errors) {
         if (errors.hasErrors()) {
             return "mypage-edit";
         }
-        userRepository.save(userForm.toUser());
-        request.getSession().setAttribute("user", userForm.toUser());
+        userRepository.save(userDto.toUser());
+        request.getSession().setAttribute("user", userDto.toUser());
 
-        return "redirect:/accounts/profile/" + userForm.getId();
+        return "redirect:/accounts/profile/" + userDto.getId();
     }
 }

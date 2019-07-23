@@ -1,13 +1,14 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.web;
 
 import lombok.Data;
+import techcourse.myblog.domain.User;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
 @Data
-public class UserForm {
+public class UserDto {
     private long id;
     @Pattern(regexp = "^[a-zA-Z가-힣]{2,10}$", message = "2글자 이상, 10글자 이하로 입력하세요. 숫자와 특수문자는 입력할 수 없습니다.")
     private String name;
