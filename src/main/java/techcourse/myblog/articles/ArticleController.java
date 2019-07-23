@@ -30,7 +30,7 @@ public class ArticleController {
         return "article";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/{id}/form")
     public String editForm(@PathVariable Long id, Model model) {
         Article article = articleService.findById(id);
         model.addAttribute(article);

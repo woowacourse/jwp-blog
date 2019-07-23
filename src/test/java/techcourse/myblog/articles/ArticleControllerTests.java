@@ -75,7 +75,7 @@ class ArticleControllerTests {
 
     @Test
     void editFormTest() {
-        webTestClient.get().uri("/articles/" + article.getId() + "/edit")
+        webTestClient.get().uri("/articles/" + article.getId() + "/form")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(response -> {

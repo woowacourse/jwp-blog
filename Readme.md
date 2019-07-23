@@ -1,6 +1,7 @@
 ## TODO
 
 - 컨트롤러 네이밍({id}삭제)
+    - 컨트롤러 네이밍 컨벤션에 맞게 수정
 - domain validation
 - 패키지 구조
 - interceptor 중복 로직(argument resolver)

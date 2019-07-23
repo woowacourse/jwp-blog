@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping
-    public String userList(Model model) {
+    public String list(Model model) {
         List<UserDto.Response> users = userService.findAllExceptPassword();
         model.addAttribute("users", users);
         return "user-list";
@@ -59,15 +59,15 @@ public class UserController {
         return "mypage";
     }
 
-    @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Long id, Model model) {
+    @GetMapping("/{id}/form")
+    public String updateForm(@PathVariable Long id, Model model) {
         UserDto.Response userResponseDto = userService.findById(id);
         model.addAttribute("user", userResponseDto);
         return "mypage-edit";
     }
 
     @PutMapping
-    public String edit(@Valid UserDto.Update userDto, HttpSession session) {
+    public String update(@Valid UserDto.Update userDto, HttpSession session) {
         UserDto.Response responseDto = userService.update(((UserDto.Response)session.getAttribute("user")).getId(), userDto);
         return "redirect:/users/" + responseDto.getId();
     }

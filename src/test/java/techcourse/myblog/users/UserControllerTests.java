@@ -155,7 +155,7 @@ public class UserControllerTests {
     void editForm() {
         Long id = saveUserWithEmail();
 
-        webTestClient.get().uri("/users/{id}/edit", id)
+        webTestClient.get().uri("/users/{id}/form", id)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody().consumeWith(response -> {
@@ -204,6 +204,16 @@ public class UserControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*/");
+    }
+
+    @Test
+    void 로그아웃_테스트() {
+        long id = saveUserWithEmail();
+
+        webTestClient.get().uri("/users/logout")
+                .cookie("JSESSIONID", getJSessionId())
+                .exchange()
+                .expectStatus().is3xxRedirection();
     }
 
     private String getJSessionId() {
