@@ -1,4 +1,4 @@
-package techcourse.myblog.config;
+package techcourse.myblog.interceptor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +12,13 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addInterceptors(InterceptorRegistry registry) {
-                registry.addInterceptor(new AuthInterceptor())
+                registry.addInterceptor(new LogoutInterceptor())
                         .addPathPatterns("/user/show")
                         .addPathPatterns("/user/edit")
                         .addPathPatterns("/user/delete");
+                registry.addInterceptor(new LoginInterceptor())
+                        .addPathPatterns("/user/signup")
+                        .addPathPatterns("/user");
             }
         };
     }
