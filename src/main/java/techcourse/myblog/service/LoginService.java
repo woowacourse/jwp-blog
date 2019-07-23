@@ -22,21 +22,14 @@ public class LoginService {
         String password = userDto.getPassword();
 
         checkUserByEmail(email);
-        checkPassword(email, password);
 
-        return userRepository.findUserByEmailAndPassword(email, password);
+        return userRepository.findUserByEmailAndPassword(email, password)
+                .orElseThrow(() -> new FailedLoginException("비밀번호가 일치하지 않습니다."));
     }
 
     private void checkUserByEmail(String email) {
         if (userRepository.countByEmail(email) == NOT_FOUND_RESULT) {
             throw new FailedLoginException("존재하지 않는 이메일입니다.");
-        }
-    }
-
-    private void checkPassword(String email, String password) {
-        User user = userRepository.findUserByEmailAndPassword(email, password);
-        if (user == null) {
-            throw new FailedLoginException("비밀번호가 일치하지 않습니다.");
         }
     }
 }

@@ -45,13 +45,8 @@ public class UserService {
     }
 
     public User findUserByEmail(String email) {
-        User user = userRepository.findUserByEmail(email);
-
-        if (user == null) {
-            throw new NoSuchUserException("잘못된 접근입니다.");
-        }
-
-        return user;
+        return userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new NoSuchUserException("잘못된 접근입니다."));
     }
 
     public void updateUser(UserDto userDto) {
@@ -59,11 +54,12 @@ public class UserService {
         String email = userDto.getEmail();
         String password = userDto.getPassword();
 
-        User user = userRepository.findUserByEmail(email); // 이 부분
-        if (user == null) {
-            log.debug("{} {}", LOG_TAG, "존재하지 않는 회원의 정보는 수정할 수 없음");
-            throw new NoSuchUserException();
-        }
+        User user = userRepository.findUserByEmail(email) // 이 부분과
+                .orElseThrow(() -> {
+                    log.debug("{} {}", LOG_TAG, "존재하지 않는 회원의 정보는 수정할 수 없음");
+                    return new NoSuchUserException();
+                });
+
         userRepository.save(new User(user.getUserId(), updatedName, email, password)); // 이 부분의
         // TODO 쿼리가 어떻게 날아가는지 확인해보기
     }
