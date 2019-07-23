@@ -6,10 +6,10 @@ import java.util.regex.Pattern;
 
 @Entity
 public class User {
-    private static final Pattern nameValidation = Pattern.compile("[a-zA-Z가-힣]+");
+    private static final Pattern NAME_VALIDATION = Pattern.compile("[a-zA-Z가-힣]+");
     private static final int MIN_NAME_LENGTH = 2;
     private static final int MAX_NAME_LENGTH = 10;
-    private static final Pattern passwordValidation = Pattern.compile("[a-zA-Z0-9~!@#$%^&*]+");
+    private static final Pattern PASSWORD_VALIDATION = Pattern.compile("[a-zA-Z0-9~!@#$%^&*]+");
     private static final int MIN_PASSWORD_LENGTH = 8;
 
     @Id
@@ -41,7 +41,7 @@ public class User {
     private String validateName(String input) {
         return Optional.ofNullable(input).filter(x -> (MIN_NAME_LENGTH <= x.length())
                                                     && (x.length() <= MAX_NAME_LENGTH))
-                                        .filter(x -> nameValidation.matcher(x).matches())
+                                        .filter(x -> NAME_VALIDATION.matcher(x).matches())
                                         .orElseThrow(IllegalArgumentException::new);
     }
 
@@ -65,7 +65,7 @@ public class User {
 
     private String validatePassword(String input) {
         return Optional.ofNullable(input).filter(x -> MIN_PASSWORD_LENGTH <= x.length())
-                                        .filter(x -> passwordValidation.matcher(x).matches())
+                                        .filter(x -> PASSWORD_VALIDATION.matcher(x).matches())
                                         .orElseThrow(IllegalArgumentException::new);
     }
 

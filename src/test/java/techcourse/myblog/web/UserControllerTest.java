@@ -21,10 +21,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class UserControllerTest {
-    private static final String testName = "donut";
-    private static final String testEmail = "donut@woowa.com";
-    private static final String testPassword = "qwer1234";
-    private static final User testUser = new User(testName, testEmail, testPassword);
+    private static final String TEST_NAME = "donut";
+    private static final String TEST_EMAIL = "donut@woowa.com";
+    private static final String TEST_PASSWORD = "qwer1234";
+    private static final User TEST_USER = new User(TEST_NAME, TEST_EMAIL, TEST_PASSWORD);
 
     @Autowired
     private UserRepository userRepository;
@@ -35,9 +35,9 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         session = new MockHttpSession();
-        session.setAttribute("email", testEmail);
-        session.setAttribute("name", testName);
-        userRepository.save(testUser);
+        session.setAttribute("email", TEST_EMAIL);
+        session.setAttribute("name", TEST_NAME);
+        userRepository.save(TEST_USER);
     }
 
     @AfterEach
@@ -61,8 +61,8 @@ class UserControllerTest {
     void loginTest() throws Exception {
         mockMvc.perform(
                 post("/login").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .param("email", testEmail)
-                            .param("password", testPassword)
+                            .param("email", TEST_EMAIL)
+                            .param("password", TEST_PASSWORD)
         ).andDo(print())
         .andExpect(redirectedUrl("/"));
         mockMvc.perform(
@@ -96,32 +96,32 @@ class UserControllerTest {
 
     @Test
     void signupTest() throws Exception {
-        final String newName = "도나쓰";
-        final String newEmail = "donatsu@woowa.com";
-        final String newPassword = "qwer1234";
-        final String wrongName = "도";
-        final String wrongEmail = "@";
-        final String wrongPassword = "";
+        final String NEW_NAME = "도나쓰";
+        final String NEW_EMAIL = "donatsu@woowa.com";
+        final String NEW_PASSWORD = "qwer1234";
+        final String WRONG_NAME = "도";
+        final String WRONG_EMAIL = "@";
+        final String WRONG_PASSWORD = "";
         mockMvc.perform(
                 post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .param("name", newName)
-                            .param("email", newEmail)
-                            .param("password", newPassword)
+                            .param("name", NEW_NAME)
+                            .param("email", NEW_EMAIL)
+                            .param("password", NEW_PASSWORD)
         ).andDo(print())
         .andExpect(redirectedUrl("/login"));
-        assertThat(userRepository.findByEmail(newEmail).isPresent()).isTrue();
+        assertThat(userRepository.findByEmail(NEW_EMAIL).isPresent()).isTrue();
         mockMvc.perform(
                 post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .param("name", testName)
-                            .param("email", testEmail)
-                            .param("password", testPassword)
+                            .param("name", TEST_NAME)
+                            .param("email", TEST_EMAIL)
+                            .param("password", TEST_PASSWORD)
         ).andDo(print())
         .andExpect(redirectedUrl("/signup"));
         mockMvc.perform(
                 post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .param("name", wrongName)
-                            .param("email", wrongEmail)
-                            .param("password", wrongPassword)
+                            .param("name", WRONG_NAME)
+                            .param("email", WRONG_EMAIL)
+                            .param("password", WRONG_PASSWORD)
         ).andDo(print())
                 .andExpect(redirectedUrl("/signup"));
     }
@@ -151,7 +151,7 @@ class UserControllerTest {
         final String newName = "donatsu";
         mockMvc.perform(
                 put("/profile/edit").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                    .param("name", testName)
+                                    .param("name", TEST_NAME)
                                     .param("email", "wrongEmail")
                                     .session(session)
         ).andDo(print())
@@ -159,15 +159,15 @@ class UserControllerTest {
         mockMvc.perform(
                 put("/profile/edit").contentType(MediaType.APPLICATION_FORM_URLENCODED)
                                     .param("name", newName)
-                                    .param("email", testEmail)
+                                    .param("email", TEST_EMAIL)
                                     .session(session)
         ).andDo(print())
         .andExpect(redirectedUrl("/profile"));
-        assertThat(userRepository.findByEmail(testEmail).get().getName().equals(newName)).isTrue();
+        assertThat(userRepository.findByEmail(TEST_EMAIL).get().getName().equals(newName)).isTrue();
         mockMvc.perform(
                 put("/profile/edit").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                    .param("name", testName)
-                                    .param("email", testEmail)
+                                    .param("name", TEST_NAME)
+                                    .param("email", TEST_EMAIL)
         ).andDo(print())
         .andExpect(redirectedUrl("/login"));
     }
@@ -177,10 +177,10 @@ class UserControllerTest {
         mockMvc.perform(get("/profile"))
                 .andDo(print())
                 .andExpect(redirectedUrl("/"));
-        assertThat(userRepository.findByEmail(testEmail).isPresent()).isTrue();
+        assertThat(userRepository.findByEmail(TEST_EMAIL).isPresent()).isTrue();
         mockMvc.perform(delete("/profile").session(session))
                 .andDo(print())
                 .andExpect(redirectedUrl("/"));
-        assertThat(userRepository.findByEmail(testEmail).isPresent()).isFalse();
+        assertThat(userRepository.findByEmail(TEST_EMAIL).isPresent()).isFalse();
     }
 }

@@ -19,10 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class ArticleControllerTest {
-    static final String testTitle = "Jemok";
-    static final String testCoverUrl = "Baegyung";
-    static final String testContents = "Naeyong";
-    static final Article testArticle = new Article(testTitle, testCoverUrl, testContents);
+    private static final String TEST_TITLE = "Jemok";
+    private static final String TEST_COVER_URL = "Baegyung";
+    private static final String TEST_CONTENTS = "Naeyong";
+    private static final Article TEST_ARTICLE = new Article(TEST_TITLE, TEST_COVER_URL, TEST_CONTENTS);
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -52,24 +52,24 @@ class ArticleControllerTest {
     void writeTest() throws Exception {
         mockMvc.perform(
                 post("/articles").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                .param("title", testTitle)
-                                .param("coverUrl", testCoverUrl)
-                                .param("contents", testContents)
+                                .param("title", TEST_TITLE)
+                                .param("coverUrl", TEST_COVER_URL)
+                                .param("contents", TEST_CONTENTS)
         ).andDo(print())
         .andExpect(status().is3xxRedirection());
         assertThat(articleRepository.count() != 0).isTrue();
         boolean[] isWritten = { false };
         articleRepository.findAll().forEach(article ->
-            isWritten[0] |= article.getTitle().equals(testTitle)
-                    & article.getCoverUrl().equals(testCoverUrl)
-                    & article.getContents().equals(testContents)
+            isWritten[0] |= article.getTitle().equals(TEST_TITLE)
+                    & article.getCoverUrl().equals(TEST_COVER_URL)
+                    & article.getContents().equals(TEST_CONTENTS)
         );
         assertThat(isWritten[0]).isTrue();
     }
 
     @Test
     void readTest() throws Exception {
-        final Article written = articleRepository.save(testArticle);
+        final Article written = articleRepository.save(TEST_ARTICLE);
         mockMvc.perform(get("/articles/0"))
                 .andDo(print())
                 .andExpect(redirectedUrl("/"));
@@ -79,14 +79,14 @@ class ArticleControllerTest {
                             .andReturn()
                             .getResponse()
                             .getContentAsString();
-        assertThat(body.contains(testTitle)).isTrue();
-        assertThat(body.contains(testCoverUrl)).isTrue();
-        assertThat(body.contains(testContents)).isTrue();
+        assertThat(body.contains(TEST_TITLE)).isTrue();
+        assertThat(body.contains(TEST_COVER_URL)).isTrue();
+        assertThat(body.contains(TEST_CONTENTS)).isTrue();
     }
 
     @Test
     void updateFormTest() throws Exception {
-        final Article written = articleRepository.save(testArticle);
+        final Article written = articleRepository.save(TEST_ARTICLE);
         mockMvc.perform(get("/articles/0/edit"))
                 .andDo(print())
                 .andExpect(redirectedUrl("/"));
@@ -96,9 +96,9 @@ class ArticleControllerTest {
                                     .andReturn()
                                     .getResponse()
                                     .getContentAsString();
-        assertThat(body.contains(testTitle)).isTrue();
-        assertThat(body.contains(testCoverUrl)).isTrue();
-        assertThat(body.contains(testContents)).isTrue();
+        assertThat(body.contains(TEST_TITLE)).isTrue();
+        assertThat(body.contains(TEST_COVER_URL)).isTrue();
+        assertThat(body.contains(TEST_CONTENTS)).isTrue();
     }
 
     @Test
@@ -106,7 +106,7 @@ class ArticleControllerTest {
         final String updatedTitle = "제목쓰";
         final String updatedCoverUrl = "배경쓰";
         final String updatedContents = "내용쓰";
-        final Article written = articleRepository.save(testArticle);
+        final Article written = articleRepository.save(TEST_ARTICLE);
         mockMvc.perform(put("/articles/0/"))
                 .andDo(print())
                 .andExpect(redirectedUrl("/"));
@@ -130,7 +130,7 @@ class ArticleControllerTest {
 
     @Test
     void deleteTest() throws Exception {
-        final Article written = articleRepository.save(testArticle);
+        final Article written = articleRepository.save(TEST_ARTICLE);
         mockMvc.perform(delete("/articles/" + written.getId()));
         assertThat(articleRepository.count()).isEqualTo(0L);
     }
