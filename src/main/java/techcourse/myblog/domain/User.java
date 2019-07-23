@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import techcourse.myblog.dto.UserDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +13,6 @@ import javax.persistence.Id;
 
 @NoArgsConstructor
 @Getter
-@Setter
 @Entity
 @ToString
 public class User {
@@ -31,5 +31,10 @@ public class User {
 
     public boolean checkPassword(String password) {
         return this.password.equals(password);
+    }
+
+    public void updateUser(UserDto userDto) {
+        name = userDto.getName();
+        password = userDto.getPassword();
     }
 }
