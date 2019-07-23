@@ -40,35 +40,47 @@ public class UserService {
         return userConverter.createFromEntities(userRepository.findAll());
     }
 
-    @Valid
     @Transactional(readOnly = true)
+    User findUserById(String email) {
+        return userRepository.findById(email)
+                .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/"));
+    }
+
     public UserDto findById(String email) {
-        User user = userRepository.findById(email)
-                .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login"));
+        User user = findUserById(email);
 
         return userConverter.convertFromEntity(user);
     }
 
     @Transactional(readOnly = true)
     public void login(LoginDto loginDto) {
-        String requestPassword = loginDto.getPassword();
-        String expectedPassword = findById(loginDto.getEmail()).getPassword();
+        String password = loginDto.getPassword();
+        User user = findUserById(loginDto.getEmail());
 
-        if (!requestPassword.equals(expectedPassword)) {
+        if (!user.authenticate(password)) {
             throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
         }
     }
 
     @Transactional
-    public void modify(@Valid UserDto userDto) {
-        User user = userRepository.findById(userDto.getEmail())
-                .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/"));
+    public void modify(@Valid UserDto userDto, String email) {
+        User user = findUserById(userDto.getEmail());
+
+        if (user.isDifferentEmail(email)) {
+            throw new IllegalArgumentException();
+        }
 
         user.modify(userConverter.convertFromDto(userDto));
     }
 
     @Transactional
-    public void removeById(String email) {
+    public void removeById(UserDto userDto, String email) {
+        User user = findUserById(userDto.getEmail());
+
+        if (user.isDifferentEmail(email)) {
+            throw new IllegalArgumentException();
+        }
+
         userRepository.deleteById(email);
     }
 }

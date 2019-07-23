@@ -14,7 +14,6 @@ import techcourse.myblog.application.service.UserService;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
 import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
-import techcourse.myblog.presentation.controller.exception.InvalidUpdateException;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -81,17 +80,11 @@ public class UserController {
 
     @PutMapping("/mypage/edit")
     public RedirectView updateUser(HttpSession httpSession, @Valid UserDto user) {
-        RedirectView redirectView = new RedirectView();
+        RedirectView redirectView = new RedirectView("/mypage");
         String email = (String) httpSession.getAttribute("email");
+        userService.modify(user, email);
 
-        if (user.getEmail().equals(email)) {
-            user.setEmail(email);
-            userService.modify(user);
-
-            redirectView.setUrl("/mypage");
-            return redirectView;
-        }
-        throw new InvalidUpdateException("잘못된 이메일 입력입니다.");
+        return redirectView;
     }
 
     @DeleteMapping("/users")
@@ -99,51 +92,9 @@ public class UserController {
         RedirectView redirectView = new RedirectView("/");
         String email = (String) httpSession.getAttribute("email");
 
-        if (user.getEmail().equals(email)) {
-            userService.removeById(email);
-            httpSession.invalidate();
-        }
+        userService.removeById(user, email);
+        httpSession.invalidate();
 
-        return redirectView;
-    }
-
-    @ExceptionHandler(DuplicatedIdException.class)
-    public RedirectView handleDuplicatedIdError(RedirectAttributes redirectAttributes, DuplicatedIdException e) {
-        RedirectView redirectView = new RedirectView("/signup");
-        redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
-        return redirectView;
-    }
-
-    @ExceptionHandler(NotExistUserIdException.class)
-    public RedirectView handleNotExistIdError(RedirectAttributes redirectAttributes, NotExistUserIdException e) {
-        RedirectView redirectView = new RedirectView(e.getNextView());
-        redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
-        return redirectView;
-    }
-
-    @ExceptionHandler(InvalidUpdateException.class)
-    public RedirectView handleInvalidUpdateError(RedirectAttributes redirectAttributes, InvalidUpdateException e) {
-        RedirectView redirectView = new RedirectView("/mypage/edit");
-        redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
-        return redirectView;
-    }
-
-    @ExceptionHandler(NotMatchPasswordException.class)
-    public RedirectView handleNotMatchPasswordError(RedirectAttributes redirectAttributes, NotMatchPasswordException e) {
-        RedirectView redirectView = new RedirectView("/login");
-        redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
-        return redirectView;
-    }
-
-    @ExceptionHandler(BindException.class)
-    public RedirectView handleBindError(RedirectAttributes redirectAttributes, BindException e) {
-        RedirectView redirectView = new RedirectView("signup");
-
-        String errorMessages = e.getFieldErrors().stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.joining("\n"));
-
-        redirectAttributes.addFlashAttribute("errormessage", errorMessages);
         return redirectView;
     }
 }

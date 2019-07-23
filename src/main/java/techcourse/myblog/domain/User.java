@@ -49,6 +49,12 @@ public class User {
         this.password = user.password;
     }
 
+    public boolean authenticate(String password) {
+        return this.password.equals(password);
+    }
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,5 +66,9 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(email);
+    }
+
+    public boolean isDifferentEmail(String email) {
+        return !this.email.equals(email);
     }
 }
