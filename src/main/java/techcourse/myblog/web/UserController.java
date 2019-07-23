@@ -9,30 +9,25 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.*;
-import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.translator.ModelTranslator;
-import techcourse.myblog.translator.UserTranslator;
+import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserRepository userRepository;
-    private final ModelTranslator<User, UserDto> userTranslator;
+    private final UserService userService;
 
-    public UserController(final UserRepository userRepository) {
-        this.userRepository = userRepository;
-        this.userTranslator = new UserTranslator();
+    public UserController(final UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public String showAllUsers(Model model) {
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userService.fetchAllUsers());
         return "user-list";
     }
 
@@ -48,14 +43,7 @@ public class UserController {
             throw new SignUpInputException("회원 가입에 필요한 값이 잘못됐습니다. 확인해주세요");
         }
 
-        Optional<User> maybeUser = userRepository.findByEmail(userDto.getEmail());
-
-        if (maybeUser.isPresent()) {
-            throw new AlreadyExistUserException("이미 존재하는 이메일입니다.");
-        }
-
-        User user = userTranslator.toEntity(new User(), userDto);
-        userRepository.save(user);
+        userService.register(userDto);
         return new RedirectView("/auth/login");
     }
 
@@ -68,11 +56,10 @@ public class UserController {
     @GetMapping(path = {"/{email}", "/{email}/edit"})
     public String showMyPageEdit(@PathVariable String email, HttpServletRequest req, Model model) {
         HttpSession session = req.getSession();
-        String loginEmail = (String) session.getAttribute("email");
-        userAuthenticated(email, loginEmail);
+        String sessionEmail = (String) session.getAttribute("email");
 
-        Optional<User> maybeUser = userRepository.findByEmail(loginEmail);
-        model.addAttribute("user", maybeUser.orElseThrow(() -> new UserNotFoundException("해당 이메일로 가입된 유저가 없습니다.")));
+        User authenticatedUser = userService.getAuthenticatedUser(email, sessionEmail);
+        model.addAttribute("user", authenticatedUser);
 
         if (req.getRequestURI().contains("edit")) {
             return "mypage-edit";
@@ -81,40 +68,26 @@ public class UserController {
     }
 
     @PutMapping("/{email}")
-    public RedirectView myPageEditConfirm(@PathVariable String email, @Valid UserDto userDto, Errors errors, HttpSession session) {
+    public RedirectView myPageEdit(@PathVariable String email, @Valid UserDto userDto, Errors errors, HttpSession session) {
         if (errors.hasErrors()) {
             throw new UpdateUserInputException("잘못된 입력값입니다.");
         }
 
-        String loginEmail = (String) session.getAttribute("email");
-        userAuthenticated(email, loginEmail);
+        String sessionEmail = (String) session.getAttribute("email");
+        User updatedUser = userService.update(userDto, email, sessionEmail);
 
-        Optional<User> maybeUser = userRepository.findByEmail(email);
-        User updateUser = userTranslator.toEntity(maybeUser.orElseThrow(() ->
-                new UserNotFoundException("해당 이메일로 가입된 유저가 없습니다.")), userDto);
-        User updatedUser = userRepository.save(updateUser);
         session.setAttribute("username", updatedUser.getName());
-
         return new RedirectView("/users/" + email);
     }
 
     @DeleteMapping("/{email}")
     public RedirectView exitUser(@PathVariable String email, HttpSession session) {
-        String loginEmail = (String) session.getAttribute("email");
-        userAuthenticated(email, loginEmail);
+        String sessionEmail = (String) session.getAttribute("email");
 
-        userRepository.findByEmail(loginEmail).ifPresent(user -> {
-            userRepository.delete(user);
-            session.invalidate();
-        });
+        userService.exit(email, sessionEmail);
+        session.invalidate();
 
         return new RedirectView("/");
-    }
-
-    private void userAuthenticated(final String email, final String loginEmail) {
-        if (!loginEmail.equals(email)) {
-            throw new UserForbiddenException("인증 되지 않은 사용자입니다.");
-        }
     }
 
     @ExceptionHandler({UserNotFoundException.class, UserForbiddenException.class})

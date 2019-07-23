@@ -3,7 +3,6 @@ package techcourse.myblog.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,17 +22,6 @@ class UserTest {
                 .email(testEmail)
                 .password(testPassword)
                 .build();
-    }
-
-    @Test
-    void 생성_테스트() {
-        User testUser = User.builder()
-                .id(testId)
-                .name(testName)
-                .email(testEmail)
-                .password(testPassword)
-                .build();
-        assertThat(user).isEqualTo(testUser);
     }
 
     @Test
