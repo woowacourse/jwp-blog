@@ -6,8 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.LogInInfoDto;
-import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserPublicInfoDto;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.LogInException;
@@ -18,6 +18,8 @@ import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LogInServiceTest {
+    private User user;
+
     @Autowired
     LogInService logInService;
 
@@ -26,8 +28,8 @@ class LogInServiceTest {
 
     @BeforeEach
     void setUp() {
-        UserDto userDto = new UserDto("name", "email@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
-        userRepository.save(userDto.toEntity());
+        user = new User("name", "email@woowa.com", VALID_PASSWORD);
+        userRepository.save(user);
     }
 
     @Test
@@ -58,6 +60,6 @@ class LogInServiceTest {
 
     @AfterEach
     void tearDown() {
-        userRepository.deleteAll();
+        userRepository.delete(user);
     }
 }
