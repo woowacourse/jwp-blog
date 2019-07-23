@@ -29,10 +29,10 @@ public class ArticleController {
     }
 
     @PostMapping("")
-    public String saveArticle(ArticleSaveDto articleSaveDto, Model model) {
+    public String saveArticle(ArticleSaveDto articleSaveDto) {
         Article article = articleService.save(articleSaveDto.toEntity());
-        model.addAttribute("article", article);
-        return "article";
+        Long id = article.getId();
+        return "redirect:/articles/" + id;
     }
 
     @GetMapping("/{id}")
@@ -50,10 +50,9 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public String saveEditedArticle(@PathVariable long id, ArticleSaveDto articleSaveDto, Model model) {
+    public String saveEditedArticle(@PathVariable long id, ArticleSaveDto articleSaveDto) {
         articleService.update(articleSaveDto, id);
-        model.addAttribute("article", articleSaveDto.toEntity());
-        return "article";
+        return "redirect:/articles/" + id;
     }
 
     @DeleteMapping("/{id}")
