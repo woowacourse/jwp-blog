@@ -6,10 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import techcourse.myblog.dto.UserDto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -19,8 +16,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "name", length = 5, nullable = false)
     private String name;
+
+    @Column(name = "email", length = 30, nullable = false)
     private String email;
+
+    @Column(name = "password", length = 20, nullable = false)
     private String password;
 
     public User(String name, String email, String password) {
