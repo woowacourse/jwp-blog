@@ -12,7 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.Objects;
@@ -53,36 +52,20 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void showArticles() {
-        checkStatus(webTestClient.post(), "/articles");
-        Article article = articleRepository.findArticleByTitle(title);
-
-        uniContents = contents;
-        checkGetStatus("/")
-                .expectBody()
-                .consumeWith(this::checkBodyResponse);
-
-        deleteMethod(article.getId());
-    }
-
-    @Test
     void findArticleById() {
-        checkStatus(webTestClient.post(), "/articles");
-        checkGetStatus("/articles/1")
+        EntityExchangeResult<byte[]> result = addArticle();
+
+        checkGetStatus("/articles/" + getArticleId(result))
                 .expectBody()
                 .consumeWith(this::checkBodyResponse);
-        deleteMethod(1);
     }
 
     @Test
     void saveArticle() {
         checkStatus(webTestClient.post(), "/articles")
+                .expectStatus().is3xxRedirection()
                 .expectBody()
-                .consumeWith(this::checkBodyResponse);
-
-        Article article = articleRepository.findArticleByTitle(title);
-
-        deleteMethod(article.getId());
+                .returnResult();
     }
 
     @Test
@@ -91,26 +74,31 @@ public class ArticleControllerTests {
         coverUrl = "http://www.kinews.net/news/photo/200907/bjs.jpg";
         contents = "나는 우아한형제들에서 짱이다.";
         uniContents = StringEscapeUtils.escapeJava(contents);
-        checkStatus(webTestClient.post(), "/articles");
-        Article article = articleRepository.findArticleByTitle(title);
+        EntityExchangeResult<byte[]> result = addArticle();
 
-        checkStatus(webTestClient.put(), "/articles/" + article.getId())
+        int articleId = getArticleId(result);
+
+        checkStatus(webTestClient.put(), "/articles/" + articleId)
                 .expectBody()
                 .consumeWith(this::checkBodyResponse)
                 .returnResult();
-
-        deleteMethod(article.getId());
     }
 
     @Test
     void deleteTest() {
-        checkStatus(webTestClient.post(), "/articles");
-        Article article = articleRepository.findArticleByTitle(title);
-        deleteMethod(article.getId());
+        EntityExchangeResult<byte[]> result = addArticle();
 
-        webTestClient.get().uri("/articles/" + article.getId())
+        deleteMethod(getArticleId(result));
+
+        webTestClient.get().uri("/articles/" + getArticleId(result))
                 .exchange()
                 .expectStatus().is3xxRedirection();
+    }
+
+    private EntityExchangeResult<byte[]> addArticle() {
+        return checkStatus(webTestClient.post(), "/articles")
+                .expectBody()
+                .returnResult();
     }
 
     private WebTestClient.ResponseSpec checkStatus(WebTestClient.RequestBodyUriSpec requestMethod, String uri) {
@@ -121,8 +109,7 @@ public class ArticleControllerTests {
                         .fromFormData("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
-                .exchange()
-                .expectStatus().isOk();
+                .exchange();
     }
 
     private void deleteMethod(int id) {
@@ -143,6 +130,10 @@ public class ArticleControllerTests {
         return webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    private int getArticleId(EntityExchangeResult<byte[]> result) {
+        return Integer.parseInt(result.getResponseHeaders().getLocation().getPath().split("/")[2]);
     }
 }
 
