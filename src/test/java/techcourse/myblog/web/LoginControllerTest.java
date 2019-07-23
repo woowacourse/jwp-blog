@@ -42,12 +42,7 @@ public class LoginControllerTest {
                         .with("password", PASSWORD)
                 )
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertTrue(body.contains(NAME));
-                });
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
@@ -64,7 +59,7 @@ public class LoginControllerTest {
 
     @Test
     public void 로그인_실패_비밀번호가_다를때() {
-        final String wrongPassword = "12345678";
+        final String wrongPassword = PASSWORD + "12321";
 
         webTestClient.post().uri("/login")
                 .body(BodyInserters

@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User.User;
 import techcourse.myblog.domain.User.UserRepository;
+import techcourse.myblog.exception.NoSuchUserException;
+import techcourse.myblog.exception.PasswordMismatchException;
 import techcourse.myblog.web.UserRequestDto;
 
 import java.util.NoSuchElementException;
@@ -18,11 +20,16 @@ public class LoginService {
     }
 
     public User login(final UserRequestDto.LoginRequestDto loginRequestDto) {
-        return findByLoginRequestDto(loginRequestDto);
+        User user = findByLoginRequestDto(loginRequestDto);
+
+        if (user.isSamePassword(loginRequestDto.getPassword())) {
+            return user;
+        }
+        throw new PasswordMismatchException("비밀번호를 제대로 입력하세요");
     }
 
     private User findByLoginRequestDto(final UserRequestDto.LoginRequestDto loginRequestDto) {
         return userRepository.findByEmail(loginRequestDto.getEmail())
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(NoSuchUserException::new);
     }
 }

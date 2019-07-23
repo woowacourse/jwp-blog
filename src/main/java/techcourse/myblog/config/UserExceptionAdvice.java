@@ -1,10 +1,14 @@
-package techcourse.myblog.exception;
+package techcourse.myblog.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import techcourse.myblog.exception.NoSuchUserException;
+import techcourse.myblog.exception.PasswordMismatchException;
+import techcourse.myblog.exception.UserCreationException;
+import techcourse.myblog.exception.UserUpdateException;
 
 import java.util.NoSuchElementException;
 
@@ -18,6 +22,20 @@ public class UserExceptionAdvice {
         log.info(loggingException(e));
         model.addAttribute(ERROR_MESSAGE, "존재하지 않습니다");
         return "index";
+    }
+
+    @ExceptionHandler(NoSuchUserException.class)
+    public String handleNoSuchUserException(NoSuchUserException e, final Model model) {
+        log.info(loggingException(e));
+        model.addAttribute(ERROR_MESSAGE, e.getMessage());
+        return e.getUrl();
+    }
+
+    @ExceptionHandler(PasswordMismatchException.class)
+    public String handlePasswordMismatchException(PasswordMismatchException e, final Model model) {
+        log.info(loggingException(e));
+        model.addAttribute(ERROR_MESSAGE, e.getMessage());
+        return e.getUrl();
     }
 
     @ExceptionHandler(UserCreationException.class)

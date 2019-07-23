@@ -11,7 +11,6 @@ import techcourse.myblog.domain.User.User;
 import techcourse.myblog.service.LoginService;
 
 import javax.servlet.http.HttpSession;
-import java.util.NoSuchElementException;
 
 @Controller
 public class LoginController {
@@ -33,18 +32,13 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(final UserRequestDto.LoginRequestDto loginRequestDto, final HttpSession session, final Model model) {
-        try {
-            log.info("login...");
-            User user = loginService.login(loginRequestDto);
-            UserRequestDto.SessionDto sessionDto = UserRequestDto.SessionDto.toDto(user);
-            log.debug("user {} transform to {}", user, sessionDto);
-            session.setAttribute(Constants.SESSION_USER_NAME, sessionDto);
-            return "/index";
-        } catch (NoSuchElementException e) {
-            model.addAttribute(ERROR_MESSAGE_NAME, "비밀번호를 올바르게 입력하시거나 회원가입을 해주세요");
-        }
-        return "/user/login";
+    public String login(final UserRequestDto.LoginRequestDto loginRequestDto, final HttpSession session) {
+        log.info("login...");
+        User user = loginService.login(loginRequestDto);
+        UserRequestDto.SessionDto sessionDto = UserRequestDto.SessionDto.toDto(user);
+        log.debug("user {} transform to {}", user, sessionDto);
+        session.setAttribute(Constants.SESSION_USER_NAME, sessionDto);
+        return "redirect:/";
     }
 
     @GetMapping("/logout")
