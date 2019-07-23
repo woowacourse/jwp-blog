@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import techcourse.myblog.dto.ArticleSaveDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,5 +32,11 @@ public class Article {
 
     public boolean isCoverUrl() {
         return StringUtils.isNotBlank(coverUrl);
+    }
+
+    public void update(ArticleSaveDto articleSaveDto) {
+        this.title = articleSaveDto.getTitle();
+        this.coverUrl = articleSaveDto.getCoverUrl();
+        this.contents = articleSaveDto.getContents();
     }
 }

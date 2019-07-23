@@ -51,7 +51,7 @@ public class ArticleController {
 
     @PutMapping("/{id}")
     public String saveEditedArticle(@PathVariable long id, ArticleSaveDto articleSaveDto, Model model) {
-        articleService.update(articleSaveDto.toEntity(), id);
+        articleService.update(articleSaveDto, id);
         model.addAttribute("article", articleSaveDto.toEntity());
         return "article";
     }

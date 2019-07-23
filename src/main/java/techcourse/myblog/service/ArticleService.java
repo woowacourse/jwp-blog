@@ -3,8 +3,11 @@ package techcourse.myblog.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.dto.ArticleSaveDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.repository.ArticleRepository;
+
+import javax.transaction.Transactional;
 
 @Service
 public class ArticleService {
@@ -29,8 +32,10 @@ public class ArticleService {
                 .orElseThrow(() -> new ArticleNotFoundException(ERROR_ARTICLE_NOT_FOUND_MESSAGE));
     }
 
-    public void update(Article article, long id) {
-        articleRepository.update(article, id);
+    @Transactional
+    public void update(ArticleSaveDto articleSaveDto, long id) {
+        Article article = findById(id);
+        article.update(articleSaveDto);
     }
 
     public void deleteById(long id) {
