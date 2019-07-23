@@ -37,6 +37,11 @@ class UserRepositoryTest {
     }
 
     @Test
+    void 유저_존재() {
+        assertThat(userRepository.existsByEmail(TEST_EMAIL_1)).isEqualTo(true);
+    }
+
+    @Test
     void 유저_이메일_정보로_유저_찾기() {
         assertThat(userRepository.findByEmail(TEST_EMAIL_1)
                 .orElseThrow(() -> new UserNotExistException("유저정보가 없습니다."))

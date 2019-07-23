@@ -25,10 +25,14 @@ public class UserService {
     }
 
     public void save(UserDTO userDTO) {
-        if (isDuplicateEmail(userDTO)) {
+        if (isExistEmail(userDTO)) {
             throw new EmailRepetitionException("이미 사용중인 이메일입니다.");
         }
         userRepository.save(new User(userDTO.getUserName(), userDTO.getEmail(), userDTO.getPassword()));
+    }
+
+    private boolean isExistEmail(UserDTO userDTO) {
+        return userRepository.existsByEmail(userDTO.getEmail());
     }
 
     public User getLoginUser(LoginDTO loginDTO) {
@@ -52,26 +56,18 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public boolean isDuplicateEmail(UserDTO userDTO) {
-        return userRepository.findByEmail(userDTO.getEmail()).isPresent();
-//        return userRepository.findByEmail(userDTO.getEmail()) != null;
-    }
-
-    public void delete(String email) {
-//        userRepository.deleteUserByEmailAddress(email);
-    }
-
     @Transactional
     public User update(UserDTO userDTO) {
-//        log.error("email {} ", userDTO.getEmail());
-//        log.error("name {} ", userDTO.getUserName());
-//        log.error("password {} ", userDTO.getPassword());
-//        int result = userRepository.updateUserByEmailAddress(userDTO.getUserName(), userDTO.getPassword(), userDTO.getEmail());
-//        if (result == 0) {
-//            throw new UserNotExistException("유저정보가 없습니다.");
-//        }
+        User findUser = userRepository.findByEmail(userDTO.getEmail()).orElseThrow(() -> new UserNotExistException("유저 정보가 없습니다."));
+        findUser.setUserName(userDTO.getUserName());
+        findUser.setPassword(userDTO.getPassword());
+        userRepository.save(findUser);
 
-        return userRepository.findByEmail(userDTO.getEmail())
-                .orElseThrow(() -> new UserNotExistException("해당 아이디를 가진 유저는 존재하지 않습니다."));
+        return findUser;
+    }
+
+    public void delete(UserDTO userDTO) {
+        User findUser = userRepository.findByEmail(userDTO.getEmail()).orElseThrow(() -> new UserNotExistException("유저 정보가 없습니다."));
+        userRepository.delete(findUser);
     }
 }

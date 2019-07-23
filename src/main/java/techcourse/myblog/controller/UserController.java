@@ -69,8 +69,8 @@ public class UserController {
     }
 
     @DeleteMapping
-    public String deleteUser(@ModelAttribute User user, SessionStatus sessionStatus) {
-        userService.delete(user.getEmail());
+    public String deleteUser(UserDTO userDTO, SessionStatus sessionStatus) {
+        userService.delete(userDTO);
         sessionStatus.setComplete();
         return "redirect:/";
     }

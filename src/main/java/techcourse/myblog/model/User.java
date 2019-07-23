@@ -1,14 +1,14 @@
 package techcourse.myblog.model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@RequiredArgsConstructor
+@Data
 @Entity
+@EqualsAndHashCode
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
