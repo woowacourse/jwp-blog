@@ -1,7 +1,5 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.application.dto.ArticleDto;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
