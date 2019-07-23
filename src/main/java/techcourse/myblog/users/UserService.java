@@ -35,20 +35,20 @@ public class UserService {
 
     private void verifyPassword(UserDto.Register userDto) {
         if (!userDto.isValidPassword()) {
-            throw new ValidSingupException(PASSWORD_INVALID_MESSAGE, "password");
+            throw new ValidSingupException(PASSWORD_INVALID_MESSAGE);
         }
     }
 
     private void verifyDuplicateEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new ValidSingupException(EMAIL_DUPLICATE_MESSAGE, "email");
+            throw new ValidSingupException(EMAIL_DUPLICATE_MESSAGE);
         }
     }
 
     public UserDto.Response login(UserDto.Register userDto) {
         UserDto.Response userResponseDto = new UserDto.Response();
         User user = userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword())
-                .orElseThrow(() -> new ValidSingupException("존재하지 않는 이메일 또는 비밀번호가 틀립니다.", "password"));
+                .orElseThrow(() -> new ValidSingupException("존재하지 않는 이메일 또는 비밀번호가 틀립니다."));
 
         validateUser(user);
         BeanUtils.copyProperties(user, userResponseDto);
@@ -100,7 +100,7 @@ public class UserService {
 
         Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
         if (constraintViolations.size() != 0) {
-            throw new ValidSingupException("Domain Error", "id");
+            throw new ValidSingupException("Domain Error");
         }
     }
 }
