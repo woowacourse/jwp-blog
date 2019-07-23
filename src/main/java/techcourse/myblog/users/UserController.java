@@ -11,12 +11,12 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
+import static techcourse.myblog.users.UserSession.USER_SESSION;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
-    public static final String USER_SESSION = "user";
-
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;

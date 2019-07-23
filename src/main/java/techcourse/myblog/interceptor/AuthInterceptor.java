@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static techcourse.myblog.users.UserController.USER_SESSION;
+import static techcourse.myblog.users.UserSession.USER_SESSION;
 
 @Component
 public class AuthInterceptor extends HandlerInterceptorAdapter {
@@ -17,6 +17,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
         UserSession userSession = (UserSession) session.getAttribute(USER_SESSION);
+
         String path = request.getRequestURI();
 
         if (!ObjectUtils.isEmpty(userSession) && !path.contains(String.valueOf(userSession.getId()))) {

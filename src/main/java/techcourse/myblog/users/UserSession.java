@@ -4,6 +4,8 @@ import lombok.Getter;
 
 @Getter
 public class UserSession {
+    public static final String USER_SESSION = "user";
+
     private Long id;
     private String email;
     private String name;
