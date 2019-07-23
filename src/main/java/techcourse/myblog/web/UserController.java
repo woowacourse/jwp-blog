@@ -17,6 +17,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+import static techcourse.myblog.domain.User.UserService.LOGGED_IN_USER_SESSION_KEY;
+
 @Slf4j
 @Controller
 public class UserController {
@@ -67,14 +69,14 @@ public class UserController {
             return "login";
         }
 
-        request.getSession().setAttribute("user", user.get());
+        request.getSession().setAttribute(LOGGED_IN_USER_SESSION_KEY, user.get());
         return "redirect:" + request.getHeader("Referer");
 
     }
 
     @GetMapping("/logout")
     public String processLogout(HttpServletRequest request) {
-        request.getSession().removeAttribute("user");
+        request.getSession().removeAttribute(LOGGED_IN_USER_SESSION_KEY);
         return "redirect:/";
     }
 
@@ -88,7 +90,7 @@ public class UserController {
 
     @GetMapping("/accounts/profile/edit")
     public String showProfileEditPage(Model model, HttpSession session) {
-        model.addAttribute("userRequestDto", new UserRequestDto((User) session.getAttribute("user")));
+        model.addAttribute("userRequestDto", new UserRequestDto((User) session.getAttribute(LOGGED_IN_USER_SESSION_KEY)));
         return "mypage-edit";
     }
 
@@ -97,9 +99,8 @@ public class UserController {
         if (errors.hasErrors()) {
             return "mypage-edit";
         }
-        //userRepository.save(userRequestDto.toUser());
         userService.update(userRequestDto.getEmail(), userRequestDto);
-        request.getSession().setAttribute("user", userRequestDto.toUser());
+        request.getSession().setAttribute(LOGGED_IN_USER_SESSION_KEY, userRequestDto.toUser());
 
         return "redirect:/accounts/profile/" + userRequestDto.getId();
     }
@@ -113,9 +114,9 @@ public class UserController {
 
     @DeleteMapping("/accounts/delete")
     public String processDelete(HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
+        User user = (User) httpSession.getAttribute(LOGGED_IN_USER_SESSION_KEY);
         userRepository.deleteById(user.getId());
-        httpSession.removeAttribute("user");
+        httpSession.removeAttribute(LOGGED_IN_USER_SESSION_KEY);
         return "redirect:/";
     }
 }
