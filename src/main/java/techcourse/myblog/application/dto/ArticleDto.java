@@ -1,7 +1,5 @@
 package techcourse.myblog.application.dto;
 
-import techcourse.myblog.domain.Article;
-
 public class ArticleDto {
     private Long id;
     private String title;
