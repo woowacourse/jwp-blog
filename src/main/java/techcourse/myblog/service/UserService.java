@@ -49,7 +49,8 @@ public class UserService {
     }
 
     public List<User> getUsers() {
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+        return users;
     }
 
     @Transactional
@@ -67,11 +68,14 @@ public class UserService {
     }
 
     @Transactional
-    public void delete(UserDTO userDTO) {
-        User findUser = userRepository.findByEmail(userDTO.getEmail()).orElseThrow(() -> new UserNotExistException("유저 정보가 없습니다."));
+    public void delete(User user) {
+        log.info("email {} ", user.getEmail());
+        log.info("userName {} ", user.getUserName());
+        log.info("password {} ", user.getPassword());
+        User findUser = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new UserNotExistException("유저 정보가 없습니다."));
         userRepository.delete(findUser);
-        log.info("email {} ", userDTO.getEmail());
-        log.info("userName {} ", userDTO.getUserName());
-        log.info("password {} ", userDTO.getPassword());
+        log.info("email {} ", user.getEmail());
+        log.info("userName {} ", user.getUserName());
+        log.info("password {} ", user.getPassword());
     }
 }

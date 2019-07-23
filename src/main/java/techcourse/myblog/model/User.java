@@ -1,13 +1,13 @@
 package techcourse.myblog.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@NoArgsConstructor
+@RequiredArgsConstructor
 @EqualsAndHashCode
 public class User {
     @Id

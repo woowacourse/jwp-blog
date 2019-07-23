@@ -21,16 +21,16 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
-    private static final String SIGN_UP_PAGE = "/users/signup";
-    private static final String LOGIN_FAIL_PAGE = "/users/login";
-    private static final String USER_NAME_1 = "test1";
-    private static final String USER_NAME_2 = "test2";
+    private static final String USER_NAME_1 = "test";
+    private static final String USER_NAME_2 = "testtest";
     private static final String EMAIL_1 = "test1@test.com";
     private static final String EMAIL_2 = "test2@test.com";
-    private static final String PASSWORD_1 = "1234";
-    private static final String PASSWORD_2 = "12345";
+    private static final String PASSWORD_1 = "!Q@W3e4r";
+    private static final String PASSWORD_2 = "!@QW12qw";
+
     @Autowired
     WebTestClient webTestClient;
+
     private String cookie;
 
     @BeforeEach
@@ -96,12 +96,7 @@ class UserControllerTest {
                         .with("email", EMAIL_1)
                         .with("password", PASSWORD_1))
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    String url = response.getResponseHeaders().get("Location").get(0);
-                    assertThat(url.contains(SIGN_UP_PAGE)).isTrue();
-                });
+                .expectStatus().isOk();
     }
 
     @Test
@@ -134,13 +129,7 @@ class UserControllerTest {
                 .body(fromFormData("email", EMAIL_2)
                         .with("password", PASSWORD_1))
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    String url = response.getResponseHeaders().get("Location").get(0);
-                    assertThat(url.contains(LOGIN_FAIL_PAGE)).isTrue();
-                });
-
+                .expectStatus().isOk();
     }
 
     @Test
@@ -149,12 +138,7 @@ class UserControllerTest {
                 .body(fromFormData("email", EMAIL_1)
                         .with("password", PASSWORD_2))
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    String url = response.getResponseHeaders().get("Location").get(0);
-                    assertThat(url.contains(LOGIN_FAIL_PAGE)).isTrue();
-                });
+                .expectStatus().isOk();
     }
 
     private String getResponseBody(byte[] responseBody) {

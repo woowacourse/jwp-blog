@@ -43,6 +43,7 @@ public class UserController {
     @PostMapping
     public String create(@Valid UserDTO userDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            log.error(bindingResult.getFieldError().getDefaultMessage());
             throw new UserFromException(bindingResult.getFieldError().getDefaultMessage());
         }
         userService.save(userDTO);
@@ -65,12 +66,13 @@ public class UserController {
     @GetMapping
     public String showUsers(Model model) {
         model.addAttribute("users", userService.getUsers());
+        log.error("userService : {}", userService.getUsers().get(0).getUserName());
         return "user-list";
     }
 
     @DeleteMapping
-    public String deleteUser(UserDTO userDTO, SessionStatus sessionStatus) {
-        userService.delete(userDTO);
+    public String deleteUser(@ModelAttribute User user, SessionStatus sessionStatus) {
+        userService.delete(user);
         sessionStatus.setComplete();
         return "redirect:/";
     }

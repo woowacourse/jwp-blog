@@ -33,14 +33,6 @@ public class HomeControllerTest {
                 });
     }
 
-//    @Test
-//    void name() {
-//        webTestClient.post().uri("/")
-//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//                .header("Authorization", "Basic" + Base64Utils)
-//                .exchange();
-//    }
-
     private String getResponseBody(byte[] responseBody) {
         return new String(responseBody, StandardCharsets.UTF_8);
     }

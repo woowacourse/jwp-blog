@@ -25,8 +25,10 @@
                                                         <div class="mrg-btm-30">
                                                             <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                                 회원가입</h2>
-                                                            <span th:if="${error != null}" th:text="${error}" style="color:red">errorMessage</span>
-                                                            <span th:unless="${error != null}" id="error" style="color:red"></span>
+                                                            <span style="color:red" th:if="${error != null}"
+                                                                  th:text="${error}">errorMessage</span>
+                                                            <span id="error" style="color:red"
+                                                                  th:unless="${error != null}"></span>
                                                         </div>
                                                         <form action="/users" method="post" name="userForm">
                                                             <div class="form-group">

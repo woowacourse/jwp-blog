@@ -126,7 +126,7 @@ public class UserSerivceTest {
         userService.save(USER_DTO_1);
         given(userRepository.findByEmail(TEST_EMAIL_1)).willReturn(Optional.of(USER_1));
 
-        userService.delete(USER_DTO_1);
+        userService.delete(USER_1);
         verify(userRepository, atLeastOnce()).findByEmail(TEST_EMAIL_1);
 
         assertThat(userService.getUsers().size()).isEqualTo(0);
