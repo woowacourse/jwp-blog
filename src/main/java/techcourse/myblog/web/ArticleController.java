@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import javax.servlet.http.HttpSession;
+
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.request.ArticleDto;
 import techcourse.myblog.exception.NotFoundArticleException;
@@ -24,12 +26,18 @@ public class ArticleController {
 	}
 
 	@GetMapping("writing")
-	public String createArticle() {
+	public String createArticle(HttpSession httpSession) {
+		if(!existSession(httpSession)) {
+			return "redirect:/";
+		}
 		return "article-edit";
 	}
-
+//TODO: SAVE, EDIT시 USER ID
 	@PostMapping("articles")
-	public String saveArticle(ArticleDto articleDto) {
+	public String saveArticle(ArticleDto articleDto, HttpSession httpSession) {
+		if(!existSession(httpSession)) {
+			return "redirect:/";
+		}
 		Article article = articleDto.valueOfArticle();
 		Long id = articleRepository.save(article).getId();
 		return "redirect:/articles/" + id;
@@ -42,7 +50,10 @@ public class ArticleController {
 	}
 
 	@GetMapping("articles/{articleId}/edit")
-	public String editArticle(@PathVariable Long articleId, Model model) {
+	public String editArticle(@PathVariable Long articleId, Model model, HttpSession httpSession) {
+		if(!existSession(httpSession)) {
+			return "redirect:/";
+		}
 		getArticleWhenExists(articleId, model);
 		return "article-edit";
 	}
@@ -54,16 +65,26 @@ public class ArticleController {
 	}
 
 	@PutMapping("articles/{articleId}")
-	public String modifyArticle(@PathVariable Long articleId, ArticleDto articleDto) {
+	public String modifyArticle(@PathVariable Long articleId, ArticleDto articleDto, HttpSession httpSession) {
+		if(!existSession(httpSession)) {
+			return "redirect:/";
+		}
 		Article article = articleDto.valueOfArticle(articleId);
 		articleRepository.save(article);
 		return "redirect:/articles/" + articleId;
 	}
 
 	@DeleteMapping("articles/{articleId}")
-	public String deleteArticle(@PathVariable Long articleId) {
+	public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
+		if(!existSession(httpSession)) {
+			return "redirect:/";
+		}
 		articleRepository.deleteById(articleId);
 		return "redirect:/";
+	}
+
+	private boolean existSession(HttpSession httpSession) {
+		return (httpSession.getAttribute("email") != null);
 	}
 }
 
