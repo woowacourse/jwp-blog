@@ -3,6 +3,7 @@ package techcourse.myblog.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @NoArgsConstructor
@@ -14,8 +15,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @NotNull
     private String name;
+    @NotNull
     private String password;
+    @NotNull
+    @Column(unique=true)
     private String email;
 
     public User(String name, String password, String email) {
