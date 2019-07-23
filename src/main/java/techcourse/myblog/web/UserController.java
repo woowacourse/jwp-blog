@@ -11,10 +11,10 @@ import techcourse.myblog.exception.InvalidEditFormException;
 import techcourse.myblog.exception.InvalidSignUpFormException;
 import techcourse.myblog.service.UserService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,17 +22,17 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/signup")
-    public String renderSignUpPage(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return "signup";
-        }
-        return "redirect:/";
+    public String renderSignUpPage(HttpSession httpSession) {
+
+        return "signup";
     }
 
     @PostMapping("/users")
-    public RedirectView createUser(
-            @Valid UserDto.Create userDto, BindingResult bindingResult) {
+    public RedirectView createUser(HttpSession httpSession, @Valid UserDto.Create userDto, BindingResult bindingResult) {
+        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (userSession.isPresent()) {
+            return new RedirectView("/");
+        }
 
         if (bindingResult.hasErrors()) {
             throw new InvalidSignUpFormException(bindingResult.getFieldError().getDefaultMessage());
@@ -57,13 +57,14 @@ public class UserController {
     }
 
     @GetMapping("/mypage/{userId}/edit")
-    public String renderEditMypage(@PathVariable long userId, HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
+    public String renderEditMypage(@PathVariable long userId, HttpSession httpSession, Model model) {
+        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (!userSession.isPresent()) {
             return "redirect:/login";
         }
+
         UserDto.Response user = userService.findById(userId);
-        UserDto.Response sessionUser = (UserDto.Response) session.getAttribute("user");
+        UserDto.Response sessionUser = (UserDto.Response) userSession.get();
         if (!sessionUser.getEmail().equals(user.getEmail())) {
             return "redirect:/";
         }
@@ -72,31 +73,36 @@ public class UserController {
     }
 
     @PutMapping("/users/{userId}")
-    public RedirectView updateUser(@PathVariable long userId, HttpServletRequest request,
-                                   @Valid UserDto.Update userDto, BindingResult result) {
-        if (result.hasErrors()) {
-            request.setAttribute("user", userService.findById(userId));
-            throw new InvalidEditFormException(result.getFieldError().getDefaultMessage());
+    public RedirectView updateUser(@Valid UserDto.Update userDto, @PathVariable long userId,
+                                   HttpSession httpSession, BindingResult bindingResult) {
+        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (!userSession.isPresent()) {
+            return new RedirectView("/login");
         }
+
+        if (bindingResult.hasErrors()) {
+            throw new InvalidEditFormException(bindingResult.getFieldError().getDefaultMessage());
+        }
+
         UserDto.Response updatedUser = userService.update(userId, userDto);
-        HttpSession session = request.getSession(false);
-        session.setAttribute("user", updatedUser);
+        httpSession.setAttribute("user", updatedUser);
         return new RedirectView("/mypage/" + userId);
     }
 
     @DeleteMapping("/users/{userId}")
-    public RedirectView deleteUser(@PathVariable long userId, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
+    public RedirectView deleteUser(@PathVariable long userId, HttpSession httpSession) {
+        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (!userSession.isPresent()) {
             return new RedirectView("/login");
         }
+
         UserDto.Response user = userService.findById(userId);
-        UserDto.Response sessionUser = (UserDto.Response) session.getAttribute("user");
+        UserDto.Response sessionUser = userSession.get();
         if (!sessionUser.getEmail().equals(user.getEmail())) {
             return new RedirectView("/");
         }
         userService.deleteById(userId);
-        session.invalidate();
+        httpSession.removeAttribute("user");
         return new RedirectView("/");
     }
 }
