@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public RedirectView login(HttpSession httpSession, LoginDto loginDto) {
+    public RedirectView login(HttpSession httpSession, @Valid LoginDto loginDto) {
         userService.login(loginDto);
 
         RedirectView redirectView = new RedirectView("/");
