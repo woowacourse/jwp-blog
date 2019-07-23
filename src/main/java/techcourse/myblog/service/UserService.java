@@ -37,7 +37,7 @@ public class UserService {
 
     public User getLoginUser(LoginDTO loginDTO) {
         User findUser = checkUser(loginDTO);
-        if (!checkPassword(loginDTO.getPassword(), findUser.getPassword())) {
+        if (!findUser.authenticate(loginDTO.getPassword())) {
             throw new LoginFailException("아이디와 비밀번호가 일치하지 않습니다.");
         }
         return findUser;
@@ -46,10 +46,6 @@ public class UserService {
     private User checkUser(LoginDTO loginDTO) {
         return userRepository.findByEmail(loginDTO.getEmail())
                 .orElseThrow(() -> new UserNotExistException("해당 아이디를 가진 유저는 존재하지 않습니다."));
-    }
-
-    private boolean checkPassword(String password, String checkPassword) {
-        return password.equals(checkPassword);
     }
 
     public List<User> getUsers() {
@@ -63,11 +59,19 @@ public class UserService {
         findUser.setPassword(userDTO.getPassword());
         userRepository.save(findUser);
 
+        log.info("email {} ", userDTO.getEmail());
+        log.info("userName {} ", userDTO.getUserName());
+        log.info("password {} ", userDTO.getPassword());
+
         return findUser;
     }
 
+    @Transactional
     public void delete(UserDTO userDTO) {
         User findUser = userRepository.findByEmail(userDTO.getEmail()).orElseThrow(() -> new UserNotExistException("유저 정보가 없습니다."));
         userRepository.delete(findUser);
+        log.info("email {} ", userDTO.getEmail());
+        log.info("userName {} ", userDTO.getUserName());
+        log.info("password {} ", userDTO.getPassword());
     }
 }

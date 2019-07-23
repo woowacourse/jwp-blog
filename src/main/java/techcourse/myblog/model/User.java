@@ -23,4 +23,8 @@ public class User {
     @NonNull
     @Column(nullable = false)
     private String password;
+
+    public boolean authenticate(String checkPassword) {
+        return this.password.equals(checkPassword);
+    }
 }
