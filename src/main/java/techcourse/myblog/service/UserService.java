@@ -74,7 +74,7 @@ public class UserService {
         }
     }
 
-    public void updateUser(UserDto userDto) {
+    public void update(UserDto userDto) {
         String updatedName = userDto.getName();
         String email = userDto.getEmail();
         String password = userDto.getPassword();

@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -12,6 +12,7 @@ import techcourse.myblog.exception.FailedLoginException;
 import techcourse.myblog.exception.FailedPasswordVerificationException;
 import techcourse.myblog.exception.InvalidUserDataException;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.web.LoginUser;
 
 import javax.servlet.http.HttpSession;
 
@@ -25,13 +26,13 @@ public class UserController {
 
     @GetMapping("/signup")
     public String showSignup(HttpSession httpSession) {
-        if (httpSession.getAttribute("name") != null) {
+        if (httpSession.getAttribute("loginUser") != null) {
             return "redirect:/";
         }
         return "signup";
     }
 
-    @PostMapping("/users")
+    @PostMapping("/users/new")
     public String enrollUser(UserDto userDto) {
         userService.createUser(userDto);
         return "redirect:/login";
@@ -39,7 +40,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String showLogin(HttpSession httpSession) {
-        if (httpSession.getAttribute("name") != null) {
+        if (httpSession.getAttribute("loginUser") != null) {
             return "redirect:/";
         }
         return "login";
@@ -48,61 +49,51 @@ public class UserController {
     @PostMapping("/login")
     public String login(UserDto userDto, HttpSession httpSession) {
         User user = userService.findUserByEmailAndPassword(userDto);
-        httpSession.setAttribute("name", user.getName());
-        httpSession.setAttribute("email", user.getEmail());
+        httpSession.setAttribute("loginUser", new LoginUser(user.getName(), user.getEmail()));
         return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
-        if (httpSession.getAttribute("name") != null) {
-            httpSession.removeAttribute("name");
-            httpSession.removeAttribute("email");
+        if (httpSession.getAttribute("loginUser") != null) {
+            httpSession.removeAttribute("loginUser");
         }
         return "redirect:/";
     }
 
     @GetMapping("/users")
-    public String showUsers(Model model, HttpSession httpSession) {
-        if (httpSession.getAttribute("name") != null) {
-            model.addAttribute("users", userService.getAllUsers());
-            return "user-list";
-        }
-        return "redirect:/login";
+    public String showUsers(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "user-list";
     }
 
     @GetMapping("/mypage")
     public String showMypage(Model model, HttpSession httpSession) {
-        String email = (String) httpSession.getAttribute("email");
-        if (email != null) {
-            User user = userService.findUserByEmailAndPassword(email);
-            model.addAttribute("user", UserAssembler.writeDto(user));
-            return "mypage";
-        }
-        return "redirect:/login";
+        String email = ((LoginUser) httpSession.getAttribute("loginUser")).getEmail();
+        User user = userService.findUserByEmailAndPassword(email);
+        model.addAttribute("user", UserAssembler.writeDto(user));
+        return "mypage";
     }
 
     @GetMapping("/mypage/edit")
     public String showEditPage(Model model, HttpSession httpSession) {
-        String email = (String) httpSession.getAttribute("email");
-        if (email != null) {
-            User user = userService.findUserByEmailAndPassword(email);
-            model.addAttribute("user", UserAssembler.writeDto(user));
-            return "mypage-edit";
-        }
-        return "redirect:/login";
+        String email = ((LoginUser) httpSession.getAttribute("loginUser")).getEmail();
+        User user = userService.findUserByEmailAndPassword(email);
+        model.addAttribute("user", UserAssembler.writeDto(user));
+        return "mypage-edit";
     }
 
     @PutMapping("/mypage/edit")
     public String updateUser(UserDto userDto, HttpSession httpSession) {
-        userService.updateUser(userDto);
-        httpSession.setAttribute("name", userDto.getName());
+        userService.update(userDto);
+        httpSession.setAttribute("loginUser", new LoginUser(userDto.getName(), userDto.getEmail()));
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/mypage/delete")
     public String deleteUser(HttpSession httpSession) {
-        userService.deleteUser((String) httpSession.getAttribute("email"));
+        String email = ((LoginUser) httpSession.getAttribute("loginUser")).getEmail();
+        userService.deleteUser(email);
         return "redirect:/logout";
     }
 
