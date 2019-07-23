@@ -16,7 +16,6 @@ public class UserController {
     private static final Logger log =
             LoggerFactory.getLogger(UserController.class);
 
-    private static final String SESSION_NAME = "userInfo";
     private static final String ERROR_MESSAGE_NAME = "errorMessage";
 
     private final UserService userService;
@@ -47,7 +46,7 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public String myPage(@PathVariable Long id, final Model model, final HttpSession session) {
-        UserRequestDto.SessionDto sessionDto = (UserRequestDto.SessionDto) session.getAttribute(SESSION_NAME);
+        UserRequestDto.SessionDto sessionDto = (UserRequestDto.SessionDto) session.getAttribute(Constants.SESSION_USER_NAME);
         User user = userService.findById(id);
         log.debug("before authenticate...");
 
@@ -69,7 +68,7 @@ public class UserController {
 
     @GetMapping("/users/edit/{id}")
     public String editPage(@PathVariable Long id, final Model model, final HttpSession session) {
-        UserRequestDto.SessionDto sessionDto = (UserRequestDto.SessionDto) session.getAttribute(SESSION_NAME);
+        UserRequestDto.SessionDto sessionDto = (UserRequestDto.SessionDto) session.getAttribute(Constants.SESSION_USER_NAME);
         User user = userService.findById(id);
 
         if (isSessionMatch(user, sessionDto)) {
@@ -85,14 +84,14 @@ public class UserController {
 
         log.debug("updateRequestDto in update() : {}", updateRequestDto);
         User user = userService.update(updateRequestDto);
-        session.setAttribute(SESSION_NAME, UserRequestDto.SessionDto.toDto(user));
+        session.setAttribute(Constants.SESSION_USER_NAME, UserRequestDto.SessionDto.toDto(user));
         return "redirect:/users/" + user.getId();
     }
 
     @DeleteMapping("/users/{email}")
     public String delete(@PathVariable String email, final HttpSession session) {
         userService.deleteByEmail(email);
-        session.removeAttribute(SESSION_NAME);
+        session.removeAttribute(Constants.SESSION_USER_NAME);
         return "redirect:/";
     }
 }

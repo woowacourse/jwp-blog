@@ -17,13 +17,6 @@ import javax.servlet.http.HttpSession;
 public class LoginInterceptor extends HandlerInterceptorAdapter {
     private static final Logger log = LoggerFactory.getLogger(LoginInterceptor.class);
 
-    private final LoginService loginService;
-
-    @Autowired
-    public LoginInterceptor(final LoginService loginService) {
-        this.loginService = loginService;
-    }
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();

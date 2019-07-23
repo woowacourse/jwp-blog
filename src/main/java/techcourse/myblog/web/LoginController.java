@@ -17,7 +17,6 @@ public class LoginController {
     private static final Logger log =
             LoggerFactory.getLogger(LoginController.class);
 
-    private static final String SESSION_NAME = "userInfo";
     private static final String ERROR_MESSAGE_NAME = "errorMessage";
 
     private final LoginService loginService;
@@ -40,7 +39,7 @@ public class LoginController {
             User user = loginService.findByLoginRequestDto(loginRequestDto);
             UserRequestDto.SessionDto sessionDto = UserRequestDto.SessionDto.toDto(user);
             log.debug("user {} transform to {}", user, sessionDto);
-            session.setAttribute(SESSION_NAME, sessionDto);
+            session.setAttribute(Constants.SESSION_USER_NAME, sessionDto);
             return "/index";
         }
         model.addAttribute(ERROR_MESSAGE_NAME, "비밀번호를 올바르게 입력하시거나 회원가입을 해주세요");
@@ -49,7 +48,7 @@ public class LoginController {
 
     @GetMapping("/logout")
     public String logout(final HttpSession session) {
-        session.removeAttribute(SESSION_NAME);
+        session.removeAttribute(Constants.SESSION_USER_NAME);
         return "redirect:/";
     }
 
