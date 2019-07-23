@@ -1,7 +1,6 @@
 package techcourse.myblog.web;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -79,7 +78,7 @@ public class AccountController {
     }
 
     @PutMapping("/accounts/profile/edit")
-    public String processUpdateProfile(Model model, HttpServletRequest request, @Valid UserForm userForm, Errors errors) {
+    public String processUpdateProfile(HttpServletRequest request, @Valid UserForm userForm, Errors errors) {
         if (errors.hasErrors()) {
             return "mypage-edit";
         }
