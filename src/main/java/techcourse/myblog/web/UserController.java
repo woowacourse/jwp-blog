@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserLoginDto;
 
@@ -21,12 +20,9 @@ import java.util.Objects;
 @Controller
 @AllArgsConstructor
 public class UserController {
-    private static final String ERROR_MESSAGE = "message";
-    private static final String SESSION_NAME = "name";
-    private static final String SESSION_EMAIL = "signedEmail";
+    private static final String SESSION_USER = "user";
 
     private final UserService userService;
-    private final UserRepository userRepository;
 
     @GetMapping("/login/page")
     public String showLogin(HttpSession httpSession) {
@@ -40,8 +36,8 @@ public class UserController {
     public String userLogin(@Valid UserLoginDto loginDto, BindingResult bindingResult, HttpSession httpSession) {
         checkBindingError(bindingResult);
         User user = userService.login(loginDto);
-        httpSession.setAttribute(SESSION_NAME, user.getName());
-        httpSession.setAttribute(SESSION_EMAIL, user.getEmail());
+        UserSession userSession = new UserSession(user);
+        setUserSession(httpSession, userSession);
         return "redirect:/";
     }
 
@@ -76,20 +72,21 @@ public class UserController {
     public String completeEditMypage(HttpSession httpSession, @Valid UserDto userDto, BindingResult bindingResult) {
         checkBindingError(bindingResult);
 
-        String sessionEmail = httpSession.getAttribute(SESSION_EMAIL).toString();
+        String sessionEmail = getUserSession(httpSession).getEmail();
         String email = userDto.getEmail();
         if (!sessionEmail.equals(email)) {
             throw new UserException("잘못된 접근입니다.");
         }
 
         User user = userService.update(userDto);
-        httpSession.setAttribute(SESSION_NAME, user.getName());
+        UserSession userSession = new UserSession(user);
+        setUserSession(httpSession, userSession);
         return "redirect:/mypage";
     }
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userService.findAll());
         return "user-list";
     }
 
@@ -101,7 +98,7 @@ public class UserController {
 
     @DeleteMapping("/user")
     public String deleteUser(HttpSession httpSession) {
-        userService.delete(httpSession.getAttribute(SESSION_EMAIL).toString());
+        userService.delete(getUserSession(httpSession).getEmail());
         httpSession.invalidate();
         return "redirect:/";
     }
@@ -114,16 +111,25 @@ public class UserController {
     }
 
     private boolean checkLogedIn(HttpSession httpSession) {
-        return !Objects.isNull(httpSession.getAttribute(SESSION_EMAIL));
+        return !Objects.isNull(httpSession.getAttribute(SESSION_USER));
     }
 
     private void initMyPage(HttpSession httpSession, Model model) {
-        String email = httpSession.getAttribute(SESSION_EMAIL).toString();
+        UserSession userSession = getUserSession(httpSession);
+        String email = userSession.getEmail();
 
-        User user = userRepository.findUserByEmail(email);
+        User user = userService.findUserByEmail(email);
         if (Objects.isNull(user)) {
             throw new UserException("잘못된 접근입니다.");
         }
         model.addAttribute("user", user);
+    }
+
+    private UserSession getUserSession(HttpSession httpSession) {
+        return (UserSession) httpSession.getAttribute(SESSION_USER);
+    }
+
+    private void setUserSession(HttpSession httpSession, UserSession userSession) {
+        httpSession.setAttribute(SESSION_USER, userSession);
     }
 }
