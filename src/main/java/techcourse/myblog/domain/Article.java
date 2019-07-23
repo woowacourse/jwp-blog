@@ -56,10 +56,6 @@ public class Article {
         this.coverUrl = modifiedArticle.coverUrl;
     }
 
-    public boolean matchId(long id) {
-        return this.id == id;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
