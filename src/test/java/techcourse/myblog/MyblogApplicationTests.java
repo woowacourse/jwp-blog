@@ -9,6 +9,5 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SpringBootTest
 public class MyblogApplicationTests {
     @Test
-    void contextLoads() {
-    }
+    void contextLoads() {}
 }
