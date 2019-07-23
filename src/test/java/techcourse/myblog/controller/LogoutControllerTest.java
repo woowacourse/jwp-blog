@@ -15,7 +15,7 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 class LogoutControllerTest {
     private static final String USER_NAME_1 = "test1";
     private static final String EMAIL_1 = "test1@test.com";
-    private static final String PASSWORD_1 = "1234";
+    private static final String PASSWORD_1 = "12345678";
     private static final String LOGIN_TEXT = "Login";
 
     private WebTestClient webTestClient;
@@ -60,8 +60,14 @@ class LogoutControllerTest {
 
     @AfterEach
     void tearDown() {
+        cookie = webTestClient.post().uri("login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("email", EMAIL_1)
+                        .with("password", PASSWORD_1))
+                .exchange()
+                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+
         webTestClient.delete().uri("/users").header("Cookie", cookie)
                 .exchange();
     }
-
 }

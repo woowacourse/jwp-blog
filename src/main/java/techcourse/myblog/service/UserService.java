@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.UserDTO;
 import techcourse.myblog.exception.EmailRepetitionException;
 import techcourse.myblog.exception.UserNotExistException;
@@ -39,6 +40,7 @@ public class UserService {
         return userRepository.findByEmail(userDTO.getEmail()) != null;
     }
 
+    @Transactional
     public void delete(String email) {
         userRepository.removeByEmail(email);
     }

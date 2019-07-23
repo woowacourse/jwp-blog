@@ -17,7 +17,7 @@ public class LoginControllerTest {
     private static final String USER_NAME_1 = "test1";
     private static final String EMAIL_1 = "test1@test.com";
     private static final String EMAIL_2 = "test2@test.com";
-    private static final String PASSWORD_1 = "1234";
+    private static final String PASSWORD_1 = "123456789";
     private static final String PASSWORD_2 = "12345";
 
     private WebTestClient webTestClient;

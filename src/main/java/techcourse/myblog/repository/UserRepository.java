@@ -8,12 +8,11 @@ import techcourse.myblog.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update User u set u.userName = ?1, u.password = ?2 where u.email = ?3")
     int updateUserByEmailAddress(String userName, String password, String email);
 
     User findByEmail(String email);
 
-    @Transactional
     void removeByEmail(String email);
 }
