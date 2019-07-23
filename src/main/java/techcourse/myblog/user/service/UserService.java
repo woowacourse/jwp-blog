@@ -19,7 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public void save(UserDto.Create userDto) {
+    public void save(UserDto.Creation userDto) {
         User newUser = userDto.toUser();
         if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
             throw new DuplicatedUserException();
@@ -49,7 +49,7 @@ public class UserService {
         return modelMapper.map(user, UserDto.Response.class);
     }
 
-    public UserDto.Response update(long userId, UserDto.Update userDto) {
+    public UserDto.Response update(long userId, UserDto.Updation userDto) {
         User user = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
         User updatedUser = userDto.toUser(userId, user.getEmail(), user.getPassword());
         return modelMapper.map(userRepository.save(updatedUser), UserDto.Response.class);

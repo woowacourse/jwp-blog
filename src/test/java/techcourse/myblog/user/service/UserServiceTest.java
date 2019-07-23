@@ -43,12 +43,12 @@ class UserServiceTest {
                 .name("name")
                 .build();
 
-        userService.save(modelMapper.map(user, UserDto.Create.class));
+        userService.save(modelMapper.map(user, UserDto.Creation.class));
     }
 
     @Test
     void 회원정보_등록시_예외처리() {
-        UserDto.Create duplicatedUser = modelMapper.map(user, UserDto.Create.class);
+        UserDto.Creation duplicatedUser = modelMapper.map(user, UserDto.Creation.class);
         assertThrows(DuplicatedUserException.class, () -> userService.save(duplicatedUser));
     }
 
@@ -99,7 +99,7 @@ class UserServiceTest {
                 .password("password")
                 .name("updatedName")
                 .build();
-        UserDto.Response result = userService.update(userId, modelMapper.map(updatedUser, UserDto.Update.class));
+        UserDto.Response result = userService.update(userId, modelMapper.map(updatedUser, UserDto.Updation.class));
         assertThat(result).isEqualTo(modelMapper.map(updatedUser, UserDto.Response.class));
     }
 

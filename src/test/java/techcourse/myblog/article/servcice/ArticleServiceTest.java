@@ -38,7 +38,7 @@ class ArticleServiceTest {
                 .contents("contents")
                 .build();
 
-        articleService.save(modelMapper.map(article, ArticleDto.Create.class));
+        articleService.save(modelMapper.map(article, ArticleDto.Creation.class));
     }
 
     @Test
@@ -60,7 +60,7 @@ class ArticleServiceTest {
                 .coverUrl("updatedCoverUrl")
                 .contents("updatedContents")
                 .build();
-        long updatedArticleId = articleService.update(articleId, modelMapper.map(updatedUser, ArticleDto.Update.class));
+        long updatedArticleId = articleService.update(articleId, modelMapper.map(updatedUser, ArticleDto.Updation.class));
         assertThat(articleService.findById(updatedArticleId))
                 .isEqualTo(modelMapper.map(updatedUser, ArticleDto.Response.class));
     }

@@ -24,7 +24,7 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    public long save(ArticleDto.Create articleDto) {
+    public long save(ArticleDto.Creation articleDto) {
         Article newArticle = articleDto.toArticle();
         return articleRepository.save(newArticle).getId();
     }
@@ -34,7 +34,7 @@ public class ArticleService {
         return modelMapper.map(article, ArticleDto.Response.class);
     }
 
-    public long update(long articleId, ArticleDto.Update articleDto) {
+    public long update(long articleId, ArticleDto.Updation articleDto) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
         Article updatedArticle = articleDto.toArticle(article.getId());
         return articleRepository.save(updatedArticle).getId();

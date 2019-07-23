@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public RedirectView createUser(@Valid UserDto.Create userDto, BindingResult bindingResult) {
+    public RedirectView createUser(@Valid UserDto.Creation userDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidSignUpFormException(bindingResult.getFieldError().getDefaultMessage());
         }
@@ -61,7 +61,7 @@ public class UserController {
 
     @PutMapping("/users/{userId}")
     public RedirectView updateUser(@PathVariable long userId, HttpSession session,
-                                   @Valid UserDto.Update userDto, BindingResult result) {
+                                   @Valid UserDto.Updation userDto, BindingResult result) {
         if (result.hasErrors()) {
             throw new InvalidEditFormException(result.getFieldError().getDefaultMessage());
         }

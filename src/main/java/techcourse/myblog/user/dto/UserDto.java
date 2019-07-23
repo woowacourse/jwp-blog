@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 public class UserDto {
 
     @Data
-    public static class Create {
+    public static class Creation {
         @Email(message = "올바른 email 형식이 아닙니다.")
         private String email;
 
@@ -31,7 +31,7 @@ public class UserDto {
     }
 
     @Data
-    public static class Update {
+    public static class Updation {
         @Pattern(regexp = "[A-Za-zㄱ-ㅎㅏ-ㅣ가-힣]{2,10}",
                 message = "올바른 이름 형식이 아닙니다.")
         private String name;

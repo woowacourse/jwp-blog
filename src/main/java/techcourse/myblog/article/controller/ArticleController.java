@@ -25,7 +25,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(ArticleDto.Create articleDto) {
+    public String createArticle(ArticleDto.Creation articleDto) {
         long newArticleId = articleService.save(articleDto);
         return "redirect:/articles/" + newArticleId;
     }
@@ -43,7 +43,7 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable long articleId, ArticleDto.Update articleDto) {
+    public String updateArticle(@PathVariable long articleId, ArticleDto.Updation articleDto) {
         long updatedArticleId = articleService.update(articleId, articleDto);
         return "redirect:/articles/" + updatedArticleId;
     }
