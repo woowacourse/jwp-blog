@@ -31,4 +31,8 @@ public class User {
     public boolean authenticate(String email, String password) {
         return this.email.equals(email) && this.password.equals(password);
     }
+
+    public boolean equals(String email) {
+        return this.email.equals(email);
+    }
 }
