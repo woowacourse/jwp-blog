@@ -40,6 +40,12 @@ class UserRepositoryTest {
         assertThat(userRepository.findByEmail(TEST_EMAIL_1).getPassword()).isEqualTo(TEST_PASSWORD_2);
     }
 
+    @Test
+    void 유저_삭제() {
+        userRepository.deleteAll();
+        assertThat(userRepository.findByEmail(TEST_EMAIL_1)).isEqualTo(null);
+    }
+
     @AfterEach
     void tearDown() {
         userRepository.deleteAll();
