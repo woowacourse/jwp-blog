@@ -1,4 +1,4 @@
-package techcourse.myblog.web.exception;
+package techcourse.myblog.service.exception;
 
 public class UserArticleMissmatchException extends RuntimeException {
     public UserArticleMissmatchException() {

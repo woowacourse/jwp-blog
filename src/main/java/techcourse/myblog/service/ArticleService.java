@@ -5,7 +5,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.service.exception.NotFoundArticleException;
-import techcourse.myblog.web.exception.UserArticleMissmatchException;
+import techcourse.myblog.service.exception.UserArticleMissmatchException;
 
 import java.util.List;
 import java.util.stream.Collectors;
