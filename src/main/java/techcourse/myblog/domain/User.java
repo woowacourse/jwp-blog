@@ -5,9 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@EqualsAndHashCode(of = {"id"})
+@Getter
 @ToString
-@Data
+@EqualsAndHashCode(of = {"id"})
 @NoArgsConstructor
 public class User {
     public User(String name, String password, String email) {
@@ -30,3 +30,4 @@ public class User {
     private String password;
     private String email;
 }
+
