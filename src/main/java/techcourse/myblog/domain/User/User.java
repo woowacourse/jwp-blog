@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 @NoArgsConstructor
 @Getter
-@Setter
 @EqualsAndHashCode(of = {"id"})
 @ToString
 public class User {

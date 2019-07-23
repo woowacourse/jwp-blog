@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 @NoArgsConstructor
 @Getter
-@Setter
 @EqualsAndHashCode
 @ToString
 public class Article {
