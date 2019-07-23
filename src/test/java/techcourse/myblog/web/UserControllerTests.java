@@ -153,6 +153,51 @@ public class UserControllerTests {
     }
 
     @Test
+    void 로그인_후_userlist_정상_이동() {
+        String cookie = getCookie();
+        webTestClient.get().uri("/users")
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus()
+                .isOk()
+        ;
+    }
+
+    @Test
+    void 로그인_후_mypage_정상_이동() {
+        String cookie = getCookie();
+        webTestClient.get().uri("/mypage")
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus()
+                .isOk()
+        ;
+    }
+
+    @Test
+    void 로그인_후_mypageedit_정상_이동() {
+        String cookie = getCookie();
+        webTestClient.get().uri("/mypage-edit")
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus()
+                .isOk()
+        ;
+    }
+
+    private String getCookie() {
+        return webTestClient.post().uri("/login")
+                .body(BodyInserters.fromFormData("email", "test@gmail.com")
+                        .with("password", "PassWord1!"))
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .getFirst("Set-Cookie");
+    }
+
+    @Test
     void 회원_이름_정상_수정() {
         webTestClient.put().uri("/users/1")
                 .body(BodyInserters.fromFormData("name", "editName"))
