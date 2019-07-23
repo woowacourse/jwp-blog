@@ -23,9 +23,6 @@ public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
 
-    @Autowired
-    private ArticleRepository articleRepository;
-
     @Test
     void index() {
         webTestClient.get().uri("/")
