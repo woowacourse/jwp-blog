@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
@@ -33,9 +32,6 @@ public class UserRequestDto {
     }
 
     public User toUser() {
-        if (id != BLANK_USER_ID) {
-            return new User(id, name, password, email);
-        }
         return new User(name, password, email);
     }
 }

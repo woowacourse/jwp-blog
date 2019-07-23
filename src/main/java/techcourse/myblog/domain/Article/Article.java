@@ -30,11 +30,4 @@ public class Article {
         this.contents = contents;
         this.coverUrl = coverUrl;
     }
-
-    public Article(long id, String title, String contents, String coverUrl) {
-        this.id = id;
-        this.title = title;
-        this.contents = contents;
-        this.coverUrl = coverUrl;
-    }
 }
