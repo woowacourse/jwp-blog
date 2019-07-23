@@ -17,7 +17,7 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    public Article() {
+    private Article() {
     }
 
     public Article(Long userId, String title, String coverUrl, String contents) {
