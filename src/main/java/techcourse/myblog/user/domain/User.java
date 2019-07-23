@@ -31,6 +31,10 @@ public class User {
         this.name = validateName(name);
     }
 
+    public void update(String name) {
+        this.name = validateName(name);
+    }
+
     private String validateEmail(final String email) {
         String emailRegex = "^[_a-zA-Z0-9-.]+@[.a-zA-Z0-9-]+\\.[a-zA-Z]+$";
         if (!email.matches(emailRegex)) {

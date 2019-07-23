@@ -3,6 +3,7 @@ package techcourse.myblog.article.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.domain.ArticleRepository;
 import techcourse.myblog.article.dto.ArticleDto;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final ModelMapper modelMapper;
@@ -36,8 +38,8 @@ public class ArticleService {
 
     public long update(long articleId, ArticleDto.Updation articleDto) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        Article updatedArticle = articleDto.toArticle(article.getId());
-        return articleRepository.save(updatedArticle).getId();
+        article.update(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
+        return article.getId();
     }
 
     public void deleteById(long articleId) {

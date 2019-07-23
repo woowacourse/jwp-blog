@@ -30,4 +30,10 @@ public class Article {
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
+
+    public void update(String title, String coverUrl, String contents) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+    }
 }

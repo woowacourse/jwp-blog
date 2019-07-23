@@ -3,6 +3,7 @@ package techcourse.myblog.user.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.domain.UserRepository;
 import techcourse.myblog.user.dto.UserDto;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
@@ -51,8 +53,8 @@ public class UserService {
 
     public UserDto.Response update(long userId, UserDto.Updation userDto) {
         User user = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
-        User updatedUser = userDto.toUser(userId, user.getEmail(), user.getPassword());
-        return modelMapper.map(userRepository.save(updatedUser), UserDto.Response.class);
+        user.update(userDto.getName());
+        return modelMapper.map(user, UserDto.Response.class);
     }
 
     public void deleteById(long userId) {
