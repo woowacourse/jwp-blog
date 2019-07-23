@@ -1,19 +1,15 @@
 package techcourse.myblog.domain;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpSession;
-
 import lombok.RequiredArgsConstructor;
+import techcourse.myblog.domain.exception.NotFoundUserException;
+import techcourse.myblog.domain.exception.NotMatchPasswordException;
 import techcourse.myblog.dto.UserDto;
 
 @Service
@@ -28,61 +24,32 @@ public class UserService {
         return allUsers;
     }
 
-    public RedirectView create(UserDto userDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("userDto", userDto);
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return new RedirectView("/signup");
-        }
-
-        try {
-            userRepository.save(userDto.toUser());
-        } catch (DataIntegrityViolationException e) {
-            bindingResult.addError(new FieldError("userDto", "email", "이미 존재하는 email입니다."));
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return new RedirectView("/signup");
-        }
-
-        return new RedirectView("/login");
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
-    public RedirectView update(UserDto userDto, BindingResult bindingResult, HttpSession session, RedirectAttributes redirectAttributes) {
-        User user = (User) session.getAttribute("user");
-
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("user", user);
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return new RedirectView("/mypage/edit");
-        }
-
-        user.modifyName(userDto.getName());
-        userRepository.save(user);
-        return new RedirectView("/mypage");
+    public void update(User originalUser, User modifiedUser) {
+        originalUser.modifyName(modifiedUser.getName());
+        userRepository.save(originalUser);
     }
 
-    public RedirectView login(UserDto userDto, BindingResult bindingResult, HttpSession session, RedirectAttributes redirectAttributes) {
+    public User login(UserDto userDto) {
         Optional<User> loginUser = userRepository.findByEmail(userDto.getEmail());
 
         if (!loginUser.isPresent()) {
-            bindingResult.addError(new FieldError("userDto", "email", "이메일을 확인해주세요."));
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return new RedirectView("/login");
+            throw new NotFoundUserException("이메일을 확인해주세요.");
         }
 
         if (!loginUser.get().matchPassword(userDto.toUser())) {
-            bindingResult.addError(new FieldError("userDto", "password", "비밀번호를 확인해주세요."));
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return new RedirectView("/login");
+            throw new NotMatchPasswordException("비밀번호를 확인해주세요.");
         }
 
-        session.setAttribute("user", loginUser.get());
-        return new RedirectView("/");
+        return loginUser.get();
     }
 
-    public RedirectView delete(User user) {
+    public void delete(User user) {
         if (user != null && user.matchEmail(user)) {
             userRepository.delete(user);
         }
-        return new RedirectView("/");
     }
 }
