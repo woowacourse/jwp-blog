@@ -35,11 +35,6 @@ public class RootController {
         return "index";
     }
 
-    @GetMapping("/error")
-    public String error() {
-        return "error";
-    }
-
     @GetMapping("/{categoryId}")
     public String index(@PathVariable final long categoryId, Model model) {
         List<ArticleDto> articles = articleService.readByCategoryId(categoryId);
