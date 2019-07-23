@@ -1,9 +1,9 @@
-package techcourse.myblog.domain.service;
+package techcourse.myblog.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.model.User;
-import techcourse.myblog.domain.repository.UserRepository;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.persistence.UserRepository;
 
 import java.util.List;
 
@@ -21,13 +21,6 @@ public class UserService {
         return userRepository.findUsersByEmail(email).size() != USER_NOT_EXIST;
     }
 
-    public boolean notExistUserEmail(String email) {
-        return userRepository.findUserByEmail(email) == null;
-    }
-
-    public boolean matchEmailAndPassword(String email, String password) {
-        return userRepository.findUserByEmail(email).matchPassword(password);
-    }
 
     public User updateName(long id, String name) {
         User user = userRepository.findUserById(id);
@@ -51,7 +44,4 @@ public class UserService {
         return userRepository.findUserById(id);
     }
 
-    public User findUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
-    }
 }

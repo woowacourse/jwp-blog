@@ -1,13 +1,10 @@
-package techcourse.myblog.web;
+package techcourse.myblog.presentation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techcourse.myblog.domain.dto.UserRequestDto;
-import techcourse.myblog.domain.service.ArticleService;
-
-import javax.servlet.http.HttpSession;
+import techcourse.myblog.service.ArticleService;
 
 @Controller
 public class MainController {
@@ -29,22 +26,5 @@ public class MainController {
         return "article-edit";
     }
 
-    @GetMapping("/login")
-    public String moveLoginPage(HttpSession httpSession) {
-        if (httpSession.getAttribute("user") != null) {
-            return "redirect:/";
-        }
-        return "login";
-    }
 
-    @GetMapping("/logout")
-    public String logout(HttpSession httpSession) {
-        httpSession.removeAttribute("user");
-        return "redirect:/";
-    }
-
-    @GetMapping("/signup")
-    public String moveSignUpPage(UserRequestDto userRequestDto) {
-        return "signup";
-    }
 }

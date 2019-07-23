@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.presentation;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,12 +22,6 @@ public class MainControllerTests {
 
     @Test
     void index_페이지_조회() {
-        log.trace("A TRACE Message");
-        log.debug("A DEBUG Message");
-        log.info("An INFO Message");
-        log.warn("A WARN Message");
-        log.error("An ERROR Message");
-
         statusIsOk(HttpMethod.GET, "/");
     }
 

@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.presentation;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +16,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
-import static techcourse.myblog.domain.dto.UserRequestDto.*;
+import static techcourse.myblog.service.dto.UserRequestDto.*;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)

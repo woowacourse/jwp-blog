@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.presentation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -7,11 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.model.User;
-import techcourse.myblog.domain.dto.LoginRequestDto;
-import techcourse.myblog.domain.dto.UserUpdateDto;
-import techcourse.myblog.domain.dto.UserRequestDto;
-import techcourse.myblog.domain.service.UserService;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.service.dto.UserUpdateDto;
+import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -50,23 +49,6 @@ public class UserController {
     public String selectAllUsers(Model model) {
         model.addAttribute("users", userService.findAll());
         return "user-list";
-    }
-
-    @PostMapping("/login")
-    public String login(LoginRequestDto loginRequestDto, Model model, HttpSession httpSession) {
-        String requestEmail = loginRequestDto.getEmail();
-        if (userService.notExistUserEmail(requestEmail)) {
-            model.addAttribute("error", true);
-            model.addAttribute("message", "존재하지않는 email입니다.");
-            return "login";
-        }
-        if (!userService.matchEmailAndPassword(requestEmail, loginRequestDto.getPassword())) {
-            model.addAttribute("error", true);
-            model.addAttribute("message", "비밀번호가 일치하지않습니다.");
-            return "login";
-        }
-        httpSession.setAttribute("user", userService.findUserByEmail(requestEmail));
-        return "redirect:/";
     }
 
     @Transactional
@@ -113,4 +95,10 @@ public class UserController {
         httpSession.setAttribute("user", user);
         return "redirect:/mypage/" + user.getId();
     }
+
+    @GetMapping("/signup")
+    public String moveSignUpPage(UserRequestDto userRequestDto) {
+        return "signup";
+    }
+
 }

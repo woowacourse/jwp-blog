@@ -1,4 +1,4 @@
-package techcourse.myblog.domain.model;
+package techcourse.myblog.domain;
 
 import javax.persistence.*;
 
