@@ -5,10 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserLoginDto;
@@ -24,9 +25,10 @@ public class UserController {
     private static final String SESSION_NAME = "name";
     private static final String SESSION_EMAIL = "signedEmail";
 
+    private final UserService userService;
     private final UserRepository userRepository;
 
-    @GetMapping("/login")
+    @GetMapping("/login/page")
     public String showLogin(HttpSession httpSession) {
         if (checkLogedIn(httpSession)) {
             return "redirect:/";
@@ -37,16 +39,7 @@ public class UserController {
     @PostMapping("/login")
     public String userLogin(@Valid UserLoginDto loginDto, BindingResult bindingResult, HttpSession httpSession) {
         checkBindingError(bindingResult);
-
-        User user = userRepository.findUserByEmail(loginDto.getEmail());
-        if (Objects.isNull(user)) {
-            throw new UserException("아이디가 올바르지 않습니다.");
-        }
-
-        if (!user.checkPassword(loginDto.getPassword())) {
-            throw new UserException("올바르지 않은 비밀번호 입니다.");
-        }
-
+        User user = userService.login(loginDto);
         httpSession.setAttribute(SESSION_NAME, user.getName());
         httpSession.setAttribute(SESSION_EMAIL, user.getEmail());
         return "redirect:/";
@@ -63,9 +56,7 @@ public class UserController {
     @PostMapping("/join")
     public String signUp(@Valid UserDto userDto, BindingResult bindingResult) {
         checkBindingError(bindingResult);
-
-        User user = UserAssembler.writeUser(userDto);
-        userRepository.save(user);
+        userService.save(userDto);
         return "redirect:/login";
     }
 
@@ -84,17 +75,15 @@ public class UserController {
     @PutMapping("/mypage/save")
     public String completeEditMypage(HttpSession httpSession, @Valid UserDto userDto, BindingResult bindingResult) {
         checkBindingError(bindingResult);
+
         String sessionEmail = httpSession.getAttribute(SESSION_EMAIL).toString();
         String email = userDto.getEmail();
-
         if (!sessionEmail.equals(email)) {
             throw new UserException("잘못된 접근입니다.");
         }
-        User user = userRepository.findUserByEmail(userDto.getEmail());
-        user.update(userDto);
-        userRepository.save(user);
-        httpSession.setAttribute(SESSION_NAME, user.getName());
 
+        User user = userService.update(userDto);
+        httpSession.setAttribute(SESSION_NAME, user.getName());
         return "redirect:/mypage";
     }
 
@@ -112,16 +101,9 @@ public class UserController {
 
     @DeleteMapping("/user")
     public String deleteUser(HttpSession httpSession) {
-        User user = userRepository.findUserByEmail(httpSession.getAttribute(SESSION_EMAIL).toString());
-        userRepository.delete(user);
+        userService.delete(httpSession.getAttribute(SESSION_EMAIL).toString());
         httpSession.invalidate();
         return "redirect:/";
-    }
-
-    @ExceptionHandler
-    public String handleUserException(UserException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute(ERROR_MESSAGE, e.getMessage());
-        return "redirect:/err";
     }
 
     private void checkBindingError(BindingResult bindingResult) {
