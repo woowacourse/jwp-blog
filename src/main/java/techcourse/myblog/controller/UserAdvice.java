@@ -12,8 +12,6 @@ import techcourse.myblog.exception.UserNotExistException;
 
 @ControllerAdvice
 public class UserAdvice {
-    private static final Logger log = LoggerFactory.getLogger(UserAdvice.class);
-
     @ExceptionHandler(EmailRepetitionException.class)
     public String handleException(EmailRepetitionException e, Model model) {
         model.addAttribute("error", e.getMessage());

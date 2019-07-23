@@ -16,8 +16,6 @@ import java.util.List;
 
 @Service
 public class UserService {
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
-
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -60,22 +58,12 @@ public class UserService {
         findUser.setPassword(userDTO.getPassword());
         userRepository.save(findUser);
 
-        log.info("email {} ", userDTO.getEmail());
-        log.info("userName {} ", userDTO.getUserName());
-        log.info("password {} ", userDTO.getPassword());
-
         return findUser;
     }
 
     @Transactional
     public void delete(User user) {
-        log.info("email {} ", user.getEmail());
-        log.info("userName {} ", user.getUserName());
-        log.info("password {} ", user.getPassword());
         User findUser = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new UserNotExistException("유저 정보가 없습니다."));
         userRepository.delete(findUser);
-        log.info("email {} ", user.getEmail());
-        log.info("userName {} ", user.getUserName());
-        log.info("password {} ", user.getPassword());
     }
 }
