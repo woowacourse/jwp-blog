@@ -3,7 +3,7 @@ package techcourse.myblog.web;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,9 +72,9 @@ public class UserController {
 
     @Transactional
     @PostMapping(ROUTE_USERS)
-    public String signup(final Model model, @Valid UserDto userDto, final BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            final FieldError error = bindingResult.getFieldError();
+    public String signup(final Model model, @Valid UserDto userDto, final Errors errors) {
+        if (errors.hasErrors()) {
+            final FieldError error = errors.getFieldError();
             LOG.debug("클라이언트에서 전송된 필드에 오류 있음: {}", error.getDefaultMessage());
             model.addAttribute(ERROR, error.getDefaultMessage());
             return ROUTE_SIGNUP;
@@ -143,9 +143,9 @@ public class UserController {
     }
 
     @PutMapping(ROUTE_MYPAGE + ROUTE_EDIT)
-    public String mypageEdit(final Model model, final HttpSession session, @Valid final MyPageEditDto dto, final BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            final FieldError error = bindingResult.getFieldError();
+    public String mypageEdit(final Model model, final HttpSession session, @Valid final MyPageEditDto dto, final Errors errors) {
+        if (errors.hasErrors()) {
+            final FieldError error = errors.getFieldError();
             LOG.debug("수정 중 오류 발생: {}", error.getDefaultMessage());
             model.addAttribute(ERROR, error.getDefaultMessage());
             model.addAttribute(USER, session.getAttribute(USER));
