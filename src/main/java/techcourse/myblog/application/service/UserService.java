@@ -43,11 +43,12 @@ public class UserService {
 
     @Valid
     @Transactional(readOnly = true)
-    private User findUserById(String email) {
+    public User findUserById(String email) {
         return userRepository.findById(email)
                 .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login"));
     }
 
+    @Transactional(readOnly = true)
     public UserDto findById(String email) {
         return userConverter.convertFromEntity(findUserById(email));
     }
