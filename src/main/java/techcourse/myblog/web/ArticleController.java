@@ -1,61 +1,56 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.service.ArticleService;
 
 @Controller
 public class ArticleController {
-    @Autowired
-    private ArticleRepository articleRepository;
+    private final ArticleService articleService;
+
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
 
     @GetMapping("/")
-    public String index(final Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
+    public String index(Model model) {
+        model.addAttribute("articles", articleService.loadEveryArticles());
         return "index";
     }
 
     @GetMapping("/writing")
-    public String writeArticle(final Model model) {
-        model.addAttribute("url", "/articles");
+    public String writingForm() {
         return "article-edit";
     }
 
-    @ResponseBody
     @PostMapping("/articles")
-    public RedirectView confirmWrite(final Article article) {
-        articleRepository.write(article);
-        return new RedirectView("/articles/" + article.getNumber());
+    public RedirectView write(String title, String coverUrl, String contents) {
+        return new RedirectView("/articles/" + articleService.write(new Article(title, coverUrl, contents)));
     }
 
     @GetMapping("/articles/{articleId}")
-    public String viewArticle(@PathVariable final int articleId, final Model model) {
-        model.addAttribute("article", articleRepository.find(articleId));
-        return "article";
+    public String read(@PathVariable long articleId, Model model) {
+        return articleService.tryRender(articleId, model) ? "article" : "redirect:/";
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String editArticle(@PathVariable final int articleId, final Model model) {
-        model.addAttribute("article", articleRepository.find(articleId));
-        model.addAttribute("url", "/articles/" + articleId);
-        return "article-edit";
+    public String updateForm(@PathVariable long articleId, Model model) {
+        return articleService.tryRender(articleId, model) ? "article-edit" : "redirect:/";
     }
 
-    @ResponseBody
     @PutMapping("/articles/{articleId}")
-    public RedirectView confirmEdit(@PathVariable final int articleId, final Article article) {
-        articleRepository.edit(article, articleId);
-        return new RedirectView("/articles/" + articleId);
+    public RedirectView update(@PathVariable long articleId, String title, String coverUrl, String contents) {
+        return articleService.tryUpdate(articleId, new Article(title, coverUrl, contents))
+                ? new RedirectView("/articles/" + articleId)
+                : new RedirectView("/");
     }
 
-    @ResponseBody
     @DeleteMapping("/articles/{articleId}")
-    public RedirectView deleteArticle(@PathVariable final int articleId) {
-        articleRepository.delete(articleId);
+    public RedirectView delete(@PathVariable long articleId) {
+        articleService.delete(articleId);
         return new RedirectView("/");
     }
 }
