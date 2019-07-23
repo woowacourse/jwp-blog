@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 @ToString
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Table(uniqueConstraints = @UniqueConstraint(name = "email", columnNames = {"email"}))
 public class User {
     static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}";
     static final String NAME_REGEX = "[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z]{2,10}";
@@ -24,7 +25,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
