@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,24 @@ import org.springframework.web.reactive.function.BodyInserters;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 class ArticleControllerTests {
+
     @Autowired
     private WebTestClient webTestClient;
+
+    private String location;
+
+    @BeforeEach
+    void setUp() {
+        location = webTestClient.post().uri("/articles")
+                .body(BodyInserters
+                        .fromFormData("title", "제목")
+                        .with("coverUrl", "주소")
+                        .with("contents", "내용"))
+                .exchange()
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .get("Location").get(0);
+    }
 
     @Test
     void articleForm() {
@@ -38,53 +56,32 @@ class ArticleControllerTests {
                         .with("coverUrl", "주소")
                         .with("contents", "내용"))
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
     void fetchArticle() {
-        webTestClient.post().uri("/articles")
-                .body(BodyInserters
-                        .fromFormData("title", "제목")
-                        .with("coverUrl", "주소")
-                        .with("contents", "내용"))
-                .exchange();
-
-        webTestClient.get().uri("/articles/1")
+        webTestClient.get().uri(location)
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void editArticle() {
-        webTestClient.post().uri("/articles")
-                .body(BodyInserters
-                        .fromFormData("title", "제목")
-                        .with("coverUrl", "주소")
-                        .with("contents", "내용"))
-                .exchange();
-
-        webTestClient.get().uri("/articles/1/edit")
+        webTestClient.get().uri(location + "/edit")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void saveEditedArticle() {
-        webTestClient.post().uri("/articles")
-                .body(BodyInserters
-                        .fromFormData("title", "제목")
-                        .with("coverUrl", "주소")
-                        .with("contents", "내용"))
-                .exchange();
-
-        webTestClient.put().uri("/articles/1")
+        webTestClient.put().uri(location)
                 .body(BodyInserters
                         .fromFormData("title", "수정된_제목")
                         .with("coverUrl", "수정된_주소")
                         .with("contents", "수정된_내용"))
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isFound();
     }
 
     @Test
@@ -96,15 +93,14 @@ class ArticleControllerTests {
                         .with("contents", "내용"))
                 .exchange();
 
-        webTestClient.post().uri("/articles")
-                .body(BodyInserters
-                        .fromFormData("title", "제목")
-                        .with("coverUrl", "주소")
-                        .with("contents", "내용"))
-                .exchange();
-
         webTestClient.delete().uri("/articles/2")
                 .exchange()
                 .expectStatus().isFound();
+    }
+
+    @AfterEach
+    void tearDown() {
+        webTestClient.delete().uri(location)
+                .exchange();
     }
 }

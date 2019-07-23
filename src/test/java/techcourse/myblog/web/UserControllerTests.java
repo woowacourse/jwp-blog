@@ -69,7 +69,7 @@ class UserControllerTests {
     void logout() {
         webTestClient.get().uri("/logout")
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
@@ -99,6 +99,6 @@ class UserControllerTests {
     void mypage_delete() {
         webTestClient.delete().uri("/mypage")
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus().is3xxRedirection();
     }
 }
