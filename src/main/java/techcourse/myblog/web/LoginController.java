@@ -1,13 +1,12 @@
 package techcourse.myblog.web;
 
 import java.util.List;
-import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.request.UserLoginDto;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.LoginService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class LoginController {
-	private final UserRepository userRepository;
+	private final LoginService loginService;
 
-	public LoginController(UserRepository userRepository) {
-		this.userRepository = userRepository;
+	public LoginController(LoginService loginService) {
+		this.loginService = loginService;
 	}
 
 	@GetMapping("/login")
@@ -43,18 +42,10 @@ public class LoginController {
 			model.addAttribute("error", errors.get(0).getField() + "입력 오류 입니다.");
 			return "login";
 		}
-		Optional<User> loginUser = userRepository.findByEmail(userLoginDto.getEmail());
-		if (!loginUser.isPresent()) {
-			model.addAttribute("error", "없는 아이디입니다. 회원가입을 진행해주세요.");
-			return "login";
-		}
-		if (!loginUser.get().matchPassword(userLoginDto.getPassword())) {
-			model.addAttribute("error", "비밀번호가 일치하지 않습니다. 다시 입력해주세요.");
-			return "login";
-		}
 
-		httpSession.setAttribute("email", loginUser.get().getEmail());
-		httpSession.setAttribute("username", loginUser.get().getUsername());
+		User loginUser = loginService.login(userLoginDto);
+		httpSession.setAttribute("email", loginUser.getEmail());
+		httpSession.setAttribute("username", loginUser.getUsername());
 		return "redirect:/user-list";
 	}
 }
