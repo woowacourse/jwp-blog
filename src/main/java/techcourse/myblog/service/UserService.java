@@ -2,7 +2,6 @@ package techcourse.myblog.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.LoginDTO;
@@ -19,16 +18,17 @@ import java.util.List;
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Transactional
-    public int save(UserDTO userDTO) {
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void save(UserDTO userDTO) {
         if (isDuplicateEmail(userDTO)) {
             throw new EmailRepetitionException("이미 사용중인 이메일입니다.");
         }
         userRepository.save(new User(userDTO.getUserName(), userDTO.getEmail(), userDTO.getPassword()));
-        return 1;
     }
 
     public User getLoginUser(LoginDTO loginDTO) {
@@ -40,11 +40,8 @@ public class UserService {
     }
 
     private User checkUser(LoginDTO loginDTO) {
-        User findUser = userRepository.findByUserEmailAddress(loginDTO.getEmail());
-        if (findUser != null) {
-            return findUser;
-        }
-        throw new UserNotExistException("해당 아이디를 가진 유저는 존재하지 않습니다.");
+        return userRepository.findByEmail(loginDTO.getEmail())
+                .orElseThrow(() -> new UserNotExistException("해당 아이디를 가진 유저는 존재하지 않습니다."));
     }
 
     private boolean checkPassword(String password, String checkPassword) {
@@ -56,21 +53,25 @@ public class UserService {
     }
 
     public boolean isDuplicateEmail(UserDTO userDTO) {
-        return userRepository.findByUserEmailAddress(userDTO.getEmail()) != null;
+        return userRepository.findByEmail(userDTO.getEmail()).isPresent();
+//        return userRepository.findByEmail(userDTO.getEmail()) != null;
     }
 
     public void delete(String email) {
-        userRepository.deleteUserByEmailAddress(email);
+//        userRepository.deleteUserByEmailAddress(email);
     }
 
+    @Transactional
     public User update(UserDTO userDTO) {
-        log.error("email {} ", userDTO.getEmail());
-        log.error("name {} ", userDTO.getUserName());
-        log.error("password {} ", userDTO.getPassword());
-        int result = userRepository.updateUserByEmailAddress(userDTO.getUserName(), userDTO.getPassword(), userDTO.getEmail());
-        if (result == 0) {
-            throw new UserNotExistException("유저정보가 없습니다.");
-        }
-        return userRepository.findByUserEmailAddress(userDTO.getEmail());
+//        log.error("email {} ", userDTO.getEmail());
+//        log.error("name {} ", userDTO.getUserName());
+//        log.error("password {} ", userDTO.getPassword());
+//        int result = userRepository.updateUserByEmailAddress(userDTO.getUserName(), userDTO.getPassword(), userDTO.getEmail());
+//        if (result == 0) {
+//            throw new UserNotExistException("유저정보가 없습니다.");
+//        }
+
+        return userRepository.findByEmail(userDTO.getEmail())
+                .orElseThrow(() -> new UserNotExistException("해당 아이디를 가진 유저는 존재하지 않습니다."));
     }
 }

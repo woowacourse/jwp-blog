@@ -5,8 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.util.Base64Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -33,6 +35,14 @@ public class HomeControllerTest {
                     assertThat(body.contains(LOGIN_TEXT)).isTrue();
                 });
     }
+
+//    @Test
+//    void name() {
+//        webTestClient.post().uri("/")
+//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//                .header("Authorization", "Basic" + Base64Utils)
+//                .exchange();
+//    }
 
     private String getResponseBody(byte[] responseBody) {
         return new String(responseBody, StandardCharsets.UTF_8);
