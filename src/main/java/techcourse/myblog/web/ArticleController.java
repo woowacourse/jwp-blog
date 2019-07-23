@@ -40,7 +40,8 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String saveArticle(ArticleRequestDto articleRequestDto) {
-        return "redirect:/articles/" + articleService.save(articleRequestDto);
+        Long articleId = articleService.save(articleRequestDto);
+        return "redirect:/articles/" + articleId;
     }
 
     @PutMapping("/articles/{articleId}")
