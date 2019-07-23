@@ -43,9 +43,9 @@ public class LoginController {
 	public String login(final UserRequestDto.LoginRequestDto loginRequestDto, final HttpSession session, final Model model) {
 		if (loginService.authenticate(loginRequestDto)) {
 			User user = loginService.findByLoginRequestDto(loginRequestDto);
-			UserRequestDto.UserSessionDto userSessionDto = UserRequestDto.UserSessionDto.toDto(user);
-			log.debug("user {} try to login...", userSessionDto);
-			session.setAttribute(SESSION_NAME, userSessionDto);
+			UserRequestDto.SessionDto sessionDto = UserRequestDto.SessionDto.toDto(user);
+			log.debug("user {} try to login...", sessionDto);
+			session.setAttribute(SESSION_NAME, sessionDto);
 			return "/index";
 		}
 		model.addAttribute(ERROR_MESSAGE_NAME, "비밀번호를 올바르게 입력하시거나 회원가입을 해주세요");

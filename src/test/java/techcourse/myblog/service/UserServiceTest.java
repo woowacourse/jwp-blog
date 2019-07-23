@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebTestClient
 public class UserServiceTest {
 	private static final String NAME = "yusi";
 	private static final String EMAIL = "temp@mail.com";

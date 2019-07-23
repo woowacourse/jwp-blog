@@ -8,7 +8,6 @@ import techcourse.myblog.domain.article.ArticleRepository;
 
 import java.util.NoSuchElementException;
 
-@Transactional
 @Service
 public class ArticleService {
 
@@ -29,8 +28,8 @@ public class ArticleService {
 				.orElseThrow(NoSuchElementException::new);
 	}
 
+	@Transactional
 	public long update(final long id, final Article articleParam) {
-		//TODO Assembler Pattern을 이용
 		Article article = findById(id);
 		article.update(articleParam);
 		return article.getId();

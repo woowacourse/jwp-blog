@@ -32,3 +32,8 @@
     2. sample data로 ('sample@mail.com', 123qweasd), ('sample2@mail.com'. '123qweasd') 회원 정보 추가
     3. 유저 목록 조회는 로그아웃 상태에서도 볼 수 있음 (GET /users)        
       
+2. TODO
+    1. BasicAuth 설정 테스트 (Interceptor -> Test)
+        1.1 UserControllerTest 메소드 추가
+    2. LoginInterceptor
+    3. existsByEmail -> Exception 발생으로 제어

@@ -113,7 +113,7 @@ public class UserControllerTest {
 
 		webTestClient.get().uri("/users/edit/" + check.getId())
 				.exchange()
-				.expectStatus().isOk();
+				.expectStatus().isFound();
 	}
 
 	@Test
@@ -122,6 +122,6 @@ public class UserControllerTest {
 		save(user);
 		webTestClient.delete().uri("/users/{email}", EMAIL)
 				.exchange()
-				.expectStatus().isOk();
+				.expectStatus().isFound();
 	}
 }

@@ -44,7 +44,6 @@ public class LoginServiceTest {
 		userService.save(signUpRequestDto);
 
 		UserRequestDto.LoginRequestDto loginRequestDto = new UserRequestDto.LoginRequestDto(EMAIL, PASSWORD);
-
 		assertTrue(loginService.authenticate(loginRequestDto));
 	}
 

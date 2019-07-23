@@ -90,6 +90,9 @@ public class User {
         return this.password.equals(password);
     }
 
+    // @TODO
+    // getter 제거 고려
+
     public Long getId() {
         return id;
     }

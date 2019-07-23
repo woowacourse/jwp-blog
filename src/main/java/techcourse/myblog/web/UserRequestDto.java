@@ -88,7 +88,7 @@ public class UserRequestDto {
 		}
 	}
 
-	public static class UserSessionDto {
+	public static class SessionDto {
 
 		@NotNull
 		private Long id;
@@ -99,18 +99,18 @@ public class UserRequestDto {
 		@NotNull
 		private String email;
 
-		public UserSessionDto() {
+		public SessionDto() {
 
 		}
 
-		public UserSessionDto(final long id, final String name, final String email) {
+		public SessionDto(final long id, final String name, final String email) {
 			this.id = id;
 			this.name = name;
 			this.email = email;
 		}
 
-		public static UserSessionDto toDto(final User user) {
-			return new UserSessionDto(user.getId(), user.getName(), user.getEmail());
+		public static SessionDto toDto(final User user) {
+			return new SessionDto(user.getId(), user.getName(), user.getEmail());
 		}
 
 		public boolean isSameId(final Long id) {
@@ -143,7 +143,7 @@ public class UserRequestDto {
 
 		@Override
 		public String toString() {
-			return "UserSessionDto{" +
+			return "SessionDto{" +
 					"id=" + id +
 					", name='" + name + '\'' +
 					", email='" + email + '\'' +

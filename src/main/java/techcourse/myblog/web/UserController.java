@@ -36,7 +36,6 @@ public class UserController {
 
 	@PostMapping("/users")
 	public String save(final UserRequestDto.SignUpRequestDto signUpRequestDto, final Model model) {
-		//TODO 수정할 수 있으면 할 것
 		if (userService.exitsByEmail(signUpRequestDto)) {
 			model.addAttribute(ERROR_MESSAGE_NAME, "이메일이 중복됩니다");
 			return "user/signup";
@@ -48,12 +47,12 @@ public class UserController {
 
 	@GetMapping("/users/{id}")
 	public String myPage(@PathVariable Long id, final Model model, final HttpSession session) {
-		UserRequestDto.UserSessionDto userSessionDto = (UserRequestDto.UserSessionDto) session.getAttribute(SESSION_NAME);
+		UserRequestDto.SessionDto sessionDto = (UserRequestDto.SessionDto) session.getAttribute(SESSION_NAME);
 
-		log.debug("session value : {}", userSessionDto);
+		log.debug("session value : {}", sessionDto);
 		log.debug("id : {}", id);
 
-		if (isSessionMatch(id, userSessionDto)) {
+		if (isSessionMatch(id, sessionDto)) {
 			User user = userService.findById(id);
 			model.addAttribute("user", user);
 			log.debug("{} to /mypage", user);
@@ -62,16 +61,16 @@ public class UserController {
 		return "redirect:/users";
 	}
 
-	private boolean isSessionMatch(@PathVariable Long id, UserRequestDto.UserSessionDto userSessionDto) {
+	private boolean isSessionMatch(@PathVariable Long id, UserRequestDto.SessionDto sessionDto) {
 		log.debug("id in isSessionMatch() : {}", id);
-		log.debug("session in isSessionMatch() : {}", userSessionDto);
-		return (userSessionDto != null) && (userSessionDto.isSameId(id));
+		log.debug("session in isSessionMatch() : {}", sessionDto);
+		return (sessionDto != null) && (sessionDto.isSameId(id));
 	}
 
 	@GetMapping("/users/edit/{id}")
 	public String editPage(@PathVariable Long id, final Model model, final HttpSession session) {
-		UserRequestDto.UserSessionDto userSessionDto = (UserRequestDto.UserSessionDto) session.getAttribute(SESSION_NAME);
-		if (isSessionMatch(id, userSessionDto)) {
+		UserRequestDto.SessionDto sessionDto = (UserRequestDto.SessionDto) session.getAttribute(SESSION_NAME);
+		if (isSessionMatch(id, sessionDto)) {
 			User user = userService.findById(id);
 			model.addAttribute("user", user);
 			log.debug("{} to /mypage-edit", user);
@@ -85,7 +84,7 @@ public class UserController {
 
 		log.debug("updateRequestDto in update() : {}", updateRequestDto);
 		User user = userService.update(updateRequestDto);
-		session.setAttribute(SESSION_NAME, UserRequestDto.UserSessionDto.toDto(user));
+		session.setAttribute(SESSION_NAME, UserRequestDto.SessionDto.toDto(user));
 		return "redirect:/users/" + user.getId();
 	}
 
