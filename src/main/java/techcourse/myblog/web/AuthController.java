@@ -9,9 +9,11 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.NotExistUserException;
-import techcourse.myblog.exception.NotMatchPasswordException;
+import techcourse.myblog.exception.NotMatchAuthenticationException;
 import techcourse.myblog.exception.UserLoginInputException;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.AuthService;
+import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -21,10 +23,10 @@ import java.util.Optional;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserRepository userRepository;
+    private final AuthService authService;
 
-    public AuthController(final UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public AuthController(final AuthService authService) {
+        this.authService = authService;
     }
 
     @GetMapping("/login")
@@ -39,19 +41,14 @@ public class AuthController {
             throw new UserLoginInputException("로그인 값이 잘못됐습니다.");
         }
 
-        Optional<User> maybeUser = userRepository.findByEmail(userDto.getEmail());
-        User user = maybeUser.orElseThrow(() -> new NotExistUserException("해당 이메일로 가입한 유저가 없습니다."));
+        User user = authService.login(userDto);
+        session.setAttribute("username", user.getName());
+        session.setAttribute("email", user.getEmail());
 
-        if (user.authenticate(userDto.getEmail(), userDto.getPassword())) {
-            session.setAttribute("username", user.getName());
-            session.setAttribute("email", user.getEmail());
-            return new RedirectView("/");
-        }
-
-        throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
+        return new RedirectView("/");
     }
 
-    @ExceptionHandler({UserLoginInputException.class, NotMatchPasswordException.class, NotExistUserException.class})
+    @ExceptionHandler({UserLoginInputException.class, NotMatchAuthenticationException.class, NotExistUserException.class})
     public RedirectView loginException(RedirectAttributes redirectAttributes, Exception exception) {
         redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
 
@@ -60,7 +57,8 @@ public class AuthController {
 
     @GetMapping("/logout")
     public RedirectView logout(HttpSession session) {
-        session.invalidate();
+        session.removeAttribute("username");
+        session.removeAttribute("email");
         return new RedirectView("/");
     }
 }
