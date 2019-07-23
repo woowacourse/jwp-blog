@@ -38,9 +38,11 @@ public class User {
     }
 
     @Builder
-    private User(final String email, final String name, final String password) {
-        validateName(name);
-        validatePassword(password);
+    private User(final Long id, final String email, final String name, final String password) {
+        if (id == null) {
+            validateName(name);
+            validatePassword(password);
+        }
 
         this.email = email;
         this.name = name;

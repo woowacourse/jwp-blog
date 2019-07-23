@@ -67,15 +67,16 @@ public class UserDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Update {
+        private Long id;
+
         @NotBlank(message = "이름을 입력해주세요.")
         @Pattern(regexp = NAME_REGEX, message = NAME_NOT_MATCH_MESSAGE)
         private String name;
 
-        User toUser(User user) {
+        User toUser() {
             return User.builder()
                     .name(name)
-                    .password(user.getPassword())
-                    .email(user.getEmail())
+                    .id(id)
                     .build();
         }
 

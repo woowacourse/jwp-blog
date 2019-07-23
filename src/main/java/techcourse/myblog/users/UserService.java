@@ -60,11 +60,11 @@ public class UserService {
         return UserDto.Response.createByUser(user);
     }
 
-    public UserDto.Response update(Long id, UserDto.Update userDto) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Can't find User : " + id));
+    public UserDto.Response update(UserDto.Update userDto) {
+        User user = userRepository.findById(userDto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Can't find User : " + userDto.getId()));
 
-        user.update(userDto.toUser(user));
+        user.update(userDto.toUser());
 
         return UserDto.Response.createByUser(user);
     }

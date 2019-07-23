@@ -50,8 +50,8 @@ class UserServiceTest {
 
     @Test
     void update() {
-        UserDto.Update updateDto = new UserDto.Update("newName");
-        UserDto.Response expected = userService.update(id, updateDto);
+        UserDto.Update updateDto = new UserDto.Update(id,"newName");
+        UserDto.Response expected = userService.update(updateDto);
 
         assertEquals(updateDto.getName(), expected.getName());
     }

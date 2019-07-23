@@ -78,8 +78,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public String edit(@PathVariable Long id, @Valid UserDto.Update userDto) {
-        UserDto.Response responseDto = userService.update(id, userDto);
+    public String edit(@Valid UserDto.Update userDto) {
+        UserDto.Response responseDto = userService.update(userDto);
         return "redirect:/users/" + responseDto.getId();
     }
 
