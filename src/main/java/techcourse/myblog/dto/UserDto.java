@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
 @Getter
@@ -17,7 +16,6 @@ public class UserDto {
     @Length(min = 8)
     @Pattern(regexp = "\\w{8,}")
     private String password;
-    @Email
     @Pattern(regexp = "\\b[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,4}\\b")
     private String email;
 }
