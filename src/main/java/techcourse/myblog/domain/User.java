@@ -24,8 +24,10 @@ public class User {
         return newUser;
     }
 
-    public void update(String username) {
-        this.username = username;
+    public void update(User user) {
+        this.username = user.username;
+        this.email = user.email;
+        this.password = user.password;
     }
 
     public Long getId() {
