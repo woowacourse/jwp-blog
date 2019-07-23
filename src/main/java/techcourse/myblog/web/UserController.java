@@ -75,8 +75,8 @@ public class UserController {
     public String signup(final Model model, @Valid UserDto userDto, final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             final FieldError error = bindingResult.getFieldError();
-            LOG.debug("클라이언트에서 전송된 필드에 오류 있음: {}", error.getField());
-            model.addAttribute(ERROR, error.getField());
+            LOG.debug("클라이언트에서 전송된 필드에 오류 있음: {}", error.getDefaultMessage());
+            model.addAttribute(ERROR, error.getDefaultMessage());
             return ROUTE_SIGNUP;
         }
         if (isDuplicatedEmail(userDto.getEmail())) {
@@ -138,7 +138,7 @@ public class UserController {
     @GetMapping(ROUTE_MYPAGE + ROUTE_EDIT)
     public String mypageEditor(final Model model, final HttpSession session) {
         final User user = (User) session.getAttribute(USER);
-        model.addAttribute("user", user);
+        model.addAttribute(USER, user);
         return loginFirstOr(PAGE_MYPAGE_EDIT, session);
     }
 
@@ -146,9 +146,10 @@ public class UserController {
     public String mypageEdit(final Model model, final HttpSession session, @Valid final MyPageEditDto dto, final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             final FieldError error = bindingResult.getFieldError();
-            LOG.debug("수정 중 오류 발생: {}", error.getField());
-            model.addAttribute(ERROR, error.getField());
-            return PAGE_MYPAGE_EDIT;
+            LOG.debug("수정 중 오류 발생: {}", error.getDefaultMessage());
+            model.addAttribute(ERROR, error.getDefaultMessage());
+            model.addAttribute(USER, session.getAttribute(USER));
+            return loginFirstOr(PAGE_MYPAGE_EDIT, session);
         }
         try {
             final User loginUser = (User) session.getAttribute(USER);
