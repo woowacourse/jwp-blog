@@ -39,7 +39,6 @@ public class UserController {
             model.addAttribute(ERROR_MESSAGE_NAME, "이메일이 중복됩니다");
             return "user/signup";
         }
-
         userService.save(signUpRequestDto);
         return "redirect:/login";
     }
@@ -50,18 +49,18 @@ public class UserController {
         User user = userService.findById(id);
         log.debug("before authenticate...");
 
-        if (isSessionMatch(user, sessionDto)) {
+        if (authenticate(user, sessionDto)) {
             log.debug("authenticate...");
             log.debug("mypage/{} : User={}", id, user);
             log.debug("mypage/{} : Session={}", id, sessionDto);
             model.addAttribute("user", user);
             session.setAttribute(Constants.SESSION_USER_NAME, sessionDto);
-            return "mypage";
+            return "/mypage";
         }
         return "redirect:/users";
     }
 
-    private boolean isSessionMatch(User user, UserRequestDto.SessionDto sessionDto) {
+    private boolean authenticate(User user, UserRequestDto.SessionDto sessionDto) {
 
         return (sessionDto != null) && (sessionDto.equals(UserRequestDto.SessionDto.toDto(user)));
     }
@@ -71,7 +70,7 @@ public class UserController {
         UserRequestDto.SessionDto sessionDto = (UserRequestDto.SessionDto) session.getAttribute(Constants.SESSION_USER_NAME);
         User user = userService.findById(id);
 
-        if (isSessionMatch(user, sessionDto)) {
+        if (authenticate(user, sessionDto)) {
             model.addAttribute("user", user);
             log.debug("{} to /mypage-edit", user);
             return "mypage-edit";
@@ -81,7 +80,6 @@ public class UserController {
 
     @PutMapping("/users/edit")
     public String update(final UserRequestDto.UpdateRequestDto updateRequestDto, final HttpSession session) {
-
         log.debug("updateRequestDto in update() : {}", updateRequestDto);
         User user = userService.update(updateRequestDto);
         session.setAttribute(Constants.SESSION_USER_NAME, UserRequestDto.SessionDto.toDto(user));

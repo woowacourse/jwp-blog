@@ -107,14 +107,15 @@ public class UserRequestDto {
 
         }
 
-        public SessionDto(final String name, final String email, final String password) {
+        public SessionDto(final Long id, final String name, final String email, final String password) {
+            this.id = id;
             this.name = name;
             this.email = email;
             this.password = password;
         }
 
         public static SessionDto toDto(final User user) {
-            return new SessionDto(user.getName(), user.getEmail(), user.getPassword());
+            return new SessionDto(user.getId(), user.getName(), user.getEmail(), user.getPassword());
         }
 
         public Long getId() {
@@ -147,7 +148,8 @@ public class UserRequestDto {
         @Override
         public String toString() {
             return "SessionDto{" +
-                    "name='" + name + '\'' +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
                     ", email='" + email + '\'' +
                     ", password='" + password + '\'' +
                     '}';
