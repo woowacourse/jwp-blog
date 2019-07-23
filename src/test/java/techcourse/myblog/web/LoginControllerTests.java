@@ -49,12 +49,12 @@ class LoginControllerTests {
 
 	@Test
 	void loginFailureDueToWrongEmail() {
-		requestForLogin("ssosso@naver.com", "asdfASDF1@").isOk();
+		requestForLogin("ssosso@naver.com", "asdfASDF1@").isBadRequest();
 	}
 
 	@Test
 	void loginFailureDueToWrongPassword() {
-		requestForLogin("tiber@naver.com", "wrongPassword").isOk();
+		requestForLogin("tiber@naver.com", "asdfASDF1@!").isBadRequest();
 	}
 
 	private StatusAssertions requestForLogin(String email, String requestURI) {
