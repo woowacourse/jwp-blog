@@ -1,9 +1,11 @@
 package techcourse.myblog.presentation.controller;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class UserExceptionHandler {
 
     @ExceptionHandler(DuplicatedIdException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public RedirectView handleDuplicatedIdError(RedirectAttributes redirectAttributes, DuplicatedIdException e) {
         RedirectView redirectView = new RedirectView("/signup");
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
@@ -23,6 +26,7 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler(NotExistUserIdException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public RedirectView handleNotExistIdError(RedirectAttributes redirectAttributes, NotExistUserIdException e) {
         RedirectView redirectView = new RedirectView(e.getNextView());
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
@@ -30,6 +34,7 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler(NotMatchPasswordException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public RedirectView handleNotMatchPasswordError(RedirectAttributes redirectAttributes, NotMatchPasswordException e) {
         RedirectView redirectView = new RedirectView("/login");
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
@@ -37,6 +42,7 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler(BindException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public RedirectView handleBindError(RedirectAttributes redirectAttributes, BindException e) {
         RedirectView redirectView = new RedirectView("signup");
 
