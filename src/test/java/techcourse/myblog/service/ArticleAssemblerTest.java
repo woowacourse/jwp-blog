@@ -2,8 +2,9 @@ package techcourse.myblog.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.dto.article.ArticleDto;
+import techcourse.myblog.service.article.ArticleAssembler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

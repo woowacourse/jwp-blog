@@ -1,12 +1,12 @@
-package techcourse.myblog.service;
+package techcourse.myblog.service.article;
 
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.dto.article.ArticleDto;
 
 import java.util.Objects;
 
 public class ArticleAssembler {
-    public ArticleDto convertToDto(final Article article) {
+    public static ArticleDto convertToDto(final Article article) {
         if (Objects.isNull(article)) {
             throw new NullPointerException();
         }
@@ -20,7 +20,7 @@ public class ArticleAssembler {
         return articleDto;
     }
 
-    public Article convertToEntity(final ArticleDto articleDto) {
+    public static Article convertToEntity(final ArticleDto articleDto) {
         if (Objects.isNull(articleDto)) {
             throw new NullPointerException();
         }

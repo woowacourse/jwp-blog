@@ -1,14 +1,13 @@
-package techcourse.myblog.service;
+package techcourse.myblog.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.dto.UserRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserRepository;
+import techcourse.myblog.dto.user.UserRequestDto;
+import techcourse.myblog.dto.user.UserResponseDto;
 import techcourse.myblog.exception.DuplicatedEmailException;
 import techcourse.myblog.exception.EmailNotFoundException;
-import techcourse.myblog.exception.InvalidPasswordException;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,8 +15,8 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
-import static techcourse.myblog.service.UserAssembler.convertToDto;
-import static techcourse.myblog.service.UserAssembler.convertToEntity;
+import static techcourse.myblog.service.user.UserAssembler.convertToDto;
+import static techcourse.myblog.service.user.UserAssembler.convertToEntity;
 
 @Service
 public class UserService {
@@ -41,22 +40,6 @@ public class UserService {
         return userRepository.findAll().stream()
                 .map(UserAssembler::convertToDto)
                 .collect(collectingAndThen(toList(), Collections::unmodifiableList));
-    }
-
-    public UserResponseDto findByEmailAndPassword(final String email, final String password) {
-        Optional<User> userOpt = userRepository.findByEmail(email);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            validatePassword(password, user);
-            return convertToDto(user);
-        }
-        throw new EmailNotFoundException("틀린 이메일입니다!");
-    }
-
-    private void validatePassword(final String password, final User user) {
-        if (!user.getPassword().equals(password)) {
-            throw new InvalidPasswordException("틀린 비밀번호입니다.");
-        }
     }
 
     public UserResponseDto update(final String email, final String name) {

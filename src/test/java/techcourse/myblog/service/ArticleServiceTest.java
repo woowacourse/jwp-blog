@@ -6,10 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.dto.article.ArticleDto;
 import techcourse.myblog.exception.ArticleDtoNotFoundException;
 import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.service.article.ArticleAssembler;
+import techcourse.myblog.service.article.ArticleService;
 
 import java.util.Arrays;
 import java.util.List;

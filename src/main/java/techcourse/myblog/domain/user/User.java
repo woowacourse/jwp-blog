@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.user;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

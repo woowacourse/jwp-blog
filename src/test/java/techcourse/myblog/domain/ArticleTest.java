@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
