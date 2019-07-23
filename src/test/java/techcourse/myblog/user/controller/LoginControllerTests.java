@@ -61,13 +61,39 @@ public class LoginControllerTests {
 
     @Test
     void 로그인_요청_패스워드_불일치_테스트() {
-        String wrongPassword = "wrongPassword";
+        String wrongPassword = "wrong1234!";
 
         webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("email", "email@gmail.com")
                         .with("password", wrongPassword))
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void 로그인_요청_아이디_형식_오류_테스트() {
+        String invalidFormEmail = "email";
+
+        webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", invalidFormEmail)
+                        .with("password", "password1234!"))
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void 로그인_요청_비밀번호_형식_오류_테스트() {
+        String invalidFormPassword = "password";
+
+        webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", "email@gmail.com")
+                        .with("password", invalidFormPassword))
                 .exchange()
                 .expectStatus().isBadRequest();
     }

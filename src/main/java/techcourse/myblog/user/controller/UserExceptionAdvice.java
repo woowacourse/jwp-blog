@@ -25,6 +25,13 @@ public class UserExceptionAdvice {
         return "mypage";
     }
 
+    @ExceptionHandler(InvalidLoginFormException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleInvalidLoginException(InvalidLoginFormException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "login";
+    }
+
     @ExceptionHandler(DuplicatedUserException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handelDuplicatedUserException(DuplicatedUserException e, Model model) {
