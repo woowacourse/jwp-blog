@@ -160,10 +160,9 @@
 <th:block layout:fragment="addScript">
     <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
     <script th:inline="javascript">
-        /* <![CDATA[ */
+
         const initValue = [[ ${article.contents}]];
-        /* ]]> */
-        // const initValue = ${#strings.unescapeJavaScript(article.contents)};
+
 
         const viewer = tui.Editor.factory({
             el: document.querySelector('#viewerSection'),

@@ -106,10 +106,8 @@
 <th:block layout:fragment="addScript">
     <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
     <script th:if="${article != null}" th:inline="javascript">
-        /* <![CDATA[ */
+
         const initValue = [[ ${article.contents}]];
-        /* ]]> */
-        // const initValue = ${#strings.unescapeJavaScript(article.contents)};
 
         const editor = new tui.Editor({
             el: document.querySelector('#editSection'),
