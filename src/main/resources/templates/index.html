@@ -1,45 +1,17 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <th:block th:include="fragment/common_head"></th:block>
-    <link href="css/index.css" rel="stylesheet">
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:include="common/meta"></th:block>
+    <th:block th:include="common/css"></th:block>
+    <link href="/css/index.css" rel="stylesheet">
 </head>
-<link href="css/index.css" rel="stylesheet">
+
 <body>
 <div>
-    <header class="header navbar bg-transparent no-border" id="header">
-        <div class="header-container">
-            <ul class="nav-left mrg-left-0">
-                <li>
-                    <a href="/">
-                        <div class="logo logo-dark d-none"
-                             style="background-image: url('images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white"
-                             style="background-image: url('images/logo/logo_full_white.png')"></div>
-                    </a>
-                </li>
-            </ul>
-            <ul class="nav-right">
-                <li class="user-profile">
-                    <a href="login.html">
-                        <div class="user-info login-btn pointer mrg-right-10">
-                            <span class="name pdd-right-5 text-white">Login</span>
-                        </div>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </header>
-
-    <div class="about-cover card no-border mrg-btm-0">
-        <div class="cover-img overlay-dark bg" style="background-image: url('images/pages/index/bg.jpg')"></div>
-        <div class="welcome-text-container">
-            <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5">궁금하면 500원</h1>
-            </div>
-        </div>
-    </div>
-
+    <th:block th:include="/common/navbar"></th:block>
+    <th:block th:include="/common/main_cover"></th:block>
     <div class="container-fluid width-100 mrg-btm-30">
         <div class="row">
             <div class="col-lg-3"></div>
@@ -56,11 +28,11 @@
                             <a class="nav-link" data-toggle="tab" href="#tab-centered-3" role="tab">Learning</a>
                         </li>
                     </ul>
-                    <div class="width-100 fixed left-0 border bottom"></div>
-                    <div class="tab-content" th:each="article,index : ${articles}">
+                    <div class="width-100 absolute left-0 border bottom"></div>
+                    <div class="tab-content" th:each="article : ${articles}">
                         <div class="tab-pane fade in active" id="tab-centered-1" role="tabpanel">
                             <div class="pdd-horizon-15 pdd-vertical-20">
-                                <a class="card article-container" th:href="'/articles/' + ${index.index}">
+                                <a class="card article-container" th:href="'/articles/' + ${article.id}">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
                                             <div class="background-holder has-content"
@@ -107,17 +79,14 @@
             </div>
             <div class="col-lg-3"></div>
         </div>
-
         <a class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px"
            href="/writing">
             <i class="ti-plus"></i>
         </a>
-
     </div>
 </div>
-<th:block th:include="fragment/common_footer"></th:block>
-<th:block th:include="fragment/common_js"></th:block>
-<script src="js/index.js"></script>
+<th:block th:include="common/footer"></th:block>
+<th:block th:include="common/js"></th:block>
 </body>
 
 </html>

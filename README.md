@@ -1,26 +1,32 @@
-# 나만의 블로그 서비스
+## myblog
 
-## Spring Boot으로 게시글 CRUD
-
-## 필요 기능
-
-1. index 서빙  
-    1.1 모든 Article을 동적으로 표현  
-    1.2 해당 Article 조회 (GET /articles/ + ID)
-    1.3 Article 생성 진입점 (GET /writing) 
-2. Article 생성 (/writing)  
-    2.1 POST /articles/new
+## 기능 목록
+1. 게시글 생성
+   + 메인 페이지에서 작성 페이지로 이동
+   + 게시글 생성 시 게시글 페이지로 이동
+2. 게시글 목록 조회
+   + 메인 페이지에서 게시글 조회
+3. 게시글 조회
+   + 메인 페이지에서 게시글 클릭 시 해당 게시글로 이동
+4. 게시글 수정
+   + 게시글 페이지에서 수정 버튼 클릭 시 수정 페이지로 이동
+   + 수정 버튼 클릭 시 해당 게시글의 정보 가져오기
+   + 수정 완료 후 게시글 페이지로 이동
+5. 게시글 삭제
+   + 삭제 버튼 클릭 시 게시글 삭제
+   + 삭제 완료 후 메인 페이지로 이동
     
-3. Article 수정  
-    3.1 수정 템플릿 제공 (GET /articles/ + ID + /edit)
-    3.2 PUT /articles/ + ID
-    
-4. Article 삭제
-    4.1 Article (/ariticles/ + ID) 에서 DELETE 요청
-    4.2 DELETE /articles/ + ID
-    
-## 추가사항
+6. 회원 가입
+   + 이름은 2자 이상 10자 미만
+   + 비밀번호는 8자 이상 대소문자 특수문자 숫자 포함
+   + 이메일은 중복 불가
+7. 로그인
+   + 로그인 후에 블로그 서비스 이용가능
+   + "/" 루트 페이지는 예외
+8. 회원정보 수정
+   + 이름과 이메일 수정 가능
+9. 회원 탈퇴
+   + 로그인 이후에 회원 탈퇴 가능
 
-- HTML 중복 제거 -> thymeleaf fragment
-- 클래스, 스태틱 파일 수정시 자동 재시작 -> spring-boot-devtools
-- thymeleaf
+## 제약 조건
++ Interceptor를 이용하여 로그인 구현
