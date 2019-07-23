@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 @Entity
 @Getter
 @ToString
-@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(uniqueConstraints = @UniqueConstraint(name = "email", columnNames = {"email"}))
 public class User {
     static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}";
@@ -66,3 +66,4 @@ public class User {
         this.name = other.name;
     }
 }
+

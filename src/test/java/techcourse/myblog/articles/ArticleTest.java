@@ -15,20 +15,4 @@ public class ArticleTest {
 
         assertThat(article).isNotNull();
     }
-
-    @Test
-    void javaBean() {
-        Article article = new Article();
-        String contents = "contents";
-        String title = "title";
-        String coverUrl = "coverUrl";
-//
-        article.setContents(contents);
-        article.setTitle(title);
-        article.setCoverUrl(coverUrl);
-
-        assertThat(article.getContents()).isEqualTo(contents);
-        assertThat(article.getTitle()).isEqualTo(title);
-        assertThat(article.getCoverUrl()).isEqualTo(coverUrl);
-    }
 }
