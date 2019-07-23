@@ -86,9 +86,6 @@ public class UserController {
             throw new UpdateUserInputException("잘못된 입력값입니다.");
         }
 
-        System.out.println(email);
-        System.out.println(userDto.getName());
-
         String loginEmail = (String) session.getAttribute("email");
         userAuthenticated(email, loginEmail);
 
