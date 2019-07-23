@@ -101,6 +101,14 @@
                     </div>
                     </form>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-4 mx-auto">
+                        <form th:action="@{/mypage/edit}" name="account-delete" th:method="DELETE" accept-charset="utf-8">
+                            <button type="submit" class="btn btn-danger">계정 삭제하기</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

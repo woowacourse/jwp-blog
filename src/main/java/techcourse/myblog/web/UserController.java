@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -142,18 +143,34 @@ public class UserController {
     }
 
     @PutMapping(ROUTE_MYPAGE + ROUTE_EDIT)
-    public String mypageEdit(final Model model, final HttpSession session, final MyPageEditDto dto) {
+    public String mypageEdit(final HttpSession session, final MyPageEditDto dto) {
         try {
             final User loginUser = (User) session.getAttribute(USER);
             final User user = userRepository.findById(loginUser.getId()).get();
+            LOG.debug("사용자 변경");
             LOG.debug("user: {}", user);
-            LOG.debug("DTO: {}", dto);
+            LOG.debug("DTO: {}", dto.getUsername());
             user.setUsername(dto.getUsername());
             userRepository.save(user);
             session.setAttribute(USER, user);
             return REDIRECT + ROUTE_MYPAGE;
         } catch (Exception e) {
             return REDIRECT + ROUTE_LOGIN;
+        }
+    }
+
+    @DeleteMapping(ROUTE_MYPAGE + ROUTE_EDIT)
+    public String deleteUser(final HttpSession session) {
+        try {
+            final User loginUser = (User) session.getAttribute(USER);
+            final User user = userRepository.findById(loginUser.getId()).get();
+            LOG.debug("사용자 계정 삭제");
+            LOG.debug("삭제되는 계정: {}", user.getEmail());
+            userRepository.delete(user);
+            session.setAttribute(USER, null);
+            return REDIRECT + ROUTE_LOGOUT;
+        } catch (Exception e) {
+            return REDIRECT + ROUTE_ROOT;
         }
     }
 }
