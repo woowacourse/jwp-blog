@@ -1,6 +1,7 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import techcourse.myblog.domain.model.User;
 
 import java.util.List;
 

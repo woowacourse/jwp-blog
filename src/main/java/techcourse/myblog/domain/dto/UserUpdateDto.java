@@ -1,12 +1,12 @@
 package techcourse.myblog.domain.dto;
 
-public class MyPageRequestDto {
+public class UserUpdateDto {
     private long id;
     private String name;
     private String snsGithub;
     private String snsFacebook;
 
-    public MyPageRequestDto() {
+    public UserUpdateDto() {
     }
 
     public long getId() {

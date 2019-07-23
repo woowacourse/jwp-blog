@@ -2,9 +2,9 @@ package techcourse.myblog.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleNotFoundException;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.model.Article;
+import techcourse.myblog.domain.exception.ArticleNotFoundException;
+import techcourse.myblog.domain.repository.ArticleRepository;
 
 import java.util.List;
 

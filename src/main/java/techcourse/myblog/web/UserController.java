@@ -7,9 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.model.User;
 import techcourse.myblog.domain.dto.LoginRequestDto;
-import techcourse.myblog.domain.dto.MyPageRequestDto;
+import techcourse.myblog.domain.dto.UserUpdateDto;
 import techcourse.myblog.domain.dto.UserRequestDto;
 import techcourse.myblog.domain.service.UserService;
 
@@ -40,7 +40,7 @@ public class UserController {
     @PostMapping("/check-email")
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> checkEmailDuplicate(String email) {
-        if (userService.isDuplicateEmail(email)) {
+        if (userService.isDuplicatedEmail(email)) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -103,13 +103,13 @@ public class UserController {
 
     @Transactional
     @PutMapping("/user/update")
-    public String updateMyPage(MyPageRequestDto myPageRequestDto, HttpSession httpSession) {
+    public String updateMyPage(UserUpdateDto userUpdateDto, HttpSession httpSession) {
         User loggedInUser = (User) httpSession.getAttribute("user");
-        if (myPageRequestDto.getId() != loggedInUser.getId()) {
-            return "redirect:/mypage/" + myPageRequestDto.getId();
+        if (userUpdateDto.getId() != loggedInUser.getId()) {
+            return "redirect:/mypage/" + userUpdateDto.getId();
         }
 
-        User user = userService.updateName(myPageRequestDto.getId(), myPageRequestDto.getName());
+        User user = userService.updateName(userUpdateDto.getId(), userUpdateDto.getName());
         httpSession.setAttribute("user", user);
         return "redirect:/mypage/" + user.getId();
     }

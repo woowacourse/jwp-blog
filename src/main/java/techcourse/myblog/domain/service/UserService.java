@@ -2,13 +2,14 @@ package techcourse.myblog.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.domain.model.User;
+import techcourse.myblog.domain.repository.UserRepository;
 
 import java.util.List;
 
 @Service
 public class UserService {
+    private static final int USER_NOT_EXIST = 0;
     private final UserRepository userRepository;
 
     @Autowired
@@ -16,8 +17,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public boolean isDuplicateEmail(String email) {
-        return userRepository.findUsersByEmail(email).size() != 0;
+    public boolean isDuplicatedEmail(String email) {
+        return userRepository.findUsersByEmail(email).size() != USER_NOT_EXIST;
     }
 
     public boolean notExistUserEmail(String email) {
