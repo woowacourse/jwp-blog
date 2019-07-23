@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Getter
 @NoArgsConstructor
+@Getter
 @EqualsAndHashCode(of = "id")
 public class User {
 
@@ -26,7 +26,7 @@ public class User {
         this.password = password;
     }
 
-    public static User to(String name, String email, String password) {
+    public static User from(String name, String email, String password) {
         return new User(name, email, password);
     }
 

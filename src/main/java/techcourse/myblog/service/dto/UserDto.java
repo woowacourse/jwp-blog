@@ -28,6 +28,6 @@ public class UserDto {
     private String password;
 
     public User toUser() {
-        return User.to(name, email, password);
+        return User.from(name, email, password);
     }
 }
