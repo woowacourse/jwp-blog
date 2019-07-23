@@ -54,7 +54,17 @@ public class ArticleControllerTests {
 		checkRedirect(statusAssertions, "Location", ".+/");
 		assertThat(articleRepository.findById(articleId)).isEmpty();
 	}
-	
+
+	@Test
+	void notFoundArticle() {
+		request(HttpMethod.GET, "/articles/100").isBadRequest();
+	}
+
+	@Test
+	void notFoundArticleEdit() {
+		request(HttpMethod.GET, "/articles/100/edit").isBadRequest();
+	}
+
 	private StatusAssertions request(HttpMethod httpMethod, String requestURI) {
 		return webTestClient
 				.method(httpMethod)
@@ -94,5 +104,4 @@ public class ArticleControllerTests {
 				.exchange()
 				.expectStatus();
 	}
-
 }
