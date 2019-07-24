@@ -26,9 +26,9 @@ public class Article {
     }
 
     public void updateArticle(Article article) {
-        this.title = article.getTitle();
-        this.coverUrl = article.getCoverUrl();
-        this.contents = article.getContents();
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
     }
 
     public boolean matchUserId(Long userId) {
