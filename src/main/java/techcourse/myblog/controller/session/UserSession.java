@@ -1,4 +1,4 @@
-package techcourse.myblog.web.session;
+package techcourse.myblog.controller.session;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package techcourse.myblog.web.test;
+package techcourse.myblog.controller.test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;

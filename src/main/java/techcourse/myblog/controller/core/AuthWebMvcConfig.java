@@ -1,4 +1,4 @@
-package techcourse.myblog.web.core;
+package techcourse.myblog.controller.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

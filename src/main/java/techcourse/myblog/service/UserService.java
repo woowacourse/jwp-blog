@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -8,9 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.exception.DuplicatedUserException;
 import techcourse.myblog.domain.exception.NotMatchPasswordException;
 import techcourse.myblog.domain.exception.UnFoundUserException;
+import techcourse.myblog.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor

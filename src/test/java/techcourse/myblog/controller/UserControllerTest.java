@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,9 +14,9 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.Objects;
 
-import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.web.test.WebClientGenerator;
+import techcourse.myblog.controller.test.WebClientGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

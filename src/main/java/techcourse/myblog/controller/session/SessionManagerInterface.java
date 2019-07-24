@@ -1,4 +1,4 @@
-package techcourse.myblog.web.session;
+package techcourse.myblog.controller.session;
 
 interface SessionManagerInterface {
     void set(String sessionKey, Object sessionValue);

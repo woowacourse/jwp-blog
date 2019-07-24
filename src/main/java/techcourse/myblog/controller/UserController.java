@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,16 +12,15 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.groups.Default;
 
 import lombok.AllArgsConstructor;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserService;
+import techcourse.myblog.service.UserService;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserInfo;
-import techcourse.myblog.web.session.UserSession;
-import techcourse.myblog.web.session.UserSessionManager;
+import techcourse.myblog.controller.session.UserSession;
+import techcourse.myblog.controller.session.UserSessionManager;
 
 @Controller
 @AllArgsConstructor

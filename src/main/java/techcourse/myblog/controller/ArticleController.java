@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +15,7 @@ import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleService;
+import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.dto.ArticleDto;
 
 @RequestMapping("/articles")

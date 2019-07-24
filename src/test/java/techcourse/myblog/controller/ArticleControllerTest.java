@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,9 +11,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.web.test.WebClientGenerator;
+import techcourse.myblog.controller.test.WebClientGenerator;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.springframework.http.HttpMethod.DELETE;

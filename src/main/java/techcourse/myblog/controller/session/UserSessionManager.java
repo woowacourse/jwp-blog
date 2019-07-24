@@ -1,4 +1,4 @@
-package techcourse.myblog.web.session;
+package techcourse.myblog.controller.session;
 
 import org.springframework.stereotype.Component;
 

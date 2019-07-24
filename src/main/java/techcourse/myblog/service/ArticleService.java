@@ -1,11 +1,13 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.exception.UnFoundArticleException;
+import techcourse.myblog.repository.ArticleRepository;
 
 @Service
 @RequiredArgsConstructor
