@@ -20,11 +20,11 @@ public class HelloWorldControllerTests {
     void passParamWithGet() {
         String blogName = "helloWrold";
         webTestClient.get().uri("/helloworld?blogName=" + blogName)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response ->
-                        Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody()
+            .consumeWith(response ->
+                Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
 
     }
 
@@ -33,13 +33,13 @@ public class HelloWorldControllerTests {
         String blogName = "helloWrold";
 
         webTestClient.post()
-                .uri("/helloworld")
-                .body(Mono.just(blogName), String.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response ->
-                        Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
+            .uri("/helloworld")
+            .body(Mono.just(blogName), String.class)
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody()
+            .consumeWith(response ->
+                Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
 
     }
 }

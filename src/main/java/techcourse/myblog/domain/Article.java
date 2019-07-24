@@ -1,32 +1,41 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.web.ArticleRequestDto;
+import techcourse.myblog.web.dto.ArticleRequestDto;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 
+@Entity
 public class Article {
-    private static long NEXT_ID = 1;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String coverUrl;
     private String contents;
 
-    public static Article of(String title, String backgroundURL, String content) {
+    public static Article of(Long id, String title, String coverUrl, String contents) {
         Article newArticle = new Article();
-        newArticle.setId(NEXT_ID++);
-        newArticle.setTitle(title);
-        newArticle.setCoverUrl(backgroundURL);
-        newArticle.setContents(content);
+        newArticle.id = id;
+        newArticle.title = title;
+        newArticle.coverUrl = coverUrl;
+        newArticle.contents = contents;
         return newArticle;
+    }
+
+    public static Article of(String title, String coverUrl, String content) {
+        return of(null, title, coverUrl, content);
     }
 
     public static Article from(ArticleRequestDto dto) {
         Article newArticle = new Article();
-        newArticle.setId(NEXT_ID++);
-        newArticle.setTitle(dto.getTitle());
-        newArticle.setCoverUrl(dto.getCoverUrl());
-        newArticle.setContents(dto.getContents());
+        newArticle.title = dto.getTitle();
+        newArticle.coverUrl = dto.getCoverUrl();
+        newArticle.contents = dto.getContents();
         return newArticle;
     }
 
@@ -34,38 +43,22 @@ public class Article {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getCoverUrl() {
         return coverUrl;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
     public String getContents() {
         return contents;
     }
 
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
     public void update(Article article) {
         title = article.getTitle();
-        coverUrl = article.getCoverUrl();
-        contents = article.getContents();
+        coverUrl = article.coverUrl;
+        contents = article.contents;
     }
 
     @Override
