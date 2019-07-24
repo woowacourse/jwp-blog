@@ -12,8 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.service.ArticleService;
 
 import java.util.Objects;
 
@@ -25,9 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
-
-    @Autowired
-    private ArticleService articleService;
 
     private String title;
     private String coverUrl;
@@ -53,37 +48,22 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void showArticles() {
-        checkStatus(webTestClient.post(), "/articles");
-        Article article = articleService.findByTitle(title);
-
-        uniContents = contents;
-
-        checkGetStatus("/")
-                .expectBody()
-                .consumeWith(this::checkBodyResponse);
-
-        deleteMethod(article.getId());
-    }
-
-    @Test
     void findArticleById() {
-        checkStatus(webTestClient.post(), "/articles");
-        checkGetStatus("/articles/1")
+        EntityExchangeResult<byte[]> result = addArticle();
+
+        checkGetStatus("/articles/" + getArticleId(result))
                 .expectBody()
                 .consumeWith(this::checkBodyResponse);
-        deleteMethod(1);
     }
+
 
     @Test
     void saveArticle() {
         checkStatus(webTestClient.post(), "/articles")
+                .expectStatus()
+                .is3xxRedirection()
                 .expectBody()
-                .consumeWith(this::checkBodyResponse);
-
-        Article article = articleService.findByTitle(title);
-
-        deleteMethod(article.getId());
+                .returnResult();
     }
 
     @Test
@@ -92,27 +72,24 @@ public class ArticleControllerTests {
         coverUrl = "http://www.kinews.net/news/photo/200907/bjs.jpg";
         contents = "나는 우아한형제들에서 짱이다.";
         uniContents = StringEscapeUtils.escapeJava(contents);
+        EntityExchangeResult<byte[]> result = addArticle();
 
-        checkStatus(webTestClient.post(), "/articles");
+        int articleId = getArticleId(result);
 
-        Article article = articleService.findByTitle(title);
-
-        checkStatus(webTestClient.put(), "/articles/" + article.getId())
+        checkStatus(webTestClient.put(), "/articles/" + articleId)
                 .expectBody()
                 .consumeWith(this::checkBodyResponse)
                 .returnResult();
-
-        deleteMethod(article.getId());
     }
 
     @Test
     void deleteTest() {
-        checkStatus(webTestClient.post(), "/articles");
-        Article article = articleService.findByTitle(title);
+        EntityExchangeResult<byte[]> result = addArticle();
 
-        deleteMethod(article.getId());
 
-        webTestClient.get().uri("/articles/" + article.getId())
+        deleteMethod(getArticleId(result));
+
+        webTestClient.get().uri("/articles/" + getArticleId(result))
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
@@ -125,8 +102,7 @@ public class ArticleControllerTests {
                         .fromFormData("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
-                .exchange()
-                .expectStatus().isOk();
+                .exchange();
     }
 
     private void deleteMethod(int id) {
@@ -147,6 +123,16 @@ public class ArticleControllerTests {
         return webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    private EntityExchangeResult<byte[]> addArticle() {
+        return checkStatus(webTestClient.post(), "/articles")
+                .expectBody()
+                .returnResult();
+    }
+
+    private int getArticleId(EntityExchangeResult<byte[]> result) {
+        return Integer.parseInt(Objects.requireNonNull(result.getResponseHeaders().getLocation()).getPath().split("/")[2]);
     }
 }
 

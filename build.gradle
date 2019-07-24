@@ -38,5 +38,6 @@ dependencies {
         exclude group: 'junit'
     }
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
