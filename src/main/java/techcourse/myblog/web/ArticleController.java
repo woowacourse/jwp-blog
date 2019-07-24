@@ -35,7 +35,7 @@ public class ArticleController {
         Article newArticle = articleService.write(articleDto);
         model.addAttribute("article", newArticle);
 
-        return "article";
+        return "redirect:/articles/" + newArticle.getId();
     }
 
     @GetMapping("/articles/{articleId}/edit")
