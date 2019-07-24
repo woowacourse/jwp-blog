@@ -2,29 +2,29 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.persistence.LoginRepository;
+import techcourse.myblog.persistence.UserRepository;
 
 @Service
 public class LoginService {
 
-    private final LoginRepository loginRepository;
+    private final UserRepository userRepository;
 
-    public LoginService(LoginRepository loginRepository) {
-        this.loginRepository = loginRepository;
+    public LoginService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public boolean notExistUserEmail(String email) {
-        return loginRepository.findUserByEmail(email) == null;
+    public boolean existUserEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     public boolean matchEmailAndPassword(String email, String password) {
-        if (loginRepository.findUserByEmail(email) != null) {
-            return loginRepository.findUserByEmail(email).matchPassword(password);
+        if (userRepository.existsByEmail(email)) {
+            return userRepository.findUserByEmail(email).matchPassword(password);
         }
         return false;
     }
 
     public User findUserByEmail(String email) {
-        return loginRepository.findUserByEmail(email);
+        return userRepository.findUserByEmail(email);
     }
 }

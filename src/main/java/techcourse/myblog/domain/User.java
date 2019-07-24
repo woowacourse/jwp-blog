@@ -5,8 +5,6 @@ import java.util.Objects;
 
 @Entity
 public class User {
-    // column명 제거
-    // Article feedback 공통 반영
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
