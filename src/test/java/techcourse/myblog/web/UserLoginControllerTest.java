@@ -90,7 +90,7 @@ public class UserLoginControllerTest {
     @Test
     public void 유저페이지() {
         webTestClient.get()
-                .uri("/users/1/mypage")
+                .uri("/users/mypage")
                 .cookie("JSESSIONID", JSSESIONID)
                 .exchange().expectStatus().isOk();
     }
