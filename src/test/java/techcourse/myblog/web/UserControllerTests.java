@@ -8,9 +8,12 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.dto.UserDto;
@@ -45,7 +48,7 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그아웃상태_회원가입_페이지_요청() {
-        requestExpect(GET, "/signup").isOk();
+        httpRequest(GET, "/signup").isOk();
     }
 
     @Test
@@ -56,19 +59,16 @@ class UserControllerTests extends ControllerTestTemplate {
     @Test
     void 회원가입_성공시_리다이렉트() {
         UserDto userDto = new UserDto(name, email, password);
-        requestExpect(POST, "/users", parser(userDto)).isFound();
+        httpRequest(POST, "/users", parser(userDto)).isFound();
     }
 
     @ParameterizedTest(name = "{index}: {3}")
     @MethodSource("invalidParameters")
     void 회원가입_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
-        requestExpect(POST, "/users", parser(new UserDto(name, email, password)))
-                .isFound()
-                .expectBody()
-                .consumeWith(response ->
-                        bodyCheck(requestExpect(GET, getRedirectedUri(response)).isOk(),
-                                Arrays.asList(errorMsg))
-                );
+        String redirectUrl = requestAndGetRedirectUrl(POST, "/users", parser(new UserDto(name, email, password)));
+        String responseBody = requestAndGetBody(GET, redirectUrl);
+
+        assertThat(responseBody).contains(errorMsg);
     }
 
     static Stream<Arguments> invalidParameters() throws Throwable {
@@ -82,12 +82,12 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 회원목록_페이지_요청() {
-        requestExpect(GET, "/users").isOk();
+        httpRequest(GET, "/users").isOk();
     }
 
     @Test
     void 로그아웃상태_로그인_페이지_요청() {
-        requestExpect(GET, "/login").isOk();
+        httpRequest(GET, "/login").isOk();
     }
 
     @Test
@@ -97,23 +97,16 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인_성공_시_메인_화면으로_리다이렉트() {
-        requestExpect(POST, "/login", parser(savedUserDto))
-                .isFound()
-                .expectBody()
-                .consumeWith(response ->
-                        getRedirectedUri(response).equals("/"));
+        httpRequest(POST, "/login", parser(savedUserDto)).isFound();
     }
 
     @ParameterizedTest(name = "{index}: {3}")
     @MethodSource("invalidLoginParameters")
     void 로그인_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
-        requestExpect(POST, "/login", parser(new UserDto(name, email, password)))
-                .isFound()
-                .expectBody()
-                .consumeWith(response ->
-                        bodyCheck(requestExpect(GET, getRedirectedUri(response)).isOk(),
-                                Arrays.asList(errorMsg))
-                );
+        String redirectUrl = requestAndGetRedirectUrl(POST, "/login", parser(new UserDto(name, email, password)));
+        String responseBody = requestAndGetBody(GET, redirectUrl);
+
+        assertThat(responseBody).contains(errorMsg);
     }
 
     static Stream<Arguments> invalidLoginParameters() throws Throwable {
@@ -130,7 +123,7 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그아웃상태_회원정보페이지_요청_리다이렉트() {
-        requestExpect(GET, "/mypage").isFound();
+        httpRequest(GET, "/mypage").isFound();
     }
 
     @Test
@@ -140,7 +133,7 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그아웃상태_회원_정보_수정_페이지_요청_리다이렉트() {
-        requestExpect(GET, "/mypage/edit").isFound();
+        httpRequest(GET, "/mypage/edit").isFound();
     }
 
     @Test
@@ -161,7 +154,7 @@ class UserControllerTests extends ControllerTestTemplate {
     @Test
     void 로그아웃상태_정보수정_불가() {
         UserDto update = new UserDto("newname", savedUserDto.getEmail(), savedUserDto.getPassword());
-        requestExpect(PUT, "/mypage", parser(update)).isFound();
+        httpRequest(PUT, "/mypage", parser(update)).isFound();
 
         User savedUser = userRepository.findByEmail(savedUserDto.getEmail()).get();
         assertThat(savedUser.getName().equals(update.getName())).isFalse();
@@ -170,7 +163,7 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그아웃상태_탈퇴시도_실패() {
-        requestExpect(DELETE, "/users/" + savedUserDto.getEmail()).isFound();
+        httpRequest(DELETE, "/users/" + savedUserDto.getEmail()).isFound();
         assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isTrue();
     }
 
@@ -186,19 +179,19 @@ class UserControllerTests extends ControllerTestTemplate {
     }
 
     private StatusAssertions loginAndRequest(HttpMethod method, String path, MultiValueMap<String, String> data) {
-        return requestExpect(
+        return httpRequest(
                 makeRequestSpec(method, path, data)
                         .cookie("JSESSIONID", getLoginSessionId()));
     }
 
     private StatusAssertions loginAndRequest(HttpMethod method, String path) {
-        return requestExpect(
+        return httpRequest(
                 makeRequestSpec(method, path)
                         .cookie("JSESSIONID", getLoginSessionId()));
     }
 
     private String getLoginSessionId() {
-        return Objects.requireNonNull(requestExpect(POST, "/login", parser(savedUserDto))
+        return Objects.requireNonNull(httpRequest(POST, "/login", parser(savedUserDto))
                 .isFound()
                 .returnResult(Void.class)
                 .getResponseCookies()

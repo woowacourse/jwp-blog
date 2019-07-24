@@ -3,23 +3,24 @@ package techcourse.myblog.web;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.http.HttpMethod;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.domain.repository.ArticleRepository;
+import techcourse.myblog.dto.ArticleDto;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -37,19 +38,20 @@ public class ArticleControllerTests extends ControllerTestTemplate {
 
     @Test
     void articleForm() {
-        requestExpect(GET, "/articles/writing").isOk();
+        httpRequest(GET, "/articles/writing").isOk();
     }
 
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("articlesStream")
     void 게시글_작성_테스트(Article article) {
-        requestExpect(POST, "/articles/write", parser(article))
-                .isFound()
-                .expectBody()
-                .consumeWith(response ->
-                        bodyCheck(
-                                requestExpect(GET, getRedirectedUri(response)).isOk(),
-                                applyEscapeArticle(article)));
+        String redirectUrl = requestAndGetRedirectUrl(POST, "/articles/write", parser(article));
+        String responseBody = requestAndGetBody(GET, redirectUrl);
+
+        Article escapedArticle = applyEscapeArticle(article);
+
+        assertThat(responseBody).contains(escapedArticle.getTitle());
+        assertThat(responseBody).contains(escapedArticle.getCoverUrl());
+        assertThat(responseBody).contains(escapedArticle.getContents());
     }
 
     static Stream<Article> articlesStream() throws Throwable {
@@ -67,45 +69,38 @@ public class ArticleControllerTests extends ControllerTestTemplate {
 
     @Test
     void 게시글_페이지_정상_조회() {
-        bodyCheck(
-                requestExpect(GET, "/articles/" + savedArticle.getId()).isOk(), savedArticle
-        );
+        String responseBody = requestAndGetBody(GET, "/articles/" + savedArticle.getId());
+
+        assertThat(responseBody).contains(savedArticle.getTitle());
+        assertThat(responseBody).contains(savedArticle.getCoverUrl());
+        assertThat(responseBody).contains(savedArticle.getContents());
     }
 
     @Test
     void 존재하지_않는_게시글_조회_에러() {
-        requestExpect(GET, "/articles/0").isEqualTo(INTERNAL_SERVER_ERROR);
+        httpRequest(GET, "/articles/0").isEqualTo(INTERNAL_SERVER_ERROR);
     }
 
     @Test
     void 게시글_수정페이지_이동() {
-        requestExpect(GET, "/articles/" + savedArticle.getId()).isOk();
+        httpRequest(GET, "/articles/" + savedArticle.getId()).isOk();
     }
 
     @Test
     void 게시글_수정() {
-        Article article = articleRepository.save(articleDto.toArticle());
         Article editedArticle = new Article("new title", "new url", "new contents");
 
-        requestExpect(PUT, "/articles/" + article.getId(), parser(editedArticle))
-                .isFound()
-                .expectBody()
-                .consumeWith(response ->
-                        bodyCheck(requestExpect(GET, getRedirectedUri(response)).isOk(), editedArticle));
+        String redirectUrl = requestAndGetRedirectUrl(PUT, "/articles/" + savedArticle.getId(), parser(editedArticle));
+        String responseBody = requestAndGetBody(GET, redirectUrl);
+
+        assertThat(responseBody).contains(editedArticle.getTitle());
+        assertThat(responseBody).contains(editedArticle.getCoverUrl());
+        assertThat(responseBody).contains(editedArticle.getContents());
     }
 
     @Test
     void 게시글_삭제() {
-        requestExpect(DELETE, "/articles/" + savedArticle.getId()).isFound();
-    }
-
-    private void bodyCheck(WebTestClient.ResponseSpec responseSpec, Article article) {
-        List<String> contents = new ArrayList<>();
-        contents.add(article.getTitle());
-        contents.add(article.getCoverUrl());
-        contents.add(article.getContents());
-
-        super.bodyCheck(responseSpec, contents);
+        httpRequest(DELETE, "/articles/" + savedArticle.getId()).isFound();
     }
 
     private MultiValueMap<String, String> parser(Article article) {
