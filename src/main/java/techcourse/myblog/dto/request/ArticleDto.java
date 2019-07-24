@@ -11,7 +11,6 @@ public class ArticleDto {
 	public ArticleDto() {
 	}
 
-	//TODO : POST 시 ID가 비어있어서 새로운 생성자를 만든건데 이렇게 두 가지의 생성자를 만드는게 바람직한 일인가?
 	public ArticleDto(String title, String contents, String coverUrl) {
 		this.title = title;
 		this.contents = contents;

@@ -27,15 +27,15 @@ public class ArticleController {
 
 	@GetMapping("writing")
 	public String createArticle(HttpSession httpSession) {
-		if(!existSession(httpSession)) {
+		if (!existSession(httpSession)) {
 			return "redirect:/";
 		}
 		return "article-edit";
 	}
-//TODO: SAVE, EDIT시 USER ID
+
 	@PostMapping("articles")
 	public String saveArticle(ArticleDto articleDto, HttpSession httpSession) {
-		if(!existSession(httpSession)) {
+		if (!existSession(httpSession)) {
 			return "redirect:/";
 		}
 		Article article = articleDto.valueOfArticle();
@@ -51,7 +51,7 @@ public class ArticleController {
 
 	@GetMapping("articles/{articleId}/edit")
 	public String editArticle(@PathVariable Long articleId, Model model, HttpSession httpSession) {
-		if(!existSession(httpSession)) {
+		if (!existSession(httpSession)) {
 			return "redirect:/";
 		}
 		getArticleWhenExists(articleId, model);
@@ -66,7 +66,7 @@ public class ArticleController {
 
 	@PutMapping("articles/{articleId}")
 	public String modifyArticle(@PathVariable Long articleId, ArticleDto articleDto, HttpSession httpSession) {
-		if(!existSession(httpSession)) {
+		if (!existSession(httpSession)) {
 			return "redirect:/";
 		}
 		Article article = articleDto.valueOfArticle(articleId);
@@ -76,7 +76,7 @@ public class ArticleController {
 
 	@DeleteMapping("articles/{articleId}")
 	public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
-		if(!existSession(httpSession)) {
+		if (!existSession(httpSession)) {
 			return "redirect:/";
 		}
 		articleRepository.deleteById(articleId);

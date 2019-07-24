@@ -50,7 +50,7 @@ public class ArticleControllerTests {
 	@Test
 	void deleteArticle() {
 		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
-		StatusAssertions statusAssertions = request(HttpMethod.DELETE, "/articles/"+articleId);
+		StatusAssertions statusAssertions = request(HttpMethod.DELETE, "/articles/" + articleId);
 		checkRedirect(statusAssertions, "Location", ".+/");
 		assertThat(articleRepository.findById(articleId)).isEmpty();
 	}

@@ -21,7 +21,7 @@ public class UserService {
 	}
 
 	public void signUp(UserDto userDto) {
-		if(userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+		if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
 			throw new AlreadyExistEmailException();
 		}
 		User user = new User();
@@ -40,7 +40,7 @@ public class UserService {
 
 	public void leaveUser(String email, String password) {
 		User user = findUser(email);
-		if(!user.matchPassword(password)) {
+		if (!user.matchPassword(password)) {
 			throw new NotMatchPasswordException();
 		}
 		userRepository.delete(user);
