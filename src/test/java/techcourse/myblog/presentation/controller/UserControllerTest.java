@@ -106,7 +106,6 @@ class UserControllerTest {
                 });
     }
 
-
     @Test
     void login_loginGetEditPage_isOk() {
         webTestClient.get().uri("/user/edit")
@@ -143,7 +142,6 @@ class UserControllerTest {
         webTestClient.get().uri(USER_MAPPING_URL + "/logout")
                 .header("cookie", cookie)
                 .exchange();
-
         webTestClient.get().uri("/").header("cookie", cookie)
                 .exchange()
                 .expectStatus().isOk()
@@ -152,7 +150,6 @@ class UserControllerTest {
                     String body = new String(response.getResponseBody());
                     assertThat(body.contains("Login")).isTrue();
                 });
-
     }
 
     private WebTestClient.ResponseSpec commonRequest(HttpMethod method, final UserDto userDto, String attatchedUrl) {

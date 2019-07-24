@@ -13,7 +13,7 @@ public class WebConfig {
             @Override
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(new AuthInterceptor())
-                        .addPathPatterns("user/login")
+                        .addPathPatterns("user/*")
                         .addPathPatterns("/user/show")
                         .addPathPatterns("/user/edit")
                         .addPathPatterns("/user/delete");
