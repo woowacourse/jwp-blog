@@ -55,13 +55,13 @@ class LoginControllerTests {
 		requestForLogin("tiber@naver.com", "asdfASDF1@!").isBadRequest();
 	}
 
-	private StatusAssertions requestForLogin(String email, String requestURI) {
+	private StatusAssertions requestForLogin(String email, String requestUri) {
 		return webTestClient.post()
 				.uri("/login")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.body(BodyInserters
 						.fromFormData("email", email)
-						.with("password", requestURI))
+						.with("password", requestUri))
 				.exchange()
 				.expectStatus();
 	}

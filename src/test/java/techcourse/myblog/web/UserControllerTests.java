@@ -37,6 +37,22 @@ class UserControllerTests {
 	}
 
 	@Test
+	void users() {
+		StatusAssertions statusAssertions = request(HttpMethod.GET, "/users");
+		checkRedirect(statusAssertions, "Location", ".+/user-list");
+	}
+
+	@Test
+	void userList() {
+		request(HttpMethod.GET, "/user-list").isOk();
+	}
+
+	@Test
+	void getSignUpPage() {
+		request(HttpMethod.GET, "/signup").isOk();
+	}
+
+	@Test
 	void signUpSuccess() {
 		StatusAssertions statusAssertions = requestForSignUp("tiber", "tiber@naver.com", "asdfASDF123@!#$");
 		checkRedirect(statusAssertions, "Location", ".+/login");
@@ -78,34 +94,6 @@ class UserControllerTests {
 						.with("password", password))
 				.exchange()
 				.expectStatus();
-	}
-
-	@Test
-	void users() {
-		StatusAssertions statusAssertions = request(HttpMethod.GET, "/users");
-		checkRedirect(statusAssertions, "Location", ".+/user-list");
-	}
-
-	@Test
-	void getSignUpPage() {
-		request(HttpMethod.GET, "/signup").isOk();
-	}
-
-	@Test
-	void userList() {
-		request(HttpMethod.GET, "/user-list").isOk();
-	}
-
-	@Test
-	void moveMyPageFailureDueToNotLogin() {
-		StatusAssertions statusAssertions = request(HttpMethod.GET, "/mypage");
-		checkRedirect(statusAssertions, "Location", ".+/");
-	}
-
-	@Test
-	void moveMyPageEditFailureDueToNotLogin() {
-		StatusAssertions statusAssertions = request(HttpMethod.GET, "/mypage/edit");
-		checkRedirect(statusAssertions, "Location", ".+/");
 	}
 
 	private StatusAssertions request(HttpMethod httpMethod, String requestURI) {
