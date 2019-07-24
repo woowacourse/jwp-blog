@@ -48,7 +48,7 @@ public class ArticleControllerTests {
 
     @Test
     void showArticleWritingPages() {
-        checkGetStatus("/writing");
+        checkGetStatus("/articles/writing");
     }
 
     @Test
