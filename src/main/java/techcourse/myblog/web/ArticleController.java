@@ -17,7 +17,6 @@ import techcourse.myblog.dto.ArticleWriteDto;
 @RequiredArgsConstructor
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
-
     private final ArticleRepository articleRepository;
 
     @GetMapping("/writing")
@@ -27,10 +26,12 @@ public class ArticleController {
 
     @PostMapping
     public String writeArticle(ArticleWriteDto articleWriteDto, Model model) {
+        log.debug("Post Data : {}", articleWriteDto);
         Article article = articleRepository.save(ArticleAssembler.writeArticle(articleWriteDto));
         model.addAttribute("article", article);
         return "redirect:/articles/" + article.getId();
     }
+
 
     @GetMapping("/edit/{articleId}")
     public String showArticleEditingPage(@PathVariable int articleId, Model model) {
@@ -48,6 +49,7 @@ public class ArticleController {
 
     @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable int articleId, ArticleWriteDto articleWriteDto, Model model) {
+        log.debug("Put Data : {}", articleWriteDto);
         Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
         article.update(ArticleAssembler.writeArticle(articleWriteDto));
         articleRepository.save(article);

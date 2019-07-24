@@ -12,7 +12,7 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
     private BasicAuthInterceptor basicAuthInterceptor;
-    private List<String> userPatterns = Arrays.asList("/mypage/**", "/mypage", "/login/page");
+    private List<String> userPatterns = Arrays.asList("/users/mypage/**", "/users/mypage", "/users/login/page");
 
     public WebConfig(BasicAuthInterceptor basicAuthInterceptor) {
         this.basicAuthInterceptor = basicAuthInterceptor;
