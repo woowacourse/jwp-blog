@@ -10,7 +10,7 @@ import techcourse.myblog.service.dto.LoginDTO;
 
 @Service
 public class LoginService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public LoginService(UserRepository userRepository) {

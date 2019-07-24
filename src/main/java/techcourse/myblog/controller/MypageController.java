@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class MypageController {
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public MypageController(UserService userService) {

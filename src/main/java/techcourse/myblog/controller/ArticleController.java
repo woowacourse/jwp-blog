@@ -11,7 +11,7 @@ import techcourse.myblog.service.dto.ArticleDTO;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
     @Autowired
     public ArticleController(ArticleRepository articleRepository) {

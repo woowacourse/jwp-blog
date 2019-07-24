@@ -15,9 +15,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class HomeController {
     private static final Logger log = LoggerFactory.getLogger(HomeController.class);
-    private ArticleRepository articleRepository;
-
-    ;
+    private final ArticleRepository articleRepository;
 
     @Autowired
     public HomeController(ArticleRepository articleRepository) {

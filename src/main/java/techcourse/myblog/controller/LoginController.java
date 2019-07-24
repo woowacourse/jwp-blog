@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
-    private LoginService loginService;
+    private final LoginService loginService;
 
     @Autowired
     public LoginController(LoginService loginService) {
