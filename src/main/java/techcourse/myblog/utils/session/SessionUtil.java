@@ -1,8 +1,8 @@
-package techcourse.myblog.session;
+package techcourse.myblog.utils.session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import techcourse.myblog.model.ModelUtil;
+import techcourse.myblog.utils.model.ModelUtil;
 
 import javax.servlet.http.HttpSession;
 

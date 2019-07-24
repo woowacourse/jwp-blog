@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
-import techcourse.myblog.model.ModelUtil;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.session.SessionUtil;
+import techcourse.myblog.utils.model.ModelUtil;
+import techcourse.myblog.utils.session.SessionUtil;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import static techcourse.myblog.session.SessionContext.USER;
+import static techcourse.myblog.utils.session.SessionContext.USER;
 
 @Controller
 public class UserController {

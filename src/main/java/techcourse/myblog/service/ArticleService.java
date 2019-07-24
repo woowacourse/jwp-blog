@@ -11,6 +11,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.exception.ArticleException;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.utils.page.PageRequest;
 
 import java.util.List;
 
