@@ -19,7 +19,7 @@ public class Article {
     @Column(nullable = false)
     private String contents;
 
-    public Article() {
+    private Article() {
     }
 
     public Article(String title, String coverUrl, String contents) {

@@ -29,7 +29,7 @@ public class User {
     @Transient
     public static final String AUTH_FAIL_MESSAGE = "인증에 실패하였습니다.";
 
-    public User() {
+    private User() {
     }
 
     public User(String name, String email, String password) {
