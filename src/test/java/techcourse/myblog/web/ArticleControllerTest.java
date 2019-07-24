@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.article.Article;
@@ -18,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTest {
+public class ArticleControllerTest extends AbstractControllerTest{
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -39,35 +40,49 @@ public class ArticleControllerTest {
     }
 
     @Test
-    void writeArticle() {
+    void Article_생성_페이지_접근() {
         checkIsOk(getResponse("/articles/writing"));
     }
 
     @Test
-    void create_article() {
+    void 로그인_전_Article_생성() {
         ArticleDto articleDto = new ArticleDto(title, coverUrl, contents);
         WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.post()
                 .uri("/articles"), articleDto)
-                .expectStatus().isFound();
-        checkBody(responseSpec, articleDto);
+                .expectStatus().isBadRequest();
     }
 
     @Test
-    void article_exception() {
+    void 로그인_후_Article_생성() {
+        String jSessionId = getJSessionId("Buddy","buddy@gmail.com","Aa12345!");
+        ArticleDto articleDto = new ArticleDto(title, coverUrl, contents);
+
+        WebTestClient.RequestBodySpec requestBodySpec = webTestClient.post().uri("/articles")
+                .cookie("JSESSIONID", jSessionId);
+
+        WebTestClient.ResponseSpec responseSpec = getResponse(requestBodySpec, articleDto)
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location", ".*/articles.*");
+
+        checkBody(responseSpec,articleDto);
+    }
+
+    @Test
+    void 없는_Article() {
         webTestClient.get().uri("/articles/10").exchange()
                 .expectStatus().isBadRequest();
     }
 
     @Test
-    void create_update() {
+    void 수정_페이지_접근() {
         articleRepository.save(article);
 
         checkIsOk(getResponse("articles/" + article.getArticleId() + "/edit"));
     }
 
     @Test
-    void submit_update() {
-        articleRepository.save(article);
+    void Article_수정() {
+        Article article = articleRepository.save(this.article);
         ArticleDto articleDto = new ArticleDto("update title", "update coverUrl", "update contents");
 
         WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/" + article.getArticleId()), articleDto);
@@ -77,8 +92,8 @@ public class ArticleControllerTest {
     }
 
     @Test
-    void create_delete() {
-        articleRepository.save(article);
+    void Article_삭제() {
+        Article article = articleRepository.save(this.article);
 
         webTestClient.delete().uri("/articles/" + article.getArticleId())
                 .exchange()

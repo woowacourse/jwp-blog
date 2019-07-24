@@ -22,6 +22,7 @@ public class UserControllerTest {
     WebTestClient webTestClient;
 
     public WebTestClient.ResponseSpec getRequest(String uri) {
+
         return webTestClient.get().uri(uri).exchange();
     }
 
@@ -45,6 +46,16 @@ public class UserControllerTest {
                 .expectStatus().isBadRequest();
 
         checkInvalidUserMessage(responseSpec, "중복된 이메일 입니다.");
+    }
+
+    @Test
+    void 이메일_형식_확인() {
+        create_user(userName, "buddy@buddy.com", password);
+
+        WebTestClient.ResponseSpec responseSpec = getResponseSpec(userName, "buddy", password, password)
+                .expectStatus().isBadRequest();
+
+        checkInvalidUserMessage(responseSpec, "형식에 맞는 이메일이 아닙니다.");
     }
 
     @Test
@@ -83,7 +94,6 @@ public class UserControllerTest {
             assertThat(body.contains("martin@gmail.com")).isTrue();
         });
     }
-
     @Test
     void 로그인_전_마이페이지_접근() {
         getRequest("/users/mypage")
@@ -118,7 +128,6 @@ public class UserControllerTest {
             assertThat(body.contains(message)).isTrue();
         });
     }
-
 
     private void create_user(String userName, String email, String password) {
         webTestClient.post().uri("/users/new")

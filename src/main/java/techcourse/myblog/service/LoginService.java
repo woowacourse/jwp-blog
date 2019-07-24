@@ -6,6 +6,8 @@ import techcourse.myblog.service.dto.AuthenticationDto;
 import techcourse.myblog.user.User;
 import techcourse.myblog.user.UserRepository;
 
+import javax.servlet.http.HttpSession;
+
 @Service
 public class LoginService {
 
@@ -28,4 +30,9 @@ public class LoginService {
         }
     }
 
+    public void checkValidLogin(HttpSession httpSession) {
+        if(httpSession.getAttribute("user") != null){
+            throw LoginException.alreadyLogin();
+        }
+    }
 }

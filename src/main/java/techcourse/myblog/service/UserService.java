@@ -16,8 +16,6 @@ import techcourse.myblog.user.UserRepository;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -30,11 +28,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void createNewUser(BindingResult bindingResult, UserDto userDto) {
+    public User createNewUser(BindingResult bindingResult, UserDto userDto) {
         checkValidUserInformation(bindingResult, userDto);
         User user = userDto.toEntity();
         userRepository.save(user);
         log.info("새로운 {} 유저가 가입했습니다.", user.getUserName());
+        return user;
     }
 
     private void checkValidUserInformation(BindingResult bindingResult, UserDto userDto) {
@@ -48,10 +47,7 @@ public class UserService {
     }
 
     public List<User> findAll() {
-        Iterator<User> userIterator = userRepository.findAll().iterator();
-        List<User> users = new ArrayList<>();
-        userIterator.forEachRemaining(users::add);
-        return users;
+        return userRepository.findAll();
     }
 
     public void checkRequestAboutMypage(HttpSession httpSession) {
