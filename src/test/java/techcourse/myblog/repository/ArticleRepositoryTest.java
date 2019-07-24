@@ -4,9 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import techcourse.myblog.converter.DtoToArticle;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleRequestDto;
+import techcourse.myblog.utils.converter.DtoConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +17,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest
 class ArticleRepositoryTest {
     private final ArticleRepository articleRepository;
-    private final DtoToArticle articleDtoToArticle;
 
     @Autowired
-    public ArticleRepositoryTest(ArticleRepository articleRepository, DtoToArticle articleDtoToArticle) {
+    public ArticleRepositoryTest(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
-        this.articleDtoToArticle = articleDtoToArticle;
     }
 
     @BeforeEach
@@ -66,7 +64,7 @@ class ArticleRepositoryTest {
     void UpdateTest() {
         ArticleRequestDto articleRequestDto = new ArticleRequestDto("a100", "b", "c");
         Article article = articleRepository.findById(1L).orElseThrow(IllegalAccessError::new);
-        article.update(articleDtoToArticle.convert(articleRequestDto));
+        article.update(DtoConverter.convert(articleRequestDto));
         articleRepository.save(article);
 
         assertThat(articleRepository.findById(1L).get().getTitle()).isEqualTo("a100");
