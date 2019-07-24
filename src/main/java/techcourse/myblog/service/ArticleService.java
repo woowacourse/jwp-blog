@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleAssembler;
 import techcourse.myblog.dto.ArticleDto;
@@ -26,16 +27,21 @@ public class ArticleService {
         return ArticleAssembler.writeDto(article);
     }
 
-    public long createArticle(ArticleDto article) {
-        Article newArticle = ArticleAssembler.writeArticle(article);
+    public long save(ArticleDto articleDto) {
+        Article newArticle = ArticleAssembler.writeArticle(articleDto);
         return articleRepository.save(newArticle).getArticleId();
     }
 
-    public void updateArticle(ArticleDto articleDto) {
-        articleRepository.save(ArticleAssembler.writeArticle(articleDto));
+    @Transactional
+    public Article update(ArticleDto articleDto) {
+        Article updatedArticle = new Article(articleDto.getArticleId(), articleDto.getTitle(),
+                articleDto.getCoverUrl(), articleDto.getContents());
+        Article article = articleRepository.findById(updatedArticle.getArticleId())
+                .orElseThrow(NoSuchElementException::new);
+        return article.update(updatedArticle);
     }
 
-    public void deleteArticleById(long articleId) {
+    public void deleteById(long articleId) {
         articleRepository.deleteById(articleId);
     }
 }

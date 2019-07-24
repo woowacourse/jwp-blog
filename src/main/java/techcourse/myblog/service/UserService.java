@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
@@ -22,7 +23,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void createUser(UserDto userDto) {
+    public void save(UserDto userDto) {
         validateUniqueEmail(userDto);
         validatePasswordConfirm(userDto);
         User user = UserAssembler.writeUser(userDto);
@@ -45,46 +46,36 @@ public class UserService {
         return UserAssembler.writeDtos(userRepository.findAll());
     }
 
-    public User findUserByEmailAndPassword(String email) {
-        User user = userRepository.findUserByEmail(email);
-        if (user == null) {
-            throw new NoSuchElementException("잘못된 접근입니다.");
-        }
-        return user;
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("잘못된 접근입니다."));
     }
 
     public User findUserByEmailAndPassword(UserDto userDto) {
         String email = userDto.getEmail();
         String password = userDto.getPassword();
-        checkUserByEmail(email);
-        checkPassword(email, password);
-        return userRepository.findUserByEmailAndPassword(email, password);
+        checkEmail(email);
+        return userRepository.findUserByEmailAndPassword(email, password)
+                .orElseThrow(() -> new FailedLoginException("비밀번호가 일치하지 않습니다."));
     }
 
-    private void checkUserByEmail(String email) {
+    private void checkEmail(String email) {
         if (userRepository.countByEmail(email) == NOT_FOUND_RESULT) {
             throw new FailedLoginException("존재하지 않는 이메일입니다.");
         }
     }
 
-    private void checkPassword(String email, String password) {
-        User user = userRepository.findUserByEmailAndPassword(email, password);
-        if (user == null) {
-            throw new FailedLoginException("비밀번호가 일치하지 않습니다.");
-        }
+    @Transactional
+    public User update(UserDto userDto) {
+        User updatedUser = new User(userDto.getUserId(), userDto.getName(), userDto.getEmail(), userDto.getPassword());
+        User user = userRepository.findUserByEmail(updatedUser.getEmail())
+                .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
+        return user.update(updatedUser);
     }
 
-    public void update(UserDto userDto) {
-        String updatedName = userDto.getName();
-        String email = userDto.getEmail();
-        String password = userDto.getPassword();
-        User user = userRepository.findUserByEmail(email);
-        User updatedUser = new User(user.getUserId(), updatedName, email, password);
-        userRepository.save(updatedUser);
-    }
-
-    public void deleteUser(String email) {
-        User user = userRepository.findUserByEmail(email);
+    public void deleteByEmail(String email) {
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
         userRepository.deleteById(user.getUserId());
     }
 }

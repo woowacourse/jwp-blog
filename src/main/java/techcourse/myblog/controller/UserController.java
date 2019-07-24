@@ -31,7 +31,7 @@ public class UserController {
 
     @PostMapping("/users/new")
     public String enrollUser(UserDto userDto) {
-        userService.createUser(userDto);
+        userService.save(userDto);
         return "redirect:/login";
     }
 
@@ -64,7 +64,7 @@ public class UserController {
     @GetMapping("/mypage")
     public String showMypage(Model model, HttpSession httpSession) {
         String email = ((LoginUser) httpSession.getAttribute("loginUser")).getEmail();
-        User user = userService.findUserByEmailAndPassword(email);
+        User user = userService.findUserByEmail(email);
         model.addAttribute("user", UserAssembler.writeDto(user));
         return "mypage";
     }
@@ -72,22 +72,22 @@ public class UserController {
     @GetMapping("/mypage/edit")
     public String showEditPage(Model model, HttpSession httpSession) {
         String email = ((LoginUser) httpSession.getAttribute("loginUser")).getEmail();
-        User user = userService.findUserByEmailAndPassword(email);
+        User user = userService.findUserByEmail(email);
         model.addAttribute("user", UserAssembler.writeDto(user));
         return "mypage-edit";
     }
 
     @PutMapping("/mypage/edit")
     public String updateUser(UserDto userDto, HttpSession httpSession) {
-        userService.update(userDto);
-        httpSession.setAttribute("loginUser", new LoginUser(userDto.getName(), userDto.getEmail()));
+        User updatedUser = userService.update(userDto);
+        httpSession.setAttribute("loginUser", new LoginUser(updatedUser.getName(), updatedUser.getEmail()));
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/mypage/delete")
     public String deleteUser(HttpSession httpSession) {
         String email = ((LoginUser) httpSession.getAttribute("loginUser")).getEmail();
-        userService.deleteUser(email);
+        userService.deleteByEmail(email);
         return "redirect:/logout";
     }
 

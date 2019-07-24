@@ -57,6 +57,12 @@ public class User {
         }
     }
 
+    public User update(User updatedUser) {
+        this.name = updatedUser.getName();
+        this.password = updatedUser.getPassword();
+        return this;
+    }
+
     public long getUserId() {
         return userId;
     }

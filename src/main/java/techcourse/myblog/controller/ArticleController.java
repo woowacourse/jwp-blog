@@ -53,7 +53,7 @@ public class ArticleController {
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable long articleId) {
-        articleService.deleteArticleById(articleId);
+        articleService.deleteById(articleId);
         return "redirect:/";
     }
 }

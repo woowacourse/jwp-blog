@@ -31,16 +31,16 @@ class UserServiceTest {
     @Test
     public void 중복된_이메일을_등록하는_경우_예외처리() {
         userDto.setEmail("cony1@cony.com");
-        userService.createUser(userDto);
+        userService.save(userDto);
 
         assertThrows(DuplicateKeyException.class,
-                () -> userService.createUser(userDto));
+                () -> userService.save(userDto));
     }
 
     @Test
     public void 등록된_사용자가_로그인을_하는_경우_테스트() {
         userDto.setEmail("cony2@cony.com");
-        userService.createUser(userDto);
+        userService.save(userDto);
 
         assertThat(userService.findUserByEmailAndPassword(userDto).getEmail()).isEqualTo(userDto.getEmail());
         assertThat(userService.findUserByEmailAndPassword(userDto).getName()).isEqualTo(userDto.getName());

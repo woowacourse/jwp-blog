@@ -25,6 +25,13 @@ public class Article {
         this.articleId = articleId;
     }
 
+    public Article update(Article updatedArticle) {
+        this.title = updatedArticle.getTitle();
+        this.coverUrl = updatedArticle.getCoverUrl();
+        this.contents = updatedArticle.getContents();
+        return this;
+    }
+
     public long getArticleId() {
         return articleId;
     }
