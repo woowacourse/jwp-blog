@@ -11,7 +11,7 @@ import techcourse.myblog.exception.EmailNotFoundException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
@@ -27,13 +27,20 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void save(final UserRequestDto userRequestDto) {
+    public UserResponseDto save(final UserRequestDto userRequestDto) {
+        checkNull(userRequestDto);
         User user = convertToEntity(userRequestDto);
         String email = user.getEmail();
-        if (userRepository.findById(email).isPresent()) {
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new DuplicatedEmailException("이메일이 중복됩니다.");
         }
-        userRepository.save(user);
+        return convertToDto(userRepository.save(user));
+    }
+
+    private void checkNull(final UserRequestDto userRequestDto) {
+        if (Objects.isNull(userRequestDto)) {
+            throw new NullPointerException();
+        }
     }
 
     public List<UserResponseDto> findAll() {
@@ -43,17 +50,20 @@ public class UserService {
     }
 
     public UserResponseDto update(final String email, final String name) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isPresent()) {
-            User retrieveUser = userOptional.get();
-            retrieveUser.update(name);
-            User persistUser = userRepository.save(retrieveUser);
-            return convertToDto(persistUser);
+        checkNull(email, name);
+        User retrieveUser = userRepository.findByEmail(email).orElseThrow(EmailNotFoundException::new);
+        retrieveUser.update(name);
+        return convertToDto(retrieveUser);
+    }
+
+    private void checkNull(final String email, final String name) {
+        if (Objects.isNull(email) || Objects.isNull(name)) {
+            throw new NullPointerException();
         }
-        throw new EmailNotFoundException("존재하지 않는 회원입니다.");
     }
 
     public void delete(final UserResponseDto user) {
-        userRepository.deleteById(user.getEmail());
+        User retrieveUser = userRepository.findByEmail(user.getEmail()).orElseThrow(EmailNotFoundException::new);
+        userRepository.delete(retrieveUser);
     }
 }

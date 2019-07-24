@@ -1,4 +1,4 @@
-package techcourse.myblog.service;
+package techcourse.myblog.service.article;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,18 +10,16 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.dto.article.ArticleDto;
 import techcourse.myblog.exception.ArticleDtoNotFoundException;
 import techcourse.myblog.exception.ArticleNotFoundException;
-import techcourse.myblog.service.article.ArticleAssembler;
-import techcourse.myblog.service.article.ArticleService;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static techcourse.myblog.service.article.ArticleAssembler.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleServiceTest {
-    private ArticleAssembler assembler;
     private ArticleDto articleDto;
     private Long id;
 
@@ -30,7 +28,6 @@ public class ArticleServiceTest {
 
     @BeforeEach
     void setUp() {
-        assembler = new ArticleAssembler();
         articleDto = new ArticleDto("title", "", "content");
         id = service.save(articleDto);
     }
@@ -60,7 +57,7 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_수정_확인() {
-        ArticleDto updatedArticleDto = assembler.convertToDto(
+        ArticleDto updatedArticleDto = convertToDto(
                 new Article("newTitle", "", "newContent"));
         service.update(id, updatedArticleDto);
         ArticleDto retrievedArticleDto = service.findById(id);

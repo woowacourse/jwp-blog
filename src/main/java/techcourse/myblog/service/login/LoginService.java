@@ -8,7 +8,7 @@ import techcourse.myblog.dto.user.UserResponseDto;
 import techcourse.myblog.exception.EmailNotFoundException;
 import techcourse.myblog.exception.InvalidPasswordException;
 
-import java.util.Optional;
+import java.util.Objects;
 
 import static techcourse.myblog.service.user.UserAssembler.convertToDto;
 
@@ -22,13 +22,16 @@ public class LoginService {
     }
 
     public UserResponseDto findByEmailAndPassword(final String email, final String password) {
-        Optional<User> userOpt = userRepository.findByEmail(email);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            validatePassword(password, user);
-            return convertToDto(user);
+        checkNull(email, password);
+        User retrieveUser = userRepository.findByEmail(email).orElseThrow(EmailNotFoundException::new);
+        validatePassword(password, retrieveUser);
+        return convertToDto(retrieveUser);
+    }
+
+    private void checkNull(String email, String password) {
+        if (Objects.isNull(email) || Objects.isNull(password)) {
+            throw new NullPointerException();
         }
-        throw new EmailNotFoundException("틀린 이메일입니다!");
     }
 
     private void validatePassword(final String password, final User user) {
