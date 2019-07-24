@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserProfileDto;
+import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
@@ -13,15 +14,18 @@ import techcourse.myblog.service.exception.UserUpdateException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 
 @Controller
 public class UserController {
     private static final String LOGGED_IN_USER = "loggedInUser";
 
     private UserService userService;
+    private ArticleService articleService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ArticleService articleService) {
         this.userService = userService;
+        this.articleService = articleService;
     }
 
     @GetMapping("/users/sign-up")
@@ -46,13 +50,9 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public String editUserName(@PathVariable Long id, UserPublicInfoDto userPublicInfoDto, HttpServletRequest httpServletRequest) {
     public String editUserName(@PathVariable Long id, UserProfileDto userProfileDto, HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
         if (isLoggedInUser(httpSession, id)) {
-            userService.update(userPublicInfoDto);
-            userPublicInfoDto.setId(id);
-            httpSession.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
             userService.update(userProfileDto);
             userProfileDto.setId(id);
             httpSession.setAttribute(LOGGED_IN_USER, userProfileDto);
@@ -60,10 +60,12 @@ public class UserController {
         return "redirect:/mypage/" + id;
     }
 
+    @Transactional
     @DeleteMapping("/users/{id}")
     public String deleteUser(@PathVariable Long id, HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
         if (isLoggedInUser(httpSession, id)) {
+            articleService.deleteByUserId(id);
             userService.delete(id);
             httpSession.removeAttribute(LOGGED_IN_USER);
         }
@@ -71,7 +73,6 @@ public class UserController {
     }
 
     private boolean isLoggedInUser(HttpSession httpSession, Long id) {
-        UserPublicInfoDto loggedInUser = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
         UserProfileDto loggedInUser = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
         return (loggedInUser != null) && loggedInUser.getId().equals(id);
     }

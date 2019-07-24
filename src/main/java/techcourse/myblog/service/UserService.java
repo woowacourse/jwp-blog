@@ -20,11 +20,9 @@ import static techcourse.myblog.service.exception.UserArgumentException.EMAIL_DU
 @Service
 public class UserService {
     private UserRepository userRepository;
-    private ArticleRepository articleRepository;
 
-    public UserService(UserRepository userRepository, ArticleRepository articleRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.articleRepository = articleRepository;
     }
 
     public List<User> findAll() {
