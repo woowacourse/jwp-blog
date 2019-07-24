@@ -26,14 +26,14 @@ configurations {
 }
 
 dependencies {
-	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'com.h2database:h2'
-	implementation 'org.springframework:spring-jdbc:+'
-	implementation 'commons-dbcp:commons-dbcp:1.4'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'org.springframework:spring-jdbc:+'
+	runtimeOnly 'commons-dbcp:commons-dbcp:1.4'
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
