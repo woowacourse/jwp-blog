@@ -17,12 +17,11 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTests {
+class ArticleControllerTests {
     private static final String SAMPLE_TITLE = "SAMPLE_TITLE";
     private static final String SAMPLE_COVER_URL = "SAMPLE_COVER_URL";
     private static final String SAMPLE_CONTENTS = "SAMPLE_CONTENTS";
 
-    private String baseUrl;
     private String setUpArticleUrl;
 
     @LocalServerPort
@@ -33,7 +32,7 @@ public class ArticleControllerTests {
 
     @BeforeEach
     void setUp() {
-        baseUrl = "http://localhost:" + randomServerPort;
+        String baseUrl = "http://localhost:" + randomServerPort;
 
         setUpArticleUrl = given()
                 .param("title", SAMPLE_TITLE)

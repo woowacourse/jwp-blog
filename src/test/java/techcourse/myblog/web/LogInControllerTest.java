@@ -16,9 +16,9 @@ import static techcourse.myblog.service.exception.LogInException.LOGIN_FAIL_MESS
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LogInControllerTest {
-    public static final String USER_NAME = "test";
-    public static final String USER_EMAIL = "test@test.test";
-    public static final String USER_PASSWORD = VALID_PASSWORD;
+    private static final String SAMPLE_USER_NAME = "test";
+    private static final String SAMPLE_USER_EMAIL = "test@test.test";
+    private static final String SAMPLE_USER_PASSWORD = VALID_PASSWORD;
 
     @LocalServerPort
     int randomPortNumber;
@@ -56,7 +56,7 @@ class LogInControllerTest {
                 .expectBody()
                 .consumeWith(res -> {
                     String body = new String(res.getResponseBody());
-                    assertThat(body).contains(USER_NAME);
+                    assertThat(body).contains(SAMPLE_USER_NAME);
                 });
     }
 
@@ -95,7 +95,7 @@ class LogInControllerTest {
                 });
     }
 
-    public static String logIn(WebTestClient webTestClient, String email, String password) {
+    static String logIn(WebTestClient webTestClient, String email, String password) {
         return webTestClient.post().uri("/login")
                 .body(BodyInserters.fromFormData("email", email)
                         .with("password", password))
@@ -104,8 +104,8 @@ class LogInControllerTest {
                 .getResponseCookies().get("JSESSIONID").get(0).getValue();
     }
 
-    public static String logInAsBaseUser(WebTestClient webTestClient) {
-        return logIn(webTestClient, USER_EMAIL, USER_PASSWORD);
+    static String logInAsBaseUser(WebTestClient webTestClient) {
+        return logIn(webTestClient, SAMPLE_USER_EMAIL, SAMPLE_USER_PASSWORD);
     }
 
     @AfterEach
