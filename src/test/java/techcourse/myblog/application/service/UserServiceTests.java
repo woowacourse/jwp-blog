@@ -1,66 +1,82 @@
 package techcourse.myblog.application.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InOrder;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import techcourse.myblog.application.converter.UserConverter;
 import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
 import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.UserRepository;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserServiceTests {
 
-    @Autowired
+    @InjectMocks
     private UserService userService;
+
+    @Mock
+    UserRepository userRepository;
+
+    private InOrder inOrder;
+
+    String email;
+    String name;
+    String password;
+
+    UserDto userDto;
+    LoginDto loginDto;
+    User user;
+
+    @BeforeEach
+    void setUp() {
+        inOrder = inOrder(userRepository);
+        UserConverter userConverter = UserConverter.getInstance();
+
+        email = "zino@naver.com";
+        name = "zino";
+        password = "zinozino";
+
+        userDto = new UserDto(email, name, password);
+        loginDto = new LoginDto(email, password);
+        user = userConverter.convertFromDto(userDto);
+    }
 
     @Test
     void 중복되지_않은_User_생성() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
+        userService.save(userDto);
 
-        UserDto userDto = new UserDto(email, name, password);
-        assertDoesNotThrow(() -> userService.save(userDto));
-
-        userService.removeById(userDto, email);
+        verify(userRepository, times(1)).save(user);
     }
 
     @Test
     void 중복된_User_생성_예외발생() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
+        given(userRepository.findById(user.getEmail())).willReturn(Optional.of(user));
 
-        UserDto userDto = new UserDto(email, name, password);
-        assertDoesNotThrow(() -> userService.save(userDto));
         assertThrows(DuplicatedIdException.class, () -> userService.save(userDto));
-
-        userService.removeById(userDto, email);
     }
 
     @Test
     void 저장된_User_조회() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
+        given(userRepository.findById(user.getEmail()))
+                .willReturn(Optional.of(user));
 
-        UserDto userDto = new UserDto(email, name, password);
-        userService.save(userDto);
-        UserDto foundUser = userService.findById(email);
-
-        assertThat(foundUser.getEmail()).isEqualTo(email);
-        assertThat(foundUser.getName()).isEqualTo(name);
-        assertThat(foundUser.getPassword()).isEqualTo(password);
-        userService.removeById(userDto, email);
+        assertThat(userService.findById(userDto.getEmail())).isEqualTo(userDto);
     }
 
     @Test
@@ -72,53 +88,36 @@ public class UserServiceTests {
 
     @Test
     void 저장된_User_삭제() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
+        given(userRepository.findById(user.getEmail())).willReturn(Optional.of(user));
 
-        UserDto userDto = new UserDto(email, name, password);
-        userService.save(userDto);
+        userService.removeById(userDto, userDto.getEmail());
 
-        assertDoesNotThrow(() -> userService.removeById(userDto, email));
+        verify(userRepository, times(1)).delete(user);
     }
 
     @Test
     void 저장된_id_login() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
+        given(userRepository.findById(user.getEmail())).willReturn(Optional.of(user));
 
-        UserDto userDto = new UserDto(email, name, password);
-        userService.save(userDto);
-
-        assertDoesNotThrow(() -> userService.login(LoginDto.of(userDto)));
-
-        userService.removeById(userDto, email);
+        assertDoesNotThrow(() -> userService.login(loginDto));
     }
 
     @Test
     void 저장되지_않은_id_login() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
+        loginDto.setEmail("bimo@hi.com");
 
-        UserDto userDto = new UserDto(email, name, password);
+        given(userRepository.findById(user.getEmail())).willReturn(Optional.of(user));
 
-        assertThrows(NotExistUserIdException.class, () -> userService.login(LoginDto.of(userDto)));
+        assertThrows(NotExistUserIdException.class, () -> userService.login(loginDto));
     }
 
     @Test
     void 비밀번호_불일치_login_예외발생() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
+        loginDto.setPassword("123123123");
 
-        UserDto userDto = new UserDto(email, name, password);
-        userService.save(userDto);
+        given(userRepository.findById(user.getEmail())).willReturn(Optional.of(user));
 
-        userDto.setPassword("zinozinozi");
-        assertThrows(NotMatchPasswordException.class, () -> userService.login(LoginDto.of(userDto)));
+        assertThrows(NotMatchPasswordException.class, () -> userService.login(loginDto));
 
-        userService.removeById(userDto, email);
     }
 }

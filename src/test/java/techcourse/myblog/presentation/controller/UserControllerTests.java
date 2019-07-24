@@ -3,22 +3,25 @@ package techcourse.myblog.presentation.controller;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
     @Autowired
     WebTestClient webTestClient;
+
+//    @Autowired
+//    MockMvc mvc;
+//
+//    @MockBean
+//    UserService userService;
 
     @Autowired
     UserRepository userRepository;
@@ -29,14 +32,15 @@ public class UserControllerTests {
     }
 
     @Test
-    void 회원가입_POST() {
+    void 회원가입_POST() throws Exception {
         webTestClient.post()
                 .uri("/users")
                 .body(fromFormData("name", "name")
-                        .with("email", "email")
+                        .with("email", "email@zino.me")
                         .with("password", "password"))
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus()
+                .isFound();
     }
 
     @Test
@@ -72,7 +76,7 @@ public class UserControllerTests {
     }
 
     @Test
-    void myPage_수정_페이지_테스트() {
+    void myPage_수정_페이지_테스트() throws Exception {
         webTestClient.get()
                 .uri("/mypage/edit")
                 .header("Cookie", setCookie())
@@ -105,6 +109,8 @@ public class UserControllerTests {
                 .body(fromFormData("email", "zino@naver.com")
                         .with("password", "zino123!"))
                 .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .getFirst("Set-Cookie");
     }
 }
