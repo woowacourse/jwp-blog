@@ -8,10 +8,11 @@ import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserLoginDto;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class UserService {
+    private static final String INVALID_ACCESS = "잘못된 접근입니다.";
+
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -19,11 +20,7 @@ public class UserService {
     }
 
     public User login(UserLoginDto loginDto) {
-        User user = userRepository.findUserByEmail(loginDto.getEmail());
-        if (Objects.isNull(user)) {
-            throw new UserException("아이디가 올바르지 않습니다.");
-        }
-
+        User user = userRepository.findUserByEmail(loginDto.getEmail()).orElseThrow(() -> new UserException("아이디가 올바르지 않습니다."));
         if (!user.checkPassword(loginDto.getPassword())) {
             throw new UserException("올바르지 않은 비밀번호 입니다.");
         }
@@ -38,7 +35,7 @@ public class UserService {
     }
 
     public User update(UserDto userDto) {
-        User user = userRepository.findUserByEmail(userDto.getEmail());
+        User user = userRepository.findUserByEmail(userDto.getEmail()).orElseThrow(() -> new UserException(INVALID_ACCESS));
         user.update(userDto);
         userRepository.save(user);
         //TODO 여기서 DTO를 던져주는게 더 좋지않을까?
@@ -46,7 +43,7 @@ public class UserService {
     }
 
     public void delete(String userEmail) {
-        User user = userRepository.findUserByEmail(userEmail);
+        User user = userRepository.findUserByEmail(userEmail).orElseThrow(() -> new UserException(INVALID_ACCESS));
         userRepository.delete(user);
     }
 
@@ -55,6 +52,6 @@ public class UserService {
     }
 
     public User findUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
+        return userRepository.findUserByEmail(email).orElseThrow(() -> new UserException(INVALID_ACCESS));
     }
 }
