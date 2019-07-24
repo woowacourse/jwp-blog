@@ -29,6 +29,7 @@ dependencies {
 	implementation 'mysql:mysql-connector-java'
 
 	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+	implementation 'com.google.code.gson:gson:2.8.5'
 	
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -36,5 +37,4 @@ dependencies {
 	}
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 	testImplementation("org.springframework.boot:spring-boot-devtools")
-
 }

@@ -1,123 +1,147 @@
 package techcourse.myblog.application.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InOrder;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import techcourse.myblog.application.converter.UserConverter;
 import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
 import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.UserRepository;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserServiceTests {
-    @Autowired
+    @InjectMocks
     private UserService userService;
 
-    @Test
-    void 중복되지_않은_User_생성() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
+    @Mock
+    private UserRepository userRepository;
 
-        UserDto userDto = new UserDto(email, name, password);
-        assertDoesNotThrow(() -> userService.save(userDto));
+    private static final UserConverter USER_CONVERTER = UserConverter.getInstance();
 
-        userService.removeById(userDto, email);
+    private static final UserDto USER_DTO_1 = new UserDto("amo@woowahan.com", "amo", "amoamoamo");
+    private static final UserDto USER_DTO_2 = new UserDto("bmo@woowahan.com", "bmo", "bmobmobmo");
+    private static final UserDto USER_DTO_3 = new UserDto("cmo@woowahan.com", "cmo", "cmoamoamo");
+    private static final LoginDto LOGIN_DTO = new LoginDto("amo@woowahan.com", "amoamoamo");
+
+    private static final User USER_1 = USER_CONVERTER.convertFromDto(USER_DTO_1);
+    private static final User USER_2 = USER_CONVERTER.convertFromDto(USER_DTO_2);
+    private static final User USER_3 = USER_CONVERTER.convertFromDto(USER_DTO_3);
+    private InOrder inOrder;
+
+    @BeforeEach
+    void setup() {
+        inOrder = inOrder(userRepository);
     }
 
     @Test
-    void 중복된_User_생성_예외발생() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
+    void save() {
+        userService.save(USER_DTO_1);
+        userService.save(USER_DTO_2);
 
-        UserDto userDto = new UserDto(email, name, password);
-        assertDoesNotThrow(() -> userService.save(userDto));
-        assertThrows(DuplicatedIdException.class, () -> userService.save(userDto));
+        verify(userRepository, times(1)).save(USER_1);
+        verify(userRepository, times(1)).save(USER_2);
+        verify(userRepository, never()).save(USER_3);
 
-        userService.removeById(userDto, email);
+        inOrder.verify(userRepository).save(USER_1);
+        inOrder.verify(userRepository).save(USER_2);
     }
 
     @Test
-    void 저장된_User_조회() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
+    void save_중복된_ID_Exception() {
+        given(userRepository.findById(USER_DTO_1.getEmail())).willReturn(Optional.of(USER_1));
 
-        UserDto userDto = new UserDto(email, name, password);
-        userService.save(userDto);
-        UserDto foundUser = userService.findById(email);
-
-        assertThat(foundUser.getEmail()).isEqualTo(email);
-        assertThat(foundUser.getName()).isEqualTo(name);
-        assertThat(foundUser.getPassword()).isEqualTo(password);
-        userService.removeById(userDto, email);
+        assertThrows(DuplicatedIdException.class, () -> userService.save(USER_DTO_1));
     }
 
     @Test
-    void 저장되지_않은_User_조회_예외발생() {
-        String email = "zino1@naver.com";
-
-        assertThrows(NotExistUserIdException.class, () -> userService.findById(email));
+    void update() {
+        given(userRepository.findById(USER_DTO_1.getEmail())).willReturn(Optional.of(USER_1));
+        userService.modify(USER_DTO_1, USER_DTO_1.getEmail());
+        verify(userRepository, times(1)).findById(USER_1.getEmail());
     }
 
     @Test
-    void 저장된_User_삭제() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
-
-        UserDto userDto = new UserDto(email, name, password);
-        userService.save(userDto);
-
-        assertDoesNotThrow(() -> userService.removeById(userDto, email));
+    void update_없는_ID_Exception() {
+        assertThrows(NotExistUserIdException.class, () -> userService.modify(USER_DTO_1, USER_DTO_1.getEmail()));
     }
 
     @Test
-    void 저장된_id_login() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
+    void findById() {
+        given(userRepository.findById(USER_DTO_1.getEmail())).willReturn(Optional.of(USER_1));
+        UserDto userDto = userService.findById(USER_1.getEmail());
 
-        UserDto userDto = new UserDto(email, name, password);
-        userService.save(userDto);
+        assertThat(userDto).isEqualTo(USER_DTO_1);
 
-        assertDoesNotThrow(() -> userService.login(LoginDto.of(userDto)));
-
-        userService.removeById(userDto, email);
+        verify(userRepository, times(1)).findById(USER_DTO_1.getEmail());
     }
 
     @Test
-    void 저장되지_않은_id_login() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
-
-        UserDto userDto = new UserDto(email, name, password);
-
-        assertThrows(NotExistUserIdException.class, () -> userService.login(LoginDto.of(userDto)));
+    void find_없는_ID_Exception() {
+        assertThrows(NotExistUserIdException.class, () -> userService.findById(USER_DTO_1.getEmail()));
     }
 
     @Test
-    void 비밀번호_불일치_login_예외발생() {
-        String email = "zino@naver.com";
-        String name = "zino";
-        String password = "zinozino";
+    void findAll() {
+        given(userRepository.findById(USER_DTO_1.getEmail())).willReturn(Optional.of(USER_1));
+        given(userRepository.findById(USER_DTO_2.getEmail())).willReturn(Optional.of(USER_2));
 
-        UserDto userDto = new UserDto(email, name, password);
-        userService.save(userDto);
+        List<User> users = Arrays.asList(USER_1, USER_2);
 
-        userDto.setPassword("zinozinozi");
-        assertThrows(NotMatchPasswordException.class, () -> userService.login(LoginDto.of(userDto)));
+        given(userRepository.findAll()).willReturn(users);
 
-        userService.removeById(userDto, email);
+        List<UserDto> userDtos = userService.findAll();
+
+        assertThat(userDtos.get(0)).isEqualTo(USER_CONVERTER.convertFromEntity(USER_1));
+        assertThat(userDtos.get(1)).isEqualTo(USER_CONVERTER.convertFromEntity(USER_2));
+
+        verify(userRepository, times(1)).findAll();
+    }
+
+    @Test
+    void delete() {
+        given(userRepository.findById(USER_DTO_1.getEmail())).willReturn(Optional.of(USER_1));
+        userService.removeById(USER_DTO_1, USER_DTO_1.getEmail());
+        verify(userRepository, times(1)).deleteById(USER_1.getEmail());
+    }
+
+    @Test
+    void delete_없는_ID_Exception() {
+        assertThrows(NotExistUserIdException.class, () -> userService.removeById(USER_DTO_1, USER_DTO_1.getEmail()));
+    }
+
+    @Test
+    void login() {
+        given(userRepository.findById(USER_DTO_1.getEmail())).willReturn(Optional.of(USER_1));
+        assertDoesNotThrow(() -> userService.login(LOGIN_DTO));
+    }
+
+    @Test
+    void login_없는_ID_Exception() {
+        assertThrows(NotExistUserIdException.class, () -> userService.login(LOGIN_DTO));
+    }
+
+    @Test
+    void login_비밀번호_불일치_Exception() {
+        given(userRepository.findById(USER_DTO_1.getEmail())).willReturn(Optional.of(USER_1));
+        LoginDto loginDto = new LoginDto(LOGIN_DTO.getEmail(), LOGIN_DTO.getPassword() + "123");
+        assertThrows(NotMatchPasswordException.class, () -> userService.login(loginDto));
     }
 }

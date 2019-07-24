@@ -27,12 +27,12 @@ public class UserService {
     }
 
     @Transactional
-    public String save(UserDto userDto) {
+    public void save(UserDto userDto) {
         if (userRepository.findById(userDto.getEmail()).isPresent()) {
             throw new DuplicatedIdException("이미 사용중인 이메일입니다.");
         }
 
-        return userRepository.save(userConverter.convertFromDto(userDto)).getEmail();
+        userRepository.save(userConverter.convertFromDto(userDto));
     }
 
     @Transactional(readOnly = true)
