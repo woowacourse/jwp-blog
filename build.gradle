@@ -8,19 +8,28 @@ apply plugin: 'io.spring.dependency-management'
 group = 'techcourse'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
+jar {
+	baseName = 'spring-validation'
+	version = '0.0.1-SNAPSHOT'
+}
 
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+	implementation 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
     }
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+	testImplementation 'com.h2database:h2'
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.apache.commons:commons-lang3:3.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'mysql:mysql-connector-java'
+	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 }

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <th:block th:include="fragments/common_meta :: common_meta"></th:block>
+    <th:block th:include="fragments/common_css :: common_css"></th:block>
+</head>
+<body>
+<div>
+    <th:block th:include="fragments/navbar :: navbar"></th:block>
+    <div class="authentication">
+        <div class="sign-in-2">
+            <div class="container-fluid no-pdd-horizon overlay-dark bg" style="background-image: url('/images/default/bg.jpg')">
+                <div class="row">
+                    <div class="col-md-10 mr-auto ml-auto">
+                        <div class="row">
+                            <div class="mr-auto ml-auto full-height height-100 d-flex align-items-center">
+                                <div class="vertical-align full-height">
+                                    <div class="table-cell">
+                                        <div class="card min-width-480px">
+                                            <div class="card-body">
+                                                <div class="pdd-horizon-30 pdd-vertical-30">
+                                                    <div class="mrg-btm-30">
+                                                        <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">회원가입</h2>
+                                                    </div>
+                                                    <form th:object="${userDto}" action="/users" method="post">
+                                                        <div class="form-group">
+                                                            <label class="text-normal text-dark">Username</label>
+                                                            <input th:field="*{name}" type="text" name="name" id="name" class="form-control">
+                                                            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></span>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="text-normal text-dark">Email Address</label>
+                                                            <input th:field="*{email}" type="email" name="email" id="email" class="form-control">
+                                                            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></span>
+                                                            <span th:if="${error}" th:text="${error}" style="color:red"></span>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="text-normal text-dark">Password</label>
+                                                            <input th:field="*{password}" type="password" name="password" id="password" class="form-control" placeholder="Password">
+                                                            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red" onchange="passwordOnChangeHandler()"></span>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="text-normal text-dark">Confirm Password</label>
+                                                            <input type="password" id="passwordCheck" class="form-control" placeholder="Password" onchange="passwordOnChangeHandler()">
+                                           `                <span id="password-check-error-message" style="color:red"></span>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <button onclick="return isSamePasswordAndCheckPassword()" type="submit" class="btn btn-info btn-block border-radius-6 font-size-16 text-white">가입하기</button>
+                                                        </div>
+                                                    </form>
+                                                    <div class="text-dark">
+                                                        <span>이미 회원이신가요?</span>
+                                                        <a href="/login" class="text-info pointer mrg-left-5">로그인</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="fragments/common_script :: common_script"></th:block>
+<script>
+    function isSamePasswordAndCheckPassword() {
+        return document.querySelector('#password').value === document.querySelector('#passwordCheck').value;
+    }
+
+    function passwordOnChangeHandler() {
+        document.getElementById('password-check-error-message').innerText=isSamePasswordAndCheckPassword() ? '' : '비밀번호가 일치하지 않습니다.';
+    }
+</script>
+</body>
+</html>
