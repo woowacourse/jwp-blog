@@ -14,7 +14,7 @@
             <div class="cover-img overlay-dark bg" th:style="'background-image:url('+ ${article?.coverUrl}+')'">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="hidden" name="_method" th:value="${method}">
+                        <input type="hidden" name="_method" th:value="PUT" th:if="${article}">
                         <th:block th:if="${article != null}">
                             <input type="hidden" name="id" th:value="${article.id}">
                         </th:block>
