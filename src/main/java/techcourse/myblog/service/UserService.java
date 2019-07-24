@@ -1,13 +1,10 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserUpdateDto;
 import techcourse.myblog.exception.DuplicateEmailException;
-import techcourse.myblog.exception.InvalidDataFormException;
 import techcourse.myblog.exception.UnequalPasswordException;
 import techcourse.myblog.repository.UserRepository;
 
@@ -24,20 +21,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void save(UserDto userDto, BindingResult bindingResult) {
-        checkUserDataForm(bindingResult);
+    public void save(UserDto userDto) {
         checkEqualPassword(userDto);
         checkDuplicateEmail(userDto.getEmail());
         User user = User.of(userDto.getName(), userDto.getEmail(), userDto.getPassword());
         userRepository.save(user);
-    }
-
-    private void checkUserDataForm(BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            FieldError error = bindingResult.getFieldError();
-            String errorMessage = error.getDefaultMessage();
-            throw new InvalidDataFormException(errorMessage);
-        }
     }
 
     private void checkEqualPassword(UserDto userDto) {
@@ -52,8 +40,7 @@ public class UserService {
         }
     }
 
-    public void update(User user, UserUpdateDto userUpdateDto, BindingResult bindingResult) {
-        checkUserDataForm(bindingResult);
+    public void update(User user, UserUpdateDto userUpdateDto) {
         user.updateUser(userUpdateDto.getName());
         userRepository.save(user);
     }

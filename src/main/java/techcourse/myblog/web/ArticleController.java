@@ -5,7 +5,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.exception.CouldNotFindArticleIdException;
 import techcourse.myblog.service.ArticleService;
 
 import javax.servlet.http.HttpSession;
@@ -51,14 +50,10 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String searchArticleView(@PathVariable Long articleId, HttpSession session, Model model) {
-        try {
-            model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
-            Article findArticle = articleService.findArticleById(articleId);
-            model.addAttribute("article", findArticle);
-            return "article";
-        } catch (CouldNotFindArticleIdException e) {
-            return "redirect:/";
-        }
+        model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
+        Article findArticle = articleService.findArticleById(articleId);
+        model.addAttribute("article", findArticle);
+        return "article";
     }
 
     @PutMapping("/articles/{articleId}")

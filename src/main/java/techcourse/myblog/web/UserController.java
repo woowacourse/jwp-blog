@@ -2,7 +2,6 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,14 +27,9 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
-        try {
-            userService.save(userDto, bindingResult);
-            return "redirect:/login";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "signup";
-        }
+    public String createUser(@Valid UserDto userDto) {
+        userService.save(userDto);
+        return "redirect:/login";
     }
 
     @GetMapping("/signup")
@@ -63,16 +57,10 @@ public class UserController {
     }
 
     @PutMapping("/mypage-edit")
-    public String updateUser(@Valid UserUpdateDto userUpdateDto, BindingResult bindingResult, HttpSession session, Model model) {
-        try {
-            User user = (User) session.getAttribute(LOGIN_SESSION_KEY);
-            userService.update(user, userUpdateDto, bindingResult);
-            return "redirect:/mypage";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
-            return "mypage-edit";
-        }
+    public String updateUser(@Valid UserUpdateDto userUpdateDto, HttpSession session) {
+        User user = (User) session.getAttribute(LOGIN_SESSION_KEY);
+        userService.update(user, userUpdateDto);
+        return "redirect:/mypage";
     }
 
     @DeleteMapping("/withdrawal")
