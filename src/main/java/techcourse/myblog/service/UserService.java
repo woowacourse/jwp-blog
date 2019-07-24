@@ -2,7 +2,7 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.converter.ToUser;
+import techcourse.myblog.converter.DtoToUser;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.exception.SignUpException;
@@ -18,17 +18,17 @@ public class UserService {
     private static final String REGISTERED_EMAIL = "이미 등록된 이메일 입니다.";
     private static final String NOT_FOUND_EMAIL = "이메일을 찾을 수 없습니다.";
     private final UserRepository userRepository;
-    private final ToUser toUser;
+    private final DtoToUser dtoToUser;
 
-    public UserService(UserRepository userRepository, ToUser toUser) {
+    public UserService(UserRepository userRepository, DtoToUser dtoToUser) {
         this.userRepository = userRepository;
-        this.toUser = toUser;
+        this.dtoToUser = dtoToUser;
     }
 
     @Transactional(rollbackFor = SignUpException.class)
     public User addUser(UserRequestDto userRequestDto) {
         checkRegisteredEmail(userRequestDto);
-        return userRepository.save(toUser.convert(userRequestDto));
+        return userRepository.save(dtoToUser.convert(userRequestDto));
     }
 
     private void checkRegisteredEmail(UserRequestDto dto) {

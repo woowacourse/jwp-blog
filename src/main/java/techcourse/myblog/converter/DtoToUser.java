@@ -6,15 +6,15 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
 
 @Component
-public class ToUser implements Converter<UserRequestDto, User> {
+public class DtoToUser implements Converter<UserRequestDto, User> {
 
     private static final String EMPTY_USER_REQUEST_DTO = "'UserRequestDto'가 없습니다.";
 
     @Override
-    public User convert(UserRequestDto source) {
-        if (source == null) {
+    public User convert(UserRequestDto dto) {
+        if (dto == null) {
             throw new IllegalArgumentException(EMPTY_USER_REQUEST_DTO);
         }
-        return new User(source.getName(), source.getPassword(), source.getEmail());
+        return new User(dto.getName(), dto.getPassword(), dto.getEmail());
     }
 }

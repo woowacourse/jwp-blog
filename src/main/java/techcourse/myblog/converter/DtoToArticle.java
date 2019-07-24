@@ -6,15 +6,15 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleRequestDto;
 
 @Component
-public class ToArticle implements Converter<ArticleRequestDto, Article> {
+public class DtoToArticle implements Converter<ArticleRequestDto, Article> {
 
     private static final String EMPTY_ARTICLE_REQUEST_DTO = "'ArticleRequestDto'가 없습니다.";
 
     @Override
-    public Article convert(ArticleRequestDto source) {
-        if (source == null) {
+    public Article convert(ArticleRequestDto dto) {
+        if (dto == null) {
             throw new IllegalArgumentException(EMPTY_ARTICLE_REQUEST_DTO);
         }
-        return new Article(source.getTitle(), source.getContents(), source.getCoverUrl());
+        return new Article(dto.getTitle(), dto.getContents(), dto.getCoverUrl());
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.converter.ToArticle;
+import techcourse.myblog.converter.DtoToArticle;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.exception.ArticleException;
@@ -23,11 +23,11 @@ public class ArticleService {
     private static final int VIEW_ARTICLE_COUNT = 10;
     private static final int START_PAGE = 0;
     private final ArticleRepository articleRepository;
-    private final ToArticle toArticle;
+    private final DtoToArticle dtoToArticle;
 
-    public ArticleService(ArticleRepository articleRepository, ToArticle toArticle) {
+    public ArticleService(ArticleRepository articleRepository, DtoToArticle dtoToArticle) {
         this.articleRepository = articleRepository;
-        this.toArticle = toArticle;
+        this.dtoToArticle = dtoToArticle;
     }
 
     @Transactional(readOnly = true)
@@ -46,7 +46,7 @@ public class ArticleService {
 
     @Transactional
     public Article save(ArticleRequestDto articleRequestDto) {
-        Article article = toArticle.convert(articleRequestDto);
+        Article article = dtoToArticle.convert(articleRequestDto);
         articleRepository.save(article);
         return article;
     }
@@ -54,7 +54,7 @@ public class ArticleService {
     @Transactional(rollbackFor = ArticleException.class)
     public Article update(long articleId, ArticleRequestDto articleRequestDto) {
         Article originArticle = findArticle(articleId);
-        originArticle.update(toArticle.convert(articleRequestDto));
+        originArticle.update(dtoToArticle.convert(articleRequestDto));
         return originArticle;
     }
 
