@@ -5,6 +5,24 @@
     background-size: 100% auto;
 }
 
+.error-box {
+    height: 50px;
+    width: 100%;
+    border: 1px solid red;
+    border-radius: 5px;
+    background: pink;
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+    color: red;
+    display: table;
+}
+
+.error-text {
+    display: table-cell;
+    vertical-align: middle;
+}
+
 .about-cover .cover-img {
     min-height: 380px;
     background-repeat: no-repeat;

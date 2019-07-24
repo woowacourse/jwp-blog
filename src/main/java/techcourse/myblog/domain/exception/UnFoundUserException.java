@@ -1,10 +1,10 @@
 package techcourse.myblog.domain.exception;
 
-public class NotFoundUserException extends UserLoginException {
+public class UnFoundUserException extends UserLoginException {
 
     private static final String NAME = "email";
 
-    public NotFoundUserException(String message) {
+    public UnFoundUserException(String message) {
         super(message);
     }
 

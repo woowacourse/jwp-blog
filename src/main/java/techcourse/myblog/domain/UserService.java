@@ -5,15 +5,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import techcourse.myblog.domain.exception.DuplicatedUserException;
-import techcourse.myblog.domain.exception.NotFoundUserException;
 import techcourse.myblog.domain.exception.NotMatchPasswordException;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.domain.exception.UnFoundUserException;
 
 @Service
 @RequiredArgsConstructor
@@ -23,18 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public List<User> findAll() {
-        Iterable<User> iterable = userRepository.findAll();
-        List<User> allUsers = new ArrayList<>();
-        iterable.forEach(allUsers::add);
-        return allUsers;
-    }
-
-    public User findByEmail(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        if (!user.isPresent()){
-            throw new UnFoundUserException("존재하지 않는 유저입니다.");
-        }
-        return user.get();
+        return userRepository.findAll();
     }
 
     public User save(User user) {
@@ -47,27 +33,28 @@ public class UserService {
 
     @Transactional
     public User update(User originalUser, String newName) {
-        User user = findByEmail(originalUser.getEmail());
-        user.modifyName(newName);
-        return user;
+        return findBy(originalUser.getEmail())
+                .modifyName(newName);
     }
 
-    public User login(UserDto userDto) {
-        Optional<User> loginUser = userRepository.findByEmail(userDto.getEmail());
+    private User findBy(String email) {
+        return userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new UnFoundUserException("로그인 정보를 확인해주세요."));
+    }
 
-        if (!loginUser.isPresent()) {
-            throw new NotFoundUserException("이메일을 확인해주세요.");
+    public User login(User user) {
+        User loginUser = findBy(user.getEmail());
+
+        if (!loginUser.matchPassword(user)) {
+            throw new NotMatchPasswordException("로그인 정보를 확인해주세요.");
         }
 
-        if (!loginUser.get().matchPassword(userDto.toUser())) {
-            throw new NotMatchPasswordException("비밀번호를 확인해주세요.");
-        }
-
-        return loginUser.get();
+        return loginUser;
     }
 
     public void delete(User user) {
-        if (user != null && user.matchEmail(user)) {
+        if (user != null) {
             userRepository.delete(user);
         }
     }

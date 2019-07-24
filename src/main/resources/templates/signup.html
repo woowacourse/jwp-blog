@@ -41,6 +41,11 @@
                                                     </div>
                                                     <form action="/users" method="post" th:object="${userDto}">
                                                         <div class="form-group">
+                                                            <div class="error-box" th:if="${errors}">
+                                                                <span class="error-text" th:text="${errors}"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
                                                             <input id="name" type="text" name="name" class="form-control" required th:field="*{name}"/>
                                                             <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></span>
