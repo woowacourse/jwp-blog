@@ -1,4 +1,4 @@
-package techcourse.myblog.service.exception;
+package techcourse.myblog.presentation.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
