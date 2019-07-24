@@ -7,9 +7,8 @@ import java.util.Objects;
 
 public class ArticleAssembler {
     public static ArticleDto convertToDto(final Article article) {
-        if (Objects.isNull(article)) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(article);
+
         Long id = article.getId();
         String title = article.getTitle();
         String coverUrl = article.getCoverUrl();
@@ -21,9 +20,8 @@ public class ArticleAssembler {
     }
 
     public static Article convertToEntity(final ArticleDto articleDto) {
-        if (Objects.isNull(articleDto)) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(articleDto);
+
         String title = articleDto.getTitle();
         String coverUrl = articleDto.getCoverUrl();
         String contents = articleDto.getContents();

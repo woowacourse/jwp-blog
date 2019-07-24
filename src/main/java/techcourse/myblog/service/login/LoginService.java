@@ -22,16 +22,10 @@ public class LoginService {
     }
 
     public UserResponseDto findByEmailAndPassword(final String email, final String password) {
-        checkNull(email, password);
-        User retrieveUser = userRepository.findByEmail(email).orElseThrow(EmailNotFoundException::new);
-        validatePassword(password, retrieveUser);
+        User retrieveUser = userRepository.findByEmail(Objects.requireNonNull(email))
+                .orElseThrow(EmailNotFoundException::new);
+        validatePassword(Objects.requireNonNull(password), retrieveUser);
         return convertToDto(retrieveUser);
-    }
-
-    private void checkNull(String email, String password) {
-        if (Objects.isNull(email) || Objects.isNull(password)) {
-            throw new NullPointerException();
-        }
     }
 
     private void validatePassword(final String password, final User user) {

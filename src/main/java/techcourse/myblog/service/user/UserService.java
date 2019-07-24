@@ -28,19 +28,12 @@ public class UserService {
     }
 
     public UserResponseDto save(final UserRequestDto userRequestDto) {
-        checkNull(userRequestDto);
-        User user = convertToEntity(userRequestDto);
+        User user = convertToEntity(Objects.requireNonNull(userRequestDto));
         String email = user.getEmail();
         if (userRepository.findByEmail(email).isPresent()) {
             throw new DuplicatedEmailException("이메일이 중복됩니다.");
         }
         return convertToDto(userRepository.save(user));
-    }
-
-    private void checkNull(final UserRequestDto userRequestDto) {
-        if (Objects.isNull(userRequestDto)) {
-            throw new NullPointerException();
-        }
     }
 
     public List<UserResponseDto> findAll() {
@@ -50,20 +43,14 @@ public class UserService {
     }
 
     public UserResponseDto update(final String email, final String name) {
-        checkNull(email, name);
-        User retrieveUser = userRepository.findByEmail(email).orElseThrow(EmailNotFoundException::new);
-        retrieveUser.update(name);
+        User retrieveUser = userRepository.findByEmail(Objects.requireNonNull(email)).orElseThrow(EmailNotFoundException::new);
+        retrieveUser.update(Objects.requireNonNull(name));
         return convertToDto(retrieveUser);
     }
 
-    private void checkNull(final String email, final String name) {
-        if (Objects.isNull(email) || Objects.isNull(name)) {
-            throw new NullPointerException();
-        }
-    }
-
     public void delete(final UserResponseDto user) {
-        User retrieveUser = userRepository.findByEmail(user.getEmail()).orElseThrow(EmailNotFoundException::new);
+        User retrieveUser = userRepository.findByEmail(Objects.requireNonNull(user).getEmail())
+                .orElseThrow(EmailNotFoundException::new);
         userRepository.delete(retrieveUser);
     }
 }

@@ -8,18 +8,16 @@ import java.util.Objects;
 
 public class UserAssembler {
     public static UserResponseDto convertToDto(final User user) {
-        if (Objects.isNull(user)) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(user);
+
         String email = user.getEmail();
         String name = user.getName();
         return new UserResponseDto(email, name);
     }
 
     public static User convertToEntity(final UserRequestDto userRequestDto) {
-        if (Objects.isNull(userRequestDto)) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(userRequestDto);
+
         String email = userRequestDto.getEmail();
         String name = userRequestDto.getName();
         String password = userRequestDto.getPassword();
