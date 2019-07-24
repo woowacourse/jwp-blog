@@ -51,14 +51,14 @@ public class ArticleService {
         return article;
     }
 
-    @Transactional(rollbackFor = ArticleException.class)
+    @Transactional()
     public Article update(long articleId, ArticleRequestDto articleRequestDto) {
         Article originArticle = findArticle(articleId);
         originArticle.update(dtoToArticle.convert(articleRequestDto));
         return originArticle;
     }
 
-    @Transactional(rollbackFor = IllegalArgumentException.class)
+    @Transactional()
     public void delete(long articleId) {
         articleRepository.deleteById(articleId);
     }

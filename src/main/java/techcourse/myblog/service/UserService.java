@@ -25,7 +25,7 @@ public class UserService {
         this.dtoToUser = dtoToUser;
     }
 
-    @Transactional(rollbackFor = SignUpException.class)
+    @Transactional()
     public User addUser(UserRequestDto userRequestDto) {
         checkRegisteredEmail(userRequestDto);
         return userRepository.save(dtoToUser.convert(userRequestDto));
@@ -43,7 +43,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(rollbackFor = UserException.class)
+    @Transactional()
     public User updateUser(UserRequestDto userRequestDto, User origin) {
         User user = getUserByEmail(origin);
         user.updateNameAndEmail(userRequestDto.getName(), userRequestDto.getEmail());
@@ -55,7 +55,7 @@ public class UserService {
                 .orElseThrow(() -> new UserException(NOT_FOUND_EMAIL));
     }
 
-    @Transactional(rollbackFor = UserException.class)
+    @Transactional()
     public void deleteUser(User user) {
         userRepository.delete(getUserByEmail(user));
     }
