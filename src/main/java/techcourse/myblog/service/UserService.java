@@ -18,6 +18,7 @@ public class UserService {
 
     public boolean isDuplicatedEmail(String email) {
         // existByEmail
+        userRepository.existsByEmail(email);
         return userRepository.findUsersByEmail(email).size() != USER_NOT_EXIST;
     }
 
