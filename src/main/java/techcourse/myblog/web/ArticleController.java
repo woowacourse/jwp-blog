@@ -8,6 +8,8 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleSaveDto;
 import techcourse.myblog.service.ArticleService;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
@@ -18,17 +20,15 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @GetMapping("/new")
-    public String writeNewArticle() {
-        return "article-edit";
-    }
-
     @GetMapping("/writing")
-    public String writeArticleForm() {
+    public String writeArticleForm(HttpSession httpSession) {
+        if (httpSession.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
         return "article-edit";
     }
 
-    @PostMapping("")
+    @PostMapping
     public String saveArticle(ArticleSaveDto articleSaveDto) {
         Article article = articleService.save(articleSaveDto.toEntity());
         Long id = article.getId();
