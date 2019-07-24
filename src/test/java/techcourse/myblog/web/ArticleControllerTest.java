@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -30,34 +29,21 @@ public class ArticleControllerTest {
     }
 
     @Test
-    public void 인덱스_페이지_테스트() {
+    public void 인덱스_페이지를_확인한다() {
         webTestClient.get().uri("/")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    public void 게시글_작성_페이지_테스트() {
+    public void 게시글_작성_페이지를_확인한다() {
         webTestClient.get().uri("/writing")
                 .exchange()
                 .expectStatus().isOk();
     }
 
-    private void createArticle(Article article, Consumer<EntityExchangeResult<byte[]>> consumer) {
-        webTestClient.post()
-                .uri("/articles")
-                .body(BodyInserters
-                        .fromFormData("title", article.getTitle())
-                        .with("coverUrl", article.getCoverUrl())
-                        .with("contents", article.getContents()))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(consumer);
-    }
-
     @Test
-    public void 게시글_추가_테스트() {
+    public void 게시글_작성이_잘_되는지_확인한다() {
         createArticle(article, response -> {
             webTestClient.get()
                     .uri(response.getResponseHeaders().getLocation())
@@ -74,7 +60,7 @@ public class ArticleControllerTest {
     }
 
     @Test
-    public void 게시글_수정_페이지_테스트() {
+    public void 게시글_수정_페이지에_글_내용이_잘_나오는지_확인한다() {
         createArticle(article, response -> {
             webTestClient.get()
                     .uri(response.getResponseHeaders().getLocation() + "/edit")
@@ -91,7 +77,7 @@ public class ArticleControllerTest {
     }
 
     @Test
-    public void 게시글_수정_테스트() {
+    public void 게시글_수정이_잘_되는지_확인한다() {
         createArticle(article, response -> {
             webTestClient.put()
                     .uri(response.getResponseHeaders().getLocation())
@@ -119,26 +105,25 @@ public class ArticleControllerTest {
     }
 
     @Test
-    public void 게시글_삭제_테스트() {
+    public void 게시글_삭제가_잘_되는지_확인한다() {
         createArticle(article, response -> {
             webTestClient.delete()
                     .uri(response.getResponseHeaders().getLocation())
                     .exchange()
-                    .expectStatus().is3xxRedirection()
-                    .expectBody()
-                    .consumeWith(res -> {
-                        webTestClient.get()
-                                .uri(res.getRequestHeaders().getLocation())
-                                .exchange()
-                                .expectStatus().isOk()
-                                .expectBody()
-                                .consumeWith(r -> {
-                                    String body = new String(r.getResponseBody());
-                                    assertThat(body).doesNotContain(article.getTitle());
-                                    assertThat(body).doesNotContain(article.getCoverUrl());
-                                    assertThat(body).doesNotContain(article.getContents());
-                                });
-                    });
+                    .expectStatus().is3xxRedirection();
         });
+    }
+
+    private void createArticle(Article article, Consumer<EntityExchangeResult<byte[]>> consumer) {
+        webTestClient.post()
+                .uri("/articles")
+                .body(BodyInserters
+                        .fromFormData("title", article.getTitle())
+                        .with("coverUrl", article.getCoverUrl())
+                        .with("contents", article.getContents()))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody()
+                .consumeWith(consumer);
     }
 }

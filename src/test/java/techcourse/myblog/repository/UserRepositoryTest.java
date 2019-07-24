@@ -25,8 +25,8 @@ class UserRepositoryTest {
 
     @Test
     public void 회원_가입이_잘_되는지_확인한다() {
-        userRepository.save(user);
-        assertThat(userRepository.findAll()).contains(user);
+        User persistUser = userRepository.save(user);
+        assertThat(persistUser).isEqualTo(user);
     }
 
     @Test
