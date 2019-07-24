@@ -92,7 +92,8 @@ public class UserController {
     @PutMapping("/mypage")
     public RedirectView update(@ModelAttribute("/mypage/edit") @Validated(UserInfo.class) UserDto userDto,
                                UserSession userSession) {
-        userSessionManager.setUser(userSession.getUser());
+        User user = userService.update(userSession.getUser(), userDto.getName());
+        userSessionManager.setUser(user);
         return new RedirectView("/mypage");
     }
 }
