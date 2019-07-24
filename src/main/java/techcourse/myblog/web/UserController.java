@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
@@ -100,23 +99,20 @@ public class UserController {
     }
 
     @ExceptionHandler(BindException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleBindException(BindException e, Model model) {
         model.addAttribute("errorMessage", e.getFieldError().getDefaultMessage());
-        return "signup";
+        return "redirect:/signup";
     }
 
     @ExceptionHandler(DuplicateUserException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleDuplicateEmailException(DuplicateUserException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "signup";
+        return "redirect:/signup";
     }
 
     @ExceptionHandler(UnknownHostAccessException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleUnknownHostAccessException(UnknownHostAccessException e, Model model) {
         model.addAttribute("unexpectedAccessErrorMessage", e.getMessage());
-        return "login";
+        return "redirect:/login";
     }
 }
