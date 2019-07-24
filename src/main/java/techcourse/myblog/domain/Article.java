@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import techcourse.myblog.dto.ArticleSaveDto;
+import techcourse.myblog.dto.ArticleSaveParams;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,9 +36,9 @@ public class Article {
         return StringUtils.isNotBlank(coverUrl);
     }
 
-    public void update(ArticleSaveDto articleSaveDto) {
-        this.title = articleSaveDto.getTitle();
-        this.coverUrl = articleSaveDto.getCoverUrl();
-        this.contents = articleSaveDto.getContents();
+    public void update(ArticleSaveParams articleSaveParams) {
+        this.title = articleSaveParams.getTitle();
+        this.coverUrl = articleSaveParams.getCoverUrl();
+        this.contents = articleSaveParams.getContents();
     }
 }

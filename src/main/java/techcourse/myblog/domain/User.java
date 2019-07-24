@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import techcourse.myblog.dto.UserEditDto;
+import techcourse.myblog.dto.UserEditParams;
 
 import javax.persistence.*;
 
@@ -35,7 +35,7 @@ public class User {
         return this.password.equals(password);
     }
 
-    public void update(UserEditDto userEditDto) {
-        this.name = userEditDto.getName();
+    public void update(UserEditParams userEditParams) {
+        this.name = userEditParams.getName();
     }
 }

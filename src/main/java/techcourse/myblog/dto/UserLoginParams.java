@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserEditDto {
-    private String name;
+public class UserLoginParams {
+    private String email;
+    private String password;
 }

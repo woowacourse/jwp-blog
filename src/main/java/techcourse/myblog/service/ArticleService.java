@@ -3,7 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleSaveDto;
+import techcourse.myblog.dto.ArticleSaveParams;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.repository.ArticleRepository;
 
@@ -33,9 +33,9 @@ public class ArticleService {
     }
 
     @Transactional
-    public void update(ArticleSaveDto articleSaveDto, long id) {
+    public void update(ArticleSaveParams articleSaveParams, long id) {
         Article article = findById(id);
-        article.update(articleSaveDto);
+        article.update(articleSaveParams);
     }
 
     public void deleteById(long id) {

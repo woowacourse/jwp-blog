@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleSaveDto;
+import techcourse.myblog.dto.ArticleSaveParams;
 import techcourse.myblog.service.ArticleService;
 
 import javax.servlet.http.HttpSession;
@@ -29,8 +29,8 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String saveArticle(ArticleSaveDto articleSaveDto) {
-        Article article = articleService.save(articleSaveDto.toEntity());
+    public String saveArticle(ArticleSaveParams articleSaveParams) {
+        Article article = articleService.save(articleSaveParams.toEntity());
         Long id = article.getId();
         return "redirect:/articles/" + id;
     }
@@ -50,8 +50,8 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public String saveEditedArticle(@PathVariable long id, ArticleSaveDto articleSaveDto) {
-        articleService.update(articleSaveDto, id);
+    public String saveEditedArticle(@PathVariable long id, ArticleSaveParams articleSaveParams) {
+        articleService.update(articleSaveParams, id);
         return "redirect:/articles/" + id;
     }
 

@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserLoginDto;
+import techcourse.myblog.dto.UserLoginParams;
 import techcourse.myblog.service.LoginService;
 
 import javax.servlet.http.HttpSession;
@@ -41,10 +41,10 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(UserLoginDto userLoginDto, Model model, HttpSession httpSession) {
-        loginService.checkLogin(userLoginDto.getEmail(), userLoginDto.getPassword());
+    public String login(UserLoginParams userLoginParams, Model model, HttpSession httpSession) {
+        loginService.checkLogin(userLoginParams.getEmail(), userLoginParams.getPassword());
 
-        User user = loginService.findByEmail(userLoginDto.getEmail());
+        User user = loginService.findByEmail(userLoginParams.getEmail());
         httpSession.setAttribute("user", user);
         return "index";
     }

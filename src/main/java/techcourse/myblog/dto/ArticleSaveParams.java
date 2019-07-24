@@ -8,7 +8,7 @@ import techcourse.myblog.domain.Article;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ArticleSaveDto {
+public class ArticleSaveParams {
     private String title;
     private String coverUrl;
     private String contents;

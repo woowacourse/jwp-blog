@@ -3,7 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserEditDto;
+import techcourse.myblog.dto.UserEditParams;
 import techcourse.myblog.exception.UserDuplicateException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.repository.UserRepository;
@@ -29,10 +29,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User update(Long id, UserEditDto userEditDto) {
+    public User update(Long id, UserEditParams userEditParams) {
         User user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
-        user.update(userEditDto);
+        user.update(userEditParams);
         return user;
     }
 

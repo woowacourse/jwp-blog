@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserEditDto;
-import techcourse.myblog.dto.UserSaveDto;
+import techcourse.myblog.dto.UserEditParams;
+import techcourse.myblog.dto.UserSaveParams;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -26,8 +26,8 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public String signUp(UserSaveDto userSaveDto, Model model) {
-        userService.save(userSaveDto.toEntity());
+    public String signUp(UserSaveParams userSaveParams, Model model) {
+        userService.save(userSaveParams.toEntity());
         model.addAttribute("successMessage", SUCCESS_SIGN_UP_MESSAGE);
         return "login";
     }
@@ -66,10 +66,10 @@ public class UserController {
     }
 
     @PutMapping("/mypage/edit")
-    public String editMyPage(UserEditDto userEditDto, HttpSession httpSession) {
+    public String editMyPage(UserEditParams userEditParams, HttpSession httpSession) {
         User lastUser = (User) httpSession.getAttribute("user");
         Long id = lastUser.getId();
-        User user = userService.update(id, userEditDto);
+        User user = userService.update(id, userEditParams);
         httpSession.setAttribute("user", user);
 
         return "redirect:/mypage";

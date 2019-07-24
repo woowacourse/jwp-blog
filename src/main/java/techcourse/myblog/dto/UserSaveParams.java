@@ -8,7 +8,7 @@ import techcourse.myblog.domain.User;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserSaveDto {
+public class UserSaveParams {
     private String name;
     private String email;
     private String password;
