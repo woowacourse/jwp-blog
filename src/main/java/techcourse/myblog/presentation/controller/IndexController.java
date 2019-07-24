@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.ArticleService;
+import techcourse.myblog.domain.User;
 
 import javax.servlet.http.HttpSession;
 
@@ -21,10 +22,10 @@ public class IndexController {
         model.addAttribute("articles", articleService.findAll());
         log.info(String.valueOf(session.getAttribute("user")));
 
-        UserDto userDto = (UserDto) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
 
-        if (userDto != null) {
-            model.addAttribute("user", userDto);
+        if (user != null) {
+            model.addAttribute("user", user);
         }
         return "index";
     }

@@ -10,12 +10,13 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.UserService;
+import techcourse.myblog.domain.User;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
-import static techcourse.myblog.presentation.controller.UserController.USER_MAPPING_URL;
 import static techcourse.myblog.domain.User.*;
+import static techcourse.myblog.presentation.controller.UserController.USER_MAPPING_URL;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class UserController {
     public static final String WRONG_LOGIN_VALUE_MESSAGE = "없는 이메일이거나 틀린 비밀번호 입니다.";
     public static final String USER_MAPPING_URL = "/user";
     public final UserService userService;
+
     @GetMapping
     public String loginForm() {
         return "login";
@@ -46,10 +48,10 @@ public class UserController {
 
     @PostMapping("/login")
     public ModelAndView login(LoginDto loginDto, HttpSession session) {
-        Optional<UserDto> maybeUserDto = userService.getUserDtoByEmail(loginDto.getEmail());
+        Optional<User> maybeUser = userService.getUserByEmail(loginDto.getEmail());
         try {
             userService.checkPassword(loginDto);
-            session.setAttribute("user", maybeUserDto.get());
+            session.setAttribute("user", maybeUser.get());
             return new ModelAndView("redirect:/");
         } catch (IllegalArgumentException e) {
             ModelAndView modelAndView = new ModelAndView();
@@ -61,25 +63,23 @@ public class UserController {
 
     @GetMapping("/show")
     public String show(HttpSession session, Model model) {
-        UserDto userDto = (UserDto) session.getAttribute("user");
-        model.addAttribute("user", userDto);
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
         return "mypage";
     }
 
     @GetMapping("/edit")
     public String editForm(HttpSession session, Model model) {
-        UserDto userDto = (UserDto) session.getAttribute("user");
-        model.addAttribute("user",userDto);
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
         model.addAttribute("namePattern", NAME_PATTERN);
         return "mypage-edit";
     }
 
     @PutMapping("/edit")
     public RedirectView edit(HttpSession session, String name) {
-        UserDto userDto = (UserDto) session.getAttribute("user");
-        userDto.setName(name);
-        session.setAttribute("user", userDto);
-        userService.updateUserName(userDto, name);
+        User user = (User) session.getAttribute("user");
+        session.setAttribute("user", userService.updateUserName(user, name));
         return new RedirectView(USER_MAPPING_URL + "/show");
     }
 
@@ -91,9 +91,9 @@ public class UserController {
 
     @DeleteMapping("/delete")
     public RedirectView delete(HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
         session.removeAttribute("user");
-        userService.deleteUser(userDto);
+        userService.deleteUser(user);
         return new RedirectView("/");
     }
 }

@@ -19,8 +19,7 @@ public class ArticleService {
                 .coverUrl(articleDto.getCoverUrl())
                 .contents(articleDto.getContents())
                 .build();
-        articleRepository.save(article);
-        return article;
+        return articleRepository.save(article);
     }
 
     @Transactional(readOnly = true)

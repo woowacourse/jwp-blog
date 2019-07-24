@@ -2,7 +2,6 @@ package techcourse.myblog.application.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.error.DuplicatedEmailException;
 import techcourse.myblog.error.WrongPasswordException;
@@ -71,21 +71,32 @@ public class UserServiceTests {
 
     @Test
     void getUserDtoByEmail_isPresent_true() {
-        assertThat(userService.getUserDtoByEmail(userDto.getEmail()).isPresent()).isTrue();
+        assertThat(userService.getUserByEmail(userDto.getEmail()).isPresent()).isTrue();
     }
 
     @Test
     void getUserDtoByEmail_isNotPresent_false() {
-        assertThat(userService.getUserDtoByEmail("abc@naver.com").isPresent()).isFalse();
+        assertThat(userService.getUserByEmail("abc@naver.com").isPresent()).isFalse();
     }
 
     @Test
     void updateUserName_otherData_true() {
-        assertThat(userService.updateUserName(userDto, "로비")).isEqualTo("로비");
+        User user = User.builder()
+                .email(userDto.getEmail())
+                .password(userDto.getPassword())
+                .name(userDto.getName())
+                .build();
+        userService.updateUserName(user, "로비");
+        assertThat(userService.getUserByEmail(userDto.getEmail()).get().getName()).isEqualTo("로비");
     }
 
     @AfterEach
     void tearDown() {
-        userService.deleteUser(userDto);
+        User user = User.builder()
+                .email(userDto.getEmail())
+                .password(userDto.getPassword())
+                .name(userDto.getName())
+                .build();
+        userService.deleteUser(user);
     }
 }

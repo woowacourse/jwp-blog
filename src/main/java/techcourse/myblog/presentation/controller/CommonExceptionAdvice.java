@@ -1,4 +1,4 @@
-package techcourse.myblog.error;
+package techcourse.myblog.presentation.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,7 @@ public class CommonExceptionAdvice {
     private static final Logger logger = LoggerFactory.getLogger(CommonExceptionAdvice.class);
     @ExceptionHandler(Exception.class)
     public ModelAndView common(Exception e) {
-        logger.info(e.toString());
+        logger.error(e.toString());
         ModelAndView mv = new ModelAndView();
         mv.setViewName("/error");
         mv.addObject("error", e);

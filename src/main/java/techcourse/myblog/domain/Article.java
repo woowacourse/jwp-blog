@@ -17,7 +17,7 @@ import javax.validation.constraints.NotBlank;
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column
     @NotBlank
