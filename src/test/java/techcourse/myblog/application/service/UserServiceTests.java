@@ -48,7 +48,7 @@ public class UserServiceTests {
                 .email("kangmin789@naver.com")
                 .password("asdASD12!@")
                 .build();
-        assertThrows(DuplicatedEmailException.class, () ->  userService.save(userDto));
+        assertThrows(DuplicatedEmailException.class, () -> userService.save(userDto));
     }
 
     @Test

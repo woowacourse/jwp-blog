@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 @ControllerAdvice
 public class CommonExceptionAdvice {
     private static final Logger logger = LoggerFactory.getLogger(CommonExceptionAdvice.class);
+
     @ExceptionHandler(Exception.class)
     public ModelAndView common(Exception e) {
         logger.error(e.toString());
