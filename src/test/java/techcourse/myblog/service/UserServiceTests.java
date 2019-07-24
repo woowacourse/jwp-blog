@@ -77,8 +77,8 @@ class UserServiceTests {
     }
 
     private void compareUser(User user1, User user2) {
-        assertThat(user1.getName()).isEqualTo(user2);
-        assertThat(user1.getEmail()).isEqualTo(user2);
-        assertThat(user1.getPassword()).isEqualTo(user2);
+        assertThat(user1.getName()).isEqualTo(user2.getName());
+        assertThat(user1.getEmail()).isEqualTo(user2.getEmail());
+        assertThat(user1.getPassword()).isEqualTo(user2.getPassword());
     }
 }
