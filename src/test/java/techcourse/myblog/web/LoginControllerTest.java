@@ -15,18 +15,18 @@ public class LoginControllerTest {
     private static final String EMAIL = "valid@email.com";
     private static final String PASSWORD = "ValidPassword!123";
 
-    private BodyInserters.FormInserter<String> validUserData = getBodyInserters(NAME, EMAIL, PASSWORD);
+    private BodyInserters.FormInserter<String> validUserData;
 
     @Autowired
     private WebTestClient webTestClient;
 
     @BeforeEach
     void setUp() {
-        postSignup(validUserData);
+        validUserData = getBodyInserters(NAME, EMAIL, PASSWORD);
     }
 
     @Test
-    public void 로그인_페이지_테스트() {
+    public void 로그인_페이지_이동테스트() {
         webTestClient.get().uri("/login")
                 .exchange()
                 .expectStatus().isOk();
@@ -34,39 +34,69 @@ public class LoginControllerTest {
 
     @Test
     public void 로그인_테스트() {
+        // given
+        postSignup(validUserData);
+
+        // when
         webTestClient.post()
                 .uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(getBodyInserters(EMAIL, PASSWORD))
                 .exchange()
+                // then
                 .expectStatus().isFound()
-                .expectBody()
-                .consumeWith(res -> {
-                    /** 인덱스 페이지 이동 **/
-                    webTestClient.get()
-                            .uri(res.getRequestHeaders().getLocation())
-                            .exchange()
-                            .expectStatus()
-                            .isOk();
-                });
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/;jsessionid=([0-9A-Z])+");
     }
 
     @Test
-    public void 로그아웃_테스트() {
-        webTestClient.post()
-                .uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(getBodyInserters(EMAIL, PASSWORD))
+    public void 로그인_상태에서_로그인_페이지로_이동하는_경우_예외처리() {
+        // given
+        postSignup(validUserData);
+        String cookie = getCookie();
+
+        // when
+        webTestClient.get().uri("/login")
+                .header("Cookie", cookie)
                 .exchange()
+                // then
                 .expectStatus().isFound()
-                .expectBody()
-                .consumeWith(r -> {
-                    /** 로그아웃 **/
-                    webTestClient.get()
-                            .uri("/logout")
-                            .exchange()
-                            .expectStatus().isFound();
-                });
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/");
+    }
+
+    @Test
+    public void 로그인_상태에서_로그아웃_테스트() {
+        // given
+        postSignup(validUserData);
+        String cookie = getCookie();
+
+        // when
+        webTestClient.get().uri("/logout")
+                .header("Cookie", cookie)
+                .exchange()
+                // then
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/");
+    }
+
+    @Test
+    public void 로그아웃_상태에서_로그아웃하는_경우_예외처리() {
+        // when
+        webTestClient.get().uri("/logout")
+                .exchange()
+                // then
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/.*");
+    }
+
+    private String getCookie() {
+        return webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(validUserData)
+                .exchange()
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .getFirst("Set-Cookie");
+
     }
 
     private void postSignup(BodyInserters.FormInserter<String> userData) {
