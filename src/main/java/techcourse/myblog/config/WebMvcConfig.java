@@ -17,14 +17,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(basicAuthInterceptor())
-				.addPathPatterns("login")
-				.addPathPatterns("signup")
-				.addPathPatterns("users")
-				.addPathPatterns("user-list")
+				.addPathPatterns("/login")
+				.addPathPatterns("/signup")
+				.addPathPatterns("/users")
+				.addPathPatterns("/user-list")
 				.addPathPatterns("/leave")
 				.addPathPatterns("/edit")
 				.addPathPatterns("/mypage")
 				.addPathPatterns("/mypage/edit")
+				.addPathPatterns("/articles")
 				.excludePathPatterns("/");
+
 	}
 }

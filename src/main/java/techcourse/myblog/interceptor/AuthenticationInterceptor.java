@@ -17,17 +17,25 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 		String path = request.getRequestURI();
 
 		if (email != null) {
-			if (path.equals("/login") || path.equals("/signup")) {
-				response.sendRedirect("/");
-				return false;
-			}
-			return true;
-		} else {
-			if (!(path.equals("/mypage") || path.equals("/mypage/edit") || path.equals("/leave"))) {
-				response.sendRedirect("/login");
-				return false;
-			}
+			return isAccessibleLoginUser(response, path);
+		}
+
+		return !isAccessibleNonLoginUser(response, path);
+	}
+
+	private boolean isAccessibleNonLoginUser(HttpServletResponse response, String path) throws IOException {
+		if ((path.equals("/mypage") || path.equals("/mypage/edit") || path.equals("/leave"))) {
+			response.sendRedirect("/login");
 			return true;
 		}
+		return false;
+	}
+
+	private boolean isAccessibleLoginUser(HttpServletResponse response, String path) throws IOException {
+		if (path.equals("/login") || path.equals("/signup")) {
+			response.sendRedirect("/");
+			return false;
+		}
+		return true;
 	}
 }
