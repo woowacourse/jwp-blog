@@ -1,6 +1,7 @@
 package techcourse.myblog.web.advice;
 
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.dto.UserPublicInfoDto;
@@ -10,8 +11,8 @@ import techcourse.myblog.web.exception.NotLoggedInException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-@org.springframework.web.bind.annotation.ControllerAdvice("techcourse.myblog.web")
-public class ControllerAdvice {
+@ControllerAdvice
+public class ControllerExceptionAdvice {
     @ExceptionHandler({NotFoundUserException.class, UserDeleteException.class,
             NotFoundArticleException.class, NotFoundUserException.class})
     public String handleNotFoundUserException() {
