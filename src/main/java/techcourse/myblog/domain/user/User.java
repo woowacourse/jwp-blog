@@ -58,6 +58,9 @@ public class User {
     }
 
     public Optional<SnsInfo> getSnsInfo(long snsCode) {
+        if(snsInfos == null) {
+            return Optional.empty();
+        }
         return snsInfos.stream()
                 .filter(snsInfo -> snsCode == snsInfo.getSnsCode())
                 .findFirst();

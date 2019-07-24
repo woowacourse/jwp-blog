@@ -11,6 +11,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 @ExtendWith(SpringExtension.class)
 @TestPropertySource("classpath:application_test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -25,26 +29,60 @@ public class UserLoginControllerTest {
     @LocalServerPort
     private int localServerPort;
 
+    private String JSSESIONID;
+
     @BeforeEach
     void setUp() {
-        webTestClient = WebTestClient.bindToWebHandler(exchange -> exchange.getSession()
-                .doOnNext(webSession ->
-                        webSession.getAttributes().put("userId", 1L))
-                .then()).build();
+        if (JSSESIONID == null) {
+            JSSESIONID = getJSSESIONID(name, email, password);
+        }
+    }
+
+    @Test
+    public void 회원가입접근() {
+        webTestClient.get()
+                .uri("/signup")
+                .cookie("JSESSIONID", JSSESIONID)
+                .exchange()
+                .expectHeader()
+                .valueEquals("location", "http://localhost:" + localServerPort + "/");
+    }
+
+    @Test
+    public void 회원가입() {
+        webTestClient.post()
+                .uri("/signup")
+                .cookie("JSESSIONID", JSSESIONID)
+                .exchange()
+                .expectHeader()
+                .valueEquals("location", "http://localhost:" + localServerPort + "/");
+    }
+
+    @Test
+    public void 회원로그인접근() {
+        webTestClient.get()
+                .uri("/login")
+                .cookie("JSESSIONID", JSSESIONID)
+                .exchange()
+                .expectHeader()
+                .valueEquals("location", "http://localhost:" + localServerPort + "/");
     }
 
     @Test
     public void 회원로그인() {
-        webTestClient.get()
+        webTestClient.post()
                 .uri("/login")
+                .cookie("JSESSIONID", JSSESIONID)
                 .exchange()
-                .expectStatus().isFound();
+                .expectHeader()
+                .valueEquals("location", "http://localhost:" + localServerPort + "/");
     }
 
     @Test
     public void 회원조회페이지_이동() {
         webTestClient.get()
                 .uri("/users")
+                .cookie("JSESSIONID", JSSESIONID)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -53,7 +91,33 @@ public class UserLoginControllerTest {
     public void 유저페이지() {
         webTestClient.get()
                 .uri("/users/1/mypage")
+                .cookie("JSESSIONID", JSSESIONID)
                 .exchange().expectStatus().isOk();
     }
 
+    private String getJSSESIONID(String name, String email, String password) {
+        List<String> result = new ArrayList<>();
+
+        webTestClient.post()
+                .uri("/signup")
+                .body(BodyInserters
+                        .fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password))
+                .exchange();
+
+        webTestClient.post()
+                .uri("/login")
+                .body(BodyInserters
+                        .fromFormData("email", email)
+                        .with("password", password))
+                .exchange()
+                .expectHeader()
+                .value("Set-Cookie", cookie -> result.add(cookie));
+
+        return Stream.of(result.get(0).split(";"))
+                .filter(it -> it.contains("JSESSIONID"))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException(""))
+                .split("=")[1];
+    }
 }

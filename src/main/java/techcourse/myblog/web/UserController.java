@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String addUser(UserDto userDto, Model model) {
+    public String addUser(UserDto userDto) {
         userService.create(userDto);
         return "redirect:/login";
     }
@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserDto userDto, HttpSession session, Model model) {
+    public String login(UserDto userDto, HttpSession session) {
         UserDto findUserDto = userService.findUser(userDto);
         session.setAttribute("userId", findUserDto.getId());
         return "redirect:/";

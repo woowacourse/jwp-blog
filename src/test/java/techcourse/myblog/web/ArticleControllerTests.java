@@ -95,7 +95,6 @@ public class ArticleControllerTests {
                 .uri("/articles/" + addId.get())
                 .exchange()
                 .expectStatus().isFound();
-
     }
 
     @AfterEach

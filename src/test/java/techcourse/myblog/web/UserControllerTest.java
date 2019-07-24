@@ -30,7 +30,7 @@ class UserControllerTest {
 
     @Test
     public void 회원가입() {
-        String name = "test";
+        String name = "testtest";
         String email = "test1@test.com";
         String password = "test123123";
 
@@ -41,25 +41,26 @@ class UserControllerTest {
                         .with("email", email)
                         .with("password", password))
                 .exchange()
-                .expectStatus().isFound();
+                .expectHeader()
+                .valueEquals("location", "http://localhost:" + localServerPort + "/login");
     }
 
     @Test
     public void 회원가입에러() {
-        String name = "test";
-        String email = "test2@test.com";
-        String password = "test123123";
-
-        addUser(name, email, password);
+        String name = "test1212";
+        String email = "test2";
+        String password = "tes3";
 
         webTestClient.post()
                 .uri("/signup")
+                .header("referer", "/signup")
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
                         .with("password", password))
                 .exchange()
-                .expectStatus().isOk();
+                .expectHeader()
+                .valueEquals("location", "http://localhost:" + localServerPort + "/signup");
     }
 
     @Test
@@ -84,7 +85,8 @@ class UserControllerTest {
                         .fromFormData("email", email)
                         .with("password", password))
                 .exchange()
-                .expectStatus().isFound();
+                .expectHeader()
+                .valueEquals("location", "http://localhost:" + localServerPort + "/");
     }
 
     @Test
@@ -97,19 +99,22 @@ class UserControllerTest {
 
         webTestClient.post()
                 .uri("/login")
+                .header("referer", "/login")
                 .body(BodyInserters
                         .fromFormData("email", email)
                         .with("password", "1111111111"))
                 .exchange()
-                .expectStatus().isOk();
+                .expectHeader()
+                .valueEquals("location", "http://localhost:" + localServerPort + "/login");
     }
 
     @Test
-    public void 회원리스트() {
+    public void 비로그인_회원리스트() {
         webTestClient.get()
                 .uri("/users")
                 .exchange()
-                .expectStatus().isFound();
+                .expectHeader()
+                .valueEquals("location", "http://localhost:" + localServerPort + "/login");
     }
 
     @Test
@@ -117,15 +122,25 @@ class UserControllerTest {
         webTestClient.get()
                 .uri("/users/mypage-edit")
                 .exchange()
-                .expectStatus().isFound();
+                .expectHeader()
+                .valueEquals("location", "http://localhost:" + localServerPort + "/login");
     }
 
     @Test
     public void 비로그인_마이페이지_수정() {
-        webTestClient.post()
+        String name = "test5";
+        String email = "test5@test.com";
+        String password = "test123123";
+
+        webTestClient.put()
                 .uri("/users/mypage-edit")
+                .body(BodyInserters
+                        .fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password))
                 .exchange()
-                .expectStatus().isFound();
+                .expectHeader()
+                .valueEquals("location", "http://localhost:" + localServerPort + "/login");
     }
 
     @Test
@@ -133,11 +148,9 @@ class UserControllerTest {
         webTestClient.delete()
                 .uri("/users/mypage-edit")
                 .exchange()
-                .expectStatus().isFound();
+                .expectHeader()
+                .valueEquals("location", "http://localhost:" + localServerPort + "/login");
     }
-
-
-
 
     private void addUser(String name, String email, String password) {
         webTestClient.post()
