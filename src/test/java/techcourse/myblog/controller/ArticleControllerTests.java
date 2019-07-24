@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import techcourse.myblog.model.Article;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.repository.ArticleRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;

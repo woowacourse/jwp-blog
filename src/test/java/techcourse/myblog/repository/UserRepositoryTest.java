@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import techcourse.myblog.model.User;
+import techcourse.myblog.domain.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,9 +32,7 @@ class UserRepositoryTest {
 
     @Test
     void 유저_이메일_정보로_유저_찾기() {
-        assertThat(userRepository.findByEmail(TEST_EMAIL_1).getUserName()).isEqualTo(TEST_USERNAME_1);
-        assertThat(userRepository.findByEmail(TEST_EMAIL_1).getEmail()).isEqualTo(TEST_EMAIL_1);
-        assertThat(userRepository.findByEmail(TEST_EMAIL_1).getPassword()).isEqualTo(TEST_PASSWORD_1);
+        assertThat(userRepository.existsByEmail(TEST_EMAIL_1)).isTrue();
     }
 
     @Test
@@ -47,7 +45,7 @@ class UserRepositoryTest {
     @Test
     void 유저_삭제() {
         userRepository.deleteAll();
-        assertThat(userRepository.findByEmail(TEST_EMAIL_1)).isEqualTo(null);
+        assertThat(userRepository.existsByEmail(TEST_EMAIL_1)).isFalse();
     }
 
     @AfterEach

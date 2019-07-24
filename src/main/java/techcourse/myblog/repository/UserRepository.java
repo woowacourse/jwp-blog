@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.model.User;
+import techcourse.myblog.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
 
     void removeByEmail(String email);
+
+    boolean existsByEmail(String email);
 }

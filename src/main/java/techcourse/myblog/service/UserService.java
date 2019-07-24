@@ -2,13 +2,12 @@ package techcourse.myblog.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.UserDTO;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.EmailRepetitionException;
 import techcourse.myblog.exception.UserNotExistException;
-import techcourse.myblog.model.User;
 import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
@@ -18,12 +17,9 @@ public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private UserRepository userRepository;
 
-    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
-    ;
 
     public void save(UserDTO userDTO) {
         if (isDuplicateEmail(userDTO)) {
@@ -37,7 +33,7 @@ public class UserService {
     }
 
     public boolean isDuplicateEmail(UserDTO userDTO) {
-        return userRepository.findByEmail(userDTO.getEmail()) != null;
+        return userRepository.existsByEmail(userDTO.getEmail());
     }
 
     @Transactional
