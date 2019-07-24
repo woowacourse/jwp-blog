@@ -84,7 +84,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void 이메일_유효성_검사_이메일_형식1() {
+    void 이메일_유효성_검사_AtSigh() {
         User user = User.builder()
                 .id(-1l)
                 .name(validName)
@@ -96,7 +96,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void 이메일_유효성_검사_이메일_형식2() {
+    void 이메일_유효성_검사_점으로_끝() {
         User user = User.builder()
                 .id(-1l)
                 .name(validName)
