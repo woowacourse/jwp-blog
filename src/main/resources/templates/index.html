@@ -10,7 +10,12 @@
 </head>
 
 <div>
-    <header th:replace="fragments/logout-header :: logoutHeaderFragment"></header>
+    <th:block th:if="${session.loggedInUser}">
+        <th:block th:replace="fragments/login-header :: loginHeaderFragment"></th:block>
+    </th:block>
+    <th:block th:unless="${session.loggedInUser}">
+        <th:block th:replace="fragments/logout-header :: logoutHeaderFragment"></th:block>
+    </th:block>
 
     <div class="about-cover card no-border mrg-btm-0">
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>

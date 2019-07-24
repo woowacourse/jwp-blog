@@ -10,7 +10,12 @@
 </head>
 <body>
 <div>
-    <header th:replace="fragments/login-header :: loginHeaderFragment"></header>
+    <th:block th:if="${session.loggedInUser}">
+        <th:block th:replace="fragments/login-header :: loginHeaderFragment"></th:block>
+    </th:block>
+    <th:block th:unless="${session.loggedInUser}">
+        <th:block th:replace="fragments/logout-header :: logoutHeaderFragment"></th:block>
+    </th:block>
 
     <div class="about-cover card no-border">
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
@@ -26,17 +31,18 @@
                     <div class="card-heading border bottom">
                         <h4 class="card-title">User List</h4>
                     </div>
-                    <div class="card-body">
+                    <div th:each="user : ${users}" class="card-body">
                         <ul class="list-unstyled list-info">
                             <li>
                                 <div class="pdd-vertical-10">
                                     <img class="thumb-img img-circle"
                                          src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
                                     <div class="info">
-                                        <a href=""
-                                           class="title no-pdd-vertical text-semibold inline-block lh-1">Brown</a>
+                                        <a th:href="${'/mypage/' + user?.id}"
+                                           class="title no-pdd-vertical text-semibold inline-block lh-1"
+                                           th:text="${user?.name}"></a>
                                         <span class="sub-title">
-                                            <span>gracefulBrown@woowahan.com</span>
+                                            <span th:text="${user.email}"></span>
                                         </span>
                                     </div>
                                 </div>
