@@ -15,17 +15,20 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.groups.Default;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserService;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserInfo;
+import techcourse.myblog.web.session.UserSession;
+import techcourse.myblog.web.session.UserSessionManager;
 
 @Controller
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
+    private final UserSessionManager userSessionManager;
 
     @GetMapping("/signup")
     public String createSignupForm(Model model) {
@@ -53,10 +56,9 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public RedirectView delete(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        userService.delete(user);
-        return logout(session);
+    public RedirectView delete() {
+        userService.delete(userSessionManager.getUser());
+        return logout();
     }
 
     @GetMapping("/login")
@@ -66,16 +68,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public RedirectView login(@ModelAttribute("/login") UserDto userDto,
-                              HttpSession session) {
-        User user = userService.login(userDto.toUser());
-        session.setAttribute("user", user);
+    public RedirectView login(@ModelAttribute("/login") UserDto userDto) {
+        userSessionManager.setUser(userService.login(userDto.toUser()));
         return new RedirectView("/");
     }
 
     @GetMapping("/logout")
-    public RedirectView logout(HttpSession session) {
-        session.invalidate();
+    public RedirectView logout() {
+        userSessionManager.removeUser();
         return new RedirectView("/");
     }
 
@@ -92,9 +92,8 @@ public class UserController {
 
     @PutMapping("/mypage")
     public RedirectView update(@ModelAttribute("/mypage/edit") @Validated(UserInfo.class) UserDto userDto,
-                               HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        session.setAttribute("user", userService.update(user, userDto.getName()));
+                               UserSession userSession) {
+        userSessionManager.setUser(userSession.getUser());
         return new RedirectView("/mypage");
     }
 }

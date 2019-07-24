@@ -216,7 +216,7 @@ class UserControllerTest extends WebClientGenerator {
                 .isFound()
                 .expectBody()
                 .consumeWith(response ->
-                        assertRedirectBodyContains(response, "이메일을 확인해주세요.")
+                        assertRedirectBodyContains(response, "로그인 정보를 확인해주세요.")
                 );
     }
 
@@ -235,7 +235,7 @@ class UserControllerTest extends WebClientGenerator {
                 .isFound()
                 .expectBody()
                 .consumeWith(response ->
-                        assertRedirectBodyContains(response, "비밀번호를 확인해주세요.")
+                        assertRedirectBodyContains(response, "로그인 정보를 확인해주세요.")
                 );
     }
 
