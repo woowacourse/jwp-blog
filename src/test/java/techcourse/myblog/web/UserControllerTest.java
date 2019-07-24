@@ -34,7 +34,7 @@ class UserControllerTest {
 
         // Then
         assertThat(new String(response.getResponseBody()))
-            .contains(UserRequestDto.CONSTRAINT_VIOLATION_EMAIL_UNIQUE);
+            .contains(UserRequestDto.EMAIL_UNIQUE_MESSAGE);
     }
 
     private EntityExchangeResult<byte[]> postUserSync(UserRequestDto user) {

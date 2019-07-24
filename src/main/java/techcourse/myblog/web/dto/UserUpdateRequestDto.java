@@ -5,7 +5,7 @@ import javax.validation.constraints.Pattern;
 
 public class UserUpdateRequestDto {
     @NotBlank
-    @Pattern(regexp = UserRequestDto.CONSTRAINT_USERNAME_PATTERN, message = UserRequestDto.CONSTRAINT_VIOLATION_USERNAME_FORMAT)
+    @Pattern(regexp = UserRequestDto.USERNAME_PATTERN, message = UserRequestDto.USERNAME_FORMAT_MESSAGE)
     private String name;
 
     public String getName() {
