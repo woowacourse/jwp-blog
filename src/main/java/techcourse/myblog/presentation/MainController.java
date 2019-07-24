@@ -26,5 +26,4 @@ public class MainController {
         return "article-edit";
     }
 
-
 }

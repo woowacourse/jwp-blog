@@ -32,6 +32,10 @@ public class User {
         return this.password.equals(password);
     }
 
+    public void changeName(String name) {
+        this.name = name;
+    }
+
     public long getId() {
         return id;
     }

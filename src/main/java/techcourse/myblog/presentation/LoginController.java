@@ -12,8 +12,8 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class LoginController {
 
-    public static final String NOT_EXIST_EMAIL_ERROR = "존재하지않는 email입니다.";
-    public static final String NOT_EXIST_PASSWORD_ERROR = "비밀번호가 일치하지않습니다.";
+    private static final String NOT_EXIST_EMAIL_ERROR = "존재하지않는 email입니다.";
+    private static final String NOT_EXIST_PASSWORD_ERROR = "비밀번호가 일치하지않습니다.";
 
     LoginService loginService;
 

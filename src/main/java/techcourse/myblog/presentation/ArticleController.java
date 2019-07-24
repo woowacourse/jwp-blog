@@ -19,7 +19,6 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @Transactional
     @PostMapping("")
     public String createArticle(Article newArticle) {
         newArticle = articleService.save(newArticle);
@@ -38,15 +37,13 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @Transactional
     @PutMapping("/{id}")
     public String updateArticle(Article updatedArticle, Model model) {
-        updatedArticle = articleService.save(updatedArticle);
+        updatedArticle = articleService.updateAritlce(updatedArticle);
         model.addAttribute("article", updatedArticle);
         return "redirect:/articles/" + updatedArticle.getId();
     }
 
-    @Transactional
     @DeleteMapping("/{id}")
     public String deleteArticle(@PathVariable long id) {
         articleService.deleteById(id);

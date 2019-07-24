@@ -25,7 +25,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Transactional
     @PostMapping("/users")
     public String createUser(@Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -51,7 +50,6 @@ public class UserController {
         return "user-list";
     }
 
-    @Transactional
     @DeleteMapping("/user/delete/{pageId}")
     public String deleteUser(@PathVariable long pageId, HttpSession httpSession) {
         User pageUser = userService.findUserById(pageId);
@@ -83,7 +81,6 @@ public class UserController {
         return "mypage-edit";
     }
 
-    @Transactional
     @PutMapping("/user/update")
     public String updateMyPage(UserUpdateDto userUpdateDto, HttpSession httpSession) {
         User loggedInUser = (User) httpSession.getAttribute("user");

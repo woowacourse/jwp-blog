@@ -2,9 +2,10 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.exception.ArticleNotFoundException;
+import techcourse.myblog.service.exception.ArticleNotFoundException;
 import techcourse.myblog.persistence.ArticleRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -21,6 +22,13 @@ public class ArticleService {
 
     public Article save(Article article) {
         return articleRepository.save(article);
+    }
+
+    @Transactional
+    public Article updateAritlce(Article updatedArticle) {
+        Article originalArticle = articleRepository.findArticleById(updatedArticle.getId());
+        originalArticle.updateArticle(updatedArticle);
+        return originalArticle;
     }
 
     public Article findById(long id) {

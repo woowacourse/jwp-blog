@@ -26,6 +26,12 @@ public class Article {
         this.contents = contents;
     }
 
+    public void updateArticle(Article updatedArticle) {
+        this.title = updatedArticle.getTitle();
+        this.coverUrl = updatedArticle.getCoverUrl();
+        this.contents = updatedArticle.getContents();
+    }
+
     public Long getId() {
         return id;
     }
@@ -54,4 +60,5 @@ public class Article {
     public int hashCode() {
         return Objects.hash(id, title, coverUrl, contents);
     }
+
 }

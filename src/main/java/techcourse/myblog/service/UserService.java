@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.persistence.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
 public class UserService {
-    private static final int USER_NOT_EXIST = 0;
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -17,15 +17,13 @@ public class UserService {
     }
 
     public boolean isDuplicatedEmail(String email) {
-        // existByEmail
-        userRepository.existsByEmail(email);
-        return userRepository.findUsersByEmail(email).size() != USER_NOT_EXIST;
+        return userRepository.existsByEmail(email);
     }
 
-    // Service가 transaction을 관리하는 게
+    @Transactional
     public User updateName(long id, String name) {
         User user = userRepository.findUserById(id);
-        user.setName(name);
+        user.changeName(name);
         return user;
     }
 
