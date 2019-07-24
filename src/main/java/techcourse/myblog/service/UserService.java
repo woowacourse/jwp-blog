@@ -7,7 +7,7 @@ import techcourse.myblog.service.dto.UserLoginRequest;
 import techcourse.myblog.service.dto.UserRequest;
 import techcourse.myblog.service.exception.EditException;
 import techcourse.myblog.service.exception.LoginException;
-import techcourse.myblog.support.util.EncryptHelper;
+import techcourse.myblog.support.encrytor.EncryptHelper;
 
 import javax.transaction.Transactional;
 import java.util.List;

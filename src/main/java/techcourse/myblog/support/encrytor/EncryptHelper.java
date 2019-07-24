@@ -1,4 +1,4 @@
-package techcourse.myblog.support.util;
+package techcourse.myblog.support.encrytor;
 
 public interface EncryptHelper {
     String encrypt(String plainPassword);

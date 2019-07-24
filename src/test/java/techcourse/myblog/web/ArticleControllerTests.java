@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,9 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
-
-    @LocalServerPort
-    private int randomLocalPort;
 
     @BeforeEach
     void setUp() {
@@ -109,7 +105,7 @@ public class ArticleControllerTests {
         webTestClient.delete().uri("/articles/1")
                 .exchange()
                 .expectHeader()
-                .valueEquals("location", "http://localhost:" + randomLocalPort + "/")
+                .valueMatches("location", ".*/")
                 .expectStatus()
                 .is3xxRedirection();
     }

@@ -4,8 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import techcourse.myblog.support.util.BCryptImpl;
-import techcourse.myblog.support.util.EncryptHelper;
+import techcourse.myblog.support.encrytor.EncryptHelper;
+import techcourse.myblog.support.encrytor.PasswordBCryptor;
 import techcourse.myblog.web.interceptor.AuthInterceptor;
 
 @Configuration
@@ -26,6 +26,6 @@ public class WebConfig {
 
     @Bean
     public EncryptHelper encryptConfigure() {
-        return new BCryptImpl();
+        return new PasswordBCryptor();
     }
 }

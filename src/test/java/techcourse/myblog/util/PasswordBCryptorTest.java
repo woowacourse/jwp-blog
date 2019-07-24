@@ -1,14 +1,14 @@
 package techcourse.myblog.util;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.support.util.BCryptImpl;
-import techcourse.myblog.support.util.EncryptHelper;
+import techcourse.myblog.support.encrytor.EncryptHelper;
+import techcourse.myblog.support.encrytor.PasswordBCryptor;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BCryptImplTest {
+public class PasswordBCryptorTest {
 
-    private EncryptHelper encryptHelper = new BCryptImpl();
+    private EncryptHelper encryptHelper = new PasswordBCryptor();
 
     @Test
     void 비밀번호_정상_인코딩() {

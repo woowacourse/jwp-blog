@@ -1,8 +1,8 @@
-package techcourse.myblog.support.util;
+package techcourse.myblog.support.encrytor;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-public class BCryptImpl implements EncryptHelper {
+public class PasswordBCryptor implements EncryptHelper {
 
     @Override
     public String encrypt(String plainPassword) {
