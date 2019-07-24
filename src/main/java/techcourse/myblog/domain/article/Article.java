@@ -25,16 +25,9 @@ public class Article {
     }
 
     public Article(final String title, final String coverUrl, final String contents) {
-        checkNull(title, coverUrl, contents);
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
-    }
-
-    private void checkNull(final String title, final String coverUrl, final String contents) {
-        if (Objects.isNull(title) || Objects.isNull(coverUrl) || Objects.isNull(contents)) {
-            throw new NullPointerException();
-        }
+        this.title = Objects.requireNonNull(title);
+        this.coverUrl = Objects.requireNonNull(coverUrl);
+        this.contents = Objects.requireNonNull(contents);
     }
 
     public void update(final Article article) {

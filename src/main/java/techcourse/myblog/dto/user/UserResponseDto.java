@@ -7,6 +7,9 @@ public class UserResponseDto {
     private String name;
 
     public UserResponseDto(final String email, final String name) {
+        Objects.requireNonNull(email);
+        Objects.requireNonNull(name);
+
         this.email = email;
         this.name = name;
     }

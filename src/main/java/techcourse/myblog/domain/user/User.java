@@ -24,16 +24,9 @@ public class User {
     }
 
     public User(final String email, final String name, final String password) {
-        checkNull(email, name, password);
-        this.email = email;
-        this.name = name;
-        this.password = password;
-    }
-
-    private void checkNull(final String email, final String name, final String password) {
-        if (Objects.isNull(email) || Objects.isNull(name) || Objects.isNull(password)) {
-            throw new NullPointerException();
-        }
+        this.email = Objects.requireNonNull(email);
+        this.name = Objects.requireNonNull(name);
+        this.password = Objects.requireNonNull(password);
     }
 
     public String getEmail() {

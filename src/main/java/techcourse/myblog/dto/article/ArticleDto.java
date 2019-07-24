@@ -16,6 +16,10 @@ public class ArticleDto {
     private String contents;
 
     public ArticleDto(final String title, final String coverUrl, final String contents) {
+        Objects.requireNonNull(title);
+        Objects.requireNonNull(coverUrl);
+        Objects.requireNonNull(contents);
+
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
