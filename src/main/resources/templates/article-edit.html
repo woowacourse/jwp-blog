@@ -8,13 +8,13 @@
 <body>
 <div>
     <th:block th:include="fragments/header :: header"/>
-    <form th:action="${article}?  '/articles/' + ${article.id} : '/articles'" name="article" method="post"
+    <form th:action="${article}?  '/article/' + ${article.id} : '/article'" name="article" method="post"
           accept-charset="utf-8">
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="hidden" name="_method" th:value="${method}">
+                        <input name="_method" th:if="${article != null}" type="hidden" value="put"/>
                         <th:block th:if="${article != null}">
                             <input type="hidden" name="id" th:value="${article.id}">
                         </th:block>
