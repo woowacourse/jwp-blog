@@ -22,8 +22,6 @@ import static techcourse.myblog.service.utils.Messages.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
-    // 탈퇴
-    // 로그인 후 접근 가능/불가능
 
     @Autowired
     private WebTestClient webTestClient;
