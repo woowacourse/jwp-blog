@@ -20,67 +20,67 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleServiceTest {
-	private static final String TITLE = "TEST";
-	private static final String COVER_URL = "https://img.com";
-	private static final String CONTENTS = "TEST_CONTENTS";
+    private static final String TITLE = "TEST";
+    private static final String COVER_URL = "https://img.com";
+    private static final String CONTENTS = "TEST_CONTENTS";
 
-	@Autowired
-	private ArticleService articleService;
+    @Autowired
+    private ArticleService articleService;
 
-	@BeforeEach
-	public void setUp() {
-		articleService.deleteAll();
-	}
+    @BeforeEach
+    public void setUp() {
+        articleService.deleteAll();
+    }
 
-	@Test
-	@DisplayName("Article_추가")
-	public void saveTest() {
-		Article expected = new Article(TITLE, COVER_URL, CONTENTS);
-		Article actual = articleService.save(expected);
-		assertEquals(expected, actual);
-	}
+    @Test
+    @DisplayName("Article_추가")
+    public void saveTest() {
+        Article expected = new Article(TITLE, COVER_URL, CONTENTS);
+        Article actual = articleService.save(expected);
+        assertEquals(expected, actual);
+    }
 
-	@Test
-	@DisplayName("Article_ID_조회")
-	public void findByIdTest() {
-		Article expected = articleService.save(new Article(TITLE, COVER_URL, CONTENTS));
-		Article actual = articleService.findById(expected.getId());
+    @Test
+    @DisplayName("Article_ID_조회")
+    public void findByIdTest() {
+        Article expected = articleService.save(new Article(TITLE, COVER_URL, CONTENTS));
+        Article actual = articleService.findById(expected.getId());
 
-		assertEquals(expected, actual);
-	}
+        assertEquals(expected, actual);
+    }
 
-	@Test
-	public void updateByIdTest() {
-		Article expected = articleService.save(new Article(TITLE, COVER_URL, CONTENTS));
-		expected.setTitle("MODIFY");
-		expected.setContents("CHANGE");
+    @Test
+    public void updateByIdTest() {
+        Article expected = articleService.save(new Article(TITLE, COVER_URL, CONTENTS));
+        expected.setTitle("MODIFY");
+        expected.setContents("CHANGE");
 
-		long actualId = articleService.update(expected.getId(), expected);
-		Article actual = articleService.findById(actualId);
-		assertEquals(expected, actual);
-	}
+        long actualId = articleService.update(expected.getId(), expected);
+        Article actual = articleService.findById(actualId);
+        assertEquals(expected, actual);
+    }
 
-	@Test
-	@DisplayName("")
-	public void deleteByIdTest() {
-		Article article = articleService.save(new Article(TITLE, COVER_URL, CONTENTS));
-		articleService.deleteById(article.getId());
+    @Test
+    @DisplayName("")
+    public void deleteByIdTest() {
+        Article article = articleService.save(new Article(TITLE, COVER_URL, CONTENTS));
+        articleService.deleteById(article.getId());
 
-		assertThrows(NoSuchElementException.class, () -> {
-			articleService.findById(article.getId());
-		});
-	}
+        assertThrows(NoSuchElementException.class, () -> {
+            articleService.findById(article.getId());
+        });
+    }
 
-	@Test
-	@DisplayName("Article_목록_조회")
-	public void findAllTest() {
-		Article article1 = new Article(TITLE, COVER_URL, CONTENTS);
-		Article article2 = new Article(TITLE + 1, COVER_URL + "1", CONTENTS + 1);
-		articleService.save(article1);
-		articleService.save(article2);
+    @Test
+    @DisplayName("Article_목록_조회")
+    public void findAllTest() {
+        Article article1 = new Article(TITLE, COVER_URL, CONTENTS);
+        Article article2 = new Article(TITLE + 1, COVER_URL + "1", CONTENTS + 1);
+        articleService.save(article1);
+        articleService.save(article2);
 
-		Iterable<Article> actual = articleService.findAll();
-		assertThat(actual, Matchers.contains(article1, article2));
-	}
+        Iterable<Article> actual = articleService.findAll();
+        assertThat(actual, Matchers.contains(article1, article2));
+    }
 
 }
