@@ -1,20 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      layout:decorator="layouts/defaultLayout">
+      layout:decorator="layouts/layout">
 <th:block layout:fragment="content">
     <div>
-        <div class="about-cover card no-border mrg-btm-0">
-            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
-            <div class="welcome-text-container">
-                <div class="welcome-txt">
-                    <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
-                </div>
-            </div>
-        </div>
-
-        <div class="container-fluid width-100 mrg-btm-30" style="background-image: url('https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4')">
-
+        <div class="container-fluid width-100 mrg-btm-30">
             <div class="row">
                 <div class="col-lg-3"></div>
                 <div class="col-lg-6">
@@ -33,7 +23,7 @@
                         <div class="width-100 fixed left-0 border bottom"></div>
 
 
-                        <div th:each="article : ${articles}">
+                        <div th:each="article : ${articles.content}">
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
                                     <div class="pdd-horizon-15 pdd-vertical-20">
@@ -81,6 +71,23 @@
                                 </div>
                             </div>
                         </div>
+
+                        <nav>
+                            <ul class="pagination">
+                                <th:block th:each="pageNumber : ${pageNumbers}">
+                                    <li th:class="${pageNumber!=articles.number+1} ? 'page-item' : 'page-item active'">
+                                        <a th:href="@{/(size=${articles.size}, page=${pageNumber-1}, sort=${(sortProperty+','+(sort))})}"
+                                           th:text="${pageNumber}" class="page-link"></a>
+                                    </li>
+                                </th:block>
+                            </ul>
+                            <a th:href="@{/(size=${articles.size}, page=${articles.number}, sort=${(sortProperty+','+(sort.ASC)) })}"
+                               th:text="'오름차순 정렬'" class="page-link"></a>
+
+                            <a th:href="@{/(size=${articles.size}, page=${articles.number}, sort=${(sortProperty+','+(sort.DESC))})}"
+                               th:text="'내림차순 정렬'" class="page-link"></a>
+                        </nav>
+
                     </div>
                 </div>
                 <div class="col-lg-3"></div>

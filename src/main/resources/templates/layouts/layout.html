@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:include="fragments/head"/>
+</head>
+<body>
+<th:block th:if="${session.user} !=null">
+    <th:block th:include="fragments/nav :: login"/>
+</th:block>
+<th:block th:unless="${session.user} !=null">
+    <th:block th:include="fragments/nav :: logout"/>
+</th:block>
+
+<div class="about-cover card no-border mrg-btm-0">
+    <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
+    <div class="welcome-text-container">
+        <div class="welcome-txt">
+            <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="content"/>
+
+<th:block th:include="fragments/footer"/>
+<th:block th:include="fragments/script"/>
+
+</body>
+</html>
