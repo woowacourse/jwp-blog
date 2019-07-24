@@ -91,12 +91,41 @@ class UserControllerTest {
 
     @Test
     void 로그인_후_로그인_접근() {
-        String jsessionId = getJsessionid("CU", DEFAULT_EMAIL, DEFAULT_PASSWORD);
+        String jSessionId = getJsessionid("CU", DEFAULT_EMAIL, DEFAULT_PASSWORD);
 
         webTestClient.get().uri("/login")
-                .cookie(JSESSIONID, jsessionId)
+                .cookie(JSESSIONID, jSessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection();
+    }
+
+    @Test
+    void 마이페이지_테스트() {
+        String jSessionId = getJsessionid("CU", DEFAULT_EMAIL, DEFAULT_PASSWORD);
+
+        webTestClient.get().uri("/mypage")
+                .cookie(JSESSIONID, jSessionId)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void 회원정보_수정_확인() {
+        String jSessionId = getJsessionid("CU", DEFAULT_EMAIL, DEFAULT_PASSWORD);
+
+        webTestClient.get().uri("/mypage/edit")
+                .cookie(JSESSIONID, jSessionId)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void 로그아웃상태_로그인요청() {
+        signUp("CU", DEFAULT_EMAIL, DEFAULT_PASSWORD);
+
+        webTestClient.get().uri("/login")
+                .exchange()
+                .expectStatus().isOk();
     }
 
     private WebTestClient.ResponseSpec signUp(String name, String email, String password) {
