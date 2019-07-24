@@ -17,15 +17,10 @@ public class UserInfoInterceptor implements HandlerInterceptor {
     private UserService userService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        return true;
-    }
-
-    @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         HttpSession session = request.getSession();
-        // TODO : css 요청마다 사용하는 문제
         Object userId = session.getAttribute("userId");
+
         if (modelAndView != null) {
             modelAndView.getModel().remove("userInfo");
         }

@@ -36,7 +36,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/signup");
 
         registry.addInterceptor(userInfoInterceptor)
-                .addPathPatterns("/**");
+                .addPathPatterns("/**")
+                .excludePathPatterns("/static/**");
 
     }
 }
