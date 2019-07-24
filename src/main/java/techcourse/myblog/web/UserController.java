@@ -1,6 +1,7 @@
 package techcourse.myblog.web;
 
 import org.slf4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -15,6 +16,7 @@ import techcourse.myblog.dto.MyPageEditDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -103,7 +105,7 @@ public class UserController {
     }
 
     @PostMapping(ROUTE_LOGIN)
-    public String userLogin(final Model model, final LoginDto loginDto, final HttpSession session) {
+    public String userLogin(final Model model, final LoginDto loginDto, final HttpSession session, final HttpServletResponse response) {
         LOG.debug("로그인 시도 시작");
         try {
             final User existUser = userRepository.findByEmailAndPassword(loginDto.getEmail(), loginDto.getPassword()).get();
@@ -113,10 +115,12 @@ public class UserController {
         } catch (NoSuchElementException e) {
             LOG.debug("이메일 주소 또는 패스워드 오류: {}", e.getMessage());
             model.addAttribute(ERROR, WRONG_LOGIN);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return ROUTE_LOGIN;
         } catch (Exception e) {
             LOG.debug("로그인 오류: {}", e.getMessage());
             model.addAttribute(ERROR, e.getMessage());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return ROUTE_LOGIN;
         }
     }
@@ -143,12 +147,13 @@ public class UserController {
     }
 
     @PutMapping(ROUTE_MYPAGE + ROUTE_EDIT)
-    public String mypageEdit(final Model model, final HttpSession session, @Valid final MyPageEditDto dto, final Errors errors) {
+    public String mypageEdit(final Model model, final HttpSession session, @Valid final MyPageEditDto dto, final Errors errors, final HttpServletResponse response) {
         if (errors.hasErrors()) {
             final FieldError error = errors.getFieldError();
             LOG.debug("수정 중 오류 발생: {}", error.getDefaultMessage());
             model.addAttribute(ERROR, error.getDefaultMessage());
             model.addAttribute(USER, session.getAttribute(USER));
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
             return loginFirstOr(PAGE_MYPAGE_EDIT, session);
         }
         try {
@@ -162,6 +167,7 @@ public class UserController {
             session.setAttribute(USER, user);
             return REDIRECT + ROUTE_MYPAGE;
         } catch (Exception e) {
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
             return REDIRECT + ROUTE_LOGIN;
         }
     }
