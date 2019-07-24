@@ -60,7 +60,7 @@ public class Article {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return id == article.id;
+        return id.equals(article.id);
     }
 
     @Override
