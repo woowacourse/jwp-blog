@@ -1,6 +1,6 @@
 package techcourse.myblog.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.UserMismatchException;
@@ -8,15 +8,11 @@ import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.repository.UserRepository;
 
 @Service
+@RequiredArgsConstructor
 public class LoginService {
     private static final String ERROR_USER_NOT_FOUND_MESSAGE = "일치하는 이메일 주소가 없습니다!";
     private static final String ERROR_MISMATCH_PASSWORD_MESSAGE = "비밀번호가 일치하지 않습니다!";
     private final UserRepository userRepository;
-
-    @Autowired
-    public LoginService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public void checkLogin(String email, String password) {
         if (!existsEmail(email)) {

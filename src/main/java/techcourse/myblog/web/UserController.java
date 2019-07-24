@@ -1,6 +1,6 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,15 +17,11 @@ import javax.servlet.http.HttpSession;
 import static techcourse.myblog.util.SessionKeys.USER;
 
 @Controller
+@RequiredArgsConstructor
 public class UserController {
     private static final String SUCCESS_SIGN_UP_MESSAGE = "회원 가입이 완료되었습니다!";
     private static final String ERROR_MISMATCH_PASSWORD_MESSAGE = "비밀번호가 일치하지 않습니다!";
     private final UserService userService;
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @PostMapping("/users")
     public String signUp(UserSaveParams userSaveParams, Model model) {

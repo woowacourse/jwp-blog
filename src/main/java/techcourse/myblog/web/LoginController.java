@@ -1,8 +1,7 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
@@ -14,13 +13,9 @@ import javax.servlet.http.HttpSession;
 import static techcourse.myblog.util.SessionKeys.USER;
 
 @Controller
+@RequiredArgsConstructor
 public class LoginController {
     private final LoginService loginService;
-
-    @Autowired
-    public LoginController(LoginService loginService) {
-        this.loginService = loginService;
-    }
 
     @GetMapping("/login")
     public String showLoginPage() {

@@ -1,27 +1,18 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleSaveParams;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.util.SessionKeys;
-
-import javax.servlet.http.HttpSession;
-
-import static techcourse.myblog.util.SessionKeys.USER;
 
 @Controller
 @RequestMapping("/articles")
+@RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
-
-    @Autowired
-    public ArticleController(ArticleService articleService) {
-        this.articleService = articleService;
-    }
 
     @GetMapping("/writing")
     public String writeArticleForm() {
