@@ -20,9 +20,6 @@ public class LogInService {
     public UserPublicInfoDto logIn(LogInInfoDto logInInfoDto) {
         User logInUser = userRepository.findByEmailAndPassword(logInInfoDto.getEmail(), logInInfoDto.getPassword())
                 .orElseThrow(() -> new LogInException(LOGIN_FAIL_MESSAGE));
-        if (logInUser == null) {
-            throw new LogInException(LOGIN_FAIL_MESSAGE);
-        }
         return new UserPublicInfoDto(logInUser.getId(), logInUser.getName(), logInUser.getEmail());
     }
 }
