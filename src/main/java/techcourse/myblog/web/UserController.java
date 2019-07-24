@@ -14,6 +14,8 @@ import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
 
+import static techcourse.myblog.util.SessionKeys.USER;
+
 @Controller
 public class UserController {
     private static final String SUCCESS_SIGN_UP_MESSAGE = "회원 가입이 완료되었습니다!";
@@ -52,7 +54,7 @@ public class UserController {
 
     @PostMapping("/mypage/edit")
     public String showMyPageEdit(String password, Model model, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
+        User user = (User) httpSession.getAttribute(USER);
         if (user == null) {
             return "index";
         }
@@ -67,10 +69,10 @@ public class UserController {
 
     @PutMapping("/mypage/edit")
     public String editMyPage(UserEditParams userEditParams, HttpSession httpSession) {
-        User lastUser = (User) httpSession.getAttribute("user");
+        User lastUser = (User) httpSession.getAttribute(USER);
         Long id = lastUser.getId();
         User user = userService.update(id, userEditParams);
-        httpSession.setAttribute("user", user);
+        httpSession.setAttribute(USER, user);
 
         return "redirect:/mypage";
     }
@@ -78,7 +80,7 @@ public class UserController {
     @DeleteMapping("/mypage")
     public String deleteUser(String email, HttpSession httpSession) {
         userService.deleteUser(email);
-        httpSession.removeAttribute("user");
+        httpSession.removeAttribute(USER);
 
         return "redirect:/";
     }

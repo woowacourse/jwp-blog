@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleSaveParams;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.util.SessionKeys;
 
 import javax.servlet.http.HttpSession;
+
+import static techcourse.myblog.util.SessionKeys.USER;
 
 @Controller
 @RequestMapping("/articles")
@@ -22,7 +25,7 @@ public class ArticleController {
 
     @GetMapping("/writing")
     public String writeArticleForm(HttpSession httpSession) {
-        if (httpSession.getAttribute("user") == null) {
+        if (httpSession.getAttribute(USER) == null) {
             return "redirect:/login";
         }
         return "article-edit";

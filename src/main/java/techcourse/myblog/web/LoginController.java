@@ -11,6 +11,8 @@ import techcourse.myblog.service.LoginService;
 
 import javax.servlet.http.HttpSession;
 
+import static techcourse.myblog.util.SessionKeys.USER;
+
 @Controller
 public class LoginController {
     private final LoginService loginService;
@@ -45,13 +47,13 @@ public class LoginController {
         loginService.checkLogin(userLoginParams.getEmail(), userLoginParams.getPassword());
 
         User user = loginService.findByEmail(userLoginParams.getEmail());
-        httpSession.setAttribute("user", user);
+        httpSession.setAttribute(USER, user);
         return "index";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
-        httpSession.removeAttribute("user");
+        httpSession.removeAttribute(USER);
         return "redirect:/";
     }
 }
