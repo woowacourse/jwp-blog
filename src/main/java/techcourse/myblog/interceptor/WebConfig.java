@@ -13,12 +13,9 @@ public class WebConfig {
             @Override
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(new LogoutInterceptor())
-                        .addPathPatterns("/user/show")
-                        .addPathPatterns("/user/edit")
-                        .addPathPatterns("/user/delete");
+                        .addPathPatterns("/user/show", "/user/edit", "/user/delete");
                 registry.addInterceptor(new LoginInterceptor())
-                        .addPathPatterns("/user/signup")
-                        .addPathPatterns("/user");
+                        .addPathPatterns("/user/signup", "user");
             }
         };
     }

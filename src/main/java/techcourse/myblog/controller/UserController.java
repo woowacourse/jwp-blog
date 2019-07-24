@@ -48,7 +48,7 @@ public class UserController {
         }
 
         Optional<UserDto> maybeUserDto = userService.getUserDtoByEmail(userDto.getEmail());
-        log.debug(USER_MAPPING_URL + "post : " + userDto.toString());
+        log.debug("signup post {}", userDto);
         if (maybeUserDto.isPresent()) {
             return addErrorMessageToModel(DUPLICATE_EMAIL_ERROR_MESSAGE);
         }
@@ -58,7 +58,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ModelAndView login(UserDto userDto, HttpSession session) {
-        log.debug(USER_MAPPING_URL + "/login post : " + userDto.toString());
+        log.debug("/login post : {}", userDto);
         Optional<UserDto> maybeUserDto = userService.getUserDtoByEmail(userDto.getEmail());
 
         if (!maybeUserDto.isPresent()) { //아이디 존재하지 않으면
@@ -67,11 +67,11 @@ public class UserController {
 
         try {
             userService.checkPassword(userDto);
-            log.debug(USER_MAPPING_URL + "/login post : from userService.checkPassword");
+            log.debug("/login post : from userService.checkPassword");
             session.setAttribute("user", maybeUserDto.get());
             return new ModelAndView("redirect:/");
         } catch (IllegalArgumentException e) {
-            log.debug(USER_MAPPING_URL + "/login post : catch block");
+            log.debug("/login post : catch block");
             return addErrorMessageToModel(e.getMessage());
         }
     }
@@ -79,7 +79,7 @@ public class UserController {
     @GetMapping("/show")
     public String show(HttpSession session, Model model) {
         UserDto userDto = (UserDto) session.getAttribute("user");
-        log.debug(USER_MAPPING_URL + "/show get : " + userDto.toString());
+        log.debug("/show get : {}" + userDto);
         model.addAttribute("user", userDto);
         return "mypage";
     }
@@ -87,7 +87,7 @@ public class UserController {
     @GetMapping("/edit")
     public String editForm(HttpSession session, Model model) {
         UserDto userDto = (UserDto) session.getAttribute("user");
-        log.debug(USER_MAPPING_URL + "/edit get : " + userDto.toString());
+        log.debug("/edit get : {}", userDto);
         model.addAttribute("namePattern", NAME_PATTERN);
         return "mypage-edit";
     }
@@ -97,7 +97,7 @@ public class UserController {
         UserDto userDto = (UserDto) session.getAttribute("user");
         userDto.setName(name);
         session.setAttribute("user", userDto);
-        log.debug(USER_MAPPING_URL + "/edit put : " + userDto.toString());
+        log.debug("/edit put : {}", userDto);
         userService.updateUserName(userDto);
         return "redirect:/" + USER_MAPPING_URL + "/show";
     }
@@ -111,7 +111,7 @@ public class UserController {
     @DeleteMapping("/delete")
     public String delete(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute("user");
-        log.debug(USER_MAPPING_URL + "/delete delete : " + userDto.toString());
+        log.debug("/delete delete : {}", userDto);
         session.removeAttribute("user");
         userService.deleteUser(userDto);
         return "redirect:/";

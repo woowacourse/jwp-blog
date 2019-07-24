@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        UserDto userDtoSession = (UserDto) request.getSession().getAttribute("user");
+        UserDto userDtoSession = (UserDto) request.getSession(false).getAttribute("user");
 
         if (userDtoSession == null) {
             return true;

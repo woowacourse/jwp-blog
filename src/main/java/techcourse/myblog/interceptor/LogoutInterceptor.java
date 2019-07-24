@@ -15,7 +15,7 @@ public class LogoutInterceptor implements HandlerInterceptor {
         if (request.getRequestURI().equals("/user/login") && request.getMethod().equals("POST")) {
             return true;
         }
-        UserDto userDtoSession = (UserDto) request.getSession().getAttribute("user");
+        UserDto userDtoSession = (UserDto) request.getSession(false).getAttribute("user");
 
         if (userDtoSession == null) {
             response.sendRedirect("/user");

@@ -18,7 +18,7 @@ public class UserService {
 
     public UserDto save(UserDto userDto) {
         emailDuplicateValidate(userDto);
-        log.debug("UserService.save() : " + userDto.toString());
+        log.debug("UserService.save() : {}", userDto);
         User user = new User(userDto.getName(), userDto.getEmail(), userDto.getPassword());
         userRepository.save(user);
         return new UserDto(user.getEmail(), user.getName(), user.getPassword());
@@ -51,14 +51,14 @@ public class UserService {
         User user = userRepository.findByEmail(userDto.getEmail()).get();
         String updatedName = user.updateName(userDto);
         userRepository.save(user);
-        log.debug("updateUserName : " + updatedName + " " + userDto.toString());
+        log.debug("updateUserName : {} {}", updatedName, userDto);
         return user.getName();
     }
 
     public void deleteUser(UserDto userDto) {
         User user = userRepository.findByEmail(userDto.getEmail()).get();
         userRepository.delete(user);
-        log.debug("delete User : " + user.toString());
+        log.debug("delete User : {}", user);
     }
 
     public Object getAllUsers() {
