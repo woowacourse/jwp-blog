@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserEditParams;
 import techcourse.myblog.dto.UserSaveParams;
@@ -24,10 +25,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/users")
-    public String signUp(UserSaveParams userSaveParams, Model model) {
+    public String signUp(UserSaveParams userSaveParams, RedirectAttributes redirectAttributes) {
         userService.save(userSaveParams.toEntity());
-        model.addAttribute("successMessage", SUCCESS_SIGN_UP_MESSAGE);
-        return "login";
+        redirectAttributes.addFlashAttribute("successMessage", SUCCESS_SIGN_UP_MESSAGE);
+        return "redirect:/login";
     }
 
     @GetMapping("/users")
