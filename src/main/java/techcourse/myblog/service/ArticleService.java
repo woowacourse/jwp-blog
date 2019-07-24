@@ -22,8 +22,7 @@ public class ArticleService {
             throw new NotFoundObjectException();
         }
         Article article = articleDto.toEntity();
-        articleRepository.save(article);
-        return article;
+        return articleRepository.save(article);
     }
 
     public Article findArticle(Long articleId) {

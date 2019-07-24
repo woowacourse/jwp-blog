@@ -23,6 +23,7 @@ public class AbstractControllerTest {
                 .expectBody()
                 .returnResult();
     }
+
     String extractJSessionId(EntityExchangeResult<byte[]> loginResult) {
         String[] cookies = loginResult.getResponseHeaders().get("set-Cookie").stream()
                 .filter(it -> it.contains("JSESSIONID"))
