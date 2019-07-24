@@ -25,7 +25,7 @@ public class ArticleController {
 		return "index";
 	}
 
-	@GetMapping("writing")
+	@GetMapping("/writing")
 	public String createArticle(HttpSession httpSession) {
 		if (!existSession(httpSession)) {
 			return "redirect:/";
@@ -33,7 +33,7 @@ public class ArticleController {
 		return "article-edit";
 	}
 
-	@PostMapping("articles")
+	@PostMapping("/articles")
 	public String saveArticle(ArticleDto articleDto, HttpSession httpSession) {
 		if (!existSession(httpSession)) {
 			return "redirect:/";
@@ -43,13 +43,13 @@ public class ArticleController {
 		return "redirect:/articles/" + id;
 	}
 
-	@GetMapping("articles/{articleId}")
+	@GetMapping("/articles/{articleId}")
 	public String getArticle(@PathVariable Long articleId, Model model) {
 		getArticleWhenExists(articleId, model);
 		return "article";
 	}
 
-	@GetMapping("articles/{articleId}/edit")
+	@GetMapping("/articles/{articleId}/edit")
 	public String editArticle(@PathVariable Long articleId, Model model, HttpSession httpSession) {
 		if (!existSession(httpSession)) {
 			return "redirect:/";
@@ -64,7 +64,7 @@ public class ArticleController {
 		model.addAttribute("article", article);
 	}
 
-	@PutMapping("articles/{articleId}")
+	@PutMapping("/articles/{articleId}")
 	public String modifyArticle(@PathVariable Long articleId, ArticleDto articleDto, HttpSession httpSession) {
 		if (!existSession(httpSession)) {
 			return "redirect:/";
@@ -74,7 +74,7 @@ public class ArticleController {
 		return "redirect:/articles/" + articleId;
 	}
 
-	@DeleteMapping("articles/{articleId}")
+	@DeleteMapping("/articles/{articleId}")
 	public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
 		if (!existSession(httpSession)) {
 			return "redirect:/";

@@ -1,5 +1,8 @@
 package techcourse.myblog.config;
 
+import java.util.Arrays;
+import java.util.List;
+
 import techcourse.myblog.interceptor.AuthenticationInterceptor;
 
 import org.springframework.context.annotation.Bean;
@@ -9,6 +12,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+	private List<String> url = Arrays.asList("/login", "/signup", "/users", "/user-list", "/leave",
+			"/edit", "/mypage", "/mypage/edit", "/articles");
+
 	@Bean
 	public AuthenticationInterceptor basicAuthInterceptor() {
 		return new AuthenticationInterceptor();
@@ -17,16 +23,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(basicAuthInterceptor())
-				.addPathPatterns("/login")
-				.addPathPatterns("/signup")
-				.addPathPatterns("/users")
-				.addPathPatterns("/user-list")
-				.addPathPatterns("/leave")
-				.addPathPatterns("/edit")
-				.addPathPatterns("/mypage")
-				.addPathPatterns("/mypage/edit")
-				.addPathPatterns("/articles")
-				.excludePathPatterns("/");
-
+				.addPathPatterns(url);
 	}
 }
