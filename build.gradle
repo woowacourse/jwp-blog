@@ -39,4 +39,6 @@ dependencies {
 
 //  http 관련 로그를 남기기 위함
     runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+
+    compile 'com.google.guava:guava:28.0-jre'
 }

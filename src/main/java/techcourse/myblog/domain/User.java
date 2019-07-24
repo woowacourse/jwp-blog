@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 public class User {
@@ -59,11 +61,43 @@ public class User {
         snsInfos.add(snsInfo);
     }
 
-    public SnsInfo getSnsInfo(int idx) {
-        if (snsInfos ==  null) return null;
-        if (idx < 0 || snsInfos.size() <= idx) return null;
+    public Optional<SnsInfo> getSnsInfo(int idx) {
+        if (snsInfos ==  null) return Optional.empty();
+        if (idx < 0 || snsInfos.size() <= idx) return Optional.empty();
 
-        return snsInfos.get(idx);
+        return Optional.of(snsInfos.get(idx));
+    }
+
+    public User replace(final String name, final List<SnsInfo> snsInfos) {
+         User user = User.builder()
+                .id(id)
+                .name(name)
+                .email(email)
+                .password(password)
+                .build();
+
+         for (SnsInfo info : snsInfos) {
+             user.addSnsInfo(info);
+         }
+
+         return user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(snsInfos, user.snsInfos);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, password, name, snsInfos);
     }
 
     @Override

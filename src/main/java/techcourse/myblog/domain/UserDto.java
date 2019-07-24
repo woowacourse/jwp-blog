@@ -27,14 +27,35 @@ public class UserDto {
         this.snsGithubEmail = snsGithubEmail;
     }
 
+//    public static UserDto from(User user) {
+//        return UserDto.builder()
+//                .id(user.getId())
+//                .name(user.getName())
+//                .password(user.getPassword())
+//                .email(user.getEmail())
+//                .snsFacebookEmail(user.getSnsInfo(0) == null ? null : user.getSnsInfo(0).getEmail())
+//                .snsGithubEmail(user.getSnsInfo(1) == null ? null : user.getSnsInfo(1).getEmail())
+//                .build();
+//    }
+//
+//    public static UserDto fromWithoutPassword(User user) {
+//        return UserDto.builder()
+//                .id(user.getId())
+//                .name(user.getName())
+//                .email(user.getEmail())
+//                .snsFacebookEmail(user.getSnsInfo(0) == null ? null : user.getSnsInfo(0).getEmail())
+//                .snsGithubEmail(user.getSnsInfo(1) == null ? null : user.getSnsInfo(1).getEmail())
+//                .build();
+//    }
+
     public static UserDto from(User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .password(user.getPassword())
                 .email(user.getEmail())
-                .snsFacebookEmail(user.getSnsInfo(0) == null ? null : user.getSnsInfo(0).getEmail())
-                .snsGithubEmail(user.getSnsInfo(1) == null ? null : user.getSnsInfo(1).getEmail())
+                .snsFacebookEmail("empty")
+                .snsGithubEmail("empty")
                 .build();
     }
 
@@ -43,8 +64,8 @@ public class UserDto {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .snsFacebookEmail(user.getSnsInfo(0) == null ? null : user.getSnsInfo(0).getEmail())
-                .snsGithubEmail(user.getSnsInfo(1) == null ? null : user.getSnsInfo(1).getEmail())
+                .snsFacebookEmail("empty")
+                .snsGithubEmail("empty")
                 .build();
     }
 
