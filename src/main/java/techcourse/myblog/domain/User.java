@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import techcourse.myblog.dto.UserEditDto;
 
 import javax.persistence.*;
 
@@ -32,5 +33,9 @@ public class User {
 
     public boolean matchPassword(String password) {
         return this.password.equals(password);
+    }
+
+    public void update(UserEditDto userEditDto) {
+        this.name = userEditDto.getName();
     }
 }

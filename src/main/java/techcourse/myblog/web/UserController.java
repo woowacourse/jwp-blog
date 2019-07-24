@@ -73,13 +73,10 @@ public class UserController {
     @PutMapping("/mypage/edit")
     public String editMyPage(UserEditDto userEditDto, HttpSession httpSession) {
         User lastUser = (User) httpSession.getAttribute("user");
-        User user = User.builder()
-                .name(userEditDto.getName())
-                .email(lastUser.getEmail())
-                .password(lastUser.getPassword())
-                .build();
-
+        Long id = lastUser.getId();
+        User user = userService.update(id, userEditDto);
         httpSession.setAttribute("user", user);
+
         return "redirect:/mypage";
     }
 
