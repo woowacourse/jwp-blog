@@ -3,7 +3,6 @@ package techcourse.myblog.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,8 +31,8 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public List<Article> findAll() {
-        PageRequest request = PageRequest.of(START_PAGE, VIEW_ARTICLE_COUNT, Sort.Direction.DESC, ID);
-        Page<Article> page = articleRepository.findAll(request);
+        PageRequest pageRequest = new PageRequest(START_PAGE, VIEW_ARTICLE_COUNT, Sort.Direction.DESC, ID);
+        Page<Article> page = articleRepository.findAll(pageRequest.of());
         log.info("page : {} ", page.getContent());
         return page.getContent();
     }
