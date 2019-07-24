@@ -2,8 +2,8 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.LogInInfoDto;
-import techcourse.myblog.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.LogInInfoDto;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.LogInException;
 

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.exception.UserArticleMissmatchException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
