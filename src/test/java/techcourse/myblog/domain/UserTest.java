@@ -11,30 +11,45 @@ class UserTest {
     private static final String VALID_NAME = "코니";
     private static final String VALID_EMAIL = "cony@cony.com";
     private static final String VALID_PASSWORD = "@Password12";
-    private static final String INVALID_NAME = "123";
-    private static final String INVALID_EMAIL = "123";
-    private static final String INVALID_PASSWORD = "123";
 
     @Test
-    public void 모든_항목이_조건에_맞는_경우_객체_생성() {
+    public void 모든_항목이_조건에_맞는_경우_객체를_생성한다() {
         assertDoesNotThrow(() -> new User(USER_ID, VALID_NAME, VALID_EMAIL, VALID_PASSWORD));
     }
 
     @Test
-    public void 조건에_맞지_않는_이름을_등록했을_경우_예외처리() {
+    public void 이름에_숫자가_들어가면_예외를_던진다() {
         assertThrows(InvalidUserDataException.class,
-                () -> new User(USER_ID, INVALID_NAME, VALID_EMAIL, VALID_PASSWORD));
+                () -> new User(USER_ID, "123코니", VALID_EMAIL, VALID_PASSWORD));
     }
 
     @Test
-    public void 조건에_맞지_않는_이메일을_등록했을_경우_예외처리() {
+    public void 이름에_특수문자가_들어가면_예외를_던진다() {
         assertThrows(InvalidUserDataException.class,
-                () -> new User(USER_ID, VALID_NAME, INVALID_EMAIL, VALID_PASSWORD));
+                () -> new User(USER_ID, "코니!", VALID_EMAIL, VALID_PASSWORD));
     }
 
     @Test
-    public void 조건에_맞지_않는_비밀번호를_등록했을_경우_예외처리() {
+    public void 이메일의_형식이_틀리면_예외를_던진다() {
         assertThrows(InvalidUserDataException.class,
-                () -> new User(USER_ID, VALID_NAME, VALID_EMAIL, INVALID_PASSWORD));
+                () -> new User(USER_ID, VALID_NAME, "cony@", VALID_PASSWORD));
+    }
+
+    @Test
+    public void 비밀번호가_8자_미만이면_예외를_던진다() {
+        assertThrows(InvalidUserDataException.class,
+                () -> new User(USER_ID, VALID_NAME, VALID_EMAIL, "@Passw1"));
+    }
+
+    @Test
+    public void 비밀번호에_숫자가_없으면_예외를_던진다() {
+        assertThrows(InvalidUserDataException.class,
+                () -> new User(USER_ID, VALID_NAME, VALID_EMAIL, "@Passwordhaha"));
+    }
+
+    @Test
+    public void 비밀번호에_특수문자가_없으면_예외를_던진다() {
+        assertThrows(InvalidUserDataException.class,
+                () -> new User(USER_ID, VALID_NAME, VALID_EMAIL, "Password12"));
     }
 }

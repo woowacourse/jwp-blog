@@ -4,10 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DuplicateKeyException;
 import techcourse.myblog.dto.UserDto;
-
-import java.util.NoSuchElementException;
+import techcourse.myblog.exception.DuplicateEmailException;
+import techcourse.myblog.exception.FailedLoginException;
+import techcourse.myblog.exception.FailedPasswordVerificationException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -29,29 +29,49 @@ class UserServiceTest {
     }
 
     @Test
-    public void 중복된_이메일을_등록하는_경우_예외처리() {
-        userDto.setEmail("cony1@cony.com");
+    public void 중복된_이메일로_가입하는_경우_예외를_던진다() {
+        userDto.setEmail("cony@cony.com");
         userService.save(userDto);
 
-        assertThrows(DuplicateKeyException.class,
+        assertThrows(DuplicateEmailException.class,
                 () -> userService.save(userDto));
     }
 
     @Test
-    public void 등록된_사용자가_로그인을_하는_경우_테스트() {
-        userDto.setEmail("cony2@cony.com");
+    public void 비밀번호_확인을_비밀번호와_다르게_입력하는_경우_예외를_던진다() {
+        userDto.setEmail("bony@cony.com");
+        userDto.setPasswordConfirm("123");
+
+        assertThrows(FailedPasswordVerificationException.class,
+                () -> userService.save(userDto));
+    }
+
+    @Test
+    public void 등록된_사용자의_로그인이_잘_되는지_확인한다() {
+        userDto.setEmail("sony@cony.com");
         userService.save(userDto);
 
-        assertThat(userService.findUserByEmailAndPassword(userDto).getEmail()).isEqualTo(userDto.getEmail());
         assertThat(userService.findUserByEmailAndPassword(userDto).getName()).isEqualTo(userDto.getName());
+        assertThat(userService.findUserByEmailAndPassword(userDto).getEmail()).isEqualTo(userDto.getEmail());
         assertThat(userService.findUserByEmailAndPassword(userDto).getPassword()).isEqualTo(userDto.getPassword());
     }
 
     @Test
-    public void 등록되지_않은_사용자가_로그인을_하는_경우_예외처리() {
+    public void 등록되지_않은_이메일로_로그인하는_경우_예외를_던진다() {
         userDto.setEmail("conie@cony.com");
 
-        assertThrows(NoSuchElementException.class, () -> {
+        assertThrows(FailedLoginException.class, () -> {
+            userService.findUserByEmailAndPassword(userDto);
+        });
+    }
+
+    @Test
+    public void 로그인_비밀번호를_틀린_경우_예외를_던진다() {
+        userDto.setEmail("dony@cony.com");
+        userService.save(userDto);
+        userDto.setPassword("@pAssword123");
+
+        assertThrows(FailedLoginException.class, () -> {
             userService.findUserByEmailAndPassword(userDto);
         });
     }
