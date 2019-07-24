@@ -1,9 +1,6 @@
 package techcourse.myblog.domain.article;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -11,8 +8,14 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String coverUrl;
+
+    @Column(nullable = false)
     private String contents;
 
     public Article() {
@@ -74,6 +77,21 @@ public class Article {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Article)) return false;
+        Article article = (Article) o;
+        return Objects.equals(title, article.title) &&
+                Objects.equals(coverUrl, article.coverUrl) &&
+                Objects.equals(contents, article.contents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, coverUrl, contents);
+    }
+
+    @Override
     public String toString() {
         return "Article{" +
                 "id=" + id +
@@ -81,21 +99,5 @@ public class Article {
                 ", coverUrl='" + coverUrl + '\'' +
                 ", contents='" + contents + '\'' +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Article)) return false;
-        Article article = (Article) o;
-        return id == article.id &&
-                Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents);
     }
 }

@@ -56,7 +56,7 @@ public class UserServiceTest {
 
         UserRequestDto.SignUpRequestDto userDto1 = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
         UserRequestDto.SignUpRequestDto userDto2
-                = new UserRequestDto.SignUpRequestDto(secondName, EMAIL, secondPassword);
+                = new UserRequestDto.SignUpRequestDto(secondName, "temp" + EMAIL, secondPassword);
         User user1 = userService.save(userDto1);
         User user2 = userService.save(userDto2);
 

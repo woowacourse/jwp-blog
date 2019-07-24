@@ -11,20 +11,23 @@ public class ArticleTest {
     private static final String TITLE = "TITLE";
     private static final String COVER_URL = "https://url.com";
     private static final String CONTENTS = "CONTENTS";
-    private static final Article SAMPLE_ARTICLE = new Article(ID, TITLE, COVER_URL, CONTENTS);
+    private static final Article SAMPLE_ARTICLE = new Article(TITLE, COVER_URL, CONTENTS);
+
+    static {
+        SAMPLE_ARTICLE.setId(ID);
+    }
 
     @Test
     public void 동시성_테스트() {
         Article expected = SAMPLE_ARTICLE;
-        Article actual = new Article(ID, TITLE, COVER_URL, CONTENTS);
+        Article actual = new Article(TITLE, COVER_URL, CONTENTS);
         assertEquals(expected, actual);
     }
 
     @Test
     public void 동시성_테스트_다를때() {
-        long diffId = 3L;
         Article expected = SAMPLE_ARTICLE;
-        Article actual = new Article(diffId, TITLE, COVER_URL, CONTENTS);
+        Article actual = new Article(TITLE + "differ", COVER_URL, CONTENTS);
         assertNotEquals(expected, actual);
     }
 

@@ -3,6 +3,7 @@ package techcourse.myblog.web.dto;
 import techcourse.myblog.domain.User.User;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Objects;
 
 public class UserRequestDto {
