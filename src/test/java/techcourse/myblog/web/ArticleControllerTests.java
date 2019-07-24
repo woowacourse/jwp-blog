@@ -19,10 +19,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
     private WebTestClient webTestClient;
-    private static String testTitle = "목적의식 있는 연습을 통한 효과적인 학습";;
+    private static String testTitle = "목적의식 있는 연습을 통한 효과적인 학습";
     private static String testCoverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-    private static String testContents = "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 '선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?'였다.";
+    private static String testContents = "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 \"선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?\"였다.";
+    private static String defaultTitle = "목적의식 있는 연습을 통한 효과적인 학습2";
+    private static String defaultCoverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo2.jpeg";
+    private static String defaultContents = "2나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 \"선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?\"였다.";
     private static String testUniContents = StringEscapeUtils.escapeJava(testContents);
+    private static String defaultUniContents = StringEscapeUtils.escapeJava(defaultContents);
 
     @Autowired
     public ArticleControllerTests(WebTestClient webTestClient) {
@@ -31,7 +35,7 @@ public class ArticleControllerTests {
 
     @BeforeEach
     void setUp() {
-        saveTestArticle();
+//        saveTestArticle();
     }
 
     @Test
@@ -81,8 +85,8 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(innerResponse -> {
                     String body = new String(innerResponse.getResponseBody());
-                    assertThat(body.contains(testTitle)).isTrue();
-                    assertThat(body.contains(testCoverUrl)).isTrue();
+                    assertThat(body.contains(defaultTitle)).isTrue();
+                    assertThat(body.contains(defaultCoverUrl)).isTrue();
                     //assertThat(body.contains(testContents)).isTrue();
                 });
     }
@@ -95,9 +99,9 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains(testTitle)).isTrue();
-                    assertThat(body.contains(testCoverUrl)).isTrue();
-                    assertThat(body.contains(testUniContents)).isTrue();
+                    assertThat(body.contains(defaultTitle)).isTrue();
+                    assertThat(body.contains(defaultCoverUrl)).isTrue();
+                    assertThat(body.contains(defaultUniContents)).isTrue();
                 });
     }
 
@@ -138,9 +142,9 @@ public class ArticleControllerTests {
                 .uri("/articles/1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", testTitle)
-                        .with("coverUrl", testCoverUrl)
-                        .with("contents", testContents))
+                        .fromFormData("title", defaultTitle)
+                        .with("coverUrl", defaultCoverUrl)
+                        .with("contents", defaultContents))
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection();
@@ -178,9 +182,9 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains(testTitle)).isTrue();
-                    assertThat(body.contains(testCoverUrl)).isTrue();
-                    assertThat(body.contains(testUniContents)).isTrue();
+                    assertThat(body.contains(defaultTitle)).isTrue();
+                    assertThat(body.contains(defaultCoverUrl)).isTrue();
+                    assertThat(body.contains(defaultUniContents)).isTrue();
                 });
     }
 

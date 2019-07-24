@@ -25,7 +25,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String saveArticlePage(Article article, Model model) {
+    public String saveArticlePage(Article article) {
         log.debug(">>> save article : {}", article);
 
         articleRepository.save(article);
@@ -33,7 +33,7 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public String showArticlesPage(Model model, HttpSession httpSession) {
+    public String showArticlesPage(Model model) {
         List<Article> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
