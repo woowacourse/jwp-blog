@@ -18,7 +18,7 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable("articleId") Long articleId, Model model) {
-        model.addAttribute("article", articleRepository.getOne(articleId));
+        model.addAttribute("article", articleRepository.findById(articleId).get());
         model.addAttribute("articleId", articleId);
         return "article";
     }
@@ -36,7 +36,7 @@ public class ArticleController {
 
     @GetMapping("/{articleId}/edit")
     public String articleUpdateForm(@PathVariable("articleId") Long articleId, Model model) {
-        model.addAttribute("article", articleRepository.getOne(articleId));
+        model.addAttribute("article", articleRepository.findById(articleId).get());
         model.addAttribute("articleId", articleId);
         return "article-edit";
     }

@@ -23,8 +23,7 @@ public class MypageController {
     @GetMapping("/mypage")
     public String myPage(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
+        setUserToModelBySession(model, session);
         return "mypage";
     }
 
@@ -39,8 +38,12 @@ public class MypageController {
     @GetMapping("/mypage/edit")
     public String myPageEdit(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
+        setUserToModelBySession(model, session);
+        return "mypage-edit";
+    }
+
+    private void setUserToModelBySession(Model model, HttpSession session) {
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
-        return "mypage-edit";
     }
 }
