@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.dto.LogInInfoDto;
-import techcourse.myblog.dto.UserPublicInfoDto;
+import techcourse.myblog.dto.UserProfileDto;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.LogInException;
 
@@ -26,9 +26,9 @@ class LogInServiceTest {
     void loginSuccess() {
         LogInInfoDto logInInfoDto = new LogInInfoDto("test@test.test", VALID_PASSWORD);
 
-        UserPublicInfoDto userPublicInfoDto = logInService.logIn(logInInfoDto);
-        assertThat(userPublicInfoDto.getName()).isEqualTo("test");
-        assertThat(userPublicInfoDto.getEmail()).isEqualTo("test@test.test");
+        UserProfileDto userProfileDto = logInService.logIn(logInInfoDto);
+        assertThat(userProfileDto.getName()).isEqualTo("test");
+        assertThat(userProfileDto.getEmail()).isEqualTo("test@test.test");
     }
 
     @Test

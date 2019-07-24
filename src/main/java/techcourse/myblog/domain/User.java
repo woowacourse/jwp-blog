@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import techcourse.myblog.dto.UserProfileDto;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,7 +41,10 @@ public class User {
         return password;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void updateByUserProfileDto(UserProfileDto userProfileDto) {
+        String updatedName = userProfileDto.getName();
+        UserFactory.checkValidNameLength(updatedName);
+        UserFactory.checkValidName(updatedName);
+        this.name = updatedName;
     }
 }

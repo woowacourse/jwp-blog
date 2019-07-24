@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.dto.UserPublicInfoDto;
+import techcourse.myblog.dto.UserProfileDto;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
@@ -47,11 +47,15 @@ public class UserController {
 
     @PutMapping("/users/{id}")
     public String editUserName(@PathVariable Long id, UserPublicInfoDto userPublicInfoDto, HttpServletRequest httpServletRequest) {
+    public String editUserName(@PathVariable Long id, UserProfileDto userProfileDto, HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
         if (isLoggedInUser(httpSession, id)) {
             userService.update(userPublicInfoDto);
             userPublicInfoDto.setId(id);
             httpSession.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
+            userService.update(userProfileDto);
+            userProfileDto.setId(id);
+            httpSession.setAttribute(LOGGED_IN_USER, userProfileDto);
         }
         return "redirect:/mypage/" + id;
     }
@@ -68,6 +72,7 @@ public class UserController {
 
     private boolean isLoggedInUser(HttpSession httpSession, Long id) {
         UserPublicInfoDto loggedInUser = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
+        UserProfileDto loggedInUser = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
         return (loggedInUser != null) && loggedInUser.getId().equals(id);
     }
 
@@ -87,7 +92,7 @@ public class UserController {
                                             HttpServletRequest httpServletRequest,
                                             RedirectAttributes redirectAttributes) {
         HttpSession httpSession = httpServletRequest.getSession();
-        UserPublicInfoDto user = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
+        UserProfileDto user = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         return "redirect:/mypage/" + user.getId() + "/edit";
     }

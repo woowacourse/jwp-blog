@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserPublicInfoDto;
+import techcourse.myblog.dto.UserProfileDto;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.NotFoundUserException;
 
@@ -28,7 +28,7 @@ public class MyPageController {
     public String showMyPage(@PathVariable("id") long id, Model model, HttpServletRequest httpServletRequest) {
         User user = userRepository.findById(id)
                 .orElseThrow(NotFoundUserException::new);
-        model.addAttribute("user", new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail()));
+        model.addAttribute("user", new UserProfileDto(user.getId(), user.getName(), user.getEmail()));
         return "mypage";
     }
 
@@ -41,7 +41,7 @@ public class MyPageController {
         User user = userRepository.findById(id)
                 .orElseThrow(NotFoundUserException::new);
         if (isLoggedInUserMYPage(httpServletRequest, user)) {
-            model.addAttribute("user", new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail()));
+            model.addAttribute("user", new UserProfileDto(user.getId(), user.getName(), user.getEmail()));
             return "mypage-edit";
         }
         return "redirect:/mypage/" + id;
@@ -49,7 +49,7 @@ public class MyPageController {
 
     private boolean isLoggedInUserMYPage(HttpServletRequest httpServletRequest, User user) {
         HttpSession httpSession = httpServletRequest.getSession();
-        UserPublicInfoDto loggedInUser = (UserPublicInfoDto) httpSession.getAttribute("loggedInUser");
+        UserProfileDto loggedInUser = (UserProfileDto) httpSession.getAttribute("loggedInUser");
         return (loggedInUser != null) && (user.getId().equals(loggedInUser.getId()));
     }
 

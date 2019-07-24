@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.dto.UserPublicInfoDto;
+import techcourse.myblog.dto.UserProfileDto;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.NotFoundArticleException;
@@ -52,8 +52,8 @@ public class ArticleController {
 
         User user = userRepository.findById(article.getUserId())
                 .orElseThrow(NotFoundUserException::new);
-        UserPublicInfoDto userPublicInfoDto = new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
-        model.addAttribute("articleUser", userPublicInfoDto);
+        UserProfileDto userProfileDto = new UserProfileDto(user.getId(), user.getName(), user.getEmail());
+        model.addAttribute("articleUser", userProfileDto);
         return "article";
     }
 
@@ -71,11 +71,11 @@ public class ArticleController {
     @PostMapping("/articles")
     public String createArticle(ArticleDto articleDto, HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
-        UserPublicInfoDto userPublicInfoDto = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
-        if (userPublicInfoDto == null) {
+        UserProfileDto userProfileDto = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
+        if (userProfileDto == null) {
             return "redirect:/login";
         }
-        articleDto.setUserId(userPublicInfoDto.getId());
+        articleDto.setUserId(userProfileDto.getId());
         Article persistArticle = articleRepository.save(articleDto.toEntity());
         return "redirect:/articles/" + persistArticle.getId();
     }
@@ -103,7 +103,7 @@ public class ArticleController {
 
     private boolean isLoggedInUserArticle(HttpServletRequest httpServletRequest, Article article) {
         HttpSession httpSession = httpServletRequest.getSession();
-        UserPublicInfoDto user = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
+        UserProfileDto user = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
         return (user != null) && article.matchUserId(user.getId());
     }
 

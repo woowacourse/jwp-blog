@@ -1,11 +1,11 @@
 package techcourse.myblog.dto;
 
-public class UserPublicInfoDto {
+public class UserProfileDto {
     private Long id;
     private String name;
     private String email;
 
-    public UserPublicInfoDto(Long id, String name, String email) {
+    public UserProfileDto(Long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
