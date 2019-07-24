@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.controller.dto.LoginDTO;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
 import techcourse.myblog.exception.UserNotExistException;
-import techcourse.myblog.model.User;
 import techcourse.myblog.service.LoginService;
 
 import javax.servlet.http.HttpServletRequest;

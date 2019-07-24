@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.controller.dto.UserDTO;
-import techcourse.myblog.model.User;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;

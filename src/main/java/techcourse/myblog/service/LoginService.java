@@ -3,9 +3,9 @@ package techcourse.myblog.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.controller.dto.LoginDTO;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
 import techcourse.myblog.exception.UserNotExistException;
-import techcourse.myblog.model.User;
 import techcourse.myblog.repository.UserRepository;
 
 @Service
@@ -16,8 +16,6 @@ public class LoginService {
     public LoginService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
-    ;
 
     public User getLoginUser(LoginDTO loginDTO) {
         User findUser = checkUser(loginDTO);

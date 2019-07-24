@@ -1,11 +1,11 @@
 package techcourse.myblog.controller.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import techcourse.myblog.model.Article;
+import lombok.RequiredArgsConstructor;
+import techcourse.myblog.domain.Article;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 public class ArticleDTO {
     @NonNull

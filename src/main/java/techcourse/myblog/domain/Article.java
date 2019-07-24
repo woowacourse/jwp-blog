@@ -1,9 +1,6 @@
-package techcourse.myblog.model;
+package techcourse.myblog.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,18 +8,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 @Entity
-public class User {
+public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NonNull
-    private String userName;
+    private String title;
+
     @NonNull
-    private String email;
+    private String contents;
+
     @NonNull
-    private String password;
+    private String coverUrl;
 }

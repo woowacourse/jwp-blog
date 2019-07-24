@@ -8,8 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.controller.dto.UserDTO;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.EmailRepetitionException;
-import techcourse.myblog.model.User;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
