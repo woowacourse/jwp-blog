@@ -7,13 +7,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserControllerTest {
+public class UserControllerTest extends AbstractControllerTest {
     private String email = "buddy@gmail.com";
     private String userName = "Buddy";
     private String password = "Aa12345!";
@@ -74,7 +73,6 @@ public class UserControllerTest {
 
     @Test
     void 유저_패스워드_컨펌패스워드_매치_확인() {
-
         WebTestClient.ResponseSpec responseSpec = getResponseSpec(userName, email, password, "Ss12345!")
                 .expectStatus().isBadRequest();
 
@@ -102,10 +100,12 @@ public class UserControllerTest {
 
     @Test
     void 로그인_후_마이페이지_접근() {
-        setSession();
-        getRequest("/users/mypage")
+        String jSessionId = getJSessionId("jason", "jason@gmail.com", password);
+
+        webTestClient.get().uri("/users/mypage")
+                .cookie("JSESSIONID", jSessionId)
+                .exchange()
                 .expectStatus().isOk();
-        removeSession();
     }
 
     @Test
@@ -116,10 +116,11 @@ public class UserControllerTest {
 
     @Test
     void 로그인_후_회원수정페이지_접근() {
-        setSession();
-        getRequest("/users/mypage/edit")
+        String jSessionId = getJSessionId("pobi", "pobi@gmail.com", password);
+        webTestClient.get().uri("/users/mypage/edit")
+                .cookie("JSESSIONID", jSessionId)
+                .exchange()
                 .expectStatus().isOk();
-        removeSession();
     }
 
     private void checkInvalidUserMessage(WebTestClient.ResponseSpec responseSpec, String message) {
@@ -127,42 +128,6 @@ public class UserControllerTest {
             String body = new String(res.getResponseBody());
             assertThat(body.contains(message)).isTrue();
         });
-    }
-
-    private void create_user(String userName, String email, String password) {
-        webTestClient.post().uri("/users/new")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("userName", userName)
-                        .with("email", email)
-                        .with("password", password)
-                        .with("confirmPassword", password)
-                ).exchange().expectStatus().isFound();
-    }
-
-    void setSession() {
-        webTestClient = WebTestClient.bindToWebHandler(exchange -> {
-            String path = exchange.getRequest().getURI().getPath();
-            if ("/users/mypage".equals(path) || "/users/mypage/edit".equals(path)) {
-                return exchange.getSession()
-                        .doOnNext(webSession ->
-                                webSession.getAttributes().put("user", new User("buddy", "buddy@buddy.com", "Aa12345!")))
-                        .then();
-            }
-            return null;
-        }).build();
-    }
-
-    void removeSession() {
-        webTestClient = WebTestClient.bindToWebHandler(exchange -> {
-            String path = exchange.getRequest().getURI().getPath();
-            if ("/users/mypage".equals(path) || "/users/mypage/edit".equals(path)) {
-                return exchange.getSession()
-                        .doOnNext(webSession ->
-                                webSession.getAttributes().remove("user"))
-                        .then();
-            }
-            return null;
-        }).build();
     }
 
     private WebTestClient.ResponseSpec getResponseSpec(String userName, String email, String password, String confirmPassword) {
