@@ -123,7 +123,6 @@ class UserControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String url = response.getResponseHeaders().get("Location").get(0);
-                    System.out.println(response.getResponseHeaders());
                     assertThat(url.contains("/user")).isTrue();
                 });
     }
@@ -138,8 +137,8 @@ class UserControllerTest {
     }
 
     @Test
-    void logout_mainPageHaveLoginString_() {
-        webTestClient.get().uri(USER_MAPPING_URL + "/logout")
+    void logout_mainPageHave_LoginString() {
+        webTestClient.post().uri(USER_MAPPING_URL + "/logout")
                 .header("cookie", cookie)
                 .exchange();
         webTestClient.get().uri("/").header("cookie", cookie)
@@ -151,6 +150,31 @@ class UserControllerTest {
                     assertThat(body.contains("Login")).isTrue();
                 });
     }
+
+    @Test
+    void logout_deletePageAccess_redirectToLogin() {
+        webTestClient.post().uri(USER_MAPPING_URL + "/logout")
+                .header("cookie", cookie)
+                .exchange();
+        webTestClient.get().uri(USER_MAPPING_URL + "/edit")
+                .header("cookie", cookie)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody()
+                .consumeWith(response -> {
+                    String url = response.getResponseHeaders().get("Location").get(0);
+                    assertThat(url.contains(USER_MAPPING_URL)).isTrue();
+                });
+    }
+
+    @Test
+    void delete_success_redirectToMain() {
+        webTestClient.delete().uri(USER_MAPPING_URL + "/delete")
+                .header("cookie", cookie)
+                .exchange()
+                .expectStatus().is3xxRedirection();
+    }
+
 
     private WebTestClient.ResponseSpec commonRequest(HttpMethod method, final UserDto userDto, String attatchedUrl) {
         return webTestClient.method(method)
