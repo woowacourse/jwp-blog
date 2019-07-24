@@ -21,7 +21,7 @@ import static techcourse.myblog.presentation.controller.UserController.WRONG_LOG
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
-    private final String DUMMY_EMAIL = "abcd@abc.com";
+    private final String DUMMY_EMAIL = "abaacd@abc.com";
     private final String DUMMY_NAME = "abcd";
     private final String DUMMY_PASSWORD = "asdASD12!@";
     private final String WRONG_EMAIL = "wrong@wrong.com";
@@ -91,13 +91,44 @@ class UserControllerTest {
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk()
-        ;
+                .expectHeader();
     }
 
     @Test
-    void login_successEditPageGet_isOk(){
-
+    void login_successMainPageHaveName_isOk() {
+        webTestClient.get().uri("/").header("cookie", cookie)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(DUMMY_NAME)).isTrue();
+                });
     }
+
+
+    @Test
+    void login_loginGetEditPage_isOk() {
+        webTestClient.get().uri("/user/edit")
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader();
+    }
+
+    @Test
+    void login_notLoginGetEditPage_redirectToLogin() {
+        webTestClient.get().uri("/user/edit")
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody()
+                .consumeWith(response -> {
+                    String url = response.getResponseHeaders().get("Location").get(0);
+                    System.out.println(response.getResponseHeaders());
+                    assertThat(url.contains("/user")).isTrue();
+                });
+    }
+
 
     @Test
     void logout_post_is3xxRedirect() {
@@ -107,13 +138,21 @@ class UserControllerTest {
                 .is3xxRedirection();
     }
 
-    private String getCookie(String email, String password) {
-        return loginRequest(email, password)
-                .expectStatus()
-                .isFound()
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .getFirst("Set-Cookie");
+    @Test
+    void logout_mainPageHaveLoginString_() {
+        webTestClient.get().uri(USER_MAPPING_URL + "/logout")
+                .header("cookie", cookie)
+                .exchange();
+
+        webTestClient.get().uri("/").header("cookie", cookie)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains("Login")).isTrue();
+                });
+
     }
 
     private WebTestClient.ResponseSpec commonRequest(HttpMethod method, final UserDto userDto, String attatchedUrl) {
@@ -150,5 +189,12 @@ class UserControllerTest {
                 .exchange();
     }
 
-
+    private String getCookie(String email, String password) {
+        return loginRequest(email, password)
+                .expectStatus()
+                .isFound()
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .getFirst("Set-Cookie");
+    }
 }
