@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.presentation.controller;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,10 +11,10 @@ import org.springframework.web.reactive.function.BodyInserters;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
-
     @Autowired
     private WebTestClient webTestClient;
-    private WebTestClient.ResponseSpec responseSpec;
+
+    private Long id = 0L;
 
     @Test
     void index() {
@@ -32,39 +32,55 @@ public class ArticleControllerTests {
 
     @Test
     void save_test() {
-        insertArticle();
-
-        responseSpec
+        webTestClient.post().uri("/articles")
+                .body(BodyInserters.fromFormData("title", "title")
+                        .with("coverUrl", "coverUrl")
+                        .with("contents", "contents"))
+                .exchange()
                 .expectStatus()
-                .isOk();
+                .isFound();
+
+        ++id;
     }
 
     @Test
     void update_test() {
         insertArticle();
 
-        webTestClient.put().uri("/articles/1")
+        webTestClient.put().uri("/articles/" + id)
                 .body(BodyInserters.fromFormData("title", "title")
-                        .with("coverUrl", "coverUrl").with("contents", "contents"))
+                        .with("coverUrl", "coverUrl")
+                        .with("contents", "contents"))
                 .exchange()
-                .expectHeader().valueMatches("Location","http://localhost:[0-9]+/$")
-                .expectStatus().is3xxRedirection();
+                .expectHeader().valueMatches("location", "(http://localhost:)(.*)(/articles/" + id + ")")
+                .expectStatus()
+                .isFound();
+
+        deleteArticle();
     }
 
     @Test
     void delete_test() {
         insertArticle();
 
-        webTestClient.delete().uri("/articles/1")
+        webTestClient.delete().uri("/articles/" + id)
                 .exchange()
                 .expectStatus()
-                .is3xxRedirection();
+                .isFound();
+    }
+
+    private void deleteArticle() {
+        webTestClient.delete().uri("/articles/" + id)
+                .exchange();
     }
 
     private void insertArticle() {
-        responseSpec = webTestClient.post().uri("/articles")
+        ++id;
+
+        webTestClient.post().uri("/articles")
                 .body(BodyInserters.fromFormData("title", "title")
-                        .with("coverUrl", "coverUrl").with("contents", "contents"))
+                        .with("coverUrl", "coverUrl")
+                        .with("contents", "contents"))
                 .exchange();
     }
 }

@@ -2,6 +2,5 @@ package techcourse.myblog.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ArticleRepository extends JpaRepository<Article, Long> {
-
+public interface UserRepository extends JpaRepository<User, String> {
 }
