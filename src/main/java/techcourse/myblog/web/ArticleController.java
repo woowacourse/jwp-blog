@@ -1,77 +1,71 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleAssembler;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.dto.ArticleWriteDto;
 
 @Controller
+@RequestMapping(value = "/articles")
+@RequiredArgsConstructor
 public class ArticleController {
-
-    private ArticleRepository articleRepository;
-
-    @Autowired
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
-
-    @GetMapping("/")
-    public ModelAndView index(String blogName) {
-        if (blogName == null) {
-            blogName = "누구게?";
-        }
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("index");
-        modelAndView.addObject("blogName", blogName);
-        modelAndView.addObject("articles", articleRepository.findAll());
-        return modelAndView;
-    }
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
+    private final ArticleRepository articleRepository;
 
     @GetMapping("/writing")
-    public String writeForm() {
+    public String showArticleWritingPage() {
         return "article-edit";
     }
 
-    @PostMapping("/articles")
-    public ModelAndView save(Article article) {
+    @PostMapping
+    public String writeArticle(ArticleWriteDto articleWriteDto, Model model) {
+        log.debug("Post Data : {}", articleWriteDto);
+        Article article = articleRepository.save(ArticleAssembler.writeArticle(articleWriteDto));
+        model.addAttribute("article", article);
+        return "redirect:/articles/" + article.getId();
+    }
+
+
+    @GetMapping("/edit/{articleId}")
+    public String showArticleEditingPage(@PathVariable int articleId, Model model) {
+        model.addAttribute("article",
+                articleRepository.findById(articleId).orElseThrow(() -> new ArticleException("잘못된 접근입니다.")));
+        return "article-edit";
+    }
+
+    @GetMapping("/{articleId}")
+    public String showArticleById(@PathVariable int articleId, Model model) {
+        model.addAttribute("article",
+                articleRepository.findById(articleId).orElseThrow(() -> new ArticleException("잘못된 접근입니다.")));
+        return "article";
+    }
+
+    @PutMapping("/{articleId}")
+    public String updateArticle(@PathVariable int articleId, ArticleWriteDto articleWriteDto, Model model) {
+        log.debug("Put Data : {}", articleWriteDto);
+        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+        article.update(ArticleAssembler.writeArticle(articleWriteDto));
         articleRepository.save(article);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("article");
-        modelAndView.addObject("article", article);
-        return modelAndView;
+        model.addAttribute("article", article);
+        return "article";
     }
 
-    @GetMapping("/article/{articleId}")
-    public ModelAndView show(@PathVariable String articleId) {
-        Article article = articleRepository.findArticleById(Integer.parseInt(articleId));
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("article");
-        modelAndView.addObject("article", article);
-        return modelAndView;
+    @DeleteMapping("/{articleId}")
+    public String deleteArticle(@PathVariable int articleId) {
+        articleRepository.deleteById(articleId);
+        return "redirect:/";
     }
 
-    @GetMapping("/articles/{articleId}/edit")
-    public ModelAndView writeForm(@PathVariable String articleId) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("article-edit");
-        Article article = articleRepository.findArticleById(Integer.parseInt(articleId));
-        modelAndView.addObject("article", article);
-        return modelAndView;
-    }
-
-    @PutMapping("/articles/{articleId}")
-    public RedirectView update(@PathVariable String articleId, Article newArticle) {
-        Article article = articleRepository.findArticleById(Integer.parseInt(articleId));
-        article.update(newArticle);
-        return new RedirectView("/");
-    }
-
-    @DeleteMapping("/articles/{articleId}")
-    public RedirectView delete(@PathVariable String articleId) {
-        articleRepository.removeById(Integer.parseInt(articleId));
-        return new RedirectView("/");
+    @ExceptionHandler
+    public String handleArticleException(ArticleException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("message", e.getMessage());
+        return "redirect:/err";
     }
 }

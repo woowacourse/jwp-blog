@@ -1,72 +1,38 @@
 package techcourse.myblog.domain;
 
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+
+@Getter
+@EqualsAndHashCode
+@NoArgsConstructor
+@Entity
 public class Article {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(nullable = false)
     private String title;
-    private String coverUrl;
+
+    @Lob
     private String contents;
 
-    public Article(String title, String coverUrl, String contents) {
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
-    }
+    @Column
+    private String coverUrl;
 
-    public boolean checkId(int id) {
-        return this.id == id;
+    public Article(String title, String contents, String coverUrl) {
+        this.title = title;
+        this.contents = contents;
+        this.coverUrl = coverUrl;
     }
 
     public void update(Article article) {
-        this.title = article.title;
-        this.coverUrl = article.coverUrl;
-        this.contents = article.contents;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", contents='" + contents + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return id == article.id &&
-                Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents);
+        this.title = article.getTitle();
+        this.contents = article.getContents();
+        this.coverUrl = article.getCoverUrl();
     }
 }
