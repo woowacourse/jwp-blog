@@ -12,4 +12,10 @@ public class UserControllerAdvice {
         model.addAttribute("errorMessage", e.getMessage());
         return "login";
     }
+
+    @ExceptionHandler(IllegalUserParamsException.class)
+    public String handleIllegalUserParamsException(IllegalUserParamsException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "signup";
+    }
 }
