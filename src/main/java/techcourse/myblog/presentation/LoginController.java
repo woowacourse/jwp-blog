@@ -1,6 +1,5 @@
 package techcourse.myblog.presentation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +17,6 @@ public class LoginController {
 
     LoginService loginService;
 
-    @Autowired
     public LoginController(LoginService loginService) {
         this.loginService = loginService;
     }
@@ -34,7 +32,7 @@ public class LoginController {
     @PostMapping("/login")
     public String login(LoginRequestDto loginRequestDto, Model model, HttpSession httpSession) {
         String requestEmail = loginRequestDto.getEmail();
-        if (loginService.notExistUserEmail(requestEmail)) {
+        if (!loginService.existUserEmail(requestEmail)) {
             model.addAttribute("error", true);
             model.addAttribute("message", NOT_EXIST_EMAIL_ERROR);
             return "login";

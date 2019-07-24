@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.exception.ArticleNotFoundException;
@@ -12,7 +11,6 @@ import java.util.List;
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
-    @Autowired
     public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
