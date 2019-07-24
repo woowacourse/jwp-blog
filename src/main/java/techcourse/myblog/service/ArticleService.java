@@ -1,13 +1,12 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.exception.CouldNotFindArticleIdException;
 import techcourse.myblog.repository.ArticleRepository;
-
-import javax.transaction.Transactional;
 
 @Service
 public class ArticleService {

@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserUpdateDto;
@@ -40,9 +41,9 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void update(User user, UserUpdateDto userUpdateDto) {
         user.updateUser(userUpdateDto.getName());
-        userRepository.save(user);
     }
 
     public void delete(HttpSession session) {
