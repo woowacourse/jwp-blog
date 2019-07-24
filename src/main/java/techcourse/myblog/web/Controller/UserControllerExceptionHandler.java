@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.Controller;
 
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -8,7 +8,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.DuplicatedEmailException;
 import techcourse.myblog.service.LoginFailedException;
-import techcourse.myblog.web.Controller.UserController;
 
 @ControllerAdvice(basePackageClasses = UserController.class)
 public class UserControllerExceptionHandler {
