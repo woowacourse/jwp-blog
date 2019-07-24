@@ -44,7 +44,7 @@ public class UserService {
     public UserDto.Response login(UserDto.Login userDto) {
         User user = userRepository.findByEmail(userDto.getEmail()).orElseThrow(NotFoundUserException::new);
 
-        if (!user.getPassword().equals(userDto.getPassword())) {
+        if (!user.checkPassword(userDto.getPassword())) {
             throw new NotMatchPasswordException();
         }
 

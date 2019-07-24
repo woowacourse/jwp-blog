@@ -3,6 +3,7 @@ package techcourse.myblog.user.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import techcourse.myblog.user.dto.UserDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,6 +34,10 @@ public class User {
 
     public void update(String name) {
         this.name = validateName(name);
+    }
+
+    public boolean checkPassword(String password) {
+        return this.getPassword().equals(password);
     }
 
     private String validateEmail(final String email) {
