@@ -25,10 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String showSignup(HttpSession httpSession) {
-        if (httpSession.getAttribute("loginUser") != null) {
-            return "redirect:/";
-        }
+    public String showSignup() {
         return "signup";
     }
 
@@ -39,10 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String showLogin(HttpSession httpSession) {
-        if (httpSession.getAttribute("loginUser") != null) {
-            return "redirect:/";
-        }
+    public String showLogin() {
         return "login";
     }
 
