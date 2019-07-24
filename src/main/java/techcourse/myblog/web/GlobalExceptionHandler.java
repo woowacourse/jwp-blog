@@ -1,4 +1,4 @@
-package techcourse.myblog;
+package techcourse.myblog.web;
 
 import techcourse.myblog.exception.*;
 
