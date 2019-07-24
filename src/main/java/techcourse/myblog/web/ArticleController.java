@@ -24,10 +24,7 @@ public class ArticleController {
     }
 
     @GetMapping("/writing")
-    public String writeArticleForm(HttpSession httpSession) {
-        if (httpSession.getAttribute(USER) == null) {
-            return "redirect:/login";
-        }
+    public String writeArticleForm() {
         return "article-edit";
     }
 

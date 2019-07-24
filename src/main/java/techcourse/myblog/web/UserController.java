@@ -55,9 +55,6 @@ public class UserController {
     @PostMapping("/mypage/edit")
     public String showMyPageEdit(String password, Model model, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute(USER);
-        if (user == null) {
-            return "index";
-        }
 
         if (!user.matchPassword(password)) {
             model.addAttribute("errorMessage", ERROR_MISMATCH_PASSWORD_MESSAGE);

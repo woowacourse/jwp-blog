@@ -23,27 +23,17 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String showLoginPage(HttpSession httpSession) {
-        if (isUserInSession(httpSession)) {
-            return "redirect:/";
-        }
+    public String showLoginPage() {
         return "login";
     }
 
-    private boolean isUserInSession(HttpSession httpSession) {
-        return httpSession.getAttribute("user") != null;
-    }
-
     @GetMapping("/signup")
-    public String showSignUpPage(HttpSession httpSession) {
-        if (isUserInSession(httpSession)) {
-            return "redirect:/";
-        }
+    public String showSignUpPage() {
         return "signup";
     }
 
     @PostMapping("/login")
-    public String login(UserLoginParams userLoginParams, Model model, HttpSession httpSession) {
+    public String login(UserLoginParams userLoginParams, HttpSession httpSession) {
         loginService.checkLogin(userLoginParams.getEmail(), userLoginParams.getPassword());
 
         User user = loginService.findByEmail(userLoginParams.getEmail());
