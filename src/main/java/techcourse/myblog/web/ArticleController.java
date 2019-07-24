@@ -12,49 +12,40 @@ import techcourse.myblog.domain.ArticleAssembler;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.dto.ArticleWriteDto;
 
-import java.util.List;
-
-@Controller
+@Controller(value = "/articles")
 @RequiredArgsConstructor
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     private final ArticleRepository articleRepository;
 
-    @GetMapping("/")
-    public String showArticles(Model model) {
-        List<Article> articles = articleRepository.findAll();
-        model.addAttribute("articles", articles);
-        return "index";
-    }
-
     @GetMapping("/writing")
     public String showArticleWritingPage() {
         return "article-edit";
     }
 
-    @PostMapping("/articles")
+    @PostMapping
     public String writeArticle(ArticleWriteDto articleWriteDto, Model model) {
         Article article = articleRepository.save(ArticleAssembler.writeArticle(articleWriteDto));
         model.addAttribute("article", article);
         return "redirect:/articles/" + article.getId();
     }
 
-    @GetMapping("/articles/{articleId}/edit")
+    @GetMapping("/edit/{articleId}")
     public String showArticleEditingPage(@PathVariable int articleId, Model model) {
         model.addAttribute("article",
                 articleRepository.findById(articleId).orElseThrow(() -> new ArticleException("잘못된 접근입니다.")));
         return "article-edit";
     }
 
-    @GetMapping("/articles/{articleId}")
+    @GetMapping("/{articleId}")
     public String showArticleById(@PathVariable int articleId, Model model) {
         model.addAttribute("article",
                 articleRepository.findById(articleId).orElseThrow(() -> new ArticleException("잘못된 접근입니다.")));
         return "article";
     }
 
-    @PutMapping("/articles/{articleId}")
+    @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable int articleId, ArticleWriteDto articleWriteDto, Model model) {
         Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
         article.update(ArticleAssembler.writeArticle(articleWriteDto));
@@ -63,7 +54,7 @@ public class ArticleController {
         return "article";
     }
 
-    @DeleteMapping("/articles/{articleId}")
+    @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable int articleId) {
         articleRepository.deleteById(articleId);
         return "redirect:/";
