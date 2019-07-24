@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.ArticleRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,9 +22,6 @@ public class ArticleControllerTests {
 
     @Autowired
     private WebTestClient webTestClient;
-
-    @Autowired
-    private ArticleRepository articleRepository;
 
     @BeforeEach
     void setUp() {
