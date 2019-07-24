@@ -27,9 +27,9 @@ public class ArticleService {
         return ArticleAssembler.writeDto(article);
     }
 
-    public long save(ArticleDto articleDto) {
+    public Article save(ArticleDto articleDto) {
         Article newArticle = ArticleAssembler.writeArticle(articleDto);
-        return articleRepository.save(newArticle).getArticleId();
+        return articleRepository.save(newArticle);
     }
 
     @Transactional

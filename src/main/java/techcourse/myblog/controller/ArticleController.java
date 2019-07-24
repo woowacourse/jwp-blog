@@ -27,7 +27,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String writeArticle(ArticleDto articleDto) {
-        long articleId = articleService.save(articleDto);
+        long articleId = articleService.save(articleDto).getArticleId();
         return "redirect:/articles/" + articleId;
     }
 
