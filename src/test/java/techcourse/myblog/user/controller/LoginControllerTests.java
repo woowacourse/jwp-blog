@@ -20,13 +20,7 @@ public class LoginControllerTests {
 
     @BeforeEach
     void setUp() {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", UserDataForTest.USER_EMAIL)
-                        .with("password", UserDataForTest.USER_PASSWORD)
-                        .with("name", UserDataForTest.USER_NAME))
-                .exchange();
+        UserUtilForTest.signUp(webTestClient);
     }
 
     @Test

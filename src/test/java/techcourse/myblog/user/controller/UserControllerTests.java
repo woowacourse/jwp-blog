@@ -1,6 +1,5 @@
 package techcourse.myblog.user.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,37 +12,20 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.user.UserDataForTest;
 
-@Slf4j
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
-    private String cookie;
     private static long userId = 1;
 
     @Autowired
     private WebTestClient webTestClient;
 
+    private String cookie;
+
     @BeforeEach
     void setUp() {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", UserDataForTest.USER_EMAIL)
-                        .with("password", UserDataForTest.USER_PASSWORD)
-                        .with("name", UserDataForTest.USER_NAME))
-                .exchange();
-
-        log.info("cookie : {}", cookie);
-
-        cookie = webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", UserDataForTest.USER_EMAIL)
-                        .with("password", UserDataForTest.USER_PASSWORD))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-
-        log.info("cookie : {}", cookie);
+        UserUtilForTest.signUp(webTestClient);
+        cookie = UserUtilForTest.loginAndGetCookie(webTestClient);
     }
 
     @Test
