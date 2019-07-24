@@ -6,16 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.dto.article.ArticleDto;
-import techcourse.myblog.exception.ArticleDtoNotFoundException;
 import techcourse.myblog.exception.ArticleNotFoundException;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static techcourse.myblog.service.article.ArticleAssembler.*;
+import static techcourse.myblog.service.article.ArticleAssembler.convertToEntity;
 
 @Service
 public class ArticleService {
@@ -34,48 +32,25 @@ public class ArticleService {
     }
 
     public ArticleDto findById(final Long id) {
-        checkNull(id);
-        Optional<Article> article = articleRepository.findById(id);
-        if (article.isPresent()) {
-            return convertToDto(article.get());
-        }
-        throw new ArticleNotFoundException();
+        return articleRepository.findById(Objects.requireNonNull(id))
+                .map(ArticleAssembler::convertToDto)
+                .orElseThrow(ArticleNotFoundException::new);
     }
 
     public Long save(final ArticleDto articleDTO) {
-        checkNull(articleDTO);
-        Article article = convertToEntity(articleDTO);
+        Article article = convertToEntity(Objects.requireNonNull(articleDTO));
         Article persistArticle = articleRepository.save(article);
         return persistArticle.getId();
     }
 
     @Transactional
     public void update(final Long id, final ArticleDto articleDTO) {
-        checkNull(id);
-        checkNull(articleDTO);
-        Article article = convertToEntity(articleDTO);
-        Optional<Article> articleOptional = articleRepository.findById(id);
-        if (articleOptional.isPresent()) {
-            Article articleToUpdate = articleOptional.get();
-            articleToUpdate.update(article);
-            articleRepository.save(articleToUpdate);
-        }
-    }
-
-    private void checkNull(final Long id) {
-        if (Objects.isNull(id)) {
-            throw new NullPointerException();
-        }
-    }
-
-    private void checkNull(final ArticleDto articleDTO) {
-        if (Objects.isNull(articleDTO)) {
-            throw new ArticleDtoNotFoundException();
-        }
+        Article article = convertToEntity(Objects.requireNonNull(articleDTO));
+        articleRepository.findById(Objects.requireNonNull(id))
+                .ifPresent((retrieveArticle -> retrieveArticle.update(article)));
     }
 
     public void delete(final Long id) {
-        checkNull(id);
-        articleRepository.deleteById(id);
+        articleRepository.deleteById(Objects.requireNonNull(id));
     }
 }

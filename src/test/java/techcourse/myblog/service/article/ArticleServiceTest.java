@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.dto.article.ArticleDto;
-import techcourse.myblog.exception.ArticleDtoNotFoundException;
 import techcourse.myblog.exception.ArticleNotFoundException;
 
 import java.util.Arrays;
@@ -16,7 +15,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static techcourse.myblog.service.article.ArticleAssembler.*;
+import static techcourse.myblog.service.article.ArticleAssembler.convertToDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleServiceTest {
@@ -66,7 +65,7 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_수정_오류확인_게시글이_null일_경우() {
-        assertThatExceptionOfType(ArticleDtoNotFoundException.class)
+        assertThatExceptionOfType(NullPointerException.class)
                 .isThrownBy(() -> service.update(id, null));
     }
 
