@@ -93,7 +93,11 @@ public class UserController {
     }
 
     @DeleteMapping("/mypage/edit/{userId}")
-    public String deleteUser(@PathVariable long userId) {
+    public String deleteUser(@PathVariable long userId, HttpSession httpSession) {
+        if (httpSession.getAttribute("name") == null) {
+            throw new UnknownHostAccessException();
+        }
+
         userService.deleteUser(userId);
         return "redirect:/logout";
     }
