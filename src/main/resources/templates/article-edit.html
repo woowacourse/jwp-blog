@@ -17,6 +17,7 @@
 
     <form th:action="${article} == null ? '/articles' : '/articles/' + ${article.id}" name="article" method="post" accept-charset="utf-8" >
         <input type="hidden" name="_method" th:value="${article} == null ? 'post' : 'put'"/>
+        <input type="hidden" name="id" th:if="${article} != null" th:value="${article.id}"/>
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
