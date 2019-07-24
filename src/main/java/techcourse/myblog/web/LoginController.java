@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserLoginDto;
-import techcourse.myblog.exception.UserMismatchException;
-import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.service.LoginService;
 
 import javax.servlet.http.HttpSession;
@@ -44,12 +42,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(UserLoginDto userLoginDto, Model model, HttpSession httpSession) {
-        try {
-            loginService.checkLogin(userLoginDto.getEmail(), userLoginDto.getPassword());
-        } catch (UserNotFoundException | UserMismatchException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "login";
-        }
+        loginService.checkLogin(userLoginDto.getEmail(), userLoginDto.getPassword());
 
         User user = loginService.findByEmail(userLoginDto.getEmail());
         httpSession.setAttribute("user", user);

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserEditDto;
 import techcourse.myblog.dto.UserSaveDto;
-import techcourse.myblog.exception.UserDuplicateException;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -28,12 +27,8 @@ public class UserController {
 
     @PostMapping("/users")
     public String signUp(UserSaveDto userSaveDto, Model model) {
-        try {
-            userService.save(userSaveDto.toEntity());
-            model.addAttribute("successMessage", SUCCESS_SIGN_UP_MESSAGE);
-        } catch (UserDuplicateException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-        }
+        userService.save(userSaveDto.toEntity());
+        model.addAttribute("successMessage", SUCCESS_SIGN_UP_MESSAGE);
         return "login";
     }
 
