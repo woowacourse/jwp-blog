@@ -14,7 +14,7 @@ public class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
 
-    private static Long id = 0L;
+    private Long id = 0L;
 
     @Test
     void index() {

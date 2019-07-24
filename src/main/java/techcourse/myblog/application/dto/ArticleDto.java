@@ -8,11 +8,17 @@ public class ArticleDto {
     private String coverUrl;
     private String contents;
 
+
+
     public ArticleDto(Long id, String title, String coverUrl, String contents) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+    }
+
+    public ArticleDto() {
+
     }
 
     public static ArticleDto of(Article article) {
@@ -52,5 +58,15 @@ public class ArticleDto {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    @Override
+    public String toString() {
+        return "ArticleDto{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                '}';
     }
 }
