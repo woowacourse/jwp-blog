@@ -41,13 +41,13 @@ public class LoginServiceTests {
     @Test
     void 존재하지_않는_이메일_확인_테스트() {
         boolean actual = loginService.existUserEmail("notExist@email.com");
-        assertThat(actual).isTrue();
+        assertThat(actual).isFalse();
     }
 
     @Test
     void 존재하는_이메일_확인_성공_테스트() {
         boolean actual = loginService.existUserEmail(EMAIL);
-        assertThat(actual).isFalse();
+        assertThat(actual).isTrue();
     }
 
     @Test
