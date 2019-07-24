@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,11 +17,14 @@ import javax.validation.Valid;
 import java.util.Objects;
 
 @Controller
-@AllArgsConstructor
 public class UserController {
     private static final String SESSION_USER = "user";
 
     private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/login/page")
     public String showLogin(HttpSession httpSession) {
