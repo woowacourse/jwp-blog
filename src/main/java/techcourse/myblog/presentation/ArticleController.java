@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.ArticleService;
-
-import javax.transaction.Transactional;
+import techcourse.myblog.service.dto.ArticleRequestDto;
+import techcourse.myblog.service.dto.ArticleUpdateDto;
 
 @Controller
 @RequestMapping("/articles")
@@ -20,8 +20,8 @@ public class ArticleController {
     }
 
     @PostMapping("")
-    public String createArticle(Article newArticle) {
-        newArticle = articleService.save(newArticle);
+    public String createArticle(ArticleRequestDto articleRequestDto) {
+        Article newArticle = articleService.save(articleRequestDto.toEntity());
         return "redirect:/articles/" + newArticle.getId();
     }
 
@@ -38,8 +38,8 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public String updateArticle(Article updatedArticle, Model model) {
-        updatedArticle = articleService.updateAritlce(updatedArticle);
+    public String updateArticle(ArticleUpdateDto articleUpdateDto, Model model) {
+        Article updatedArticle = articleService.updateAritlce(articleUpdateDto.toEntity());
         model.addAttribute("article", updatedArticle);
         return "redirect:/articles/" + updatedArticle.getId();
     }

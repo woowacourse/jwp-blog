@@ -23,8 +23,8 @@ public class ArticleServiceTests {
     private static final Logger log = LoggerFactory.getLogger(MainControllerTests.class);
 
     private final ArticleService articleService;
-    private Article article = new Article();
-    private Article savedArticle = new Article();
+    private Article article;
+    private Article savedArticle;
 
     @Autowired
     public ArticleServiceTests(ArticleService articleService) {
@@ -33,10 +33,7 @@ public class ArticleServiceTests {
 
     @BeforeEach
     void setUp() {
-        article.setId(1);
-        article.setTitle("new Article title");
-        article.setContents("new Article contents");
-        article.setCoverUrl("new Article awesome Cover");
+        article = new Article("new Article title", "new Article contents", "new Article awesome Cover");
         savedArticle = articleService.save(article);
     }
 

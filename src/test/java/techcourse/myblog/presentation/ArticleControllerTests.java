@@ -57,7 +57,8 @@ public class ArticleControllerTests {
                 .uri(URI_ARTICLES + "/" + ARTICLE_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", "updated_title")
+                        .fromFormData("id", ARTICLE_ID + "")
+                        .with("title", "updated_title")
                         .with("coverUrl", "updated_coverUrl")
                         .with("contents", "updated_contents"))
                 .exchange()

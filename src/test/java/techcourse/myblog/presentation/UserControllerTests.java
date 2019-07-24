@@ -16,12 +16,15 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
-import static techcourse.myblog.service.dto.UserRequestDto.*;
+import static techcourse.myblog.service.utils.Messages.*;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
+    // 탈퇴
+    // 로그인 후 접근 가능/불가능
+
     @Autowired
     private WebTestClient webTestClient;
 
