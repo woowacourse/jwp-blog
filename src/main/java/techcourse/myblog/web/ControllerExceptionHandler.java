@@ -23,7 +23,7 @@ public class ControllerExceptionHandler {
      */
     @ExceptionHandler(ArticleException.class)
     public String handleArticleException(ArticleException e) {
-        log.info(EXCEPTION, e.getMessage());
+        log.error(EXCEPTION, e.getMessage());
         return "/";
     }
 
@@ -36,7 +36,7 @@ public class ControllerExceptionHandler {
      */
     @ExceptionHandler(LoginException.class)
     public ModelAndView handleLoginException(LoginException e) {
-        log.info(EXCEPTION, e.getMessage());
+        log.error(EXCEPTION, e.getMessage());
         ModelAndView mav = new ModelAndView();
         mav.addObject("error", e.getMessage());
         mav.setViewName("login");
@@ -52,7 +52,7 @@ public class ControllerExceptionHandler {
      */
     @ExceptionHandler(SignUpException.class)
     public ModelAndView handleSignUpException(SignUpException e) {
-        log.info(EXCEPTION, e.getMessage());
+        log.error(EXCEPTION, e.getMessage());
         ModelAndView mav = new ModelAndView();
         mav.addObject("error", e.getMessage());
         mav.setViewName("signup");
