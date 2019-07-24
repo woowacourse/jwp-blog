@@ -8,12 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.dto.UserUpdateDto;
-import techcourse.myblog.service.dto.UserRequestDto;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserUpdateDto;
 
 import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @Controller
@@ -54,7 +53,7 @@ public class UserController {
     public String deleteUser(@PathVariable long pageId, HttpSession httpSession) {
         User pageUser = userService.findUserById(pageId);
         User loggedInUser = (User) httpSession.getAttribute("user");
-        if (pageUser.getId() != loggedInUser.getId()) {
+        if (!pageUser.getId().equals(loggedInUser.getId())) {
             return "redirect:/mypage/" + pageId;
         }
 
@@ -73,7 +72,7 @@ public class UserController {
     public String moveMyPageEdit(@PathVariable long pageId, HttpSession httpSession, Model model) {
         User pageUser = userService.findUserById(pageId);
         User loggedInUser = (User) httpSession.getAttribute("user");
-        if (pageUser.getId() != loggedInUser.getId()) {
+        if (!pageUser.getId().equals(loggedInUser.getId())) {
             return "redirect:/mypage/" + pageId;
         }
 
@@ -84,7 +83,7 @@ public class UserController {
     @PutMapping("/user/update")
     public String updateMyPage(UserUpdateDto userUpdateDto, HttpSession httpSession) {
         User loggedInUser = (User) httpSession.getAttribute("user");
-        if (userUpdateDto.getId() != loggedInUser.getId()) {
+        if (!userUpdateDto.getId().equals(loggedInUser.getId())) {
             return "redirect:/mypage/" + userUpdateDto.getId();
         }
 
@@ -94,7 +93,7 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String moveSignUpPage(UserRequestDto userRequestDto) {
+    public String moveSignUpPage() {
         return "signup";
     }
 

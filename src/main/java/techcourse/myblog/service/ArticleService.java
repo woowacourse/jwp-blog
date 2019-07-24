@@ -1,8 +1,9 @@
 package techcourse.myblog.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.service.exception.ArticleNotFoundException;
+import techcourse.myblog.presentation.exception.ArticleNotFoundException;
 import techcourse.myblog.persistence.ArticleRepository;
 
 import javax.transaction.Transactional;
@@ -12,6 +13,7 @@ import java.util.List;
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
+    @Autowired
     public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }

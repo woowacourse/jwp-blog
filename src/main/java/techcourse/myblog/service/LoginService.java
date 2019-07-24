@@ -1,5 +1,6 @@
 package techcourse.myblog.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.persistence.UserRepository;
@@ -9,6 +10,7 @@ public class LoginService {
 
     private final UserRepository userRepository;
 
+    @Autowired
     public LoginService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
