@@ -1,4 +1,4 @@
-package techcourse.myblog.controller.dto;
+package techcourse.myblog.service.dto;
 
 import lombok.Getter;
 import lombok.NonNull;

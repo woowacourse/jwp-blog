@@ -2,11 +2,11 @@ package techcourse.myblog.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.controller.dto.LoginDTO;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
 import techcourse.myblog.exception.UserNotExistException;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.dto.LoginDTO;
 
 @Service
 public class LoginService {

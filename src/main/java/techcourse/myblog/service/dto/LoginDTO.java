@@ -1,12 +1,11 @@
-package techcourse.myblog.controller.dto;
+package techcourse.myblog.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class UserDTO {
-    private String userName;
+public class LoginDTO {
     private String email;
     private String password;
 }

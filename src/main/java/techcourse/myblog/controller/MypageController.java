@@ -6,9 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import techcourse.myblog.controller.dto.UserDTO;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.UserDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

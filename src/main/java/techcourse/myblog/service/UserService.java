@@ -4,11 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.controller.dto.UserDTO;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.EmailRepetitionException;
 import techcourse.myblog.exception.UserNotExistException;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.dto.UserDTO;
 
 import java.util.List;
 
