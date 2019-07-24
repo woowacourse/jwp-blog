@@ -12,7 +12,8 @@ import techcourse.myblog.domain.ArticleAssembler;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.dto.ArticleWriteDto;
 
-@Controller(value = "/articles")
+@Controller
+@RequestMapping(value = "/articles")
 @RequiredArgsConstructor
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
