@@ -78,7 +78,7 @@ class RootControllerTest {
 
     @AfterEach
     void tearDown() {
-        //deleteArticle
+        //delete
         webTestClient.delete()
                 .uri("/articles/" + articleId)
                 .exchange()

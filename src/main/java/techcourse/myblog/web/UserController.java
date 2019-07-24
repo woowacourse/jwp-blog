@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String addUser(UserDto userDto) {
+    public String create(UserDto userDto) {
         userService.create(userDto);
         return "redirect:/login";
     }
@@ -68,14 +68,14 @@ public class UserController {
     }
 
     @PutMapping("/users/mypage-edit")
-    public String updateUser(HttpSession session, UserDto userDto) {
+    public String update(HttpSession session, UserDto userDto) {
         Object userId = session.getAttribute("userId");
         UserDto updateUserDto = userService.updateUser((long) userId, userDto);
         return "redirect:/users/" + updateUserDto.getId() + "/mypage";
     }
 
     @DeleteMapping("/users/mypage-edit")
-    public String deleteUser(HttpSession session) {
+    public String delete(HttpSession session) {
         Object userId = session.getAttribute("userId");
         userService.deleteById((long) userId);
         return "redirect:/logout";

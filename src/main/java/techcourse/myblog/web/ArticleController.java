@@ -23,7 +23,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/new")
-    public String addArticle(ArticleDto articleDto) {
+    public String create(ArticleDto articleDto) {
         long articleId = articleService.createArticle(articleDto);
 
         return "redirect:/articles/" + articleId;
@@ -37,14 +37,14 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable long articleId, ArticleDto articleDto) {
+    public String update(@PathVariable long articleId, ArticleDto articleDto) {
         ArticleDto toArticleDto = articleService.updateByArticle(articleId, articleDto);
 
         return "redirect:/articles/" + toArticleDto.getId();
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String updateArticle(@PathVariable long articleId, Model model) {
+    public String showArticleEditPage(@PathVariable long articleId, Model model) {
         ArticleDto articleDto = articleService.readById(articleId);
 
         model.addAttribute("article", articleDto);
@@ -53,7 +53,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("articles/{articleId}")
-    public String deleteArticle(@PathVariable long articleId) {
+    public String delete(@PathVariable long articleId) {
         articleService.deleteById(articleId);
         return "redirect:/";
     }

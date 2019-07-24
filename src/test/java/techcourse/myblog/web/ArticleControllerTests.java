@@ -99,7 +99,6 @@ public class ArticleControllerTests {
 
     @AfterEach
     void tearDown() {
-        //deleteArticle
         webTestClient.delete()
                 .uri("/articles/" + articleId)
                 .exchange()

@@ -15,13 +15,13 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/categories/add")
-    public String addCategories(CategoryDto categoryDto) {
+    public String create(CategoryDto categoryDto) {
         categoryService.create(categoryDto);
         return "redirect:/";
     }
 
     @GetMapping("/categories/delete/{categoryId}")
-    public String deleteCategories(@PathVariable long categoryId) {
+    public String delete(@PathVariable long categoryId) {
         categoryService.deleteById(categoryId);
 
         return "redirect:/";
