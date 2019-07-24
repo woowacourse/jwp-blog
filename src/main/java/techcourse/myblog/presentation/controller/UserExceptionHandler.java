@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
+import techcourse.myblog.application.service.exception.NotExistArticleIdException;
 import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 
@@ -29,6 +30,14 @@ public class UserExceptionHandler {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public RedirectView handleNotExistIdError(RedirectAttributes redirectAttributes, NotExistUserIdException e) {
         RedirectView redirectView = new RedirectView(e.getNextView());
+        redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
+        return redirectView;
+    }
+
+    @ExceptionHandler(NotExistArticleIdException.class)
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public RedirectView handleNotExistArticleIdError(RedirectAttributes redirectAttributes, NotExistArticleIdException e) {
+        RedirectView redirectView = new RedirectView("/");
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
         return redirectView;
     }
