@@ -23,17 +23,16 @@ class UserControllerTest {
     private static final String DEFAULT_EMAIL = "starkim06@naver.com";
     private static final String DEFAULT_PASSWORD = "aA1231!!";
 
+    @Autowired
+    WebTestClient webTestClient;
     private String name;
     private String email;
     private String password;
 
-    @Autowired
-    WebTestClient webTestClient;
-
     @Test
     void 로그인상태_로그인요청() {
         signUp("alswns", DEFAULT_EMAIL, DEFAULT_PASSWORD);
-        webTestClient.get().uri("/login/page")
+        webTestClient.get().uri("/users/login/page")
                 .header("Authorization", "Basic " + Base64Utils
                         .encodeToString(("starkim06@naver.com:aA1231!!").getBytes(UTF_8)))
                 .exchange()
@@ -44,7 +43,7 @@ class UserControllerTest {
     @Test
     void 로그아웃상태_로그인요청() {
         signUp("alswns", DEFAULT_EMAIL, DEFAULT_PASSWORD);
-        webTestClient.get().uri("/login/page")
+        webTestClient.get().uri("/users/login/page")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -56,7 +55,7 @@ class UserControllerTest {
         String password = "aA1231!@";
         signUp(name, email, password);
 
-        webTestClient.post().uri("/login")
+        webTestClient.post().uri("/users/login")
                 .body(BodyInserters
                         .fromFormData(PASSWORD, password)
                         .with(EMAIL, email))
@@ -72,7 +71,7 @@ class UserControllerTest {
         String password = "aA1231!@";
         signUp(name, DEFAULT_EMAIL, DEFAULT_PASSWORD);
 
-        webTestClient.post().uri("/login")
+        webTestClient.post().uri("/users/login")
                 .body(BodyInserters
                         .fromFormData(PASSWORD, password)
                         .with(EMAIL, email))
@@ -111,7 +110,7 @@ class UserControllerTest {
     @Test
     void 세션_테스트() {
         signUp("alswns", DEFAULT_EMAIL, DEFAULT_PASSWORD);
-        webTestClient.get().uri("/mypage")
+        webTestClient.get().uri("/users/mypage")
                 .header("Authorization", "Basic " + Base64Utils
                         .encodeToString(("starkim06@naver.com:aA1231!!").getBytes(UTF_8)))
                 .exchange()
@@ -131,7 +130,7 @@ class UserControllerTest {
     @Test
     void 회원정보_수정_확인() {
         signUp("alswns", DEFAULT_EMAIL, DEFAULT_PASSWORD);
-        webTestClient.get().uri("/mypage/edit")
+        webTestClient.get().uri("/users/mypage/edit")
                 .header("Authorization", "Basic " + Base64Utils
                         .encodeToString(("starkim06@naver.com:aA1231!!").getBytes(UTF_8)))
                 .exchange()
@@ -140,7 +139,7 @@ class UserControllerTest {
 
     private WebTestClient.ResponseSpec signUp(String name, String email, String password) {
         return webTestClient.post()
-                .uri("/join")
+                .uri("/users/join")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData(NAME, name)
