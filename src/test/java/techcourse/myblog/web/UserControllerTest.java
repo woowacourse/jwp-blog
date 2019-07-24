@@ -11,6 +11,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.dto.UserDto;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
     private static final String CUSTOM_USER_ID = "1";
@@ -38,6 +40,19 @@ class UserControllerTest {
     }
 
     @Test
+    public void 로그인이_되어_있는_상태에서_회원가입_페이지로_이동하는_경우_예외처리() {
+        // given
+        postSignup(validUserData);
+        String cookie = getCookie();
+
+        webTestClient.get().uri("/signup")
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/.*");
+    }
+
+    @Test
     public void 유효한_정보로_회원가입_하는_경우_테스트() {
         // given
         UserDto user = new UserDto();
@@ -51,15 +66,8 @@ class UserControllerTest {
         webTestClient.get()
                 .uri(signupResponse.getResponseHeaders().getLocation())
                 .exchange()
-                .expectStatus()
                 // then
-                .isOk()
-        ;
-
-        /*webTestClient.post().uri()
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .header(, "Base64Utils")
-                .exchange()*/
+                .expectStatus().isOk();
     }
 
     @Test
@@ -71,7 +79,8 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(getBodyInserters(invalidName, getValidEmail(), getValidPassword()))
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/signup.*");
     }
 
     @Test
@@ -83,7 +92,8 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(getBodyInserters(getValidName(), invalidEmail, getValidPassword()))
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/signup.*");
     }
 
     @Test
@@ -95,101 +105,142 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(getBodyInserters(VALID_NAME, VALID_EMAIL, invalidPassword))
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/signup.*");
     }
 
-//    @Ignore
-//    @Test
-//    public void 회원수정_페이지가_잘_출력되는지_테스트() {
-//        // given
-//        postSignup(validUserData);
-//        /** TODO 로그인 상태 **/
-//
-//        // when
-//        /** 회원수정 **/
-//        webTestClient.get()
-//                .uri("/mypage/edit")
-//                .exchange()
-//                .expectStatus().isOk()
-//                .expectBody()
-//                .consumeWith(res -> {
-//                    // then
-//                    String body = new String(res.getResponseBody());
-//                    assertThat(body.contains(getValidEmail())).isTrue();
-//                    assertThat(body.contains(getValidEmail())).isTrue();
-//                });
-//    }
+    @Test
+    public void 마이페이지가_잘_출력되는지_테스트() {
+        // given
+        postSignup(validUserData);
+        String cookie = getCookie();
+
+        // when
+        webTestClient.get().uri("/mypage")
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(res -> {
+                    // then
+                    String body = new String(res.getResponseBody());
+                    assertThat(body.contains(getValidEmail())).isTrue();
+                    assertThat(body.contains(getValidEmail())).isTrue();
+                });
+    }
+
+    @Test
+    public void 로그아웃_상태에서_마이페이지가_잘_출력되는지_테스트() {
+        // given
+        postSignup(validUserData);
+
+        // when
+        webTestClient.get().uri("/mypage")
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/login.*");
+    }
+
+    @Test
+    public void 회원수정_페이지가_잘_출력되는지_테스트() {
+        // given
+        postSignup(validUserData);
+        String cookie = getCookie();
+
+        // when
+        webTestClient.get().uri("/mypage/edit")
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(res -> {
+                    // then
+                    String body = new String(res.getResponseBody());
+                    assertThat(body.contains(getValidEmail())).isTrue();
+                    assertThat(body.contains(getValidEmail())).isTrue();
+                });
+    }
 
     @Test
     public void 로그인이_안된_상태에서_회원수정_페이지에_접속하는_경우_예외처리() {
         webTestClient.get()
                 .uri("/mypage/edit")
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/login.*");
     }
 
     @Test
     public void 회원정보_수정_테스트() {
+        // given
         String name = "효진쓰";
         String password = "@Password123";
 
-        // given
         postSignup(validUserData);
-        /** TODO 로그인 상태 **/
+        String cookie = getCookie();
 
         // then
-        webTestClient.put()
-                .uri("/mypage/edit")
+        webTestClient.put().uri("/mypage/edit")
+                .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(getBodyInserters(name, getValidEmail(), password))
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/mypage");
     }
 
-//    @Ignore
-//    @Test
-//    public void 회원조회_페이지가_잘_출력되는지_테스트() {
-//        // given
-//        postSignup(validUserData);
-//        /** TODO 로그인 상태 **/
-//
-//        // when
-//        webTestClient.get()
-//                .uri("/users")
-//                .exchange()
-//                .expectStatus()
-//                .isOk()
-//                .expectBody()
-//                .consumeWith(
-//                        res -> {
-//                            // then
-//                            String body = new String(res.getResponseBody());
-//                            assertThat(body.contains(getValidEmail())).isTrue();
-//                            assertThat(body.contains(getValidEmail())).isTrue();
-//                        }
-//                );
-//    }
+    @Test
+    public void 회원조회_페이지가_잘_출력되는지_테스트() {
+        // given
+        postSignup(validUserData);
+        String cookie = getCookie();
+
+        // when
+        webTestClient.get().uri("/users")
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().consumeWith(res -> {
+                    // then
+                    String body = new String(res.getResponseBody());
+                    assertThat(body.contains(getValidEmail())).isTrue();
+                    assertThat(body.contains(getValidEmail())).isTrue();
+                }
+        );
+    }
 
     @Test
     public void 로그인이_안된_상태에서_회원조회_페이지에_접속하는_경우_예외처리() {
         webTestClient.get()
                 .uri("/users")
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isFound();
     }
 
     @Test
     public void 회원탈퇴_테스트() {
         // given
         postSignup(validUserData);
-        /** TODO 로그인 **/
+        String cookie = getCookie();
 
         // when
         webTestClient.delete()
-                .uri("/mypage/edit/{userId}", CUSTOM_USER_ID)
-                .attribute("", VALID_EMAIL)
+                .uri("/mypage/edit/{userId}", CUSTOM_USER_ID).attribute("", VALID_EMAIL)
+                .header("Cookie", cookie)
                 .exchange()
-                .expectStatus().isFound(); // then
+                // then
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/.*");
+    }
+
+    @Test
+    public void 로그아웃_상태에서_회원_탈퇴하는_경우_예외처리() {
+        webTestClient.delete()
+                .uri("/mypage/edit/{userId}", CUSTOM_USER_ID).attribute("", VALID_EMAIL)
+                .exchange()
+                // then
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/login.*");
     }
 
     @AfterEach
@@ -207,6 +258,17 @@ class UserControllerTest {
 
     private String getValidPassword() {
         return VALID_PASSWORD + userIdentifier;
+    }
+
+    private String getCookie() {
+        return webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(validUserData)
+                .exchange()
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .getFirst("Set-Cookie");
+
     }
 
     private EntityExchangeResult<byte[]> postSignup(BodyInserters.FormInserter<String> userData) {
