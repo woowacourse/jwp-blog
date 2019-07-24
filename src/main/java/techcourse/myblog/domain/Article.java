@@ -8,21 +8,25 @@ import java.util.Objects;
 
 @Entity
 public class Article {
-    private static final String DEFAULT_COVER_URL = "/images/pages/index/study.jpg";
-    private static final int NO_COVER_URL = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String title;
     private String coverUrl;
     private String contents;
 
-    public Article() {
+    private Article() {
     }
 
-    public long getId() {
+    public Article(String title, String coverUrl, String contents) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+    }
+
+    public Long getId() {
         return id;
     }
 
@@ -38,31 +42,12 @@ public class Article {
         return contents;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = (coverUrl.length() != NO_COVER_URL) ? coverUrl : DEFAULT_COVER_URL;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return id == article.id &&
-                Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
+        return id == article.id;
     }
 
     @Override
