@@ -14,10 +14,10 @@
 
     <div class="about-cover card no-border ">
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg');"
-             th:styleappend="${article.coverUrl} != '' ? 'background-image: url(' + ${article.coverUrl} + ');' : ''">
+             th:styleappend="${articleDto.coverUrl} != '' ? 'background-image: url(' + ${articleDto.coverUrl} + ');' : ''">
 
             <div class="padding-30">
-                <h1 th:text="${article.title} == null ? '목적의식 있는 연습을 통한 효과적인 학습' : ${article.title}"
+                <h1 th:text="${articleDto.title} == null ? '제목' : ${articleDto.title}"
                     class="text-center cover-title"></h1>
             </div>
         </div>
@@ -26,16 +26,16 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a th:href="'/articles/' + ${article.articleId}+ '/edit'" class="float-right pointer btn btn-icon">
+                <a th:href="'/articles/' + ${articleDto.articleId}+ '/edit'" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
-                <form method="post" th:action="'/articles/' + ${article.articleId}">
+                <form method="post" th:action="'/articles/' + ${articleDto.articleId}">
                     <input type="hidden" name="_method" value="delete"/>
                     <button type="submit" class="float-right pointer btn btn-icon">
                         <i class="ti-na text-dark font-size-16 pdd-horizontal-5"></i>
                     </button>
                 </form>
-                <div id="viewerSection" th:if="${#strings.length(article.contents)} != 0" th:text="${article.contents}">
+                <div id="viewerSection" th:if="${#strings.length(articleDto.contents)} != 0" th:text="${articleDto.contents}">
                     입력된 글의 내용이 없습니다
                 </div>
             </div>

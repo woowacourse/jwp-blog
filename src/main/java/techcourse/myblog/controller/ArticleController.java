@@ -16,7 +16,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String showIndex(Model model) {
-        model.addAttribute("articles", articleService.getAllArticles());
+        model.addAttribute("articleDtos", articleService.getAllArticles());
         return "index";
     }
 
@@ -26,28 +26,28 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String writeArticle(ArticleDto article) {
-        long articleId = articleService.createArticle(article);
+    public String writeArticle(ArticleDto articleDto) {
+        long articleId = articleService.save(articleDto);
         return "redirect:/articles/" + articleId;
     }
 
     @GetMapping("/articles/{articleId}")
     public String showArticle(@PathVariable long articleId, Model model) {
-        ArticleDto article = articleService.getArticleDtoById(articleId);
-        model.addAttribute("article", article);
+        ArticleDto articleDto = articleService.getArticleDtoById(articleId);
+        model.addAttribute("articleDto", articleDto);
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String showEditForm(@PathVariable long articleId, Model model) {
-        ArticleDto article = articleService.getArticleDtoById(articleId);
-        model.addAttribute("article", article);
+        ArticleDto articleDto = articleService.getArticleDtoById(articleId);
+        model.addAttribute("articleDto", articleDto);
         return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable long articleId, ArticleDto articleDto) {
-        articleService.updateArticle(articleDto);
+    public String updateArticle(@PathVariable long articleId, ArticleDto articleDto) {
+        articleService.update(articleDto);
         return "redirect:/articles/" + articleId;
     }
 

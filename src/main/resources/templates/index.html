@@ -38,22 +38,22 @@
                     </ul>
                     <div class="width-100 absolute left-0 border bottom"></div>
                     <div class="tab-content">
-                        <div th:each="article : ${articles}" role="tabpanel" class="tab-pane fade in active"
+                        <div th:each="articleDto : ${articleDtos}" role="tabpanel" class="tab-pane fade in active"
                              id="tab-centered-1">
                             <div class="pdd-horizon-15 pdd-vertical-20">
-                                <a th:href="'/articles/' + ${article.articleId}" class="card article-container">
+                                <a th:href="'/articles/' + ${articleDto.articleId}" class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
                                             <div class="background-holder has-content" style="background-image: url('/images/pages/index/study.jpg');"
-                                                 th:styleappend="${article.coverUrl} != '' ? 'background-image: url(' + ${article.coverUrl} + ');' : ''"></div>
+                                                 th:styleappend="${articleDto.coverUrl} != '' ? 'background-image: url(' + ${articleDto.coverUrl} + ');' : ''"></div>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-md-8 ml-auto">
                                                     <div class="pdd-vertical-30 pdd-horizon-25">
                                                         <h2 class="mrg-btm-20 text-bold"
-                                                            th:text="${#strings.abbreviate(article.title, 50)}"></h2>
-                                                        <p th:text="${#strings.abbreviate(article.contents, 140)}"></p>
+                                                            th:text="${#strings.abbreviate(articleDto.title, 50)}"></h2>
+                                                        <p th:text="${#strings.abbreviate(articleDto.contents, 140)}"></p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
                                                                 <i class="ti-heart text-danger pdd-right-5"></i>
