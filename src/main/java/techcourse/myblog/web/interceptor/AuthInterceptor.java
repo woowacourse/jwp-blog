@@ -1,4 +1,4 @@
-package techcourse.myblog.web.core;
+package techcourse.myblog.web.interceptor;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;

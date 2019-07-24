@@ -2,8 +2,6 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,13 +39,6 @@ public class UserController {
         }
     }
 
-    private void bindErrors(BindingResult bindingResult, Model model) {
-        List<ObjectError> errors = (List<ObjectError>) model.asMap().get("errors");
-        if (errors != null) {
-            errors.forEach(error -> bindingResult.addError(error));
-        }
-    }
-
     @GetMapping("/users")
     public String userList(Model model) {
         List<User> users = userService.findAll();
@@ -60,11 +51,6 @@ public class UserController {
         userService.save(userDto.toUser());
         return new RedirectView("/login");
     }
-
-//    private RedirectView redirectErrorView(BindingResult bindingResult, RedirectAttributes redirectAttributes, String to) {
-//        redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-//        return new RedirectView(to);
-//    }
 
     @DeleteMapping("/users")
     public RedirectView delete(HttpSession session) {
