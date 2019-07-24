@@ -34,6 +34,7 @@ public class UserService {
             User user = userRepository.save(userDto.toEntity());
             return UserDto.from(user);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalArgumentException("회원 가입 오류!");
         }
     }
@@ -83,7 +84,7 @@ public class UserService {
             maybeSnsInfo.get().updateSnsInfo(snsEmail);
             return;
         }
-        if (snsEmail.length() != 0) {
+        if (snsEmail != null) {
             user.addSns(snsEmail, snsCode);
         }
     }

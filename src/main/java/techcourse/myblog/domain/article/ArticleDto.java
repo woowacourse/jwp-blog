@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 public class ArticleDto {
@@ -52,5 +54,22 @@ public class ArticleDto {
                 ", contents='" + contents + '\'' +
                 ", categoryId=" + categoryId +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ArticleDto that = (ArticleDto) o;
+        return id == that.id &&
+                categoryId == that.categoryId &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(coverUrl, that.coverUrl) &&
+                Objects.equals(contents, that.contents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, coverUrl, contents, categoryId);
     }
 }

@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 public class UserDto {
@@ -56,10 +58,10 @@ public class UserDto {
                 .password(password)
                 .build();
 
-        if (snsFacebookEmail != null) {
+        if (snsFacebookEmail != null && snsFacebookEmail.length() > 0) {
             user.addSns(snsFacebookEmail, 0L);
         }
-        if (snsGithubEmail != null) {
+        if (snsGithubEmail != null && snsFacebookEmail.length() > 0) {
             user.addSns(snsGithubEmail, 1L);
         }
 
@@ -69,10 +71,30 @@ public class UserDto {
     @Override
     public String toString() {
         return "UserDto{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", snsFacebookEmail='" + snsFacebookEmail + '\'' +
+                ", snsGithubEmail='" + snsGithubEmail + '\'' +
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDto userDto = (UserDto) o;
+        return id == userDto.id &&
+                Objects.equals(name, userDto.name) &&
+                Objects.equals(email, userDto.email) &&
+                Objects.equals(password, userDto.password) &&
+                Objects.equals(snsFacebookEmail, userDto.snsFacebookEmail) &&
+                Objects.equals(snsGithubEmail, userDto.snsGithubEmail);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, email, password, snsFacebookEmail, snsGithubEmail);
+    }
 }
