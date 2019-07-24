@@ -35,8 +35,10 @@ public class UserController {
 
     @PostMapping("/new")
     public String createUser(@Valid UserDto userDto, BindingResult bindingResult) throws NotValidUserInfoException {
-        User user = userDto.toEntity();
-        userService.createNewUser(bindingResult, userDto);
+        if (bindingResult.hasErrors()) {
+            throw new NotValidUserInfoException(bindingResult.getFieldError().getDefaultMessage());
+        }
+        userService.createNewUser(userDto);
         return "redirect:/login";
     }
 

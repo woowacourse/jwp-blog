@@ -28,22 +28,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User createNewUser(BindingResult bindingResult, UserDto userDto) {
-        checkValidUserInformation(bindingResult, userDto);
+    public void createNewUser(UserDto userDto) {
+        checkValidUserInformation(userDto);
         User user = userDto.toEntity();
         userRepository.save(user);
         log.info("새로운 {} 유저가 가입했습니다.", user.getUserName());
-        return user;
-    }
-
-    private void checkValidUserInformation(BindingResult bindingResult, UserDto userDto) {
-        if (bindingResult.hasErrors()) {
-            throw new NotValidUserInfoException(bindingResult.getFieldError().getDefaultMessage());
-        }
-
-        if (userRepository.existsByEmail(userDto.getEmail())) {
-            throw new NotValidUserInfoException("중복된 이메일 입니다.");
-        }
     }
 
     public List<User> findAll() {
@@ -69,11 +58,16 @@ public class UserService {
         return user;
     }
 
-    @Transactional
     public void deleteUser(HttpSession httpSession) {
         String email = ((User) httpSession.getAttribute("user")).getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(NotFoundObjectException::new);
         userRepository.delete(user);
+    }
+
+    private void checkValidUserInformation(UserDto userDto) {
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            throw new NotValidUserInfoException("중복된 이메일 입니다.");
+        }
     }
 
 
