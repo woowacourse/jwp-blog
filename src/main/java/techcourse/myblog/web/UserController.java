@@ -52,26 +52,29 @@ public class UserController {
         return "user-list";
     }
 
-    @GetMapping("users/{id}/mypage")
-    public String showMypage(@PathVariable final long id, Model model) {
-        UserDto userDto = userService.readWithoutPasswordById(id);
-        model.addAttribute("userData", userDto);
+    @GetMapping("/users/mypage")
+    public String showMypage(HttpSession session, Model model) {
+        addUserInModel(session, model);
         return "mypage";
     }
 
     @GetMapping("/users/mypage-edit")
     public String showMypageEdit(HttpSession session, Model model) {
+        addUserInModel(session, model);
+        return "mypage-edit";
+    }
+
+    private void addUserInModel(HttpSession session, Model model) {
         Object userId = session.getAttribute("userId");
         UserDto userDto = userService.readWithoutPasswordById((long) userId);
         model.addAttribute("userData", userDto);
-        return "mypage-edit";
     }
 
     @PutMapping("/users/mypage-edit")
     public String update(HttpSession session, UserDto userDto) {
         Object userId = session.getAttribute("userId");
-        UserDto updateUserDto = userService.updateUser((long) userId, userDto);
-        return "redirect:/users/" + updateUserDto.getId() + "/mypage";
+        userService.updateUser((long) userId, userDto);
+        return "redirect:/users/mypage";
     }
 
     @DeleteMapping("/users/mypage-edit")
