@@ -1,9 +1,19 @@
 package techcourse.myblog.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 
+@Entity
 public class Article {
-    private int id;
+    private static final String DEFAULT_URL = "/images/default/bg.jpg";
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String title;
     private String contents;
     private String coverUrl;
@@ -11,7 +21,17 @@ public class Article {
     public Article(String title, String contents, String coverUrl) {
         this.title = title;
         this.contents = contents;
-        this.coverUrl = coverUrl;
+        this.coverUrl = getDefaultUrl(coverUrl);
+    }
+
+    protected Article() {
+    }
+
+    private String getDefaultUrl(String coverUrl) {
+        if (coverUrl.isEmpty()) {
+            return DEFAULT_URL;
+        }
+        return coverUrl;
     }
 
     public String getTitle() {
@@ -26,12 +46,8 @@ public class Article {
         return contents;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public void update(Article modifiedArticle) {
@@ -40,27 +56,16 @@ public class Article {
         this.coverUrl = modifiedArticle.coverUrl;
     }
 
-    public boolean matchId(int id) {
-        return this.id == id;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Article)) {
-            return false;
-        }
-        final Article article = (Article) o;
-        return getId() == article.getId() &&
-                Objects.equals(getTitle(), article.getTitle()) &&
-                Objects.equals(getContents(), article.getContents()) &&
-                Objects.equals(getCoverUrl(), article.getCoverUrl());
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return Objects.equals(id, article.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getTitle(), getContents(), getCoverUrl());
+        return Objects.hash(id);
     }
 }
