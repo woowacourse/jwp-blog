@@ -1,0 +1,19 @@
+package techcourse.myblog.application.converter;
+
+import techcourse.myblog.application.dto.ArticleDto;
+import techcourse.myblog.domain.Article;
+
+public class ArticleConverter extends Converter<ArticleDto, Article> {
+    private static class ArticleConverterLazyHolder {
+        private static final ArticleConverter INSTANCE = new ArticleConverter();
+    }
+
+    public static ArticleConverter getInstance() {
+        return ArticleConverterLazyHolder.INSTANCE;
+    }
+
+    private ArticleConverter() {
+        super(articleDto -> new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents()),
+                article -> new ArticleDto(article.getId(), article.getTitle(), article.getCoverUrl(), article.getContents()));
+    }
+}
