@@ -28,8 +28,9 @@ class UserControllerTests {
     private static final Logger log = LoggerFactory.getLogger(UserControllerTests.class);
 
     private static final String LOCATION = "location";
-    private static final String ROOT_REGEX_WITH_JSESSION_ID = "[^/]*//[^/]*/;[^/]*"; // 일단.. JSESSION_ID 가 존재할 때만을 위함
-    private static final String ROOT_REGEX = "[^/]*//[^/]*/"; // 일단.. JSESSION_ID 가 존재할 때만을 위함
+    private static final String ROOT_REGEX_WITH_JSESSION_ID = "[^/]*//[^/]*/;[^/]*";
+    private static final String ROOT_REGEX_WITHOUT_JSESSION_ID = "[^/]*//[^/]*/";
+    private static final String ROOT_REGEX = String.format("(%s)|(%s)", ROOT_REGEX_WITH_JSESSION_ID, ROOT_REGEX_WITHOUT_JSESSION_ID);
 
     private final String validName = "미스터코";
     private final String validPassword = "123123123";
@@ -66,47 +67,36 @@ class UserControllerTests {
     }
 
     @Test
-    public void 로그인() {
+    public void 로그인페이지GET_로그인상태_메인페이지로() {
         String validEmail = newValidEmail();
         signupUser(validName, validEmail, validPassword);
 
-        webTestClient.post()
+        ResponseSpec rs = webTestClient.get()
                 .uri("/login")
-                .body(BodyInserters
-                        .fromFormData("email", validEmail)
-                        .with("password", validPassword))
+                .header("Authorization", "Basic "
+                        + Base64Utils.encodeToString((String.format("%s:%s", validEmail, validPassword).getBytes(UTF_8))))
                 .exchange()
                 .expectStatus()
                 .isFound();
 
-        webTestClient.get()
-                .uri("/users/1/mypage-edit")
-                .exchange()
-                .expectStatus().isOk();
+        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX);
     }
 
     @Test
-    public void 로그인_된_상태에서_로그인() {
-        String validEmail = newValidEmail();
-        signupUser(validName, validEmail, validPassword);
-
-        webTestClient.post()
+    public void 로그인페이지GET_로그인X_로그인페이지로() {
+        webTestClient.get()
                 .uri("/login")
-                .header("Authorization", "Basic "
-                        + Base64Utils.encodeToString((String.format("%s:%s", validEmail, validPassword).getBytes(UTF_8))))
-                .body(BodyInserters
-                        .fromFormData("email", validEmail)
-                        .with("password", validPassword))
                 .exchange()
                 .expectStatus()
                 .isOk();
     }
 
     @Test
-    public void 로그인_잘못된_비밀번호() {
+    public void 로그인페이지POST_잘못된_비밀번호() {
         String validEmail = newValidEmail();
         signupUser(validName, validEmail, validPassword);
 
+        // TODO: 애러페이지를 좀 더 명확하게 잡을 순 없나?
         webTestClient.post()
                 .uri("/login")
                 .body(BodyInserters
@@ -118,10 +108,11 @@ class UserControllerTests {
     }
 
     @Test
-    public void 로그인_존재하지_않는_이메일() {
+    public void 로그인페이지POST_존재하지_않는_이메일() {
         String validEmail = newValidEmail();
         signupUser(validName, validEmail, validPassword);
 
+        // TODO: 애러페이지를 좀 더 명확하게 잡을 순 없나?
         webTestClient.post()
                 .uri("/login")
                 .body(BodyInserters
@@ -133,84 +124,36 @@ class UserControllerTests {
     }
 
     @Test
-    public void 로그인_세션이_등록되었는지() {
-//        회원추가();
-//        String email = "test@test.com";
-//        String password = "123123123";
-//
-//        String[] data = new String[]{""};
-//
-//        ResponseSpec rs = webTestClient.post()
-//                .uri("/login")
-//                .body(BodyInserters
-//                        .fromFormData("email", email)
-//                        .with("password", password))
-//                .exchange()
-//                .expectStatus()
-//                .isFound();
-//
-//        rs.expectHeader()
-//                .value("set-cookie", (content) -> {
-//                    data[0] = content;
-//                });
-//
-//        System.out.println(data[0]);
-    }
+    public void 로그인페이지POST_로그인성공() {
+        String validEmail = newValidEmail();
+        signupUser(validName, validEmail, validPassword);
 
-    @Test
-    public void 로그인_실패_세션이_안_등록되었는지() {
-//        // ?
-//        회원로그아웃();
-//
-//        회원추가();
-//        String email = "test@test.com";
-//        String wrongPassword = "wrongPassword";
-//
-//        String[] data = new String[]{""};
-//
-//        ResponseSpec rs = webTestClient.post()
-//                .uri("/login")
-//                .body(BodyInserters
-//                        .fromFormData("email", email)
-//                        .with("password", wrongPassword))
-//                .exchange();
-//
-//        rs.expectHeader()
-//                .value("set-cookie", (content) -> {
-//                    data[0] = content;
-//
-//                    // session id 로 ...만들어내서 내용을 비교해보아야하나??...
-//                });
-//
-//        System.out.println("session exist?: " + data[0]);
-    }
-
-    @Test
-    public void 회원로그아웃_세션_가졌니() {
-        String[] data = new String[]{""};
-
-        webTestClient.get()
-                .uri("/logout")
+        ResponseSpec rs = webTestClient.post()
+                .uri("/login")
+                .body(BodyInserters
+                        .fromFormData("email", validEmail)
+                        .with("password", validPassword))
                 .exchange()
-                .expectStatus().isFound()
-                .expectHeader()
-                .value("set-cookie", (content) -> {
-                    data[0] = content;
-                });
+                .expectStatus()
+                .isFound();
 
-        System.out.println("session?: " + data[0]);
+        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX);
     }
 
     @Test
-    public void 로그아웃_이후_메인페이지로이동(){
-        log.debug("로그아웃 실행..!!");
+    public void 로그아웃_이후_메인페이지로이동() {
+        String validEmail = newValidEmail();
+        signupUser(validName, validEmail, validPassword);
 
         ResponseSpec rs = webTestClient.get()
                 .uri("/logout")
+                .header("Authorization", "Basic "
+                        + Base64Utils.encodeToString((String.format("%s:%s", validEmail, validPassword).getBytes(UTF_8))))
                 .exchange()
                 .expectStatus().isFound();
 
-        rs.expectHeader().valueMatches(LOCATION, )
+
+        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX);
     }
 
     @Test
@@ -312,10 +255,9 @@ class UserControllerTests {
                         + Base64Utils.encodeToString((String.format("%s:%s", validEmail, validPassword).getBytes(UTF_8))))
                 .exchange()
                 .expectStatus()
-                .isFound();
+                .isFound(); // error page
 
-
-        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX_WITH_JSESSION_ID);
+        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX);
     }
 
     // TODO: 테스트할때만 죽는다... ㅠ
@@ -378,7 +320,7 @@ class UserControllerTests {
                 .expectStatus()
                 .isFound();
 
-        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX_WITH_JSESSION_ID);
+        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX);
     }
 
     @Test
@@ -386,20 +328,21 @@ class UserControllerTests {
         String validEmail = newValidEmail();
         signupUser(validName, validEmail, validPassword);
 
-        long notLoggedInId = userService.findIdBy(validEmail, validPassword).get() + 1;
+        long id = userService.findIdBy(validEmail, validPassword).get();
 
         ResponseSpec rs = webTestClient.delete()
-                .uri(String.format("users/%d/mypage-edit", notLoggedInId))
+                .uri(String.format("users/%d/mypage-edit", id))
                 .header("Authorization", "Basic "
                         + Base64Utils.encodeToString((String.format("%s:%s", validEmail, validPassword).getBytes(UTF_8))))
                 .exchange()
                 .expectStatus()
                 .isFound();
 
-        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX_WITH_JSESSION_ID);
+        rs.expectHeader().value(LOCATION, location -> {
+            assertThat(location.contains("logout"));
+        });
 
         // TODO: 삭제를 어떻게 확인 할 까? (지금은 다시 로그인을 했을 때 실패하는 것으로 하려고 함)
-        // 그러면 당연히.. 로그아웃도 되어있어야겠지
     }
 
     private boolean hasUser(String email) {

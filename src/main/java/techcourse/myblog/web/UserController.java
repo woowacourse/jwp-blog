@@ -6,19 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.SnsInfoRepository;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserDto;
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserMypageRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.dto.UserSaveRequestDto;
+import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 
 @Controller
@@ -47,27 +46,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String showLoginPage(UserDto userDto, HttpSession session) {
+    public String handleLogin(UserDto userDto, HttpSession session) {
         log.debug("userDto: {}", userDto);
 
-        Optional<User> maybeUser = userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
+        User user = userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword())
+                .orElseThrow(() -> new UserNotFoundException());
 
-        if (maybeUser.isPresent()) {
-            User user = maybeUser.get();
-            session.setAttribute("userId", user.getId());
+        loginService.login(session, user.getEmail(), user.getPassword());
 
-            System.out.println(user);
-            System.out.println(userDto);
-
-            return "redirect:/";
-        }
-
-        System.out.println("로그인 망했다...");
-
-        // 아... session 이 존재하면 무조건 세션을 보내는 건가??....
-        session.invalidate();
-
-        return "login";
+        return "redirect:/";
     }
 
     @GetMapping("/logout")
@@ -98,25 +85,17 @@ public class UserController {
 
     @GetMapping("users/{id}/mypage")
     public String showMypage(@PathVariable final long id, Model model) {
-        Optional<UserResponseDto> user = userService.findById(id);
+        UserResponseDto userDto = userService.findById(id)
+                .orElseThrow(() -> new UserNotFoundException());
 
-        if (user.isPresent()) {
-            log.debug(user.get().toString());
+        model.addAttribute("userInfo", userDto);
 
-            model.addAttribute("userInfo", user.get());
-
-            return "mypage";
-        }
-
-        return "redirect:/";
+        return "mypage";
     }
 
     @GetMapping("/users/{id}/mypage-edit")
     public String showMypageEdit(@PathVariable final long id, HttpSession session, Model model) {
-        // TODO: 로그인되었는지 확인 (아니면 메인으로)
-
-        Object userId = session.getAttribute("userId");
-        if (userId == null || id != (long) userId) {
+        if (!loginService.isLoggedInUser(session, id)){
             return "redirect:/";
         }
 
@@ -128,10 +107,7 @@ public class UserController {
     @PutMapping("/users/{id}/mypage-edit")
     @Transactional
     public String updateUser(@PathVariable final long id, HttpSession session, UserMypageRequestDto dto) {
-        // TODO: 로그인되었는지 확인 (아니면 메인으로)
-
-        Object userId = session.getAttribute("userId");
-        if (userId == null || id != (long) userId) {
+        if (!loginService.isLoggedInUser(session, id)){
             return "redirect:/";
         }
 
@@ -144,10 +120,7 @@ public class UserController {
 
     @DeleteMapping("/users/{id}/mypage-edit")
     public String deleteUser(@PathVariable final long id, HttpSession session) {
-        // TODO: 로그인되었는지 확인 (아니면 메인으로)
-
-        Object userId = session.getAttribute("userId");
-        if (userId == null || id != (long) userId) {
+        if (!loginService.isLoggedInUser(session, id)){
             return "redirect:/";
         }
 

@@ -13,12 +13,13 @@ import techcourse.myblog.exception.UserNotFoundException;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {})
+@SpringBootTest(classes = {LoginService.class})
 class LoginServiceTests {
     @Autowired
     private LoginService loginService;
@@ -53,5 +54,32 @@ class LoginServiceTests {
         loginService.logout(httpSession);
 
         verify(httpSession).removeAttribute(LoginService.USER_ID);
+    }
+
+    @Test
+    void isLoggedInUser_세션이없을때() {
+        long userId = 1;
+        long anyId = 1;
+        given(httpSession.getAttribute(LoginService.USER_ID)).willReturn(null);
+
+        assertThat(loginService.isLoggedInUser(httpSession, anyId)).isFalse();
+    }
+
+    @Test
+    void isLoggedInUser_로그인된유저와_확인하려는유저_같음() {
+        long userId = 1;
+        long id = 1;
+        given(httpSession.getAttribute(LoginService.USER_ID)).willReturn(userId);
+
+        assertThat(loginService.isLoggedInUser(httpSession, id)).isTrue();
+    }
+
+    @Test
+    void isLoggedInUser_로그인된유저와_확인하려는유저_다름() {
+        long userId = 1;
+        long differentId = userId + 1;
+        given(httpSession.getAttribute(LoginService.USER_ID)).willReturn(userId);
+
+        assertThat(loginService.isLoggedInUser(httpSession, differentId)).isFalse();
     }
 }

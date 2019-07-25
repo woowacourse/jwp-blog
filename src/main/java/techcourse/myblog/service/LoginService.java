@@ -17,6 +17,7 @@ public class LoginService {
     private static final Logger log = LoggerFactory.getLogger(LoginService.class);
 
     public static final String USER_ID = "userId";
+    private static final long INVALID_ID = -123456789l;
 
     private UserRepository userRepository;
 
@@ -45,5 +46,15 @@ public class LoginService {
         log.debug("called..!!");
 
         session.removeAttribute(USER_ID);
+    }
+
+    public boolean isLoggedInUser(HttpSession session, long id) {
+        if (session == null) {
+            return false;
+        }
+
+        long userId = (long) Optional.ofNullable(session.getAttribute(USER_ID)).orElse(INVALID_ID);
+
+        return userId == id;
     }
 }

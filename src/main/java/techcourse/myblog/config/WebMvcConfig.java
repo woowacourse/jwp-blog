@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import techcourse.myblog.interceptor.AlreadyLoggedInInterceptor;
 import techcourse.myblog.interceptor.BasicAuthInterceptor;
 import techcourse.myblog.interceptor.LoginInterceptor;
 
@@ -19,6 +20,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return new LoginInterceptor();
     }
 
+    @Bean
+    public AlreadyLoggedInInterceptor alreadyLoggedInInterceptor() {
+        return new AlreadyLoggedInInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(basicAuthInterceptor());
@@ -26,5 +32,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // TODO : 경로 패턴을 상수화? 해야할 듯 (공통된 곳에서 부터 가르키도록 해야지... 컨트롤러랑 여기 둘 중 한 군데서 바꿔도 실수하지 않게)
         registry.addInterceptor(loginInterceptor())
                 .addPathPatterns("/users/{id}/mypage-edit");
+
+        registry.addInterceptor(alreadyLoggedInInterceptor())
+                .addPathPatterns("/signup", "/login");
     }
 }
