@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.user.domain.Email;
 import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.domain.UserRepository;
 import techcourse.myblog.user.dto.UserDto;
@@ -42,7 +43,7 @@ public class UserService {
     }
 
     public UserDto.Response login(UserDto.Login userDto) {
-        User user = userRepository.findByEmail(userDto.getEmail()).orElseThrow(NotFoundUserException::new);
+        User user = userRepository.findByEmail(Email.of(userDto.getEmail())).orElseThrow(NotFoundUserException::new);
 
         if (!user.checkPassword(userDto.getPassword())) {
             throw new NotMatchPasswordException();

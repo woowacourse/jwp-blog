@@ -3,12 +3,8 @@ package techcourse.myblog.user.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import techcourse.myblog.user.dto.UserDto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -18,49 +14,28 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String email;
+    @Convert(converter = EmailConverter.class)
+    private Email email;
 
-    private String password;
+    @Convert(converter = PasswordConverter.class)
+    private Password password;
 
-    private String name;
+    @Convert(converter = NameConverter.class)
+    private Name name;
 
     @Builder
     private User(long id, String email, String password, String name) {
         this.id = id;
-        this.email = validateEmail(email);
-        this.password = validatePassword(password);
-        this.name = validateName(name);
+        this.email = Email.of(email);
+        this.password = Password.of(password);
+        this.name = Name.of(name);
     }
 
     public void update(String name) {
-        this.name = validateName(name);
+        this.name.updateName(name);
     }
 
     public boolean checkPassword(String password) {
-        return this.getPassword().equals(password);
-    }
-
-    private String validateEmail(final String email) {
-        String emailRegex = "^[_a-zA-Z0-9-.]+@[.a-zA-Z0-9-]+\\.[a-zA-Z]+$";
-        if (!email.matches(emailRegex)) {
-            throw new IllegalArgumentException("잘못된 형식의 이메일입니다.");
-        }
-        return email;
-    }
-
-    private String validatePassword(final String password) {
-        String passwordRegex = ".*(?=^.{8,}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*";
-        if (!password.matches(passwordRegex)) {
-            throw new IllegalArgumentException("잘못된 형식의 비밀번호입니다.");
-        }
-        return password;
-    }
-
-    private String validateName(final String name) {
-        String nameRegex = "[A-Za-zㄱ-ㅎㅏ-ㅣ가-힣]{2,10}";
-        if (!name.matches(nameRegex)) {
-            throw new IllegalArgumentException("이름은 2자 이상 10자 이하입니다.");
-        }
-        return name;
+        return this.password.isCorrect(password);
     }
 }
