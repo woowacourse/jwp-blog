@@ -20,11 +20,11 @@ public class User {
     private String password;
 
     @Transient
-    private String namePattern = "^[^ \\-!@#$%^&*(),.?\\\":{}|<>0-9]{2,10}$";
+    private static final String namePattern = "^[^ \\-!@#$%^&*(),.?\\\":{}|<>0-9]{2,10}$";
     @Transient
-    private String emailPattern = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$";
+    private static final String emailPattern = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$";
     @Transient
-    private String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}$";
+    private static final String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}$";
 
     @Transient
     public static final String AUTH_FAIL_MESSAGE = "인증에 실패하였습니다.";
