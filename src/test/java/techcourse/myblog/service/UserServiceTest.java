@@ -1,9 +1,10 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.domain.user.SnsInfoRepository;
 import techcourse.myblog.domain.user.UserDto;
 import techcourse.myblog.domain.user.UserRepository;
@@ -14,15 +15,15 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 class UserServiceTest {
-    @MockBean
+    @Mock
     private UserRepository userRepository;
 
-    @MockBean
+    @Mock
     private SnsInfoRepository snsInfoRepository;
 
-    @Autowired
+    @InjectMocks
     private UserService userService;
 
     @Test

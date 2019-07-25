@@ -1,12 +1,11 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.domain.article.ArticleDto;
-import techcourse.myblog.domain.article.ArticleRepository;
-import techcourse.myblog.domain.category.Category;
 import techcourse.myblog.domain.category.CategoryDto;
 import techcourse.myblog.domain.category.CategoryRepository;
 
@@ -14,18 +13,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.longThat;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 class CategoryServiceTest {
-    @MockBean
+    @Mock
     private CategoryRepository categoryRepository;
 
-    @MockBean
+    @Mock
     private ArticleService articleService;
 
-    @Autowired
+    @InjectMocks
     private CategoryService categoryService;
 
     @Test
