@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.exception.UserException;
 import techcourse.myblog.service.ArticleService;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}")
-    public String showArticleById(@PathVariable int articleId, Model model) throws ArticleNotFoundException {
+    public String showArticleById(@PathVariable int articleId, Model model) throws UserException {
         model.addAttribute("article", articleService.findById(articleId));
         return "article";
     }
