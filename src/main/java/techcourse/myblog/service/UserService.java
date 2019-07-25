@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserLoginDto;
 import techcourse.myblog.exception.UserException;

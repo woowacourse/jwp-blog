@@ -4,12 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import techcourse.myblog.exception.UserException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @NoArgsConstructor
 @Getter

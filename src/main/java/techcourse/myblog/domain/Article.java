@@ -1,6 +1,9 @@
 package techcourse.myblog.domain;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -35,5 +38,4 @@ public class Article {
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
-
 }

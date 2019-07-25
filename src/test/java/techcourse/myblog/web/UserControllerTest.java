@@ -43,7 +43,7 @@ class UserControllerTest {
                 .uri("/join")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("name", name)
-                        .with("email", email)
+                        .with("email", DEFAULT_EMAIL)
                         .with("password", password))
                 .exchange()
                 .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/err;jsessionid=([0-9A-Z])+")
