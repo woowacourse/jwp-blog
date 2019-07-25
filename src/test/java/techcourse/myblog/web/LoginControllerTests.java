@@ -56,7 +56,7 @@ public class LoginControllerTests {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("email", noneEmail)
-                        .with("password", "password"))
+                        .with("password", "password1234!"))
                 .exchange()
                 .expectStatus().isBadRequest();
     }

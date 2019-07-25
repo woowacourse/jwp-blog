@@ -151,7 +151,7 @@ public class UserControllerTests {
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("name", ""))
+                        .fromFormData("name", "A"))
                 .exchange()
                 .expectStatus().isBadRequest();
     }
