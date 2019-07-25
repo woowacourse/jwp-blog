@@ -22,4 +22,8 @@ public class User {
     private String email;
     @NonNull
     private String password;
+
+    public boolean matchPassword(String password) {
+        return this.password.equals(password);
+    }
 }

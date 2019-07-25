@@ -16,15 +16,13 @@ public class LoginService {
     }
 
     public User getLoginUser(LoginDTO loginDTO) {
-        User findUser = findByEmail(loginDTO.getEmail());
-        if (checkPassword(loginDTO.getPassword(), findUser.getPassword())) {
-            return findUser;
-        }
-        throw new LoginFailException("아이디와 비밀번호가 일치하지 않습니다.");
-    }
+        User user = findByEmail(loginDTO.getEmail());
 
-    private boolean checkPassword(String password, String checkPassword) {
-        return password.equals(checkPassword);
+        if (!user.matchPassword(loginDTO.getPassword())) {
+            throw new LoginFailException("아이디와 비밀번호가 일치하지 않습니다.");
+        }
+
+        return user;
     }
 
     private User findByEmail(String email) {
