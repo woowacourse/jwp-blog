@@ -21,11 +21,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void save(UserDTO userDTO) {
+    public User save(UserDTO userDTO) {
         if (isDuplicateEmail(userDTO)) {
             throw new EmailRepetitionException("이메일이 중복입니다.");
         }
-        userRepository.save(new User(userDTO.getUserName(), userDTO.getEmail(), userDTO.getPassword()));
+        return userRepository.save(userDTO.toDomain());
     }
 
     public List<User> getUsers() {
@@ -37,8 +37,8 @@ public class UserService {
     }
 
     @Transactional
-    public void delete(String email) {
-        userRepository.removeByEmail(email);
+    public void delete(User user) {
+        userRepository.delete(user);
     }
 
     public User update(UserDTO userDTO) {

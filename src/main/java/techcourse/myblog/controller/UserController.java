@@ -51,7 +51,7 @@ public class UserController {
     @DeleteMapping
     public String delete(HttpSession session) {
         User user = (User) session.getAttribute("user");
-        userService.delete(user.getEmail());
+        userService.delete(user);
         session.invalidate();
         return "redirect:/";
     }

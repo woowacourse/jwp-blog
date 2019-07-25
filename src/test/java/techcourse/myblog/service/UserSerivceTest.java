@@ -3,15 +3,13 @@ package techcourse.myblog.service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.service.dto.UserDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserSerivceTest {
     private static final String TEST_EMAIL_1 = "test1@test.com";
@@ -19,6 +17,8 @@ public class UserSerivceTest {
     private static final String TEST_PASSWORD_1 = "!Q@W3e4r";
     private static final String TEST_USERNAME = "test1";
     private static final UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
+
+    private static User user;
 
     private UserService userService;
 
@@ -29,7 +29,7 @@ public class UserSerivceTest {
 
     @BeforeEach
     void setUp() {
-        userService.save(userDTO);
+        user = userService.save(userDTO);
     }
 
     @Test
@@ -51,6 +51,6 @@ public class UserSerivceTest {
 
     @AfterEach
     void tearDown() {
-        userService.delete(TEST_EMAIL_1);
+        userService.delete(user);
     }
 }

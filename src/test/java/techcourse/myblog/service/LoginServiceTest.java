@@ -23,6 +23,7 @@ public class LoginServiceTest {
     private static final String TEST_USERNAME = "test1";
     private static final UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
 
+    private User user;
     private UserService userService;
     private LoginService loginService;
 
@@ -34,7 +35,7 @@ public class LoginServiceTest {
 
     @BeforeEach
     void setUp() {
-        userService.save(userDTO);
+        user = userService.save(userDTO);
     }
 
     @Test
@@ -64,6 +65,6 @@ public class LoginServiceTest {
 
     @AfterEach
     void tearDown() {
-        userService.delete(TEST_EMAIL_1);
+        userService.delete(user);
     }
 }
