@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.user.UserResponseDto;
-import techcourse.myblog.exception.EmailNotFoundException;
-import techcourse.myblog.exception.InvalidPasswordException;
 import techcourse.myblog.service.login.LoginService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +17,7 @@ public class LoginController {
 
     @Autowired
     public LoginController(LoginService loginService) {
-        this.loginservice= loginService;
+        this.loginservice = loginService;
     }
 
     @GetMapping("/login")
@@ -36,15 +34,7 @@ public class LoginController {
     @PostMapping("/users/login")
     public ModelAndView processLogin(final HttpServletRequest request, final String email, final String password) {
         ModelAndView modelAndView = new ModelAndView();
-        UserResponseDto userResponseDto;
-        try {
-            userResponseDto = loginservice.findByEmailAndPassword(email, password);
-        } catch (EmailNotFoundException | InvalidPasswordException e) {
-            // TODO: 2019-07-19 에러메시지 띄우기
-            System.err.println(e.getMessage());
-            modelAndView.setView(new RedirectView("/login"));
-            return modelAndView;
-        }
+        UserResponseDto userResponseDto = loginservice.findByEmailAndPassword(email, password);
 
         HttpSession session = request.getSession();
         session.setAttribute("user", userResponseDto);

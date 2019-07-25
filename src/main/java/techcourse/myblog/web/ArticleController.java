@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 
+@ControllerAdvice
 @Controller
 public class ArticleController {
     final private ArticleService articleService;
