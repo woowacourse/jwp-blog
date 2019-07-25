@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserDTO;
@@ -27,11 +28,11 @@ public class MypageController {
     }
 
     @PostMapping("/mypage")
-    public String updateProfile(@ModelAttribute UserDTO userDTO, HttpServletRequest request) {
+    public RedirectView updateProfile(@ModelAttribute UserDTO userDTO, HttpServletRequest request) {
         User user = userService.update(userDTO);
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
-        return "redirect:/mypage";
+        return new RedirectView("/mypage");
     }
 
     @GetMapping("/mypage/edit")
