@@ -1,4 +1,4 @@
-package techcourse.myblog.user.domain;
+package techcourse.myblog.user.domain.vo;
 
 public class Password {
     private static final String PASSWORD_REGEX = ".*(?=^.{8,}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*";

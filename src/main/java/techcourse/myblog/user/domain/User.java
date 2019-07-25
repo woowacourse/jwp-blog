@@ -3,6 +3,7 @@ package techcourse.myblog.user.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import techcourse.myblog.user.domain.vo.*;
 
 import javax.persistence.*;
 

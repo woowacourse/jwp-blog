@@ -1,6 +1,7 @@
 package techcourse.myblog.user.domain;
 
 import org.springframework.data.repository.CrudRepository;
+import techcourse.myblog.user.domain.vo.Email;
 
 import java.util.Optional;
 

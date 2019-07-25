@@ -1,4 +1,4 @@
-package techcourse.myblog.user.domain;
+package techcourse.myblog.user.domain.vo;
 
 public class Name {
     private static final String NAME_REGEX = "[A-Za-zㄱ-ㅎㅏ-ㅣ가-힣]{2,10}";
