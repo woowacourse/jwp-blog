@@ -24,11 +24,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserControllerTest {
-    private static final Logger log = LoggerFactory.getLogger(UserControllerTest.class);
+class UserControllerTests {
+    private static final Logger log = LoggerFactory.getLogger(UserControllerTests.class);
 
     private static final String LOCATION = "location";
-    private static final String ROOT_REGEX = "[^/]*//[^/]*/;[^/]*"; // 일단.. JSESSION_ID 가 존재할 때만을 위함
+    private static final String ROOT_REGEX_WITH_JSESSION_ID = "[^/]*//[^/]*/;[^/]*"; // 일단.. JSESSION_ID 가 존재할 때만을 위함
+    private static final String ROOT_REGEX = "[^/]*//[^/]*/"; // 일단.. JSESSION_ID 가 존재할 때만을 위함
 
     private final String validName = "미스터코";
     private final String validPassword = "123123123";
@@ -201,13 +202,15 @@ class UserControllerTest {
     }
 
     @Test
-    public void 회원로그아웃_로그인() {
+    public void 로그아웃_이후_메인페이지로이동(){
         log.debug("로그아웃 실행..!!");
 
-        webTestClient.get()
+        ResponseSpec rs = webTestClient.get()
                 .uri("/logout")
                 .exchange()
                 .expectStatus().isFound();
+
+        rs.expectHeader().valueMatches(LOCATION, )
     }
 
     @Test
@@ -312,7 +315,7 @@ class UserControllerTest {
                 .isFound();
 
 
-        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX);
+        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX_WITH_JSESSION_ID);
     }
 
     // TODO: 테스트할때만 죽는다... ㅠ
@@ -375,7 +378,7 @@ class UserControllerTest {
                 .expectStatus()
                 .isFound();
 
-        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX);
+        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX_WITH_JSESSION_ID);
     }
 
     @Test
@@ -393,7 +396,7 @@ class UserControllerTest {
                 .expectStatus()
                 .isFound();
 
-        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX);
+        rs.expectHeader().valueMatches(LOCATION, ROOT_REGEX_WITH_JSESSION_ID);
 
         // TODO: 삭제를 어떻게 확인 할 까? (지금은 다시 로그인을 했을 때 실패하는 것으로 하려고 함)
         // 그러면 당연히.. 로그아웃도 되어있어야겠지

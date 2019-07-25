@@ -13,6 +13,7 @@ import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserMypageRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.dto.UserSaveRequestDto;
+import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -30,6 +31,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private LoginService loginService;
+
     @GetMapping("/signup")
     public String showSignUpPage() {
         // TODO: 로그인 된 유저인지 체크
@@ -44,7 +48,8 @@ public class UserController {
 
     @PostMapping("/login")
     public String showLoginPage(UserDto userDto, HttpSession session) {
-        System.out.println(userDto);
+        log.debug("userDto: {}", userDto);
+
         Optional<User> maybeUser = userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
 
         if (maybeUser.isPresent()) {
@@ -67,12 +72,9 @@ public class UserController {
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        log.debug("/logout handler called..!!");
+        log.debug("called..!!");
 
-        if (session.getAttribute("userId") != null) {
-            session.removeAttribute("userId");
-        }
-        session.invalidate();
+        loginService.logout(session);
 
         return "redirect:/";
     }
@@ -151,8 +153,8 @@ public class UserController {
 
         log.debug(String.format("id: %d", id));
 
-        userRepository.deleteById(id);
         userService.deleteById(id);
+        loginService.logout(session);
 
         return "redirect:/logout";
     }
