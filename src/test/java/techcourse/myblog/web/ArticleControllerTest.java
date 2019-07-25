@@ -12,36 +12,44 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.validator.CouldNotFindArticleIdException;
+import techcourse.myblog.dto.LoginDto;
+import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.exception.CouldNotFindArticleIdException;
+import techcourse.myblog.repository.ArticleRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTest {
-    private static final int TEST_ARTICLE_ID = 1;
-    private static final int DELETE_TEST_ARTICLE_ID = 0;
-
-    private Article article;
-
+public class ArticleControllerTest extends ControllerTest {
     @Autowired
     private ArticleRepository articleRepository;
 
     @Autowired
     private WebTestClient webTestClient;
 
+    private Article article;
+    private UserDto userDto;
+    private LoginDto loginDto;
+
     @BeforeEach
     void setUp() {
-        article = new Article(
-                TEST_ARTICLE_ID,
-                "test title",
+        userDto = new UserDto();
+        loginDto = new LoginDto();
+
+        article = articleRepository.save(Article.of("test title",
                 "test coverUrl",
-                "test contents"
+                "test contents")
         );
 
-        articleRepository.save(article);
+        userDto.setName("test");
+        userDto.setEmail("test@test.com");
+        userDto.setPassword("PassW0rd@");
+        userDto.setPasswordConfirm("PassW0rd@");
+
+        loginDto.setEmail("test@test.com");
+        loginDto.setPassword("PassW0rd@");
     }
 
     private WebTestClient.ResponseSpec requestGetTest(String testUrl) {
@@ -67,7 +75,7 @@ public class ArticleControllerTest {
     @DisplayName("게시글을 작성한 뒤 생성 버튼을 눌렀을 때 생성된 게시글을 보여준다.")
     void createNewArticleTest() {
         // Given
-        int expectedIdGeneratedByServer = TEST_ARTICLE_ID;
+        long expectedIdGeneratedByServer = article.getArticleId();
         String inputTitle = "test title";
         String inputCoverUrl = "test coverUrl";
         String inputContents = "test contents";
@@ -78,7 +86,7 @@ public class ArticleControllerTest {
         // Then
         responseSpec
                 .expectStatus().isFound();
-        Article article = articleRepository.find(expectedIdGeneratedByServer)
+        Article article = articleRepository.findById(expectedIdGeneratedByServer)
                 .orElseThrow(CouldNotFindArticleIdException::new);
 
         assertThat(article.getTitle()).isEqualTo(inputTitle);
@@ -89,49 +97,55 @@ public class ArticleControllerTest {
     @Test
     @DisplayName("새로운 Article 생성시 article-edit 페이지를 되돌려준다.")
     void articleCreationPageTest() {
-        requestGetTest("/articles/new");
+        postUser(webTestClient, userDto, postUserResponse -> {
+            String sessionId = getSessionId(postUserResponse);
+            postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {
+                requestGetTest("articles/new" + sessionId);
+            });
+        });
     }
 
     @Test
     @DisplayName("게시글에서 수정 버튼을 누르는 경우 id에 해당하는 edit 페이지를 되돌려준다.")
     void articleEditPageTest() {
-        requestGetTest("/articles/" + TEST_ARTICLE_ID + "/edit")
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(article.getTitle())).isTrue();
-                    assertThat(body.contains(article.getCoverUrl())).isTrue();
-                    assertThat(body.contains(article.getContents())).isTrue();
-                });
+        userDto.setEmail("edit@test.com");
+        loginDto.setEmail("edit@test.com");
+
+        postUser(webTestClient, userDto, postUserResponse -> {
+            String sessionId = getSessionId(postUserResponse);
+            postLogin(webTestClient, loginDto, sessionId, postLoginResponse -> {
+                requestGetTest("/articles/" + article.getArticleId() + "/edit" + sessionId)
+                        .expectBody()
+                        .consumeWith(response -> {
+                            String body = new String(response.getResponseBody());
+                            assertThat(body.contains(article.getTitle())).isTrue();
+                            assertThat(body.contains(article.getCoverUrl())).isTrue();
+                            assertThat(body.contains(article.getContents())).isTrue();
+                        });
+            });
+        });
+
     }
 
     @Test
     @DisplayName("게시글을 삭제한다.")
     void deleteArticleTest() {
-        // Given
-        Article deleteArticle = new Article(
-                DELETE_TEST_ARTICLE_ID,
-                "deleting title",
-                "deleting coverUrl",
-                "deleting contents"
-        );
-
-        articleRepository.save(deleteArticle);
+        long deleteTestId = article.getArticleId();
 
         // When, Then
         webTestClient.delete()
-                .uri("/articles/" + DELETE_TEST_ARTICLE_ID)
+                .uri("/articles/" + deleteTestId)
                 .exchange()
                 .expectStatus().isFound();
 
         assertThatThrownBy(() -> articleRepository
-                .find(DELETE_TEST_ARTICLE_ID)
+                .findById(deleteTestId)
                 .orElseThrow(CouldNotFindArticleIdException::new))
                 .isInstanceOf(CouldNotFindArticleIdException.class);
     }
 
     @AfterEach
     void tearDown() {
-        articleRepository.delete(TEST_ARTICLE_ID);
+        articleRepository.deleteAll();
     }
 }

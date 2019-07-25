@@ -4,73 +4,68 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.validator.CouldNotFindArticleIdException;
-import techcourse.myblog.web.dto.ArticleDto;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.service.ArticleService;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class ArticleController {
-    private final ArticleRepository articleRepository;
+    private static final String LOGIN_SESSION_KEY = "loginUser";
+    private final ArticleService articleService;
 
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
+
+    @PostMapping("/write")
+    public String createArticle(ArticleDto articleDto) {
+        Article article = articleService.save(articleDto);
+        return "redirect:/articles/" + article.getArticleId();
     }
 
     @GetMapping("/articles/new")
-    public String articleCreationPage(Model model) {
-        String actionRoute = "/write";
-        String formMethod = "post";
+    public String editNewArticleView(HttpSession session, Model model) {
+        model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
+        articleService.setActionOfArticle(model,
+                "/write",
+                "post"
+        );
 
-        model.addAttribute("actionRoute", actionRoute);
-        model.addAttribute("formMethod", formMethod);
         return "article-edit";
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String articleEditPage(@PathVariable int articleId, Model model) {
-        Article article = articleRepository
-                .find(articleId)
-                .orElseThrow(CouldNotFindArticleIdException::new);
-        String actionRoute = "/articles/" + articleId;
-        String formMethod = "put";
+    public String editArticleView(@PathVariable Long articleId, HttpSession session, Model model) {
+        model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
+        Article findArticle = articleService.findArticleById(articleId);
+        articleService.setActionOfArticle(model,
+                "/articles/" + articleId,
+                "put"
+        );
 
-        model.addAttribute("actionRoute", actionRoute);
-        model.addAttribute("formMethod", formMethod);
-        model.addAttribute("article", article);
+        model.addAttribute("article", findArticle);
         return "article-edit";
     }
 
-    @PostMapping("/write")
-    public String createNewArticle(ArticleDto articleDto) {
-        int articleId = articleRepository.getLastArticleId();
-        Article article = new Article(articleId, articleDto);
-
-        articleRepository.save(article);
-        return "redirect:/articles/" + articleId;
-    }
-
     @GetMapping("/articles/{articleId}")
-    public String searchArticle(@PathVariable int articleId, Model model) {
-        Article article = articleRepository
-                .find(articleId)
-                .orElseThrow(CouldNotFindArticleIdException::new);
-
-        model.addAttribute("article", article);
+    public String searchArticleView(@PathVariable Long articleId, HttpSession session, Model model) {
+        model.addAttribute(LOGIN_SESSION_KEY, session.getAttribute(LOGIN_SESSION_KEY));
+        Article findArticle = articleService.findArticleById(articleId);
+        model.addAttribute("article", findArticle);
         return "article";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable int articleId, ArticleDto articleDto) {
-        articleRepository.find(articleId)
-                .orElseThrow(CouldNotFindArticleIdException::new)
-                .updateArticle(articleDto);
+    public String updateArticle(@PathVariable Long articleId, ArticleDto articleDto) {
+        Article updateArticle = articleService.update(articleId, articleDto);
 
-        return "redirect:/articles/" + articleId;
+        return "redirect:/articles/" + updateArticle.getArticleId();
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId) {
-        articleRepository.delete(articleId);
+    public String deleteArticle(@PathVariable Long articleId) {
+        articleService.deleteById(articleId);
 
         return "redirect:/";
     }
