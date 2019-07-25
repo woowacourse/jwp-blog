@@ -30,7 +30,7 @@ public class UserWriteService {
         }
     }
 
-    public void modify(User user, UserDto userDto) {
+    public void update(User user, UserDto userDto) {
         userRepository.findByEmail(user.getEmail())
                 .ifPresent(existingUser -> {
                     user.modifyName(userDto.getName());

@@ -29,8 +29,8 @@ public class User {
     @Transient
     private static final String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}$";
 
-    @Transient
-    public static final String AUTH_FAIL_MESSAGE = "인증에 실패하였습니다.";
+//    @Transient
+//    public static final String AUTH_FAIL_MESSAGE = "인증에 실패하였습니다.";
 
     private User() {
     }
@@ -66,16 +66,16 @@ public class User {
         return (text == null) || ("").equals(text);
     }
 
-    public void authenticate(String email, String password) {
-        if (this.password == null) {
-            throw new IllegalUserException("password 값이 설정되어 있지 않습니다.");
-        }
-
-        if (this.email.equals(email) && this.password.equals(password)) {
-            return;
-        }
-        throw new AuthenticationFailedException(AUTH_FAIL_MESSAGE);
-    }
+//    public void authenticate(String email, String password) {
+//        if (this.password == null) {
+//            throw new IllegalUserException("password 값이 설정되어 있지 않습니다.");
+//        }
+//
+//        if (this.email.equals(email) && this.password.equals(password)) {
+//            return;
+//        }
+//        throw new AuthenticationFailedException(AUTH_FAIL_MESSAGE);
+//    }
 
     public User modifyName(String name) {
         validateName(name);
