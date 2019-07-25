@@ -99,8 +99,6 @@
 					<div>
 						<form action="/mypage" method="post">
 							<input id="article-write" type="hidden" name="_method" value="delete"/>
-							<input type="hidden" name="email" class="form-control" th:if="${session.user}"
-							       th:value="${session.user.email}">
 							<button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">회원 탈퇴</button>
 						</form>
 					</div>

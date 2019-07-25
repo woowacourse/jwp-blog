@@ -38,8 +38,8 @@ public class UserService {
         return user;
     }
 
-    public void deleteUser(String email) {
-        log.debug("delete user email={}", email);
-        userRepository.deleteByEmail(email);
+    public void deleteUser(Long id) {
+        log.debug("delete user id={}", id);
+        userRepository.deleteById(id);
     }
 }

@@ -76,9 +76,12 @@ public class UserController {
     }
 
     @DeleteMapping("/mypage")
-    public String deleteUser(String email, HttpSession httpSession) {
-        log.info("delete user delete request id={}", ((User) httpSession.getAttribute(USER)).getId());
-        userService.deleteUser(email);
+    public String deleteUser(HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute(USER);
+        Long id = user.getId();
+        log.info("delete user delete request id={}", id);
+
+        userService.deleteUser(id);
         httpSession.removeAttribute(USER);
 
         return "redirect:/";
