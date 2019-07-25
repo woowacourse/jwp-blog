@@ -3,7 +3,7 @@ package techcourse.myblog.user.domain;
 public class Password {
     private static final String PASSWORD_REGEX = ".*(?=^.{8,}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*";
 
-    private String password;
+    private final String password;
 
     private Password(final String password) {
         this.password = validatePassword(password);

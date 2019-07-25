@@ -3,7 +3,7 @@ package techcourse.myblog.user.domain;
 public class Name {
     private static final String NAME_REGEX = "[A-Za-zㄱ-ㅎㅏ-ㅣ가-힣]{2,10}";
 
-    private String name;
+    private final String name;
 
     private Name(final String name) {
         this.name = validateName(name);
@@ -21,7 +21,7 @@ public class Name {
     }
 
     public Name updateName(String name) {
-        return new Name(validateName(name));
+        return new Name(name);
     }
 
     public String getName() {
