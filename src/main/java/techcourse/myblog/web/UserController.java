@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
+
 @Controller
 public class UserController {
     final private UserService userService;
@@ -27,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public ModelAndView showSignUp(final HttpSession session) {
+    public ModelAndView showSignUp() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("signup");
         return modelAndView;
@@ -52,14 +54,14 @@ public class UserController {
     public ModelAndView showMyPage(final HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("mypage");
-        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
         modelAndView.addObject("user", user);
         return modelAndView;
     }
 
     @DeleteMapping("/mypage")
     public ModelAndView deleteUser(final HttpSession session) {
-        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
         userService.delete(user);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/logout"));
@@ -67,8 +69,8 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public ModelAndView logOut(HttpServletRequest request) {
-        request.getSession().removeAttribute("user");
+    public ModelAndView logOut(final HttpServletRequest request) {
+        request.getSession().removeAttribute(USER_SESSION_KEY);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/"));
         return modelAndView;
@@ -76,7 +78,7 @@ public class UserController {
 
     @GetMapping("/mypage/mypage-edit")
     public ModelAndView showMyPageEdit(final HttpSession session) {
-        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", user);
         modelAndView.setViewName("mypage-edit");
@@ -85,8 +87,8 @@ public class UserController {
 
     @PutMapping("/mypage/mypage-edit")
     public ModelAndView editMyPage(final HttpSession session, final String name) {
-        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
-        session.setAttribute("user", userService.update(user.getEmail(), name));
+        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
+        session.setAttribute(USER_SESSION_KEY, userService.update(user.getEmail(), name));
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/mypage"));
         return modelAndView;

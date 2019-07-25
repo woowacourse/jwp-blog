@@ -20,6 +20,7 @@ import static techcourse.myblog.service.user.UserAssembler.convertToEntity;
 
 @Service
 public class UserService {
+    public static final String USER_SESSION_KEY = "user";
     final private UserRepository userRepository;
 
     @Autowired

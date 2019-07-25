@@ -12,6 +12,8 @@ import techcourse.myblog.service.login.LoginService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
+
 @Controller
 public class LoginController {
     final private LoginService loginservice;
@@ -22,7 +24,7 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public ModelAndView showLogin(final HttpSession session) {
+    public ModelAndView showLogin() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login");
         return modelAndView;
@@ -34,7 +36,7 @@ public class LoginController {
         UserResponseDto userResponseDto = loginservice.findByEmailAndPassword(email, password);
 
         HttpSession session = request.getSession();
-        session.setAttribute("user", userResponseDto);
+        session.setAttribute(USER_SESSION_KEY, userResponseDto);
         modelAndView.setView(new RedirectView("/"));
         return modelAndView;
     }

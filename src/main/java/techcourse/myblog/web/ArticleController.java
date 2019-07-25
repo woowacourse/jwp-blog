@@ -14,6 +14,8 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
 
+import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
+
 @ControllerAdvice
 @Controller
 public class ArticleController {
@@ -28,7 +30,7 @@ public class ArticleController {
     public String showMain(Model model, final HttpSession session) {
         List<ArticleDto> articleDtos = articleService.findAll();
         model.addAttribute("articleDtos", articleDtos);
-        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
         if (!Objects.isNull(user)) {
             model.addAttribute("user", user);
         }
