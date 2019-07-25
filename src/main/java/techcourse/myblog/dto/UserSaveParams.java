@@ -1,15 +1,13 @@
 package techcourse.myblog.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import techcourse.myblog.domain.User;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserSaveParams {
     private String name;
     private String email;

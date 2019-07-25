@@ -20,23 +20,33 @@ class ArticleControllerTests {
     private WebTestClient webTestClient;
 
     private String location;
+    private String jSessionId;
 
     @BeforeEach
     void setUp() {
-        location = webTestClient.post().uri("/articles")
-                .body(BodyInserters
-                        .fromFormData("title", "제목")
-                        .with("coverUrl", "주소")
-                        .with("contents", "내용"))
-                .exchange()
+        LoginTestConfig.signUp(webTestClient);
+        jSessionId = LoginTestConfig.getJSessionId(webTestClient);
+
+        location = postArticle()
                 .returnResult(String.class)
                 .getResponseHeaders()
                 .get("Location").get(0);
     }
 
+    private WebTestClient.ResponseSpec postArticle() {
+        return webTestClient.post().uri("/articles")
+                .body(BodyInserters
+                        .fromFormData("title", "제목")
+                        .with("coverUrl", "주소")
+                        .with("contents", "내용"))
+                .cookie("JSESSIONID", jSessionId)
+                .exchange();
+    }
+
     @Test
     void writeArticleForm() {
         webTestClient.get().uri("/articles/writing")
+                .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -48,6 +58,7 @@ class ArticleControllerTests {
                         .fromFormData("title", "제목")
                         .with("coverUrl", "주소")
                         .with("contents", "내용"))
+                .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*/articles/.*");
@@ -56,6 +67,7 @@ class ArticleControllerTests {
     @Test
     void fetchArticle() {
         webTestClient.get().uri(location)
+                .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -63,6 +75,7 @@ class ArticleControllerTests {
     @Test
     void editArticle() {
         webTestClient.get().uri(location + "/edit")
+                .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -74,6 +87,7 @@ class ArticleControllerTests {
                         .fromFormData("title", "수정된_제목")
                         .with("coverUrl", "수정된_주소")
                         .with("contents", "수정된_내용"))
+                .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isFound();
     }
@@ -85,9 +99,11 @@ class ArticleControllerTests {
                         .fromFormData("title", "제목")
                         .with("coverUrl", "주소")
                         .with("contents", "내용"))
+                .cookie("JSESSIONID", jSessionId)
                 .exchange();
 
         webTestClient.delete().uri("/articles/2")
+                .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isFound();
     }
@@ -95,6 +111,9 @@ class ArticleControllerTests {
     @AfterEach
     void tearDown() {
         webTestClient.delete().uri(location)
+                .cookie("JSESSIONID", jSessionId)
                 .exchange();
+
+        LoginTestConfig.deleteUser(webTestClient);
     }
 }
