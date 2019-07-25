@@ -14,12 +14,17 @@ repositories {
 }
 
 dependencies {
-	implementation('org.springframework.boot:spring-boot-devtools')
+	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'mysql:mysql-connector-java'
+	implementation 'com.h2database:h2'
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'junit'
-    }
+		exclude group: 'junit'
+	}
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 }

@@ -44,8 +44,8 @@
                                 <a th:href="'/articles/' + ${article.articleId}" class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
-                                            <div class="background-holder has-content"
-                                                 th:style="'background-image: url(\'' + ${article.coverUrl} + '\')'"></div>
+                                            <div class="background-holder has-content" style="background-image: url('/images/pages/index/study.jpg');"
+                                                 th:styleappend="${article.coverUrl} != '' ? 'background-image: url(' + ${article.coverUrl} + ');' : ''"></div>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
@@ -88,7 +88,7 @@
             <div class="col-lg-3"></div>
         </div>
 
-        <a href="/articles/new"
+        <a href="/writing"
            class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
             <i class="ti-plus"></i>
         </a>
@@ -108,6 +108,6 @@
     </div>
 </footer>
 <!-- include fragments/footer -->
-<th:block th:replace="fragments/common_script"></th:block>
+<th:block th:replace="fragments/script"></th:block>
 </body>
 </html>
