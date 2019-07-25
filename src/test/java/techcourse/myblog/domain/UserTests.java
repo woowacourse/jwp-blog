@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserTest {
+class UserTests {
 
     @Test
     void replace_이름_SnsInfo_변경() {

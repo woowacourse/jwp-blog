@@ -7,29 +7,28 @@
         </layout>
     </appender>
 
-    <!--&lt;!&ndash; 자바 패키지별 log level을 설정한다. &ndash;&gt;-->
-    <!--<logger name="core" level="DEBUG" />-->
-
-    <!--<logger name="next" level="DEBUG" />-->
-
-    <logger name="techcourse.myblog.domain" level="DEBUG" >
-        <appender-ref ref="STDOUT" />
+    <logger name="techcourse.myblog.domain" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="techcourse.myblog.service" level="DEBUG" >
-        <appender-ref ref="STDOUT" />
+    <logger name="techcourse.myblog.service" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="techcourse.myblog.web" level="DEBUG" >
-        <appender-ref ref="STDOUT" />
+    <logger name="techcourse.myblog.web" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="techcourse.myblog.error" level="DEBUG" >
-        <appender-ref ref="STDOUT" />
+    <logger name="techcourse.myblog.error" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="techcourse.myblog.interceptor" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
     </logger>
 
     <!-- 기본 log level을 설정한다. -->
     <!--<root level="INFO">-->
-        <!--<appender-ref ref="STDOUT" />-->
+    <!--<appender-ref ref="STDOUT" />-->
     <!--</root>-->
 </configuration>

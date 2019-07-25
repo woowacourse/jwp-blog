@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CategoryControllerTest {
+class CategoryControllerTests {
     @Autowired
     WebTestClient webTestClient;
 

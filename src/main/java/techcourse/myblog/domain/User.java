@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@ToString(exclude = "snsInfos")
 @Entity
 public class User {
     @Id
@@ -98,16 +99,5 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id, email, password, name, snsInfos);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", snsInfos=" + snsInfos +
-                '}';
     }
 }

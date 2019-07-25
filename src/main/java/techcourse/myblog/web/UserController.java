@@ -30,9 +30,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private SnsInfoRepository snsInfoRepository;
-
     @GetMapping("/signup")
     public String showSignUpPage() {
         // TODO: 로그인 된 유저인지 체크
@@ -65,7 +62,7 @@ public class UserController {
         // 아... session 이 존재하면 무조건 세션을 보내는 건가??....
         session.invalidate();
 
-        return "redirect:/";
+        return "login";
     }
 
     @GetMapping("/logout")
@@ -125,30 +122,6 @@ public class UserController {
 
         return "mypage-edit";
     }
-
-
-//    @PutMapping("/users/{id}/mypage-edit")
-//    @Transactional
-//    public String updateUser(@PathVariable final long id, HttpSession session, UserDto userDto) {
-//        // TODO: 로그인되었는지 확인 (아니면 메인으로)
-//
-//        Object userId = session.getAttribute("userId");
-//        if (userId == null || id != (long) userId) {
-//            return "redirect:/";
-//        }
-//
-//        Optional<User> maybeUser = userRepository.findById(id);
-//        if (maybeUser.isPresent()) {
-//            UserDto findUserDto = UserDto.from(maybeUser.get());
-//            findUserDto.updateUserInfo(userDto);
-//            snsInfoRepository.deleteByUserId(id);
-//            userRepository.save(findUserDto.toEntity());
-//        }
-////        UserMypageRequestDto dto = new UserMypageRequestDto();
-////        userService.update(id, dto);
-//
-//        return "redirect:/users/" + id + "/mypage";
-//    }
 
     @PutMapping("/users/{id}/mypage-edit")
     @Transactional

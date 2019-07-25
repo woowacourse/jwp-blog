@@ -19,6 +19,7 @@ public class GlobalExceptionHandler {
         log.info("+++++++++++++++++++++++++ handleException called..!!");
 
         log.info("ex: " + ex.toString());
+
         model.addAttribute("error", new ApiError(ex.toString()));
 
         return "error";

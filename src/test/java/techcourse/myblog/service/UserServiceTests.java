@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {UserService.class, UserRepository.class, SnsInfoRepository.class})
-class UserServiceTest {
+class UserServiceTests {
     @Autowired
     private UserService userService;
 
@@ -97,9 +97,6 @@ class UserServiceTest {
         assertThrows(UserNotFoundException.class, () -> userService.update(notExistId, dto));
     }
 
-    // 무엇을 해야할까?
-    // userRepository 에서 읽어오기
-    // 기존의 존재하던 userRepository 에 변경된 값이 저장되어야 함
     @Test
     void update_존재하는_id() {
         User dirtyUser = TestUser.createValidUsers(1).get(0);

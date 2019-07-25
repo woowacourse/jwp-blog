@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserRepositoryTest {
+class UserRepositoryTests {
     private final String validName = "yun";
     private final String validEmail = "hello@world.com";
     private final String validPassword = "123123123";
