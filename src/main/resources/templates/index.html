@@ -5,7 +5,6 @@
     <th:block th:replace="fragments/head"> </th:block>
 
     <link rel="stylesheet" href="/css/index.css">
-
 </head>
 <body>
 <div>
@@ -15,7 +14,7 @@
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
         <div class="welcome-text-container">
             <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5">这是我的朋友</h1>
+                <h1 th:text="${session.user} == null ? 'Welcome' : 'Welcome, ' + ${session.user.name}" class="text-white border bottom font-size-35 padding-5"></h1>
             </div>
         </div>
     </div>
@@ -40,33 +39,33 @@
                     <div class="tab-content">
                         <div th:each="article : ${articles}" role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
                             <div class="pdd-horizon-15 pdd-vertical-20">
-                                    <a th:href="'/articles/' + ${article.articleId}" class="card article-container">
-                                        <div class="card-horizon">
-                                            <div class="image-container col-md-4">
-                                                <div class="background-holder has-content" th:style="'background-image: url(\'' + ${article.coverUrl} + '\')'"></div>
-                                            </div>
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-md-8 ml-auto">
-                                                        <div class="pdd-vertical-30 pdd-horizon-25">
-                                                            <h2 class="mrg-btm-20 text-bold" th:text="${#strings.abbreviate(article.title, 50)}"></h2>
-                                                            <p th:text="${#strings.abbreviate(article.contents, 140)}"></p>
-                                                            <ul class="list-style-none pdd-left-0">
-                                                                <li class="inline-block mrg-right-5">
-                                                                    <i class="ti-heart text-danger pdd-right-5"></i>
-                                                                    <span class="text-gray font-size-14 relative">33</span>
-                                                                </li>
-                                                                <li class="inline-block">
-                                                                    <i class="ti-comments text-primary pdd-right-5"></i>
-                                                                    <span class="text-gray font-size-14 relative">3</span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
+                                <a th:href="'/articles/' + ${article.id}" class="card article-container">
+                                    <div class="card-horizon">
+                                        <div class="image-container col-md-4">
+                                            <div class="background-holder has-content" th:style="'background-image: url(\'' + ${article.coverUrl} + '\')'"></div>
+                                        </div>
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-md-8 ml-auto">
+                                                    <div class="pdd-vertical-30 pdd-horizon-25">
+                                                        <h2 class="mrg-btm-20 text-bold" th:text="${#strings.abbreviate(article.title, 50)}"></h2>
+                                                        <p th:text="${#strings.abbreviate(article.contents, 140)}"></p>
+                                                        <ul class="list-style-none pdd-left-0">
+                                                            <li class="inline-block mrg-right-5">
+                                                                <i class="ti-heart text-danger pdd-right-5"></i>
+                                                                <span class="text-gray font-size-14 relative">33</span>
+                                                            </li>
+                                                            <li class="inline-block">
+                                                                <i class="ti-comments text-primary pdd-right-5"></i>
+                                                                <span class="text-gray font-size-14 relative">3</span>
+                                                            </li>
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
+                                </a>
                             </div>
                         </div>
 
@@ -85,10 +84,9 @@
             <div class="col-lg-3"></div>
         </div>
 
-        <a href="/articles/new" class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
+        <a href="/writing" class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
             <i class="ti-plus"></i>
         </a>
-
     </div>
 </div>
 
