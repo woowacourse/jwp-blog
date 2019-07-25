@@ -9,6 +9,8 @@ import techcourse.myblog.exception.UserDuplicateException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.repository.UserRepository;
 
+import javax.transaction.Transactional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -25,15 +27,20 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
     public Iterable<User> findAll() {
         return userRepository.findAll();
     }
 
+    @Transactional
     public User update(Long id, UserEditParams userEditParams) {
         log.debug("update user params={} by id={}", userEditParams, id);
 
-        User user = userRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
+        User user = findById(id);
         user.update(userEditParams);
         return user;
     }

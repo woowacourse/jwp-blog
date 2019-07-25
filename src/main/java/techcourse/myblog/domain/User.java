@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@EqualsAndHashCode(of = "id")
 @ToString
 @Entity
 public class User {

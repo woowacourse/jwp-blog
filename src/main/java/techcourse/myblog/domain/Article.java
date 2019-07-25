@@ -11,6 +11,7 @@ import javax.persistence.Id;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@EqualsAndHashCode(of = "id")
 @ToString
 @Entity
 public class Article {
