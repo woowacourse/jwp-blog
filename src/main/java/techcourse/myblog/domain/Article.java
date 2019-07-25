@@ -1,42 +1,33 @@
 package techcourse.myblog.domain;
 
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
+import techcourse.myblog.dto.ArticleSaveParams;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@EqualsAndHashCode(of = "id")
+@ToString
+@Entity
 public class Article {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String title;
     private String coverUrl;
     private String contents;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
+    @Builder
+    public Article(String title, String coverUrl, String contents) {
         this.title = title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public void setContents(String contents) {
         this.contents = contents;
     }
 
@@ -44,13 +35,9 @@ public class Article {
         return StringUtils.isNotBlank(coverUrl);
     }
 
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", contents='" + contents + '\'' +
-                '}';
+    public void update(ArticleSaveParams articleSaveParams) {
+        this.title = articleSaveParams.getTitle();
+        this.coverUrl = articleSaveParams.getCoverUrl();
+        this.contents = articleSaveParams.getContents();
     }
 }

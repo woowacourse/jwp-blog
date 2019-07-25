@@ -1,74 +1,59 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.dto.ArticleSaveParams;
+import techcourse.myblog.service.ArticleService;
 
-import java.util.List;
-
+@Slf4j
 @Controller
+@RequestMapping("/articles")
+@RequiredArgsConstructor
 public class ArticleController {
-    private final ArticleRepository articleRepository;
-
-    @Autowired
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
-
-    @GetMapping("/")
-    public String index(Model model) {
-        List<Article> articles = articleRepository.findAll();
-        model.addAttribute("articles", articles);
-        return "index";
-    }
-
-    @GetMapping("/articles/new")
-    public String writeNewArticle() {
-
-        return "article-edit";
-    }
+    private final ArticleService articleService;
 
     @GetMapping("/writing")
     public String writeArticleForm() {
         return "article-edit";
     }
 
-    @PostMapping("/articles")
-    public String saveArticle(Article article, Model model) {
-        articleRepository.save(article);
+    @PostMapping
+    public String saveArticle(ArticleSaveParams articleSaveParams) {
+        log.info("save article post request params={}", articleSaveParams);
+        Article article = articleService.save(articleSaveParams.toEntity());
+        Long id = article.getId();
+        return "redirect:/articles/" + id;
+    }
+
+    @GetMapping("/{id}")
+    public String fetchArticle(@PathVariable long id, Model model) {
+        Article article = articleService.findById(id);
         model.addAttribute("article", article);
-        System.out.println(articleRepository.findAll());
         return "article";
     }
 
-    @GetMapping("/articles/{id}")
-    public String fetchArticle(@PathVariable int id, Model model) {
-        Article article = articleRepository.find(id);
-        model.addAttribute("article", article);
-        return "article";
-    }
-
-    @GetMapping("/articles/{id}/edit")
-    public String editArticle(@PathVariable int id, Model model) {
-        Article article = articleRepository.find(id);
+    @GetMapping("/{id}/edit")
+    public String editArticle(@PathVariable long id, Model model) {
+        Article article = articleService.findById(id);
         model.addAttribute("article", article);
         return "article-edit";
     }
 
-    @PutMapping("/articles/{id}")
-    public String saveEditedArticle(@PathVariable int id, Article article, Model model) {
-        article.setId(id);
-        articleRepository.saveEdited(article);
-        model.addAttribute("article", article);
-        return "article";
+    @PutMapping("/{id}")
+    public String saveEditedArticle(@PathVariable long id, ArticleSaveParams articleSaveParams) {
+        log.info("save edited article post request params={}", articleSaveParams);
+        articleService.update(articleSaveParams, id);
+        return "redirect:/articles/" + id;
     }
 
-    @DeleteMapping("/articles/{id}")
-    public String deleteArticle(@PathVariable int id) {
-        articleRepository.delete(id);
+    @DeleteMapping("/{id}")
+    public String deleteArticle(@PathVariable long id) {
+        log.info("delete article delete request id={}", id);
+        articleService.deleteById(id);
         return "redirect:/";
     }
 }
