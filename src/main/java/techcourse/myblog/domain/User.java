@@ -1,9 +1,6 @@
 package techcourse.myblog.domain;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +10,7 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode
 @Builder
 public class User {
@@ -25,11 +23,4 @@ public class User {
     private String password;
 
     private String name;
-
-    public User(long id, String email, String password, String name) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.name = name;
-    }
 }
