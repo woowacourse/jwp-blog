@@ -13,8 +13,9 @@ import static org.mockito.BDDMockito.given;
 
 public class UserReadServiceTests extends UserCommonServiceTests {
     @Test
-    public void login_test() {
-        given(userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword())).willReturn(Optional.of(user));
+    public void findByEmailAndPassword_test() {
+        given(userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword()))
+                .willReturn(Optional.of(user));
 
         assertTrue(userReadService.findByEmailAndPassword(new UserDto("", user.getEmail(), "Passw0rd!")).isPresent());
         assertFalse(userReadService.findByEmailAndPassword(new UserDto("", "e@mail.com", "Passw0rd!")).isPresent());
@@ -24,8 +25,7 @@ public class UserReadServiceTests extends UserCommonServiceTests {
     public void findAll_test() {
         given(userRepository.findAll()).willReturn(Arrays.asList(user));
 
-        userReadService.findAll().forEach(foundUser -> {
-            compareUser(user, foundUser);
-        });
+        userReadService.findAll().forEach(foundUser ->
+            compareUser(user, foundUser));
     }
 }
