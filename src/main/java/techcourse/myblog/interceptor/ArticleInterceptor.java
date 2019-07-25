@@ -27,4 +27,3 @@ public class ArticleInterceptor extends HandlerInterceptorAdapter {
     }
 }
 
-//TODO : 인터셉터 테스트

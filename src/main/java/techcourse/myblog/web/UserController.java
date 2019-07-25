@@ -85,7 +85,7 @@ public class UserController {
     public String renderEditMypage(@PathVariable long userId, HttpSession httpSession, Model model) {
         Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
         UserDto.Response user = userService.findById(userId);
-        UserDto.Response sessionUser = userSession.get(); //TODO : get()??
+        UserDto.Response sessionUser = userSession.get();
         if (!sessionUser.getEmail().equals(user.getEmail())) {
             return "redirect:/";
         }

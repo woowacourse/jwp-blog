@@ -19,7 +19,6 @@ public class ExceptionAdvice {
         model.addAttribute("errorMessage", e.getMessage());
         return "/";
     }
-    //TODO : ArticleExceptionAdvice
 
     @ExceptionHandler(InvalidSignUpFormException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -35,10 +34,9 @@ public class ExceptionAdvice {
         if (user.isPresent()) {
             model.addAttribute("user", user.get());
         }
-        model.addAttribute("errorMessage", e.getMessage()); //TODO : 리다이렉트
+        model.addAttribute("errorMessage", e.getMessage());
         return "mypage";
     }
-    //TODO : 왜 일로 안올까
 
     @ExceptionHandler(DuplicatedUserException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -53,7 +51,6 @@ public class ExceptionAdvice {
         model.addAttribute("errorMessage", e.getMessage());
         return "/login";
     }
-    //TODO : "/login"으로 하면 에러 안나고 "/"로 하면 에러
 
     @ExceptionHandler(NotMatchPasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
