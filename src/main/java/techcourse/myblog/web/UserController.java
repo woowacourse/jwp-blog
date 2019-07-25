@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.dto.user.UserRequestDto;
-import techcourse.myblog.dto.user.UserResponseDto;
+import techcourse.myblog.service.dto.user.UserRequestDto;
+import techcourse.myblog.service.dto.user.UserResponseDto;
 import techcourse.myblog.service.user.UserService;
 
 import javax.servlet.http.HttpServletRequest;

@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.dto.article.ArticleDto;
-import techcourse.myblog.dto.user.UserResponseDto;
+import techcourse.myblog.service.dto.article.ArticleDto;
+import techcourse.myblog.service.dto.user.UserResponseDto;
 import techcourse.myblog.service.article.ArticleService;
 
 import javax.servlet.http.HttpSession;

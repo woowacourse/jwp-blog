@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.dto.article.ArticleDto;
+import techcourse.myblog.service.dto.article.ArticleDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
 
 import java.util.Arrays;

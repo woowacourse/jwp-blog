@@ -1,7 +1,7 @@
 package techcourse.myblog.service.article;
 
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.dto.article.ArticleDto;
+import techcourse.myblog.service.dto.article.ArticleDto;
 
 import java.util.Objects;
 

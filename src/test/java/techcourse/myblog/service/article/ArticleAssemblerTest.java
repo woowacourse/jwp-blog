@@ -3,7 +3,7 @@ package techcourse.myblog.service.article;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.dto.article.ArticleDto;
+import techcourse.myblog.service.dto.article.ArticleDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.service.article.ArticleAssembler.*;

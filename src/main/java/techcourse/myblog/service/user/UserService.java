@@ -3,9 +3,9 @@ package techcourse.myblog.service.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserRepository;
-import techcourse.myblog.dto.user.UserRequestDto;
-import techcourse.myblog.dto.user.UserResponseDto;
+import techcourse.myblog.presentation.UserRepository;
+import techcourse.myblog.service.dto.user.UserRequestDto;
+import techcourse.myblog.service.dto.user.UserResponseDto;
 import techcourse.myblog.exception.DuplicatedEmailException;
 import techcourse.myblog.exception.EmailNotFoundException;
 

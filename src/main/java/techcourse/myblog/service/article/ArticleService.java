@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.article.ArticleRepository;
-import techcourse.myblog.dto.article.ArticleDto;
+import techcourse.myblog.presentation.ArticleRepository;
+import techcourse.myblog.service.dto.article.ArticleDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
 
 import java.util.Collections;
