@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,115 +9,111 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Mono;
-import techcourse.myblog.domain.Article;
+import org.springframework.web.reactive.function.BodyInserters;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-public class ArticleControllerTests {
+class ArticleControllerTests {
+
     @Autowired
     private WebTestClient webTestClient;
 
-    @Test
-    void index() {
-        webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
+    private String location;
+    private String jSessionId;
+
+    @BeforeEach
+    void setUp() {
+        LoginTestConfig.signUp(webTestClient);
+        jSessionId = LoginTestConfig.getJSessionId(webTestClient);
+
+        location = postArticle()
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .get("Location").get(0);
     }
 
-    @Test
-    void articleForm() {
-        webTestClient.get().uri("/articles/new")
-                .exchange()
-                .expectStatus().isOk();
+    private WebTestClient.ResponseSpec postArticle() {
+        return webTestClient.post().uri("/articles")
+                .body(BodyInserters
+                        .fromFormData("title", "제목")
+                        .with("coverUrl", "주소")
+                        .with("contents", "내용"))
+                .cookie("JSESSIONID", jSessionId)
+                .exchange();
     }
 
     @Test
     void writeArticleForm() {
-        webTestClient.get().uri("/writing")
+        webTestClient.get().uri("/articles/writing")
+                .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void saveArticle() {
-        Article article = new Article();
-        article.setTitle("제목");
-        article.setCoverUrl("http");
-        article.setContents("내용");
-
         webTestClient.post().uri("/articles")
-                .body(Mono.just(article), Article.class)
+                .body(BodyInserters
+                        .fromFormData("title", "제목")
+                        .with("coverUrl", "주소")
+                        .with("contents", "내용"))
+                .cookie("JSESSIONID", jSessionId)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles/.*");
     }
 
     @Test
     void fetchArticle() {
-        Article article = new Article();
-        article.setTitle("제목");
-        article.setCoverUrl("http");
-        article.setContents("내용");
-
-        webTestClient.post().uri("/articles")
-                .body(Mono.just(article), Article.class)
-                .exchange();
-
-        webTestClient.get().uri("/articles/1")
+        webTestClient.get().uri(location)
+                .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void editArticle() {
-        Article article = new Article();
-        article.setTitle("제목");
-        article.setCoverUrl("http");
-        article.setContents("내용");
-
-        webTestClient.post().uri("/articles")
-                .body(Mono.just(article), Article.class)
-                .exchange();
-
-        webTestClient.get().uri("/articles/1/edit")
+        webTestClient.get().uri(location + "/edit")
+                .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void saveEditedArticle() {
-        Article article = new Article();
-        article.setTitle("제목");
-        article.setCoverUrl("http");
-        article.setContents("내용");
-
-        webTestClient.post().uri("/articles")
-                .body(Mono.just(article), Article.class)
-                .exchange();
-
-        webTestClient.put().uri("/articles/1")
+        webTestClient.put().uri(location)
+                .body(BodyInserters
+                        .fromFormData("title", "수정된_제목")
+                        .with("coverUrl", "수정된_주소")
+                        .with("contents", "수정된_내용"))
+                .cookie("JSESSIONID", jSessionId)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isFound();
     }
 
     @Test
     void deleteArticle() {
-        Article article = new Article();
-        article.setTitle("제목");
-        article.setCoverUrl("http");
-        article.setContents("내용");
-
         webTestClient.post().uri("/articles")
-                .body(Mono.just(article), Article.class)
-                .exchange();
-
-        webTestClient.post().uri("/articles")
-                .body(Mono.just(article), Article.class)
+                .body(BodyInserters
+                        .fromFormData("title", "제목")
+                        .with("coverUrl", "주소")
+                        .with("contents", "내용"))
+                .cookie("JSESSIONID", jSessionId)
                 .exchange();
 
         webTestClient.delete().uri("/articles/2")
+                .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isFound();
+    }
+
+    @AfterEach
+    void tearDown() {
+        webTestClient.delete().uri(location)
+                .cookie("JSESSIONID", jSessionId)
+                .exchange();
+
+        LoginTestConfig.deleteUser(webTestClient);
     }
 }
