@@ -7,19 +7,19 @@
             <img class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
                  alt="Brown">
             <div class="user-info text-white">
-                <span class="name pdd-right-5">Brown</span>
+                <span class="name pdd-right-5" th:text="${session.name}"></span>
             </div>
         </a>
         <ul class="dropdown-menu">
             <li class="text-dark">
-                <a href="mypage.html">
+                <a href="/mypage">
                     <i class="ti-user pdd-right-10"></i>
                     <span class="text-dark">마이 페이지</span>
                 </a>
             </li>
             <li role="separator" class="divider"></li>
             <li class="text-dark">
-                <a href="index.html">
+                <a href="/logout">
                     <i class="ti-power-off pdd-right-10"></i>
                     <span class="text-dark">로그아웃</span>
                 </a>

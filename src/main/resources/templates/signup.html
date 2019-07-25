@@ -10,7 +10,7 @@
         <div class="header-container pdd-right-15">
             <ul class="nav-left mrg-left-0">
                 <li>
-                    <a href="index.html">
+                    <a href="/">
                         <div class="logo logo-dark d-none"
                              style="background-image: url('/images/logo/logo_full_dark.png')"></div>
                         <div class="logo logo-white"
@@ -37,25 +37,27 @@
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
-                                                    <form method="post">
+                                                    <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger" role="alert"></div>
+                                                    <form action="/users" method="post">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input type="text" name="name" class="form-control">
+                                                            <input type="text" name="name" class="form-control" placeholder="숫자 및 특수문자 제외 2자 이상 10자 이내"
+                                                                   pattern="^[a-zA-Zㄱ-ㅎ가-힣]*$" minlength="2" maxlength="10" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
-                                                            <input type="email" name="email" class="form-control">
+                                                            <input type="email" name="email" class="form-control" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
-                                                            <input type="password" name="password" class="form-control"
-                                                                   placeholder="Password">
+                                                            <input type="password" id="password" name="password" class="form-control"
+                                                                   placeholder="소문자, 대문자, 숫자, 특수문자 조합 8자 이상" minlength="8" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm
                                                                 Password</label>
-                                                            <input type="password" class="form-control"
-                                                                   placeholder="Password">
+                                                            <input type="password" id="confirm_password" class="form-control"
+                                                                   placeholder="Password" minlength="8" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <button type="submit"
@@ -66,7 +68,7 @@
                                                     </form>
                                                     <div class="text-dark">
                                                         <span>이미 회원이신가요?</span>
-                                                        <a href="login.html"
+                                                        <a href="/login"
                                                            class="text-info pointer mrg-left-5">로그인</a>
                                                     </div>
                                                 </div>
@@ -84,6 +86,21 @@
 </div>
 
 <!-- include fragments/footer -->
-<th:block th:replace="fragments/common_script"></th:block>
+<th:block th:replace="fragments/script"></th:block>
+<script>
+    const password = document.getElementById("password");
+    const confirm_password = document.getElementById("confirm_password");
+
+    function validatePassword(){
+        if(password.value != confirm_password.value) {
+            confirm_password.setCustomValidity("비밀번호가 일치하지 않습니다.");
+        } else {
+            confirm_password.setCustomValidity('');
+        }
+    }
+
+    password.onchange = validatePassword;
+    confirm_password.onkeyup = validatePassword;
+</script>
 </body>
 </html>

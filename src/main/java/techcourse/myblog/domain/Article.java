@@ -1,23 +1,32 @@
 package techcourse.myblog.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 
+@Entity
 public class Article {
-    private static Long NEXT_ARTICLE_ID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long articleId;
 
-    private Long articleId;
     private String title;
-    private String contents;
     private String coverUrl;
+    private String contents;
 
-    public Article(String title, String contents, String coverUrl) {
-        this.articleId = NEXT_ARTICLE_ID++;
-        this.title = title;
-        this.contents = contents;
-        this.coverUrl = (coverUrl.length() == 0) ? "/images/pages/index/study.jpg" : coverUrl;
+    public Article() {
     }
 
-    public Long getArticleId() {
+    public Article(long articleId, String title, String coverUrl, String contents) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+        this.articleId = articleId;
+    }
+
+    public long getArticleId() {
         return articleId;
     }
 
@@ -25,20 +34,12 @@ public class Article {
         return title;
     }
 
-    public String getContents() {
-        return contents;
-    }
-
     public String getCoverUrl() {
         return coverUrl;
     }
 
-    void update(Article article) {
-        this.title = article.title;
-        this.coverUrl = article.coverUrl;
-        this.contents = article.contents;
-
-        NEXT_ARTICLE_ID--;
+    public String getContents() {
+        return contents;
     }
 
     @Override
@@ -46,24 +47,14 @@ public class Article {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return Objects.equals(articleId, article.articleId) &&
+        return articleId == article.articleId &&
                 Objects.equals(title, article.title) &&
-                Objects.equals(contents, article.contents) &&
-                Objects.equals(coverUrl, article.coverUrl);
+                Objects.equals(coverUrl, article.coverUrl) &&
+                Objects.equals(contents, article.contents);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(articleId, title, contents, coverUrl);
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "articleId=" + articleId +
-                ", title='" + title + '\'' +
-                ", contents='" + contents + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                '}';
+        return Objects.hash(articleId, title, coverUrl, contents);
     }
 }

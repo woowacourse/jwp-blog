@@ -4,7 +4,7 @@
     <!-- include fragments/head -->
     <th:block th:replace="fragments/head"></th:block>
     <!-- include fragments/common_code_editor -->
-    <th:block th:replace="fragments/common_code_editor"></th:block>
+    <th:block th:replace="fragments/code-editor"></th:block>
 
     <link rel="stylesheet" href="/css/article.css">
 </head>
@@ -13,7 +13,8 @@
     <header th:replace="fragments/header :: header"></header>
 
     <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg" th:style="'background-image: url(\'' + ${article.coverUrl} + '\')'">
+        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg');"
+             th:styleappend="${article.coverUrl} != '' ? 'background-image: url(' + ${article.coverUrl} + ');' : ''">
 
             <div class="padding-30">
                 <h1 th:text="${article.title} == null ? '목적의식 있는 연습을 통한 효과적인 학습' : ${article.title}"
@@ -97,7 +98,7 @@
 </div>
 
 <!-- include fragments/footer -->
-<th:block th:replace="fragments/common_script"></th:block>
+<th:block th:replace="fragments/script"></th:block>
 
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script>

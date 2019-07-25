@@ -4,7 +4,7 @@
     <!-- include fragments/head -->
     <th:block th:replace="fragments/head"></th:block>
     <!-- include fragments/common_code_editor -->
-    <th:block th:replace="fragments/common_code_editor"></th:block>
+    <th:block th:replace="fragments/code-editor"></th:block>
 
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/article-edit.css">
@@ -13,19 +13,13 @@
 <div>
     <header th:replace="fragments/header :: header"> </header>
 
-    <form th:action="${article} == null ? '/articles' : '/articles/' + ${article.articleId}" name="article" method="post" accept-charset="utf-8" >
-        <input type="hidden" name="_method" th:value="${article} == null ? 'post' : 'put'"/>
+    <form th:action="${article} ? '/articles/' + ${article.articleId} : '/articles' " name="article" th:method="${article} ? 'put' : 'post'" accept-charset="utf-8" >
         <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg" style="background-image: url('images/pages/index/study.jpg')">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="hidden" name="articleId" th:value="${article} == null ? '' : ${article.articleId}">
-                        <input type="text" name="title" th:value="${article} == null ? '' : ${article.title}"
-                               class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
-                               autocomplete="off" placeholder="제목을 입력해주세요">
-                        <input type="text" name="coverUrl" th:value="${article} == null ? '' : ${article.coverUrl}"
-                               class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
-                               placeholder="배경 url을 입력해주세요" autocomplete="off">
+                        <input type="text" th:value="${article} ? ${article.title} : ''" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" autocomplete="off" required="required">
+                        <input type="text" th:value="${article} ? ${article.coverUrl} : ''" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"  placeholder="배경 url을 입력해주세요" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -35,9 +29,8 @@
             <div class="row">
                 <div class="col-lg-1 col-md-1"></div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
-                    <input id="article-contents" name="contents" type="hidden"
-                           th:value="${article} == null ? '' : ${article.contents}">
-                    <div id="editSection"></div>
+                    <input id="article-contents" name="contents" type="hidden">
+                    <div id="editSection" th:text="${article} ? ${article.contents} : ''"></div>
                 </div>
                 <div class="col-lg-1 col-md-1">
                     <div class="btn-group btn-group-vertical">
@@ -55,7 +48,7 @@
 </div>
 
 <!-- include fragments/footer -->
-<th:block th:replace="fragments/common_script"></th:block>
+<th:block th:replace="fragments/script"></th:block>
 
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script type="text/javascript">
