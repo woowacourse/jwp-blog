@@ -21,8 +21,7 @@ public class MypageController {
     }
 
     @GetMapping("/mypage")
-    public String myPage(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
+    public String myPage(HttpSession session, Model model) {
         setUserToModelBySession(model, session);
         return "mypage";
     }
@@ -36,8 +35,7 @@ public class MypageController {
     }
 
     @GetMapping("/mypage/edit")
-    public String myPageEdit(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
+    public String myPageEdit(HttpSession session, Model model) {
         setUserToModelBySession(model, session);
         return "mypage-edit";
     }

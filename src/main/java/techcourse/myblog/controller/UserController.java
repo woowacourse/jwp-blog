@@ -11,7 +11,6 @@ import techcourse.myblog.exception.EmailRepetitionException;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserDTO;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -49,8 +48,7 @@ public class UserController {
     }
 
     @DeleteMapping
-    public String delete(HttpServletRequest request) {
-        HttpSession session = request.getSession();
+    public String delete(HttpSession session) {
         User user = (User) session.getAttribute("user");
         userService.delete(user.getEmail());
         session.invalidate();

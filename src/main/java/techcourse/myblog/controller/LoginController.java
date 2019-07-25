@@ -12,7 +12,6 @@ import techcourse.myblog.exception.UserNotExistException;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.dto.LoginDTO;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -30,10 +29,9 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute LoginDTO loginDTO, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public String login(@ModelAttribute LoginDTO loginDTO, HttpSession session, RedirectAttributes redirectAttributes) {
         try {
             User user = loginService.getLoginUser(loginDTO);
-            HttpSession session = request.getSession();
             session.setAttribute("user", user);
             return "redirect:/";
         } catch (UserNotExistException | LoginFailException e) {

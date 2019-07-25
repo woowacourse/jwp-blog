@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.ArticleRepository;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -21,8 +20,7 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
+    public String home(HttpSession session, Model model) {
 
         log.info("session.id {}", session.getId());
 
