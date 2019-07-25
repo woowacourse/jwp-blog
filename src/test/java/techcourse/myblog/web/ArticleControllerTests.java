@@ -35,13 +35,6 @@ class ArticleControllerTests {
     }
 
     @Test
-    void articleForm() {
-        webTestClient.get().uri("/articles/new")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
     void writeArticleForm() {
         webTestClient.get().uri("/articles/writing")
                 .exchange()
@@ -56,7 +49,8 @@ class ArticleControllerTests {
                         .with("coverUrl", "주소")
                         .with("contents", "내용"))
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles/.*");
     }
 
     @Test
