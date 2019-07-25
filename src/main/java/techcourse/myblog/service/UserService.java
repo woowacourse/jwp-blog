@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.EmailRepetitionException;
-import techcourse.myblog.exception.UserNotExistException;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.dto.UserDTO;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
@@ -36,7 +36,6 @@ public class UserService {
         return userRepository.existsByEmail(userDTO.getEmail());
     }
 
-    @Transactional
     public void delete(User user) {
         userRepository.delete(user);
     }
@@ -45,10 +44,10 @@ public class UserService {
         log.error("email {} ", userDTO.getEmail());
         log.error("name {} ", userDTO.getUserName());
         log.error("password {} ", userDTO.getPassword());
-        int result = userRepository.updateUserByEmailAddress(userDTO.getUserName(), userDTO.getPassword(), userDTO.getEmail());
-        if (result == 0) {
-            throw new UserNotExistException("유저정보가 없습니다.");
-        }
-        return userRepository.findByEmail(userDTO.getEmail()).get();
+
+        User user = userRepository.findByEmail(userDTO.getEmail()).get();
+        user.update(userDTO.toDomain());
+
+        return user;
     }
 }

@@ -24,4 +24,10 @@ public class Article {
 
     @NonNull
     private String coverUrl;
+
+    public void update(Article article) {
+        this.title = article.title;
+        this.contents = article.contents;
+        this.coverUrl = article.coverUrl;
+    }
 }

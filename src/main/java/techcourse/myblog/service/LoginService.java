@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
 import techcourse.myblog.exception.UserNotExistException;
@@ -8,6 +9,7 @@ import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.dto.UserDTO;
 
 @Service
+@Transactional
 public class LoginService {
     private final UserRepository userRepository;
 

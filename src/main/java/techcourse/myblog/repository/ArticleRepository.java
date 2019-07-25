@@ -12,6 +12,4 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     @Query("update Article a set a.title = ?1, a.coverUrl = ?2, a.contents = ?3 where a.id = ?4")
     int updateArticleById(String title, String coverUrl, String contents, Long id);
 
-    @Transactional
-    void removeById(Long id);
 }

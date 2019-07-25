@@ -36,13 +36,6 @@ class UserRepositoryTest {
     }
 
     @Test
-    void 유저_정보_수정() {
-        userRepository.updateUserByEmailAddress(TEST_USERNAME_2, TEST_PASSWORD_2, TEST_EMAIL_1);
-        assertThat(userRepository.findByEmail(TEST_EMAIL_1).get().getUserName()).isEqualTo(TEST_USERNAME_2);
-        assertThat(userRepository.findByEmail(TEST_EMAIL_1).get().getPassword()).isEqualTo(TEST_PASSWORD_2);
-    }
-
-    @Test
     void 유저_삭제() {
         userRepository.deleteAll();
         assertThat(userRepository.existsByEmail(TEST_EMAIL_1)).isFalse();

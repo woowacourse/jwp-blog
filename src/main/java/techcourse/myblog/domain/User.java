@@ -26,4 +26,10 @@ public class User {
     public boolean matchPassword(String password) {
         return this.password.equals(password);
     }
+
+    public void update(User user) {
+        this.userName = user.userName;
+        this.email = user.email;
+        this.password = user.password;
+    }
 }
