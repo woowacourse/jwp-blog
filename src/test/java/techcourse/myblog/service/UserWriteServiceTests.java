@@ -25,7 +25,7 @@ public class UserWriteServiceTests extends UserCommonServiceTests {
         given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
         UserDto userDto = new UserDto("nameee", user.getEmail(), user.getPassword());
-        userWriteService.modify(user, userDto);
+        userWriteService.update(user, userDto);
         compareUser(userDto.toUser(), userRepository.findByEmail(user.getEmail()).get());
     }
 }

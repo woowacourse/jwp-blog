@@ -21,9 +21,9 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpMethod.*;
-import static techcourse.myblog.domain.User.AUTH_FAIL_MESSAGE;
 import static techcourse.myblog.dto.UserDto.*;
-import static techcourse.myblog.service.UserService.*;
+import static techcourse.myblog.service.UserWriteService.DUPLICATED_USER_MESSAGE;
+import static techcourse.myblog.web.controller.UserController.LOGIN_FAIL_MESSAGE;
 
 class UserControllerTests extends ControllerTestTemplate {
     @Autowired
@@ -108,8 +108,8 @@ class UserControllerTests extends ControllerTestTemplate {
 
     static Stream<Arguments> invalidLoginParameters() throws Throwable {
         return Stream.of(
-                Arguments.of(null, "e@mail.com", "p@sswsavedPassw0RD!", NOT_EXIST_USER_MESSAGE),
-                Arguments.of(null, "saved@email.com", "edPassw0RD!", AUTH_FAIL_MESSAGE)
+                Arguments.of(null, "e@mail.com", "p@sswsavedPassw0RD!", LOGIN_FAIL_MESSAGE),
+                Arguments.of(null, "saved@email.com", "edPassw0RD!", LOGIN_FAIL_MESSAGE)
         );
     }
 
