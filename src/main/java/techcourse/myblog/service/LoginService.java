@@ -5,7 +5,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
 import techcourse.myblog.exception.UserNotExistException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.service.dto.LoginDTO;
+import techcourse.myblog.service.dto.UserDTO;
 
 @Service
 public class LoginService {
@@ -15,10 +15,10 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
-    public User getLoginUser(LoginDTO loginDTO) {
-        User user = findByEmail(loginDTO.getEmail());
+    public User getLoginUser(UserDTO userDTO) {
+        User user = findByEmail(userDTO.getEmail());
 
-        if (!user.matchPassword(loginDTO.getPassword())) {
+        if (!user.matchPassword(userDTO.getPassword())) {
             throw new LoginFailException("아이디와 비밀번호가 일치하지 않습니다.");
         }
 
