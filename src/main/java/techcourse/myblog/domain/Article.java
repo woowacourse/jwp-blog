@@ -7,8 +7,6 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Setter
-@EqualsAndHashCode
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Article {
@@ -24,4 +22,11 @@ public class Article {
 
     @Column(name = "coverUrl", length = 1000, nullable = false)
     private String coverUrl;
+
+    public Article(int id, String title, String contents, String coverUrl) {
+        this.id = id;
+        this.title = title;
+        this.contents = contents;
+        this.coverUrl = coverUrl;
+    }
 }
