@@ -1,6 +1,7 @@
 package techcourse.myblog.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
@@ -41,9 +42,12 @@ public class ArticleController {
         return "article-edit";
     }
 
+    @Transactional
     @PutMapping("/{articleId}")
-    public String updateArticle(@PathVariable("articleId") Long articleId, ArticleDTO article) {
-        articleRepository.updateArticleById(article.getTitle(), article.getCoverUrl(), article.getContents(), articleId);
+    public String updateArticle(@PathVariable("articleId") Long articleId, ArticleDTO articleDTO) {
+        Article article = articleRepository.findById(articleId).get();
+        article.update(articleDTO.toDomain());
+
         return "redirect:/articles/" + articleId;
     }
 
