@@ -28,7 +28,7 @@ class ArticleControllerTest {
     private ArticleRepository articleRepository;
     @Autowired
     private MockMvc mockMvc;
-
+  
     @AfterEach
     void tearDown() {
         articleRepository.deleteAll();
