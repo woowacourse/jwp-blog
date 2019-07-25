@@ -55,6 +55,7 @@ public class UserController {
         model.addAttribute("user", user);
         return "mypage";
     }
+    //TODO : 로그인하고 없는 것에 접근 -> 로그인으로 감
 
     @GetMapping("/mypage/{userId}/edit")
     public String renderEditMypage(@PathVariable long userId, HttpSession httpSession, Model model) {
@@ -72,9 +73,10 @@ public class UserController {
         return "mypage-edit";
     }
 
+    //TODO : 매개변수 순서
     @PutMapping("/users/{userId}")
-    public RedirectView updateUser(@Valid UserDto.Update userDto, @PathVariable long userId,
-                                   HttpSession httpSession, BindingResult bindingResult) {
+    public RedirectView updateUser(HttpSession httpSession, @Valid UserDto.Update userDto,
+                                   BindingResult bindingResult, @PathVariable long userId) {
         Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
         if (!userSession.isPresent()) {
             return new RedirectView("/login");
