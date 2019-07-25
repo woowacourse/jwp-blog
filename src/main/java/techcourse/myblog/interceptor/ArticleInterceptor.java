@@ -15,6 +15,10 @@ public class ArticleInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Optional<UserDto.Response> user = Optional.ofNullable((UserDto.Response) request.getSession().getAttribute("user"));
 
+        if (request.getMethod().equals("GET") && request.getRequestURI().matches("(\\/articles\\/)([0-9]+)$")){
+            return true;
+        }
+
         if (!user.isPresent()) {
             response.sendRedirect("/login");
             return false;
@@ -22,3 +26,5 @@ public class ArticleInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 }
+
+//TODO : 인터셉터 테스트

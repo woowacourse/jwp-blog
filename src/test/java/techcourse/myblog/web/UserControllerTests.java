@@ -34,8 +34,6 @@ public class UserControllerTests {
                         .with("name", "name"))
                 .exchange();
 
-        log.info("cookie : {}", cookie);
-
         cookie = webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -43,8 +41,6 @@ public class UserControllerTests {
                         .with("password", "password1234!"))
                 .exchange()
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-
-        log.info("cookie : {}", cookie);
     }
 
     @Test
@@ -52,6 +48,14 @@ public class UserControllerTests {
         webTestClient.get().uri("/signup")
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void 로그인_후_회원가입_페이지_이동_테스트() {
+        webTestClient.get().uri("/signup")
+            .header("Cookie", cookie)
+            .exchange()
+            .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*/");
     }
 
     @Test
@@ -111,11 +115,33 @@ public class UserControllerTests {
     }
 
     @Test
-    void 회원_정보_전체_조회_테스트() {
+    void 로그인_후_회원가입_요청_테스트() {
+        String wrongEmail = "email";
+
+        webTestClient.post().uri("/users")
+            .header("Cookie", cookie)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", wrongEmail)
+                .with("password", "password1234!")
+                .with("name", "name"))
+            .exchange()
+            .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*/");
+    }
+
+    @Test
+    void 로그인_후_회원_정보_전체_조회_테스트() {
         webTestClient.get().uri("/users")
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void 비로그인_회원_정보_전체_조회_테스트() {
+        webTestClient.get().uri("/users")
+            .exchange()
+            .expectStatus().isOk();
     }
 
     @Test
@@ -127,11 +153,25 @@ public class UserControllerTests {
     }
 
     @Test
+    void 비로그인_MyPage_이동_성공_테스트() {
+        webTestClient.get().uri("/mypage/" + userId)
+            .exchange()
+            .expectStatus().isOk();
+    }
+
+    @Test
     void EditMyPage_이동_성공_테스트() {
         webTestClient.get().uri("/mypage/" + userId + "/edit")
-                .header("Cookie", cookie)
-                .exchange()
-                .expectStatus().isOk();
+            .header("Cookie", cookie)
+            .exchange()
+            .expectStatus().isOk();
+    }
+
+    @Test
+    void 비로그인_EditMyPage_이동_테스트() {
+        webTestClient.get().uri("/mypage/" + userId + "/edit")
+            .exchange()
+            .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*/login");
     }
 
     @Test
@@ -146,6 +186,16 @@ public class UserControllerTests {
     }
 
     @Test
+    void 비로그인_회원_정보_수정_테스트() {
+        webTestClient.put().uri("/users/" + userId)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("name", "newName"))
+            .exchange()
+            .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*/login");
+    }
+
+    @Test
     void 회원_정보_수정_실패_테스트() {
         webTestClient.put().uri("/users/" + userId)
                 .header("Cookie", cookie)
@@ -154,6 +204,13 @@ public class UserControllerTests {
                         .fromFormData("name", "A"))
                 .exchange()
                 .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void 비로그인_회원_탈퇴_테스트() {
+        webTestClient.delete().uri("/users/" + 1)
+            .exchange()
+            .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*/login");
     }
 
     @AfterEach

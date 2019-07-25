@@ -9,17 +9,20 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
     private final ArticleInterceptor articleInterceptor;
+    private final UserInterceptor userInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(articleInterceptor)
             .addPathPatterns("/writing")
-            .addPathPatterns("/articles/**")
-            .excludePathPatterns("/mypage/**")
-            .excludePathPatterns("/users/**")
-            .excludePathPatterns("/signup")
-            .excludePathPatterns("/login")
-            .excludePathPatterns("/logout")
-            .excludePathPatterns("/");
+            .addPathPatterns("/articles/**");
+
+        registry.addInterceptor(userInterceptor)
+            .addPathPatterns("/signup")
+            .addPathPatterns("/users/**")
+            .addPathPatterns("/mypage/**")
+            .addPathPatterns("/login")
+            .addPathPatterns("/logout");
+
     }
 }

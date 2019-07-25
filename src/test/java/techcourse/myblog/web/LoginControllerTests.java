@@ -19,6 +19,8 @@ public class LoginControllerTests {
     @Autowired
     private WebTestClient webTestClient;
 
+    private String cookie;
+
     @BeforeEach
     void setUp() {
         webTestClient.post().uri("/users")
@@ -28,6 +30,14 @@ public class LoginControllerTests {
                         .with("password", "password1234!")
                         .with("name", "name"))
                 .exchange();
+
+        cookie = webTestClient.post().uri("/login")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", "email@gmail.com")
+                .with("password", "password1234!"))
+            .exchange()
+            .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
     }
 
     @Test
@@ -35,6 +45,14 @@ public class LoginControllerTests {
         webTestClient.get().uri("/login")
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void 로그인_후_로그인_페이지_이동_테스트() {
+        webTestClient.get().uri("/login")
+            .header("Cookie", cookie)
+            .exchange()
+            .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*/");
     }
 
     @Test
@@ -46,6 +64,18 @@ public class LoginControllerTests {
                         .with("password", "password1234!"))
                 .exchange()
                 .expectStatus().isFound();
+    }
+
+    @Test
+    void 로그인_후_로그인_요청_테스트() {
+        webTestClient.post().uri("/login")
+            .header("Cookie", cookie)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", "email@gmail.com")
+                .with("password", "password1234!"))
+            .exchange()
+            .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*/");
     }
 
     @Test
@@ -72,5 +102,20 @@ public class LoginControllerTests {
                         .with("password", wrongPassword))
                 .exchange()
                 .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void 로그아웃_성공_테스트() {
+        webTestClient.get().uri("/logout")
+            .header("Cookie", cookie)
+            .exchange()
+            .expectStatus().isFound();
+    }
+
+    @Test
+    void 비로그인_로그아웃_테스트() {
+        webTestClient.get().uri("/logout")
+            .exchange()
+            .expectStatus().isFound().expectHeader().valueMatches("location", "(.)*/");
     }
 }

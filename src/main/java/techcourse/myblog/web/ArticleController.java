@@ -5,9 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.ArticleService;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,7 +24,11 @@ public class ArticleController {
     }
 
     @GetMapping("/writing")
-    public String renderCreatePage(HttpSession httpSession) {
+    public String renderCreatePage(HttpSession httpSession, Model model) {
+        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (userSession.isPresent()) {
+            model.addAttribute("user", userSession.get());
+        }
         return "article-edit";
     }
 
@@ -34,12 +40,20 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String readArticle(@PathVariable long articleId, HttpSession httpSession, Model model) {
+        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (userSession.isPresent()) {
+            model.addAttribute("user", userSession.get());
+        }
         model.addAttribute("article", articleService.findById(articleId));
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String renderUpdatePage(@PathVariable long articleId, HttpSession httpSession, Model model) {
+        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (userSession.isPresent()) {
+            model.addAttribute("user", userSession.get());
+        }
         model.addAttribute("article", articleService.findById(articleId));
         return "article-edit";
     }

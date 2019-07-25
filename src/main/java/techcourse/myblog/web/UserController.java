@@ -23,63 +23,33 @@ public class UserController {
 
     @GetMapping("/signup")
     public String renderSignUpPage(HttpSession httpSession) {
-
         return "signup";
     }
 
     @PostMapping("/users")
     public RedirectView createUser(HttpSession httpSession, @Valid UserDto.Create userDto, BindingResult bindingResult) {
-        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
-        if (userSession.isPresent()) {
-            return new RedirectView("/");
-        }
-
         if (bindingResult.hasErrors()) {
             throw new InvalidSignUpFormException(bindingResult.getFieldError().getDefaultMessage());
         }
-
         userService.save(userDto);
         return new RedirectView("/login");
     }
 
     @GetMapping("/users")
-    public String readUsers(Model model) {
+    public String readUsers(Model model, HttpSession httpSession) {
         List<UserDto.Response> users = userService.findAll();
         model.addAttribute("users", users);
         return "user-list";
     }
 
-    @GetMapping("/mypage/{userId}")
-    public String renderMypage(@PathVariable long userId, Model model) {
-        UserDto.Response user = userService.findById(userId);
-        model.addAttribute("user", user);
-        return "mypage";
-    }
-    //TODO : 로그인하고 없는 것에 접근 -> 로그인으로 감
-
-    @GetMapping("/mypage/{userId}/edit")
-    public String renderEditMypage(@PathVariable long userId, HttpSession httpSession, Model model) {
-        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
-        if (!userSession.isPresent()) {
-            return "redirect:/login";
-        }
-
-        UserDto.Response user = userService.findById(userId);
-        UserDto.Response sessionUser = (UserDto.Response) userSession.get();
-        if (!sessionUser.getEmail().equals(user.getEmail())) {
-            return "redirect:/";
-        }
-        model.addAttribute("user", user);
-        return "mypage-edit";
-    }
-
-    //TODO : 매개변수 순서
     @PutMapping("/users/{userId}")
     public RedirectView updateUser(HttpSession httpSession, @Valid UserDto.Update userDto,
                                    BindingResult bindingResult, @PathVariable long userId) {
         Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
-        if (!userSession.isPresent()) {
-            return new RedirectView("/login");
+        UserDto.Response user = userService.findById(userId);
+        UserDto.Response sessionUser = userSession.get();
+        if (!sessionUser.getEmail().equals(user.getEmail())) {
+            return new RedirectView("/");
         }
 
         if (bindingResult.hasErrors()) {
@@ -94,10 +64,6 @@ public class UserController {
     @DeleteMapping("/users/{userId}")
     public RedirectView deleteUser(@PathVariable long userId, HttpSession httpSession) {
         Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
-        if (!userSession.isPresent()) {
-            return new RedirectView("/login");
-        }
-
         UserDto.Response user = userService.findById(userId);
         UserDto.Response sessionUser = userSession.get();
         if (!sessionUser.getEmail().equals(user.getEmail())) {
@@ -107,4 +73,24 @@ public class UserController {
         httpSession.removeAttribute("user");
         return new RedirectView("/");
     }
+
+    @GetMapping("/mypage/{userId}")
+    public String renderMypage(@PathVariable long userId, Model model) {
+        UserDto.Response user = userService.findById(userId);
+        model.addAttribute("user", user);
+        return "mypage";
+    }
+
+    @GetMapping("/mypage/{userId}/edit")
+    public String renderEditMypage(@PathVariable long userId, HttpSession httpSession, Model model) {
+        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        UserDto.Response user = userService.findById(userId);
+        UserDto.Response sessionUser = userSession.get(); //TODO : get()??
+        if (!sessionUser.getEmail().equals(user.getEmail())) {
+            return "redirect:/";
+        }
+        model.addAttribute("user", user);
+        return "mypage-edit";
+    }
+
 }
