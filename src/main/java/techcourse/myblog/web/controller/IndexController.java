@@ -4,20 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techcourse.myblog.domain.repository.ArticleRepository;
+import techcourse.myblog.service.ArticleReadService;
 
 @Controller
 public class IndexController {
-    private final ArticleRepository articleRepository;
+    private final ArticleReadService articleReadService;
 
     @Autowired
-    public IndexController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public IndexController(ArticleReadService articleReadService) {
+        this.articleReadService = articleReadService;
     }
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
+        model.addAttribute("articles", articleReadService.findAll());
 
         return "index";
     }
