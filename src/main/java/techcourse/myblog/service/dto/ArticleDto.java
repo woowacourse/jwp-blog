@@ -1,6 +1,6 @@
 package techcourse.myblog.service.dto;
 
-import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.article.Article;
 
 public class ArticleDto {
     private Long id;

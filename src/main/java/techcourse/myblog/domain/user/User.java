@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.user;
 
 import techcourse.myblog.domain.exception.UserArgumentException;
 

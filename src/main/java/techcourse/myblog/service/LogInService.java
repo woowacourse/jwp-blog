@@ -1,10 +1,10 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.LogInInfoDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.domain.user.UserRepository;
 import techcourse.myblog.service.exception.LogInException;
 
 import static techcourse.myblog.service.exception.LogInException.LOGIN_FAIL_MESSAGE;

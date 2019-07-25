@@ -2,6 +2,7 @@ package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.domain.article.Article;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
