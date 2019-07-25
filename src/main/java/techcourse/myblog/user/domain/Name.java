@@ -20,8 +20,8 @@ public class Name {
         return name;
     }
 
-    public void updateName(String name) {
-        this.name = validateName(name);
+    public Name updateName(String name) {
+        return new Name(validateName(name));
     }
 
     public String getName() {

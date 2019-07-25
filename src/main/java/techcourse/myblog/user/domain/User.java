@@ -32,7 +32,7 @@ public class User {
     }
 
     public void update(String name) {
-        this.name.updateName(name);
+        this.name = this.name.updateName(name);
     }
 
     public boolean checkPassword(String password) {
