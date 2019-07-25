@@ -1,6 +1,5 @@
 package techcourse.myblog.web.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -9,18 +8,21 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.UserInfo;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.UserReadService;
+import techcourse.myblog.service.UserWriteService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.groups.Default;
+import java.util.Optional;
 
 @Controller
 public class UserController {
-    private final UserService userService;
+    private final UserReadService userReadService;
+    private final UserWriteService userWriteService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserReadService userReadService, UserWriteService userWriteService) {
+        this.userReadService = userReadService;
+        this.userWriteService = userWriteService;
     }
 
     @GetMapping("/signup")
@@ -33,7 +35,7 @@ public class UserController {
 
     @PostMapping("/users")
     public RedirectView createUser(@ModelAttribute("/signup") @Validated({Default.class, UserInfo.class}) UserDto userDto) {
-        userService.save(userDto);
+        userWriteService.save(userDto);
 
         return new RedirectView("/login");
     }
@@ -50,8 +52,14 @@ public class UserController {
     @PostMapping("/login")
     public RedirectView login(HttpSession session,
                               @ModelAttribute("/login") @Validated(Default.class) UserDto userDto) {
-        session.setAttribute("user", userService.login(userDto));
-        return new RedirectView("/");
+        Optional<User> loginUser = userReadService.findByEmailAndPassword(userDto);
+
+        if (loginUser.isPresent()) {
+            session.setAttribute("user", loginUser.get());
+            return new RedirectView("/");
+        }
+
+        throw new LoginFailedException("이메일이나 비밀번호가 올바르지 않습니다");
     }
 
     @GetMapping("/logout")
@@ -62,7 +70,7 @@ public class UserController {
 
     @GetMapping("/users")
     public String userList(Model model) {
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute("users", userReadService.findAll());
         return "user-list";
     }
 
@@ -83,8 +91,7 @@ public class UserController {
     public RedirectView editUser(HttpSession session,
                                  @ModelAttribute("/mypage/edit") @Validated(UserInfo.class) UserDto userDto) {
         User user = (User) session.getAttribute("user");
-        userDto.setEmail(user.getEmail());
-        userService.modify(userDto);
+        userWriteService.modify(user, userDto);
 
         return new RedirectView("/mypage");
     }
@@ -92,7 +99,7 @@ public class UserController {
     @DeleteMapping("/users")
     public RedirectView removeUser(HttpSession session) {
         User user = (User) session.getAttribute("user");
-        userService.remove(user);
+        userWriteService.remove(user);
         session.invalidate();
 
         return new RedirectView("/");

@@ -7,7 +7,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.DuplicatedEmailException;
-import techcourse.myblog.service.LoginFailedException;
 
 @ControllerAdvice(basePackageClasses = UserController.class)
 public class UserControllerExceptionHandler {
