@@ -8,17 +8,14 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.web.common.ControllerTestTemplate;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Stream;
 
