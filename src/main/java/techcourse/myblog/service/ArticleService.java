@@ -45,9 +45,7 @@ public class ArticleService {
     public Article update(ArticleDto articleDto, int articleId) {
         Article dbArticle = articleRepository.findById(articleId).orElseThrow(() -> new UserException("잘못된 입력입니다."));
 
-        dbArticle.setContents(articleDto.getContents());
-        dbArticle.setCoverUrl(articleDto.getCoverUrl());
-        dbArticle.setTitle(articleDto.getTitle());
+        dbArticle.updateArticle(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
 
         return dbArticle;
     }

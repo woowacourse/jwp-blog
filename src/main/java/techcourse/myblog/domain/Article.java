@@ -29,4 +29,11 @@ public class Article {
         this.contents = contents;
         this.coverUrl = coverUrl;
     }
+
+    public void updateArticle(String title, String coverUrl, String contents) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+    }
+
 }
