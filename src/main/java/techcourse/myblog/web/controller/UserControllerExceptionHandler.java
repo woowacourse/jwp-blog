@@ -1,4 +1,4 @@
-package techcourse.myblog.web.Controller;
+package techcourse.myblog.web.controller;
 
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
