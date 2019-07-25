@@ -7,6 +7,7 @@ import lombok.ToString;
 import techcourse.myblog.dto.UserDto;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 
 @NoArgsConstructor
 @Getter
@@ -21,7 +22,7 @@ public class User {
     @Column(name = "name", length = 20, nullable = false)
     private String name;
 
-    @Column(name = "email", length = 30, nullable = false)
+    @Email()
     private String email;
 
     @Column(name = "password", length = 20, nullable = false)
