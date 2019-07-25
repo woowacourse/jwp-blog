@@ -1,65 +1,72 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.service.ArticleService;
+
+import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 @Controller
+@RequiredArgsConstructor
 public class ArticleController {
-    @Autowired
-    private ArticleRepository articleRepository;
 
-    //홈 이동
+    private final ArticleService articleService;
+
     @GetMapping("/")
-    public String index(final Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
+    public String index(Model model) {
+        model.addAttribute("articles", articleService.findAll());
         return "index";
     }
 
-    //글작성 페이지 이동
     @GetMapping("/writing")
-    public String writeArticle(final Model model) {
+    public String renderCreatePage(HttpSession httpSession, Model model) {
+        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (userSession.isPresent()) {
+            model.addAttribute("user", userSession.get());
+        }
         return "article-edit";
     }
 
-    //글작성
     @PostMapping("/articles")
-    public RedirectView confirmWrite(final Article article) {
-        articleRepository.write(article);
-        return new RedirectView("/articles/" + article.getId());
+    public String createArticle(ArticleDto.Create articleDto, HttpSession httpSession) {
+        long newArticleId = articleService.save(articleDto);
+        return "redirect:/articles/" + newArticleId;
     }
 
-    //글 보기
     @GetMapping("/articles/{articleId}")
-    public String viewArticle(@PathVariable final int articleId, final Model model) {
-        model.addAttribute("article", articleRepository.find(articleId));
+    public String readArticle(@PathVariable long articleId, HttpSession httpSession, Model model) {
+        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (userSession.isPresent()) {
+            model.addAttribute("user", userSession.get());
+        }
+        model.addAttribute("article", articleService.findById(articleId));
         return "article";
     }
 
-    //글 수정 페이지
     @GetMapping("/articles/{articleId}/edit")
-    public String editArticle(@PathVariable final int articleId, final Model model) {
-        model.addAttribute("article", articleRepository.find(articleId));
-        model.addAttribute("method", "put");
+    public String renderUpdatePage(@PathVariable long articleId, HttpSession httpSession, Model model) {
+        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (userSession.isPresent()) {
+            model.addAttribute("user", userSession.get());
+        }
+        model.addAttribute("article", articleService.findById(articleId));
         return "article-edit";
     }
 
-    //글 수정
-    @ResponseBody
     @PutMapping("/articles/{articleId}")
-    public RedirectView confirmEdit(@PathVariable final int articleId, final Article article) {
-        articleRepository.edit(article, articleId);
-        return new RedirectView("/articles/" + articleId);
+    public String updateArticle(@PathVariable long articleId, ArticleDto.Update articleDto, HttpSession httpSession) {
+        long updatedArticleId = articleService.update(articleId, articleDto);
+        return "redirect:/articles/" + updatedArticleId;
     }
 
-    @ResponseBody
     @DeleteMapping("/articles/{articleId}")
-    public RedirectView deleteArticle(@PathVariable final int articleId) {
-        articleRepository.delete(articleId);
-        return new RedirectView("/");
+    public String deleteArticle(@PathVariable long articleId, HttpSession httpSession) {
+        articleService.deleteById(articleId);
+        return "redirect:/";
     }
 }

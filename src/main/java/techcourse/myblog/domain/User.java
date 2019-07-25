@@ -11,15 +11,16 @@ import javax.persistence.Id;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@EqualsAndHashCode
 @Builder
-public class Article {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String title;
+    private String email;
 
-    private String coverUrl;
+    private String password;
 
-    private String contents;
+    private String name;
 }
