@@ -16,7 +16,6 @@ import techcourse.myblog.service.user.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Objects;
 
 @Controller
 public class UserController {
@@ -30,10 +29,6 @@ public class UserController {
     @GetMapping("/signup")
     public ModelAndView showSignUp(final HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
-        if (!Objects.isNull(session.getAttribute("user"))) {
-            modelAndView.setView(new RedirectView("/"));
-            return modelAndView;
-        }
         modelAndView.setViewName("signup");
         return modelAndView;
     }
@@ -73,7 +68,7 @@ public class UserController {
 
     @GetMapping("/logout")
     public ModelAndView logOut(HttpServletRequest request) {
-        request.getSession().invalidate();
+        request.getSession().removeAttribute("user");
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/"));
         return modelAndView;
