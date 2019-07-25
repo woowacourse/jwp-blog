@@ -3,10 +3,12 @@ package techcourse.myblog.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import techcourse.myblog.domain.Article;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class ArticleSaveParams {
     private String title;

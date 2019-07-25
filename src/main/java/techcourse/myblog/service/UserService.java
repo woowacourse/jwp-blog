@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserEditParams;
@@ -8,6 +9,7 @@ import techcourse.myblog.exception.UserDuplicateException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.repository.UserRepository;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -18,6 +20,8 @@ public class UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new UserDuplicateException(ERROR_DUPLICATE_EMAIL_MESSAGE);
         }
+
+        log.debug("save user={}", user);
         return userRepository.save(user);
     }
 
@@ -26,6 +30,8 @@ public class UserService {
     }
 
     public User update(Long id, UserEditParams userEditParams) {
+        log.debug("update user params={} by id={}", userEditParams, id);
+
         User user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
         user.update(userEditParams);
@@ -33,6 +39,7 @@ public class UserService {
     }
 
     public void deleteUser(String email) {
+        log.debug("delete user email={}", email);
         userRepository.deleteByEmail(email);
     }
 }

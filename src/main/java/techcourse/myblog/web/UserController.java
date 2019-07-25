@@ -1,6 +1,7 @@
 package techcourse.myblog.web;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpSession;
 
 import static techcourse.myblog.util.SessionKeys.USER;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class UserController {
@@ -26,6 +28,7 @@ public class UserController {
 
     @PostMapping("/users")
     public String signUp(UserSaveParams userSaveParams, RedirectAttributes redirectAttributes) {
+        log.info("sign up post request params={}", userSaveParams);
         userService.save(userSaveParams.toEntity());
         redirectAttributes.addFlashAttribute("successMessage", SUCCESS_SIGN_UP_MESSAGE);
         return "redirect:/login";
@@ -63,6 +66,7 @@ public class UserController {
 
     @PutMapping("/mypage/edit")
     public String editMyPage(UserEditParams userEditParams, HttpSession httpSession) {
+        log.info("edit mypage put request params={}", userEditParams);
         User lastUser = (User) httpSession.getAttribute(USER);
         Long id = lastUser.getId();
         User user = userService.update(id, userEditParams);
@@ -73,6 +77,7 @@ public class UserController {
 
     @DeleteMapping("/mypage")
     public String deleteUser(String email, HttpSession httpSession) {
+        log.info("delete user delete request id={}", ((User) httpSession.getAttribute(USER)).getId());
         userService.deleteUser(email);
         httpSession.removeAttribute(USER);
 

@@ -1,9 +1,6 @@
 package techcourse.myblog.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import techcourse.myblog.dto.ArticleSaveParams;
 
@@ -14,6 +11,7 @@ import javax.persistence.Id;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@ToString
 @Entity
 public class Article {
 

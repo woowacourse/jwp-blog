@@ -1,6 +1,7 @@
 package techcourse.myblog.web;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import static techcourse.myblog.util.SessionKeys.USER;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
@@ -29,6 +31,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(UserLoginParams userLoginParams, HttpSession httpSession) {
+        log.info("login post request params={}", userLoginParams);
         loginService.checkLogin(userLoginParams.getEmail(), userLoginParams.getPassword());
 
         User user = loginService.findByEmail(userLoginParams.getEmail());
@@ -38,6 +41,7 @@ public class LoginController {
 
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
+        log.info("logout get request params={}", httpSession.getAttribute(USER));
         httpSession.removeAttribute(USER);
         return "redirect:/";
     }

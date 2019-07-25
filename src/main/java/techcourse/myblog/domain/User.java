@@ -1,9 +1,6 @@
 package techcourse.myblog.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import techcourse.myblog.dto.UserEditParams;
 import techcourse.myblog.exception.IllegalUserParamsException;
 
@@ -12,6 +9,7 @@ import java.util.regex.Pattern;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@ToString
 @Entity
 public class User {
     private static final Pattern NAME_PATTERN = Pattern.compile("[가-힣ㅣa-zA-Z]{2,10}");
