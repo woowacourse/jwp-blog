@@ -12,6 +12,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.user.UserDataForTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
@@ -125,7 +127,16 @@ public class UserControllerTests {
                 .body(BodyInserters
                         .fromFormData("name", newName))
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus().isFound()
+                .expectBody()
+                .consumeWith(response -> webTestClient.get().uri(response.getResponseHeaders().getLocation())
+                        .header("Cookie", cookie)
+                        .exchange()
+                        .expectBody()
+                        .consumeWith(res -> {
+                            String body = new String(res.getResponseBody());
+                            assertThat(body.contains(newName)).isTrue();
+                        }));
     }
 
     @Test

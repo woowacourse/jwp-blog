@@ -147,18 +147,16 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get().uri(response.getResponseHeaders().getLocation())
-                            .header("Cookie", cookie)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                String body = new String(res.getResponseBody());
-                                assertThat(body.contains(updatedTitle)).isTrue();
-                                //assertThat(body.contains(updatedCoverUrl)).isTrue();
-                                assertThat(body.contains(updatedContents)).isTrue();
-                            });
-                });
+                .consumeWith(response -> webTestClient.get().uri(response.getResponseHeaders().getLocation())
+                        .header("Cookie", cookie)
+                        .exchange()
+                        .expectBody()
+                        .consumeWith(res -> {
+                            String body = new String(res.getResponseBody());
+                            assertThat(body.contains(updatedTitle)).isTrue();
+                            //assertThat(body.contains(updatedCoverUrl)).isTrue();
+                            assertThat(body.contains(updatedContents)).isTrue();
+                        }));
     }
 
     @AfterEach
