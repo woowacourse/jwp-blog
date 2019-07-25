@@ -16,7 +16,7 @@ public class LoginService {
     }
 
     public User getLoginUser(LoginDTO loginDTO) {
-        User findUser = checkUser(loginDTO);
+        User findUser = findByEmail(loginDTO.getEmail());
         if (checkPassword(loginDTO.getPassword(), findUser.getPassword())) {
             return findUser;
         }
@@ -27,11 +27,11 @@ public class LoginService {
         return password.equals(checkPassword);
     }
 
-    private User checkUser(LoginDTO loginDTO) {
-        User findUser = userRepository.findByEmail(loginDTO.getEmail());
-        if (findUser != null) {
-            return findUser;
-        }
-        throw new UserNotExistException("해당 아이디를 가진 유저는 존재하지 않습니다.");
+    private User findByEmail(String email) {
+        return userRepository
+                .findByEmail(email)
+                .orElseThrow(() ->
+                        new UserNotExistException("해당 아이디를 가진 유저는 존재하지 않습니다.")
+                );
     }
 }

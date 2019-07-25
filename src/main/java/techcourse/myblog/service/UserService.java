@@ -49,6 +49,6 @@ public class UserService {
         if (result == 0) {
             throw new UserNotExistException("유저정보가 없습니다.");
         }
-        return userRepository.findByEmail(userDTO.getEmail());
+        return userRepository.findByEmail(userDTO.getEmail()).get();
     }
 }
