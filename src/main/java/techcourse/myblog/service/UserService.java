@@ -12,15 +12,10 @@ import techcourse.myblog.exception.UserException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private static final String NAME_PATTERN = "^([a-zA-Z]){2,10}$";
-    private static final String PASSWORD_PATTERN = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,20}$";
-
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
@@ -45,10 +40,6 @@ public class UserService {
             throw new UserException("인증된 사용자 정보가 아닙니다.");
         }
 
-        if (!(validateName(userDto.getName()) && validatePassword(userDto.getPassword()))) {
-            throw new UserException("아이디와 비밀번호가 올바르지 않습니다.");
-        }
-
         User user = userRepository.findUserByEmail(userDto.getEmail());
         user.updateUser(userDto.getName(), userDto.getPassword());
 
@@ -59,9 +50,6 @@ public class UserService {
     public User login(UserLoginDto loginDto) {
         User user = userRepository.findUserByEmail(loginDto.getEmail());
 
-        if (Objects.isNull(user)) {
-            throw new UserException("아이디가 올바르지 않습니다.");
-        }
         if (!user.checkPassword(loginDto.getPassword())) {
             throw new UserException("패스워드가 올바르지 않습니다.");
         }
@@ -70,7 +58,7 @@ public class UserService {
     }
 
     public void signUpUser(UserDto userDto) {
-        if (!validateUser(userDto)) {
+        if (!isNull(userDto.getEmail())) {
             throw new UserException("유저가 이미 존재합니다.");
         }
 
@@ -79,35 +67,10 @@ public class UserService {
     }
 
     public User findUser(String email) {
-        User user = userRepository.findUserByEmail(email);
-        if (Objects.isNull(user)) {
-            throw new UserException("유저를 찾지 못했습니다.");
-        }
-
-        return user;
+        return userRepository.findUserByEmail(email);
     }
 
-    private boolean validateUser(UserDto userDto) {
-        return validateName(userDto.getName())
-                && validatePassword(userDto.getPassword())
-                && validateEmail(userDto.getEmail());
-    }
-
-    private boolean validateName(String name) {
-        Pattern pattern = Pattern.compile(NAME_PATTERN);
-        Matcher matcher = pattern.matcher(name);
-
-        return matcher.matches();
-    }
-
-    private boolean validatePassword(String password) {
-        Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
-        Matcher matcher = pattern.matcher(password);
-
-        return matcher.matches();
-    }
-
-    private boolean validateEmail(String email) {
+    private boolean isNull(String email) {
         return Objects.isNull(userRepository.findUserByEmail(email));
     }
 }

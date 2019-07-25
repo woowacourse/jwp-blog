@@ -4,9 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import techcourse.myblog.exception.UserException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @NoArgsConstructor
 @Getter
@@ -21,7 +24,7 @@ public class User {
     @Column(name = "name", length = 20, nullable = false)
     private String name;
 
-    @Email()
+    @Email
     private String email;
 
     @Column(name = "password", length = 20, nullable = false)
