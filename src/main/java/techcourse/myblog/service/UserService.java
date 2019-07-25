@@ -67,7 +67,7 @@ public class UserService {
         try {
             User user = userRepository.findByEmail(userPublicInfoDto.getEmail())
                     .orElseThrow(NotFoundUserException::new);
-            user.setName(userPublicInfoDto.getName());
+            user.updateName(userPublicInfoDto.getName());
             userRepository.save(user);
         } catch (Exception e) {
             throw new UserUpdateException(e.getMessage());

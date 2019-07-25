@@ -105,7 +105,7 @@ public class User {
         return password;
     }
 
-    public void setName(String name) {
+    public void updateName(String name) {
         checkValidName(name);
         this.name = name;
     }
