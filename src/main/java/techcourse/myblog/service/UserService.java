@@ -50,7 +50,7 @@ public class UserService {
         }
 
         User user = userRepository.findUserByEmail(userDto.getEmail());
-        user.updateUser(userDto);
+        user.updateUser(userDto.getName(), userDto.getPassword());
 
         userRepository.save(user);
         return user.getName();

@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import techcourse.myblog.dto.UserDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -38,8 +37,8 @@ public class User {
         return this.password.equals(password);
     }
 
-    public void updateUser(UserDto userDto) {
-        name = userDto.getName();
-        password = userDto.getPassword();
+    public void updateUser(String name, String password) {
+        this.name = name;
+        this.password = password;
     }
 }
