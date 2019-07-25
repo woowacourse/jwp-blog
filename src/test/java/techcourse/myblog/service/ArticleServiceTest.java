@@ -20,6 +20,11 @@ public class ArticleServiceTest {
     }
 
     @Test
+    void name() {
+        articleService.save(new ArticleDto(2L, 2L, null, "coverUrl", "contents"));
+    }
+
+    @Test
     void Article_userId와_수정하려는_User의_Id가_다르면_수정_실패() {
         ArticleDto articleDto = new ArticleDto(1L, 1L, "title1", "coverUrl1", "contents1");
 

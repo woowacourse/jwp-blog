@@ -42,6 +42,10 @@ public class User {
         this.password = password;
     }
 
+    public boolean matchPassword(final String password) {
+        return this.password.equals(password);
+    }
+
     private void checkValidName(String name) {
         checkValidNameLength(name);
         checkValidNameCharacters(name);

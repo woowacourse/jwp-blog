@@ -12,7 +12,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
-import static techcourse.myblog.service.exception.LogInException.LOGIN_FAIL_MESSAGE;
+import static techcourse.myblog.service.exception.LogInException.NOT_FOUND_USER_MESSAGE;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LogInControllerTest {
@@ -61,7 +61,7 @@ class LogInControllerTest {
     }
 
     @Test
-    @DisplayName("로그인 실패시 에러 메세지 출력한다.")
+    @DisplayName("없는 이메일로 로그인 했을때 에러 메세지 출력한다.")
     void failLogIn() {
         String name = "testName";
         String email = "logintest2@woowa.com";
@@ -91,7 +91,7 @@ class LogInControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body).contains(LOGIN_FAIL_MESSAGE);
+                    assertThat(body).contains(NOT_FOUND_USER_MESSAGE);
                 });
     }
 

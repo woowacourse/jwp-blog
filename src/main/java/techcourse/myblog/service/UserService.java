@@ -1,12 +1,12 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.domain.exception.UserArgumentException;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserRepository;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
-import techcourse.myblog.domain.article.ArticleRepository;
-import techcourse.myblog.domain.user.UserRepository;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
 import techcourse.myblog.service.exception.UserDeleteException;
