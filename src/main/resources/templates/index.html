@@ -19,9 +19,10 @@
                 </ul>
                 <ul class="nav-right">
                     <li class="user-profile">
-                        <a href="login.html">
+                        <a th:href="${session.user == null} ? '/login' : '/'">
                             <div class="user-info login-btn pointer mrg-right-10">
-                                <span class="name pdd-right-5 text-white">Login</span>
+                                <span class="name pdd-right-5 text-white"
+                                      th:text ="${session.user == null} ? 'Login' : ${session.user.name}"></span>
                             </div>
                         </a>
                     </li>

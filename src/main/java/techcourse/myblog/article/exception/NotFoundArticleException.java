@@ -1,4 +1,4 @@
-package techcourse.myblog.exception;
+package techcourse.myblog.article.exception;
 
 public class NotFoundArticleException extends IllegalArgumentException {
     public NotFoundArticleException() {

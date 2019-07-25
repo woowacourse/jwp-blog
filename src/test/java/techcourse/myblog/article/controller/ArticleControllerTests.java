@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.article.controller;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,15 +16,34 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
-    private static int currentArticleId = 1;
+    private static long currentArticleId = 1;
 
     @Autowired
     private WebTestClient webTestClient;
 
+    private String cookie;
+
     @BeforeEach
     void setUp() {
+        webTestClient.post().uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", "email@gmail.com")
+                        .with("password", "password1234!")
+                        .with("name", "name"))
+                .exchange();
+
+        cookie = webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", "email@gmail.com")
+                        .with("password", "password1234!"))
+                .exchange()
+                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+
         webTestClient.post()
                 .uri("/articles")
+                .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", "jaemok")
@@ -43,6 +62,7 @@ public class ArticleControllerTests {
     @Test
     void 게시물_작성_페이지_이동_테스트() {
         webTestClient.get().uri("/writing")
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -60,6 +80,7 @@ public class ArticleControllerTests {
         String contents = "naeyong";
 
         webTestClient.get().uri("/articles/" + currentArticleId)
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -79,6 +100,7 @@ public class ArticleControllerTests {
 
         webTestClient.post()
                 .uri("/articles")
+                .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", newTitle)
@@ -89,6 +111,7 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     webTestClient.get().uri(response.getResponseHeaders().getLocation())
+                            .header("Cookie", cookie)
                             .exchange()
                             .expectBody()
                             .consumeWith(res -> {
@@ -103,6 +126,7 @@ public class ArticleControllerTests {
     @Test
     void 게시물_수정_페이지_이동_테스트() {
         webTestClient.get().uri("/articles/" + currentArticleId + "/edit")
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -114,6 +138,7 @@ public class ArticleControllerTests {
         String updatedContents = "updatedContents";
 
         webTestClient.put().uri("/articles/" + currentArticleId)
+                .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", updatedTitle)
@@ -122,17 +147,16 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get().uri(response.getResponseHeaders().getLocation())
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                String body = new String(res.getResponseBody());
-                                assertThat(body.contains(updatedTitle)).isTrue();
-                                //assertThat(body.contains(updatedCoverUrl)).isTrue();
-                                assertThat(body.contains(updatedContents)).isTrue();
-                            });
-                });
+                .consumeWith(response -> webTestClient.get().uri(response.getResponseHeaders().getLocation())
+                        .header("Cookie", cookie)
+                        .exchange()
+                        .expectBody()
+                        .consumeWith(res -> {
+                            String body = new String(res.getResponseBody());
+                            assertThat(body.contains(updatedTitle)).isTrue();
+                            //assertThat(body.contains(updatedCoverUrl)).isTrue();
+                            assertThat(body.contains(updatedContents)).isTrue();
+                        }));
     }
 
     @AfterEach

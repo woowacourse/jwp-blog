@@ -1,12 +1,12 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.article.dto;
 
 import lombok.Data;
-import techcourse.myblog.domain.Article;
+import techcourse.myblog.article.domain.Article;
 
 public class ArticleDto {
 
     @Data
-    public static class Create {
+    public static class Creation {
         private String title;
         private String coverUrl;
         private String contents;
@@ -21,7 +21,7 @@ public class ArticleDto {
     }
 
     @Data
-    public static class Update {
+    public static class Updation {
         private String title;
         private String coverUrl;
         private String contents;
