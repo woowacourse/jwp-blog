@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.persistence.ArticleRepository;
-import techcourse.myblog.service.ArticleNotFoundException;
+import techcourse.myblog.service.exception.ArticleNotFoundException;
 
 import java.util.List;
 

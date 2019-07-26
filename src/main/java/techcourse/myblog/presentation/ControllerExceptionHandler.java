@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import techcourse.myblog.service.AuthenticationFailException;
-import techcourse.myblog.service.ArticleNotFoundException;
+import techcourse.myblog.service.exception.AuthenticationFailException;
+import techcourse.myblog.service.exception.ArticleNotFoundException;
 
 import javax.servlet.http.HttpServletResponse;
 

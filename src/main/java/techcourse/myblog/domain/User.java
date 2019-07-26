@@ -1,7 +1,7 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
-import techcourse.myblog.service.UserRequestDto;
+import techcourse.myblog.service.dto.UserRequestDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
