@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
+import techcourse.myblog.service.dto.ArticleRequestDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,5 +29,11 @@ public class Article {
         this.title = title;
         this.contents = contents;
         this.coverUrl = coverUrl;
+    }
+
+    public void update(ArticleRequestDto articleRequestDto) {
+        this.title = articleRequestDto.getTitle();
+        this.contents = articleRequestDto.getContents();
+        this.coverUrl = articleRequestDto.getCoverUrl();
     }
 }

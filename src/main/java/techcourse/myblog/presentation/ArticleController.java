@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.persistence.ArticleRepository;
+import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.dto.ArticleRequestDto;
 import techcourse.myblog.service.exception.ArticleNotFoundException;
 
 import java.util.List;
@@ -13,10 +15,12 @@ import java.util.List;
 @Slf4j
 @Controller
 public class ArticleController {
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
 
-    public ArticleController(ArticleRepository articleRepository) {
+    public ArticleController(ArticleRepository articleRepository, ArticleService articleService) {
         this.articleRepository = articleRepository;
+        this.articleService = articleService;
     }
 
     @GetMapping("/writing")
@@ -25,34 +29,36 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String addNewArticle(Article article) {
-        articleRepository.save(article);
-        return "redirect:/articles/" + article.getId();
+    public String addNewArticle(ArticleRequestDto articleRequestDto) {
+        Article newArticle = articleRequestDto.toArticle();
+        articleRepository.save(newArticle);
+        return "redirect:/articles/" + newArticle.getId();
     }
 
     @GetMapping("/")
     public String showArticlesPage(Model model) {
-        List<Article> articles = articleRepository.findAll();
-        model.addAttribute("articles", articles);
+        model.addAttribute("articles", articleRepository.findAll());
         return "index";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String showArticleEditingPage(@PathVariable long articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new));
+        model.addAttribute("article",
+                articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new));
         return "article-edit";
     }
 
     @GetMapping("/articles/{articleId}")
     public String showArticleByIdPage(@PathVariable long articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new));
+        model.addAttribute("article",
+                articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new));
         return "article";
     }
 
-    @PutMapping("/articles/{articleId}")
-    public String updateArticleById(Article article) {
-        articleRepository.save(article);
-        return "redirect:/articles/" + article.getId();
+    @PutMapping("/articles")
+    public String updateArticleById(ArticleRequestDto articleRequestDto) {
+        articleService.update(articleRequestDto);
+        return "redirect:/articles/" + articleRequestDto.getId();
     }
 
     @DeleteMapping("/articles/{articleId}")
