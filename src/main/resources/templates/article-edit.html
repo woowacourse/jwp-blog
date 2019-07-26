@@ -8,7 +8,7 @@
 <body>
 <div>
     <div th:replace="fragments/main/header :: header"></div>
-    <form th:action="${article != null ? '/articles/' + article.id : '/articles' }" name="article" th:method="${article != null ? 'put' : 'post'}"
+    <form action="/articles" name="article" th:method="${article != null ? 'put' : 'post'}"
           accept-charset="utf-8">
         <input type="hidden" name="id" th:if="${article}" th:value="${article.id}"/>
         <div class="about-cover card no-border">
