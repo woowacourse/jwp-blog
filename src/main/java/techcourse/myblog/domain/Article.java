@@ -1,9 +1,8 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -11,9 +10,13 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @OneToOne
+    private User author;
     private String title;
     private String coverUrl;
     private String contents;
+    @OneToMany
+    private List<Comment> comments = new ArrayList<>();
 
     public Article() {}
 
@@ -31,6 +34,8 @@ public class Article {
         this.id = id;
     }
 
+    public User getAuthor() { return this.author; }
+
     public String getTitle() {
         return this.title;
     }
@@ -41,6 +46,14 @@ public class Article {
 
     public String getContents() {
         return this.contents;
+    }
+
+    public void writeComment(Comment comment) {
+        comments.add(comment);
+    }
+
+    public List<Comment> getComments() {
+        return this.comments;
     }
 
     @Override

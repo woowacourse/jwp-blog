@@ -1,9 +1,6 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -13,6 +10,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private LocalDateTime date;
+    @OneToOne
     private User author;
     private String contents;
 
@@ -34,6 +32,7 @@ public class Comment {
     public User getAuthor() {
         return this.author;
     }
+
     public String getContents() {
         return this.contents;
     }
