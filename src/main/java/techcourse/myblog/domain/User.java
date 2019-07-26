@@ -2,10 +2,8 @@ package techcourse.myblog.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -22,6 +20,9 @@ public class User {
     private String email;
     @NonNull
     private String password;
+
+    @OneToMany(mappedBy = "author")
+    private List<Article> articles;
 
     public boolean matchPassword(String password) {
         return this.password.equals(password);

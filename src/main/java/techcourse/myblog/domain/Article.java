@@ -2,10 +2,7 @@ package techcourse.myblog.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -24,6 +21,13 @@ public class Article {
 
     @NonNull
     private String coverUrl;
+
+    @ManyToOne
+    private User author;
+
+    public void setAuthor(User user) {
+        this.author = user;
+    }
 
     public void update(Article article) {
         this.title = article.title;

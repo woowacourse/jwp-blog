@@ -5,40 +5,61 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 class UserRepositoryTest {
-    private static final String TEST_EMAIL_1 = "test1@test.com";
-    private static final String TEST_PASSWORD_1 = "!Q@W3e4r";
-    private static final String TEST_USERNAME_1 = "test1";
-    private static final String TEST_PASSWORD_2 = "%T^Y&U*I";
-    private static final String TEST_USERNAME_2 = "test2";
+    private static final String EMAIL = "test1@test.com";
+    private static final String PASSWORD = "!Q@W3e4r";
+    private static final String USERNAME = "test1";
 
-    UserRepository userRepository;
+    private static final String ARTICLE_TITLE = "title";
+    private static final String ARTICLE_CONTENT = "content";
+    private static final String ARTICLE_COVER_URL = "coverUrl";
+
+    private User user;
 
     @Autowired
-    public UserRepositoryTest(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private UserRepository userRepository;
+
+    @Autowired
+    private TestEntityManager testEntityManager;
+
+
 
     @BeforeEach
     void setUp() {
-        User user = new User(TEST_USERNAME_1, TEST_EMAIL_1, TEST_PASSWORD_1);
-        userRepository.save(user);
+        user = new User(USERNAME, EMAIL, PASSWORD);
+        user = userRepository.save(user);
     }
 
     @Test
     void 유저_이메일_정보로_유저_찾기() {
-        assertThat(userRepository.existsByEmail(TEST_EMAIL_1)).isTrue();
+        assertThat(userRepository.existsByEmail(EMAIL)).isTrue();
     }
 
     @Test
     void 유저_삭제() {
         userRepository.deleteAll();
-        assertThat(userRepository.existsByEmail(TEST_EMAIL_1)).isFalse();
+        assertThat(userRepository.existsByEmail(EMAIL)).isFalse();
+    }
+
+    @Test
+    public void findById() {
+        Article article = new Article(ARTICLE_TITLE, ARTICLE_CONTENT, ARTICLE_COVER_URL);
+        article.setAuthor(user);
+        testEntityManager.persist(article);
+
+        testEntityManager.flush();
+        testEntityManager.clear();
+
+        User actualUser = userRepository.findById(user.getId()).get();
+
+        assertThat(actualUser.getArticles().size()).isEqualTo(1);
     }
 
     @AfterEach
