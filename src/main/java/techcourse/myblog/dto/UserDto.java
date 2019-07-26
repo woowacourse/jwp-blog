@@ -1,6 +1,6 @@
 package techcourse.myblog.dto;
 
-import techcourse.myblog.domain.User.User;
+import techcourse.myblog.domain.user.User;
 
 public class UserDto {
     private String name;

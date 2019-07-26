@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import techcourse.myblog.domain.User.UserException;
+import techcourse.myblog.domain.user.UserException;
 
 @ControllerAdvice(annotations = Controller.class)
 public class LoginControllerAdvice {

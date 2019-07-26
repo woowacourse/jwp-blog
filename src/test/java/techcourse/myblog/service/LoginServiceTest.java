@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.User.User;
-import techcourse.myblog.domain.User.UserException;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserException;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 

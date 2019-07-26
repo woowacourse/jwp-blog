@@ -2,8 +2,8 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.Article.Article;
-import techcourse.myblog.domain.Article.ArticleException;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleException;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
 

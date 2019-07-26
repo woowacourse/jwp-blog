@@ -1,8 +1,8 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.User.UserException;
-import techcourse.myblog.domain.User.UserName;
+import techcourse.myblog.domain.user.UserException;
+import techcourse.myblog.domain.user.UserName;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

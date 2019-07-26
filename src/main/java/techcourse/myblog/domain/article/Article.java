@@ -1,12 +1,11 @@
-package techcourse.myblog.domain.Article;
+package techcourse.myblog.domain.article;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import techcourse.myblog.domain.comment.Comment;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -21,6 +20,9 @@ public class Article {
     private String title;
     private String contents;
     private String coverUrl;
+
+    @OneToMany(mappedBy = "id")
+    private List<Comment> comments;
 
     public Article(String title, String contents, String coverUrl) {
         this.title = title;
@@ -56,11 +58,11 @@ public class Article {
     }
 
     public void update(Article modifiedArticle) {
-        log.debug("Article Ready to Save {}", modifiedArticle.getId());
+        log.debug("article Ready to Save {}", modifiedArticle.getId());
         this.title = modifiedArticle.title;
         this.contents = modifiedArticle.contents;
         this.coverUrl = modifiedArticle.coverUrl;
-        log.debug("Article Save done", this.id);
+        log.debug("article Save done", this.id);
     }
 
     public boolean matchId(long id) {

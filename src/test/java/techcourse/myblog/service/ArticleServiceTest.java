@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.Article.Article;
+import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.List;

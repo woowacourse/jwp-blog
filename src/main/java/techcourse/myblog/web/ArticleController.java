@@ -8,7 +8,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article.Article;
+import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.PageableArticleService;
 
