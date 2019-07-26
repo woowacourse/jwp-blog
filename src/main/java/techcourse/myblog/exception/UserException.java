@@ -2,6 +2,7 @@ package techcourse.myblog.exception;
 
 public class UserException extends RuntimeException {
     public UserException() {
+        super("유효하지 않은 회원입니다.");
     }
 
     public UserException(String message) {

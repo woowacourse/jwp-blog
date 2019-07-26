@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 
 import java.util.stream.StreamSupport;
 
@@ -61,7 +62,9 @@ public class ArticleControllerTests extends LoginTemplate {
 
     @Test
     void findById() {
-        long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+        Article article = new Article(title, contents, coverUrl);
+        article.setAuthor(new User("ehem", "@Password12!", "hgenie14@gmail.com"));
+        long articleId = articleRepository.save(article).getId();
 
         loggedInGetRequest("/articles/" + articleId)
                 .exchange()
@@ -71,7 +74,9 @@ public class ArticleControllerTests extends LoginTemplate {
 
     @Test
     void updateArticle() {
-        long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+        Article article = new Article(title, contents, coverUrl);
+        article.setAuthor(new User("ehem", "@Password12!", "hgenie14@gmail.com"));
+        long articleId = articleRepository.save(article).getId();
         loggedInPutRequest("/articles/" + articleId)
                 .body(BodyInserters
                         .fromFormData("title", "updatedTitle")
