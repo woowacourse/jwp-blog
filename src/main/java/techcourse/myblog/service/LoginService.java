@@ -4,8 +4,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
+import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.LoginException;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.utils.converter.DtoConverter;
 
 @Service
 public class LoginService {
@@ -19,11 +21,11 @@ public class LoginService {
     }
 
     @Transactional(readOnly = true)
-    public User loginByEmailAndPwd(UserRequestDto userRequestDto) {
+    public UserResponseDto loginByEmailAndPwd(UserRequestDto userRequestDto) {
         User user = getUser(userRequestDto);
         checkMatchPassword(user, userRequestDto);
 
-        return user;
+        return DtoConverter.convert(user);
     }
 
     private User getUser(UserRequestDto userRequestDto) {

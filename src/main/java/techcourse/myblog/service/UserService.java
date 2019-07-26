@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
+import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.SignUpException;
 import techcourse.myblog.exception.UserException;
 import techcourse.myblog.repository.UserRepository;
@@ -24,9 +25,11 @@ public class UserService {
     }
 
     @Transactional()
-    public User addUser(UserRequestDto userRequestDto) {
+    public UserResponseDto addUser(UserRequestDto userRequestDto) {
         checkRegisteredEmail(userRequestDto);
-        return userRepository.save(DtoConverter.convert(userRequestDto));
+        User user = userRepository.save(DtoConverter.convert(userRequestDto));
+
+        return DtoConverter.convert(user);
     }
 
     private void checkRegisteredEmail(UserRequestDto dto) {
@@ -42,19 +45,19 @@ public class UserService {
     }
 
     @Transactional()
-    public User updateUser(UserRequestDto userRequestDto, User origin) {
+    public UserResponseDto updateUser(UserRequestDto userRequestDto, UserResponseDto origin) {
         User user = getUserByEmail(origin);
-        user.updateNameAndEmail(userRequestDto.getName(), userRequestDto.getEmail());
-        return user;
+        user.updateNameAndEmail(userRequestDto);
+        return DtoConverter.convert(user);
     }
 
-    private User getUserByEmail(User user) {
-        return userRepository.findByEmail(user.getEmail())
+    private User getUserByEmail(UserResponseDto userResponseDto) {
+        return userRepository.findByEmail(userResponseDto.getEmail())
                 .orElseThrow(() -> new UserException(NOT_FOUND_EMAIL));
     }
 
     @Transactional()
-    public void deleteUser(User user) {
-        userRepository.delete(getUserByEmail(user));
+    public void deleteUser(UserResponseDto userResponseDto) {
+        userRepository.delete(getUserByEmail(userResponseDto));
     }
 }

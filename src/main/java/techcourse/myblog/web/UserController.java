@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
+import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.utils.model.ModelUtil;
@@ -50,8 +51,8 @@ public class UserController {
             return "login";
         }
 
-        User user = loginService.loginByEmailAndPwd(userRequestDto);
-        SessionUtil.setAttribute(session, USER, user);
+        UserResponseDto userResponseDto = loginService.loginByEmailAndPwd(userRequestDto);
+        SessionUtil.setAttribute(session, USER, userResponseDto);
         return "redirect:/";
     }
 
@@ -82,8 +83,8 @@ public class UserController {
             return "signup";
         }
 
-        User user = userService.addUser(userRequestDto);
-        SessionUtil.setAttribute(session, USER, user);
+        UserResponseDto userResponseDto = userService.addUser(userRequestDto);
+        SessionUtil.setAttribute(session, USER, userResponseDto);
         return "redirect:/";
     }
 
@@ -93,16 +94,16 @@ public class UserController {
             return "mypage";
         }
 
-        User origin = (User) SessionUtil.getAttribute(session, USER);
-        User user = userService.updateUser(userRequestDto, origin);
-        SessionUtil.setAttribute(session, USER, user);
+        UserResponseDto origin = (UserResponseDto) SessionUtil.getAttribute(session, USER);
+        UserResponseDto userResponseDto = userService.updateUser(userRequestDto, origin);
+        SessionUtil.setAttribute(session, USER, userResponseDto);
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/users")
     public String deleteUser() {
-        User user = (User) SessionUtil.getAttribute(session, USER);
-        userService.deleteUser(user);
+        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(session, USER);
+        userService.deleteUser(userResponseDto);
         SessionUtil.removeAttribute(session, USER);
         return "redirect:/";
     }
