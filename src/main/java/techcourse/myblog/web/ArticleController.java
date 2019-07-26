@@ -5,14 +5,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleRequestDto;
+import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.utils.model.ModelUtil;
 
+import javax.servlet.http.HttpSession;
+
+import static techcourse.myblog.utils.session.SessionContext.USER;
+
 @Controller
 public class ArticleController {
+    private final HttpSession httpSession;
     private final ArticleService articleService;
 
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(HttpSession httpSession, ArticleService articleService) {
+        this.httpSession = httpSession;
         this.articleService = articleService;
     }
 
@@ -41,7 +48,8 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String saveArticle(ArticleRequestDto articleRequestDto) {
-        Article article = articleService.save(articleRequestDto);
+        UserResponseDto userResponseDto = (UserResponseDto) httpSession.getAttribute(USER);
+        Article article = articleService.save(articleRequestDto, userResponseDto);
         return "redirect:/articles/" + article.getId();
     }
 

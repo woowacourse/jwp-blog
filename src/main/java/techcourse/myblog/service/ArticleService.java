@@ -7,9 +7,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleRequestDto;
+import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.ArticleException;
+import techcourse.myblog.exception.UserException;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.utils.converter.DtoConverter;
 import techcourse.myblog.utils.page.PageRequest;
 
@@ -22,10 +26,13 @@ public class ArticleService {
     private static final String ID = "id";
     private static final int START_PAGE = 1;
     private static final int VIEW_ARTICLE_COUNT = 10;
-    private final ArticleRepository articleRepository;
 
-    public ArticleService(ArticleRepository articleRepository) {
+    private final ArticleRepository articleRepository;
+    private final UserRepository userRepository;
+
+    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository) {
         this.articleRepository = articleRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -43,8 +50,11 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article save(ArticleRequestDto articleRequestDto) {
+    public Article save(ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
         Article article = DtoConverter.convert(articleRequestDto);
+        User user = userRepository.findByEmail(userResponseDto.getEmail())
+                .orElseThrow(() -> new UserException("존재하지 않은 회원입니다."));
+        article.setAuthor(user);
         articleRepository.save(article);
         return article;
     }

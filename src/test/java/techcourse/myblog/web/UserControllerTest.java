@@ -29,7 +29,7 @@ public class UserControllerTest extends LoginTemplate {
     void getIndexTest() {
         webTestClient.get().uri("/users")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isFound();
 
     }
 
