@@ -10,6 +10,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserReadService;
 import techcourse.myblog.service.UserWriteService;
+import techcourse.myblog.web.LoginUser;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.groups.Default;
@@ -89,20 +90,17 @@ public class UserController {
     }
 
     @PutMapping("/mypage")
-    public RedirectView editUser(HttpSession session,
+    public RedirectView editUser(LoginUser loginUser,
                                  @ModelAttribute("/mypage/edit") @Validated(UserInfo.class) UserDto userDto) {
-        User user = (User) session.getAttribute("user");
-        userWriteService.update(user, userDto);
+        userWriteService.update(loginUser.getUser(), userDto);
 
         return new RedirectView("/mypage");
     }
 
     @DeleteMapping("/users")
-    public RedirectView removeUser(HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        userWriteService.remove(user);
-        session.invalidate();
+    public RedirectView removeUser(LoginUser loginUser) {
+        userWriteService.remove(loginUser.getUser());
 
-        return new RedirectView("/");
+        return new RedirectView("/logout");
     }
 }
