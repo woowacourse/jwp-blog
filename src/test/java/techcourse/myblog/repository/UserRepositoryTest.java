@@ -9,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -21,7 +23,8 @@ class UserRepositoryTest {
     private static final String ARTICLE_CONTENT = "content";
     private static final String ARTICLE_COVER_URL = "coverUrl";
 
-    private User user;
+    private User user = new User(USERNAME, EMAIL, PASSWORD);
+    private Article article = new Article(ARTICLE_TITLE, ARTICLE_CONTENT, ARTICLE_COVER_URL);
 
     @Autowired
     private UserRepository userRepository;
@@ -33,7 +36,6 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        user = new User(USERNAME, EMAIL, PASSWORD);
         user = userRepository.save(user);
     }
 
@@ -50,7 +52,6 @@ class UserRepositoryTest {
 
     @Test
     public void findById() {
-        Article article = new Article(ARTICLE_TITLE, ARTICLE_CONTENT, ARTICLE_COVER_URL);
         article.setAuthor(user);
         testEntityManager.persist(article);
 
@@ -58,8 +59,24 @@ class UserRepositoryTest {
         testEntityManager.clear();
 
         User actualUser = userRepository.findById(user.getId()).get();
+        List<Article> articles = actualUser.getArticles();
+        assertThat(articles.get(0).getTitle()).isEqualTo(ARTICLE_TITLE);
 
-        assertThat(actualUser.getArticles().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void findById2() {
+        Article persistArticle = testEntityManager.persist(article);
+
+        user.addArticle(persistArticle);
+        User persistUser = testEntityManager.persist(user);
+
+        testEntityManager.flush();
+        testEntityManager.clear();
+
+        User actualUser = userRepository.findById(persistUser.getId()).get();
+
+        assertThat(actualUser.getArticles().size()).isEqualTo(0);
     }
 
     @AfterEach
