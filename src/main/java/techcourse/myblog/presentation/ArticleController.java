@@ -25,7 +25,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String saveArticlePage(Article article) {
+    public String addNewArticle(Article article) {
         articleRepository.save(article);
         return "redirect:/articles/" + article.getId();
     }
@@ -50,13 +50,13 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticleByIdPage(Article article) {
+    public String updateArticleById(Article article) {
         articleRepository.save(article);
         return "redirect:/articles/" + article.getId();
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticleByIdPage(@PathVariable long articleId) {
+    public String deleteArticleById(@PathVariable long articleId) {
         articleRepository.deleteById(articleId);
         return "redirect:/";
     }
