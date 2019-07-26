@@ -53,7 +53,7 @@ public class ArticleController {
             model.addAttribute("article", articleDto);
             return "article-edit";
         }
-        return "redirect:/login";
+        return "redirect:/articles/" + id;
     }
 
     @PostMapping("/articles")

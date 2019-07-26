@@ -5,9 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.service.dto.ArticleDto;
-import techcourse.myblog.service.exception.UserArticleMissmatchException;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleServiceTest {
@@ -20,25 +19,25 @@ public class ArticleServiceTest {
     }
 
     @Test
-    void name() {
-        articleService.save(new ArticleDto(2L, 2L, null, "coverUrl", "contents"));
-    }
-
-    @Test
     void Article_userId와_수정하려는_User의_Id가_다르면_수정_실패() {
         ArticleDto articleDto = new ArticleDto(1L, 1L, "title1", "coverUrl1", "contents1");
 
-        assertThatThrownBy(() -> articleService.update(1L, 2L, articleDto))
-                .isInstanceOf(UserArticleMissmatchException.class);
+        articleService.update(1L, 2L, articleDto);
+        ArticleDto updateFailArticle = articleService.findById(1L);
+
+        assertThat(updateFailArticle.getTitle()).isEqualTo("title");
+        assertThat(updateFailArticle.getCoverUrl()).isEqualTo("coverUrl");
+        assertThat(updateFailArticle.getContents()).isEqualTo("contents");
 
     }
 
     @Test
     void Article_userId와_삭제하려는_User의_Id가_다르면_삭제_실패() {
-        ArticleDto articleDto = new ArticleDto(1L, 1L, "title1", "coverUrl1", "contents1");
+        articleService.delete(1L, 2L);
+        ArticleDto deleteFailArticle = articleService.findById(1L);
 
-        assertThatThrownBy(() -> articleService.delete(1L, 2L))
-                .isInstanceOf(UserArticleMissmatchException.class);
-
+        assertThat(deleteFailArticle.getTitle()).isEqualTo("title");
+        assertThat(deleteFailArticle.getCoverUrl()).isEqualTo("coverUrl");
+        assertThat(deleteFailArticle.getContents()).isEqualTo("contents");
     }
 }

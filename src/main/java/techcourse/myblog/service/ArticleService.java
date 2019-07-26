@@ -5,7 +5,6 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.exception.NotFoundArticleException;
-import techcourse.myblog.service.exception.UserArticleMissmatchException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,20 +35,18 @@ public class ArticleService {
     public void update(Long articleId, Long userId, ArticleDto articleDto) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
-        if (!article.matchUserId(userId)) {
-            throw new UserArticleMissmatchException();
+        if (article.matchUserId(userId)) {
+            article.updateArticle(articleDto.toEntity());
+            articleRepository.save(article);
         }
-        article.updateArticle(articleDto.toEntity());
-        articleRepository.save(article);
     }
 
     public void delete(Long articleId, Long userId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
-        if (!article.matchUserId(userId)) {
-            throw new UserArticleMissmatchException();
+        if (article.matchUserId(userId)) {
+            articleRepository.deleteById(articleId);
         }
-        articleRepository.deleteById(articleId);
     }
 
     private ArticleDto toArticleDto(Article article) {

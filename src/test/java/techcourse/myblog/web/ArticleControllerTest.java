@@ -17,7 +17,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTests {
+public class ArticleControllerTest {
     private static final String SAMPLE_TITLE = "SAMPLE_TITLE";
     private static final String SAMPLE_COVER_URL = "SAMPLE_COVER_URL";
     private static final String SAMPLE_CONTENTS = "SAMPLE_CONTENTS";
@@ -74,7 +74,7 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void createArticle() {
+    void createArticleWhenLogin() {
         String newTitle = "New Title";
         String newCoverUrl = "New Cover Url";
         String newContents = "New Contents";
@@ -106,6 +106,24 @@ public class ArticleControllerTests {
     }
 
     @Test
+    void createArticleWhenLogout() {
+        String newTitle = "New Title";
+        String newCoverUrl = "New Cover Url";
+        String newContents = "New Contents";
+
+        webTestClient.post()
+                .uri("/articles")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", newTitle)
+                        .with("coverUrl", newCoverUrl)
+                        .with("contents", newContents))
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location", ".*/login.*");
+    }
+
+    @Test
     void showArticle() {
         webTestClient.get()
                 .uri(setUpArticleUrl)
@@ -120,7 +138,7 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void showEditPage() {
+    void showEditPageWhenUserMatch() {
         webTestClient.get()
                 .uri(setUpArticleUrl + "/edit")
                 .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
@@ -136,7 +154,18 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void editArticle() {
+    void showEditPageWhenUserMismatch() {
+        webTestClient.get()
+                .uri(setUpArticleUrl + "/edit")
+                .cookie("JSESSIONID",
+                        LogInControllerTest.logInAsMismatchUser(webTestClient))
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location", ".*/articles/[0-9]+.*");
+    }
+
+    @Test
+    void editArticleWhenUserMatch() {
         String newTitle = "test";
         String newCoverUrl = "newCorverUrl";
         String newContents = "newContents";
@@ -167,8 +196,29 @@ public class ArticleControllerTests {
                 });
     }
 
+
     @Test
-    void deleteArticle() {
+    void editArticleWhenUserMismatch() {
+        String newTitle = "test";
+        String newCoverUrl = "newCorverUrl";
+        String newContents = "newContents";
+
+        webTestClient.put()
+                .uri(setUpArticleUrl)
+                .cookie("JSESSIONID",
+                        LogInControllerTest.logInAsMismatchUser(webTestClient))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", newTitle)
+                        .with("coverUrl", newCoverUrl)
+                        .with("contents", newContents))
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location", ".*/articles/[0-9]+.*");
+    }
+
+    @Test
+    void deleteArticleWithMatchUser() {
         webTestClient.delete()
                 .uri(setUpArticleUrl)
                 .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
@@ -179,6 +229,20 @@ public class ArticleControllerTests {
                 .uri(setUpArticleUrl)
                 .exchange()
                 .expectStatus().isFound();
+    }
+
+    @Test
+    void deleteArticleWithMismatchUser() {
+        webTestClient.delete()
+                .uri(setUpArticleUrl)
+                .cookie("JSESSIONID", LogInControllerTest.logInAsMismatchUser(webTestClient))
+                .exchange()
+                .expectStatus().isFound();
+
+        webTestClient.get()
+                .uri(setUpArticleUrl)
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @AfterEach

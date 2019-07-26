@@ -19,6 +19,8 @@ class LogInControllerTest {
     public static final String USER_NAME = "test";
     public static final String USER_EMAIL = "test@test.test";
     public static final String USER_PASSWORD = VALID_PASSWORD;
+    private static final String MISMATCH_USER_EMAIL = "test2@test.test";
+    private static final String MISMATCH_USER_PASSWORD = VALID_PASSWORD;
 
     @LocalServerPort
     int randomPortNumber;
@@ -102,6 +104,10 @@ class LogInControllerTest {
                 .exchange()
                 .returnResult(String.class)
                 .getResponseCookies().get("JSESSIONID").get(0).getValue();
+    }
+
+    public static String logInAsMismatchUser(WebTestClient webTestClient) {
+        return logIn(webTestClient, MISMATCH_USER_EMAIL, MISMATCH_USER_PASSWORD);
     }
 
     public static String logInAsBaseUser(WebTestClient webTestClient) {
