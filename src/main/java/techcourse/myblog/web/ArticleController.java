@@ -1,66 +1,70 @@
 package techcourse.myblog.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.ArticleRequestDto;
-import techcourse.myblog.domain.ArticleResponseDto;
+import techcourse.myblog.domain.*;
+import techcourse.myblog.service.CategoryService;
+
+import java.util.Optional;
 
 @Controller
 public class ArticleController {
-    private final ArticleRepository articleRepository;
+    @Autowired
+    private ArticleRepository articleRepository;
 
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
+    @Autowired
+    private CategoryService categoryService;
 
-    @PostMapping("/articles")
-    public String createArticles(ArticleRequestDto articleRequestDto, Model model) {
-        Article article = articleRequestDto.toArticle();
-        int id = articleRepository.insertArticle(article);
-
-        model.addAttribute("article", ArticleResponseDto.from(article));
-
-        return "redirect:/articles/" + id;
-    }
-
-    @GetMapping("/articles/{articleId}")
-    public String readArticle(@PathVariable int articleId, Model model) {
-        Article article = articleRepository.findById(articleId);
-
-        model.addAttribute("article", ArticleResponseDto.from(article));
-
-        return "article";
-    }
-
-    @GetMapping("/articles/{articleId}/edit")
-    public String readArticleEditPage(@PathVariable int articleId, Model model) {
-        Article article = articleRepository.findById(articleId);
-
-        model.addAttribute("article", ArticleResponseDto.from(article));
-        model.addAttribute("method", "put");
-
+    @GetMapping("/articles/new")
+    public String showWritingPage(Model model) {
+        model.addAttribute("categories", categoryService.findAll());
         return "article-edit";
     }
 
-    @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable int articleId, ArticleRequestDto articleRequestDto, Model model) {
-        Article article = articleRequestDto.toArticle();
-        article = article.replaceId(articleId);
-
-        articleRepository.updateArticle(article);
-
-        model.addAttribute("article", ArticleResponseDto.from(article));
-
-        return "article";
+    @PostMapping("/articles/new")
+    public String addArticle(ArticleDto articleDto) {
+        Article article = articleRepository.save(articleDto.toArticle());
+        long latestId = article.getId();
+        return "redirect:/articles/" + latestId;
     }
 
-    @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId) {
-        articleRepository.deleteArticle(articleId);
+    @GetMapping("/articles/{articleId}")
+    public String showArticleById(@PathVariable long articleId, Model model) {
+        Optional<Article> maybeArticle = articleRepository.findById(articleId);
+        if (maybeArticle.isPresent()) {
+            model.addAttribute("article", ArticleDto.from(maybeArticle.get()));
+            return "article";
+        }
+        return "error";
+    }
 
+    @PutMapping("/articles/{articleId}")
+    public String updateArticle(@PathVariable long articleId, ArticleDto articleDto) {
+        Optional<Article> maybeArticle = articleRepository.findById(articleId);
+        if (maybeArticle.isPresent()) {
+            ArticleDto findArticleDto = ArticleDto.from(maybeArticle.get());
+            articleDto.setId(findArticleDto.getId());
+            articleRepository.save(articleDto.toArticle());
+        }
+
+        return "redirect:/articles/" + articleId;
+    }
+
+    @GetMapping("/articles/{articleId}/edit")
+    public String updateArticle(@PathVariable long articleId, Model model) {
+        Optional<Article> maybeArticle = articleRepository.findById(articleId);
+        if (maybeArticle.isPresent()) {
+            model.addAttribute("article", ArticleDto.from(maybeArticle.get()));
+        }
+        model.addAttribute("categories", categoryService.findAll());
+        return "article-edit";
+    }
+
+    @DeleteMapping("articles/{articleId}")
+    public String deleteArticle(@PathVariable long articleId) {
+        articleRepository.deleteById(articleId);
         return "redirect:/";
     }
 }

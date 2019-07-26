@@ -1,159 +1,133 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
+import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+    private static final String ARTICLE_DELIMITER
+            = "<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tab-centered-1\">";
+    private static final Article ARTICLE_SAMPLE;
+    private static String title = "TEST";
+    private static String coverUrl = "https://img.com";
+    private static String contents = "testtest";
+    private static String categoryId = "1";
+
+    static {
+        ARTICLE_SAMPLE = new Article(0, title, coverUrl, contents, 0);
+    }
+
     @Autowired
     private WebTestClient webTestClient;
 
-    @Autowired
-    private ArticleRepository articleRepository;
-
     @Test
-    void create_article() {
-        String title = "title";
-        String coverUrl = "coverUrl";
-        String contents = "contents";
+    public void index() {
+        final int count = 3;
+        addArticle();
+        addArticle();
+        addArticle();
 
-        createArticleWith(title, coverUrl, contents);
+        webTestClient.get()
+                .uri("/")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertEquals(count, StringUtils.countOccurrencesOf(body, ARTICLE_DELIMITER));
+                });
     }
 
     @Test
-    void read_article() {
-        String title = "blogTitle";
-        String coverUrl = "blogCoverUrl";
-        String contents = "blogContents";
+    public void indexTestByCategory() {
+        final int count = 2;
+        addArticle();
+        addArticle();
 
-        int articleId = createArticleWith(title, coverUrl, contents);
+        webTestClient.get()
+                .uri("/1")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertEquals(count, StringUtils.countOccurrencesOf(body, ARTICLE_DELIMITER));
+                });
+    }
 
+    @Test
+    public void showArticleById() {
+       addArticle();
 
-        ResponseSpec rs = webTestClient.get()
-                .uri("/articles/" + articleId)
+        webTestClient.get().uri("/articles/1")
                 .exchange()
                 .expectStatus().isOk();
-
-        assertResponse(rs, response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(title)).isTrue();
-            assertThat(body.contains(coverUrl)).isTrue();
-            assertThat(body.contains(contents)).isTrue();
-        });
     }
 
     @Test
-    void read_article_edit_page() {
-        String title = "blogTitle";
-        String coverUrl = "blogCoverUrl";
-        String contents = "blogContents";
+    public void updateArticleById() {
+        addArticle();
 
-        int articleId = createArticleWith(title, coverUrl, contents);
+        webTestClient.get().uri("/articles/1/edit")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(title)).isTrue();
+                    assertThat(body.contains(coverUrl)).isTrue();
+                    assertThat(body.contains(contents)).isTrue();
+                    assertThat(body.contains(categoryId)).isTrue();
+                });
+    }
 
-        ResponseSpec rs = webTestClient.get()
-                .uri("/articles/" + articleId + "/edit")
+    @Test
+    public void showWritingPage() {
+        webTestClient.get().uri("/articles/new")
                 .exchange()
                 .expectStatus().isOk();
-
-        assertResponse(rs, response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(title)).isTrue();
-            assertThat(body.contains(coverUrl)).isTrue();
-            assertThat(body.contains(contents)).isTrue();
-        });
     }
 
     @Test
-    void update_article() {
-        String title = "blogTitle";
-        String coverUrl = "blogCoverUrl";
-        String contents = "blogContents";
-
-        int articleId = createArticleWith(title, coverUrl, contents);
-
-        ResponseSpec rs = webTestClient.put()
-                .uri("/articles/" + articleId)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+    public void addArticle() {
+        webTestClient.post()
+                .uri("/articles/new")
                 .body(BodyInserters
                         .fromFormData("title", title)
                         .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+                        .with("contents", contents)
+                        .with("categoryId", categoryId))
                 .exchange()
-                .expectStatus().isOk();
-
-        assertResponse(rs, response -> {
-            // redirect 의 경우 이 안에서 다시 get 을 요청하는 코드를 보았습니다.
-            // 또 다시 get 을 하지 않고 이런 식으로 테스트를 해도 괜찮을까요?
-            //
-            // 둘이 어떤 차이가 있는지 잘 이해가 안됩니다..
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(title)).isTrue();
-            assertThat(body.contains(coverUrl)).isTrue();
-            assertThat(body.contains(contents)).isTrue();
-        });
+                .expectStatus().isFound();
     }
 
     @Test
-    void delete_article() {
-        String title = "title";
-        String coverUrl = "coverUrl";
-        String contents = "contents";
-
-        int articleId = createArticleWith(title, coverUrl, contents);
+    public void deleteArticle() {
+        addArticle();
 
         webTestClient.delete()
-                .uri("/articles/" + articleId)
+                .uri("/articles/1")
                 .exchange()
-                .expectStatus().isFound()
-                .expectHeader()
-                .valueMatches("location", "[^/]*//[^/]*/");
+                .expectStatus().isFound();
     }
 
-    private int createArticleWith(String title, String coverUrl, String contents) {
-        int[] id = new int[]{0};
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectHeader()
-                .value("location", (location -> {
-                    System.out.println(location);
-
-                    id[0] = findId(location);
-                }));
-
-        return id[0];
-    }
-
-    private int findId(String locationFinishedById) {
-        List<String> chunks = Arrays.asList(locationFinishedById.split("/"));
-
-        return Integer.parseInt(chunks.get(chunks.size() - 1));
-    }
-
-    private void assertResponse(ResponseSpec rs, Consumer<EntityExchangeResult<byte[]>> assertBody) {
-        rs.expectBody()
-                .consumeWith(assertBody);
-    }
+//    private boolean isLogin() {
+//        webTestClient.get().uri("/")
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectHeader().
+//    }
 }

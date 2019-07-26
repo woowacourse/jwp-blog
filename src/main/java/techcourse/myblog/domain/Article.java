@@ -1,27 +1,34 @@
 package techcourse.myblog.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 
+@Entity
 public class Article {
-    private static final int EMPTY_ID = -1;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    private final int id;
-    private final String title;
-    private final String coverUrl;
-    private final String contents;
+    private String title;
+    private String coverUrl;
+    private String contents;
+    private long categoryId;
 
-    public Article(int id, String title, String coverUrl, String contents) {
+    public Article() {
+    }
+
+    public Article(long id, String title, String coverUrl, String contents, long categoryId) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.categoryId = categoryId;
     }
 
-    public static Article createWithoutId(String title, String coverUrl, String contents) {
-        return new Article(EMPTY_ID, title, coverUrl, contents);
-    }
-
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -37,12 +44,17 @@ public class Article {
         return contents;
     }
 
+    public long getCategoryId() {
+        return categoryId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
         return id == article.id &&
+                categoryId == article.categoryId &&
                 Objects.equals(title, article.title) &&
                 Objects.equals(coverUrl, article.coverUrl) &&
                 Objects.equals(contents, article.contents);
@@ -50,7 +62,7 @@ public class Article {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents);
+        return Objects.hash(id, title, coverUrl, contents, categoryId);
     }
 
     @Override
@@ -60,16 +72,7 @@ public class Article {
                 ", title='" + title + '\'' +
                 ", coverUrl='" + coverUrl + '\'' +
                 ", contents='" + contents + '\'' +
+                ", categoryId=" + categoryId +
                 '}';
-    }
-
-    public Article replaceId(int id) {
-        return new Article(id, title, coverUrl, contents);
-    }
-
-    public boolean isEqualToExceptId(Article article) {
-        return Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
     }
 }

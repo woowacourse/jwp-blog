@@ -1,0 +1,1 @@
+https://blogdeveloperspot.blogspot.com/2018/12/spring-boot-2-jpa-mysql-column-unique.html
