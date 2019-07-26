@@ -16,8 +16,9 @@
 
     <div class="about-cover card no-border ">
         <div class="cover-img overlay-dark bg" th:style="'background-image: url(\'' + ${article.coverUrl} + '\')'">
+
             <div class="padding-30">
-                <h1 th:if="${article.title} != null" th:text="${article.title}" class="text-center cover-title"></h1>
+                <h1 th:text="${article.title} == null ? '목적의식 있는 연습을 통한 효과적인 학습' : ${article.title}" class="text-center cover-title"></h1>
             </div>
         </div>
     </div>
@@ -25,16 +26,16 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a th:href="'/articles/' + ${article.id}+ '/edit'" class="float-right pointer btn btn-icon">
+                <a th:href="'/articles/' + ${article.articleId}+ '/edit'" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
-                <form method="post" th:action="'/articles/' + ${article.id}">
-                    <input type="hidden" name="_method" value="delete">
-                    <button type="submit" class="float-right btn btn-default no-border-line" style="border:transparent; background:transparent;">
-                        <i class="ti-trash font-size-16"></i>
+                <form method="post" th:action="'/articles/' + ${article.articleId}">
+                    <input type="hidden" name="_method" value="delete" />
+                    <button type="submit" class="float-right pointer btn btn-icon">
+                        <i class="ti-na text-dark font-size-16 pdd-horizontal-5"></i>
                     </button>
                 </form>
-                <div id="viewerSection" th:if="${#strings.length(article.contents)} != 0" th:text="${article.contents}">Contents</div>
+                <div id="viewerSection" th:if="${#strings.length(article.contents)} != 0" th:text="${article.contents}">No Contents</div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
                 <div class="profile-container row mrg-top-30 mrg-btm-30">

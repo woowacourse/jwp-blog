@@ -1,58 +1,53 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.Objects;
 
-@Entity
 public class Article {
+    private static final String DEFAULT_COVER_URL = "/images/pages/index/study.jpg";
+    private static final int NO_COVER_URL = 0;
+    private static long NEXT_ID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private long articleId;
     private String title;
-    private String coverUrl;
     private String contents;
+    private String coverUrl;
 
-    private Article() {
+    public Article() {
     }
 
-    public Article(String title, String coverUrl, String contents) {
+    public Article(final long articleId, final String title, final String contents, final String coverUrl) {
+        this.articleId = articleId == 0 ? NEXT_ID++ : articleId;
         this.title = title;
-        this.coverUrl = coverUrl;
         this.contents = contents;
+        this.coverUrl = (coverUrl.length() != NO_COVER_URL) ? coverUrl : DEFAULT_COVER_URL;
     }
 
-    public Article(Long id, String title, String coverUrl, String contents) {
-        this.id = id;
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
+    public boolean matchId(long articleId) {
+        return this.articleId == articleId;
     }
 
-    public void updateArticle(Article updatedArticle) {
+    public void update(Article updatedArticle) {
+        this.articleId = updatedArticle.getArticleId();
         this.title = updatedArticle.getTitle();
-        this.coverUrl = updatedArticle.getCoverUrl();
         this.contents = updatedArticle.getContents();
+        this.coverUrl = updatedArticle.getCoverUrl();
     }
 
-    public Long getId() {
-        return id;
+    public long getArticleId() {
+        return articleId;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
     public String getContents() {
         return contents;
+    }
+
+
+    public String getCoverUrl() {
+        return coverUrl;
     }
 
     @Override
@@ -60,12 +55,25 @@ public class Article {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return id.equals(article.id);
+        return articleId == article.articleId &&
+                Objects.equals(title, article.title) &&
+                Objects.equals(contents, article.contents) &&
+                Objects.equals(coverUrl, article.coverUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents);
+        return Objects.hash(articleId, title, contents, coverUrl);
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "articleId=" + articleId +
+                ", title='" + title + '\'' +
+                ", contents='" + contents + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                '}';
     }
 
 }
