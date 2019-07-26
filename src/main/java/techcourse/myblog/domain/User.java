@@ -37,7 +37,7 @@ public class User {
         }
 
         Matcher matcher = NAME_PATTERN.matcher(name);
-        if (!matcher.find()) {
+        if (!matcher.find()) {p/
             throw new IllegalArgumentException("이름은 알파벳만 가능합니다.");
         }
     }
