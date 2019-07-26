@@ -85,3 +85,22 @@
 ### 회원 탈퇴
 - [X] MyPage > profile 하단 > 탈퇴 버튼 추가
 - [X] 탈퇴버튼 클릭시 ``DELETE /users`` 로 요청 ~ 탈퇴 처리 후 ``GET /`` 로 redirect
+
+## 게시글 추가 기능
+
+1. 게시글 작성 관련 요청 (``GET /articles/writing``, ``POST /articles/write``)
+    - [ ] 로그인한 사용자 -> 정상 동작 (원래대로)
+    - [ ] 로그인하지 않은 사용자 -> 로그인 요청 (로그인페이지로 redirect)
+    
+2. 게시글 수정 / 삭제 관련 요청 (``GET /articles/{articleId}/edit``, ``PUT /articles/{articleId}``, ``DELETE /articles/{articleId}``)
+    - [ ] 로그인하지 않은 사용자 -> 에러 발생 (로그인페이지로 redirect)
+    - [ ] 작성자인 경우 -> 정상 동작 (원래대로)
+    - [ ] 작성자가 아닌 경우 -> 에러 발생 (홈으로 이동할때 alert 창 발생)
+    
+## 댓글 관련 기능
+
+### 댓글 작성
+- [ ] GET은 나중에 생각
+- [ ] ``POST /comment/{articleId}``
+- [ ] ``PUT /comment/{commentId}/``
+- [ ] ``DELETE /comment/{commentId}/``
