@@ -36,9 +36,7 @@ public class User {
     }
 
     public boolean isMatch(UserRequestDto userRequestDto) {
-        if (email.equals(userRequestDto.getEmail()) && password.equals(userRequestDto.getPassword())) {
-            return true;
-        }
-        return false;
+        return email.equals(userRequestDto.getEmail())
+                && password.equals(userRequestDto.getPassword());
     }
 }
