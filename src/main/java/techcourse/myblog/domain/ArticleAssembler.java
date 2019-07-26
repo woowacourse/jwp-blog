@@ -1,25 +1,29 @@
 package techcourse.myblog.domain;
 
+import techcourse.myblog.dto.ArticleDto;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ArticleAssembler {
-    public ArticleDTO writeDTO(Article article) {
-        ArticleDTO articleDTO = new ArticleDTO();
-        articleDTO.setId(article.getId());
-        articleDTO.setTitle(article.getTitle());
-        articleDTO.setCoverUrl(article.getCoverUrl());
-        articleDTO.setContents(article.getContents());
-        return articleDTO;
+    public static ArticleDto writeDto(Article article) {
+        ArticleDto articleDto = new ArticleDto();
+
+        articleDto.setArticleId(article.getArticleId());
+        articleDto.setTitle(article.getTitle());
+        articleDto.setCoverUrl(article.getCoverUrl());
+        articleDto.setContents(article.getContents());
+
+        return articleDto;
     }
 
-    public List<ArticleDTO> writeDTOs(List<Article> articles) {
+    public static List<ArticleDto> writeDtos(List<Article> articles) {
         return articles.stream()
-                .map(this::writeDTO)
+                .map(ArticleAssembler::writeDto)
                 .collect(Collectors.toList());
     }
 
-    public Article writeArticle(ArticleDTO articleDTO) {
-        return new Article(articleDTO.getTitle(), articleDTO.getCoverUrl(), articleDTO.getContents());
+    public static Article writeArticle(ArticleDto articleDto) {
+        return new Article(articleDto.getArticleId(), articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
     }
 }
