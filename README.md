@@ -4,11 +4,13 @@
 
 ### 게시글 생성/조회 기능
 1. 게시글 작성 페이지 이동
+    - 로그인하지 않은 사용자는 로그인 요청
     - 메인페이지(index.html)에서 게시글 생성 버튼을 누르기
     - ```GET /writing``` 으로 요청
     - 작성 페이지(article-edit.html)로 이동
     
 2. 게시글 작성
+    - 로그인하지 않은 사용자는 로그인 요청
     - ```POST /articles``` 으로 요청
     - 게시글 생성 시 게시글은 ```ArticleRepository```의 ```List<Article> articles```에 저장한다.
     - 게시글 페이지(article.html)로 이동
@@ -21,14 +23,17 @@
 
 ### 게시글 수정/삭제 기능
 1. 게시글 수정 페이지 이동
+    - 작성자만 접근 가능
     - 게시글 페이지(article.html)에서 수정 버튼 누르기
     - GET /articles/{articleId}/edit 으로 요청
     - 게시글 수정 페이지(article-edit.html)로 이동
  
  2. 게시글 수정
+    - 작성자만 접근 가능
     - ```PUT/articles/{articleId}``` 으로 요청 시 게시글 페이지(article.html)로 이동
  
  3. 게시글 삭제
+    - 작성자만 접근 가능
     - 게시글 페이지(article.html)에서 삭제 버튼 누르기
     - DELETE /articles/{articleId} 으로 요청
     - 게시글 목록 조회 페이지(index.html)로 이동
@@ -73,3 +78,9 @@
 2. 회원 탈퇴
     - 로그인한 사용자는 회원 탈퇴 요청 가능 (DELETE 메소드를 이용)
     - 로그인하지 않은 사용자는 탈퇴 요청시 ``GET /``로 redirect 
+    
+ 
+## 댓글 관련 기능
+1. 댓글 작성 시 작성자와 게시글 정보가 같이 저장
+2. 댓글 생성/조회/수정/삭제 조회 기능
+    - 수정/삭제는 댓글 작성자만 가능
