@@ -1,52 +1,104 @@
 package techcourse.myblog.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.util.Objects;
 
+@Entity
 public class Article {
-    private static final String DEFAULT_COVER_URL = "/images/default/bg.jpg";
-    private final String title;
-    private final String contents;
-    private final String coverUrl;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Article(String title, String contents, String coverUrl) {
-        this.title = title;
-        this.contents = contents;
-        if (coverUrl.isEmpty()) {
-            this.coverUrl = DEFAULT_COVER_URL;
-            return;
+    private String title;
+    private String coverUrl;
+    private String contents;
+
+    private Article() {
+
+    }
+
+    public static class ArticleBuilder {
+        private String title;
+        private String coverUrl;
+        private String contents;
+
+        public ArticleBuilder title(String title) {
+            this.title = title;
+            return this;
         }
+
+        public ArticleBuilder coverUrl(String coverUrl) {
+            this.coverUrl = coverUrl;
+            return this;
+        }
+
+        public ArticleBuilder contents(String contents) {
+            this.contents = contents;
+            return this;
+        }
+
+        public Article build() {
+            return new Article(this);
+        }
+    }
+
+    public Article(ArticleBuilder articleBuilder) {
+        this.title = articleBuilder.title;
+        this.coverUrl = articleBuilder.coverUrl;
+        this.contents = articleBuilder.contents;
+    }
+
+    public Article(String title, String coverUrl, String contents) {
+        this.title = title;
         this.coverUrl = coverUrl;
+        this.contents = contents;
     }
 
-    public boolean isSameTitle(String title) {
-        return title.equals(this.title);
+    public void modify(Article article) {
+        this.title = article.getTitle();
+        this.coverUrl = article.getCoverUrl();
+        this.contents = article.getContents();
     }
 
-    public boolean isSameContents(String contents) {
-        return contents.equals(this.contents);
-    }
-
-    public boolean isSameCoverUrl(String coverUrl) {
-        return coverUrl.equals(this.coverUrl);
+    public Long getId() {
+        return id;
     }
 
     public String getTitle() {
         return title;
     }
 
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
     public String getContents() {
         return contents;
     }
 
-    public String getCoverUrl() {
-        return coverUrl;
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Article article = (Article) object;
+        return Objects.equals(id, article.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Article{" +
-                "title : \"" + title + "\"" +
-                ", contents : \"" + contents + "\"" +
-                ", coverUrl : \"" + coverUrl + "\"" +
-                "}";
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                '}';
     }
 }
