@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.UserRequestDto;
+import techcourse.myblog.service.dto.UserRequestDto;
 import techcourse.myblog.persistence.UserRepository;
 import techcourse.myblog.service.UserService;
 
