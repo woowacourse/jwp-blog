@@ -1,8 +1,12 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -13,9 +17,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
+    @Size(min = 2, max = 10)
     private String name;
+    @Column(nullable = false)
+    @Size(max = 30)
     private String password;
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
+    @Size(max = 20)
     private String email;
 
     public User(String name, String password, String email) {
@@ -30,6 +39,5 @@ public class User {
         this.password = password;
         this.email = email;
     }
-
 }
 
