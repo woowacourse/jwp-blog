@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -53,7 +54,7 @@ public class LoginControllerTest {
                 .expectBody()
                 .consumeWith(redirectResponse -> {
                     String body = new String(redirectResponse.getResponseBody());
-                    assertThat(body.contains(USER_NAME_1)).isTrue();
+                    assertTrue(body.contains(USER_NAME_1));
                 });
     }
 
@@ -67,7 +68,7 @@ public class LoginControllerTest {
                 .expectBody()
                 .consumeWith(response -> {
                     String url = response.getResponseHeaders().get("Location").get(0);
-                    assertThat(url.contains(LOGIN_FAIL_PAGE)).isTrue();
+                    assertTrue(url.contains(LOGIN_FAIL_PAGE));
 
                 });
 

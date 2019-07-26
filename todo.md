@@ -1,6 +1,13 @@
 #TODO
-1. interceptor 구현
-2. controllerAdvice 구현
+1. 게시글 생성 시 사용자 정보 같이 저장하기
+2. 댓글 관련 기능 구현
+    - 댓글 작성 시 작성자와 게시글 정보가 같이 저장됨
+    - 댓글 생성 / 조회 /  수정 / 삭제 기능 구현
+        - 수정/삭제는 댓글 작성자만 가능
+
+
+(선택) 1. interceptor 구현     
+(선택) 2. controllerAdvice 구현
 
 
 
