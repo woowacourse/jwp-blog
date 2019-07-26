@@ -1,7 +1,6 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -10,8 +9,12 @@ import java.util.Objects;
 @Entity
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @NotBlank
     @Email
+    @Column(unique = true)
     private String email;
 
     @NotBlank
@@ -57,7 +60,7 @@ public class User {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         User user = (User) object;
-        return Objects.equals(email, user.email);
+        return Objects.equals(id, user.id);
     }
 
     @Override

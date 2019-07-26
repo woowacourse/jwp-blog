@@ -27,7 +27,7 @@ public class UserService {
 
     @Transactional
     public String save(UserDto userDto) {
-        if (userRepository.findById(userDto.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
             throw new DuplicatedIdException("이미 사용중인 이메일입니다.");
         }
 
@@ -44,7 +44,7 @@ public class UserService {
     @Valid
     @Transactional(readOnly = true)
     public User findUserById(String email) {
-        return userRepository.findById(email)
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login"));
     }
 
@@ -64,13 +64,13 @@ public class UserService {
 
     @Transactional
     public void modify(@Valid UserDto userDto) {
-        User user = userRepository.findById(userDto.getEmail())
+        User user = userRepository.findByEmail(userDto.getEmail())
                 .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/"));
         user.modify(userConverter.convertFromDto(userDto));
     }
 
     @Transactional
     public void removeById(String email) {
-        userRepository.deleteById(email);
+        userRepository.deleteByEmail(email);
     }
 }
