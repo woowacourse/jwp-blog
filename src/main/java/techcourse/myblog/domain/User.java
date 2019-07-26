@@ -16,10 +16,15 @@ public class User {
     private Long id;
 
     @NonNull
+    @Column(length = 100)
     private String userName;
+
     @NonNull
+    @Column(length = 100)
     private String email;
+
     @NonNull
+    @Column(length = 100)
     private String password;
 
     @OneToMany(mappedBy = "author")
