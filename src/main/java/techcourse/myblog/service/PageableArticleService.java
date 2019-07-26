@@ -4,8 +4,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.Article.Article;
-import techcourse.myblog.domain.Article.ArticleException;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleException;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repository.ArticlePageableRepository;
 

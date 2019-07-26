@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import techcourse.myblog.domain.Article.ArticleException;
+import techcourse.myblog.domain.article.ArticleException;
 import techcourse.myblog.web.ArticleController;
 
 @ControllerAdvice(assignableTypes = ArticleController.class)
@@ -17,7 +17,7 @@ public class ArticleControllerAdvice {
     @ExceptionHandler(ArticleException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public String failToLogin(ArticleException e, Model model) {
-        log.debug("Article Manipulate FAILED {}", e.getMessage());
+        log.debug("article Manipulate FAILED {}", e.getMessage());
         model.addAttribute("error", e.getMessage());
         return "404";
     }

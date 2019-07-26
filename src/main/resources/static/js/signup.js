@@ -5,7 +5,7 @@ const validate = (e) => {
     if (first.value !== second.value) {
         first.value = "";
         second.value = "";
-        alert("Are you Fucking me?");
+        alert("비밀번호가 다릅니다");
         return false;
     }
     document.forms[0].submit();

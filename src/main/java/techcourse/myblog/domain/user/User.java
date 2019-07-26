@@ -1,4 +1,4 @@
-package techcourse.myblog.domain.User;
+package techcourse.myblog.domain.user;
 
 import techcourse.myblog.dto.UserDto;
 
@@ -16,7 +16,7 @@ public class User {
     @Convert(converter = UserPasswordConverter.class)
     private UserPassword password;
 
-    @Column(unique = true)
+    //    @Column(unique = true)
     @Convert(converter = UserEmailConverter.class)
     private UserEmail email;
 

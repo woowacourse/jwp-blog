@@ -1,6 +1,6 @@
 package techcourse.myblog.dto;
 
-import techcourse.myblog.domain.Article.Article;
+import techcourse.myblog.domain.article.Article;
 
 public class ArticleDto {
 
