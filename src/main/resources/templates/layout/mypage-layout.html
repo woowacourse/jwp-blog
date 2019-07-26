@@ -9,13 +9,21 @@
 <div>
     <header th:replace="fragments/header :: headerFragment">
     </header>
+    <div class="about-cover card no-border">
+        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
+            <div class="display-block height-100">
+
+            </div>
+        </div>
+    </div>
     <th:block layout:fragment="content">
     </th:block>
 </div>
-<footer th:replace="fragments/footer :: footerFragment">
-</footer>
 
 <th:block th:replace="fragments/script :: scriptFragment">
+</th:block>
+
+<th:block layout:fragment="addScript">
 </th:block>
 
 </body>

@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
@@ -43,7 +43,7 @@ public class ArticleControllerTests {
 
     @Test
     void articleAddTest() {
-        webTestClient.post().uri("/write")
+        webTestClient.post().uri("/articles/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("id", id)
                         .with("title", title)
@@ -68,8 +68,28 @@ public class ArticleControllerTests {
     }
 
     @Test
+    void findArticleByIdTest() {
+//        given(articleRepository.get(Integer.parseInt(id))).willReturn(new Article(0, title, contents, coverUrl));
+//        articleController.showArticle(0, model);
+//
+//        verify(articleRepository, atLeastOnce()).get(anyInt());
+        webTestClient.post().uri("/articles/write")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("id", "0")
+                        .with("title", "title")
+                        .with("coverUrl", "coverUrl")
+                        .with("contents", "contents"))
+                .exchange()
+                .expectStatus().is3xxRedirection();
+
+        webTestClient.get().uri("/articles/0")
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
     void articleUpdate() {
-        webTestClient.post().uri("/write")
+        webTestClient.post().uri("/articles/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("id", "0")
                         .with("title", "title")
@@ -103,16 +123,12 @@ public class ArticleControllerTests {
     }
 
     private String getResponseBody(byte[] responseBody) {
-        try {
-            return new String(responseBody, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("ArticleControllerTest 에서 EncodingException 발생 : " + e.getMessage());
-        }
+        return new String(responseBody, StandardCharsets.UTF_8);
     }
 
     @Test
     void articleDelete() {
-        webTestClient.post().uri("/write")
+        webTestClient.post().uri("/articles/write")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("id", id)
                         .with("title", title)
@@ -129,5 +145,4 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is4xxClientError();
     }
-
 }
