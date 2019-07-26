@@ -3,7 +3,6 @@ package techcourse.myblog.interceptor.login;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import techcourse.myblog.utils.session.SessionUtil;
 
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
