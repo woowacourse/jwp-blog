@@ -15,6 +15,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/accounts/profile/edit")
                 .addPathPatterns("/logout")
                 .addPathPatterns("/accounts/user")
+                .addPathPatterns("/articles/**")
         ;
 
         registry.addInterceptor(new UserInterceptor())
