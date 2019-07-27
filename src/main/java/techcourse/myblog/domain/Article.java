@@ -5,15 +5,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @RequiredArgsConstructor
 @Getter
+@Setter
 @EqualsAndHashCode
 @ToString
 public class Article {
@@ -29,6 +32,9 @@ public class Article {
 
     @Column(nullable = false)
     private String contents;
+
+    @ManyToOne
+    private User author;
 
     public Article(String title, String coverUrl, String contents) {
         this.title = title;
