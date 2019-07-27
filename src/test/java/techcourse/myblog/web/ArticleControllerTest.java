@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.article.Article;
@@ -40,16 +39,28 @@ public class ArticleControllerTest extends AbstractControllerTest{
     }
 
     @Test
-    void Article_생성_페이지_접근() {
-        checkIsOk(getResponse("/articles/writing"));
+    void 로그인_전_Article_생성_페이지_접근() {
+        webTestClient.get().uri("/articles/new").exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
+    }
+
+    @Test
+    void 로그인_후_Article_생성_페이지_접근() {
+        String jSessionId = getJSessionId("jun", "jun@gmail.com", "Aa12345!");
+        webTestClient.get().uri("/articles/new")
+                .cookie("JSESSIONID", jSessionId)
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @Test
     void 로그인_전_Article_생성() {
         ArticleDto articleDto = new ArticleDto(title, coverUrl, contents);
-        WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.post()
-                .uri("/articles"), articleDto)
-                .expectStatus().isBadRequest();
+        getResponse(webTestClient.post()
+                .uri("/articles/new"), articleDto, null)
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
     }
 
     @Test
@@ -57,65 +68,98 @@ public class ArticleControllerTest extends AbstractControllerTest{
         String jSessionId = getJSessionId("Buddy","buddy@gmail.com","Aa12345!");
         ArticleDto articleDto = new ArticleDto(title, coverUrl, contents);
 
-        WebTestClient.RequestBodySpec requestBodySpec = webTestClient.post().uri("/articles")
+        WebTestClient.RequestBodySpec requestBodySpec = webTestClient.post().uri("/articles/new")
                 .cookie("JSESSIONID", jSessionId);
 
-        WebTestClient.ResponseSpec responseSpec = getResponse(requestBodySpec, articleDto)
+        WebTestClient.ResponseSpec responseSpec = getResponse(requestBodySpec, articleDto, jSessionId)
                 .expectStatus().isFound()
                 .expectHeader().valueMatches("location", ".*/articles.*");
 
         checkBody(responseSpec,articleDto);
     }
 
-    @Test
-    void 없는_Article() {
-        webTestClient.get().uri("/articles/10").exchange()
-                .expectStatus().isBadRequest();
-    }
+    //TODO
+//    @Test
+//    void 없는_Article() {
+//        webTestClient.get().uri("/articles/10").exchange()
+//                .expectStatus().isBadRequest();
+//    }
 
     @Test
-    void 수정_페이지_접근() {
+    void 로그인_전_수정_페이지_접근() {
         articleRepository.save(article);
-
-        checkIsOk(getResponse("articles/" + article.getArticleId() + "/edit"));
+        webTestClient.get().uri("articles/" + article.getArticleId() + "/edit")
+                .exchange().expectStatus().is3xxRedirection();
     }
 
     @Test
-    void Article_수정() {
+    void 로그인_후_수정_페이지_접근() {
+        Article article = articleRepository.save(this.article);
+        String jSessionId = getJSessionId("coni", "coni@gmail.com", "Aa12345!");
+        webTestClient.get().uri("articles/" + article.getArticleId() + "/edit")
+                .cookie("JSESSIONID", jSessionId)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void 로그인_전_Article_수정() {
         Article article = articleRepository.save(this.article);
         ArticleDto articleDto = new ArticleDto("update title", "update coverUrl", "update contents");
 
-        WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/" + article.getArticleId()), articleDto);
-        checkIsFound(responseSpec);
-        checkBody(responseSpec, articleDto);
-
+        getResponse(webTestClient.put().uri("/articles/" + article.getArticleId()), articleDto, null)
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
-    void Article_삭제() {
+    void 로그인_후_Article_수정() {
+        Article article = articleRepository.save(this.article);
+        ArticleDto articleDto = new ArticleDto("update title", "update coverUrl", "update contents");
+        String jSessionId = getJSessionId("hwatu", "hawtu@gmail.com", "Aa12345!");
+
+        WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/"
+                + article.getArticleId()), articleDto, jSessionId);
+
+        responseSpec.expectBody()
+                .consumeWith(response -> {
+                    webTestClient.get().uri(Objects.requireNonNull(response.getResponseHeaders().get("Location")).get(0))
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody()
+                            .consumeWith(res -> {
+                                String body = new String(Objects.requireNonNull(res.getResponseBody()));
+                                assertThat(body.contains(articleDto.getTitle())).isTrue();
+                                assertThat(body.contains(articleDto.getCoverUrl())).isTrue();
+                                assertThat(body.contains(articleDto.getContents())).isTrue();
+                            });
+                });
+    }
+
+    @Test
+    void 로그인_전_Article_삭제() {
         Article article = articleRepository.save(this.article);
 
         webTestClient.delete().uri("/articles/" + article.getArticleId())
                 .exchange()
                 .expectStatus()
-                .is3xxRedirection();
+                .is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
     }
 
-    private void checkIsFound(WebTestClient.ResponseSpec responseSpec) {
-        responseSpec.expectStatus().isFound();
+    @Test
+    void 로그인_후_Article_삭제() {
+        Article article = articleRepository.save(this.article);
+
+        webTestClient.delete().uri("/articles/" + article.getArticleId())
+                .exchange()
+                .expectStatus()
+                .is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/.*");
     }
 
-    private void checkIsOk(WebTestClient.ResponseSpec responseSpec) {
-        responseSpec.expectStatus().isOk();
-    }
-
-    private WebTestClient.ResponseSpec getResponse(String uri) {
-        return webTestClient.get().uri(uri)
-                .exchange();
-    }
-
-    private WebTestClient.ResponseSpec getResponse(WebTestClient.RequestBodySpec requestBodySpec, ArticleDto articleDto) {
+    private WebTestClient.ResponseSpec getResponse(WebTestClient.RequestBodySpec requestBodySpec, ArticleDto articleDto, String jSessionId) {
         return requestBodySpec
+                .cookie("JSESSIONID", jSessionId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", articleDto.getTitle())

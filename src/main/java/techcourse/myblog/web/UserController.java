@@ -35,6 +35,7 @@ public class UserController {
 
     @PostMapping("/new")
     public String createUser(@Valid UserDto userDto, BindingResult bindingResult) throws NotValidUserInfoException {
+        //TODO 이 코드 ServiceLayer로 이동
         if (bindingResult.hasErrors()) {
             throw new NotValidUserInfoException(bindingResult.getFieldError().getDefaultMessage());
         }

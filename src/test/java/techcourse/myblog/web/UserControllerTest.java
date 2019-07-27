@@ -80,10 +80,19 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void 유점_리스트_확인() {
-        create_user("Martin", "martin@gmail.com", password);
-
+    void 로그인_전_유점_리스트_확인() {
         getRequest("/users")
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
+    }
+
+    @Test
+    void 로그인_후_유점_리스트_확인() {
+        String jSessionId = getJSessionId("Martin", "martin@gmail.com", password);
+
+        webTestClient.get().uri("/users")
+                .cookie("JSESSIONID", jSessionId)
+                .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBody().consumeWith(res -> {
@@ -95,7 +104,8 @@ public class UserControllerTest extends AbstractControllerTest {
     @Test
     void 로그인_전_마이페이지_접근() {
         getRequest("/users/mypage")
-                .expectStatus().isBadRequest();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
     }
 
     @Test
@@ -111,7 +121,8 @@ public class UserControllerTest extends AbstractControllerTest {
     @Test
     void 로그인_전_회원수정페이지_접근() {
         getRequest("/users/mypage/edit")
-                .expectStatus().isBadRequest();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
     }
 
     @Test

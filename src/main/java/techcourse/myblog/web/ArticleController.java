@@ -20,12 +20,12 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @GetMapping("/writing")
+    @GetMapping("/new")
     public String writeArticle() {
         return "article-edit";
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public String createArticle(ArticleDto articleDto, HttpSession httpSession, Model model) {
         Article article = articleService.createArticle(articleDto,httpSession);
         model.addAttribute("article", article);
