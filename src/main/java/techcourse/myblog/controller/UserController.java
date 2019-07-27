@@ -50,7 +50,7 @@ public class UserController {
 
     @PostMapping("/users")
     public RedirectView save(@ModelAttribute("/signup") @Validated({Default.class, UserInfo.class}) UserDto userDto) {
-        userService.save(userDto.toUser());
+        userService.save(userDto.toDomain());
         return new RedirectView("/login");
     }
 
@@ -68,7 +68,7 @@ public class UserController {
 
     @PostMapping("/login")
     public RedirectView login(@ModelAttribute("/login") UserDto userDto) {
-        userSessionManager.setUser(userService.login(userDto.toUser()));
+        userSessionManager.setUser(userService.login(userDto.toDomain()));
         return new RedirectView("/");
     }
 

@@ -32,7 +32,7 @@ public class ArticleControllerTest extends WebClientGenerator {
     @BeforeEach
     void setup() {
         if (saved == null) {
-            saved = articleRepository.save(articleDto.toArticle());
+            saved = articleRepository.save(articleDto.toDomain());
         }
     }
 
@@ -75,11 +75,11 @@ public class ArticleControllerTest extends WebClientGenerator {
 
     @Test
     void create_article_en() {
-        responseSpec(POST, "/articles/write", parser(articleDto.toArticle()))
+        responseSpec(POST, "/articles/write", parser(articleDto.toDomain()))
                 .expectStatus()
                 .isFound()
                 .expectBody()
-                .consumeWith(response -> assertEqualToResponseArticle(response, articleDto.toArticle()));
+                .consumeWith(response -> assertEqualToResponseArticle(response, articleDto.toDomain()));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class ArticleControllerTest extends WebClientGenerator {
 
     @Test
     void 게시글_수정() {
-        Article article = articleRepository.save(articleDto.toArticle());
+        Article article = articleRepository.save(articleDto.toDomain());
         Article editedArticle = new Article("new title", "new url", "new contents");
 
         responseSpec(PUT, "/articles/" + article.getId(), parser(editedArticle))
@@ -117,7 +117,7 @@ public class ArticleControllerTest extends WebClientGenerator {
 
     @Test
     void 게시글_삭제() {
-        Article article = articleRepository.save(articleDto.toArticle());
+        Article article = articleRepository.save(articleDto.toDomain());
 
         responseSpec(DELETE, "/articles/" + article.getId())
                 .expectStatus()

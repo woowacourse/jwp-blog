@@ -6,7 +6,7 @@ import javax.validation.constraints.Pattern;
 
 import techcourse.myblog.domain.User;
 
-public class UserDto {
+public class UserDto implements DtoUtils<User> {
     @NotBlank(message = "이름을 입력해주세요",
             groups={UserInfo.class})
     @Pattern(regexp = "[^ \\-!@#$%^&*(),.?\":{}|<>0-9]{2,10}",
@@ -41,16 +41,8 @@ public class UserDto {
         return password;
     }
 
-    public User toUser() {
-        return new User(name, email, password);
-    }
-
     @Override
-    public String toString() {
-        return "UserDto{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+    public User toDomain() {
+        return new User(name, email, password);
     }
 }

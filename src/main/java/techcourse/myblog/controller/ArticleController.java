@@ -32,7 +32,7 @@ public class ArticleController {
 
     @PostMapping("/write")
     public RedirectView createArticle(@Valid ArticleDto articleDto) {
-        Article article = articleService.save(articleDto.toArticle());
+        Article article = articleService.save(articleDto.toDomain());
         return new RedirectView("/articles/" + article.getId());
     }
 
@@ -53,7 +53,7 @@ public class ArticleController {
     @PutMapping("/{articleId}")
     @Transactional
     public RedirectView editArticle(@PathVariable long articleId, @Valid ArticleDto articleDto) {
-        articleService.update(articleId, articleDto.toArticle());
+        articleService.update(articleId, articleDto.toDomain());
         return new RedirectView("/articles/" + articleId);
     }
 
