@@ -7,10 +7,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.users.User;
 import techcourse.myblog.users.UserSession;
 
-import static techcourse.myblog.users.UserSession.USER_SESSION;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class LoginInterceptorTest {
+class NotLoginInterceptorTest {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -26,43 +24,56 @@ class LoginInterceptorTest {
 
         webTestClient = WebTestClient.bindToWebHandler(exchange -> exchange.getSession()
                 .doOnNext(webSession ->
-                        webSession.getAttributes().put(USER_SESSION, userSession))
+                        webSession.getAttributes().put("user", userSession))
                 .then()).build();
     }
 
     @Test
-    void 로그인후_LoginForm_접근() {
-        createSession();
-
-        webTestClient.get().uri("/users/login")
+    void 로그인_안하고_users_접근시_Redirection() {
+        webTestClient.get().uri("/users")
                 .exchange()
-                .expectStatus()
-                .is3xxRedirection()
+                .expectStatus().is3xxRedirection()
                 .expectHeader()
-                .valueMatches("location", "/");
+                .valueMatches("location", ".*/users/login");
     }
 
     @Test
-    void 로그인후_Login_접근() {
+    void 로그인후_users_접근() {
         createSession();
 
-        webTestClient.post().uri("/users/login")
+        webTestClient.get().uri("/users")
                 .exchange()
                 .expectStatus()
-                .is3xxRedirection()
-                .expectHeader()
-                .valueMatches("location", "/");
+                .isOk();
     }
 
     @Test
-    void 로그인후_SignupForm__접근() {
+    void 로그인후_mypage_페이지_접근() {
         createSession();
 
-        webTestClient.get().uri("/users/new")
+        webTestClient.get().uri("/users/{id}", 1)
                 .exchange()
                 .expectStatus()
-                .is3xxRedirection()
+                .isOk();
+    }
+
+    @Test
+    void 로그인후_mypage_edit__접근() {
+        createSession();
+
+        webTestClient.get().uri("/users/{id}/edit", 1)
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
+
+    @Test
+    void 로그인_안하고_mypage_edit_접근() {
+
+        webTestClient.get().uri("/users/{id}/edit", 1)
+                .exchange()
+                .expectStatus().is3xxRedirection()
                 .expectHeader()
-                .valueMatches("location", "/");
+                .valueMatches("location", ".*/users/login");
     }
 }
