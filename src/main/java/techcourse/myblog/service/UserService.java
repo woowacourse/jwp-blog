@@ -40,7 +40,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    private User getUserByEmail(String userEmail) {
+    public User getUserByEmail(String userEmail) {
         return userRepository.findByEmail(UserEmail.of(userEmail)).orElseThrow(UserException::new);
     }
 
