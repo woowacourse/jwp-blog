@@ -25,10 +25,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    static String authenticate(final String password) {
-        return password;
-    }
-
     @Builder
     private User(final Long id, final String email, final String name, final String password) {
         if (id == null) {
@@ -40,6 +36,10 @@ public class User {
         this.email = email;
         this.name = name;
         this.password = password;
+    }
+
+    public boolean authenticate(final String password) {
+        return this.password.equals(password);
     }
 
     void update(final User other) {
