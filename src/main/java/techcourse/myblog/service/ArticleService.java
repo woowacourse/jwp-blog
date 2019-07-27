@@ -6,7 +6,6 @@ import techcourse.myblog.article.ArticleRepository;
 import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.service.dto.ArticleDto;
 
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 @Service
@@ -17,10 +16,7 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public Article createArticle(ArticleDto articleDto, HttpSession httpSession) {
-        if(httpSession.getAttribute("user")== null){
-            throw new NotFoundObjectException();
-        }
+    public Article createArticle(ArticleDto articleDto) {
         Article article = articleDto.toEntity();
         return articleRepository.save(article);
     }

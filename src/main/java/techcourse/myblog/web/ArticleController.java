@@ -8,8 +8,6 @@ import techcourse.myblog.article.Article;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.dto.ArticleDto;
 
-import javax.servlet.http.HttpSession;
-
 @Slf4j
 @Controller
 @RequestMapping("/articles")
@@ -26,8 +24,8 @@ public class ArticleController {
     }
 
     @PostMapping("/new")
-    public String createArticle(ArticleDto articleDto, HttpSession httpSession, Model model) {
-        Article article = articleService.createArticle(articleDto,httpSession);
+    public String createArticle(ArticleDto articleDto, Model model) {
+        Article article = articleService.createArticle(articleDto);
         model.addAttribute("article", article);
         return "redirect:/articles/" + article.getArticleId();
     }

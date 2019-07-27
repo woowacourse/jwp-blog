@@ -71,7 +71,7 @@ public class userServiceTest {
         given(httpSession.getAttribute("user")).willReturn(user);
         given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
 
-        assertDoesNotThrow(() -> userService.deleteUser(httpSession));
+        assertDoesNotThrow(() -> userService.deleteUser(user.getEmail()));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class userServiceTest {
         given(httpSession.getAttribute("user")).willReturn(user);
         given(userRepository.findByEmail(email)).willReturn(Optional.empty());
 
-        assertThrows(NotFoundObjectException.class, () -> userService.deleteUser(httpSession));
+        assertThrows(NotFoundObjectException.class, () -> userService.deleteUser(user.getEmail()));
     }
 
 }

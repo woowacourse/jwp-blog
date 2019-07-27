@@ -38,14 +38,7 @@ public class ArticleServiceTest {
         given(httpSession.getAttribute("user")).willReturn(user);
         given(articleRepository.save(article)).willReturn(article);
 
-        assertDoesNotThrow(() -> articleService.createArticle(articleDto, httpSession));
-    }
-
-    @Test
-    void 글_생성_예외() {
-        given(httpSession.getAttribute("user")).willReturn(null);
-
-        assertThrows(NotFoundObjectException.class, () -> articleService.createArticle(articleDto, httpSession));
+        assertDoesNotThrow(() -> articleService.createArticle(articleDto));
     }
 
     @Test

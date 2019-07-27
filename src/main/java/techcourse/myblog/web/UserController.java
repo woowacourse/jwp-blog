@@ -50,28 +50,28 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String showMyPage(HttpSession httpSession) {
-        userService.checkRequestAboutMypage(httpSession);
+    public String showMyPage() {
         return "mypage";
     }
 
     @GetMapping("/mypage/edit")
-    public String showEditPage(HttpSession httpSession) {
-        userService.checkRequestAboutMypage(httpSession);
+    public String showEditPage() {
         return "mypage-edit";
     }
 
     @PutMapping("/mypage/edit")
     public String editUserInfo(@Valid UserUpdateRequestDto userUpdateRequestDto,
                                BindingResult bindingResult, HttpSession httpSession) {
-        User user = userService.updateUser(bindingResult, httpSession, userUpdateRequestDto);
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
+        User user = userService.updateUser(bindingResult, email, userUpdateRequestDto);
         httpSession.setAttribute("user", user);
         return "redirect:/users/mypage";
     }
 
     @DeleteMapping("/mypage")
     public String deleteUser(HttpSession httpSession) {
-        userService.deleteUser(httpSession);
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
+        userService.deleteUser(email);
         httpSession.removeAttribute("user");
         return "redirect:/";
     }
