@@ -24,6 +24,7 @@ public class CertificationWebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(handlerInterceptor)
                 .addPathPatterns("/mypage/**")
+                .addPathPatterns("/articles/**")
                 .addPathPatterns("/logout");
     }
 }
