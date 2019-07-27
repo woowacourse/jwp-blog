@@ -14,9 +14,11 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
+import techcourse.myblog.controller.session.UserSession;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.service.CommentService;
 
 @RequestMapping("/articles")
 @Controller
@@ -24,6 +26,7 @@ import techcourse.myblog.dto.ArticleDto;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final CommentService commentService;
 
     @GetMapping("/writing")
     public String createArticleForm() {
@@ -31,8 +34,8 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public RedirectView createArticle(@Valid ArticleDto articleDto) {
-        Article article = articleService.save(articleDto.toDomain());
+    public RedirectView createArticle(@Valid ArticleDto articleDto, UserSession userSession) {
+        Article article = articleService.save(articleDto.toDomain(), userSession.getUser());
         return new RedirectView("/articles/" + article.getId());
     }
 
@@ -40,6 +43,7 @@ public class ArticleController {
     public String showArticle(@PathVariable long articleId, Model model) {
         Article article = articleService.select(articleId);
         model.addAttribute("article", article);
+        model.addAttribute("comments", commentService.findAll(articleId));
         return "article";
     }
 

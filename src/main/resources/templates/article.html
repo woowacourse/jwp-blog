@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://thymeleaf.org" lang="ko">
 <head>
     <head th:include="includes/meta :: common_meta"></head>
     <head th:include="includes/css :: common_css"></head>
@@ -70,6 +70,18 @@
                 </div>
                 <div class="comment">
                     <ul class="list-unstyled list-info">
+                        <li class="comment-item border bottom mrg-btm-30" th:each="comment: ${comments}">
+                            <img class="thumb-img img-circle"
+                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+                            <div class="info">
+                                <span href="" class="text-bold inline-block" th:text="${comment.user.name}">이름</span>
+                                <span class="sub-title inline-block pull-right">
+                                    <i class="ti-timer pdd-right-5"></i>
+                                    <span>6 min ago</span>
+                            </span>
+                                <p class="width-80" th:text="${comment.contents}">내용</p>
+                            </div>
+                        </li>
                         <li class="comment-item border bottom mrg-btm-30">
                             <img class="thumb-img img-circle"
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
@@ -94,7 +106,7 @@
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span>6 min ago</span>
                                 </span>
-                                <p class="width-80">브라운 멋져</p>
+                                <p class="width-80" th:text="${article.id}">브라운 멋져</p>
                             </div>
                         </li>
 

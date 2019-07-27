@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.exception.UnFoundArticleException;
 import techcourse.myblog.repository.ArticleRepository;
 
@@ -12,7 +13,8 @@ import techcourse.myblog.repository.ArticleRepository;
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
-    public Article save(Article article) {
+    public Article save(Article article, User user) {
+        article.setAuthor(user);
         return articleRepository.save(article);
     }
 
