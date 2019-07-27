@@ -5,7 +5,6 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserFactory;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserProfileDto;
-import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;

@@ -68,25 +68,4 @@ public class UserController {
         UserProfileDto loggedInUser = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
         return (loggedInUser != null) && loggedInUser.getId().equals(id);
     }
-
-    @ExceptionHandler(NotFoundUserException.class)
-    public String handleNotFoundUserException(Model model, Exception e) {
-        return "redirect:/";
-    }
-
-    @ExceptionHandler(SignUpException.class)
-    public String handleSignUpException(Model model, Exception e) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "sign-up";
-    }
-
-    @ExceptionHandler(UserUpdateException.class)
-    public String handleUpdateUserException(Exception e,
-                                            HttpServletRequest httpServletRequest,
-                                            RedirectAttributes redirectAttributes) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        UserProfileDto user = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
-        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        return "redirect:/mypage/" + user.getId() + "/edit";
-    }
 }

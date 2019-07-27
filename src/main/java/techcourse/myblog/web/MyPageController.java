@@ -49,7 +49,7 @@ public class MyPageController {
 
     private boolean isLoggedInUserMYPage(HttpServletRequest httpServletRequest, User user) {
         HttpSession httpSession = httpServletRequest.getSession();
-        UserProfileDto loggedInUser = (UserProfileDto) httpSession.getAttribute("loggedInUser");
+        UserProfileDto loggedInUser = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
         return (loggedInUser != null) && (user.getId().equals(loggedInUser.getId()));
     }
 
