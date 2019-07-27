@@ -1,8 +1,10 @@
 package techcourse.myblog.domain.user;
 
+import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.dto.UserDto;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -16,9 +18,12 @@ public class User {
     @Convert(converter = UserPasswordConverter.class)
     private UserPassword password;
 
-    //    @Column(unique = true)
+    @Column(unique = true)
     @Convert(converter = UserEmailConverter.class)
     private UserEmail email;
+
+    @OneToMany(mappedBy = "author")
+    private List<Article> aritlces;
 
     protected User() {
     }
@@ -46,8 +51,8 @@ public class User {
     }
 
     public void updateNameAndEmail(String name, String email) {
-        this.name.update(name);
-        this.email.update(email);
+        this.name = UserName.of(name);
+        this.email = UserEmail.of(email);
     }
 
     public boolean isMatchPassword(UserDto dto) {
@@ -55,7 +60,11 @@ public class User {
     }
 
     public boolean isMatchPassword(String password) {
-        return this.password.match(password);
+        return this.password.equals(UserPassword.of(password));
+    }
+
+    public boolean isMatchEmail(String email) {
+        return this.email.equals(UserEmail.of(email));
     }
 
     @Override
