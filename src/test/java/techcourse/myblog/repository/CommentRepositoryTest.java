@@ -21,7 +21,7 @@ class CommentRepositoryTest {
     private UserRepository userRepository;
 
     @Autowired
-    private ArticlePageableRepository articleRepsository;
+    private ArticleRepository articleRepsository;
 
     private User user;
     private Article article;

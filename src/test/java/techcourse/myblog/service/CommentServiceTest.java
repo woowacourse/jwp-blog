@@ -7,7 +7,7 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.CommentDto;
-import techcourse.myblog.repository.ArticlePageableRepository;
+import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.web.support.UserSessionInfo;
 
@@ -20,14 +20,14 @@ class CommentServiceTest {
     private CommentService commentService;
 
     @Autowired
-    private ArticlePageableRepository articlePageableRepository;
+    private ArticleRepository articleRepository;
 
     @Autowired
     private UserRepository userRepository;
 
     @Test
     void 코맨트_추가_테스트() {
-        Article article = articlePageableRepository.save(new Article("a", "b", "c"));
+        Article article = articleRepository.save(new Article("a", "b", "c"));
         userRepository.save(new User("andole", "aA1231!!", "andole87@gmail.com"));
         UserSessionInfo userSessionInfo = new UserSessionInfo("andole", "andole87@gmail.com");
         Comment comment = commentService.addComment(article.getId(), userSessionInfo.getEmail(), new CommentDto("asd"));

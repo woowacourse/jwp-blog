@@ -9,14 +9,13 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.dto.ArticleDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class ArticleRepositoryTest {
 
     @Autowired
@@ -54,8 +53,7 @@ class ArticleRepositoryTest {
 
     @Test
     void findAllTest() {
-        List<Article> list = new ArrayList<>();
-        articleRepository.findAll().forEach(list::add);
+        List<Article> list = articleRepository.findAll();
 
         assertThat(list.get(0).getTitle()).isEqualTo("a1");
         assertThat(list.get(1).getTitle()).isEqualTo("a2");
