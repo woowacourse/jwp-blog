@@ -14,14 +14,14 @@ import techcourse.myblog.domain.exception.UserLoginException;
 @Slf4j
 @ControllerAdvice
 public class UserLoginExceptionAdvice {
-    @ExceptionHandler(UnFoundUserException.class)
+    @ExceptionHandler({UnFoundUserException.class, NotMatchPasswordException.class})
     public RedirectView unFoundExceptionHandler(UserLoginException e, RedirectAttributes redirectAttributes) {
         log.debug(e.getMessage());
         redirectAttributes.addFlashAttribute("errors", e.getMessage());
         return new RedirectView("/login");
     }
 
-    @ExceptionHandler({DuplicatedUserException.class, NotMatchPasswordException.class})
+    @ExceptionHandler({DuplicatedUserException.class})
     public RedirectView duplicatedUserExceptionHandler(UserLoginException e, RedirectAttributes redirectAttributes) {
         log.debug(e.getMessage());
         redirectAttributes.addFlashAttribute("errors", e.getMessage());

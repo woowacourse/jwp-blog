@@ -92,8 +92,8 @@
 - [X] 객체 연관관계 수정하기
 
 ### 댓글 등록 및 수정
-- [ ] 댓글 생성 기능 구현 ``POST /comments``
-- [ ] 댓글 조회 기능 구현 - CommentService
+- [X] 댓글 생성 기능 구현 ``POST /comments``
+- [X] 댓글 조회 기능 구현 - CommentService
 - [ ] 댓글 수정 기능 구현 ``PUT /comments/{comment_id}``
 - [ ] 댓글 삭제 기능 구현 ``DELETE /comments/{comment_id}``
 - [ ] 수정/삭제는 댓글 작성자만 가능
