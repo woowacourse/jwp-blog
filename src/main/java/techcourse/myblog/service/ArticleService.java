@@ -2,8 +2,6 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.exception.UnFoundArticleException;
@@ -19,23 +17,23 @@ public class ArticleService {
     }
 
     public Article select(long id) {
-        Optional<Article> article = articleRepository.findById(id);
-        if (!article.isPresent()) {
-            throw new UnFoundArticleException("해당 게시글이 존재하지 않습니다.");
-        }
-        return article.get();
+        return articleRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new UnFoundArticleException("해당 게시글이 존재하지 않습니다."));
     }
 
     public void update(long id, Article updateArticle) {
-        Optional<Article> article = articleRepository.findById(id);
-        if (!article.isPresent()) {
-            throw new UnFoundArticleException("해당 게시글이 존재하지 않습니다.");
-        }
-        article.get().update(updateArticle);
+        articleRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new UnFoundArticleException("해당 게시글이 존재하지 않습니다."))
+                .update(updateArticle);
     }
 
     public void delete(long id) {
-        Optional<Article> article = articleRepository.findById(id);
-        article.ifPresent(articleRepository::delete);
+        articleRepository
+                .findById(id)
+                .ifPresent(articleRepository::delete);
     }
 }

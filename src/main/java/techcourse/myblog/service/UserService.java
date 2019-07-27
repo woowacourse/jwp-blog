@@ -33,7 +33,6 @@ public class UserService {
         }
     }
 
-    @Transactional
     public User update(User originalUser, String newName) {
         return findBy(originalUser.getEmail())
                 .modifyName(newName);
