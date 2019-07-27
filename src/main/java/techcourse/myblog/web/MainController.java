@@ -8,15 +8,15 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techcourse.myblog.service.PageableArticleService;
+import techcourse.myblog.service.ArticleService;
 
 @Controller
 public class MainController {
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
-    private final PageableArticleService articleService;
+    private final ArticleService articleService;
 
-    public MainController(PageableArticleService articleService) {
+    public MainController(ArticleService articleService) {
         this.articleService = articleService;
     }
 

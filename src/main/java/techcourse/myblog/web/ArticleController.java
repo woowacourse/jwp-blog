@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.CommentDto;
+import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
-import techcourse.myblog.service.PageableArticleService;
 import techcourse.myblog.web.support.UserSessionInfo;
 
 @Controller
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
-    private final PageableArticleService articleService;
+    private final ArticleService articleService;
 
     private final CommentService commentService;
 
-    public ArticleController(PageableArticleService articleService, CommentService commentService) {
+    public ArticleController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
         this.commentService = commentService;
     }
