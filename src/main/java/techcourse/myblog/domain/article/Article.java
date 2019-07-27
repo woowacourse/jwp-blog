@@ -3,8 +3,10 @@ package techcourse.myblog.domain.article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,7 +23,11 @@ public class Article {
     private String contents;
     private String coverUrl;
 
-    @OneToMany(mappedBy = "id")
+    @ManyToOne
+    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    private User author;
+
+    @OneToMany(mappedBy = "article")
     private List<Comment> comments;
 
     public Article(String title, String contents, String coverUrl) {
@@ -67,6 +73,25 @@ public class Article {
 
     public boolean matchId(long id) {
         return this.id == id;
+    }
+
+    public List<Comment> getComments() {
+        return this.comments;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public void addComment(Comment comment) {
+        if (this.comments == null) {
+            this.comments = new ArrayList<>();
+        }
+        comments.add(comment);
     }
 
     @Override
