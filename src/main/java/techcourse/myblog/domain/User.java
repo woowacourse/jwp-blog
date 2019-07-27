@@ -2,20 +2,24 @@ package techcourse.myblog.domain;
 
 import techcourse.myblog.web.dto.UserDto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     private String email;
     private String name;
     private String password;
+
+    @OneToMany(mappedBy = "author")
+    private List<Article> articles = new ArrayList<>();
 
     public User() {
     }
@@ -63,6 +67,14 @@ public class User {
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    public List<Article> getArticles() {
+        return this.articles;
+    }
+
+    public void addArticle(Article persistArticle) {
+        articles.add(persistArticle);
     }
 
     @Override

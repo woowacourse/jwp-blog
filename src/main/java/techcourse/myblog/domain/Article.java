@@ -2,21 +2,22 @@ package techcourse.myblog.domain;
 
 import techcourse.myblog.web.dto.ArticleDto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Article")
 public class Article {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "article_id")
     private Long id;
     private String title;
     private String coverUrl;
     private String contents;
+
+    @ManyToOne
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    private User author;
 
     public Article() {
     }
@@ -38,10 +39,6 @@ public class Article {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -52,6 +49,10 @@ public class Article {
 
     public String getContents() {
         return contents;
+    }
+
+    public void setAuthor(User persistUser) {
+        this.author = persistUser;
     }
 
     @Override
