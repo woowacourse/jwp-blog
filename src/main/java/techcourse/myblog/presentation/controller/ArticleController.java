@@ -19,6 +19,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public RedirectView createArticles(ArticleDto article) {
+
         Long id = articleService.save(article);
 
         return new RedirectView("/articles/" + id);

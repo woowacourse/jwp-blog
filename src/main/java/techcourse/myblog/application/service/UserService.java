@@ -28,7 +28,7 @@ public class UserService {
 
     @Transactional
     public void save(UserDto userDto) {
-        if (userRepository.findById(userDto.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
             throw new DuplicatedIdException("이미 사용중인 이메일입니다.");
         }
 
@@ -47,7 +47,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     User findUserById(String email) {
-        return userRepository.findById(email)
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login"));
     }
 
