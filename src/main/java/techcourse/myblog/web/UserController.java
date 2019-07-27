@@ -7,10 +7,13 @@ import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserProfileDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.exception.AccessNotPermittedException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+
+import static techcourse.myblog.service.exception.AccessNotPermittedException.PERMISSION_FAIL_MESSAGE;
 
 @Controller
 public class UserController {
@@ -44,11 +47,11 @@ public class UserController {
     @PutMapping("/users/{id}")
     public String editUserName(@PathVariable Long id, UserProfileDto userProfileDto, HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
-        if (isLoggedInUser(httpSession, id)) {
-            userService.update(userProfileDto);
-            userProfileDto.setId(id);
-            httpSession.setAttribute(LOGGED_IN_USER, userProfileDto);
-        }
+
+        validateUser(httpSession, id);
+        userService.update(userProfileDto);
+        userProfileDto.setId(id);
+        httpSession.setAttribute(LOGGED_IN_USER, userProfileDto);
         return "redirect:/mypage/" + id;
     }
 
@@ -56,16 +59,18 @@ public class UserController {
     @DeleteMapping("/users/{id}")
     public String deleteUser(@PathVariable Long id, HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
-        if (isLoggedInUser(httpSession, id)) {
-            articleService.deleteByUserId(id);
-            userService.delete(id);
-            httpSession.removeAttribute(LOGGED_IN_USER);
-        }
+
+        validateUser(httpSession, id);
+        articleService.deleteByUserId(id);
+        userService.delete(id);
+        httpSession.removeAttribute(LOGGED_IN_USER);
         return "redirect:/";
     }
 
-    private boolean isLoggedInUser(HttpSession httpSession, Long id) {
+    private void validateUser(HttpSession httpSession, Long id) {
         UserProfileDto loggedInUser = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
-        return (loggedInUser != null) && loggedInUser.getId().equals(id);
+        if (!loggedInUser.getId().equals(id)) {
+            throw new AccessNotPermittedException(PERMISSION_FAIL_MESSAGE);
+        }
     }
 }

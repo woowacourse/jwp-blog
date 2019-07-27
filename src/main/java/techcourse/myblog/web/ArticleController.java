@@ -9,6 +9,7 @@ import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserProfileDto;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.exception.AccessNotPermittedException;
 import techcourse.myblog.service.exception.NotFoundArticleException;
 import techcourse.myblog.service.exception.NotFoundUserException;
