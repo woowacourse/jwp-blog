@@ -15,17 +15,17 @@
         <ul class="nav-right">
             <li class="user-profile dropdown no-border pointer" id="header-user-dropdown-btn">
                 <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown" href="/"
-                   th:if="${user != null}">
+                   th:if="${session.user != null}">
                     <img alt="Brown"
                          class="profile-img img-fluid"
                          src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
                     <div class="user-info text-white">
-                        <span class="name pdd-right-5" th:text="${user.userName}">Name</span>
+                        <span class="name pdd-right-5" th:text="${session.user.userName}">Name</span>
                     </div>
                 </a>
-                <a href="/users/login" th:unless="${user != null}">
+                <a href="/login" th:unless="${session.user != null}">
                     <div class="user-info login-btn pointer mrg-right-10">
-                        <span class="name pdd-right-5 text-white" th:unless="${user != null}">Login</span>
+                        <span class="name pdd-right-5 text-white">Login</span>
                     </div>
                 </a>
                 <ul class="dropdown-menu">

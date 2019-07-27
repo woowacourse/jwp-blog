@@ -25,7 +25,7 @@ class ArticleServiceTest {
     private static final String TITLE = "title";
     private static final String COVER_URL = "coverUrl";
     private static final String CONTENTS = "Contents";
-    private static final User AUTHOR = new User();
+    private static final String AUTHOR = "email@email.com";
 
     private static final String TITLE_2 = "title2";
     private static final String COVER_URL_2 = "coverUrl2";
@@ -43,7 +43,7 @@ class ArticleServiceTest {
     @BeforeEach
     void setUp() {
         inOrder = inOrder(articleRepository);
-        testArticle = new Article(TITLE, COVER_URL, CONTENTS, AUTHOR);
+        testArticle = new Article(TITLE, COVER_URL, CONTENTS, new User());
     }
 
     @Test
@@ -52,7 +52,7 @@ class ArticleServiceTest {
         testArticleDto.setTitle(TITLE);
         testArticleDto.setCoverUrl(COVER_URL);
         testArticleDto.setContents(CONTENTS);
-        testArticleDto.setAuthor(AUTHOR);
+        testArticleDto.setEmail(AUTHOR);
 
         articleService.save(testArticleDto);
         verify(articleRepository, atLeast(1)).save(testArticle);
@@ -65,7 +65,7 @@ class ArticleServiceTest {
         testArticleDto2.setTitle(TITLE_2);
         testArticleDto2.setCoverUrl(COVER_URL_2);
         testArticleDto2.setContents(CONTENTS_2);
-        testArticleDto2.setAuthor(AUTHOR);
+        testArticleDto2.setEmail(AUTHOR);
 
         given(articleRepository.findById(TEST_ID)).willReturn(Optional.of(testArticle));
         Article updateArticle = articleService.update(testArticleDto2);

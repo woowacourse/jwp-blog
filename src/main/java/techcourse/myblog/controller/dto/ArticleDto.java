@@ -1,7 +1,7 @@
 package techcourse.myblog.controller.dto;
 
-import lombok.*;
-import techcourse.myblog.model.User;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -10,5 +10,5 @@ public class ArticleDto {
     private String title;
     private String coverUrl;
     private String contents;
-    private User author;
+    private String email;
 }
