@@ -1,32 +1,30 @@
-package techcourse.myblog.service;
+package techcourse.myblog.service.article;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.service.dto.article.ArticleDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.service.article.ArticleAssembler.*;
 
 public class ArticleAssemblerTest {
-    private ArticleAssembler assembler;
     private ArticleDto articleDto;
     private Article article;
 
     @BeforeEach
     void setUp() {
-        assembler = new ArticleAssembler();
         articleDto = new ArticleDto("title", "", "contents");
-        articleDto.setId(1);
-        article = new Article(1, "title", "", "contents");
+        article = new Article("title", "", "contents");
     }
 
     @Test
     void dto를_entity로_변환하는지_확인() {
-        assertThat(assembler.convertToEntity(articleDto)).isEqualTo(article);
+        assertThat(convertToEntity(articleDto)).isEqualTo(article);
     }
 
     @Test
     void entity를_dto로_변환하는지_확인() {
-        assertThat(assembler.convertToDto(article)).isEqualTo(articleDto);
+        assertThat(convertToDto(article)).isEqualTo(articleDto);
     }
 }

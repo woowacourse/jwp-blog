@@ -1,37 +1,33 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.article;
 
 import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
-import techcourse.myblog.exception.InvalidArticleIdException;
 
+import javax.persistence.*;
 import java.util.Objects;
 
-import static techcourse.myblog.domain.ArticleRepository.INIT_ARTICLE_ID;
 
+@Entity
 public class Article {
-    private final int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String coverUrl;
+
+    @Column(nullable = false)
     private String contents;
 
-    public Article(final int id, final String title, final String coverUrl, final String contents) {
-        checkNull(title, coverUrl, contents);
-        if (id < INIT_ARTICLE_ID) {
-            throw new InvalidArticleIdException("적절한 ID가 아닙니다.");
-        }
-        this.id = id;
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
+    public Article() {
     }
 
-    private void checkNull(String title, String coverUrl, String contents) {
-        if (Objects.isNull(title) || Objects.isNull(coverUrl) || Objects.isNull(contents)) {
-            throw new NullPointerException();
-        }
-    }
-
-    public boolean match(final int id) {
-        return (this.id == id);
+    public Article(final String title, final String coverUrl, final String contents) {
+        this.title = Objects.requireNonNull(title);
+        this.coverUrl = Objects.requireNonNull(coverUrl);
+        this.contents = Objects.requireNonNull(contents);
     }
 
     public void update(final Article article) {
@@ -43,7 +39,7 @@ public class Article {
         this.contents = article.getContents();
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -64,7 +60,7 @@ public class Article {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return id == article.id &&
+        return Objects.equals(id, article.id) &&
                 Objects.equals(title, article.title) &&
                 Objects.equals(coverUrl, article.coverUrl) &&
                 Objects.equals(contents, article.contents);

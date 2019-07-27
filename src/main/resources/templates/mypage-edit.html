@@ -23,7 +23,7 @@
                     <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
                         <img class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
                         <div class="user-info text-white">
-                            <span class="name pdd-right-5">Brown</span>
+                            <span class="name pdd-right-5" th:text="${user.name}">Brown</span>
                             <i class="ti-angle-down font-size-10"></i>
                         </div>
                     </a>
@@ -58,6 +58,7 @@
     <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
         <div class="row">
             <div class="col-md-7 mx-auto">
+                <form th:action="${'/mypage/mypage-edit'}" th:method="${'put'}">
                 <div class="card">
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
@@ -69,7 +70,7 @@
                                 <p class="mrg-top-10 text-dark"> <b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" value="Brown">
+                                <input type="text" class="form-control" th:value="${user.name}" name="name">
                             </div>
                         </div>
                         <hr>
@@ -78,7 +79,7 @@
                                 <p class="mrg-top-10 text-dark"> <b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10">gracefulBrown@woowahan.com</p>
+                                <p class="mrg-top-10" th:text="${user.email}"></p>
                             </div>
                         </div>
                         <hr>
@@ -133,6 +134,7 @@
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>

@@ -1,24 +1,35 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.service.dto.article;
 
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class ArticleDto {
-    private int id;
+    private Long id;
+
+    @NotNull
     private String title;
+
+    @NotNull
     private String coverUrl;
+
+    @NotNull
     private String contents;
 
-    public ArticleDto(String title, String coverUrl, String contents) {
+    public ArticleDto(final String title, final String coverUrl, final String contents) {
+        Objects.requireNonNull(title);
+        Objects.requireNonNull(coverUrl);
+        Objects.requireNonNull(contents);
+
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -39,14 +50,13 @@ public class ArticleDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ArticleDto that = (ArticleDto) o;
-        return id == that.id &&
-                Objects.equals(title, that.title) &&
+        return Objects.equals(title, that.title) &&
                 Objects.equals(coverUrl, that.coverUrl) &&
                 Objects.equals(contents, that.contents);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents);
+        return Objects.hash(title, coverUrl, contents);
     }
 }
