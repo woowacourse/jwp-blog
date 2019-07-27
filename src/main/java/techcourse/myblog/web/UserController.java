@@ -3,14 +3,10 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserProfileDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.service.exception.NotFoundUserException;
-import techcourse.myblog.service.exception.SignUpException;
-import techcourse.myblog.service.exception.UserUpdateException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -18,7 +14,7 @@ import javax.transaction.Transactional;
 
 @Controller
 public class UserController {
-    private static final String LOGGED_IN_USER = "loggedInUser";
+    public static final String LOGGED_IN_USER = "loggedInUser";
 
     private UserService userService;
     private ArticleService articleService;
@@ -29,11 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/users/sign-up")
-    public String showRegisterPage(HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        if (httpSession.getAttribute(LOGGED_IN_USER) != null) {
-            return "redirect:/";
-        }
+    public String showRegisterPage() {
         return "sign-up";
     }
 

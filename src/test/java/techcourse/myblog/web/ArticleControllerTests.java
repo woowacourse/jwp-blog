@@ -2,6 +2,7 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,6 +45,7 @@ class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("Article들의 목록을 index페이지에 담아 되돌려준다.")
     void showArticles() {
         webTestClient.get().uri("/articles")
                 .exchange()
@@ -51,6 +53,7 @@ class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("User가 login 되어있을 때 새 글을 쓰는 페이지를 되돌려준다.")
     void showCreatePageWhenUserLogIn() {
         webTestClient.get().uri("/articles/new")
                 .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
@@ -59,6 +62,7 @@ class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("User가 logout 되어있을 때 새 글 쓰는 페이지에 접근하면 login 페이지로 redirect한다.")
     void showCreatePageWhenUserLogOut() {
         webTestClient.get().uri("/articles/new")
                 .exchange()
@@ -66,6 +70,7 @@ class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("새로운 Article을 생성하고 생성된 article을 보여준다.")
     void createArticle() {
         String newTitle = "New Title";
         String newCoverUrl = "New Cover Url";
@@ -86,6 +91,7 @@ class ArticleControllerTests {
                     URI location = response.getResponseHeaders().getLocation();
                     webTestClient.get()
                             .uri(location)
+                            .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                             .exchange()
                             .expectBody()
                             .consumeWith(res -> {
@@ -98,9 +104,11 @@ class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("게시된 Article 하나를 보여준다.")
     void showArticle() {
         webTestClient.get()
                 .uri(setUpArticleUrl)
+                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                 .exchange()
                 .expectBody()
                 .consumeWith(res -> {
@@ -112,6 +120,7 @@ class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("Article author가 article 수정 페이지에 접근하는 경우 수정 페이지를 되돌려준다.")
     void showEditPage() {
         webTestClient.get()
                 .uri(setUpArticleUrl + "/edit")
@@ -128,6 +137,16 @@ class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("Article author가 아닌 사람이 article 수정 페이지에 접근하는 경우 예외 페이지를 되돌려준다,")
+    void showPermissionDeniedPageWhenNotAuthenticatedEditor() {
+        webTestClient.get()
+                .uri(setUpArticleUrl + "/edit")
+                .exchange()
+                .expectStatus().isFound();
+    }
+
+    @Test
+    @DisplayName("Article을 수정한다.")
     void editArticle() {
         String newTitle = "test";
         String newCoverUrl = "newCorverUrl";
@@ -148,6 +167,7 @@ class ArticleControllerTests {
                     URI location = response.getResponseHeaders().getLocation();
                     webTestClient.get()
                             .uri(location)
+                            .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                             .exchange()
                             .expectBody()
                             .consumeWith(res -> {
@@ -160,6 +180,7 @@ class ArticleControllerTests {
     }
 
     @Test
+    @DisplayName("Article을 지운다.")
     void deleteArticle() {
         webTestClient.delete()
                 .uri(setUpArticleUrl)
@@ -169,8 +190,14 @@ class ArticleControllerTests {
 
         webTestClient.get()
                 .uri(setUpArticleUrl)
+                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body).contains("Wrong access");
+                });
     }
 
     @AfterEach

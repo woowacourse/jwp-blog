@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class LogInController {
     private static final String LOGGED_IN_USER = "loggedInUser";
+    private static final String REDIRECT_PATH_TO_INDEX = "redirect:/";
 
     private LogInService logInService;
 
@@ -24,11 +25,7 @@ public class LogInController {
     }
 
     @GetMapping("/login")
-    public String showLoginPage(HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        if (httpSession.getAttribute(LOGGED_IN_USER) != null) {
-            return "redirect:/";
-        }
+    public String showLogInPage() {
         return "login";
     }
 
@@ -37,14 +34,14 @@ public class LogInController {
         UserProfileDto userProfileDto = logInService.logIn(logInInfoDto);
         HttpSession httpSession = httpServletRequest.getSession();
         httpSession.setAttribute(LOGGED_IN_USER, userProfileDto);
-        return "redirect:/";
+        return REDIRECT_PATH_TO_INDEX;
     }
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
         httpSession.removeAttribute(LOGGED_IN_USER);
-        return "redirect:/";
+        return REDIRECT_PATH_TO_INDEX;
     }
 
     @ExceptionHandler(LogInException.class)

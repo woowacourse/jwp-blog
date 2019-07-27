@@ -9,11 +9,14 @@ import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserProfileDto;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.exception.AccessNotPermittedException;
 import techcourse.myblog.service.exception.NotFoundArticleException;
 import techcourse.myblog.service.exception.NotFoundUserException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import static techcourse.myblog.service.exception.AccessNotPermittedException.PERMISSION_FAIL_MESSAGE;
 
 @Controller
 public class ArticleController {
@@ -34,11 +37,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/new")
-    public String showCreatePage(HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        if (httpSession.getAttribute(LOGGED_IN_USER) == null) {
-            return "redirect:/login";
-        }
+    public String showCreatePage() {
         return "article-edit";
     }
 
@@ -61,10 +60,15 @@ public class ArticleController {
     public String showEditPage(@PathVariable("id") Long id, Model model, HttpServletRequest httpServletRequest) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(NotFoundArticleException::new);
-        if (isLoggedInUserArticle(httpServletRequest, article)) {
-            ArticleDto articleDto = new ArticleDto(article.getId(), article.getTitle(), article.getCoverUrl(), article.getContents());
-            model.addAttribute("article", articleDto);
-        }
+
+        validateAuthor(httpServletRequest.getSession(), article);
+        ArticleDto articleDto = new ArticleDto(
+                article.getId(),
+                article.getTitle(),
+                article.getCoverUrl(),
+                article.getContents()
+        );
+        model.addAttribute("article", articleDto);
         return "article-edit";
     }
 
@@ -72,9 +76,7 @@ public class ArticleController {
     public String createArticle(ArticleDto articleDto, HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
         UserProfileDto userProfileDto = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
-        if (userProfileDto == null) {
-            return "redirect:/login";
-        }
+
         articleDto.setUserId(userProfileDto.getId());
         Article persistArticle = articleRepository.save(articleDto.toEntity());
         return "redirect:/articles/" + persistArticle.getId();
@@ -83,10 +85,9 @@ public class ArticleController {
     @PutMapping("/articles/{id}")
     public String editArticle(@PathVariable("id") long id, ArticleDto articleDto, HttpServletRequest httpServletRequest) {
         articleRepository.findById(id).ifPresent(article -> {
-            if (isLoggedInUserArticle(httpServletRequest, article)) {
-                article.updateArticle(articleDto);
-                articleRepository.save(article);
-            }
+            validateAuthor(httpServletRequest.getSession(), article);
+            article.updateArticle(articleDto);
+            articleRepository.save(article);
         });
         return "redirect:/articles/" + id;
     }
@@ -94,26 +95,16 @@ public class ArticleController {
     @DeleteMapping("/articles/{id}")
     public String deleteArticle(@PathVariable("id") long id, HttpServletRequest httpServletRequest) {
         articleRepository.findById(id).ifPresent(article -> {
-            if (isLoggedInUserArticle(httpServletRequest, article)) {
-                articleRepository.deleteById(id);
-            }
+            validateAuthor(httpServletRequest.getSession(), article);
+            articleRepository.deleteById(id);
         });
         return "redirect:/";
     }
 
-    private boolean isLoggedInUserArticle(HttpServletRequest httpServletRequest, Article article) {
-        HttpSession httpSession = httpServletRequest.getSession();
+    private void validateAuthor(HttpSession httpSession, Article article) {
         UserProfileDto user = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
-        return (user != null) && article.matchUserId(user.getId());
-    }
-
-    @ExceptionHandler(NotFoundArticleException.class)
-    public String handleNotFoundArticleException(Model model, Exception e) {
-        return "redirect:/";
-    }
-
-    @ExceptionHandler(NotFoundUserException.class)
-    public String handleNotFoundUserException(Model model, Exception e) {
-        return "redirect:/";
+        if (!article.matchUserId(user.getId())) {
+            throw new AccessNotPermittedException(PERMISSION_FAIL_MESSAGE);
+        }
     }
 }
