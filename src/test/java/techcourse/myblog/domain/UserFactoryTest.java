@@ -56,7 +56,7 @@ class UserFactoryTest {
                 "passwor", "passwor");
 
         assertThatThrownBy(() -> UserFactory.generateUser(userDto))
-                .isInstanceOf(UserFactory.class);
+                .isInstanceOf(UserArgumentException.class);
     }
 
     @Test
@@ -66,7 +66,7 @@ class UserFactoryTest {
                 "PASSWORD1!", "PASSWORD1!");
 
         assertThatThrownBy(() -> UserFactory.generateUser(userDto))
-                .isInstanceOf(UserFactory.class);
+                .isInstanceOf(UserArgumentException.class);
     }
 
     @Test
@@ -76,7 +76,7 @@ class UserFactoryTest {
                 "password1!", "password1!");
 
         assertThatThrownBy(() -> UserFactory.generateUser(userDto))
-                .isInstanceOf(UserFactory.class);
+                .isInstanceOf(UserArgumentException.class);
     }
 
     @Test
@@ -86,7 +86,7 @@ class UserFactoryTest {
                 "passWORD!", "passWORD!");
 
         assertThatThrownBy(() -> UserFactory.generateUser(userDto))
-                .isInstanceOf(UserFactory.class);
+                .isInstanceOf(UserArgumentException.class);
     }
 
     @Test
@@ -96,7 +96,7 @@ class UserFactoryTest {
                 "passWORD1", "passWORD1");
 
         assertThatThrownBy(() -> UserFactory.generateUser(userDto))
-                .isInstanceOf(UserFactory.class);
+                .isInstanceOf(UserArgumentException.class);
     }
 
     @Test
@@ -106,6 +106,6 @@ class UserFactoryTest {
                 "passWORD가1!", "passWORD가1!");
 
         assertThatThrownBy(() -> UserFactory.generateUser(userDto))
-                .isInstanceOf(UserFactory.class);
+                .isInstanceOf(UserArgumentException.class);
     }
 }

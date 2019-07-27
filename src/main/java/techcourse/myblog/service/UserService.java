@@ -14,6 +14,7 @@ import techcourse.myblog.service.exception.UserUpdateException;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static techcourse.myblog.service.exception.NotFoundUserException.NOT_FOUND_USER_MESSAGE;
 import static techcourse.myblog.service.exception.UserArgumentException.EMAIL_DUPLICATION_MESSAGE;
 
 @Service
@@ -28,14 +29,20 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void save(UserDto userDto) {
+    public Long save(UserDto userDto) {
         try {
             checkDuplicatedEmail(userDto.getEmail());
             User user = UserFactory.generateUser(userDto);
             userRepository.save(user);
+            return user.getId();
         } catch (Exception e) {
             throw new SignUpException(e.getMessage());
         }
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(NotFoundUserException::new);
     }
 
     private void checkDuplicatedEmail(String email) {
@@ -45,17 +52,18 @@ public class UserService {
     }
 
     @Transactional
-    public void update(UserProfileDto userProfileDto) {
+    public Long update(UserProfileDto userProfileDto) {
         try {
             User user = userRepository.findByEmail(userProfileDto.getEmail())
                     .orElseThrow(NotFoundUserException::new);
             user.updateByUserProfileDto(userProfileDto);
+            return user.getId();
         } catch (Exception e) {
             throw new UserUpdateException(e.getMessage());
         }
     }
 
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
 }

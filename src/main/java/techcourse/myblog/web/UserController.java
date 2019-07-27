@@ -46,13 +46,14 @@ public class UserController {
 
     @PutMapping("/users/{id}")
     public String editUserName(@PathVariable Long id, UserProfileDto userProfileDto, HttpServletRequest httpServletRequest) {
+        Long updatedUserId;
         HttpSession httpSession = httpServletRequest.getSession();
 
         validateUser(httpSession, id);
-        userService.update(userProfileDto);
+        updatedUserId = userService.update(userProfileDto);
         userProfileDto.setId(id);
         httpSession.setAttribute(LOGGED_IN_USER, userProfileDto);
-        return "redirect:/mypage/" + id;
+        return "redirect:/mypage/" + updatedUserId;
     }
 
     @Transactional
@@ -62,7 +63,7 @@ public class UserController {
 
         validateUser(httpSession, id);
         articleService.deleteByUserId(id);
-        userService.delete(id);
+        userService.deleteById(id);
         httpSession.removeAttribute(LOGGED_IN_USER);
         return "redirect:/";
     }
