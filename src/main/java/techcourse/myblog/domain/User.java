@@ -1,6 +1,8 @@
 package techcourse.myblog.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -11,6 +13,9 @@ import java.util.Objects;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
     @NotBlank
     @Email
     private String email;
@@ -30,6 +35,10 @@ public class User {
         this.email = email;
         this.name = name;
         this.password = password;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -69,6 +78,5 @@ public class User {
     public int hashCode() {
         return Objects.hash(email);
     }
-
 
 }
