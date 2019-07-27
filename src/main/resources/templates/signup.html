@@ -36,10 +36,12 @@
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
-                                                    <form method="post">
+                                                    <form id="signupForm" th:action="@{/join}" method="post"
+                                                          name="signUp">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input type="text" name="name" class="form-control">
+                                                            <input id="name" type="text" name="name"
+                                                                   class="form-control">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
@@ -47,25 +49,27 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
-                                                            <input type="password" name="password" class="form-control"
+                                                            <input id="password" type="password" name="password"
+                                                                   class="form-control"
                                                                    placeholder="Password">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm
                                                                 Password</label>
-                                                            <input type="password" class="form-control"
+                                                            <input id="passwordConfirm" type="password"
+                                                                   class="form-control"
                                                                    placeholder="Password">
                                                         </div>
                                                         <div class="form-group">
-                                                            <button type="submit"
-                                                                    class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
+                                                            <a onclick="signUpCheck()"
+                                                               class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
                                                                 가입하기
-                                                            </button>
+                                                            </a>
                                                         </div>
                                                     </form>
                                                     <div class="text-dark">
                                                         <span>이미 회원이신가요?</span>
-                                                        <a href="login.html"
+                                                        <a href="login.html" th:href="@{/login}"
                                                            class="text-info pointer mrg-left-5">로그인</a>
                                                     </div>
                                                 </div>
@@ -93,5 +97,35 @@
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 <script src="/js/index.js"></script>
+<script>
+    const nameRule = /^(?=.*[a-zA-Z]).{2,10}$/;
+    const passwordRule = /^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{8,20}$/;
+
+    const signUpCheck = () =>
+    {
+        if (checkUserInfo()) {
+            if (checkPassword()) {
+                document.getElementById('signupForm').submit();
+            } else {
+                alert("비밀너호 값이 똑같지 않습다");
+            }
+        } else {
+            alert('아이디와 비밃너호를 확인하세요');
+        }
+    }
+    const checkUserInfo = () =>
+    {
+        const name = document.getElementById("name").value;
+        const pwd = document.getElementById("password").value;
+        return nameRule.test(name) && passwordRule.test(pwd);
+    };
+
+    const checkPassword = () =>
+    {
+        const pwd = document.getElementById("password").value;
+        const pwdConfirm = document.getElementById("passwordConfirm").value;
+        return pwd === pwdConfirm;
+    }
+</script>
 </body>
 </html>
