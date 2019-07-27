@@ -26,8 +26,7 @@
                     <li class="user-profile dropdown no-border pointer" id="header-user-dropdown-btn">
                         <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
                             <img alt="Brown"
-                                 class="profile-img img-fluid"
-                                 src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
+                                 class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
                             <div class="user-info text-white">
                                 <span class="name pdd-right-5">Brown</span>
                                 <i class="ti-angle-down font-size-10"></i>
@@ -54,19 +53,17 @@
         </div>
 
         <form accept-charset="utf-8" method="post" name="article"
-              th:action="${articleId == null} ? '/articles/write' : |/articles/${articleId}|">
+              th:action="${articleId == null} ? '/write' : |/articles/${articleId}|">
             <div class="about-cover card no-border">
                 <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                     <div class="height-300px vertical-center pdd-horizon-50">
                         <div class="width-80">
                             <input name="id" th:value="${articleId != null} ? ${articleId} : 0" type="hidden"/>
-                            <input autocomplete="off"
-                                   class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
+                            <input autocomplete="off" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
                                    name="title"
                                    placeholder="제목을 입력해주세요" th:value="${article != null} ? ${article.title} : ''"
                                    type="text">
-                            <input autocomplete="off"
-                                   class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
+                            <input autocomplete="off" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
                                    name="coverUrl"
                                    placeholder="배경 url을 입력해주세요" th:value="${article != null} ? ${article.coverUrl} : ''"
                                    type="text">

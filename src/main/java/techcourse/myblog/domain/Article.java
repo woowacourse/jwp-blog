@@ -1,4 +1,4 @@
-package techcourse.myblog.model;
+package techcourse.myblog.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
