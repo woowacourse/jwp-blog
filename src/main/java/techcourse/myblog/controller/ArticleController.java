@@ -41,16 +41,14 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable long articleId, Model model) {
-        Article article = articleService.select(articleId);
-        model.addAttribute("article", article);
+        model.addAttribute("article", articleService.select(articleId));
         model.addAttribute("comments", commentService.findAll(articleId));
         return "article";
     }
 
     @GetMapping("/{articleId}/edit")
     public String editArticleForm(@PathVariable long articleId, Model model) {
-        Article article = articleService.select(articleId);
-        model.addAttribute("article", article);
+        model.addAttribute("article", articleService.select(articleId));
         return "article-edit";
     }
 
