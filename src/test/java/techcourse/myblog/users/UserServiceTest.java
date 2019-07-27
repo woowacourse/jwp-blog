@@ -22,7 +22,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        register = new UserDto.Register("asdg@asd", "name", "P@ssw0rd", "P@ssw0rd");
+        register = new UserDto.Register("pwmdsdkwe@qwe.asd", "name", "P@ssw0rd", "P@ssw0rd");
         id = userService.save(register);
     }
 

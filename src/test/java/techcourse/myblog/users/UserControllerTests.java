@@ -15,7 +15,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.users.User.*;
+import static techcourse.myblog.users.UserValidator.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {

@@ -30,7 +30,8 @@ class UserTest {
                 Arguments.of("name", "asdf@asd", "Passw0rd", "password 특수문자 제외"),
                 Arguments.of("name", "asdf@asd", "P@ssword", "password 숫자 제외"),
                 Arguments.of("name", "asdf@asd", "p@ssw0rd", "password 대문자 제외"),
-                Arguments.of("name", "asdf@asd", "P@SSW0RD", "password 소문자 제외")
+                Arguments.of("name", "asdf@asd", "P@SSW0RD", "password 소문자 제외"),
+                Arguments.of("name", "asdfasd", "P@SSW0RD", "email 양식")
         );
     }
 

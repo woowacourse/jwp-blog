@@ -15,7 +15,7 @@ class LoginInterceptorTest {
 
     private void createSession() {
         User user = User.builder()
-                .email("email@emaai")
+                .email("email@gmail.com")
                 .password("P@ssw0rd")
                 .name("name")
                 .build();
