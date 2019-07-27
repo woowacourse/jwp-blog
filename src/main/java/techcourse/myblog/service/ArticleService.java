@@ -1,17 +1,21 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.exception.UnFoundArticleException;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.CommentRepository;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
 
     public Article save(Article article, User user) {
         article.setAuthor(user);
@@ -34,6 +38,7 @@ public class ArticleService {
     }
 
     public void delete(long id) {
+        commentRepository.findAllByArticleId(id).forEach(commentRepository::delete);
         articleRepository
                 .findById(id)
                 .ifPresent(articleRepository::delete);
