@@ -1,10 +1,10 @@
 package techcourse.myblog.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
@@ -21,13 +21,10 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @BeforeEach
+    @Transactional
     void setUp() {
-        userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
-    }
-
-    @AfterEach
-    void tearDown() {
         userRepository.deleteAll();
+        userRepository.saveAndFlush(new User("andole", "A!1bcdefg", "andole@gmail.com"));
     }
 
     @Test
