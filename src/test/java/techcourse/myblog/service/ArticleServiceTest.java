@@ -22,12 +22,12 @@ class ArticleServiceTest {
     @InjectMocks
     private ArticleService articleService;
 
+    private final long articleId = 3;
+    private final long categoryId = 1;
+
     @Test
     void 게시글_생성() {
-        long articleId = 3l;
-        ArticleDto articleDto = ArticleDto.builder()
-                .id(articleId)
-                .build();
+        ArticleDto articleDto = getArticleDto(articleId, categoryId);
 
         when(articleRepository.save(articleDto.toEntity())).thenReturn(articleDto.toEntity());
         assertThat(articleService.createArticle(articleDto)).isEqualTo(articleId);
@@ -35,10 +35,7 @@ class ArticleServiceTest {
 
     @Test
     void 게시글_조회() {
-        long articleId = 3l;
-        ArticleDto articleDto = ArticleDto.builder()
-                .id(articleId)
-                .build();
+        ArticleDto articleDto = getArticleDto(articleId, categoryId);
 
         when(articleRepository.findById(articleId)).thenReturn(Optional.of(articleDto.toEntity()));
         assertThat(articleService.readById(articleId)).isEqualTo(articleDto);
@@ -46,14 +43,8 @@ class ArticleServiceTest {
 
     @Test
     void 게시글_업데이트() {
-        long articleId = 3l;
-        ArticleDto inArticleDto = ArticleDto.builder()
-                .id(5l)
-                .build();
-
-        ArticleDto outArticleDto = ArticleDto.builder()
-                .id(articleId)
-                .build();
+        ArticleDto inArticleDto = getArticleDto(5, categoryId);
+        ArticleDto outArticleDto = getArticleDto(articleId, categoryId);
 
         when(articleRepository.findById(articleId)).thenReturn(Optional.of(outArticleDto.toEntity()));
         assertThat(articleService.updateByArticle(articleId, inArticleDto)).isEqualTo(outArticleDto);
@@ -61,15 +52,8 @@ class ArticleServiceTest {
 
     @Test
     void 게시글_ALL_조회() {
-        ArticleDto articleDto1 = ArticleDto.builder()
-                .id(1l)
-                .categoryId(1)
-                .build();
-
-        ArticleDto articleDto2 = ArticleDto.builder()
-                .id(2l)
-                .categoryId(2)
-                .build();
+        ArticleDto articleDto1 = getArticleDto(1, categoryId);
+        ArticleDto articleDto2 = getArticleDto(2, categoryId);
 
         when(articleRepository.findAll())
                 .thenReturn(Arrays.asList(articleDto1.toEntity(), articleDto2.toEntity()));
@@ -79,19 +63,20 @@ class ArticleServiceTest {
 
     @Test
     void 게시글_CategoryId_조회() {
-        ArticleDto articleDto1 = ArticleDto.builder()
-                .id(1l)
-                .categoryId(1)
-                .build();
-
-        ArticleDto articleDto2 = ArticleDto.builder()
-                .id(2l)
-                .categoryId(1)
-                .build();
+        ArticleDto articleDto1 = getArticleDto(1, categoryId);
+        ArticleDto articleDto2 = getArticleDto(1, categoryId);
 
         when(articleRepository.findAll())
                 .thenReturn(Arrays.asList(articleDto1.toEntity(), articleDto2.toEntity()));
         assertThat(articleService.readAll())
                 .isEqualTo(Arrays.asList(articleDto1, articleDto2));
     }
+
+    private  ArticleDto getArticleDto(long id, long categoryId) {
+        return ArticleDto.builder()
+                .id(id)
+                .categoryId(categoryId)
+                .build();
+    }
+
 }
