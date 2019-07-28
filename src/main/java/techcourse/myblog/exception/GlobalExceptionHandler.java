@@ -14,4 +14,10 @@ public class GlobalExceptionHandler {
         redirectAttributes.addFlashAttribute(ERROR_MESSAGE, e.getMessage());
         return REDIRECT_URL;
     }
+
+    @ExceptionHandler(value = ArticleException.class)
+    public String ArticleNotFoundExceptionHandler(ArticleException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute(ERROR_MESSAGE, e.getMessage());
+        return REDIRECT_URL;
+    }
 }

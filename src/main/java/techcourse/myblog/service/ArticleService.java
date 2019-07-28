@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.exception.UserException;
+import techcourse.myblog.exception.ArticleException;
+import techcourse.myblog.repository.ArticleRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -26,7 +26,7 @@ public class ArticleService {
     public Article findById(int id) {
         return articleRepository.findById(id).orElseThrow(() -> {
             log.error("사용자를 찾을 수 없음 : id >>> {}", id);
-            return new UserException("잘못된 입력입니다.");
+            return new ArticleException("id를 찾을 수 없습니다.");
         });
     }
 
@@ -43,7 +43,7 @@ public class ArticleService {
 
     @Transactional
     public Article update(ArticleDto articleDto, int articleId) {
-        Article dbArticle = articleRepository.findById(articleId).orElseThrow(() -> new UserException("잘못된 입력입니다."));
+        Article dbArticle = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException("id를 찾을 수 없습니다."));
 
         dbArticle.updateArticle(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
 
