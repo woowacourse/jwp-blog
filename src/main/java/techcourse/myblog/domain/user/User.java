@@ -1,9 +1,11 @@
 package techcourse.myblog.domain.user;
 
 import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.dto.UserDto;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,8 +24,11 @@ public class User {
     @Convert(converter = UserEmailConverter.class)
     private UserEmail email;
 
-    @OneToMany(mappedBy = "author")
-    private List<Article> aritlces;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    private List<Article> aritlces = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     protected User() {
     }

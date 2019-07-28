@@ -27,8 +27,8 @@ public class Article {
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
-    @OneToMany(mappedBy = "article")
-    private List<Comment> comments;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     public Article(String title, String contents, String coverUrl) {
         this.title = title;
@@ -68,7 +68,7 @@ public class Article {
         this.title = modifiedArticle.title;
         this.contents = modifiedArticle.contents;
         this.coverUrl = modifiedArticle.coverUrl;
-        log.debug("article Save done", this.id);
+        log.debug("article Save done {}", this.id);
     }
 
     public boolean matchId(long id) {
@@ -88,9 +88,6 @@ public class Article {
     }
 
     public void addComment(Comment comment) {
-        if (this.comments == null) {
-            this.comments = new ArrayList<>();
-        }
         comments.add(comment);
     }
 
