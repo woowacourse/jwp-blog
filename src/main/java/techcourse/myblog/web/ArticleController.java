@@ -7,12 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
-import techcourse.myblog.web.support.UserSessionInfo;
 
-@Controller
+@Controller("/articles")
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
@@ -25,48 +23,30 @@ public class ArticleController {
         this.commentService = commentService;
     }
 
-
-    @GetMapping("/writing")
-    public String getArticleEditForm() {
-        return "article-edit";
-    }
-
-    @GetMapping("/articles/{articleId}")
+    @GetMapping("/{articleId}")
     public String getArticle(@PathVariable long articleId, Model model) {
         setArticleModel(model, articleService.findArticle(articleId));
         return "article";
     }
 
-    @PostMapping("/articles/{articleId}/comment")
-    public String addComment(@PathVariable long articleId, UserSessionInfo userSessionInfo, CommentDto commentDto) {
-        commentService.addComment(articleId, userSessionInfo.getEmail(), commentDto);
-        return "redirect:/articles/" + articleId;
-    }
-
-    @DeleteMapping("/articles/{articleId}/comment/{commentId}")
-    public String deleteComment(@PathVariable long articleId, @PathVariable long commentId, UserSessionInfo userSessionInfo) {
-        commentService.deleteComment(commentId, userSessionInfo.getEmail());
-        return "redirect:/articles/" + articleId;
-    }
-
-    @GetMapping("/articles/{articleId}/edit")
+    @GetMapping("/{articleId}/edit")
     public String getEditArticle(@PathVariable long articleId, Model model) {
         setArticleModel(model, articleService.findArticle(articleId));
         return "article-edit";
     }
 
-    @PostMapping("/articles")
+    @PostMapping
     public String saveArticle(ArticleDto dto) {
         return "redirect:/articles/" + articleService.save(dto.toEntity());
     }
 
-    @PutMapping("/articles/{articleId}")
+    @PutMapping("/{articleId}")
     public String getModifiedArticle(@PathVariable long articleId, ArticleDto dto, Model model) {
         setArticleModel(model, articleService.update(articleId, dto));
         return "article";
     }
 
-    @DeleteMapping("/articles/{articleId}")
+    @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable long articleId) {
         articleService.delete(articleId);
         return "redirect:/";
