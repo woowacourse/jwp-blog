@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleDto;
+import techcourse.myblog.domain.article.ArticleDtos;
 import techcourse.myblog.domain.article.ArticleRepository;
 
 import javax.transaction.Transactional;
@@ -43,18 +44,10 @@ public class ArticleService {
     }
 
     public List<ArticleDto> readAll() {
-        List<ArticleDto> articleDtos = new ArrayList<>();
-        for (Article article : articleRepository.findAll()) {
-            articleDtos.add(ArticleDto.from(article));
-        }
-        return articleDtos;
+        return new ArticleDtos(articleRepository.findAll()).getArticleDtos();
     }
 
     public List<ArticleDto> readByCategoryId(long categoryId) {
-        List<ArticleDto> articleDtos = new ArrayList<>();
-        for (Article article : articleRepository.findByCategoryId(categoryId)) {
-            articleDtos.add(ArticleDto.from(article));
-        }
-        return articleDtos;
+        return new ArticleDtos(articleRepository.findByCategoryId(categoryId)).getArticleDtos();
     }
 }
