@@ -16,10 +16,7 @@ import static techcourse.myblog.users.UserSession.USER_SESSION;
 public class UserSessionArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        if(parameter.getParameterType() == UserSession.class){
-            return true;
-        }
-        return false;
+        return parameter.getParameterType() == UserSession.class;
     }
 
     @Override

@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.users.User;
+import techcourse.myblog.users.UserService;
+import techcourse.myblog.users.UserSession;
 
 @Controller
 @RequestMapping("/articles")
@@ -18,8 +21,9 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String write(Article article) {
-        Article savedArticle = articleService.save(article);
+    public String write(UserSession userSession, Article article) {
+        Long userId = userSession.getId();
+        Article savedArticle = articleService.save(userId, article);
         return "redirect:/articles/" + savedArticle.getId();
     }
 

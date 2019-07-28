@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import static techcourse.myblog.users.UserSession.USER_SESSION;
 
@@ -16,27 +17,33 @@ import static techcourse.myblog.users.UserSession.USER_SESSION;
 public class NotLoginInterceptor extends HandlerInterceptorAdapter {
     private static final Logger log = LoggerFactory.getLogger(NotLoginInterceptor.class);
 
+    private static final Pattern ARTICLE_PATTERN = Pattern.compile("^/articles/[0-9]*$");
+
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) throws Exception {
         HttpSession session = request.getSession();
         String path = request.getRequestURI();
         String method = request.getMethod();
-        log.debug("PATH : {} METHOD : {} ", path, method);
+        log.info("PATH : {} METHOD : {} ", path, method);
 
-        if (session.getAttribute(USER_SESSION) == null && !isException(response, path, method)) {
+        if (session.getAttribute(USER_SESSION) == null && !isException(path, method)) {
             response.sendRedirect("/users/login");
             return false;
         }
         return true;
     }
 
-    private boolean isException(final HttpServletResponse response, final String path, final String method) throws IOException {
-        return isSignup(path, method);
+    private boolean isException(final String path, final String method) {
+        return isSignup(path, method) || isShow(path, method);
     }
 
 
     private boolean isSignup(String path, String method) {
         return path.equals("/users") && method.equals("POST");
+    }
+
+    private boolean isShow(String path, String method){
+        return ARTICLE_PATTERN.matcher(path).find() && method.equals("GET");
     }
 
 }

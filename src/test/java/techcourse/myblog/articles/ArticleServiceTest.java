@@ -25,7 +25,7 @@ class ArticleServiceTest {
                 .title("title")
                 .build();
 
-        article = articleService.save(article);
+        article = articleService.save(1L, article);
     }
 
     @Test
