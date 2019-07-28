@@ -23,9 +23,11 @@ class UserControllerTest {
     private static final String NAME = "name";
     private static final String EMAIL = "email";
     private static final String PASSWORD = "password";
+    private static final String LOCATION = "LOCATION";
+    private static final String DEFAULT_NAME = "CU";
     private static final String DEFAULT_EMAIL = "starkim06@naver.com";
-    private static final String DEFAULT_PASSWORD = "aA1231!!";
-    private static final String HEADER_LOCATION = "location";
+    private static final String DEFAULT_PASSWORD = "aA1231!@";
+    private static final String HEADER_LOCATION = LOCATION;
     private static final String SET_COOKIE = "set-cookie";
     private static final String REGEX_SEMI_COLON = ";";
     private static final String REGEX_EQUAL = "=";
@@ -36,33 +38,17 @@ class UserControllerTest {
 
     @Test
     void 회원등록_오류_테스트() {
-        String name = "name";
-        String email = "email";
-        String password = "password";
-        webTestClient.post()
-                .uri("/join")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("name", name)
-                        .with("email", DEFAULT_EMAIL)
-                        .with("password", password))
-                .exchange()
-                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/err;jsessionid=([0-9A-Z])+")
+        getExchange(NAME, DEFAULT_EMAIL, PASSWORD, NAME, EMAIL, PASSWORD)
+                .expectHeader().valueMatches(LOCATION, "http://localhost:[0-9]+/err;jsessionid=([0-9A-Z])+")
                 .expectStatus().is3xxRedirection();
     }
 
     @Test
     void 회원등록_테스트() {
-        String name = "name";
         String email = "pobi@naver.com";
-        String password = "aA1231!@";
-        webTestClient.post()
-                .uri("/join")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/login")
+        
+        getExchange(DEFAULT_NAME, email, DEFAULT_PASSWORD, NAME, EMAIL, PASSWORD)
+                .expectHeader().valueMatches(LOCATION, "http://localhost:[0-9]+/login")
                 .expectStatus().is3xxRedirection();
     }
 
@@ -75,23 +61,19 @@ class UserControllerTest {
 
     @Test
     void 로그인_테스트() {
-        String name = "name";
-        String email = "ILovePobi@naver.com";
-        String password = "aA1231!@";
-
-        signUp(name, email, password);
+        getExchange(DEFAULT_NAME, DEFAULT_EMAIL, DEFAULT_PASSWORD, NAME, EMAIL, PASSWORD);
 
         webTestClient.post().uri("/login")
-                .body(fromFormData("password", password)
-                        .with("email", email))
+                .body(fromFormData(PASSWORD, DEFAULT_PASSWORD)
+                        .with(EMAIL, DEFAULT_EMAIL))
                 .exchange()
-                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/;jsessionid=([0-9A-Z])+")
+                .expectHeader().valueMatches(LOCATION, "http://localhost:[0-9]+/;jsessionid=([0-9A-Z])+")
                 .expectStatus().is3xxRedirection();
     }
 
     @Test
     void 로그인_후_로그인_접근() {
-        String jSessionId = getJsessionid("CU", DEFAULT_EMAIL, DEFAULT_PASSWORD);
+        String jSessionId = getJsessionid(DEFAULT_NAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
 
         webTestClient.get().uri("/login")
                 .cookie(JSESSIONID, jSessionId)
@@ -101,7 +83,7 @@ class UserControllerTest {
 
     @Test
     void 마이페이지_테스트() {
-        String jSessionId = getJsessionid("CU", DEFAULT_EMAIL, DEFAULT_PASSWORD);
+        String jSessionId = getJsessionid(DEFAULT_NAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
 
         webTestClient.get().uri("/mypage")
                 .cookie(JSESSIONID, jSessionId)
@@ -111,7 +93,7 @@ class UserControllerTest {
 
     @Test
     void 회원정보_수정_확인() {
-        String jSessionId = getJsessionid("CU", DEFAULT_EMAIL, DEFAULT_PASSWORD);
+        String jSessionId = getJsessionid(DEFAULT_NAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
 
         webTestClient.get().uri("/mypage/edit")
                 .cookie(JSESSIONID, jSessionId)
@@ -121,22 +103,11 @@ class UserControllerTest {
 
     @Test
     void 로그아웃상태_로그인요청() {
-        signUp("CU", DEFAULT_EMAIL, DEFAULT_PASSWORD);
+        getExchange(DEFAULT_NAME, DEFAULT_EMAIL, DEFAULT_PASSWORD, NAME, EMAIL, PASSWORD);
 
         webTestClient.get().uri("/login")
                 .exchange()
                 .expectStatus().isOk();
-    }
-
-    private WebTestClient.ResponseSpec signUp(String name, String email, String password) {
-        return webTestClient.post()
-                .uri("/join")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData(NAME, name)
-                        .with(EMAIL, email)
-                        .with(PASSWORD, password))
-                .exchange();
     }
 
     private EntityExchangeResult<byte[]> getLoginResult(String email, String password) {
@@ -164,9 +135,24 @@ class UserControllerTest {
     }
 
     private String getJsessionid(String name, String email, String password) {
-        signUp(name, email, password);
+        getExchange(name, email, password, NAME, EMAIL, PASSWORD);
         EntityExchangeResult loginResult = getLoginResult(email, password);
         return extractJSessionId(loginResult);
+    }
+
+    private WebTestClient.ResponseSpec getExchange(String userName, String userEmail, String userPassword, String name, String email, String password) {
+        return webTestClient.post()
+                .uri("/join")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(insertBody(userName, userEmail, userPassword, name, email, password))
+                .exchange();
+    }
+
+    private BodyInserters.FormInserter<String> insertBody(String userName, String userEmail, String userPassword, String name, String email, String password) {
+        return BodyInserters
+                .fromFormData(name, userName)
+                .with(email, userEmail)
+                .with(password, userPassword);
     }
 }
 
