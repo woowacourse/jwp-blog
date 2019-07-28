@@ -14,7 +14,6 @@ import techcourse.myblog.service.exception.UserUpdateException;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static techcourse.myblog.service.exception.NotFoundUserException.NOT_FOUND_USER_MESSAGE;
 import static techcourse.myblog.service.exception.UserArgumentException.EMAIL_DUPLICATION_MESSAGE;
 
 @Service

@@ -1,19 +1,12 @@
 package techcourse.myblog.interceptor;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.UserProfileDto;
-import techcourse.myblog.service.exception.AccessNotPermittedException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import java.util.Map;
-
-import static techcourse.myblog.service.exception.AccessNotPermittedException.PERMISSION_FAIL_MESSAGE;
 import static techcourse.myblog.web.UserController.LOGGED_IN_USER;
 
 @Component

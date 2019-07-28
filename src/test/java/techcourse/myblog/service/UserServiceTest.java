@@ -45,7 +45,7 @@ public class UserServiceTest {
         UserDto userDto = new UserDto("new", "new@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
         Long createdId = userService.save(userDto);
 
-        User user =userRepository.findById(createdId).orElseThrow(NotFoundUserException::new);
+        User user = userRepository.findById(createdId).orElseThrow(NotFoundUserException::new);
         assertThat(user.getEmail()).isEqualTo("new@woowa.com");
     }
 

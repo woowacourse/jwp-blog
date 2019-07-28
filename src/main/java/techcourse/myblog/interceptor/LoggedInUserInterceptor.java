@@ -1,7 +1,5 @@
 package techcourse.myblog.interceptor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -22,7 +20,7 @@ public class LoggedInUserInterceptor extends HandlerInterceptorAdapter {
         HttpSession session = request.getSession();
         String path = request.getRequestURI();
 
-        if (isLoggedIn(session) && path.equals("/login") ) {
+        if (isLoggedIn(session) && path.equals("/login")) {
             response.sendRedirect("/");
             return false;
         }
