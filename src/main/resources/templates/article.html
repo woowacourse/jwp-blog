@@ -63,7 +63,7 @@
                                 <span class="text-bold inline-block" th:text="${comment.getAuthor().getName()}"></span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
-                                        <span>6 min ago</span>
+                                        <span th:text="${comment.modifiedDate}"></span>
                                         <span>
                                             <form method="post"
                                                   th:action="${#strings.concat('/articles/', article.id, '/comment/', comment.getId())}">
@@ -71,6 +71,15 @@
                                             <button class="ti-trash text-dark font-size-16 pdd-horizontal-5"
                                                     type="submit"></button>
                                         </form>
+                                        </span>
+                                        <span>
+                                            <form method="post"
+                                                  th:action="${#strings.concat('/articles/', article.id, '/comment/', comment.getId())}">
+                                            <input name="_method" type="hidden" value="PUT">
+                                            <button class="ti-pencil text-dark font-size-16 pdd-horizontal-5"
+                                                    type="submit">
+                                            </button>
+                                            </form>
                                         </span>
                                 </span>
                                 <p class="width-80" th:text="${comment.getContents()}"></p>
@@ -116,6 +125,7 @@
         },
         height: '200px'
     });
+
 
 
 </script>
