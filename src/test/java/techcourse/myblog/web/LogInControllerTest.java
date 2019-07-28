@@ -18,8 +18,6 @@ import static techcourse.myblog.service.exception.LogInException.LOGIN_FAIL_MESS
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LogInControllerTest {
     private static final String SAMPLE_USER_NAME = "test";
-    private static final String SAMPLE_USER_EMAIL = "test@test.test";
-    private static final String SAMPLE_USER_PASSWORD = VALID_PASSWORD;
 
     @LocalServerPort
     int randomPortNumber;

@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +49,6 @@ class UserControllerTest {
     void createUser() {
         String name = "hibri";
         String email = "test1@woowa.com";
-        String password = VALID_PASSWORD;
-        String passwordConfirm = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -59,8 +56,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password)
-                        .with("passwordConfirm", passwordConfirm))
+                        .with("password", VALID_PASSWORD)
+                        .with("passwordConfirm", VALID_PASSWORD))
                 .exchange()
                 .expectStatus().isFound()
                 .expectBody()
@@ -76,8 +73,6 @@ class UserControllerTest {
     void isDuplicatedEmail() {
         String name = "Deock";
         String email = "test2@woowa.com";
-        String password = VALID_PASSWORD;
-        String passwordConfirm = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -85,8 +80,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password)
-                        .with("passwordConfirm", passwordConfirm))
+                        .with("password", VALID_PASSWORD)
+                        .with("passwordConfirm", VALID_PASSWORD))
                 .exchange()
                 .expectStatus().isFound();
 
@@ -96,8 +91,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password)
-                        .with("passwordConfirm", passwordConfirm))
+                        .with("password", VALID_PASSWORD)
+                        .with("passwordConfirm", VALID_PASSWORD))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -112,8 +107,6 @@ class UserControllerTest {
     void underValidNameLength() {
         String name = "a";
         String email = "test3@woowa.com";
-        String password = VALID_PASSWORD;
-        String passwordConfirm = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -121,8 +114,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password)
-                        .with("passwordConfirm", passwordConfirm))
+                        .with("password", VALID_PASSWORD)
+                        .with("passwordConfirm", VALID_PASSWORD))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -137,8 +130,6 @@ class UserControllerTest {
     void exceedValidNameLength() {
         String name = "abcdefghijk";
         String email = "test4@woowa.com";
-        String password = VALID_PASSWORD;
-        String passwordConfirm = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -146,8 +137,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password)
-                        .with("passwordConfirm", passwordConfirm))
+                        .with("password", VALID_PASSWORD)
+                        .with("passwordConfirm", VALID_PASSWORD))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -162,8 +153,6 @@ class UserControllerTest {
     void checkInvalidName() {
         String name = "afghij1";
         String email = "test4@woowa.com";
-        String password = VALID_PASSWORD;
-        String passwordConfirm = VALID_PASSWORD;
 
         webTestClient.post()
                 .uri("/users")
@@ -171,8 +160,8 @@ class UserControllerTest {
                 .body(BodyInserters
                         .fromFormData("name", name)
                         .with("email", email)
-                        .with("password", password)
-                        .with("passwordConfirm", passwordConfirm))
+                        .with("password", VALID_PASSWORD)
+                        .with("passwordConfirm", VALID_PASSWORD))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
