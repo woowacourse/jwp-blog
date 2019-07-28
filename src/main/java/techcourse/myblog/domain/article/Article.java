@@ -33,11 +33,11 @@ public class Article {
         this.categoryId = categoryId;
     }
 
-    public void update(ArticleDto articleDto) {
-        this.title = articleDto.getTitle();
-        this.coverUrl = articleDto.getCoverUrl();
-        this.contents = articleDto.getContents();
-        this.categoryId = articleDto.getCategoryId();
+    public void update(Article article) {
+        this.title = article.getTitle();
+        this.coverUrl = article.getCoverUrl();
+        this.contents = article.getContents();
+        this.categoryId = article.getCategoryId();
     }
 
     @Override

@@ -19,7 +19,7 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private SnsInfoRepository snsInfoRepository;
+    private SnsInfoService snsInfoService;
 
     public UserDto findUser(UserDto userDto) {
         Optional<User> maybeUser = userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
@@ -62,30 +62,14 @@ public class UserService {
     }
 
     private void updateInfo(UserDto userDto, User user) {
-        user.updateInfo(userDto);
+        user.updateInfo(userDto.toEntity());
 
-        updateSnsInfo(1L, userDto.getSnsGithubEmail(), user);
-        updateSnsInfo(0L, userDto.getSnsFacebookEmail(), user);
-    }
-
-    private void updateSnsInfo(long snsCode, String snsEmail, User user) {
-        Optional<SnsInfo> maybeSnsInfo = user.getSnsInfo(snsCode);
-        if (maybeSnsInfo.isPresent() && snsEmail.length() == 0) {
-            snsInfoRepository.deleteById(maybeSnsInfo.get().getId());
-            user.deleteSnsInfo(maybeSnsInfo.get());
-            return;
-        }
-        if (maybeSnsInfo.isPresent()) {
-            maybeSnsInfo.get().updateSnsInfo(snsEmail);
-            return;
-        }
-        if (snsEmail != null) {
-            user.addSns(snsEmail, snsCode);
-        }
+        snsInfoService.updateSnsInfo(1L, userDto.getSnsGithubEmail(), user);
+        snsInfoService.updateSnsInfo(0L, userDto.getSnsFacebookEmail(), user);
     }
 
     public void deleteById(long id) {
-        snsInfoRepository.deleteByUserId(id);
+        snsInfoService.deleteByUserId(id);
         userRepository.deleteById(id);
     }
 }

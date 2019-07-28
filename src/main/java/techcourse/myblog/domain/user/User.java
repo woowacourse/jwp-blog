@@ -59,7 +59,7 @@ public class User {
     }
 
     public Optional<SnsInfo> getSnsInfo(long snsCode) {
-        if(snsInfos == null) {
+        if (snsInfos == null) {
             return Optional.empty();
         }
         return snsInfos.stream()
@@ -67,8 +67,8 @@ public class User {
                 .findFirst();
     }
 
-    public void updateInfo(UserDto userDto) {
-        this.name = userDto.getName();
+    public void updateInfo(User user) {
+        this.name = user.getName();
     }
 
     public void deleteSnsInfo(SnsInfo snsInfo) {

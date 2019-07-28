@@ -23,17 +23,15 @@ public class ArticleService {
 
     public ArticleDto readById(long articleId) {
         Optional<Article> maybeArticle = articleRepository.findById(articleId);
-        if (maybeArticle.isPresent()) {
-            return ArticleDto.from(maybeArticle.get());
-        }
-        throw new IllegalArgumentException("게시글을 읽을 수 없습니다.");
+        return maybeArticle.map(ArticleDto::from)
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 읽을 수 없습니다."));
     }
 
     @Transactional
     public ArticleDto updateByArticle(long articleId, ArticleDto articleDto) {
         Optional<Article> maybeArticle = articleRepository.findById(articleId);
         if (maybeArticle.isPresent()) {
-            maybeArticle.get().update(articleDto);
+            maybeArticle.get().update(articleDto.toEntity());
 
             return readById(articleId);
         }
