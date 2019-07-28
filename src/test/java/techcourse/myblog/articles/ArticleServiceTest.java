@@ -51,7 +51,7 @@ class ArticleServiceTest {
         article.update(editedArticle);
 
         // when
-        Article expected = articleService.edit(article);
+        Article expected = articleService.edit(1L, article);
 
         // then
         assertThat(editedArticle.getContents()).isEqualTo(expected.getContents());

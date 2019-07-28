@@ -53,6 +53,10 @@ public class Article {
         this.coverUrl = other.coverUrl;
         this.contents = other.contents;
     }
+
+    boolean isWrittenBy(final User user) {
+        return this.author.equals(user);
+    }
 }
 
 

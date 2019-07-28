@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.users.User;
-import techcourse.myblog.users.UserService;
 import techcourse.myblog.users.UserSession;
 
 @Controller
@@ -35,15 +33,19 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Long id, Model model) {
-        Article article = articleService.findById(id);
+    public String editForm(@PathVariable Long id, UserSession userSession, Model model) {
+        Long userId = userSession.getId();
+        Article article = articleService.findById(userId, id);
+
         model.addAttribute(article);
         return "article-edit";
     }
 
     @PutMapping("/{id}")
-    public String edit(Article editedArticle) {
-        Article article = articleService.edit(editedArticle);
+    public String edit(UserSession userSession, Article editedArticle) {
+        Long userId = userSession.getId();
+
+        Article article = articleService.edit(userId, editedArticle);
         return "redirect:/articles/" + article.getId();
     }
 

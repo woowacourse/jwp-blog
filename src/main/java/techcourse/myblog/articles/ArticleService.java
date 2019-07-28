@@ -21,7 +21,7 @@ public class ArticleService {
                 .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 아닙니다."));
 
         article.setAuthor(user);
-        
+
         return articleRepository.save(article);
     }
 
@@ -31,8 +31,15 @@ public class ArticleService {
                 .orElseThrow(() -> new IllegalArgumentException("Can't find Article : " + id));
     }
 
-    public Article edit(Article editedArticle) {
+    public Article edit(final Long userId, final Article editedArticle) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 아닙니다."));
+
         Article article = findById(editedArticle.getId());
+
+        if (article.isWrittenBy(user)) {
+            throw new IllegalArgumentException("작성자가 아닙니다.");
+        }
 
         article.update(editedArticle);
 
@@ -46,5 +53,19 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public Page<Article> findAll(Pageable pageable) {
         return articleRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Article findById(final Long userId, final Long id) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 아닙니다."));
+
+        Article article = findById(id);
+
+        if (article.isWrittenBy(user)) {
+            throw new IllegalArgumentException("작성자가 아닙니다.");
+        }
+
+        return null;
     }
 }
