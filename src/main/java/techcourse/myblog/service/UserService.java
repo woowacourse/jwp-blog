@@ -45,7 +45,7 @@ public class UserService {
 
     public UserDto readWithoutPasswordById(long id) {
         Optional<User> maybeUser = userRepository.findById(id);
-        return maybeUser.map(UserDto::from)
+        return maybeUser.map(UserDto::fromWithoutPassword)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
     }
 
@@ -64,8 +64,8 @@ public class UserService {
     private void updateInfo(UserDto userDto, User user) {
         user.updateInfo(userDto.toEntity());
 
-        snsInfoService.updateSnsInfo(1L, userDto.getSnsGithubEmail(), user);
-        snsInfoService.updateSnsInfo(0L, userDto.getSnsFacebookEmail(), user);
+        snsInfoService.updateSnsInfo(1, userDto.getSnsGithubEmail(), user);
+        snsInfoService.updateSnsInfo(0, userDto.getSnsFacebookEmail(), user);
     }
 
     public void deleteById(long id) {

@@ -3,8 +3,10 @@ package techcourse.myblog.domain.user;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
@@ -13,8 +15,7 @@ import javax.validation.ConstraintViolationException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DataJpaTest
 class UserRepositoryTest {
     private final String validName = "yun";
     private final String validEmail = "hello@world.com";
@@ -80,6 +81,7 @@ class UserRepositoryTest {
                 .password(validPassword)
                 .build();
 
+        userRepository.save(user);
         assertThrows(DataIntegrityViolationException.class, () -> userRepository.save(user));
     }
 
