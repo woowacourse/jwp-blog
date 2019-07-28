@@ -17,8 +17,7 @@ public class ArticleService {
 
 
     public Article save(final Long userId, final Article article) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 아닙니다."));
+        User user = findUserById(userId);
 
         article.setAuthor(user);
 
@@ -32,22 +31,24 @@ public class ArticleService {
     }
 
     public Article edit(final Long userId, final Article editedArticle) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 아닙니다."));
+        User user = findUserById(userId);
 
         Article article = findById(editedArticle.getId());
 
-        if (article.isWrittenBy(user)) {
-            throw new IllegalArgumentException("작성자가 아닙니다.");
-        }
+        validateAuthor(user, article);
 
         article.update(editedArticle);
 
         return article;
     }
 
-    public void deleteById(Long id) {
-        articleRepository.deleteById(id);
+    public void deleteById(Long userId, Long articleId) {
+        User user = findUserById(userId);
+        Article article = findById(articleId);
+
+        validateAuthor(user, article);
+
+        articleRepository.deleteById(articleId);
     }
 
     @Transactional(readOnly = true)
@@ -56,16 +57,24 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public Article findById(final Long userId, final Long id) {
-        User user = userRepository.findById(userId)
+    public Article findById(final Long userId, final Long articleId) {
+        User user = findUserById(userId);
+
+        Article article = findById(articleId);
+
+        validateAuthor(user, article);
+
+        return article;
+    }
+
+    private User findUserById(final Long userId) {
+        return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 아닙니다."));
+    }
 
-        Article article = findById(id);
-
-        if (article.isWrittenBy(user)) {
+    private void validateAuthor(final User user, final Article article) {
+        if (!article.isWrittenBy(user)) {
             throw new IllegalArgumentException("작성자가 아닙니다.");
         }
-
-        return null;
     }
 }

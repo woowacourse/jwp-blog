@@ -50,8 +50,10 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
-        articleService.deleteById(id);
+    public String delete(@PathVariable Long id, UserSession userSession) {
+        Long userId = userSession.getId();
+
+        articleService.deleteById(userId, id);
         return "redirect:/";
     }
 }
