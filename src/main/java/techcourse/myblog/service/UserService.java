@@ -35,7 +35,7 @@ public class UserService {
     }
 
     @Transactional
-    public String saveMyPage(String sessionEmail, UserDto userDto) {
+    public UserDto save(String sessionEmail, UserDto userDto) {
         if (!sessionEmail.equals(userDto.getEmail())) {
             throw new UserException("인증된 사용자 정보가 아닙니다.");
         }
@@ -43,18 +43,17 @@ public class UserService {
         User user = userRepository.findUserByEmail(userDto.getEmail());
         user.updateUser(userDto.getName(), userDto.getPassword());
 
-        userRepository.save(user);
-        return user.getName();
+        return userDto;
     }
 
     public User login(UserLoginDto loginDto) {
-        User user = userRepository.findUserByEmail(loginDto.getEmail());
+        User dbUser = userRepository.findUserByEmail(loginDto.getEmail());
 
-        if (!user.checkPassword(loginDto.getPassword())) {
+        if (!dbUser.checkPassword(loginDto.getPassword())) {
             throw new UserException("패스워드가 올바르지 않습니다.");
         }
 
-        return user;
+        return dbUser;
     }
 
     public void signUpUser(UserDto userDto) {

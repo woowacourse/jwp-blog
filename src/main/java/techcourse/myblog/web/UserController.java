@@ -74,8 +74,8 @@ public class UserController {
     public String completeEditMypage(HttpSession httpSession, UserDto userDto) {
         String sessionEmail = httpSession.getAttribute(SESSION_EMAIL).toString();
 
-        String updatedUserName = userService.saveMyPage(sessionEmail, userDto);
-        httpSession.setAttribute(SESSION_NAME, updatedUserName);
+        UserDto selectedDto = userService.save(sessionEmail, userDto);
+        httpSession.setAttribute(SESSION_NAME, selectedDto.getName());
 
         return "redirect:/mypage";
     }
