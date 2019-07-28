@@ -10,6 +10,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.utils.Utils;
 
 import java.net.URI;
 
@@ -26,20 +27,20 @@ class ArticleControllerTests {
     private String setUpArticleUrl;
 
     @LocalServerPort
-    int randomServerPort;
+    int srverPort;
 
     @Autowired
     private WebTestClient webTestClient;
 
     @BeforeEach
     void setUp() {
-        String baseUrl = "http://localhost:" + randomServerPort;
+        String baseUrl = "http://localhost:" + srverPort;
 
         setUpArticleUrl = given()
                 .param("title", SAMPLE_TITLE)
                 .param("coverUrl", SAMPLE_COVER_URL)
                 .param("contents", SAMPLE_CONTENTS)
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", Utils.logInAsSampleUser(webTestClient))
                 .post(baseUrl + "/articles")
                 .getHeader("Location");
     }
@@ -56,7 +57,7 @@ class ArticleControllerTests {
     @DisplayName("User가 login 되어있을 때 새 글을 쓰는 페이지를 되돌려준다.")
     void showCreatePageWhenUserLogIn() {
         webTestClient.get().uri("/articles/new")
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", Utils.logInAsSampleUser(webTestClient))
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -76,29 +77,30 @@ class ArticleControllerTests {
         String newCoverUrl = "New Cover Url";
         String newContents = "New Contents";
 
-        webTestClient.post()
+        WebTestClient.ResponseSpec createdArticle = webTestClient.post()
                 .uri("/articles")
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", Utils.logInAsSampleUser(webTestClient))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", newTitle)
                         .with("coverUrl", newCoverUrl)
                         .with("contents", newContents))
                 .exchange()
-                .expectStatus().isFound()
-                .expectBody()
+                .expectStatus().isFound();
+
+        createdArticle.expectBody()
                 .consumeWith(response -> {
                     URI location = response.getResponseHeaders().getLocation();
                     webTestClient.get()
                             .uri(location)
-                            .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                            .cookie("JSESSIONID", Utils.logInAsSampleUser(webTestClient))
                             .exchange()
                             .expectBody()
                             .consumeWith(res -> {
                                 String body = new String(res.getResponseBody());
-                                assertThat(body.contains(newTitle)).isTrue();
-                                assertThat(body.contains(newCoverUrl)).isTrue();
-                                assertThat(body.contains(newContents)).isTrue();
+                                assertThat(body).contains(newTitle);
+                                assertThat(body).contains(newCoverUrl);
+                                assertThat(body).contains(newContents);
                             });
                 });
     }
@@ -108,7 +110,7 @@ class ArticleControllerTests {
     void showArticle() {
         webTestClient.get()
                 .uri(setUpArticleUrl)
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", Utils.logInAsSampleUser(webTestClient))
                 .exchange()
                 .expectBody()
                 .consumeWith(res -> {
@@ -124,7 +126,7 @@ class ArticleControllerTests {
     void showEditPage() {
         webTestClient.get()
                 .uri(setUpArticleUrl + "/edit")
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", Utils.logInAsSampleUser(webTestClient))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -154,7 +156,7 @@ class ArticleControllerTests {
 
         webTestClient.put()
                 .uri(setUpArticleUrl)
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", Utils.logInAsSampleUser(webTestClient))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", newTitle)
@@ -167,7 +169,7 @@ class ArticleControllerTests {
                     URI location = response.getResponseHeaders().getLocation();
                     webTestClient.get()
                             .uri(location)
-                            .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                            .cookie("JSESSIONID", Utils.logInAsSampleUser(webTestClient))
                             .exchange()
                             .expectBody()
                             .consumeWith(res -> {
@@ -184,13 +186,13 @@ class ArticleControllerTests {
     void deleteArticle() {
         webTestClient.delete()
                 .uri(setUpArticleUrl)
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", Utils.logInAsSampleUser(webTestClient))
                 .exchange()
                 .expectStatus().isFound();
 
         webTestClient.get()
                 .uri(setUpArticleUrl)
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", Utils.logInAsSampleUser(webTestClient))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()

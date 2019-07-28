@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import techcourse.myblog.utils.Utils;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MyPageControllerTest {
@@ -16,6 +17,7 @@ class MyPageControllerTest {
     void showMyPage() {
         webTestClient.get()
                 .uri("/mypage/1")
+                .cookie("JSESSIONID", Utils.logInAsSampleUser(webTestClient))
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -25,17 +27,19 @@ class MyPageControllerTest {
     void showMyPageEditWhenLogIn() {
         webTestClient.get()
                 .uri("/mypage/1/edit")
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", Utils.logInAsSampleUser(webTestClient))
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    @DisplayName("로그인이 되어 있지 않은 경우에 마이 페이지 수정 화면으로 접근하면 홈 화면으로 리다이렉트한다.")
+    @DisplayName("로그인이 되어 있지 않은 경우에 마이 페이지 수정 화면으로 접근하면 로그인 화면으로 리다이렉트한다.")
     void showMyPageEditWhenLogOut() {
         webTestClient.get()
                 .uri("/mypage/1/edit")
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus().isFound()
+                .expectHeader()
+                .valueMatches("location", ".*/login.*");
     }
 }

@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.dto.LogInInfoDto;
+import techcourse.myblog.utils.Utils;
 
 import java.net.URI;
 
@@ -257,11 +260,11 @@ class UserControllerTest {
     @Test
     @DisplayName("로그인한 유저가 자신의 프로필을 변경하는 경우 변경에 성공한다.")
     void updateUserWhenLogIn() {
-        String jssesionId = LogInControllerTest.logIn(webTestClient, "update@test.test", VALID_PASSWORD);
+        String jsessionId = Utils.logIn(webTestClient, new LogInInfoDto("update@test.test", VALID_PASSWORD));
 
         webTestClient.put()
                 .uri("/users/2")
-                .cookie("JSESSIONID", jssesionId)
+                .cookie("JSESSIONID", jsessionId)
                 .body(BodyInserters.fromFormData("name", "updated")
                         .with("email", "update@test.test"))
                 .exchange()
@@ -269,6 +272,7 @@ class UserControllerTest {
 
         webTestClient.get()
                 .uri("/mypage/2")
+                .cookie("JSESSIONID", jsessionId)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -290,6 +294,7 @@ class UserControllerTest {
 
         webTestClient.get()
                 .uri("/mypage/1")
+                .cookie("JSESSIONID", Utils.logInAsSampleUser(webTestClient))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -302,11 +307,10 @@ class UserControllerTest {
     @Test
     @DisplayName("로그인한 유저가 자신의 프로필을 삭제하는 경우 삭제에 성공한다.")
     void deleteUserWhenLogIn() {
-        String jssesionId = LogInControllerTest.logIn(webTestClient, "delete@test.test", VALID_PASSWORD);
-
+        String jsessionId = Utils.logIn(webTestClient, new LogInInfoDto("delete@test.test", VALID_PASSWORD));
         webTestClient.delete()
                 .uri("/users/3")
-                .cookie("JSESSIONID", jssesionId)
+                .cookie("JSESSIONID", jsessionId)
                 .exchange()
                 .expectStatus().isFound();
 

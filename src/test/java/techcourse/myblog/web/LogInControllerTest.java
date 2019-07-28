@@ -9,6 +9,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.utils.Utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
@@ -47,7 +48,7 @@ class LogInControllerTest {
     @Test
     @DisplayName("로그인 성공 시 메인 화면을 띄우고 우측 상단에 사용자 이름을 띄운다.")
     void successLogIn() {
-        String jsessiontId = logInAsBaseUser(webTestClient);
+        String jsessiontId = Utils.logInAsSampleUser(webTestClient);
 
         webTestClient.get()
                 .uri("/")
@@ -93,19 +94,6 @@ class LogInControllerTest {
                     String body = new String(response.getResponseBody());
                     assertThat(body).contains(LOGIN_FAIL_MESSAGE);
                 });
-    }
-
-    static String logIn(WebTestClient webTestClient, String email, String password) {
-        return webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .returnResult(String.class)
-                .getResponseCookies().get("JSESSIONID").get(0).getValue();
-    }
-
-    static String logInAsBaseUser(WebTestClient webTestClient) {
-        return logIn(webTestClient, SAMPLE_USER_EMAIL, SAMPLE_USER_PASSWORD);
     }
 
     @AfterEach
