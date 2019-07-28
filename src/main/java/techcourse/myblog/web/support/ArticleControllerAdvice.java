@@ -17,16 +17,16 @@ public class ArticleControllerAdvice {
 
     @ExceptionHandler(ArticleException.class)
     @ResponseStatus(value = HttpStatus.PERMANENT_REDIRECT)
-    public String failToLogin(ArticleException e, RedirectAttributes redirectAttributes) {
+    public String articleHandler(ArticleException e, RedirectAttributes redirectAttributes) {
         log.debug("article Manipulate FAILED {}", e.getMessage());
         redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return "redirect:/404";
+        return "redirect:/error";
     }
 
     @ExceptionHandler(CommentException.class)
     @ResponseStatus(value = HttpStatus.PERMANENT_REDIRECT)
-    public String comment(CommentException e, RedirectAttributes redirectAttributes) {
+    public String commentHandler(CommentException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return "redirect:/404";
+        return "redirect:/error";
     }
 }
