@@ -13,7 +13,6 @@ import techcourse.myblog.service.exception.AccessNotPermittedException;
 import techcourse.myblog.service.exception.NotFoundArticleException;
 import techcourse.myblog.service.exception.NotFoundUserException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import static techcourse.myblog.service.exception.AccessNotPermittedException.PERMISSION_FAIL_MESSAGE;
@@ -58,11 +57,11 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}/edit")
-    public String showEditPage(@PathVariable("id") Long id, Model model, HttpServletRequest httpServletRequest) {
+    public String showEditPage(@PathVariable("id") Long id, Model model, HttpSession httpSession) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(NotFoundArticleException::new);
 
-        validateAuthor(httpServletRequest.getSession(), article);
+        validateAuthor(httpSession, article);
         ArticleDto articleDto = new ArticleDto(
                 article.getId(),
                 article.getTitle(),
@@ -74,8 +73,7 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String createArticle(ArticleDto articleDto, HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
+    public String createArticle(ArticleDto articleDto, HttpSession httpSession) {
         UserProfileDto userProfileDto = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
 
         articleDto.setUserId(userProfileDto.getId());
@@ -84,9 +82,9 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public String editArticle(@PathVariable("id") long id, ArticleDto articleDto, HttpServletRequest httpServletRequest) {
+    public String editArticle(@PathVariable("id") long id, ArticleDto articleDto, HttpSession httpSession) {
         articleRepository.findById(id).ifPresent(article -> {
-            validateAuthor(httpServletRequest.getSession(), article);
+            validateAuthor(httpSession, article);
             article.updateArticle(articleDto);
             articleRepository.save(article);
         });
@@ -94,9 +92,9 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteArticle(@PathVariable("id") long id, HttpServletRequest httpServletRequest) {
+    public String deleteArticle(@PathVariable("id") long id, HttpSession httpSession) {
         articleRepository.findById(id).ifPresent(article -> {
-            validateAuthor(httpServletRequest.getSession(), article);
+            validateAuthor(httpSession, article);
             articleRepository.deleteById(id);
         });
         return "redirect:/";

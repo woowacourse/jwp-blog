@@ -11,7 +11,6 @@ import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.exception.AccessNotPermittedException;
 import techcourse.myblog.service.exception.SignUpException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -52,9 +51,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public String editUserName(@PathVariable Long id, UserProfileDto userProfileDto, HttpServletRequest httpServletRequest) {
+    public String editUserName(@PathVariable Long id, UserProfileDto userProfileDto, HttpSession httpSession) {
         Long updatedUserId;
-        HttpSession httpSession = httpServletRequest.getSession();
 
         validateUser(httpSession, id);
         updatedUserId = userService.update(userProfileDto);
@@ -65,9 +63,7 @@ public class UserController {
 
     @Transactional
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable Long id, HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-
+    public String deleteUser(@PathVariable Long id, HttpSession httpSession) {
         validateUser(httpSession, id);
         articleService.deleteByUserId(id);
         userService.deleteById(id);

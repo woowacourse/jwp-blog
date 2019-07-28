@@ -7,7 +7,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.dto.UserProfileDto;
 import techcourse.myblog.service.exception.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import static techcourse.myblog.web.UserController.LOGGED_IN_USER;
@@ -28,9 +27,8 @@ public class BlogControllerAdvice {
 
     @ExceptionHandler(UserUpdateException.class)
     public String handleUpdateUserException(Exception e,
-                                            HttpServletRequest httpServletRequest,
+                                            HttpSession httpSession,
                                             RedirectAttributes redirectAttributes) {
-        HttpSession httpSession = httpServletRequest.getSession();
         UserProfileDto user = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         return "redirect:/mypage/" + user.getId() + "/edit";
