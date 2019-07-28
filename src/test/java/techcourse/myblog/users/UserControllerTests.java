@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.BaseControllerTests;
 
 import java.util.stream.Stream;
 
@@ -18,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.users.UserValidator.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserControllerTests {
+public class UserControllerTests extends BaseControllerTests {
 
     @Autowired
     WebTestClient webTestClient;
@@ -30,7 +31,7 @@ public class UserControllerTests {
 
     @BeforeEach
     void setUp() {
-        email = "email@gmail.com";
+        email = "edlemail@gmail.com";
         name = "name";
         password = "P@ssw0rd";
 
@@ -41,7 +42,7 @@ public class UserControllerTests {
                 .confirmPassword(password)
                 .build();
 
-        id = postUsers(userDto).returnResult(String.class).getResponseBody().blockFirst();
+        id = addUser(name, email, password);
     }
 
     @Test
@@ -152,7 +153,7 @@ public class UserControllerTests {
     @DisplayName("로그인 상태에서 로그인 form 접근시 차단")
     void invalidLoginForm() {
         webTestClient.get().uri("/users/login")
-                .cookie("JSESSIONID", getJSessionId())
+                .cookie(JSESSIONID, getJSessionId(email, password))
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
@@ -181,7 +182,7 @@ public class UserControllerTests {
                 .body(BodyInserters.
                         fromFormData("email", email)
                         .with("password", password))
-                .cookie("JSESSIONID", getJSessionId())
+                .cookie(JSESSIONID, getJSessionId(email, password))
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
@@ -191,7 +192,7 @@ public class UserControllerTests {
     void userList() {
 
         webTestClient.get().uri("/users")
-                .cookie("JSESSIONID", getJSessionId())
+                .cookie(JSESSIONID, getJSessionId(email, password))
                 .exchange()
                 .expectBody()
                 .consumeWith(response -> {
@@ -205,7 +206,7 @@ public class UserControllerTests {
     void editForm() {
 
         webTestClient.get().uri("/users/{id}/edit", id)
-                .cookie("JSESSIONID", getJSessionId())
+                .cookie(JSESSIONID, getJSessionId(email, password))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -220,7 +221,7 @@ public class UserControllerTests {
     void show() {
 
         webTestClient.get().uri("/users/{id}", id)
-                .cookie("JSESSIONID", getJSessionId())
+                .cookie(JSESSIONID, getJSessionId(email, password))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -235,21 +236,11 @@ public class UserControllerTests {
     void edit() {
         String changedName = "asdf";
         webTestClient.put().uri("/users/{id}", id)
-                .cookie("JSESSIONID", getJSessionId())
+                .cookie(JSESSIONID, getJSessionId(email, password))
                 .body(BodyInserters.fromFormData("name", changedName))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*/users/" + id);
-    }
-
-    private String getJSessionId() {
-        return webTestClient.post().uri("/users/login")
-                .body(BodyInserters
-                        .fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .returnResult(String.class)
-                .getResponseCookies().get("JSESSIONID").get(0).getValue();
     }
 
     private WebTestClient.ResponseSpec postUsers(final UserDto.Register userDto) {
@@ -264,10 +255,6 @@ public class UserControllerTests {
 
     @AfterEach
     void tearDown() {
-        webTestClient.delete().uri("/users/{id}", id)
-                .cookie("JSESSIONID", getJSessionId())
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/");
+       deleteUser(id, email, password);
     }
 }
