@@ -19,11 +19,8 @@
 ### Todo
 
 4. 기타
-    - 테스트시에만 DB가 초기화 되도록 설정하는 방법 찾아보기(UserControllerTest) - profile
-    - 테스트 코드 중복 제거(UserControllerTests)
     - logging
     - logout 관련 테스트 작성
-    - validation domin에서 체크(@Pattern)
     
 ### Done
 0. 페어와 코드 동기화
@@ -66,3 +63,8 @@
         - MyPage > profile 하단 > 탈퇴 버튼을 추가
         - DELETE 메소드를 이용하여 탈퇴 요청
         
+4. 기타
+    - 테스트시에만 DB가 초기화 되도록 설정하는 방법 찾아보기(UserControllerTest) - profile
+    - 테스트 코드 중복 제거(UserControllerTests)
+    - validation domin에서 체크(@Pattern)
+    - util에 vaild passord 넣어놓기
