@@ -2,20 +2,24 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserProfileDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.exception.AccessNotPermittedException;
+import techcourse.myblog.service.exception.SignUpException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import static techcourse.myblog.service.exception.AccessNotPermittedException.PERMISSION_FAIL_MESSAGE;
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
     public static final String LOGGED_IN_USER = "loggedInUser";
 
@@ -27,24 +31,27 @@ public class UserController {
         this.articleService = articleService;
     }
 
-    @GetMapping("/users/sign-up")
+    @GetMapping("/sign-up")
     public String showRegisterPage() {
         return "sign-up";
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public String showUserList(Model model) {
         model.addAttribute("users", userService.findAll());
         return "user-list";
     }
 
-    @PostMapping("/users")
-    public String createUser(UserDto userDto) {
+    @PostMapping
+    public String createUser(@Valid UserDto userDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new SignUpException(bindingResult.getFieldError().getDefaultMessage());
+        }
         userService.save(userDto);
         return "redirect:/login";
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping("/{id}")
     public String editUserName(@PathVariable Long id, UserProfileDto userProfileDto, HttpServletRequest httpServletRequest) {
         Long updatedUserId;
         HttpSession httpSession = httpServletRequest.getSession();
@@ -57,7 +64,7 @@ public class UserController {
     }
 
     @Transactional
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable Long id, HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
 

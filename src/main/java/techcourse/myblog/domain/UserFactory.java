@@ -9,17 +9,18 @@ import java.util.regex.Pattern;
 import static techcourse.myblog.service.exception.UserArgumentException.*;
 
 public class UserFactory {
-    private static final int MIN_NAME_LENGTH = 2;
-    private static final int MAX_NAME_LENGTH = 10;
-    private static final int MIN_PASSWORD_LENGTH = 8;
-    private static final String KOREAN_ENGLISH_REGEX = "^[(ㄱ-ㅎ가-힣a-zA-Z)]+$";
-    private static final String LOWER_CASE_REGEX = "[(a-z)]+";
-    private static final String UPPER_CASE_REGEX = "[(A-Z)]+";
-    private static final String NUMBER_REGEX = "[(0-9)]+";
-    private static final String SPECIAL_CHARACTER_REGEX = "[ `~!@#[$]%\\^&[*]\\(\\)_-[+]=\\{\\}\\[\\][|]'\":;,.<>/?]+";
-    private static final String KOREAN_REGEX = "[(ㄱ-ㅎ가-힣)]+";
+    public static final int MIN_NAME_LENGTH = 2;
+    public static final int MAX_NAME_LENGTH = 10;
+    public static final int MIN_PASSWORD_LENGTH = 8;
+    public static final String KOREAN_ENGLISH_REGEX = "^[(ㄱ-ㅎ가-힣a-zA-Z)]+$";
+    public static final String LOWER_CASE_REGEX = "[(a-z)]+";
+    public static final String UPPER_CASE_REGEX = "[(A-Z)]+";
+    public static final String NUMBER_REGEX = "[(0-9)]+";
+    public static final String SPECIAL_CHARACTER_REGEX = "[ `~!@#[$]%\\^&[*]\\(\\)_-[+]=\\{\\}\\[\\][|]'\":;,.<>/?]+";
+    public static final String KOREAN_REGEX = "[(ㄱ-ㅎ가-힣)]+";
 
-    private UserFactory() {}
+    private UserFactory() {
+    }
 
     public static User generateUser(UserDto userDto) {
         validate(userDto);
