@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import techcourse.myblog.dto.LogInInfoDto;
 import techcourse.myblog.dto.UserProfileDto;
 import techcourse.myblog.service.LogInService;
@@ -42,11 +43,5 @@ public class LogInController {
         HttpSession httpSession = httpServletRequest.getSession();
         httpSession.removeAttribute(LOGGED_IN_USER);
         return REDIRECT_PATH_TO_INDEX;
-    }
-
-    @ExceptionHandler(LogInException.class)
-    public String handleLogInException(Model model, Exception e) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "login";
     }
 }

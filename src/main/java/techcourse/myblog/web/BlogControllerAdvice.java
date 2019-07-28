@@ -35,4 +35,10 @@ public class BlogControllerAdvice {
         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         return "redirect:/mypage/" + user.getId() + "/edit";
     }
+
+    @ExceptionHandler(LogInException.class)
+    public String handleLogInException(Model model, Exception e) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "login";
+    }
 }
