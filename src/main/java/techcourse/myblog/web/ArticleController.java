@@ -10,7 +10,8 @@ import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 
-@Controller("/articles")
+@Controller
+@RequestMapping("/articles")
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
