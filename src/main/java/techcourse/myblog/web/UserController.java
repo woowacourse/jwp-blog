@@ -75,7 +75,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    private void validateUser(HttpSession httpSession, Long id) {
+    public static void validateUser(HttpSession httpSession, Long id) {
         UserProfileDto loggedInUser = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
         if (!loggedInUser.getId().equals(id)) {
             throw new AccessNotPermittedException(PERMISSION_FAIL_MESSAGE);

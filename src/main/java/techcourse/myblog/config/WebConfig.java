@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(guestInterceptor)
-                .addPathPatterns("/articles", "/articles/**", "/users/**")
+                .addPathPatterns("/articles", "/articles/**", "/users/**", "/mypage/**")
                 .excludePathPatterns("/users/sign-up", "/users");
 
         registry.addInterceptor(loggedInUserInterceptor)
