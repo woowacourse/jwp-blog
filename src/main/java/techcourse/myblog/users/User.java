@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@ToString
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(uniqueConstraints = @UniqueConstraint(name = "email", columnNames = {"email"}))
@@ -16,10 +15,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     private String name;
 
     @Column(nullable = false)
@@ -38,12 +37,13 @@ public class User {
         this.password = password;
     }
 
-    public boolean authenticate(final String password) {
+    boolean authenticate(final String password) {
         return this.password.equals(password);
     }
 
     void update(final User other) {
         this.name = other.name;
     }
+
 }
 

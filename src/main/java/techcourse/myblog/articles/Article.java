@@ -3,6 +3,7 @@ package techcourse.myblog.articles;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import techcourse.myblog.users.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,7 +11,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = "id")
 public class Article {
@@ -19,14 +19,18 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false, length = 100)
     private String title;
 
-    @Column
+    @Lob
     private String contents;
 
-    @Column
+    @Column(nullable = false)
     private String coverUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    private User author;
 
     @CreatedDate
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
@@ -43,7 +47,7 @@ public class Article {
         this.coverUrl = coverUrl;
     }
 
-    public void update(Article other) {
+    void update(Article other) {
         this.updateDate = LocalDateTime.now();
         this.title = other.title;
         this.coverUrl = other.coverUrl;
