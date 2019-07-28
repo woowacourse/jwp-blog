@@ -8,7 +8,7 @@ class LoginInterceptorTest extends AuthedWebTestClient {
 
     @Test
     void 인터셉터_동작() {
-        webTestClient.get().uri("/users")
+        webTestClient.get().uri("/writing")
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".+/login");

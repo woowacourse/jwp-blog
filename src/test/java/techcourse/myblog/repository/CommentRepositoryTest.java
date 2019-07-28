@@ -46,8 +46,7 @@ class CommentRepositoryTest {
     void 노예_아티클_테스트() {
         article.addComment(new Comment("z"));
         assertThat(articleRepsository.findById(article.getId()).get().getComments().get(0).getContents()).isEqualTo("z");
-
-        assertThat(commentRepository.findAll().size()).isEqualTo(1);
+        assertThat(commentRepository.findAll().size()).isEqualTo(2);
         assertThat(commentRepository.findAll().get(0).getContents()).isEqualTo("a");
     }
 
