@@ -1,4 +1,4 @@
-package techcourse.myblog.controller.core;
+package techcourse.myblog.controller.advice;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

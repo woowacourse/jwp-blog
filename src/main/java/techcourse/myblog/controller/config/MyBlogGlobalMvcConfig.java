@@ -1,4 +1,4 @@
-package techcourse.myblog.controller.core;
+package techcourse.myblog.controller.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
