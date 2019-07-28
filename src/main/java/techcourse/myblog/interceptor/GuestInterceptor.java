@@ -8,14 +8,13 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.regex.Pattern;
 
 import static techcourse.myblog.users.UserSession.USER_SESSION;
 
 @Component
-public class NotLoginInterceptor extends HandlerInterceptorAdapter {
-    private static final Logger log = LoggerFactory.getLogger(NotLoginInterceptor.class);
+public class GuestInterceptor extends HandlerInterceptorAdapter {
+    private static final Logger log = LoggerFactory.getLogger(GuestInterceptor.class);
 
     private static final Pattern ARTICLE_PATTERN = Pattern.compile("^/articles/[0-9]*$");
 

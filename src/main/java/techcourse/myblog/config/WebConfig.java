@@ -6,7 +6,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import techcourse.myblog.interceptor.AuthInterceptor;
-import techcourse.myblog.interceptor.NotLoginInterceptor;
+import techcourse.myblog.interceptor.GuestInterceptor;
 import techcourse.myblog.interceptor.LoginInterceptor;
 import techcourse.myblog.users.UserSessionArgumentResolver;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final NotLoginInterceptor notLoginInterceptor;
+    private final GuestInterceptor guestInterceptor;
     private final AuthInterceptor authInterceptor;
     private final LoginInterceptor loginInterceptor;
 
@@ -25,7 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(notLoginInterceptor)
+        registry.addInterceptor(guestInterceptor)
                 .addPathPatterns("/users")
                 .addPathPatterns("/users/**")
                 .addPathPatterns("/articles/**")

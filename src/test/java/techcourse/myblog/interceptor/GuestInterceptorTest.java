@@ -8,7 +8,7 @@ import techcourse.myblog.users.User;
 import techcourse.myblog.users.UserSession;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class NotLoginInterceptorTest {
+class GuestInterceptorTest {
 
     @Autowired
     private WebTestClient webTestClient;
