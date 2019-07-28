@@ -54,7 +54,7 @@ public class LoginControllerTest {
                 .body(BodyInserters.fromFormData("email", "xxx@gmail.com")
                         .with("password", "A!1bcdefg"))
                 .exchange()
-                .expectStatus().isAccepted()
+                .expectStatus().isUnauthorized()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
@@ -69,7 +69,7 @@ public class LoginControllerTest {
                 .body(BodyInserters.fromFormData("email", "andole@gmail.com")
                         .with("password", "B!1bcdefg"))
                 .exchange()
-                .expectStatus().isAccepted()
+                .expectStatus().isUnauthorized()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());

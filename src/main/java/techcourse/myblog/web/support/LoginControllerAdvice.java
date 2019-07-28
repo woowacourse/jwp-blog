@@ -15,7 +15,7 @@ public class LoginControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(LoginControllerAdvice.class);
 
     @ExceptionHandler(UserException.class)
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public String failToLogin(UserException e, Model model) {
         log.debug("LOGIN FAILED {}", e.getMessage());
         model.addAttribute("error", e.getMessage());
