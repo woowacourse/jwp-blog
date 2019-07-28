@@ -32,15 +32,9 @@ public class CommentController {
         return "redirect:/articles/" + articleId;
     }
 
-//    @PutMapping("/articles/{articleId}/comment/{commentId}")
-//    public String updateComment(@PathVariable long articleId, @PathVariable long commentId, UserSessionInfo userSessionInfo, CommentDto commentDto) {
-//        commentService.updateComment(commentId, userSessionInfo.getEmail(), commentDto);
-//        return "redirect:/articles/" + articleId;
-//    }
-
     @PutMapping("/articles/{articleId}/comment/{commentId}")
-    public String updateComment(@PathVariable long articleId, @PathVariable long commentId, UserSessionInfo userSessionInfo) {
-        commentService.updateComment(commentId, userSessionInfo.getEmail(), new CommentDto("바뀌었습니다."));
+    public String updateComment(@PathVariable long articleId, @PathVariable long commentId, UserSessionInfo userSessionInfo, CommentDto commentDto) {
+        commentService.updateComment(commentId, userSessionInfo.getEmail(), commentDto);
         return "redirect:/articles/" + articleId;
     }
 }
