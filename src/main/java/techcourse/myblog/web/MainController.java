@@ -28,8 +28,13 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping("/404")
+    @GetMapping("/writing")
+    public String getArticleEditForm() {
+        return "article-edit";
+    }
+
+    @GetMapping("/error")
     public String error() {
-        return "404";
+        return "error";
     }
 }

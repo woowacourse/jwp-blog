@@ -40,4 +40,13 @@ public class CommentService {
         }
         commentRepository.deleteById(commentId);
     }
+
+    @Transactional
+    public Comment updateComment(long commentId, String email, CommentDto commentDto) {
+        Comment comment = commentRepository.getOne(commentId);
+        if (!comment.isAuthor(email)) {
+            throw new CommentException("FBI WARNING");
+        }
+        return comment.updateContent(commentDto.getContents());
+    }
 }
