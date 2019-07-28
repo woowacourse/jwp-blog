@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.springframework:spring-jdbc:+'
     implementation 'commons-dbcp:commons-dbcp:1.4'
     implementation 'mysql:mysql-connector-java'
+    implementation "org.hibernate.validator:hibernate-validator"
 
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
     runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
