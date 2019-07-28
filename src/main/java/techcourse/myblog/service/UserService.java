@@ -23,10 +23,8 @@ public class UserService {
 
     public UserDto findUser(UserDto userDto) {
         Optional<User> maybeUser = userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
-        if (maybeUser.isPresent()) {
-            return UserDto.from(maybeUser.get());
-        }
-        throw new IllegalArgumentException("아이디, 비밀번호 확인!");
+        return maybeUser.map(UserDto::from)
+                .orElseThrow(() -> new IllegalArgumentException("아이디, 비밀번호 확인!"));
     }
 
     public UserDto create(UserDto userDto) {
@@ -34,7 +32,6 @@ public class UserService {
             User user = userRepository.save(userDto.toEntity());
             return UserDto.from(user);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new IllegalArgumentException("회원 가입 오류!");
         }
     }
@@ -47,11 +44,9 @@ public class UserService {
     }
 
     public UserDto readWithoutPasswordById(long id) {
-        Optional<UserDto> maybeUserDto = userRepository.findById(id).map(UserDto::fromWithoutPassword);
-        if (maybeUserDto.isPresent()) {
-            return maybeUserDto.get();
-        }
-        throw new IllegalArgumentException("유저를 찾을 수 없습니다.");
+        Optional<User> maybeUser = userRepository.findById(id);
+        return maybeUser.map(UserDto::from)
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
     }
 
     @Transactional
