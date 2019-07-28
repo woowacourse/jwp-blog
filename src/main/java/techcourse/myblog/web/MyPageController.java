@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserProfileDto;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/mypage")
 public class MyPageController {
     private static final String LOGGED_IN_USER = "loggedInUser";
 
@@ -22,15 +24,16 @@ public class MyPageController {
         this.userService = userService;
     }
 
-    @GetMapping("/mypage/{id}")
+    @GetMapping("/{id}")
     public String showMyPage(@PathVariable("id") long id, Model model) {
         User user = userService.findById(id);
         model.addAttribute("user", new UserProfileDto(user.getId(), user.getName(), user.getEmail()));
         return "mypage";
     }
 
-    @GetMapping("/mypage/{id}/edit")
-    public String showMyPageEdit(@PathVariable("id") long id, Model model, HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
+    @GetMapping("/{id}/edit")
+    public String showMyPageEdit(@PathVariable("id") long id, Model model,
+                                 HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
         String errorMessage = (String) redirectAttributes.getFlashAttributes().get("errorMessage");
         if (errorMessage != null) {
             model.addAttribute("errorMessage", errorMessage);
@@ -40,7 +43,7 @@ public class MyPageController {
             model.addAttribute("user", new UserProfileDto(user.getId(), user.getName(), user.getEmail()));
             return "mypage-edit";
         }
-        return "redirect:/mypage/" + id;
+        return "redirect:/login";
     }
 
     private boolean isLoggedInUserMYPage(HttpServletRequest httpServletRequest, User user) {

@@ -9,7 +9,6 @@ import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserProfileDto;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.exception.AccessNotPermittedException;
 import techcourse.myblog.service.exception.NotFoundArticleException;
 import techcourse.myblog.service.exception.NotFoundUserException;
@@ -20,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import static techcourse.myblog.service.exception.AccessNotPermittedException.PERMISSION_FAIL_MESSAGE;
 
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
     private static final String LOGGED_IN_USER = "loggedInUser";
 
@@ -31,18 +31,18 @@ public class ArticleController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/articles")
+    @GetMapping
     public String showArticles(Model model) {
         model.addAttribute("articles", articleRepository.findAll());
         return "index";
     }
 
-    @GetMapping("/articles/new")
+    @GetMapping("/new")
     public String showCreatePage() {
         return "article-edit";
     }
 
-    @GetMapping("/articles/{id}")
+    @GetMapping("/{id}")
     public String showArticle(@PathVariable("id") Long id, Model model) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(NotFoundArticleException::new);
@@ -57,7 +57,7 @@ public class ArticleController {
         return "article";
     }
 
-    @GetMapping("/articles/{id}/edit")
+    @GetMapping("/{id}/edit")
     public String showEditPage(@PathVariable("id") Long id, Model model, HttpServletRequest httpServletRequest) {
         Article article = articleRepository.findById(id)
                 .orElseThrow(NotFoundArticleException::new);
@@ -73,7 +73,7 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PostMapping("/articles")
+    @PostMapping
     public String createArticle(ArticleDto articleDto, HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
         UserProfileDto userProfileDto = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
@@ -83,7 +83,7 @@ public class ArticleController {
         return "redirect:/articles/" + persistArticle.getId();
     }
 
-    @PutMapping("/articles/{id}")
+    @PutMapping("/{id}")
     public String editArticle(@PathVariable("id") long id, ArticleDto articleDto, HttpServletRequest httpServletRequest) {
         articleRepository.findById(id).ifPresent(article -> {
             validateAuthor(httpServletRequest.getSession(), article);
@@ -93,7 +93,7 @@ public class ArticleController {
         return "redirect:/articles/" + id;
     }
 
-    @DeleteMapping("/articles/{id}")
+    @DeleteMapping("/{id}")
     public String deleteArticle(@PathVariable("id") long id, HttpServletRequest httpServletRequest) {
         articleRepository.findById(id).ifPresent(article -> {
             validateAuthor(httpServletRequest.getSession(), article);
