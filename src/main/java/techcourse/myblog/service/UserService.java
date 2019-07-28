@@ -8,9 +8,9 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.exception.DuplicatedUserException;
-import techcourse.myblog.service.exception.NotMatchPasswordException;
-import techcourse.myblog.service.exception.UnFoundUserException;
+import techcourse.myblog.exception.DuplicatedUserException;
+import techcourse.myblog.exception.NotMatchPasswordException;
+import techcourse.myblog.exception.UnFoundUserException;
 import techcourse.myblog.repository.UserRepository;
 
 @Service

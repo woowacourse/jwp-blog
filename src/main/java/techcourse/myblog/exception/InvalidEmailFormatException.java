@@ -1,4 +1,4 @@
-package techcourse.myblog.service.exception;
+package techcourse.myblog.exception;
 
 public class InvalidEmailFormatException extends RuntimeException {
     public InvalidEmailFormatException(String message) {

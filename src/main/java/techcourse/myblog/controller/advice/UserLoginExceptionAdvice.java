@@ -6,10 +6,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import lombok.extern.slf4j.Slf4j;
-import techcourse.myblog.service.exception.DuplicatedUserException;
-import techcourse.myblog.service.exception.NotMatchPasswordException;
-import techcourse.myblog.service.exception.UnFoundUserException;
-import techcourse.myblog.service.exception.UserLoginException;
+import techcourse.myblog.exception.DuplicatedUserException;
+import techcourse.myblog.exception.NotMatchPasswordException;
+import techcourse.myblog.exception.UnFoundUserException;
+import techcourse.myblog.exception.UserLoginException;
 
 @Slf4j
 @ControllerAdvice
