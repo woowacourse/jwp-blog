@@ -14,6 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/articles")
                 .addPathPatterns("/articles/*/edit")
                 .addPathPatterns("/accounts/delete")
+                .addPathPatterns("/articles/*/comments")
                 .addPathPatterns("/logout");
 
         registry.addInterceptor(new NonAuthInterceptor())

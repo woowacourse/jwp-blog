@@ -118,6 +118,7 @@
 - ~~커맨트 레파지토리 구현~~
 - 커맨트 서비스 구현
 - Comment Controller
-- Add addNewComment controller method in ArticleController
+- ~~Add addNewComment controller method in ArticleController~~
+- ~~Show comments related to articles~~
 - Add modifyCommentById controller method in CommentController
 - Add deleteCommentById controller method in CommentController

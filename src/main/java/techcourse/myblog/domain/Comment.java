@@ -1,9 +1,6 @@
 package techcourse.myblog.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,6 +29,13 @@ public class Comment {
 
     public Comment(String comment) {
         this.comment = comment;
+    }
+
+    @Builder
+    public Comment(String comment, User commenter, Article article) {
+        this.comment = comment;
+        this.commenter = commenter;
+        this.article = article;
     }
 
     public void setCommenter(User commenter) {
