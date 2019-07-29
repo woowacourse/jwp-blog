@@ -52,15 +52,16 @@ public class ArticleController {
 		Long id = articleRepository.save(article).getId();
 		return "redirect:/articles/" + id;
 	}
-	//Todo : test
+	@Transactional
 	@PutMapping("/articles/{articleId}")
 	public String modifyArticle(@PathVariable Long articleId, ArticleDto articleDto, HttpSession httpSession) {
 		if (!existSession(httpSession)) {
 			return "redirect:/";
 		}
-		confirmAuthor(articleDto.getId(), httpSession);
-		Article article = articleDto.valueOfArticle(articleId);
-		articleRepository.save(article);
+		confirmAuthor(articleId, httpSession);
+		Article article = articleRepository.findById(articleId).get();
+		article.update(articleDto.valueOfArticle(articleId));
+
 		return "redirect:/articles/" + articleId;
 	}
 
