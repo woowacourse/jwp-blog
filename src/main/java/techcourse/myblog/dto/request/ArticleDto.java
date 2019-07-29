@@ -1,6 +1,7 @@
 package techcourse.myblog.dto.request;
 
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 
 public class ArticleDto {
 	private Long id;
@@ -56,11 +57,17 @@ public class ArticleDto {
 		this.coverUrl = coverUrl;
 	}
 
-	public Article valueOfArticle() {
-		return new Article(this.title, this.contents, this.coverUrl);
-	}
-
 	public Article valueOfArticle(Long articleId) {
 		return new Article(articleId, this.title, this.contents, this.coverUrl);
+	}
+
+	public Article valueOfArticle(User user) {
+		Article article = new Article(this, user);
+		return article;
+	}
+
+	public Article valueOfArticle(Long articleId, User user) {
+		Article article = new Article(articleId, this, user);
+		return article;
 	}
 }

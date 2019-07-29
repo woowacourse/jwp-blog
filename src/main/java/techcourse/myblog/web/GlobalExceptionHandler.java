@@ -44,4 +44,11 @@ public class GlobalExceptionHandler {
 		model.addAttribute("error", notMatchPasswordException.getMessage());
 		return "leave-user";
 	}
+
+	@ExceptionHandler(value = UnauthorizedException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public String handlerExistEmailException(UnauthorizedException unauthorizedException, Model model) {
+		model.addAttribute("error", unauthorizedException.getMessage());
+		return "index";
+	}
 }

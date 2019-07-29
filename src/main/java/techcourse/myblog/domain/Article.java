@@ -1,10 +1,9 @@
 package techcourse.myblog.domain;
 
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+
+import techcourse.myblog.dto.request.ArticleDto;
 
 @Entity
 public class Article {
@@ -14,6 +13,10 @@ public class Article {
 	private String title;
 	private String contents;
 	private String coverUrl;
+
+	@ManyToOne
+	@JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+	private User author;
 
 	public Article() {
 	}
@@ -29,6 +32,21 @@ public class Article {
 		this.title = title;
 		this.contents = contents;
 		this.coverUrl = coverUrl;
+	}
+
+	public Article(ArticleDto articleDto, User user) {
+		this.title = articleDto.getTitle();
+		this.contents = articleDto.getContents();
+		this.coverUrl = articleDto.getCoverUrl();
+		this.author = user;
+	}
+
+	public Article(Long id, ArticleDto articleDto, User user) {
+		this.id = id;
+		this.title = articleDto.getTitle();
+		this.contents = articleDto.getContents();
+		this.coverUrl = articleDto.getCoverUrl();
+		this.author = user;
 	}
 
 	public String getTitle() {
@@ -57,6 +75,18 @@ public class Article {
 		this.coverUrl = article.coverUrl;
 	}
 
+	public User getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(User author) {
+		this.author = author;
+	}
+
+	public boolean matchUser(User user) {
+		return this.author.equals(user);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -69,11 +99,12 @@ public class Article {
 		return Objects.equals(getId(), article.getId()) &&
 				Objects.equals(getTitle(), article.getTitle()) &&
 				Objects.equals(getContents(), article.getContents()) &&
-				Objects.equals(getCoverUrl(), article.getCoverUrl());
+				Objects.equals(getCoverUrl(), article.getCoverUrl()) &&
+				Objects.equals(getAuthor(), article.getAuthor());
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getId(), getTitle(), getContents(), getCoverUrl());
+		return Objects.hash(getId(), getTitle(), getContents(), getCoverUrl(), getAuthor());
 	}
 }

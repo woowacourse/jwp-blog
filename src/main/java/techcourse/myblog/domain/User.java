@@ -7,7 +7,7 @@ import javax.persistence.Id;
 
 import techcourse.myblog.dto.request.UserDto;
 import techcourse.myblog.dto.request.UserEditProfileDto;
-
+//TODO: @COLUMN 추가하기
 @Entity
 public class User {
 	@Id
@@ -79,5 +79,25 @@ public class User {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, getUsername(), getPassword(), getEmail(), getGithubURL(), getFacebookURL());
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", email='" + email + '\'' +
+				", githubURL='" + githubURL + '\'' +
+				", facebookURL='" + facebookURL + '\'' +
+				'}';
 	}
 }
