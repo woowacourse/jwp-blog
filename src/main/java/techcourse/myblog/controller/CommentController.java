@@ -16,7 +16,7 @@ import techcourse.myblog.service.dto.CommentDTO;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/articles")
+@RequestMapping("/articles/{articleId}/comments")
 public class CommentController {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
@@ -26,7 +26,7 @@ public class CommentController {
         this.articleRepository = articleRepository;
     }
 
-    @PostMapping("/{articleId}/comments")
+    @PostMapping("/")
     public RedirectView create(@ModelAttribute CommentDTO commentDTO,
                                @PathVariable long articleId,
                                HttpSession httpSession) {
@@ -52,7 +52,7 @@ public class CommentController {
         return new RedirectView("/articles/" + articleId);
     }
 
-    @DeleteMapping("/{articleId}/comments/{commentId}")
+    @DeleteMapping("/{commentId}")
     public RedirectView delete(@PathVariable long articleId,
                                @PathVariable long commentId,
                                HttpSession httpSession) {

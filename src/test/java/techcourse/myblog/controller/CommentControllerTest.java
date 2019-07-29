@@ -116,6 +116,34 @@ class CommentControllerTest {
                 }));
     }
 
+    @Test
+    void 댓글_수정_확인() {
+        webTestClient.post().uri("/articles/1/comments")
+                .header("cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("contents", "댓글 내용"))
+                .exchange();
+
+        webTestClient.put().uri("/articles/1/comments/1")
+                .header("cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("contents", "댓글 내용 수정됨"))
+                .exchange().expectStatus().isFound()
+                .expectBody()
+                .consumeWith((response -> {
+                    String url = response.getResponseHeaders().get("Location").get(0);
+                    webTestClient.get().uri(url)
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody()
+                            .consumeWith(redirectResponse -> {
+                                String body = new String(redirectResponse.getResponseBody());
+                                assertThat(body.contains("댓글 내용 수정됨")).isTrue();
+                            });
+                }));
+
+    }
+
     @AfterEach
     void tearDown() {
         userRepository.deleteAll();
