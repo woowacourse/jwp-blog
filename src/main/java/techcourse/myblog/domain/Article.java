@@ -1,42 +1,48 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.domain.exception.IllegalArticleArgumentsException;
-import techcourse.myblog.web.ArticleDto;
+import techcourse.myblog.dto.ArticleDto;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Article {
-    private final int articleId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long userId;
     private String title;
     private String coverUrl;
     private String contents;
 
-    private Article(int articleId, String title, String coverUrl, String contents) {
-        this.articleId = articleId;
+    public Article() {
+    }
+
+    public Article(Long userId, String title, String coverUrl, String contents) {
+        this.userId = userId;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
 
-    public static Article of(int articleId, ArticleDto articleDTO) {
-        validateNotNull(articleDTO);
-
-        return new Article(
-                articleId,
-                articleDTO.getTitle(),
-                articleDTO.getCoverUrl(),
-                articleDTO.getContents()
-        );
+    public void updateArticle(ArticleDto articleDto) {
+        this.title = articleDto.getTitle();
+        this.coverUrl = articleDto.getCoverUrl();
+        this.contents = articleDto.getContents();
     }
 
-    private static void validateNotNull(ArticleDto articleDTO) {
-        if (articleDTO.getTitle() == null
-                || articleDTO.getCoverUrl() == null
-                || articleDTO.getContents() == null) {
-            throw new IllegalArticleArgumentsException();
-        }
+    public boolean matchUserId(Long userId) {
+        return this.userId.equals(userId);
     }
 
-    public int getArticleId() {
-        return articleId;
+    public Long getId() {
+        return id;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     public String getTitle() {

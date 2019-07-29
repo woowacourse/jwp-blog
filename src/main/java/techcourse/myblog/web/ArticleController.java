@@ -1,65 +1,109 @@
 package techcourse.myblog.web;
 
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.UserProfileDto;
+import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.exception.AccessNotPermittedException;
+import techcourse.myblog.service.exception.NotFoundArticleException;
+import techcourse.myblog.service.exception.NotFoundUserException;
+
+import javax.servlet.http.HttpSession;
+
+import static techcourse.myblog.service.exception.AccessNotPermittedException.PERMISSION_FAIL_MESSAGE;
 
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
-    private final ArticleRepository articleRepository;
+    private static final String LOGGED_IN_USER = "loggedInUser";
 
-    public ArticleController(ArticleRepository articleRepository) {
+    private ArticleRepository articleRepository;
+    private UserRepository userRepository;
+
+    public ArticleController(final ArticleRepository articleRepository, final UserRepository userRepository) {
         this.articleRepository = articleRepository;
+        this.userRepository = userRepository;
     }
 
-    @GetMapping("/articles/new")
-    public String articleCreationPage(Model model) {
-        String actionRoute = "/write";
+    @GetMapping
+    public String showArticles(Model model) {
+        model.addAttribute("articles", articleRepository.findAll());
+        return "index";
+    }
 
-        model.addAttribute("actionRoute", actionRoute);
-        model.addAttribute("formMethod", HttpMethod.POST);
+    @GetMapping("/new")
+    public String showCreatePage() {
         return "article-edit";
     }
 
-    @GetMapping("/articles/{articleId}/edit")
-    public String articleEditPage(@PathVariable int articleId, Model model) {
-        Article article = articleRepository.findBy(articleId);
-        String actionRoute = "/articles/" + articleId;
+    @GetMapping("/{id}")
+    public String showArticle(@PathVariable("id") Long id, Model model) {
+        Article article = articleRepository.findById(id)
+                .orElseThrow(NotFoundArticleException::new);
+        ArticleDto articleDto = new ArticleDto(article.getId(), article.getTitle(),
+                article.getCoverUrl(), article.getContents());
+        model.addAttribute("article", articleDto);
 
-        model.addAttribute("article", article);
-        model.addAttribute("actionRoute", actionRoute);
-        model.addAttribute("formMethod", HttpMethod.PUT);
-        return "article-edit";
-    }
-
-    @PostMapping("/write")
-    public String createNewArticle(ArticleDto articleDto) {
-        articleRepository.save(articleDto);
-        return "redirect:/articles/" + articleRepository.getLastGeneratedId();
-    }
-
-    @GetMapping("/articles/{articleId}")
-    public String getArticle(@PathVariable int articleId, Model model) {
-        Article article = articleRepository.findBy(articleId);
-
-        model.addAttribute("article", article);
+        User user = userRepository.findById(article.getUserId())
+                .orElseThrow(NotFoundUserException::new);
+        UserProfileDto userProfileDto = new UserProfileDto(user.getId(), user.getName(), user.getEmail());
+        model.addAttribute("articleUser", userProfileDto);
         return "article";
     }
 
-    @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable int articleId, ArticleDto articleDto) {
-        articleRepository.updateBy(articleId, articleDto);
+    @GetMapping("/{id}/edit")
+    public String showEditPage(@PathVariable("id") Long id, Model model, HttpSession httpSession) {
+        Article article = articleRepository.findById(id)
+                .orElseThrow(NotFoundArticleException::new);
 
-        return "redirect:/articles/" + articleId;
+        validateAuthor(httpSession, article);
+        ArticleDto articleDto = new ArticleDto(
+                article.getId(),
+                article.getTitle(),
+                article.getCoverUrl(),
+                article.getContents()
+        );
+        model.addAttribute("article", articleDto);
+        return "article-edit";
     }
 
-    @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId) {
-        articleRepository.deleteBy(articleId);
+    @PostMapping
+    public String createArticle(ArticleDto articleDto, HttpSession httpSession) {
+        UserProfileDto userProfileDto = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
 
+        articleDto.setUserId(userProfileDto.getId());
+        Article persistArticle = articleRepository.save(articleDto.toEntity());
+        return "redirect:/articles/" + persistArticle.getId();
+    }
+
+    @PutMapping("/{id}")
+    public String editArticle(@PathVariable("id") long id, ArticleDto articleDto, HttpSession httpSession) {
+        articleRepository.findById(id).ifPresent(article -> {
+            validateAuthor(httpSession, article);
+            article.updateArticle(articleDto);
+            articleRepository.save(article);
+        });
+        return "redirect:/articles/" + id;
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteArticle(@PathVariable("id") long id, HttpSession httpSession) {
+        articleRepository.findById(id).ifPresent(article -> {
+            validateAuthor(httpSession, article);
+            articleRepository.deleteById(id);
+        });
         return "redirect:/";
+    }
+
+    private void validateAuthor(HttpSession httpSession, Article article) {
+        UserProfileDto user = (UserProfileDto) httpSession.getAttribute(LOGGED_IN_USER);
+        if (!article.matchUserId(user.getId())) {
+            throw new AccessNotPermittedException(PERMISSION_FAIL_MESSAGE);
+        }
     }
 }

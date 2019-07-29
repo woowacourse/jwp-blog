@@ -43,35 +43,14 @@
                                             <div class="card-body">
                                                 <div class="pdd-horizon-30 pdd-vertical-30">
                                                     <div class="mrg-btm-30">
-                                                        <h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">
-                                                            로그인</h2>
+                                                        <h4 class="text-center no-mrg-vertical mrg-btm-15 text-dark">
+                                                            Wrong access</h4>
                                                     </div>
-                                                    <form action="/login" method="post">
-                                                        <div class="form-group">
-                                                            <input type="email" name="email" class="form-control" placeholder="Email">
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <input type="password" name="password" class="form-control"
-                                                                   placeholder="Password">
-                                                        </div>
-                                                        <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
-                                                            <input id="agreement" name="agreement" type="checkbox">
-                                                            <label for="agreement">로그인 유지</label>
-                                                        </div>
-                                                        <div class="pull-right mrg-left-10">
-                                                            <a href="">Forgot Password?</a>
-                                                        </div>
-                                                        <div th:text="${errorMessage}" class="alert alert-danger" role="alert">
-                                                        </div>
+                                                    <form action="/" method="get">
                                                         <div class="mrg-top-20 text-right">
-                                                            <button type="submit" class="btn btn-tumblr">로그인</button>
+                                                            <button type="submit" class="btn btn-tumblr">홈으로</button>
                                                         </div>
                                                     </form>
-                                                    <div class="text-dark">
-                                                        <span>아직 회원이 아니신가요?</span>
-                                                        <a href="/users/sign-up"
-                                                           class="text-info pointer mrg-left-5">회원가입</a>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

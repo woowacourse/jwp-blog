@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class HelloWorldControllerTest {
+public class HelloWorldControllerTests {
 
     @Autowired
     private WebTestClient webTestClient;
