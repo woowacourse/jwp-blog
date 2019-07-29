@@ -1,7 +1,6 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.domain.exception.UserArgumentException;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
@@ -12,7 +11,6 @@ import techcourse.myblog.service.exception.SignUpException;
 import techcourse.myblog.service.exception.UserDeleteException;
 import techcourse.myblog.service.exception.UserUpdateException;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 import static techcourse.myblog.domain.exception.UserArgumentException.EMAIL_DUPLICATION_MESSAGE;
@@ -21,26 +19,28 @@ import static techcourse.myblog.domain.exception.UserArgumentException.PASSWORD_
 @Service
 public class UserService {
     private UserRepository userRepository;
-    private ArticleRepository articleRepository;
 
-    public UserService(UserRepository userRepository, ArticleRepository articleRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.articleRepository = articleRepository;
     }
 
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    public UserPublicInfoDto findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(NotFoundUserException::new);
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(NotFoundUserException::new);
+    }
+
+    public UserPublicInfoDto findUserPublicInfoById(Long id) {
+        User user = findById(id);
         return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
     }
 
-    public void save(UserDto userDto) {
+    public User save(UserDto userDto) {
         try {
             validate(userDto);
-            userRepository.save(userDto.toEntity());
+            return userRepository.save(userDto.toEntity());
         } catch (Exception e) {
             throw new SignUpException(e.getMessage());
         }
@@ -74,10 +74,8 @@ public class UserService {
         }
     }
 
-    @Transactional
     public void delete(Long id) {
         try {
-            articleRepository.deleteByUserId(id);
             userRepository.deleteById(id);
         } catch (Exception e) {
             throw new UserDeleteException(e.getMessage());

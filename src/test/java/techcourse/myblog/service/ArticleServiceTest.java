@@ -13,28 +13,32 @@ public class ArticleServiceTest {
     @Autowired
     ArticleService articleService;
 
+    private Long articleId;
+
     @BeforeEach
     void setUp() {
-        articleService.save(new ArticleDto(1L, 1L, "title", "coverUrl", "contents"));
+        ArticleDto articleDto = articleService.save(
+                new ArticleDto(5L, 1L, "title", "coverUrl", "contents"));
+        articleId = articleDto.getId();
     }
 
     @Test
     void Article_userId와_수정하려는_User의_Id가_다르면_수정_실패() {
-        ArticleDto articleDto = new ArticleDto(1L, 1L, "title1", "coverUrl1", "contents1");
+        ArticleDto updateArticleDto =
+                new ArticleDto(articleId, 1L, "title1", "coverUrl1", "contents1");
 
-        articleService.update(1L, 2L, articleDto);
-        ArticleDto updateFailArticle = articleService.findById(1L);
+        articleService.update(articleId, 2L, updateArticleDto);
+        ArticleDto updateFailArticle = articleService.findById(articleId);
 
         assertThat(updateFailArticle.getTitle()).isEqualTo("title");
         assertThat(updateFailArticle.getCoverUrl()).isEqualTo("coverUrl");
         assertThat(updateFailArticle.getContents()).isEqualTo("contents");
-
     }
 
     @Test
     void Article_userId와_삭제하려는_User의_Id가_다르면_삭제_실패() {
-        articleService.delete(1L, 2L);
-        ArticleDto deleteFailArticle = articleService.findById(1L);
+        articleService.delete(articleId, 2L);
+        ArticleDto deleteFailArticle = articleService.findById(articleId);
 
         assertThat(deleteFailArticle.getTitle()).isEqualTo("title");
         assertThat(deleteFailArticle.getCoverUrl()).isEqualTo("coverUrl");

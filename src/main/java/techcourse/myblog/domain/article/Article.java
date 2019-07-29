@@ -1,57 +1,54 @@
 package techcourse.myblog.domain.article;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import techcourse.myblog.domain.user.User;
+
+import javax.persistence.*;
 
 @Entity
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
-    private String title;
-    private String coverUrl;
-    private String contents;
+
+    @Embedded
+    private ArticleVo articleVo;
+
+    @ManyToOne
+    private User author;
 
     private Article() {
     }
 
-    public Article(Long userId, String title, String coverUrl, String contents) {
-        this.userId = userId;
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
+    public Article(User author, ArticleVo articleVo) {
+        this.author = author;
+        this.articleVo = articleVo;
     }
 
-    public void updateArticle(Article article) {
-        this.title = article.title;
-        this.coverUrl = article.coverUrl;
-        this.contents = article.contents;
+    public void updateArticle(ArticleVo articleVo) {
+        this.articleVo = articleVo;
     }
 
     public boolean matchUserId(Long userId) {
-        return this.userId.equals(userId);
+        return this.author.matchId(userId);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getAuthorId() {
+        return author.getId();
     }
 
     public String getTitle() {
-        return title;
+        return articleVo.getTitle();
     }
 
     public String getCoverUrl() {
-        return coverUrl;
+        return articleVo.getCoverUrl();
     }
 
     public String getContents() {
-        return contents;
+        return articleVo.getContents();
     }
 }

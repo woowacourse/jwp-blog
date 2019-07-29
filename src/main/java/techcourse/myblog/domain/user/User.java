@@ -1,11 +1,10 @@
 package techcourse.myblog.domain.user;
 
+import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.exception.UserArgumentException;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static techcourse.myblog.domain.exception.UserArgumentException.*;
@@ -29,6 +28,9 @@ public class User {
     private String name;
     private String email;
     private String password;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+    private List<Article> articles;
 
     private User() {
     }
@@ -89,6 +91,15 @@ public class User {
         return pattern.matcher(input).find();
     }
 
+    public boolean matchId(Long userId) {
+        return this.id.equals(userId);
+    }
+
+    public void updateName(String name) {
+        checkValidName(name);
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }
@@ -103,10 +114,5 @@ public class User {
 
     public String getPassword() {
         return password;
-    }
-
-    public void updateName(String name) {
-        checkValidName(name);
-        this.name = name;
     }
 }

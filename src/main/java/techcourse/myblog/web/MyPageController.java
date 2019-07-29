@@ -23,7 +23,7 @@ public class MyPageController {
 
     @GetMapping("/mypage/{id}")
     public String showMyPage(@PathVariable("id") long id, Model model) {
-        model.addAttribute("user", userService.findById(id));
+        model.addAttribute("user", userService.findUserPublicInfoById(id));
         return "mypage";
     }
 
@@ -35,7 +35,7 @@ public class MyPageController {
             model.addAttribute("errorMessage", errorMessage);
         }
         if (isLoggedInUserMYPage(httpServletRequest, id)) {
-            model.addAttribute("user", userService.findById(id));
+            model.addAttribute("user", userService.findUserPublicInfoById(id));
             return "mypage-edit";
         }
         return "redirect:/mypage/" + id;

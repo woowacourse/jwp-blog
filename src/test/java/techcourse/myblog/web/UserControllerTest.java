@@ -12,9 +12,9 @@ import org.springframework.web.reactive.function.BodyInserters;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.domain.exception.UserArgumentException.*;
 import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
 import static techcourse.myblog.service.exception.SignUpException.SIGN_UP_FAIL_MESSAGE;
-import static techcourse.myblog.domain.exception.UserArgumentException.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {

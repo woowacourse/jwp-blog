@@ -41,7 +41,7 @@ public class ArticleController {
         ArticleDto articleDto = articleService.findById(id);
         model.addAttribute("article", articleDto);
 
-        UserPublicInfoDto userPublicInfoDto = userService.findById(articleDto.getUserId());
+        UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoById(articleDto.getUserId());
         model.addAttribute("articleUser", userPublicInfoDto);
         return "article";
     }

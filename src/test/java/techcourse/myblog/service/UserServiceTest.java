@@ -4,7 +4,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.service.exception.NotFoundArticleException;
 import techcourse.myblog.service.exception.SignUpException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -15,6 +18,9 @@ public class UserServiceTest {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ArticleService articleService;
 
     @Test
     @DisplayName("이메일이 중복되는 경우에 예외를 던져준다.")
@@ -126,5 +132,20 @@ public class UserServiceTest {
 
         assertThatThrownBy(() -> userService.save(userDto))
                 .isInstanceOf(SignUpException.class);
+    }
+
+    @Test
+    @DisplayName("User를 삭제했을 때 작성한 Article도 삭제된다")
+    void deleteUserWithCascadeArticles() {
+        UserDto userDto = new UserDto("delete", "email11@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
+        User author = userService.save(userDto);
+        ArticleDto articleDto = new ArticleDto(1L, author.getId(), "title",
+                "coverUrl", "contents");
+
+        articleService.save(articleDto);
+        userService.delete(author.getId());
+
+        assertThatThrownBy(() -> articleService.findById(articleDto.getId()))
+                .isInstanceOf(NotFoundArticleException.class);
     }
 }
