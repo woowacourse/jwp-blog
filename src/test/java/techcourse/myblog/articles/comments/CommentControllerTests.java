@@ -1,7 +1,6 @@
 package techcourse.myblog.articles.comments;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,12 +16,13 @@ class CommentControllerTests extends BaseControllerTests {
 
     private String articleId;
 
-    private final String userEmail = "emailArticle@gamil.com";
-    private final String userPassword = "P@ssw0rd";
     private String jSessionId;
 
     @BeforeEach
     void setUp() {
+
+        final String userPassword = "P@ssw0rd";
+        final String userEmail = "emailArticle@gamil.com";
 
         addUser("name", userEmail, userPassword);
         jSessionId = getJSessionId(userEmail, userPassword);
@@ -51,7 +51,7 @@ class CommentControllerTests extends BaseControllerTests {
     void update() {
         //TODO Comment.id 리턴 받아서 넣어주기, 수정된 거 확인하기
 
-        webTestClient.put().uri("/articles/{articleId}/comments/{id}", articleId, 1)
+        webTestClient.put().uri("/articles/{articleId}/comments/{id}", articleId, 4)
                 .cookie(JSESSIONID, jSessionId)
                 .body(fromFormData("contents", "modifiedContents"))
                 .exchange()
@@ -60,7 +60,7 @@ class CommentControllerTests extends BaseControllerTests {
     }
 
     @Test
-    void 로그인_안하고_update() {
+    void 로그인_안하고_update_로그인창으로_이동() {
 
         webTestClient.put().uri("/articles/{articleId}/comments/{id}", articleId, 1)
                 .body(fromFormData("contents", "modifiedContents"))
@@ -71,7 +71,7 @@ class CommentControllerTests extends BaseControllerTests {
     }
 
     @Test
-    void 다른_사용자가_update() {
+    void 다른_사용자가_update_시도_Forbidden() {
 
         webTestClient.put().uri("/articles/{articleId}/comments/{id}", articleId, 1)
                 .cookie(JSESSIONID, getJSessionId())
@@ -83,7 +83,7 @@ class CommentControllerTests extends BaseControllerTests {
     @Test
     void delete() {
 
-        webTestClient.delete().uri("/articles/{articleId}/comments/{id}", articleId, 4)
+        webTestClient.delete().uri("/articles/{articleId}/comments/{id}", articleId, 5)
                 .cookie(JSESSIONID, jSessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection()

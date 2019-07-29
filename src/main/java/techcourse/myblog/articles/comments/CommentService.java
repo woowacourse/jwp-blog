@@ -20,34 +20,34 @@ public class CommentService {
     private final UserRepository userRepository;
 
     public Long save(final CommentDto.Create commentDto, final Long userId) {
-        final User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 아닙니다."));
-        final Article article = articleRepository.findById(commentDto.getArticleId())
-                .orElseThrow(() -> new IllegalArgumentException("등록된 글이 아닙니다."));
-
-        Comment comment = commentDto.toComment(article, user);
+        final User user = findUserById(userId);
+        final Article article = findArticleById(commentDto.getArticleId());
+        final Comment comment = commentDto.toComment(article, user);
 
         return commentRepository.save(comment).getId();
     }
 
     public void update(final CommentDto.Update commentDto, final Long userId) {
-        Comment comment = commentRepository.findById(commentDto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("등록된 댓글이 아닙니다."));
-
+        final Comment comment = findCommentById(commentDto.getId());
         final User user = findUserById(userId);
+
         validateAuthor(user, comment);
 
         comment.update(commentDto.toComment());
     }
 
-    public void deleteById(final Long commentId, final Long userId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("등록된 댓글이 아닙니다."));
-
+    public void delete(final Long commentId, final Long userId) {
+        final Comment comment = findCommentById(commentId);
         final User user = findUserById(userId);
+
         validateAuthor(user, comment);
 
         commentRepository.delete(comment);
+    }
+
+    private Comment findCommentById(final Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("등록된 댓글이 아닙니다."));
     }
 
     private User findUserById(final Long userId) {
@@ -61,9 +61,13 @@ public class CommentService {
         }
     }
 
-    public List<Comment> findAllByArticle(final Long articleId) {
-        Article article = articleRepository.findById(articleId)
+    private Article findArticleById(final Long articleId) {
+        return articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("등록된 글이 아닙니다."));
+    }
+
+    public List<Comment> findAllByArticle(final Long articleId) {
+        Article article = findArticleById(articleId);
 
         return commentRepository.findAllByArticle(article);
     }

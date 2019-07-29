@@ -37,7 +37,7 @@ public class CommentController {
                          UserSession userSession){
 
         final Long userId = userSession.getId();
-        commentService.deleteById(id, userId);
+        commentService.delete(id, userId);
 
         return "redirect:/articles/" + articleId;
     }
