@@ -11,6 +11,7 @@ import techcourse.myblog.web.dto.CommentDto;
 import techcourse.myblog.web.dto.UserDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -47,5 +48,14 @@ class CommentServiceTest {
         CommentDto newCommentDto = new CommentDto(user, "asdf");
         Comment newComment = commentService.update(beforeComment.getId(), newCommentDto);
         assertThat(newComment.getContents()).isEqualTo("asdf");
+    }
+
+    @Test
+    void 삭제_테스트() {
+        Long beforeCommentId = beforeComment.getId();
+        commentService.delete(beforeCommentId);
+        assertThatThrownBy(() -> {
+            commentService.findById(beforeCommentId);
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 }
