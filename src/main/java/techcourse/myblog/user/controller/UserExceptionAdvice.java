@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import techcourse.myblog.argumentresolver.UserSession;
 import techcourse.myblog.user.exception.*;
 
-@ControllerAdvice
+@ControllerAdvice("techcourse.myblog.user.controller")
 public class UserExceptionAdvice {
     @ExceptionHandler(InvalidSignUpFormException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

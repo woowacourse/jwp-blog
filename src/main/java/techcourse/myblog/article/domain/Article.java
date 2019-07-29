@@ -38,4 +38,8 @@ public class Article {
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
+
+    public boolean matchAuthorId(long authorId) {
+        return author.getId() == authorId;
+    }
 }

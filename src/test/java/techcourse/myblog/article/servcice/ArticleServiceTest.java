@@ -78,14 +78,15 @@ class ArticleServiceTest {
                 .author(author)
                 .build();
 
-        long updatedArticleId = articleService.update(articleId, modelMapper.map(updatedUser, ArticleDto.Updation.class));
+        long updatedArticleId = articleService.update(
+                articleId, modelMapper.map(updatedUser, ArticleDto.Updation.class), author.getId());
         assertThat(articleService.findById(updatedArticleId))
                 .isEqualTo(modelMapper.map(updatedUser, ArticleDto.Response.class));
     }
 
     @AfterEach
     void tearDown() {
-        articleService.deleteById(articleId++);
+        articleService.deleteById(articleId++, author.getId());
         userRepository.deleteAll();
     }
 }
