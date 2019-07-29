@@ -8,6 +8,9 @@ import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.domain.ArticleRepository;
 import techcourse.myblog.article.dto.ArticleDto;
 import techcourse.myblog.article.exception.NotFoundArticleException;
+import techcourse.myblog.user.domain.User;
+import techcourse.myblog.user.domain.UserRepository;
+import techcourse.myblog.user.exception.NotFoundUserException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     public List<ArticleDto.Response> findAll() {
@@ -26,8 +30,9 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    public long save(ArticleDto.Creation articleDto) {
-        Article newArticle = articleDto.toArticle();
+    public long save(ArticleDto.Creation articleDto, long userId) {
+        User author = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
+        Article newArticle = articleDto.toArticle(author);
         return articleRepository.save(newArticle).getId();
     }
 

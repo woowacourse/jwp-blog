@@ -3,11 +3,9 @@ package techcourse.myblog.article.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import techcourse.myblog.user.domain.User;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -23,12 +21,16 @@ public class Article {
 
     private String contents;
 
+    @ManyToOne
+    private User author;
+
     @Builder
-    private Article(long id, String title, String coverUrl, String contents) {
+    private Article(long id, String title, String coverUrl, String contents, User author) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.author = author;
     }
 
     public void update(String title, String coverUrl, String contents) {

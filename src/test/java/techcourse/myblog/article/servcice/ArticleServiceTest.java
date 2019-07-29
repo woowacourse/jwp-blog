@@ -11,6 +11,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.dto.ArticleDto;
 import techcourse.myblog.article.service.ArticleService;
+import techcourse.myblog.user.UserDataForTest;
+import techcourse.myblog.user.domain.User;
+import techcourse.myblog.user.domain.UserRepository;
 
 import java.util.Arrays;
 
@@ -25,20 +28,33 @@ class ArticleServiceTest {
     private ArticleService articleService;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     private Article article;
+    private User author;
 
     @BeforeEach
     void setUp() {
+        author = User.builder()
+                .email(UserDataForTest.USER_EMAIL)
+                .name(UserDataForTest.USER_NAME)
+                .password(UserDataForTest.USER_PASSWORD)
+                .build();
+
         article = Article.builder()
                 .id(articleId)
                 .title("title")
                 .coverUrl("coverUrl")
                 .contents("contents")
+                .author(author)
                 .build();
 
-        articleService.save(modelMapper.map(article, ArticleDto.Creation.class));
+        User savedAuthor = userRepository.save(author);
+
+        articleService.save(modelMapper.map(article, ArticleDto.Creation.class), savedAuthor.getId());
     }
 
     @Test
@@ -59,7 +75,9 @@ class ArticleServiceTest {
                 .title("updatedTitle")
                 .coverUrl("updatedCoverUrl")
                 .contents("updatedContents")
+                .author(author)
                 .build();
+
         long updatedArticleId = articleService.update(articleId, modelMapper.map(updatedUser, ArticleDto.Updation.class));
         assertThat(articleService.findById(updatedArticleId))
                 .isEqualTo(modelMapper.map(updatedUser, ArticleDto.Response.class));
@@ -68,5 +86,6 @@ class ArticleServiceTest {
     @AfterEach
     void tearDown() {
         articleService.deleteById(articleId++);
+        userRepository.deleteAll();
     }
 }
