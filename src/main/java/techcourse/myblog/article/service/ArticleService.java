@@ -8,6 +8,7 @@ import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.domain.ArticleRepository;
 import techcourse.myblog.article.dto.ArticleDto;
 import techcourse.myblog.article.exception.NotFoundArticleException;
+import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.domain.UserRepository;
 import techcourse.myblog.user.exception.NotFoundUserException;
@@ -30,8 +31,8 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    public long save(ArticleDto.Creation articleDto, long userId) {
-        User author = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
+    public long save(ArticleDto.Creation articleDto, long authorId) {
+        User author = userRepository.findById(authorId).orElseThrow(NotFoundUserException::new);
         Article newArticle = articleDto.toArticle(author);
         return articleRepository.save(newArticle).getId();
     }
@@ -41,13 +42,20 @@ public class ArticleService {
         return modelMapper.map(article, ArticleDto.Response.class);
     }
 
-    public long update(long articleId, ArticleDto.Updation articleDto) {
+    public long update(long articleId, ArticleDto.Updation articleDto, long authorId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        if (!article.matchAuthorId(authorId)) {
+            throw new NotMatchUserException();
+        }
         article.update(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
         return article.getId();
     }
 
-    public void deleteById(long articleId) {
+    public void deleteById(long articleId, long authorId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        if (!article.matchAuthorId(authorId)) {
+            throw new NotMatchUserException();
+        }
         articleRepository.deleteById(articleId);
     }
 }

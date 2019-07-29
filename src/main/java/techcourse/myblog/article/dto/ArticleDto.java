@@ -45,5 +45,9 @@ public class ArticleDto {
         private String coverUrl;
         private String contents;
         private User author;
+
+        public boolean matchAuthorId(long authorId) {
+            return author.getId() == authorId;
+        }
     }
 }

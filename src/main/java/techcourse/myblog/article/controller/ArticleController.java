@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.argumentresolver.UserSession;
 import techcourse.myblog.article.dto.ArticleDto;
+import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.article.service.ArticleService;
 
 @Controller
@@ -38,20 +39,24 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String renderUpdatePage(@PathVariable long articleId, Model model) {
-        model.addAttribute("article", articleService.findById(articleId));
+    public String renderUpdatePage(@PathVariable long articleId, Model model, UserSession userSession) {
+        ArticleDto.Response articleResponse = articleService.findById(articleId);
+        if (!articleResponse.matchAuthorId(userSession.getId())) {
+            throw new NotMatchUserException();
+        }
+        model.addAttribute("article", articleResponse);
         return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable long articleId, ArticleDto.Updation articleDto) {
-        long updatedArticleId = articleService.update(articleId, articleDto);
+    public String updateArticle(@PathVariable long articleId, ArticleDto.Updation articleDto, UserSession userSession) {
+        long updatedArticleId = articleService.update(articleId, articleDto, userSession.getId());
         return "redirect:/articles/" + updatedArticleId;
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable long articleId) {
-        articleService.deleteById(articleId);
+    public String deleteArticle(@PathVariable long articleId, UserSession userSession) {
+        articleService.deleteById(articleId, userSession.getId());
         return "redirect:/";
     }
 }
