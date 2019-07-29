@@ -5,6 +5,8 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.exception.CommentNotFoundException;
+import techcourse.myblog.exception.NotMatchAuthenticationException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 
@@ -31,5 +33,13 @@ public class CommentService {
 
     public List<Comment> findAllByArticleId(Long articleId) {
         return commentRepository.findAllByArticleId(articleId);
+    }
+
+    public void delete(final Long commentId, final User user) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("해당 댓글을 찾을 수 없습니다"));
+        if (!comment.getUser().equals(user)) {
+            throw new NotMatchAuthenticationException("권한이 없습니다.");
+        }
+        commentRepository.delete(comment);
     }
 }
