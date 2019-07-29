@@ -1,4 +1,4 @@
-package techcourse.myblog.comments;
+package techcourse.myblog.articles.comments;
 
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -42,5 +42,9 @@ public class Comment {
         this.contents = contents;
         this.user = user;
         this.article = article;
+    }
+
+    public void update(final Comment other) {
+        this.contents = other.contents;
     }
 }

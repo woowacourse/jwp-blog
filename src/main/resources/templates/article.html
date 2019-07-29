@@ -70,7 +70,7 @@
 
                         </ul>
 
-                        <form name="comments" action="/comments" method="post">
+                        <form name="comments" th:action="${#strings.concat('/articles/', article.id, '/comments')}" method="post">
                             <div class="add-comment">
                                 <div id="editSection"></div>
 

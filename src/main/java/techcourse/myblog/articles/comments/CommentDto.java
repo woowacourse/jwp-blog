@@ -1,4 +1,4 @@
-package techcourse.myblog.comments;
+package techcourse.myblog.articles.comments;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +28,7 @@ public class CommentDto {
     @Setter
     @NoArgsConstructor
     public static class Update{
+        private Long id;
         private Long articleId;
         private String contents;
 

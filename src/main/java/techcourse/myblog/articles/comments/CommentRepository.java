@@ -1,4 +1,4 @@
-package techcourse.myblog.comments;
+package techcourse.myblog.articles.comments;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
