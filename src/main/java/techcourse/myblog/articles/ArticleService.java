@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.advice.AuthException;
+import techcourse.myblog.exception.AuthException;
 import techcourse.myblog.users.User;
 import techcourse.myblog.users.UserRepository;
 
@@ -23,12 +23,6 @@ public class ArticleService {
         article.setAuthor(user);
 
         return articleRepository.save(article);
-    }
-
-    @Transactional(readOnly = true)
-    public Article findById(Long id) {
-        return articleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Can't find Article : " + id));
     }
 
     public Article edit(final Long userId, final Article editedArticle) {
@@ -55,6 +49,12 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public Page<Article> findAll(Pageable pageable) {
         return articleRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Article findById(Long id) {
+        return articleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Can't find Article : " + id));
     }
 
     @Transactional(readOnly = true)
