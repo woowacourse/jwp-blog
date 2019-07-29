@@ -6,6 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.exception.ArticleInputException;
@@ -13,6 +14,7 @@ import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.NotMatchAuthenticationException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CommentService;
 import techcourse.myblog.translator.ArticleTranslator;
 import techcourse.myblog.translator.ModelTranslator;
 
@@ -23,9 +25,11 @@ import javax.validation.Valid;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final CommentService commentService;
 
-    public ArticleController(final ArticleService articleService) {
+    public ArticleController(final ArticleService articleService, final CommentService commentService) {
         this.articleService = articleService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/")
@@ -56,6 +60,7 @@ public class ArticleController {
     public String readArticle(@PathVariable Long articleId, Model model) {
         Article article = articleService.findById(articleId);
         model.addAttribute("article", article);
+        model.addAttribute("comments", commentService.findAllByArticleId(articleId));
 
         return "article";
     }
@@ -84,5 +89,11 @@ public class ArticleController {
     @ExceptionHandler({NotMatchAuthenticationException.class, ArticleNotFoundException.class, ArticleInputException.class})
     public RedirectView articleException(Exception exception) {
         return new RedirectView("/");
+    }
+
+    @PostMapping("/articles/{articleId}/comments")
+    public RedirectView createComment(@PathVariable final Long articleId, HttpSession session, Comment comment) {
+        commentService.create(articleId, (User) session.getAttribute("user"), comment);
+        return new RedirectView("/articles/" + articleId);
     }
 }
