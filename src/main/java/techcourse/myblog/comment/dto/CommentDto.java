@@ -27,6 +27,7 @@ public class CommentDto {
         private String contents;
     }
 
+    @Data
     public static class Response {
         private long id;
         private String contents;
