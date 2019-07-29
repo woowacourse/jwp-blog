@@ -14,17 +14,22 @@ import javax.persistence.*;
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ARTICLE_ID")
     private Long id;
     private String title;
     private String coverUrl;
     @Lob
     private String contents;
+    @ManyToOne
+    @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(name = "FK_ARTICLE_USER"))
+    private User author;
 
     @Builder
-    private Article(Long id, String title, String coverUrl, String contents) {
+    private Article(Long id, String title, String coverUrl, String contents, User author) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.author = author;
     }
 }
