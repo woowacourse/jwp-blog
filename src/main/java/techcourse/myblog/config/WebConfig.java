@@ -13,10 +13,9 @@ public class WebConfig {
             @Override
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(new AuthInterceptor())
-//                        .addPathPatterns("/articles/*")
-//                        .addPathPatterns("/login")
-//                        .addPathPatterns("/profile")
-//                        .addPathPatterns("/profile/edit");
+                        .addPathPatterns("/profile")
+                        .addPathPatterns("/profile/edit")
+                        .addPathPatterns("/article/*/comment");
             }
         };
     }
