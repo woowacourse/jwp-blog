@@ -32,4 +32,8 @@ public class Comment {
         this.user = user;
         this.article = article;
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

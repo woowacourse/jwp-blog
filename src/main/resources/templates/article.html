@@ -122,7 +122,14 @@
 					
 					</ul>
 					<div class="add-comment">
-						<div id="editSection"></div>
+						<form method="post" action="/comment/writing">
+							<input type="hidden" id="comment-contents" name="comment">
+							<div id="editSection"></div>
+							<input type="hidden" name="articleId" th:value="${article.id}">
+							<div class="mrg-top-20 text-right">
+								<button type="submit" class="btn btn-tumblr">댓글 작성</button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -171,6 +178,7 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
+                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
             }
         },
         height: '200px'
