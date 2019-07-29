@@ -8,19 +8,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
-import techcourse.myblog.controller.argumentresolver.Redirection;
 import techcourse.myblog.controller.argumentresolver.UserSession;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.service.CommentService;
 
 @Controller
-@RequestMapping("/articles/{articleId}/comments")
+@RequestMapping("/articles")
 public class CommentController {
 
     @Autowired
     private CommentService commentService;
 
-    @PostMapping("/")
+    @PostMapping("/{articleId}/comments")
     public RedirectView save(@PathVariable long articleId,
                              CommentDto commentDto,
                              UserSession userSession) {
@@ -28,12 +27,12 @@ public class CommentController {
         return new RedirectView("/articles/" + articleId);
     }
 
-    @DeleteMapping("/{commentId}")
-    public RedirectView delete(@PathVariable long commentId,
-                               UserSession userSession,
-                               Redirection redirection) {
-        commentService.delete(commentId, userSession.getUser());
-        return new RedirectView(redirection.getRedirectUrl());
+    @DeleteMapping("/{articleId}/comments/{commentId}")
+    public RedirectView delete(@PathVariable long articleId,
+                               @PathVariable long commentId,
+                               UserSession userSession) {
+        commentService.delete(commentId, userSession.getUser(), articleId);
+        return new RedirectView("/articles/" + articleId);
     }
 }
 
