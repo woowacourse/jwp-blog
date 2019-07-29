@@ -35,3 +35,22 @@
     [참고 : 쿠키(Cookie)와 세션(Session) & 로그인 동작 방법](https://cjh5414.github.io/cookie-and-session/)
     
     JSESSIONID로 적용
+    
+# 댓글 관련 기능 구현 TODO
+
+1. 작성글과 유저 관계 매핑
+
+    - CRUD에 유저 관계 매핑 기능 구현
+    - Mockito 이용 테스트
+
+2. 작성글이랑 댓글 관계 매핑
+    
+    - Entity 작성
+        - id
+        - content
+        - date
+        - User
+        - Article
+    - CRUD 구현
+    
+    
