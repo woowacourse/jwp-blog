@@ -26,9 +26,13 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    public ArticleDto findById(Long id) {
-        return toArticleDto(articleRepository.findById(id)
-                .orElseThrow(NotFoundArticleException::new));
+    public Article findById(Long id) {
+        return articleRepository.findById(id)
+                .orElseThrow(NotFoundArticleException::new);
+    }
+
+    public ArticleDto findArticleDtoById(Long id) {
+        return toArticleDto(findById(id));
     }
 
     public ArticleDto save(Long userId, ArticleDto articleDto) {

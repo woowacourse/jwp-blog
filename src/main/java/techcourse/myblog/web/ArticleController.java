@@ -38,7 +38,7 @@ public class ArticleController {
 
     @GetMapping("/articles/{id}")
     public String showArticle(@PathVariable("id") Long id, Model model) {
-        ArticleDto articleDto = articleService.findById(id);
+        ArticleDto articleDto = articleService.findArticleDtoById(id);
         model.addAttribute("article", articleDto);
 
         UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoById(articleDto.getUserId());
@@ -48,7 +48,7 @@ public class ArticleController {
 
     @GetMapping("/articles/{id}/edit")
     public String showEditPage(@PathVariable("id") Long id, Model model, HttpServletRequest httpServletRequest) {
-        ArticleDto articleDto = articleService.findById(id);
+        ArticleDto articleDto = articleService.findArticleDtoById(id);
         if (getLoggedInUser(httpServletRequest).getId().equals(articleDto.getUserId())) {
             model.addAttribute("article", articleDto);
             return "article-edit";

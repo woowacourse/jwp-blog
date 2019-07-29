@@ -1,6 +1,7 @@
 package techcourse.myblog.domain.user;
 
 import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.exception.UserArgumentException;
 
 import javax.persistence.*;
@@ -31,6 +32,9 @@ public class User {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     private List<Article> articles;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
 
     private User() {
     }

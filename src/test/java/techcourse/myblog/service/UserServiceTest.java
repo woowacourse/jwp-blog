@@ -145,7 +145,7 @@ public class UserServiceTest {
         articleService.save(author.getId(), articleDto);
         userService.delete(author.getId());
 
-        assertThatThrownBy(() -> articleService.findById(articleDto.getId()))
+        assertThatThrownBy(() -> articleService.findArticleDtoById(articleDto.getId()))
                 .isInstanceOf(NotFoundArticleException.class);
     }
 }

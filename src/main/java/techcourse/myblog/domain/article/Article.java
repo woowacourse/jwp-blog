@@ -1,8 +1,10 @@
 package techcourse.myblog.domain.article;
 
+import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Article {
@@ -15,6 +17,9 @@ public class Article {
 
     @ManyToOne
     private User author;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
 
     private Article() {
     }

@@ -28,7 +28,7 @@ public class ArticleServiceTest {
                 new ArticleDto(articleId, 1L, "title1", "coverUrl1", "contents1");
 
         articleService.update(articleId, 2L, updateArticleDto);
-        ArticleDto updateFailArticle = articleService.findById(articleId);
+        ArticleDto updateFailArticle = articleService.findArticleDtoById(articleId);
 
         assertThat(updateFailArticle.getTitle()).isEqualTo("title");
         assertThat(updateFailArticle.getCoverUrl()).isEqualTo("coverUrl");
@@ -38,7 +38,7 @@ public class ArticleServiceTest {
     @Test
     void Article_userId와_삭제하려는_User의_Id가_다르면_삭제_실패() {
         articleService.delete(articleId, 2L);
-        ArticleDto deleteFailArticle = articleService.findById(articleId);
+        ArticleDto deleteFailArticle = articleService.findArticleDtoById(articleId);
 
         assertThat(deleteFailArticle.getTitle()).isEqualTo("title");
         assertThat(deleteFailArticle.getCoverUrl()).isEqualTo("coverUrl");
