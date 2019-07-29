@@ -13,16 +13,19 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.web.UserControllerTest.testEmail;
+import static techcourse.myblog.web.UserControllerTest.testPassword;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
     private WebTestClient webTestClient;
-    private static String testTitle = "목적의식 있는 연습을 통한 효과적인 학습";;
-    private static String testCoverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
-    private static String testContents = "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 '선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?'였다.";
+    private static String testTitle = "testTitle";;
+    private static String testCoverUrl = "testCoverUrl";
+    private static String testContents = "testContents";
     private static String testUniContents = StringEscapeUtils.escapeJava(testContents);
+    private String cookie;
 
     @Autowired
     public ArticleControllerTests(WebTestClient webTestClient) {
@@ -31,45 +34,33 @@ public class ArticleControllerTests {
 
     @BeforeEach
     void setUp() {
-        saveTestArticle();
+        this.cookie = webTestClient.post()
+                .uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("email", testEmail)
+                        .with("password", testPassword))
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .getFirst("Set-Cookie");
     }
 
     @Test
     void showArticleWritingPageTest() {
         webTestClient.get()
                 .uri("/writing")
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk();
     }
 
     @Test
-    void saveArticlePageTest() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", testTitle)
-                        .with("coverUrl", testCoverUrl)
-                        .with("contents", testContents))
-                .exchange()
-                .expectStatus()
-                .is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    String redirectUrl = response.getResponseHeaders().getLocation().toString();
-                    webTestClient.get().uri(redirectUrl)
-                            .exchange()
-                            .expectStatus()
-                            .isOk()
-                            .expectBody()
-                            .consumeWith(innerResponse -> {
-                                String body = new String(innerResponse.getResponseBody());
-                                assertThat(body.contains(testTitle)).isTrue();
-                                assertThat(body.contains(testCoverUrl)).isTrue();
-                                assertThat(body.contains(testUniContents)).isTrue();
-                            });
-                });
+    void addNewArticleTest() {
+        testSaveNewArticle("testArticle", "testCoverUrl", "testContents");
     }
 
     @Test
@@ -110,6 +101,7 @@ public class ArticleControllerTests {
 
         webTestClient.put()
                 .uri("/articles/1")
+                .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", updatedTitle)
@@ -136,6 +128,7 @@ public class ArticleControllerTests {
 
         webTestClient.put()
                 .uri("/articles/1")
+                .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", testTitle)
@@ -150,6 +143,7 @@ public class ArticleControllerTests {
     void deleteArticleByIdTest() {
         webTestClient.post()
                 .uri("/articles")
+                .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", testTitle)
@@ -212,6 +206,35 @@ public class ArticleControllerTests {
                     assertThat(body.contains("로그인")).isTrue();
                     assertThat(body.contains("회원가입")).isTrue();
                     assertThat(body.contains("로그아웃")).isFalse();
+                });
+    }
+
+    private void testSaveNewArticle(String title, String coverUrl, String contents) {
+        webTestClient.post()
+                .uri("/articles")
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange()
+                .expectStatus()
+                .is3xxRedirection()
+                .expectBody()
+                .consumeWith(response -> {
+                    String redirectUrl = response.getResponseHeaders().getLocation().toString();
+                    webTestClient.get().uri(redirectUrl)
+                            .exchange()
+                            .expectStatus()
+                            .isOk()
+                            .expectBody()
+                            .consumeWith(innerResponse -> {
+                                String body = new String(innerResponse.getResponseBody());
+                                assertThat(body.contains(title)).isTrue();
+                                assertThat(body.contains(coverUrl)).isTrue();
+                                assertThat(body.contains(StringEscapeUtils.escapeJava(testContents))).isTrue();
+                            });
                 });
     }
 }

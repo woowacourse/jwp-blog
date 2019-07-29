@@ -21,9 +21,9 @@ import static techcourse.myblog.presentation.UserController.LOGIN_ERROR_MSG;
 public class UserControllerTest {
     private WebTestClient webTestClient;
     private int testId = 1;
-    private String testName = "abcdeFGHI";
-    private String testPassword = "abcdEFGH123!@#";
-    private String testEmail = "abc@hi.com";
+    public static String testName = "abcdeFGHI";
+    public static String testPassword = "abcdEFGH123!@#";
+    public static String testEmail = "abc@hi.com";
 
     @Autowired
     public UserControllerTest(WebTestClient webTestClient) {
