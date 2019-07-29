@@ -116,10 +116,11 @@
 - ~~커멘트 엔터티 생성~~
 - ~~Add createdAt column into Comment entity~~
 - ~~커맨트 레파지토리 구현~~
-- 커맨트 서비스 구현
-- Comment Controller
+- ~~커맨트 서비스 구현~~
+- ~~Comment Controller~~
 - ~~Add addNewComment controller method in ArticleController~~
 - ~~Show comments related to articles~~
-- Add modifyCommentById controller method in CommentController
+- ~~Add modifyCommentById controller method in CommentController~~
 - ~~Add deleteCommentById controller method in CommentController~~
-- 게시글 삭제시 댓글도 삭제
+- ~~게시글 삭제시 댓글도 삭제~~
+- 댓글 수정 프론트엔드 작업

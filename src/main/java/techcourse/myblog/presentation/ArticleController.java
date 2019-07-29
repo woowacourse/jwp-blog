@@ -10,6 +10,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.persistence.ArticleRepository;
 import techcourse.myblog.persistence.CommentRepository;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.ArticleRequestDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
@@ -28,11 +29,13 @@ public class ArticleController {
     private final ArticleRepository articleRepository;
     private final ArticleService articleService;
     private final CommentRepository commentRepository;
+    private final CommentService commentService;
 
-    public ArticleController(ArticleRepository articleRepository, ArticleService articleService, CommentRepository commentRepository) {
+    public ArticleController(ArticleRepository articleRepository, ArticleService articleService, CommentRepository commentRepository, CommentService commentService) {
         this.articleRepository = articleRepository;
         this.articleService = articleService;
         this.commentRepository = commentRepository;
+        this.commentService = commentService;
     }
 
     @GetMapping("/writing")
@@ -83,6 +86,7 @@ public class ArticleController {
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticleById(@PathVariable long articleId) {
+        commentService.deleteByArticle(articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new));
         articleRepository.deleteById(articleId);
         return "redirect:/";
     }
