@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
-
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -28,7 +27,11 @@ public class ArticleWriteService {
     }
 
     public void update(Long articleId, ArticleDto articleDto) {
-        Optional<Article> articleOptional = articleRepository.findById(articleId);
-        articleOptional.ifPresent(article -> article.update(articleDto.toArticle()));
+        findByIdAndAuthor(articleId, articleDto.getAuthor()).update(articleDto.toArticle());
+    }
+
+    public Article findByIdAndAuthor(Long articleId, User user) {
+        return articleRepository.findByIdAndAuthor(articleId, user)
+                .orElseThrow(() -> new MismatchAuthorException("작성자만 접근할 수 있습니다."));
     }
 }

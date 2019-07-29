@@ -8,7 +8,6 @@ import techcourse.myblog.domain.repository.ArticleRepository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,7 +23,8 @@ public class ArticleReadService {
         return Collections.unmodifiableList(articleRepository.findAll());
     }
 
-    public Optional<Article> findById(Long articleId) {
-        return articleRepository.findById(articleId);
+    public Article findById(Long articleId) {
+        return articleRepository.findById(articleId)
+                .orElseThrow(() -> new NotFoundArticleException("존재하지 않는 게시글입니다."));
     }
 }

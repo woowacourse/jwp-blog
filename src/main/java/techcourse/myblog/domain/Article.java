@@ -4,28 +4,31 @@ import javax.persistence.*;
 
 @Entity
 public class Article {
-    private static final String EMPTY_TEXT = "NULL";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String title;
 
     @Column(nullable = false)
     private String coverUrl;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String contents;
+
+    @ManyToOne
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    private User author;
 
     private Article() {
     }
 
-    public Article(String title, String coverUrl, String contents) {
+    public Article(String title, String coverUrl, String contents, User author) {
         this.title = title;
         this.contents = contents;
         this.coverUrl = coverUrl;
+        this.author = author;
     }
 
     public Article update(Article article) {
@@ -50,6 +53,10 @@ public class Article {
 
     public String getContents() {
         return contents;
+    }
+
+    public User getAuthor() {
+        return author;
     }
 
     @Override
