@@ -19,8 +19,13 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "title", length = 40, nullable = false)
     private String title;
+
+    @Column(name = "contents", columnDefinition = "text", nullable = false)
     private String contents;
+
+    @Column(name = "coverUrl")
     private String coverUrl;
 
     @ManyToOne
@@ -37,7 +42,6 @@ public class Article {
     }
 
     protected Article() {
-
     }
 
     private String getDefaultUrl(String coverUrl) {
