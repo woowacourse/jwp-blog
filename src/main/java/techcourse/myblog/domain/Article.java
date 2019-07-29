@@ -2,12 +2,9 @@ package techcourse.myblog.domain;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
-@Table(name = "article")
 public class Article {
     @Id
     @Column(name = "id")
@@ -16,7 +13,7 @@ public class Article {
     private String title;
     private String coverUrl;
     private String contents;
-    @OneToMany(mappedBy = "article")
+    @OneToMany
     private List<Comment> comments = new ArrayList<>();
 
     public Article() {}
@@ -47,31 +44,11 @@ public class Article {
         return this.contents;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Article)) {
-            return false;
-        }
-        Article rhs = (Article) o;
-        return Objects.equals(this.title, rhs.title) &&
-                Objects.equals(this.coverUrl, rhs.coverUrl) &&
-                Objects.equals(this.contents, rhs.contents);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.id, this.title, this.coverUrl, this.contents);
+    public void writeComment(Comment comment) {
+        comments.add(comment);
     }
 
     public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void writeComment(Comment comment) {
-        comments.add(comment);
+        return this.comments;
     }
 }
