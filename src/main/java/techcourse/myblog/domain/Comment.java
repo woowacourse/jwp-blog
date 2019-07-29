@@ -43,6 +43,11 @@ public class Comment {
         if (comment == null) {
             throw new InvalidCommentException("댓글은 비어있을 수 없습니다.");
         }
-        this.contents = comment.contents;
+
+        if (comment.article.equals(this.article) && comment.writer.equals(this.writer)) {
+            this.contents = comment.contents;
+        }
+
+        throw new InvalidCommentException("댓글을 수정할 수 없습니다.");
     }
 }
