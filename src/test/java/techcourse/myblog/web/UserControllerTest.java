@@ -27,13 +27,12 @@ class UserControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    EntityExchangeResult<byte[]> login() {
+    EntityExchangeResult<byte[]> login(final String email, final String password) {
         return webTestClient
                 .post().uri("/login")
                 .body(BodyInserters
-                        .fromFormData("username", USERNAME)
-                        .with("email", EMAIL)
-                        .with("password", PASSWORD))
+                        .fromFormData("email", email)
+                        .with("password", password))
                 .exchange()
                 .expectBody()
                 .returnResult();
@@ -55,7 +54,7 @@ class UserControllerTest {
 
     @Test
     void 로그인() {
-        final EntityExchangeResult<byte[]> response = login();
+        final EntityExchangeResult<byte[]> response = login(EMAIL, PASSWORD);
         HttpStatus status = response.getStatus();
         jSessionId = extractJSessionId(response);
         assertThat(status).isEqualTo(HttpStatus.FOUND);
@@ -63,35 +62,28 @@ class UserControllerTest {
     }
 
     @Test
-    void 잘못된_로그인_email_1() {
-        webTestClient
-                .post().uri("/login")
-                .body(BodyInserters
-                        .fromFormData("email", "a@a.com")
-                        .with("password", PASSWORD))
-                .exchange()
-                .expectStatus().is4xxClientError();
+    void 없는_이메일로_로그인_시도() {
+        assertThat(login("a@a.com", PASSWORD).getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
-    void 잘못된_로그인_password() {
-        webTestClient
-                .post().uri("/login")
-                .body(BodyInserters
-                        .fromFormData("email", EMAIL)
-                        .with("password", "qwerty"))
-                .exchange()
-                .expectStatus().is4xxClientError();
+    void 잘못된_패스워드로_로그인_시도() {
+        assertThat(login(EMAIL, "qwerty").getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
     void 로그아웃() {
-        final EntityExchangeResult<byte[]> loginResult = login();
+        final EntityExchangeResult<byte[]> loginResult = login(EMAIL, PASSWORD);
         final EntityExchangeResult<byte[]> logoutResult = webTestClient
                 .get().uri("/logout")
                 .exchange().expectBody().returnResult();
         assertThat(extractJSessionId(loginResult))
                 .isNotEqualTo(extractJSessionId(logoutResult));
     }
+
+//    @Test
+//    void 회원가입_정상() {
+//
+//    }
 }
 
