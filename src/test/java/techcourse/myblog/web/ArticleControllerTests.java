@@ -115,9 +115,9 @@ class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(res -> {
                     String body = new String(res.getResponseBody());
-                    assertThat(body.contains(SAMPLE_TITLE)).isTrue();
-                    assertThat(body.contains(SAMPLE_COVER_URL)).isTrue();
-                    assertThat(body.contains(SAMPLE_CONTENTS)).isTrue();
+                    assertThat(body).contains(SAMPLE_TITLE);
+                    assertThat(body).contains(SAMPLE_COVER_URL);
+                    assertThat(body).contains(SAMPLE_CONTENTS);
                 });
     }
 
@@ -132,9 +132,9 @@ class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains(SAMPLE_TITLE)).isTrue();
-                    assertThat(body.contains(SAMPLE_COVER_URL)).isTrue();
-                    assertThat(body.contains(SAMPLE_CONTENTS)).isTrue();
+                    assertThat(body).contains(SAMPLE_TITLE);
+                    assertThat(body).contains(SAMPLE_COVER_URL);
+                    assertThat(body).contains(SAMPLE_CONTENTS);
                 });
     }
 
@@ -174,9 +174,9 @@ class ArticleControllerTests {
                             .expectBody()
                             .consumeWith(res -> {
                                 String body = new String(res.getResponseBody());
-                                assertThat(body.contains(newTitle)).isTrue();
-                                assertThat(body.contains(newCoverUrl)).isTrue();
-                                assertThat(body.contains(newContents)).isTrue();
+                                assertThat(body).contains(newTitle);
+                                assertThat(body).contains(newCoverUrl);
+                                assertThat(body).contains(newContents);
                             });
                 });
     }
