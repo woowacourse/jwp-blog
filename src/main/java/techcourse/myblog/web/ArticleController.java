@@ -93,4 +93,10 @@ public class ArticleController {
         commentService.create(articleId, (User) session.getAttribute("user"), comment);
         return new RedirectView("/articles/" + articleId);
     }
+
+    @DeleteMapping("/articles/{articleId}/comments/{commentId}")
+    public RedirectView createComment(@PathVariable final Long articleId, HttpSession session, @PathVariable final Long commentId) {
+        commentService.delete(commentId, (User) session.getAttribute("user"));
+        return new RedirectView("/articles/" + articleId);
+    }
 }
