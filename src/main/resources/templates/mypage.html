@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html layout:decorator="layout/default"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+      layout:decorate="~{layout/layout}"
+      lang="ko">
+<head>
+    <link rel="stylesheet" href="/css/mypage.css">
+</head>
 
 <th:block layout:fragment="content">
     <div>
+        <th:block th:replace="fragment/header :: header"></th:block>
+
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
                 <div class="display-block height-100">
@@ -19,8 +25,8 @@
                     <div class="card">
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
-                            <a class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5"
-                               href="/users/mypage/edit">
+                            <a th:href="@{/mypage/{userId}/edit(userId = ${user.id})}"
+                               class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                                 <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                             </a>
                         </div>
@@ -30,7 +36,7 @@
                                     <p class="mrg-top-10 text-dark"><b>Name</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mrg-top-10" th:text="${session.user.userName}"></p>
+                                    <p class="mrg-top-10" th:text="${user.name}"></p>
                                 </div>
                             </div>
                             <hr>
@@ -39,7 +45,7 @@
                                     <p class="mrg-top-10 text-dark"><b>Email</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mrg-top-10" th:text="${session.user.email}"></p>
+                                    <p class="mrg-top-10" th:text="${user.email}"></p>
                                 </div>
                             </div>
                             <hr>
@@ -49,8 +55,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div>
-                                        <img alt="" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
-                                             width="117">
+                                        <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
+                                             width="117" alt="">
                                     </div>
                                 </div>
                             </div>
@@ -62,11 +68,11 @@
                                 <div class="col-md-12">
                                     <div class="row">
                                         <div class="col-md-4">
-                                        <span class="btn-dark border-radius-4 inline-block">
-                                            <span class="pdd-horizon-10 lh-2-5 display-block">
-                                                <i class="fa fa-github"></i>
+                                            <span class="btn-dark border-radius-4 inline-block">
+                                                <span class="pdd-horizon-10 lh-2-5 display-block">
+                                                    <i class="fa fa-github"></i>
+                                                </span>
                                             </span>
-                                        </span>
                                             <span class="font-size-14 mrg-left-10 text-dark text-bold">Github</span>
                                         </div>
                                         <div class="col-md-8 text-right">
@@ -76,11 +82,11 @@
                                     <hr>
                                     <div class="row">
                                         <div class="col-md-4">
-                                    <span class="btn-facebook border-radius-4 inline-block">
-                                        <span class="pdd-horizon-10 lh-2-5 display-block">
-                                            <i class="ti-facebook"></i>
+                                        <span class="btn-facebook border-radius-4 inline-block">
+                                            <span class="pdd-horizon-10 lh-2-5 display-block">
+                                                <i class="ti-facebook"></i>
+                                            </span>
                                         </span>
-                                    </span>
                                             <span class="mrg-left-10 font-size-14 text-dark text-bold">Facebook</span>
                                         </div>
                                         <div class="col-md-8 text-right">
@@ -88,18 +94,26 @@
                                         </div>
                                     </div>
                                     <hr>
+                                    <div>
+                                        <form th:method="delete" th:action="@{/users/{userId}/(userId = ${user.id})}">
+                                            <button type="submit">
+                                                <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                            <form action="/users/mypage" method="post">
-                                <input name="_method" type="hidden" value="delete"/>
-                                <button class="btn btn-info float-right mrg-btm-0 relative bottom-5" type="submit">탈퇴
-                                </button>
-                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script type="text/javascript" th:inline="javascript">
+        const errorMessage = [[${errorMessage}]];
+        if (errorMessage !== null) {
+            alert(errorMessage);
+        }
+    </script>
 </th:block>
 </html>
