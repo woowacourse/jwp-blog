@@ -4,75 +4,57 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.CategoryRepository;
-
-import java.util.List;
+import techcourse.myblog.domain.article.ArticleDto;
+import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CategoryService;
 
 @Controller
 public class ArticleController {
+    @Autowired
+    private ArticleService articleService;
 
     @Autowired
-    private ArticleRepository articleRepository;
+    private CategoryService categoryService;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @GetMapping("/")
-    public String index(Model model) {
-        List<Article> articles = articleRepository.findAll();
-        model.addAttribute("categories", categoryRepository.findAll());
-        model.addAttribute("articles", articles);
-        return "index";
-    }
-
-    @GetMapping("/{categoryId}")
-    public String index(@PathVariable final long categoryId, Model model) {
-        List<Article> articles = articleRepository.findByCategoryId(categoryId);
-        model.addAttribute("categories", categoryRepository.findAll());
-        model.addAttribute("articles", articles);
-        System.out.println(articles);
-        return "index";
-    }
-
-    @GetMapping("/writing")
-    public String showWritingPage(Model model) {
-        model.addAttribute("categories", categoryRepository.findAll());
+    @GetMapping("/articles/new")
+    public String showArticleWritingPage(Model model) {
+        model.addAttribute("categories", categoryService.readAll());
         return "article-edit";
     }
 
     @PostMapping("/articles/new")
-    public String addArticle(Article articleParam) {
-        Long latestId = articleRepository.add(articleParam);
-        return "redirect:/articles/" + latestId;
+    public String create(ArticleDto articleDto) {
+        long articleId = articleService.createArticle(articleDto);
+
+        return "redirect:/articles/" + articleId;
     }
 
     @GetMapping("/articles/{articleId}")
     public String showArticleById(@PathVariable long articleId, Model model) {
-        Article article = articleRepository.findById(articleId);
-        model.addAttribute("article", article);
+        ArticleDto articleDto = articleService.readById(articleId);
+        model.addAttribute("article", articleDto);
         return "article";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable long articleId, Article articleParam) {
-        long updateId = articleRepository.updateById(articleParam, articleId);
-        return "redirect:/articles/" + updateId;
-    }
+    public String update(@PathVariable long articleId, ArticleDto articleDto) {
+        ArticleDto toArticleDto = articleService.updateByArticle(articleId, articleDto);
 
-    @DeleteMapping("articles/{articleId}")
-    public String deleteArticle(@PathVariable long articleId) {
-        articleRepository.deleteById(articleId);
-        return "redirect:/";
+        return "redirect:/articles/" + toArticleDto.getId();
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String updateArticle(@PathVariable long articleId, Model model) {
-        Article article = articleRepository.findById(articleId);
-        model.addAttribute("categories", categoryRepository.findAll());
-        model.addAttribute("article", article);
+    public String showArticleEditPage(@PathVariable long articleId, Model model) {
+        ArticleDto articleDto = articleService.readById(articleId);
+
+        model.addAttribute("article", articleDto);
+        model.addAttribute("categories", categoryService.readAll());
         return "article-edit";
+    }
+
+    @DeleteMapping("articles/{articleId}")
+    public String delete(@PathVariable long articleId) {
+        articleService.deleteById(articleId);
+        return "redirect:/";
     }
 }

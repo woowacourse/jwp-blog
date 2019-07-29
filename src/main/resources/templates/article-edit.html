@@ -9,7 +9,8 @@
 </head>
 <body class="pace-done">
 <div>
-    <th:block th:include="/fragment/login-header"></th:block>
+    <th:block th:if="${userInfo == null}" th:include="/fragment/header"></th:block>
+    <th:block th:unless="${userInfo == null}" th:include="/fragment/login-header"></th:block>
 
     <form th:action="(${article} == null) ? '/articles/new' : '/articles/' + ${article.id}" name="article"
           th:method="${article} == null ? 'post' : 'put'" accept-charset="utf-8">
@@ -124,6 +125,12 @@
 
     const list = document.querySelectorAll("#categories li");
     list.forEach(category => {category.addEventListener("click", handleClick)});
+
+    const error = "[[ ${error} ]]";
+
+    if (error != "") {
+        alert(error);
+    }
 
 </script>
 </body>
