@@ -122,3 +122,4 @@
 - ~~Show comments related to articles~~
 - Add modifyCommentById controller method in CommentController
 - ~~Add deleteCommentById controller method in CommentController~~
+- 게시글 삭제시 댓글도 삭제

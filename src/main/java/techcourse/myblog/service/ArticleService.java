@@ -6,6 +6,8 @@ import techcourse.myblog.persistence.ArticleRepository;
 import techcourse.myblog.service.dto.ArticleRequestDto;
 import techcourse.myblog.service.exception.ArticleNotFoundException;
 
+import javax.transaction.Transactional;
+
 @Service
 public class ArticleService {
 
@@ -15,6 +17,7 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
+    @Transactional
     public void update(ArticleRequestDto articleRequestDto) {
         Article article = articleRepository.findById(articleRequestDto.getId()).orElseThrow(ArticleNotFoundException::new);
         article.update(articleRequestDto);
