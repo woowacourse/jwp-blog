@@ -1,14 +1,17 @@
 package techcourse.myblog.web;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.*;
+
+import javax.transaction.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -23,14 +26,36 @@ class ArticleControllerTest {
     private static final String TEST_COVER_URL = "Baegyung";
     private static final String TEST_CONTENTS = "Naeyong";
     private static final Article TEST_ARTICLE = new Article(TEST_TITLE, TEST_COVER_URL, TEST_CONTENTS);
+    private static final String TEST_NAME = "도나쓰";
+    private static final String TEST_EMAIL = "testdonut@woowa.com";
+    private static final String TEST_PASSWORD = "qwer1234";
+    private static final User TEST_USER = new User(TEST_NAME, TEST_EMAIL, TEST_PASSWORD);
+    private static final String TEST_COMMENT_CONTENT = "ㅎㅇ";
+
 
     @Autowired
     private ArticleRepository articleRepository;
     @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private MockMvc mockMvc;
-  
+    private MockHttpSession session;
+
+    @BeforeEach
+    void setUp() {
+        session = new MockHttpSession();
+        session.setAttribute("email", TEST_EMAIL);
+        session.setAttribute("name", TEST_NAME);
+        userRepository.save(TEST_USER);
+    }
+
     @AfterEach
     void tearDown() {
+        session.clearAttributes();
+        session = null;
+        userRepository.deleteAll();
         articleRepository.deleteAll();
     }
 
@@ -132,6 +157,20 @@ class ArticleControllerTest {
     void deleteTest() throws Exception {
         final Article written = articleRepository.save(TEST_ARTICLE);
         mockMvc.perform(delete("/articles/" + written.getId()));
-        assertThat(articleRepository.count()).isEqualTo(0L);
+        assertThat(articleRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    void writeCommentTest() throws Exception {
+        final Article written = articleRepository.save(TEST_ARTICLE);
+        mockMvc.perform(
+                post("/articles/" + written.getId() + "/comment").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                                                .param("contents", TEST_COMMENT_CONTENT)
+                                                                .session(session)
+        ).andDo(print())
+        .andExpect(redirectedUrl("/articles/" + written.getId()));
+        assertThat(commentRepository.count()).isEqualTo(1);
+        articleRepository.deleteAll();
+        assertThat(commentRepository.count()).isEqualTo(0);
     }
 }

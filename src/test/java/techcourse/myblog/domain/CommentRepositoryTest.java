@@ -23,9 +23,9 @@ class CommentRepositoryTest {
     private static final User _TEST_USER = new User(TEST_NAME, _TEST_EMAIL, TEST_PASSWORD);
 
     @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
     private ArticleRepository articleRepository;
+    @Autowired
+    private CommentRepository commentRepository;
     @Autowired
     private TestEntityManager testEntityManager;
 

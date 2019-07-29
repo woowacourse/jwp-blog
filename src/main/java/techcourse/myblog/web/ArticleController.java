@@ -44,7 +44,7 @@ public class ArticleController {
     public String read(@PathVariable long articleId, Model model) {
         return articleService.maybeArticle(articleId).map(article -> {
             model.addAttribute("article", article);
-//            model.addAttribute("comments", article.getComments());
+            model.addAttribute("comments", article.getComments());
             return "article";
         }).orElse("redirect:/");
     }
