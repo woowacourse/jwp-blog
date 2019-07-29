@@ -31,4 +31,8 @@ public class CommentDto {
 	public Comment valueOf(User user, Article article) {
 		return new Comment(user, article, contents);
 	}
+
+	public Comment valueOf() {
+		return new Comment(contents);
+	}
 }

@@ -34,6 +34,10 @@ public class Comment {
 	public Comment() {
 	}
 
+	public Comment(String contents) {
+		this.contents = contents;
+	}
+
 	public Comment(User user, Article article, String contents) {
 		this.author = user;
 		this.article = article;
@@ -79,5 +83,9 @@ public class Comment {
 	@Override
 	public int hashCode() {
 		return Objects.hash(getId(), contents, createDate, author, article);
+	}
+
+	public void update(Comment comment) {
+		this.contents = comment.contents;
 	}
 }

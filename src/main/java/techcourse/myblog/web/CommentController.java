@@ -12,9 +12,11 @@ import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.service.UserService;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @Controller
 public class CommentController {
@@ -39,6 +41,21 @@ public class CommentController {
 			commentRepository.save(commentDto.valueOf(user, article.get()));
 		}
 
+		return "redirect:/articles/" + articleId;
+	}
+
+	@Transactional
+	@PutMapping("/comments/{articleId}/{commentId}")
+	public String update(CommentDto commentDto, @PathVariable long articleId, @PathVariable long commentId, HttpSession session) {
+		Object email = session.getAttribute("email");
+
+		if (email != null) {
+			User user = userService.findUser((String) email);
+			Comment comment = commentRepository.findById(commentId).get();
+			if (user.equals(comment.getAuthor())) {
+				comment.update(commentDto.valueOf());
+			}
+		}
 		return "redirect:/articles/" + articleId;
 	}
 
