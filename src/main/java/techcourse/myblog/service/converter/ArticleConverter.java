@@ -5,11 +5,11 @@ import techcourse.myblog.service.dto.ArticleRequest;
 
 public class ArticleConverter extends Converter<ArticleRequest, Article> {
     private static class ArticleConverterLazyHolder {
-        private static final ArticleConverter INSTNACE = new ArticleConverter();
+        private static final ArticleConverter INSTANCE = new ArticleConverter();
     }
 
     public static ArticleConverter getInstance() {
-        return ArticleConverterLazyHolder.INSTNACE;
+        return ArticleConverterLazyHolder.INSTANCE;
     }
 
     private ArticleConverter(){
