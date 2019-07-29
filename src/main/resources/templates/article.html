@@ -59,14 +59,15 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info" th:text="${article.comments.size()}">2</span>
+                    <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info" th:each="comment : ${article.comments}">
+                    <ul class="list-unstyled list-info" th:each="comment : ${comments}">
                         <li class="comment-item border bottom mrg-btm-30">
                             <img class="thumb-img img-circle"
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                             <div class="info">
+                                <input name="id" type="hidden" th:value="${comment.id}">
                                 <span class="text-bold inline-block" th:text="${comment.writer.name}">Jun</span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
@@ -79,7 +80,12 @@
                         </li>
                     </ul>
                     <div class="add-comment">
-                        <div id="editSection"></div>
+                        <form th:action="|/articles/${article.id}/comment|" method="post">
+                            <input id="comment-contents" name="contents" type="hidden">
+                            <div id="editSection">
+                            </div>
+                            <button id="btn-comment-add" type="submit" class="btn btn-default">댓글달기</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -112,6 +118,7 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
+                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
             }
         },
         height: '200px'
