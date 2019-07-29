@@ -1,9 +1,9 @@
 package techcourse.myblog.service.converter;
 
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.service.dto.ArticleRequest;
+import techcourse.myblog.service.dto.ArticleDto;
 
-public class ArticleConverter extends Converter<ArticleRequest, Article> {
+public class ArticleConverter extends Converter<ArticleDto, Article> {
     private static class ArticleConverterLazyHolder {
         private static final ArticleConverter INSTANCE = new ArticleConverter();
     }
@@ -13,10 +13,10 @@ public class ArticleConverter extends Converter<ArticleRequest, Article> {
     }
 
     private ArticleConverter(){
-        super(articleRequest -> new Article(articleRequest.getTitle(),
-                articleRequest.getCoverUrl(),
-                articleRequest.getContents())
-        , article -> new ArticleRequest(article.getTitle(),
+        super(articleDto -> new Article(articleDto.getTitle(),
+                articleDto.getCoverUrl(),
+                articleDto.getContents())
+        , article -> new ArticleDto(article.getTitle(),
                         article.getCoverUrl(),
                         article.getContents()));
     }

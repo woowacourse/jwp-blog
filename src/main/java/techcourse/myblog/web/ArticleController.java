@@ -3,14 +3,10 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.converter.ArticleConverter;
-import techcourse.myblog.service.dto.ArticleRequest;
+import techcourse.myblog.service.dto.ArticleDto;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class ArticleController {
@@ -38,15 +34,15 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String saveArticle(@Valid ArticleRequest articleRequest) {
-        Long articleId = articleService.post(articleRequest);
+    public String saveArticle(@Valid ArticleDto articleDto) {
+        Long articleId = articleService.post(articleDto);
 
         return "redirect:/articles/" + articleId;
     }
 
     @GetMapping("/articles/{articleId}")
     public String selectArticle(@PathVariable("articleId") long articleId, Model model) {
-        ArticleRequest article = articleService.findById(articleId);
+        ArticleDto article = articleService.findById(articleId);
         model.addAttribute(ARTICLE_INFO, article);
 
         return "article";
@@ -54,16 +50,16 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}/edit")
     public String edit(@PathVariable("articleId") long articleId, Model model) {
-        ArticleRequest article = articleService.findById(articleId);
+        ArticleDto article = articleService.findById(articleId);
         model.addAttribute(ARTICLE_INFO, article);
 
         return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleRequest articleRequest, Model model) {
-        articleService.editArticle(articleRequest, articleId);
-        model.addAttribute(ARTICLE_INFO, articleRequest);
+    public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleDto articleDto, Model model) {
+        articleService.editArticle(articleDto, articleId);
+        model.addAttribute(ARTICLE_INFO, articleDto);
 
         return "article";
     }

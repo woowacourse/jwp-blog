@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.service.converter.ArticleConverter;
-import techcourse.myblog.service.dto.ArticleRequest;
+import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.exception.NoArticleException;
 
 import javax.transaction.Transactional;
@@ -20,27 +20,27 @@ public class ArticleService {
         this.articleConverter = ArticleConverter.getInstance();
     }
 
-    public List<ArticleRequest> findAll() {
+    public List<ArticleDto> findAll() {
         return articleConverter.convertToEntities(articleRepository.findAll());
     }
 
-    public Long post(ArticleRequest articleRequest) {
-        Article article = articleConverter.convertToEntity(articleRequest);
+    public Long post(ArticleDto articleDto) {
+        Article article = articleConverter.convertToEntity(articleDto);
         Article savedArticle = articleRepository.save(article);
         return savedArticle.getId();
     }
 
-    public ArticleRequest findById(long articleId) {
+    public ArticleDto findById(long articleId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
         return articleConverter.convertToDto(article);
     }
 
     @Transactional
-    public void editArticle(ArticleRequest articleRequest, long articleId) {
+    public void editArticle(ArticleDto articleDto, long articleId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
-        article.updateArticle(articleConverter.convertToEntity(articleRequest));
+        article.updateArticle(articleConverter.convertToEntity(articleDto));
     }
 
     public void deleteById(long articleId) {
