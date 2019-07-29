@@ -108,9 +108,12 @@ public class UserController {
     public String userLogin(final Model model, final LoginDto loginDto, final HttpSession session, final HttpServletResponse response) {
         LOG.debug("로그인 시도 시작");
         try {
+            LOG.debug("received email: {}", loginDto.getEmail());
+            LOG.debug("received password: {}", loginDto.getPassword());
             final User existUser = userRepository.findByEmailAndPassword(loginDto.getEmail(), loginDto.getPassword()).get();
             session.setAttribute(USER, existUser);
             LOG.debug("로그인 성공!");
+            LOG.debug("user: {}", existUser);
             return REDIRECT + ROUTE_ROOT;
         } catch (NoSuchElementException e) {
             LOG.debug("이메일 주소 또는 패스워드 오류: {}", e.getMessage());

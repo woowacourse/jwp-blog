@@ -1,9 +1,9 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -26,16 +26,6 @@ class UserControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
-
-    @BeforeEach
-    void signup() {
-        webTestClient.post().uri("/users")
-                .body(BodyInserters
-                        .fromFormData("username", USERNAME)
-                        .with("email", EMAIL)
-                        .with("password", PASSWORD))
-                .exchange();
-    }
 
     EntityExchangeResult<byte[]> login() {
         return webTestClient
@@ -66,12 +56,14 @@ class UserControllerTest {
     @Test
     void 로그인() {
         final EntityExchangeResult<byte[]> response = login();
+        HttpStatus status = response.getStatus();
         jSessionId = extractJSessionId(response);
+        assertThat(status).isEqualTo(HttpStatus.FOUND);
         assertThat(jSessionId).isNotBlank();
     }
 
     @Test
-    void 잘못된_로그인_email() {
+    void 잘못된_로그인_email_1() {
         webTestClient
                 .post().uri("/login")
                 .body(BodyInserters
@@ -102,3 +94,4 @@ class UserControllerTest {
                 .isNotEqualTo(extractJSessionId(logoutResult));
     }
 }
+

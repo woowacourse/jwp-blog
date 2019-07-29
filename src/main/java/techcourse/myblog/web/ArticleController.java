@@ -16,6 +16,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Controller
 public class ArticleController {
     private static final Logger LOG = getLogger(ArticleController.class);
+    private static final String REDIRECT = "redirect:";
+    private static final String ROOT = "/";
+    private static final String ROUTE_ARTICLES = "/articles";
+    private static final String ROUTE_WRITING = "/writing";
+    private static final String ROUTE_ID = "/{id}";
+    private static final String ROUTE_EDIT = "/edit";
+    private static final String ROUTE_ARTICLE_ID = ROUTE_ARTICLES + ROUTE_ID;
+    private static final String PAGE_ARTICLE = "article";
+    private static final String PAGE_EDIT = "article-edit";
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -25,43 +34,43 @@ public class ArticleController {
 //        this.articleRepository = articleRepository;
 //    } // TODO: 검색 - 생성자 주입 필드 주입
 
-    @GetMapping("/writing")
+    @GetMapping(ROUTE_WRITING)
     public String getNewArticlePage() {
-        return "article-edit";
+        return PAGE_EDIT;
     }
 
-    @PostMapping("/articles")
-    public String createArticle(@ModelAttribute("article") final ArticleDto articleDto) {
+    @PostMapping(ROUTE_ARTICLES)
+    public String createArticle(@ModelAttribute(PAGE_ARTICLE) final ArticleDto articleDto) {
         final Article article = new Article(articleDto);
         LOG.trace("{}", article);
         articleRepository.save(article);
-        return "redirect:/articles/" + article.getId();
+        return REDIRECT + ROUTE_ARTICLES + ROOT + article.getId();
     }
 
-    @GetMapping("/articles/{id}")
+    @GetMapping(ROUTE_ARTICLE_ID)
     public ModelAndView showArticle(@PathVariable final Long id) {
-        final ModelAndView mav = new ModelAndView("article");
-        mav.addObject("article", articleRepository.findById(id).get());
+        final ModelAndView mav = new ModelAndView(PAGE_ARTICLE);
+        mav.addObject(PAGE_ARTICLE, articleRepository.findById(id).get());
         return mav;
     }
 
-    @GetMapping("/articles/{articleId}/edit")
-    public String editArticlePage(final Model model, @PathVariable final Long articleId) {
-        model.addAttribute("article", articleRepository.findById(articleId).get());
-        return "article-edit";
+    @GetMapping(ROUTE_ARTICLE_ID + ROUTE_EDIT)
+    public String editArticlePage(final Model model, @PathVariable final Long id) {
+        model.addAttribute(PAGE_ARTICLE, articleRepository.findById(id).get());
+        return PAGE_EDIT;
     }
 
-    @PutMapping("/articles/{articleId}")
-    public RedirectView editArticle(@PathVariable final Long articleId, @ModelAttribute("article") final ArticleDto articleDto) {
-        final Article article = articleRepository.findById(articleId).get();
+    @PutMapping(ROUTE_ARTICLE_ID)
+    public RedirectView editArticle(@PathVariable final Long id, @ModelAttribute(PAGE_ARTICLE) final ArticleDto articleDto) {
+        final Article article = articleRepository.findById(id).get();
         article.write(articleDto);
         articleRepository.save(article);
-        return new RedirectView("/articles/" + article.getId());
+        return new RedirectView(ROUTE_ARTICLES + ROOT + article.getId());
     }
 
-    @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable final Long articleId) {
-        articleRepository.deleteById(articleId);
-        return "redirect:/";
+    @DeleteMapping(ROUTE_ARTICLE_ID)
+    public String deleteArticle(@PathVariable final Long id) {
+        articleRepository.deleteById(id);
+        return REDIRECT + ROOT;
     }
 }
