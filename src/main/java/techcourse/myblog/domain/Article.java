@@ -3,6 +3,7 @@ package techcourse.myblog.domain;
 import techcourse.myblog.web.dto.ArticleDto;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,6 +19,10 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
+
+    @OneToMany
+    @JoinColumn(name = "comments", foreignKey = @ForeignKey(name = "fk_article_to_comment"))
+    private List<Comment> comments;
 
     public Article() {
     }
