@@ -3,6 +3,7 @@ package techcourse.myblog.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.*;
@@ -79,12 +80,16 @@ public class ArticleController {
         return "redirect:/articles/" + article.getId();
     }
 
+    @Transactional
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticleByIdPage(@PathVariable long articleId, HttpSession httpSession) {
         log.debug(">>> article Id : {}", articleId);
         Article article = articleRepository.findById(articleId).get();
+        log.debug(">>> before delete comment size : {}",commentRepository.findAllByArticle_Id(articleId).size());
         if (isAuthor(article, httpSession)) return "redirect:/";
         articleRepository.deleteById(articleId);
+        commentRepository.deleteAllByArticle(article);
+        log.debug(">>> after delete comment size : {}",commentRepository.findAllByArticle_Id(articleId).size());
         return "redirect:/";
     }
 
