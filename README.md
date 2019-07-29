@@ -114,7 +114,7 @@
 
 댓글작성 기능 구현
 - ~~커멘트 엔터티 생성~~
-- Add createdAt column into Comment entity
+- ~~Add createdAt column into Comment entity~~
 - 커맨트 레파지토리 구현
 - 커맨트 서비스 구현
 - Comment Controller
