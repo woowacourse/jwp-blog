@@ -42,8 +42,14 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editArticle(@PathVariable long id, Model model) {
+    public String editArticle(@PathVariable long id, Model model, HttpSession httpSession) {
         Article article = articleService.findById(id);
+        User user = (User) httpSession.getAttribute(USER);
+        User author = article.getAuthor();
+        
+        if (!user.equals(author)) {
+            return "redirect:/articles/" + id;
+        }
         model.addAttribute("article", article);
         return "article-edit";
     }
