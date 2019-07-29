@@ -30,7 +30,7 @@ public class ArticleController {
     @PostMapping("/articles")
     public String saveArticlePage(HttpSession httpSession, ArticleDto articleDto) {
         log.debug(">>> save article : {}", articleDto);
-        User user = (User)httpSession.getAttribute("user");
+        User user = (User) httpSession.getAttribute("user");
 
         Article article = articleRepository.save(articleDto.toArticle(user));
         return "redirect:/articles/" + article.getId();
@@ -44,16 +44,20 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String showArticleEditingPage(@PathVariable long articleId, Model model) {
+    public String showArticleEditingPage(@PathVariable long articleId, HttpSession httpSession, Model model) {
         log.debug(">>> article Id : {}", articleId);
-        model.addAttribute("article", articleRepository.findById(articleId).get());
+        Article article = articleRepository.findById(articleId).get();
+        if (isAuthor(article, httpSession)) return "redirect:/";
+        model.addAttribute("article", article);
         return "article-edit";
     }
 
     @GetMapping("/articles/{articleId}")
     public String showArticleByIdPage(@PathVariable long articleId, Model model) {
         log.debug(">>> article Id : {}", articleId);
-        model.addAttribute("article", articleRepository.findById(articleId).get());
+        Article article = articleRepository.findById(articleId).get();
+        log.debug(">>> get article : {}", article);
+        model.addAttribute("article", article);
         return "article";
     }
 
@@ -61,16 +65,31 @@ public class ArticleController {
     public String updateArticleByIdPage(HttpSession httpSession, ArticleDto articleDto) {
         log.debug(">>> put ArticleDto : {}", articleDto);
         User user = (User)httpSession.getAttribute("user");
-        log.debug(">>> put Article before save: {}",articleDto.toArticle(user));
+        Article preArticle = articleRepository.findById(articleDto.getId()).get();
+        log.debug(">>> put Article before save: {}", articleDto);
+
+        if (isAuthor(preArticle, httpSession)) return "redirect:/";
+
         Article article = articleRepository.save(articleDto.toArticle(user));
         log.debug(">>> put Article : {}", article);
         return "redirect:/articles/" + article.getId();
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticleByIdPage(@PathVariable long articleId) {
+    public String deleteArticleByIdPage(@PathVariable long articleId, HttpSession httpSession) {
         log.debug(">>> article Id : {}", articleId);
+        Article article = articleRepository.findById(articleId).get();
+        if (isAuthor(article, httpSession)) return "redirect:/";
         articleRepository.deleteById(articleId);
         return "redirect:/";
     }
+
+    private boolean isAuthor(Article article, HttpSession httpSession) {
+        User author = (User) httpSession.getAttribute("user");
+        if (article.getAuthor().getId() != author.getId()) {
+            return true;
+        }
+        return false;
+    }
+
 }
