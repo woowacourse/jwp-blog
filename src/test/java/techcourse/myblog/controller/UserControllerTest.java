@@ -5,18 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseCookie;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
-import java.util.Objects;
-
-import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.controller.test.WebClientGenerator;
+import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.repository.UserRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -53,7 +47,7 @@ class UserControllerTest extends WebClientGenerator {
     void 회원목록_페이지_요청() {
         responseSpec(GET, "/users")
                 .expectStatus()
-                .isOk();;
+                .isOk();
     }
 
     @Test
@@ -97,14 +91,6 @@ class UserControllerTest extends WebClientGenerator {
                     assertEquals(user.getName(), userDto.getName());
                     assertEquals(user.getPassword(), userDto.getPassword());
                 });
-    }
-
-    private MultiValueMap<String, String> parser(UserDto userDto) {
-        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-        multiValueMap.add("email", userDto.getEmail());
-        multiValueMap.add("name", userDto.getName());
-        multiValueMap.add("password", userDto.getPassword());
-        return multiValueMap;
     }
 
     @Test
@@ -246,22 +232,9 @@ class UserControllerTest extends WebClientGenerator {
                 .expectStatus()
                 .isFound();
 
-        logInResponseSpec(userDto, "/signup")
+        logInResponseSpec(GET, "/signup", userDto)
                 .expectStatus()
                 .isFound();
-    }
-
-    private WebTestClient.ResponseSpec logInResponseSpec(UserDto userDto, String path) {
-        MultiValueMap<String, ResponseCookie> cookies
-                = responseSpec(POST, "/login", parser(userDto))
-                .expectStatus()
-                .isFound()
-                .returnResult(Void.class)
-                .getResponseCookies();
-
-        return requestCookie(GET, path, new LinkedMultiValueMap<>())
-                .cookie("JSESSIONID", Objects.requireNonNull(cookies.getFirst("JSESSIONID")).getValue())
-                .exchange();
     }
 
     @Test
@@ -271,7 +244,7 @@ class UserControllerTest extends WebClientGenerator {
                 .expectStatus()
                 .isFound();
 
-        logInResponseSpec(userDto, "/login")
+        logInResponseSpec(GET, "/login", userDto)
                 .expectStatus()
                 .isFound();
     }
@@ -283,7 +256,7 @@ class UserControllerTest extends WebClientGenerator {
                 .expectStatus()
                 .isFound();
 
-        logInResponseSpec(userDto, "/mypage")
+        logInResponseSpec(GET, "/mypage", userDto)
                 .expectStatus()
                 .isOk();
     }
@@ -295,7 +268,7 @@ class UserControllerTest extends WebClientGenerator {
                 .expectStatus()
                 .isFound();
 
-        logInResponseSpec(userDto, "/mypage/edit")
+        logInResponseSpec(GET, "/mypage/edit", userDto)
                 .expectStatus()
                 .isOk();
     }
