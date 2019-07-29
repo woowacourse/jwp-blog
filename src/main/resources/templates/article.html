@@ -33,30 +33,46 @@
 
 
                 <!-- 댓글 -->
-                <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
+                <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30" id="comment-list">
                     <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                         <span class="font-size-16">댓글</span>
                         <span class="font-size-16 text-info" th:text="${comments.size()}"></span>
                     </div>
 
                     <div class="comment">
-                        <ul class="list-unstyled list-info" th:each="comment : ${comments}">
+                        <ul class="list-unstyled list-info" th:each="comment, index : ${comments}">
                             <li class="comment-item border bottom mrg-btm-30">
                                 <img class="thumb-img img-circle"
                                      src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                                 <div class="info">
                                     <span href="" class="text-bold inline-block" th:text="${comment.user.name}"></span>
-                                    <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                        <span th:text="${comment.modifiedDate}"></span>
-                            </span>
-                                    <p class="width-80" th:text="${comment.contents}"></p>
+                                        <span class="sub-title inline-block pull-right">
+                                            <i class="ti-timer pdd-right-5"></i>
+                                                <span th:text="${comment.modifiedDate}"></span>
+
+                                               <button class="btn btn-icon float-right pointer" id="comment-modify-form-button" type="submit" th:onclick="|editBtnClickHandler('${index.index}')|">
+                                                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                               </button>
+
+                                                <form name="comments-delete"
+                                                      th:action="${#strings.concat('/articles/', article.id, '/comments/', comment.id)}"
+                                                      th:method="delete">
+                                                    <button class="btn btn-icon float-right pointer"
+                                                            id="comment-delete-button" type="submit">
+                                                        <i class="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
+                                                    </button>
+                                                </form>
+                                        </span>
+
+                                            <form name="comments-put" th:action="${#strings.concat('/articles/', article.id, '/comments/', comment.id)}" th:method="put">
+                                                    <p class="width-80" th:id="'contents-' + ${index.index}" th:text="${comment.contents}"></p>
+                                            </form>
                                 </div>
                             </li>
 
                         </ul>
 
-                        <form name="comments" th:action="${#strings.concat('/articles/', article.id, '/comments')}"
+                        <form name="comments-post" th:action="${#strings.concat('/articles/', article.id, '/comments')}"
                               method="post">
                             <div class="add-comment">
                                 <div id="editSection"></div>
@@ -99,6 +115,27 @@
             },
             height: '200px'
         });
+
+
+        const commentList = document.getElementById("comment-list");
+
+        function editBtnClickHandler(index) {
+            // event.preventDefault()
+
+            const content = document.getElementById("contents-"+index);
+            console.log(content)
+            content.innerHTML = "<textarea name='contents'></textarea>  <button value='수정' type='submit'>수정</button>"
+        }
+
+        function cancleEditHandler(event) {
+            if (event.target.classList.contains('comment-edit-text') && event.key === "Escape") {
+                event.target.value = "";
+                const editDiv = event.target.parentElement.parentElement;
+                editDiv.style.visibility = "hidden";
+            }
+        }
+
+        commentList.addEventListener('click', editBtnClickHandler);
     </script>
 </th:block>
 </html>
