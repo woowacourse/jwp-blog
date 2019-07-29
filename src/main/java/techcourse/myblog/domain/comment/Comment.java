@@ -40,6 +40,11 @@ public class Comment {
         this.contents = contents;
     }
 
+    public Comment updateContent(String contents) {
+        this.contents = contents;
+        return this;
+    }
+
     public Long getId() {
         return id;
     }
@@ -74,10 +79,5 @@ public class Comment {
 
     public void setArticle(Article article) {
         this.article = article;
-    }
-
-    public Comment updateContent(String contents) {
-        this.contents = contents;
-        return this;
     }
 }
