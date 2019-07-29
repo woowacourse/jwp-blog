@@ -4,10 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.servlet.http.HttpSession;
-
 import lombok.AllArgsConstructor;
-import techcourse.myblog.controller.session.UserSession;
 import techcourse.myblog.controller.session.UserSessionManager;
 import techcourse.myblog.repository.ArticleRepository;
 

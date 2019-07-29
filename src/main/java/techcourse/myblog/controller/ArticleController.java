@@ -14,7 +14,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
-import techcourse.myblog.controller.session.UserSession;
+import techcourse.myblog.controller.argumentresolver.UserSession;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.dto.ArticleDto;

@@ -19,7 +19,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserInfo;
-import techcourse.myblog.controller.session.UserSession;
+import techcourse.myblog.controller.argumentresolver.UserSession;
 import techcourse.myblog.controller.session.UserSessionManager;
 
 @Controller

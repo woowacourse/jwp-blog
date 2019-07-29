@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
-import techcourse.myblog.controller.session.UserSession;
+import techcourse.myblog.controller.argumentresolver.UserSession;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.service.CommentService;
 
