@@ -20,7 +20,10 @@ public class Article {
     private Long id;
 
     private String title;
+
+    @Lob
     private String contents;
+    
     private String coverUrl;
 
     @ManyToOne

@@ -25,10 +25,6 @@ public class UserPassword {
         throw new UserException();
     }
 
-    public boolean match(String password) {
-        return this.password.equals(password);
-    }
-
     public String getPassword() {
         return password;
     }

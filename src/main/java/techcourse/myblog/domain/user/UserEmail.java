@@ -25,10 +25,6 @@ public class UserEmail {
         throw new UserException(EMAIL_ERROR);
     }
 
-    public void update(String email) {
-        this.email = validate(email);
-    }
-
     public String getEmail() {
         return email;
     }
