@@ -40,8 +40,7 @@ public class ArticleService {
 
     public Article findById(final Long articleId, final User user) {
         Article article = findById(articleId);
-        if (user.equals(
-                article.getAuthor())) {
+        if (user.equals(article.getAuthor())) {
             return article;
         }
         throw new NotMatchAuthenticationException("접근할 수 없는 게시글 입니다.");

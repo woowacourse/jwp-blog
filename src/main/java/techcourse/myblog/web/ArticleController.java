@@ -12,11 +12,8 @@ import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.exception.ArticleInputException;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.NotMatchAuthenticationException;
-import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
-import techcourse.myblog.translator.ArticleTranslator;
-import techcourse.myblog.translator.ModelTranslator;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;

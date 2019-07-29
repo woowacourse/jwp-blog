@@ -78,7 +78,7 @@
                                     <span class="text-bold inline-block" th:text="${comment.user.name}">Jun</span>
                                     <form th:action="@{/articles/{articleId}/comments/{commentId}(articleId=${comment.article.id}, commentId=${comment.id})}"
                                           th:method="put">
-                                        <input type="hidden" name="content" th:value="${comment.content}">
+                                        <input name="content" th:value="${comment.content}" type="hidden">
                                         <button class="float-right pointer btn btn-icon">
                                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                                         </button>
@@ -116,7 +116,7 @@
                             <!--                            </li>-->
 
                         </ul>
-                        <form th:action="@{/articles/{articleId}/comments(articleId=${article.id})}" method="post">
+                        <form method="post" th:action="@{/articles/{articleId}/comments(articleId=${article.id})}">
                             <input id="comment-contents" name="content" type="hidden">
                             <div class="add-comment">
                                 <div id="editSection"></div>

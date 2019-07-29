@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
