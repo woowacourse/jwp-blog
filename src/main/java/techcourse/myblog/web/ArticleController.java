@@ -8,6 +8,7 @@ import techcourse.myblog.dto.request.ArticleDto;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
 
 import org.springframework.stereotype.Controller;
@@ -18,10 +19,12 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleController {
 	private final ArticleRepository articleRepository;
 	private final UserRepository userRepository;
+	private final CommentRepository commentRepository;
 
-	public ArticleController(final ArticleRepository articleRepository, final UserRepository userRepository) {
+	public ArticleController(ArticleRepository articleRepository, UserRepository userRepository, CommentRepository commentRepository) {
 		this.articleRepository = articleRepository;
 		this.userRepository = userRepository;
+		this.commentRepository = commentRepository;
 	}
 
 	@GetMapping("/")
@@ -69,8 +72,9 @@ public class ArticleController {
 	}
 
 	@GetMapping("/articles/{articleId}")
-	public String getArticle(@PathVariable Long articleId, Model model) {
+	public String getArticle(@PathVariable long articleId, Model model) {
 		getArticleWhenExists(articleId, model);
+		model.addAttribute("comments", commentRepository.findByArticleId(articleId));
 		return "article";
 	}
 
@@ -83,7 +87,7 @@ public class ArticleController {
 		return "article-edit";
 	}
 
-	private void getArticleWhenExists(Long articleId, Model model) {
+	private void getArticleWhenExists(long articleId, Model model) {
 		Article article = articleRepository.findById(articleId)
 				.orElseThrow(NotFoundArticleException::new);
 		model.addAttribute("article", article);
