@@ -2,6 +2,9 @@ package techcourse.myblog.domain.user;
 
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.user.UserConverter.UserEmailConverter;
+import techcourse.myblog.domain.user.UserConverter.UserNameConverter;
+import techcourse.myblog.domain.user.UserConverter.UserPasswordConverter;
 import techcourse.myblog.dto.UserDto;
 
 import javax.persistence.*;

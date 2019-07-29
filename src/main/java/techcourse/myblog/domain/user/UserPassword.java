@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 public class UserPassword {
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z[0-9]$@$!%*#?&]{8,}$");
     private static final String PASSWORD_ERROR = "대소문자, 특수문자, 숫자를 포함한 8자리 이상 문자를 입력하세요. 싫으면 시집가시고";
+
     private String password;
 
     public UserPassword(String password) {

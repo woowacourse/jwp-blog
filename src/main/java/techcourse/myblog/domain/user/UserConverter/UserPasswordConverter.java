@@ -1,4 +1,6 @@
-package techcourse.myblog.domain.user;
+package techcourse.myblog.domain.user.UserConverter;
+
+import techcourse.myblog.domain.user.UserPassword;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
