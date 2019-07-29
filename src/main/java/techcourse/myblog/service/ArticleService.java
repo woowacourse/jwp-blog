@@ -11,6 +11,7 @@ import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.exception.NotFoundUserException;
+import techcourse.myblog.exception.NotMatchAuthorException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,18 +30,40 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    public ArticleDto.Response findById(long articleId) {
+    public ArticleDto.Response findById(Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
         return modelMapper.map(article, ArticleDto.Response.class);
     }
 
-    public Long update(long articleId, ArticleDto.Update articleDto) {
+    public ArticleDto.Response findById(UserDto.Response userDto, Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundUserException::new);
+        if (!article.isWrittenBy(user)) {
+            throw new NotMatchAuthorException();
+        }
+        return modelMapper.map(article, ArticleDto.Response.class);
+    }
+
+    public Long update(UserDto.Response userDto, Long articleId, ArticleDto.Update articleDto) {
+        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundUserException::new);
+
+        if (!article.isWrittenBy(user)) {
+            throw new NotMatchAuthorException();
+        }
+
         Article updatedArticle = articleDto.toArticle(article.getId());
         return articleRepository.save(updatedArticle).getId();
     }
 
-    public void deleteById(long articleId) {
+    public void deleteById(UserDto.Response userDto, Long articleId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundUserException::new);
+
+        if (!article.isWrittenBy(user)) {
+            throw new NotMatchAuthorException();
+        }
+
         articleRepository.deleteById(articleId);
     }
 

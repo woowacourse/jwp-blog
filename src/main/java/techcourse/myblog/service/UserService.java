@@ -34,7 +34,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserDto.Response findById(long userId) {
+    public UserDto.Response findById(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
         return modelMapper.map(user, UserDto.Response.class);
     }
@@ -49,13 +49,13 @@ public class UserService {
         return modelMapper.map(user, UserDto.Response.class);
     }
 
-    public UserDto.Response update(long userId, UserDto.Update userDto) {
+    public UserDto.Response update(Long userId, UserDto.Update userDto) {
         User user = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
         User updatedUser = userDto.toUser(userId, user.getEmail(), user.getPassword());
         return modelMapper.map(userRepository.save(updatedUser), UserDto.Response.class);
     }
 
-    public void deleteById(long userId) {
+    public void deleteById(Long userId) {
         userRepository.deleteById(userId);
     }
 }

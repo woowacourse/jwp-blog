@@ -17,7 +17,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleNotFoundArticleException(NotFoundArticleException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "/";
+        return "forward:/";
     }
 
     @ExceptionHandler(InvalidSignUpFormException.class)
@@ -30,9 +30,9 @@ public class ExceptionAdvice {
     @ExceptionHandler(InvalidEditFormException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handelInvalidEditFormException(InvalidEditFormException e, HttpSession httpSession, Model model) {
-        Optional<UserDto.Response> user = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
-        if (user.isPresent()) {
-            model.addAttribute("user", user.get());
+        Optional<UserDto.Response> userDto = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (userDto.isPresent()) {
+            model.addAttribute("user", userDto.get());
         }
         model.addAttribute("errorMessage", e.getMessage());
         return "mypage";
@@ -42,20 +42,28 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handelDuplicatedUserException(DuplicatedUserException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "/signup";
+        return "signup";
     }
 
     @ExceptionHandler(NotFoundUserException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleNotFoundUserException(NotFoundUserException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "/login";
+        return "login";
     }
 
     @ExceptionHandler(NotMatchPasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleNotMatchPasswordException(NotMatchPasswordException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "/login";
+        return "login";
     }
+
+    @ExceptionHandler(NotMatchAuthorException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleNotMatchAuthorException(NotMatchAuthorException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "forward:/";
+    }
+    //TODO : 에러 페이지 만들기 링크
 }

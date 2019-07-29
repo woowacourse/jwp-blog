@@ -28,7 +28,7 @@ public class ArticleDto {
         private String coverUrl;
         private String contents;
 
-        public Article toArticle(long articleId) {
+        public Article toArticle(Long articleId) {
             return Article.builder()
                     .id(articleId)
                     .title(title)
@@ -40,7 +40,7 @@ public class ArticleDto {
 
     @Data
     public static class Response {
-        private long id;
+        private Long id;
         private String title;
         private String coverUrl;
         private String contents;
