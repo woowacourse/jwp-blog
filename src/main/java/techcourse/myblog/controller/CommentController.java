@@ -1,15 +1,13 @@
 package techcourse.myblog.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.NotFoundArticleException;
+import techcourse.myblog.exception.NotFoundCommentException;
 import techcourse.myblog.exception.UnauthenticatedUserException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
@@ -47,9 +45,34 @@ public class CommentController {
         );
 
         comment.setArticle(article);
-        article.addComment(comment);
+        article.add(comment);
 
         commentRepository.save(comment);
+
+        return new RedirectView("/articles/" + articleId);
+    }
+
+    @DeleteMapping("/{articleId}/comments/{commentId}")
+    public RedirectView delete(@PathVariable long articleId,
+                               @PathVariable long commentId,
+                               HttpSession httpSession) {
+        Article article = articleRepository.findById(articleId).orElseThrow(() ->
+                new NotFoundArticleException("article is not found"));
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
+                new NotFoundCommentException("해당 덧글이 존재하지 않습니다."));
+
+        User user = (User) httpSession.getAttribute("user");
+        if (user == null) {
+            throw new UnauthenticatedUserException("확인되지 않은 유저입니다.");
+        }
+
+        if (!user.equals(comment.getAuthor())) {
+            throw new UnauthenticatedUserException("권한이 없습니다.");
+        }
+
+        article.remove(comment);
+        commentRepository.delete(comment);
 
         return new RedirectView("/articles/" + articleId);
     }

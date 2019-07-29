@@ -40,7 +40,11 @@ public class Article {
         this.coverUrl = article.coverUrl;
     }
 
-    public void addComment(Comment comment) {
+    public void add(Comment comment) {
         comments.add(comment);
+    }
+
+    public void remove(Comment comment) {
+        comments.remove(comment);
     }
 }

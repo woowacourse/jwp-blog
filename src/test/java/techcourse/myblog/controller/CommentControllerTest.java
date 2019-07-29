@@ -1,5 +1,6 @@
 package techcourse.myblog.controller;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -89,4 +90,36 @@ class CommentControllerTest {
                 }));
     }
 
+    @Test
+    void 댓글_삭제_성공_확인() {
+        webTestClient.post().uri("/articles/1/comments")
+                .header("cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("contents", "댓글 내용"))
+                .exchange();
+
+        webTestClient.delete().uri("/articles/1/comments/1")
+                .header("cookie", cookie)
+                .exchange()
+                .expectStatus().isFound()
+                .expectBody()
+                .consumeWith((response -> {
+                    String url = response.getResponseHeaders().get("Location").get(0);
+                    webTestClient.get().uri(url)
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody()
+                            .consumeWith(redirectResponse -> {
+                                String body = new String(redirectResponse.getResponseBody());
+                                assertThat(body.contains("댓글 내용")).isFalse();
+                            });
+                }));
+    }
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
+        articleRepository.deleteAll();
+
+    }
 }
