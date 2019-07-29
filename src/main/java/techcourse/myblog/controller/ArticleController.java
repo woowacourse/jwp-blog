@@ -25,7 +25,7 @@ public class ArticleController {
 
         model.addAttribute("article", article);
         model.addAttribute("comments", article.getComments());
-        model.addAttribute("articleId", articleId);
+//        model.addAttribute("articleId", articleId);
 
         return "article";
     }

@@ -1,6 +1,7 @@
 package techcourse.myblog.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
@@ -24,6 +25,26 @@ public class CommentController {
     public CommentController(CommentRepository commentRepository, ArticleRepository articleRepository) {
         this.commentRepository = commentRepository;
         this.articleRepository = articleRepository;
+    }
+
+    @GetMapping("/{commentId}")
+    public String editForm(@PathVariable long articleId,
+                           @PathVariable long commentId,
+                           Model model) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() ->
+                        new NotFoundCommentException("존재하지 않는 댓글입니다."));
+
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() ->
+                        new NotFoundArticleException("존재하지 않는 게시글입니다."));
+
+        model.addAttribute("article", article);
+        model.addAttribute("editCommentId", commentId);
+        model.addAttribute("comments", article.getComments());
+        model.addAttribute("comment", comment);
+
+        return "article";
     }
 
     @PostMapping("/")
@@ -56,13 +77,24 @@ public class CommentController {
     public RedirectView delete(@PathVariable long articleId,
                                @PathVariable long commentId,
                                HttpSession httpSession) {
-        Article article = articleRepository.findById(articleId).orElseThrow(() ->
-                new NotFoundArticleException("article is not found"));
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() ->
+                        new NotFoundArticleException("article is not found"));
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
                 new NotFoundCommentException("해당 덧글이 존재하지 않습니다."));
 
+        validateUser(httpSession, comment);
+
+        article.remove(comment);
+        commentRepository.delete(comment);
+
+        return new RedirectView("/articles/" + articleId);
+    }
+
+    private void validateUser(HttpSession httpSession, Comment comment) {
         User user = (User) httpSession.getAttribute("user");
+
         if (user == null) {
             throw new UnauthenticatedUserException("확인되지 않은 유저입니다.");
         }
@@ -70,9 +102,22 @@ public class CommentController {
         if (!user.equals(comment.getAuthor())) {
             throw new UnauthenticatedUserException("권한이 없습니다.");
         }
+    }
 
-        article.remove(comment);
-        commentRepository.delete(comment);
+    @PutMapping("/{commentId}")
+    public RedirectView put(@PathVariable long articleId,
+                            @PathVariable long commentId,
+                            @ModelAttribute CommentDTO commentDTO,
+                            HttpSession httpSession) {
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() ->
+                        new NotFoundCommentException("해당 덧글이 존재하지 않습니다."));
+
+        validateUser(httpSession, comment);
+
+        comment.setContents(commentDTO.getContents());
+        commentRepository.save(comment);
 
         return new RedirectView("/articles/" + articleId);
     }

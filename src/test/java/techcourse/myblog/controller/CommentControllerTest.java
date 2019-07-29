@@ -1,8 +1,8 @@
 package techcourse.myblog.controller;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +16,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CommentControllerTest {
     public static final String TITLE = "title";
     public static final String CONTENTS = "contents";
     public static final String COVER_URL = "cover_url";
+
     private static final String USER_NAME_1 = "name";
     private static final String EMAIL_1 = "test@test.com";
     private static final String PASSWORD_1 = "1234";
+
     private static final Logger log = LoggerFactory.getLogger(CommentControllerTest.class);
 
     @Autowired
@@ -36,13 +39,8 @@ class CommentControllerTest {
 
     private String cookie;
 
-//    @Autowired
-//    public CommentControllerTest(WebTestClient webTestClient) {
-//        this.webTestClient = webTestClient;
-//    }
-
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    public void setUp() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("userName", USER_NAME_1)
@@ -88,66 +86,5 @@ class CommentControllerTest {
                                 assertThat(body.contains("댓글 내용")).isTrue();
                             });
                 }));
-    }
-
-    @Test
-    void 댓글_삭제_성공_확인() {
-        webTestClient.post().uri("/articles/1/comments")
-                .header("cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("contents", "댓글 내용"))
-                .exchange();
-
-        webTestClient.delete().uri("/articles/1/comments/1")
-                .header("cookie", cookie)
-                .exchange()
-                .expectStatus().isFound()
-                .expectBody()
-                .consumeWith((response -> {
-                    String url = response.getResponseHeaders().get("Location").get(0);
-                    webTestClient.get().uri(url)
-                            .exchange()
-                            .expectStatus().isOk()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = new String(redirectResponse.getResponseBody());
-                                assertThat(body.contains("댓글 내용")).isFalse();
-                            });
-                }));
-    }
-
-    @Test
-    void 댓글_수정_확인() {
-        webTestClient.post().uri("/articles/1/comments")
-                .header("cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("contents", "댓글 내용"))
-                .exchange();
-
-        webTestClient.put().uri("/articles/1/comments/1")
-                .header("cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("contents", "댓글 내용 수정됨"))
-                .exchange().expectStatus().isFound()
-                .expectBody()
-                .consumeWith((response -> {
-                    String url = response.getResponseHeaders().get("Location").get(0);
-                    webTestClient.get().uri(url)
-                            .exchange()
-                            .expectStatus().isOk()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = new String(redirectResponse.getResponseBody());
-                                assertThat(body.contains("댓글 내용 수정됨")).isTrue();
-                            });
-                }));
-
-    }
-
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAll();
-        articleRepository.deleteAll();
-
     }
 }

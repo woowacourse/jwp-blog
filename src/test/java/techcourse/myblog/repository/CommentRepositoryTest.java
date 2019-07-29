@@ -32,7 +32,7 @@ class CommentRepositoryTest {
 
         flushAndClearEntityManager();
 
-        List<Comment> actualComment = commentRepository.findByArticle(persistArticle);
+        List<Comment> actualComment = commentRepository.findAllByArticle(persistArticle);
         assertThat(actualComment.size()).isEqualTo(1);
     }
 
