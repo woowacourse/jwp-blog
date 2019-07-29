@@ -6,6 +6,9 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleDto;
 import techcourse.myblog.domain.article.ArticleDtos;
 import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserDto;
+import techcourse.myblog.domain.user.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -17,7 +20,12 @@ public class ArticleService {
     @Autowired
     private ArticleRepository articleRepository;
 
-    public long createArticle(ArticleDto articleDto) {
+    @Autowired
+    private UserRepository userRepository;
+
+    public long createArticle(ArticleDto articleDto, long userId) {
+        Optional<User> maybeUser = userRepository.findById(userId);
+        maybeUser.ifPresent(user -> articleDto.setUserDto(UserDto.from(user)));
         Article article = articleRepository.save(articleDto.toEntity());
         return article.getId();
     }

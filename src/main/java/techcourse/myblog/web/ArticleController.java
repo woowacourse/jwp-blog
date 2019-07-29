@@ -5,8 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.article.ArticleDto;
+import techcourse.myblog.domain.user.UserDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CategoryService;
+import techcourse.myblog.service.UserService;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class ArticleController {
@@ -16,6 +20,9 @@ public class ArticleController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/articles/new")
     public String showArticleWritingPage(Model model) {
         model.addAttribute("categories", categoryService.readAll());
@@ -23,9 +30,9 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/new")
-    public String create(ArticleDto articleDto) {
-        long articleId = articleService.createArticle(articleDto);
-
+    public String create(ArticleDto articleDto, HttpSession session) {
+        Object userId = session.getAttribute("userId");
+        long articleId = articleService.createArticle(articleDto, (long) userId);
         return "redirect:/articles/" + articleId;
     }
 

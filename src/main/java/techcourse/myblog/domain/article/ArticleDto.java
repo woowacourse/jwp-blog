@@ -3,6 +3,8 @@ package techcourse.myblog.domain.article;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserDto;
 
 import java.util.Objects;
 
@@ -14,17 +16,19 @@ public class ArticleDto {
     private String coverUrl;
     private String contents;
     private long categoryId;
+    private UserDto userDto;
 
     public ArticleDto() {
     }
 
     @Builder
-    public ArticleDto(long id, String title, String coverUrl, String contents, long categoryId) {
+    public ArticleDto(long id, String title, String coverUrl, String contents, long categoryId, UserDto userDto) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
         this.categoryId = categoryId;
+        this.userDto = userDto;
     }
 
     public static ArticleDto from(Article article) {
@@ -33,7 +37,9 @@ public class ArticleDto {
                 .title(article.getTitle())
                 .coverUrl(article.getCoverUrl())
                 .contents(article.getContents())
-                .categoryId(article.getCategoryId()).build();
+                .categoryId(article.getCategoryId())
+                .userDto(UserDto.from(article.getAuthor()))
+                .build();
     }
 
     public Article toEntity() {
@@ -42,7 +48,9 @@ public class ArticleDto {
                 .title(this.title)
                 .coverUrl(this.coverUrl)
                 .contents(this.contents)
-                .categoryId(this.categoryId).build();
+                .categoryId(this.categoryId)
+                .author(userDto != null ? userDto.toEntity() : null)
+                .build();
     }
 
     @Override

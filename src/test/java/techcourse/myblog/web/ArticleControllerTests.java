@@ -13,7 +13,10 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.article.ArticleDto;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,15 +29,26 @@ public class ArticleControllerTests {
     private static String contents = "testtest";
     private static String categoryId = "1";
 
+    private static final String name = "미스터코";
+    private static final String email = "test@test.com";
+    private static final String password = "123123123";
+
     @Autowired
     private WebTestClient webTestClient;
 
     private static long articleId;
 
+    private String JSSESIONID;
+
     @BeforeEach
     void setUp() {
+        if (JSSESIONID == null) {
+            JSSESIONID = getJSSESIONID(name, email, password);
+        }
+
         webTestClient.post()
                 .uri("/articles/new")
+                .cookie("JSESSIONID", JSSESIONID)
                 .body(createFormData(ArticleDto.class, title, coverUrl, contents, categoryId))
                 .exchange()
                 .expectHeader()
@@ -46,6 +60,7 @@ public class ArticleControllerTests {
     @Test
     public void showArticleById() {
         webTestClient.get().uri("/articles/" + articleId)
+                .cookie("JSESSIONID", JSSESIONID)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -53,6 +68,7 @@ public class ArticleControllerTests {
     @Test
     public void updateArticleById() {
         webTestClient.get().uri("/articles/" + articleId + "/edit")
+                .cookie("JSESSIONID", JSSESIONID)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -77,6 +93,7 @@ public class ArticleControllerTests {
         AtomicLong addId = new AtomicLong();
         webTestClient.post()
                 .uri("/articles/new")
+                .cookie("JSESSIONID", JSSESIONID)
                 .body(createFormData(ArticleDto.class, title, coverUrl, contents, categoryId))
                 .exchange()
                 .expectHeader()
@@ -94,18 +111,46 @@ public class ArticleControllerTests {
     void tearDown() {
         webTestClient.delete()
                 .uri("/articles/" + articleId)
+                .cookie("JSESSIONID", JSSESIONID)
                 .exchange()
                 .expectStatus().isFound();
     }
 
     private <T> BodyInserters.FormInserter<String> createFormData(Class<T> classType, String... parameters) {
         BodyInserters.FormInserter<String> body = BodyInserters.fromFormData(Strings.EMPTY, Strings.EMPTY);
-
         for (int i = 1; i < classType.getDeclaredFields().length; i++) {
-            System.out.println(classType.getDeclaredFields()[i].getName());
-            body.with(classType.getDeclaredFields()[i].getName(), parameters[i - 1]);
+            if (classType.getDeclaredFields()[i].getName() != "userDto") {
+                body.with(classType.getDeclaredFields()[i].getName(), parameters[i - 1]);
+            }
         }
 
         return body;
+    }
+
+
+    private String getJSSESIONID(String name, String email, String password) {
+        List<String> result = new ArrayList<>();
+
+        webTestClient.post()
+                .uri("/signup")
+                .body(BodyInserters
+                        .fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password))
+                .exchange();
+
+        webTestClient.post()
+                .uri("/login")
+                .body(BodyInserters
+                        .fromFormData("email", email)
+                        .with("password", password))
+                .exchange()
+                .expectHeader()
+                .value("Set-Cookie", cookie -> result.add(cookie));
+
+        return Stream.of(result.get(0).split(";"))
+                .filter(it -> it.contains("JSESSIONID"))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException(""))
+                .split("=")[1];
     }
 }

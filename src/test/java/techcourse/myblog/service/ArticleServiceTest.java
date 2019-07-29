@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.domain.article.ArticleDto;
 import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.user.UserRepository;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -19,6 +20,9 @@ import static org.mockito.Mockito.when;
 class ArticleServiceTest {
     @Mock
     private ArticleRepository articleRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private ArticleService articleService;
@@ -36,7 +40,8 @@ class ArticleServiceTest {
     @Test
     void 게시글_생성() {
         when(articleRepository.save(articleDto.toEntity())).thenReturn(articleDto.toEntity());
-        assertThat(articleService.createArticle(articleDto)).isEqualTo(articleId);
+        when(userRepository.findById(0l)).thenReturn(Optional.empty());
+        assertThat(articleService.createArticle(articleDto, 0)).isEqualTo(articleId);
     }
 
     @Test
@@ -79,6 +84,7 @@ class ArticleServiceTest {
         return ArticleDto.builder()
                 .id(id)
                 .categoryId(categoryId)
+                .userDto(null)
                 .build();
     }
 

@@ -4,10 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import techcourse.myblog.domain.user.User;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -22,16 +19,21 @@ public class Article {
     private String contents;
     private long categoryId;
 
+    @ManyToOne
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    private User author;
+
     public Article() {
     }
 
     @Builder
-    public Article(long id, String title, String coverUrl, String contents, long categoryId) {
+    public Article(long id, String title, String coverUrl, String contents, long categoryId, User author) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
         this.categoryId = categoryId;
+        this.author = author;
     }
 
     public void update(Article article) {
