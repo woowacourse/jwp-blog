@@ -38,6 +38,18 @@ class UserControllerTest {
                 .returnResult();
     }
 
+    EntityExchangeResult<byte[]> signup(final String username, final String email, final String password) {
+        return webTestClient
+                .post().uri("/users")
+                .body(BodyInserters
+                        .fromFormData("username", username)
+                        .with("email", email)
+                        .with("password", password))
+                .exchange()
+                .expectBody()
+                .returnResult();
+    }
+
     String extractJSessionId(final EntityExchangeResult<byte[]> loginResult) {
         final String[] cookies = loginResult.getResponseHeaders().get(SET_COOKIE).stream()
                 .filter(it -> it.contains(JSESSIONID))
@@ -81,9 +93,25 @@ class UserControllerTest {
                 .isNotEqualTo(extractJSessionId(logoutResult));
     }
 
-//    @Test
-//    void 회원가입_정상() {
-//
-//    }
+    @Test
+    void 회원가입_삼고초려() {
+        EntityExchangeResult<byte[]> signupTry;
+
+        // 너무 짧은 이름
+        signupTry = signup("a", "a@a.com", PASSWORD);
+        assertThat(signupTry.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        // 패스워드 규칙 위반
+        signupTry = signup("abc", "a@a.com", "1234");
+        assertThat(signupTry.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        // 중복 이메일
+        signupTry = signup(USERNAME, EMAIL, PASSWORD);
+        assertThat(signupTry.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        // 가입 성공
+        signupTry = signup(USERNAME, "a@a.com", PASSWORD);
+        assertThat(signupTry.getStatus()).isEqualTo(HttpStatus.FOUND);
+    }
 }
 

@@ -74,16 +74,18 @@ public class UserController {
 
     @Transactional
     @PostMapping(ROUTE_USERS)
-    public String signup(final Model model, @Valid UserDto userDto, final Errors errors) {
+    public String signup(final Model model, @Valid UserDto userDto, final Errors errors, final HttpServletResponse response) {
         if (errors.hasErrors()) {
             final FieldError error = errors.getFieldError();
             LOG.debug("클라이언트에서 전송된 필드에 오류 있음: {}", error.getDefaultMessage());
             model.addAttribute(ERROR, error.getDefaultMessage());
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return ROUTE_SIGNUP;
         }
         if (isDuplicatedEmail(userDto.getEmail())) {
             LOG.debug("중복 이메일 계정: {}", userDto.getEmail());
             model.addAttribute(ERROR, DUPLICATED_EMAIL);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return ROUTE_SIGNUP;
         }
         final User user = new User(userDto);
