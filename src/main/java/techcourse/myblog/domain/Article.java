@@ -15,7 +15,7 @@ public class Article {
     private String contents;
     private String coverUrl;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
@@ -70,11 +70,15 @@ public class Article {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return Objects.equals(id, article.id);
+        return Objects.equals(id, article.id) &&
+                Objects.equals(title, article.title) &&
+                Objects.equals(contents, article.contents) &&
+                Objects.equals(coverUrl, article.coverUrl) &&
+                Objects.equals(author, article.author);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, title, contents, coverUrl, author);
     }
 }
