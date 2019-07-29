@@ -2,6 +2,7 @@ package techcourse.myblog.domain.article;
 
 import lombok.Builder;
 import lombok.Getter;
+import techcourse.myblog.domain.user.User;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,6 +39,9 @@ public class Article {
         this.coverUrl = article.getCoverUrl();
         this.contents = article.getContents();
         this.categoryId = article.getCategoryId();
+    }
+
+    public void setAuthor(User persistUser) {
     }
 
     @Override

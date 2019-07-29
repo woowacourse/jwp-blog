@@ -1,5 +1,6 @@
 package techcourse.myblog.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,19 +25,22 @@ class ArticleServiceTest {
 
     private final long articleId = 3;
     private final long categoryId = 1;
+    private ArticleDto articleDto;
+
+
+    @BeforeEach
+    void setUp() {
+        articleDto = getArticleDto(articleId, categoryId);
+    }
 
     @Test
     void 게시글_생성() {
-        ArticleDto articleDto = getArticleDto(articleId, categoryId);
-
         when(articleRepository.save(articleDto.toEntity())).thenReturn(articleDto.toEntity());
         assertThat(articleService.createArticle(articleDto)).isEqualTo(articleId);
     }
 
     @Test
     void 게시글_조회() {
-        ArticleDto articleDto = getArticleDto(articleId, categoryId);
-
         when(articleRepository.findById(articleId)).thenReturn(Optional.of(articleDto.toEntity()));
         assertThat(articleService.readById(articleId)).isEqualTo(articleDto);
     }
@@ -44,10 +48,9 @@ class ArticleServiceTest {
     @Test
     void 게시글_업데이트() {
         ArticleDto inArticleDto = getArticleDto(5, categoryId);
-        ArticleDto outArticleDto = getArticleDto(articleId, categoryId);
 
-        when(articleRepository.findById(articleId)).thenReturn(Optional.of(outArticleDto.toEntity()));
-        assertThat(articleService.updateByArticle(articleId, inArticleDto)).isEqualTo(outArticleDto);
+        when(articleRepository.findById(articleId)).thenReturn(Optional.of(articleDto.toEntity()));
+        assertThat(articleService.updateByArticle(articleId, inArticleDto)).isEqualTo(articleDto);
     }
 
     @Test
