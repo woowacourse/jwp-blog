@@ -38,7 +38,7 @@ public class Article {
 
     @LastModifiedDate
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime updateDate;
+    private LocalDateTime modifiedDate;
 
     @Builder
     private Article(final String title, final String contents, final String coverUrl) {
@@ -48,7 +48,7 @@ public class Article {
     }
 
     void update(Article other) {
-        this.updateDate = LocalDateTime.now();
+        this.modifiedDate = LocalDateTime.now();
         this.title = other.title;
         this.coverUrl = other.coverUrl;
         this.contents = other.contents;
