@@ -13,6 +13,10 @@ public class CommentDto {
         return contents;
     }
 
+    public void setContents(String contents) {
+        this.contents = contents;
+    }
+
     public Comment toEntity() {
         return new Comment(contents);
     }
