@@ -16,11 +16,11 @@ class CommentRepositoryTest {
     private static final String TEST_CONTENTS = "Naeyong";
     private static final Article TEST_ARTICLE = new Article(TEST_TITLE, TEST_COVER_URL, TEST_CONTENTS);
     private static final String TEST_NAME = "도나쓰";
-    private static final String TEST_EMAIL = "donuts@woowa.com";
+    private static final String TEST_EMAIL = "testdonut@woowa.com";
     private static final String TEST_PASSWORD = "qwer1234";
-    private static final String TEST_EMAIL_2 = "2" + TEST_EMAIL;
     private static final User TEST_USER = new User(TEST_NAME, TEST_EMAIL, TEST_PASSWORD);
-    private static final User TEST_USER_2 = new User(TEST_NAME, TEST_EMAIL_2, TEST_PASSWORD);
+    private static final String _TEST_EMAIL = "test" + TEST_EMAIL;
+    private static final User _TEST_USER = new User(TEST_NAME, _TEST_EMAIL, TEST_PASSWORD);
 
     @Autowired
     private CommentRepository commentRepository;
@@ -42,12 +42,12 @@ class CommentRepositoryTest {
     }
 
     @Test
-    public void commentWriteFindByUserTest() {
-        User persistentUser = testEntityManager.persist(TEST_USER_2);
+    public void commentWriteFindByCommentTest() {
+        User persistentUser = testEntityManager.persist(_TEST_USER);
         Comment persistentComment = testEntityManager.persist(new Comment(persistentUser, "ㅎㅇ"));
         testEntityManager.flush();
         testEntityManager.clear();
         Comment actualComment = commentRepository.findById(persistentComment.getId()).get();
-        assertThat(actualComment.getAuthor().getEmail()).isEqualTo(TEST_EMAIL_2);
+        assertThat(actualComment.getAuthor().getEmail()).isEqualTo(_TEST_EMAIL);
     }
 }

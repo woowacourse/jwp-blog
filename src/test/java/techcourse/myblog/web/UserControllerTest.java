@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserControllerTest {
     private static final String TEST_NAME = "도나쓰";
-    private static final String TEST_EMAIL = "donuts@woowa.com";
+    private static final String TEST_EMAIL = "testdonut@woowa.com";
     private static final String TEST_PASSWORD = "qwer1234";
     private static final User TEST_USER = new User(TEST_NAME, TEST_EMAIL, TEST_PASSWORD);
 
@@ -54,7 +54,7 @@ class UserControllerTest {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/login").session(session))
                 .andDo(print())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -133,7 +133,7 @@ class UserControllerTest {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/profile"))
                 .andDo(print())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl("/login"));
     }
 
     @Test
@@ -143,7 +143,7 @@ class UserControllerTest {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/profile/edit"))
                 .andDo(print())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl("/login"));
     }
 
     @Test
@@ -174,9 +174,9 @@ class UserControllerTest {
 
     @Test
     void cancelProfileTest() throws Exception {
-        mockMvc.perform(get("/profile"))
+        mockMvc.perform(delete("/profile"))
                 .andDo(print())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl("/login"));
         assertThat(userRepository.findByEmail(TEST_EMAIL).isPresent()).isTrue();
         mockMvc.perform(delete("/profile").session(session))
                 .andDo(print())
