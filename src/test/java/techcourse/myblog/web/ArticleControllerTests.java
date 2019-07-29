@@ -236,6 +236,37 @@ public class ArticleControllerTests {
                 });
     }
 
+    @Test
+    void 댓글_삭제_테스트() {
+        webTestClient.get()
+                .uri("/articles/1")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains("FourthComment")).isTrue();
+                });
+
+        webTestClient.delete()
+                .uri("/comments/4")
+                .exchange()
+                .expectStatus()
+                .isFound();
+
+        webTestClient.get()
+                .uri("/articles/1")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains("FourthComment")).isFalse();
+                });
+    }
+
     private void testSaveNewArticle(String title, String coverUrl, String contents) {
         webTestClient.post()
                 .uri("/articles")
