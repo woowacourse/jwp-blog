@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.request.ArticleDto;
 import techcourse.myblog.dto.request.UserDto;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
@@ -74,7 +75,7 @@ public class ArticleControllerTests {
 	@Test
 	void canNotSaveArticle() {
 		StatusAssertions statusAssertions = articlePutOrPostRequest(HttpMethod.POST, "/articles", title, coverUrl, contents);
-		checkRedirect(statusAssertions, "Location", ".+/");
+		checkRedirect(statusAssertions, "Location", ".+/login");
 	}
 
 	@Test
@@ -99,9 +100,11 @@ public class ArticleControllerTests {
 		requestWithSession(HttpMethod.GET, "/articles" + articleId).isOk();
 	}
 
+	//Todo : 본인이 아닐 때
 	@Test
 	void deleteArticle() {
-		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+		ArticleDto articleDto = new ArticleDto(title, contents, coverUrl);
+		Long articleId = articleRepository.save(articleDto.valueOfArticle(user)).getId();
 		StatusAssertions statusAssertions = requestWithSession(HttpMethod.DELETE, "/articles/" + articleId);
 		checkRedirect(statusAssertions, "Location", ".+/");
 		assertThat(articleRepository.findById(articleId)).isEmpty();
@@ -140,9 +143,11 @@ public class ArticleControllerTests {
 				.expectStatus();
 	}
 
+	//Todo : 본인이 아닐 때
 	@Test
 	void updateArticle() {
-		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+		ArticleDto articleDto = new ArticleDto(title, contents, coverUrl);
+		Long articleId = articleRepository.save(articleDto.valueOfArticle(user)).getId();
 		StatusAssertions statusAssertions = articlePutOrPostRequestWithSession(HttpMethod.PUT, "/articles/" + articleId, "updatedTitle", "updatedCoverUrl", "updatedContents");
 		checkRedirect(statusAssertions, "Location", ".+/articles/[1-9][0-9]*");
 	}
