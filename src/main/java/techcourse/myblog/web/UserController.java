@@ -52,11 +52,7 @@ public class UserController {
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        List<UserResponse> users = new ArrayList<>();
-        for (User user : userService.findAll()) {
-            users.add(new UserResponse(user.getName(), user.getEmail()));
-        }
-        model.addAttribute(USERS_INFO, users);
+        model.addAttribute(USERS_INFO, userService.findAll());
 
         return "user-list";
     }
@@ -79,9 +75,7 @@ public class UserController {
             return "login";
         }
 
-        User user = userService.findUserByEmail(userLoginRequest);
-
-        httpSession.setAttribute(USER_INFO, user);
+        httpSession.setAttribute(USER_INFO, userService.findUserByEmail(userLoginRequest));
 
         return "redirect:/";
     }
@@ -98,8 +92,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "mypage-edit";
         }
-        User user = userService.editUserName(userId, userEditRequest.getName());
-        request.getSession().setAttribute(USER_INFO, user);
+        request.getSession().setAttribute(USER_INFO, userService.editUserName(userId, userEditRequest.getName()));
 
         return "redirect:/";
     }
