@@ -12,12 +12,12 @@ import java.util.List;
 
 @Service
 public class ArticleService {
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
     private final ArticleAssembler articleAssembler;
 
-    public ArticleService(ArticleRepository articleRepository) {
+    public ArticleService(ArticleRepository articleRepository, ArticleAssembler articleAssembler) {
         this.articleRepository = articleRepository;
-        this.articleAssembler = ArticleAssembler.getInstance();
+        this.articleAssembler = articleAssembler;
     }
 
     public List<ArticleDto> findAll() {
