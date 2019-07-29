@@ -3,15 +3,22 @@ package techcourse.myblog.service.dto.user;
 import java.util.Objects;
 
 public class UserResponseDto {
+    private Long id;
     private String email;
     private String name;
 
-    public UserResponseDto(final String email, final String name) {
+    public UserResponseDto(final Long id, final String email, final String name) {
+        Objects.requireNonNull(id);
         Objects.requireNonNull(email);
         Objects.requireNonNull(name);
 
+        this.id = id;
         this.email = email;
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {

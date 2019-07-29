@@ -14,7 +14,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String name;
 
     @Column(nullable = false)
@@ -27,6 +27,10 @@ public class User {
         this.email = Objects.requireNonNull(email);
         this.name = Objects.requireNonNull(name);
         this.password = Objects.requireNonNull(password);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -53,14 +57,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(password, user.password);
+        return Objects.equals(id, user.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, name, password);
+        return Objects.hash(id);
     }
 }

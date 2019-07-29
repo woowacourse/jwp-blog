@@ -3,11 +3,11 @@ package techcourse.myblog.service.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.user.User;
+import techcourse.myblog.exception.DuplicatedEmailException;
+import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.presentation.UserRepository;
 import techcourse.myblog.service.dto.user.UserRequestDto;
 import techcourse.myblog.service.dto.user.UserResponseDto;
-import techcourse.myblog.exception.DuplicatedEmailException;
-import techcourse.myblog.exception.EmailNotFoundException;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +37,12 @@ public class UserService {
         return convertToDto(userRepository.save(user));
     }
 
+    public UserResponseDto findById(Long id) {
+        User retrieveUser = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        return convertToDto(retrieveUser);
+    }
+
     public List<UserResponseDto> findAll() {
         return userRepository.findAll().stream()
                 .map(UserAssembler::convertToDto)
@@ -44,14 +50,14 @@ public class UserService {
     }
 
     public UserResponseDto update(final String email, final String name) {
-        User retrieveUser = userRepository.findByEmail(Objects.requireNonNull(email)).orElseThrow(EmailNotFoundException::new);
+        User retrieveUser = userRepository.findByEmail(Objects.requireNonNull(email)).orElseThrow(UserNotFoundException::new);
         retrieveUser.update(Objects.requireNonNull(name));
         return convertToDto(retrieveUser);
     }
 
     public void delete(final UserResponseDto user) {
-        User retrieveUser = userRepository.findByEmail(Objects.requireNonNull(user).getEmail())
-                .orElseThrow(EmailNotFoundException::new);
+        User retrieveUser = userRepository.findById(Objects.requireNonNull(user).getId())
+                .orElseThrow(UserNotFoundException::new);
         userRepository.delete(retrieveUser);
     }
 }
