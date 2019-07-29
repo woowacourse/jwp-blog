@@ -23,9 +23,11 @@ public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     private ArticleService articleService;
+    private CommentService commentService;
 
     ArticleController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/new")
@@ -45,6 +47,7 @@ public class ArticleController {
     public String showArticle(@PathVariable Long articleId, Model model) {
         Article article = articleService.findArticle(articleId);
         model.addAttribute("article", article);
+        model.addAttribute("comments", commentService.findAll(article));
         return "article";
     }
 
@@ -66,8 +69,24 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{articleId}")
-    public String deleteArticle(@PathVariable Long articleId) {
-        articleService.deleteArticle(articleId);
+    public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
+        User author = (User) httpSession.getAttribute("user");
+        articleService.deleteArticle(articleId, author);
+        return "redirect:/";
+    }
+
+
+    @PostMapping("/{articleId}/comment/new")
+    public String createComment(@PathVariable Long articleId, CommentDto commentDto, Model model, HttpSession httpSession) {
+        User author = (User) httpSession.getAttribute("user");
+        Article article = articleService.findArticle(articleId);
+        commentService.createComment(commentDto, article, author);
+        return "redirect:/articles/" + articleId;
+    }
+
+    @ExceptionHandler(InvalidAuthorException.class)
+    public String handleInvalidAuthorException(InvalidAuthorException e) {
+        log.error(e.getMessage());
         return "redirect:/";
     }
 }
