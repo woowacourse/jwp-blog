@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.ArticleRepository;
 
 import java.util.Collections;
@@ -26,5 +27,10 @@ public class ArticleReadService {
     public Article findById(Long articleId) {
         return articleRepository.findById(articleId)
                 .orElseThrow(() -> new NotFoundArticleException("존재하지 않는 게시글입니다."));
+    }
+
+    public Article findByIdAndAuthor(Long articleId, User user) {
+        return articleRepository.findByIdAndAuthor(articleId, user)
+                .orElseThrow(() -> new MismatchAuthorException("작성자만 접근할 수 있습니다."));
     }
 }
