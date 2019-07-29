@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Entity
+@Table(name = "user")
 public class User {
     private static final Pattern NAME_VALIDATION = Pattern.compile("[a-zA-Z가-힣]+");
     private static final int MIN_NAME_LENGTH = 2;
@@ -13,6 +14,7 @@ public class User {
     private static final int MIN_PASSWORD_LENGTH = 8;
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
@@ -71,5 +73,9 @@ public class User {
 
     public boolean authenticate(String password) {
         return this.password.equals(password);
+    }
+
+    public long getId() {
+        return id;
     }
 }

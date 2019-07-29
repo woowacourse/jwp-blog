@@ -1,8 +1,10 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.CommentRepository;
+import techcourse.myblog.domain.User;
 
 @Service
 public class CommentService {
@@ -12,8 +14,8 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public long write(Comment toWrite) {
-        return commentRepository.save(toWrite).getId();
+    public Comment write(Article article, User user, String contents) {
+        return commentRepository.save(new Comment(article,user,contents));
     }
 
     public boolean tryUpdate(long commentId, Comment toUpdate) {

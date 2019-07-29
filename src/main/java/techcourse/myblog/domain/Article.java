@@ -2,18 +2,21 @@ package techcourse.myblog.domain;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "article")
 public class Article {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String title;
     private String coverUrl;
     private String contents;
-    @OneToMany
+    @OneToMany(mappedBy = "article")
     private List<Comment> comments = new ArrayList<>();
 
     public Article() {}
@@ -44,13 +47,6 @@ public class Article {
         return this.contents;
     }
 
-    public void writeComment(Comment comment) {
-        comments.add(comment);
-    }
-
-    public List<Comment> getComments() {
-        return this.comments;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -69,5 +65,13 @@ public class Article {
     @Override
     public int hashCode() {
         return Objects.hash(this.id, this.title, this.coverUrl, this.contents);
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void writeComment(Comment comment) {
+        comments.add(comment);
     }
 }

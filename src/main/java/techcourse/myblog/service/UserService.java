@@ -1,13 +1,11 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -17,15 +15,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> ifLoggedIn(HttpSession session) {
-        return userRepository.findByEmail((String) session.getAttribute("email"));
-    }
-
-    public boolean tryRender(Model model, HttpSession session) {
-        return ifLoggedIn(session).map(user -> {
-                                        model.addAttribute("user", user);
-                                        return true;
-                                    }).orElse(false);
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).get();
     }
 
     public boolean tryLogin(String email, String password, HttpSession session) {
@@ -36,10 +27,6 @@ public class UserService {
                                 session.setAttribute("email", user.getEmail());
                                 return true;
                             }).orElse(false);
-    }
-
-    public void logout(HttpSession session) {
-        session.invalidate();
     }
 
     public Iterable<User> loadEveryUsers() {
@@ -60,26 +47,19 @@ public class UserService {
     }
 
     @Transactional
-    public UserQueryResult tryUpdate(String name, String email, HttpSession session) {
-        return ifLoggedIn(session).map(user -> {
-            if (user.emailChanged(email) && userRepository.findByEmail(email).isPresent()) {
-                return UserQueryResult.EMAIL_ALREADY_TAKEN;
-            }
-            try {
-                user.update(name, email);
-                session.setAttribute("name", name);
-                session.setAttribute("email", email);
-                return UserQueryResult.SUCCESS;
-            } catch (IllegalArgumentException e) {
-                return UserQueryResult.INVALID_INPUT;
-            }
-        }).orElse(UserQueryResult.IS_NOT_LOGGED_IN);
+    public UserQueryResult tryUpdate(String editedName, String editedEmail, String currentEmail) {
+        if (!editedEmail.equals(currentEmail) && userRepository.findByEmail(editedEmail).isPresent()) {
+            return UserQueryResult.EMAIL_ALREADY_TAKEN;
+        }
+        try {
+            userRepository.findByEmail(currentEmail).get().update(editedName, editedEmail);
+            return UserQueryResult.SUCCESS;
+        } catch (IllegalArgumentException e) {
+            return UserQueryResult.INVALID_INPUT;
+        }
     }
 
-    public void tryDelete(HttpSession session) {
-        ifLoggedIn(session).ifPresent(user -> {
-                                userRepository.delete(user);
-                                session.invalidate();
-                            });
+    public void delete(String email) {
+        userRepository.deleteByEmail(email);
     }
 }

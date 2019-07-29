@@ -18,13 +18,19 @@ public class UserController {
         this.userService = userService;
     }
 
+    private String getEmailFromSession(HttpSession session) {
+        return (String) session.getAttribute("email");
+    }
+
+    private void clearSession(HttpSession session) {
+        session.removeAttribute("email");
+        session.removeAttribute("name");
+    }
+
     @GetMapping("/login")
-    public String loginForm(@RequestParam(required = false) String errorMessage, Model model, HttpSession session) {
-        return userService.ifLoggedIn(session).map(ifExists -> "redirect:/")
-                                            .orElseGet(() -> {
-                                                model.addAttribute("errorMessage", errorMessage);
-                                                return "login-form";
-                                            });
+    public String loginForm(@RequestParam(required = false) String errorMessage, Model model) {
+        model.addAttribute("errorMessage", errorMessage);
+        return "login-form";
     }
 
     @PostMapping("/login")
@@ -46,7 +52,7 @@ public class UserController {
 
     @GetMapping("/logout")
     public RedirectView logout(HttpSession session) {
-        userService.logout(session);
+        clearSession(session);
         return new RedirectView("/");
     }
 
@@ -82,7 +88,8 @@ public class UserController {
 
     @GetMapping("/profile")
     public String profile(Model model, HttpSession session) {
-        return userService.tryRender(model, session) ? "mypage" : "redirect:/";
+        model.addAttribute("user", userService.getUserByEmail(getEmailFromSession(session)));
+        return "mypage";
     }
 
     @GetMapping("/profile/edit")
@@ -94,7 +101,8 @@ public class UserController {
         if (errorMessage != null) {
             model.addAttribute("errorMessage", errorMessage);
         }
-        return userService.tryRender(model, session) ? "mypage-edit" : "redirect:/";
+        model.addAttribute("user", userService.getUserByEmail(getEmailFromSession(session)));
+        return "mypage-edit";
     }
 
     @PutMapping("/profile/edit")
@@ -104,12 +112,11 @@ public class UserController {
             HttpSession session,
             RedirectAttributes redirectAttributes
     ) {
-        final UserQueryResult result = userService.tryUpdate(name, email, session);
+        final UserQueryResult result = userService.tryUpdate(name, email, getEmailFromSession(session));
         if (result == UserQueryResult.SUCCESS) {
+            session.setAttribute("name", name);
+            session.setAttribute("email", email);
             return new RedirectView("/profile");
-        }
-        if (result == UserQueryResult.IS_NOT_LOGGED_IN) {
-            return new RedirectView("/login");
         }
         redirectAttributes.addFlashAttribute(
                 "errorMessage",
@@ -120,7 +127,8 @@ public class UserController {
 
     @DeleteMapping("/profile")
     public RedirectView cancelProfile(HttpSession session) {
-        userService.tryDelete(session);
+        userService.delete(getEmailFromSession(session));
+        clearSession(session);
         return new RedirectView("/");
     }
 }

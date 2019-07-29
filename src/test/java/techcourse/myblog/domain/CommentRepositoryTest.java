@@ -15,8 +15,8 @@ class CommentRepositoryTest {
     private static final String TEST_COVER_URL = "Baegyung";
     private static final String TEST_CONTENTS = "Naeyong";
     private static final Article TEST_ARTICLE = new Article(TEST_TITLE, TEST_COVER_URL, TEST_CONTENTS);
-    private static final String TEST_NAME = "donut";
-    private static final String TEST_EMAIL = "donut@woowa.com";
+    private static final String TEST_NAME = "도나쓰";
+    private static final String TEST_EMAIL = "donuts@woowa.com";
     private static final String TEST_PASSWORD = "qwer1234";
     private static final String TEST_EMAIL_2 = "2" + TEST_EMAIL;
     private static final User TEST_USER = new User(TEST_NAME, TEST_EMAIL, TEST_PASSWORD);

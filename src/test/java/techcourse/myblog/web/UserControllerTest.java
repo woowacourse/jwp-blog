@@ -21,8 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class UserControllerTest {
-    private static final String TEST_NAME = "donut";
-    private static final String TEST_EMAIL = "donut@woowa.com";
+    private static final String TEST_NAME = "도나쓰";
+    private static final String TEST_EMAIL = "donuts@woowa.com";
     private static final String TEST_PASSWORD = "qwer1234";
     private static final User TEST_USER = new User(TEST_NAME, TEST_EMAIL, TEST_PASSWORD);
 
