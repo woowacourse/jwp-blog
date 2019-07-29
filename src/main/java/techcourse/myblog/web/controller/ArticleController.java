@@ -5,22 +5,29 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.ArticleWriteService;
+import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.LoginUser;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequestMapping("/articles")
 @Controller
 public class ArticleController {
     private final ArticleReadService articleReadService;
     private final ArticleWriteService articleWriteService;
+    private final CommentService commentService;
 
-    public ArticleController(ArticleReadService articleReadService, ArticleWriteService articleWriteService) {
+    public ArticleController(ArticleReadService articleReadService,
+                             ArticleWriteService articleWriteService,
+                             CommentService commentService) {
         this.articleReadService = articleReadService;
         this.articleWriteService = articleWriteService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/writing")
@@ -28,6 +35,7 @@ public class ArticleController {
         return "article-edit";
     }
 
+    //todo: BindException 처리 (ControllerAdvice 분할..?)
     @PostMapping("/write")
     public RedirectView createArticle(LoginUser loginUser, @Valid ArticleDto articleDto) {
         articleDto.setAuthor(loginUser.getUser());
@@ -38,7 +46,9 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable long articleId, Model model) {
         Article article = articleReadService.findById(articleId);
+        List<Comment> comments = commentService.findByArticleId(articleId);
         model.addAttribute("article", article);
+        model.addAttribute("comments", comments);
         return "article";
     }
 
