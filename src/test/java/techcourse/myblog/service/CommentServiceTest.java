@@ -60,6 +60,16 @@ class CommentServiceTest {
         assertThat(updatedComment.getComment()).isEqualTo("UPDATE Comment");
     }
 
+    @Test
+    void deleteComment() {
+        Long userId = 1L;
+        CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
+        Comment comment = commentService.save(1L, commentRequestDto);
+
+        commentService.delete(userId, comment.getId());
+        assertThat(commentService.findCommentsByArticleId(articleId).size()).isEqualTo(0);
+    }
+
     @AfterEach
     void tearDown() {
         commentService.deleteAll();

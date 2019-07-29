@@ -12,6 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CommentControllerTest {
     private static final Long SAMPLE_ARTICLE_ID = 1L;
     private static final Long SAMPLE_COMMENT_ID = 1L;
+    private static final Long SAMPLE_DELETE_COMMENT_ID = 2L;
 
     @Autowired
     WebTestClient webTestClient;
@@ -58,7 +59,7 @@ class CommentControllerTest {
         String updateComment = "update comment";
 
         webTestClient.put()
-                .uri("/comment/" + SAMPLE_COMMENT_ID.toString())
+                .uri("/articles/" + SAMPLE_ARTICLE_ID + "/comment/" + SAMPLE_COMMENT_ID)
                 .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                 .body(BodyInserters.fromFormData("comment", updateComment)
                         .with("articleId", SAMPLE_ARTICLE_ID.toString()))
@@ -73,6 +74,27 @@ class CommentControllerTest {
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
                     assertThat(body.contains(updateComment)).isTrue();
+                });
+    }
+
+    @Test
+    void deleteComment() {
+        String deleteComment = "delete comment";
+
+        webTestClient.delete()
+                .uri("/articles/" + SAMPLE_ARTICLE_ID + "/comment/" + SAMPLE_DELETE_COMMENT_ID)
+                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location", ".*/articles/" + SAMPLE_ARTICLE_ID + ".*");
+
+        webTestClient.get().uri("/articles/" + SAMPLE_ARTICLE_ID.toString())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body).doesNotContain(deleteComment);
                 });
     }
 }

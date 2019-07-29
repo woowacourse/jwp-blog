@@ -1,6 +1,7 @@
 package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,13 +30,20 @@ public class CommentController {
         return "redirect:/articles/" + commentRequestDto.getArticleId();
     }
 
-    @PutMapping("/comment/{id}")
-    public String updateComment(@PathVariable("id") Long commentId,
+    @PutMapping("/articles/{articleId}/comment/{commentId}")
+    public String updateComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
                                 CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
-
         Long userId = getLoggedInUser(httpServletRequest).getId();
         commentService.update(userId, commentId, commentRequestDto);
-        return "redirect:/articles/" + commentRequestDto.getArticleId();
+        return "redirect:/articles/" + articleId;
+    }
+
+    @DeleteMapping("/articles/{articleId}/comment/{commentId}")
+    public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
+                                HttpServletRequest httpServletRequest) {
+        Long userId = getLoggedInUser(httpServletRequest).getId();
+        commentService.delete(userId, commentId);
+        return "redirect:/articles/" + articleId;
     }
 
     private UserPublicInfoDto getLoggedInUser(HttpServletRequest httpServletRequest) {
