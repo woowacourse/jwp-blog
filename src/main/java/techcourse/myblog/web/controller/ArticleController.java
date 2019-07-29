@@ -44,7 +44,7 @@ public class ArticleController {
 
     @GetMapping("/{articleId}/edit")
     public String editArticleForm(LoginUser loginUser, @PathVariable Long articleId, Model model) {
-        Article article = articleWriteService.findByIdAndAuthor(articleId, loginUser.getUser());
+        Article article = articleReadService.findByIdAndAuthor(articleId, loginUser.getUser());
         model.addAttribute("article", article);
         return "article-edit";
     }
@@ -59,7 +59,7 @@ public class ArticleController {
 
     @DeleteMapping("/{articleId}")
     public RedirectView deleteArticle(LoginUser loginUser, @PathVariable Long articleId) {
-        articleWriteService.findByIdAndAuthor(articleId, loginUser.getUser());  //todo : 리턴값 활용하지 않음..
+        articleReadService.findByIdAndAuthor(articleId, loginUser.getUser());  //todo : 리턴값 활용하지 않음..
         articleWriteService.removeById(articleId);
         return new RedirectView("/");
     }
