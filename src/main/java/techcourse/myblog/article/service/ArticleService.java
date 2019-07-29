@@ -44,7 +44,7 @@ public class ArticleService {
 
     public long update(long articleId, ArticleDto.Updation articleDto, long authorId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        if (!article.matchAuthorId(authorId)) {
+        if (article.notMatchAuthorId(authorId)) {
             throw new NotMatchUserException();
         }
         article.update(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
@@ -53,7 +53,7 @@ public class ArticleService {
 
     public void deleteById(long articleId, long authorId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        if (!article.matchAuthorId(authorId)) {
+        if (article.notMatchAuthorId(authorId)) {
             throw new NotMatchUserException();
         }
         articleRepository.deleteById(articleId);

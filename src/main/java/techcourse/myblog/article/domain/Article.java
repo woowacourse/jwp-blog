@@ -39,7 +39,7 @@ public class Article {
         this.contents = contents;
     }
 
-    public boolean matchAuthorId(long authorId) {
-        return author.getId() == authorId;
+    public boolean notMatchAuthorId(long authorId) {
+        return author.getId() != authorId;
     }
 }
