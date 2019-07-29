@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.service.dto.ArticleDTO;
 
@@ -19,8 +20,13 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable("articleId") Long articleId, Model model) {
-        model.addAttribute("article", articleRepository.findById(articleId).get());
+        Article article = articleRepository.findById(articleId).orElseThrow(() ->
+                new NotFoundArticleException("게시물이 없습니다"));
+
+        model.addAttribute("article", article);
+        model.addAttribute("comments", article.getComments());
         model.addAttribute("articleId", articleId);
+
         return "article";
     }
 
