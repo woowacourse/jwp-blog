@@ -51,7 +51,7 @@ class LoginControllerTests {
                         .fromFormData("email", userSaveParams.getEmail())
                         .with("password", userSaveParams.getPassword()))
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().is3xxRedirection();
     }
 
     @Test

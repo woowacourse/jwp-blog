@@ -6,8 +6,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleSaveParams;
 import techcourse.myblog.service.ArticleService;
+
+import javax.servlet.http.HttpSession;
+
+import static techcourse.myblog.util.SessionKeys.USER;
 
 @Slf4j
 @Controller
@@ -22,9 +27,9 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String saveArticle(ArticleSaveParams articleSaveParams) {
+    public String saveArticle(ArticleSaveParams articleSaveParams, HttpSession httpSession) {
         log.info("save article post request params={}", articleSaveParams);
-        Article article = articleService.save(articleSaveParams.toEntity());
+        Article article = articleService.save(articleSaveParams.toEntity(), (User) httpSession.getAttribute(USER));
         Long id = article.getId();
         return "redirect:/articles/" + id;
     }

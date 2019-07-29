@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleSaveParams;
 import techcourse.myblog.exception.ArticleNotFoundException;
 
@@ -17,15 +18,27 @@ class ArticleServiceTest {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private UserService userService;
+
+    private User author;
     private Article article;
 
     @BeforeEach
     void setUp() {
+        author = User.builder()
+                .name("이름")
+                .email("test123@test.com")
+                .password("asdfas1!")
+                .build();
+        userService.save(author);
+
         article = articleService.save(Article.builder()
                 .title("title")
                 .coverUrl("coverUrl")
                 .contents("contents")
-                .build());
+                .build(), author);
     }
 
     @Test
@@ -42,7 +55,7 @@ class ArticleServiceTest {
                 .coverUrl("newCoverUrl")
                 .contents("newContents")
                 .build();
-        Article savedArticle = articleService.save(newArticle);
+        Article savedArticle = articleService.save(newArticle, author);
 
         assertThat(savedArticle.getTitle()).isEqualTo(newArticle.getTitle());
         assertThat(savedArticle.getCoverUrl()).isEqualTo(newArticle.getCoverUrl());
@@ -80,7 +93,7 @@ class ArticleServiceTest {
                 .coverUrl("newCoverUrl")
                 .contents("newContents")
                 .build();
-        Article savedArticle = articleService.save(newArticle);
+        Article savedArticle = articleService.save(newArticle, author);
         Long id = savedArticle.getId();
 
         articleService.deleteById(id);
@@ -91,5 +104,6 @@ class ArticleServiceTest {
     @AfterEach
     void tearDown() {
         articleService.deleteById(article.getId());
+        userService.deleteUser(author.getId());
     }
 }
