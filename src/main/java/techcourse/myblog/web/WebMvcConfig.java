@@ -7,30 +7,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    private final ArticleInterceptor articleInterceptor;
-    private final UserInterceptor userInterceptor;
+    private final LoginInterceptor loginInterceptor;
+    private final LogoutInterceptor logoutInterceptor;
 
     @Autowired
-    public WebMvcConfig(ArticleInterceptor articleInterceptor, UserInterceptor userInterceptor) {
-        this.articleInterceptor = articleInterceptor;
-        this.userInterceptor = userInterceptor;
+    public WebMvcConfig(LoginInterceptor loginInterceptor, LogoutInterceptor logoutInterceptor) {
+        this.loginInterceptor = loginInterceptor;
+        this.logoutInterceptor = logoutInterceptor;
     }
-
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(authLoginInterceptor)
-//                .addPathPatterns("/**");
-//    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(userInterceptor)
+        registry.addInterceptor(loginInterceptor)
+                .addPathPatterns("/login")
+                .addPathPatterns("/users/new");
+
+        registry.addInterceptor(logoutInterceptor)
                 .addPathPatterns("/users/**")
-                .excludePathPatterns("/users/signup")
-                .excludePathPatterns("/users/new");
-
-
-        registry.addInterceptor(articleInterceptor)
+                .excludePathPatterns("/users/new")
                 .addPathPatterns("/articles/**");
     }
 

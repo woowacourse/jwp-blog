@@ -23,10 +23,10 @@ public class ArticleServiceTest {
     @Autowired
     private ArticleService articleService;
 
-    @MockBean
+    @MockBean(name = "articleRepository")
     private ArticleRepository articleRepository;
 
-    @MockBean
+    @MockBean(name = "httpSession")
     private HttpSession httpSession;
 
     private User user = new User();

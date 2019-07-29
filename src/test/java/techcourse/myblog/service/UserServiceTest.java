@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
-public class userServiceTest {
+public class UserServiceTest {
 
     @MockBean(name = "userRepository")
     private UserRepository userRepository;

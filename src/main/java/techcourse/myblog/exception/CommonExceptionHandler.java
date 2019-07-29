@@ -19,12 +19,12 @@ public class CommonExceptionHandler {
     }
 
 
-    @ExceptionHandler(UnacceptablePathException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleUnacceptablePathException(UnacceptablePathException e) {
-        log.error(e.getMessage());
-        return "redirect:/login";
-    }
+//    @ExceptionHandler(UnacceptablePathException.class)
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    public String handleUnacceptablePathException(UnacceptablePathException e) {
+//        log.error(e.getMessage());
+//        return "redirect:/login";
+//    }
 
 
 }

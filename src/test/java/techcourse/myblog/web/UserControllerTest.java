@@ -80,14 +80,14 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void 로그인_전_유점_리스트_확인() {
+    void 로그인_전_유저_리스트_확인() {
         getRequest("/users")
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*/login.*");
     }
 
     @Test
-    void 로그인_후_유점_리스트_확인() {
+    void 로그인_후_유저_리스트_확인() {
         String jSessionId = getJSessionId("Martin", "martin@gmail.com", password);
 
         webTestClient.get().uri("/users")

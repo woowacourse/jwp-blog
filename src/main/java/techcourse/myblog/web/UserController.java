@@ -28,17 +28,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/signup")
+    @GetMapping("/new")
     public String showSignUpPage() {
         return "signup";
     }
 
     @PostMapping("/new")
     public String createUser(@Valid UserDto userDto, BindingResult bindingResult) throws NotValidUserInfoException {
-        //TODO 이 코드 ServiceLayer로 이동
-        if (bindingResult.hasErrors()) {
-            throw new NotValidUserInfoException(bindingResult.getFieldError().getDefaultMessage());
-        }
+        checkValidUser(bindingResult);
         userService.createNewUser(userDto);
         return "redirect:/login";
     }
@@ -90,6 +87,12 @@ public class UserController {
         log.error(e.getMessage());
         model.addAttribute("error", e.getMessage());
         return "mypage-edit";
+    }
+
+    private void checkValidUser(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new NotValidUserInfoException(bindingResult.getFieldError().getDefaultMessage());
+        }
     }
 
 }
