@@ -29,7 +29,7 @@ public class Article {
     private String coverUrl;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_article_to_user"), nullable = false)
     private User author;
 
     @CreatedDate
