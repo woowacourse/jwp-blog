@@ -5,8 +5,6 @@ import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.exception.SignUpException;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,9 +29,6 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY, mappedBy = "author")
-    private List<Article> articles;
-
     public User() {
     }
 
@@ -41,7 +36,6 @@ public class User {
         this.name = validateName(name);
         this.password = validatePassword(password);
         this.email = email;
-        this.articles = new ArrayList<>();
     }
 
     private String validatePassword(String password) {
@@ -76,14 +70,6 @@ public class User {
         return email;
     }
 
-    public List<Article> getArticles() {
-        return articles;
-    }
-
-    public void addArticle(Article persistArticle) {
-        this.articles.add(persistArticle);
-    }
-
     public void updateNameAndEmail(UserRequestDto userRequestDto) {
         this.name = userRequestDto.getName();
         this.email = userRequestDto.getEmail();
@@ -98,11 +84,14 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id);
+        return Objects.equals(id, user.id) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, name, password, email);
     }
 }
