@@ -95,8 +95,14 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView createComment(@PathVariable final Long articleId, HttpSession session, @PathVariable final Long commentId) {
+    public RedirectView deleteComment(@PathVariable final Long articleId, HttpSession session, @PathVariable final Long commentId) {
         commentService.delete(commentId, (User) session.getAttribute("user"));
+        return new RedirectView("/articles/" + articleId);
+    }
+
+    @PutMapping("/articles/{articleId}/comments/{commentId}")
+    public RedirectView updateComment(String content, @PathVariable final Long articleId, @PathVariable final Long commentId, HttpSession session) {
+        commentService.update(content, commentId, (User) session.getAttribute("user"));
         return new RedirectView("/articles/" + articleId);
     }
 }

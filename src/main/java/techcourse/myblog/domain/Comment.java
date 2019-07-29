@@ -31,6 +31,10 @@ public class Comment {
         createdAt = LocalDateTime.now();
     }
 
+    public void update(final String content) {
+        this.content = content;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
