@@ -1,5 +1,9 @@
 package techcourse.myblog.service.dto.article;
 
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.service.dto.user.UserRequestDto;
+import techcourse.myblog.service.dto.user.UserResponseDto;
+
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
