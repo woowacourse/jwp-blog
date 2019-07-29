@@ -1,27 +1,19 @@
 package techcourse.myblog.web.dto;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
+@Data
+@Slf4j
 public class ArticleDto {
     private long id;
-
     private String title;
     private String contents;
     private String coverUrl;
-
-    public ArticleDto(String title, String contents, String coverUrl) {
-        this.title = title;
-        this.contents = contents;
-        this.coverUrl = coverUrl;
-    }
 
     public Article toArticle(User author) {
         if(id != 0 ){

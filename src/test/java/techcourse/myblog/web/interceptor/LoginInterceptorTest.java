@@ -29,6 +29,11 @@ class LoginInterceptorTest extends MyblogApplicationTests {
     }
 
     @Test
+    void 비로그인시_articles_writing_접근시_로그인으로_리다이렉트_확인() throws Exception{
+        mockMvc.perform(delete("/articles/writing")).andDo(print()).andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
     void 비로그인시_article_edit으로_접근시_로그인으로_리다이렉트_확인() throws Exception {
         mockMvc.perform(get("/articles/1/edit")).andDo(print()).andExpect(redirectedUrl("/login"));
     }
@@ -47,4 +52,5 @@ class LoginInterceptorTest extends MyblogApplicationTests {
     void 비로그인시_delete_article_로그인으로_리다이렉트_확인() throws Exception{
         mockMvc.perform(delete("/articles/1")).andDo(print()).andExpect(redirectedUrl("/login"));
     }
+
 }

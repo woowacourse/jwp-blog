@@ -8,7 +8,7 @@
 <body>
 <div>
     <div th:replace="fragments/main/header :: header"></div>
-    <form th:action="${article != null ? '/articles/' + article.id : '/articles' }" name="article" th:method="${article != null ? 'put' : 'post'}"
+    <form th:action="${article != null ? '/articles/' + article.id : '/articles' }" name="articleDto" th:method="${article != null ? 'put' : 'post'}"
           accept-charset="utf-8">
 <!--        <input type="hidden" name="_method" value="put"/>-->
         <input type="hidden" name="id" th:if="${article}" th:value="${article.id}"/>
@@ -19,10 +19,10 @@
                     <div class="width-80">
                         <input type="text" name="title"
                                class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
-                               th:value="${article != null ? article.title : ''}" placeholder="제목을 입력해주세요" autocomplete="off">
+                               th:value="${article?.title}" placeholder="제목을 입력해주세요" autocomplete="off">
                         <input type="text" name="coverUrl"
                                class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
-                               th:value="${article != null ? article.coverUrl : ''}" placeholder="배경 url을 입력해주세요" autocomplete="off">
+                               th:value="${article?.coverUrl}" placeholder="배경 url을 입력해주세요" autocomplete="off">
                     </div>
                 </div>
             </div>

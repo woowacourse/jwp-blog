@@ -11,6 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.apache.commons.lang3.StringEscapeUtils;
+import techcourse.myblog.domain.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,21 +28,30 @@ public class ArticleControllerTests {
     private static String defaultContents = "2나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 \"선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?\"였다.";
     private static String testUniContents = StringEscapeUtils.escapeJava(testContents);
     private static String defaultUniContents = StringEscapeUtils.escapeJava(defaultContents);
+    private String defaultName = "default";
+    private String defaultPassword = "abcdEFGH123!@#";
+    private String defaultEmail = "default@default.com";
+    private LoginControllerTest loginControllerTest;
+    @Autowired
+    private UserRepository userRepository;
+    String cookie;
 
     @Autowired
     public ArticleControllerTests(WebTestClient webTestClient) {
         this.webTestClient = webTestClient;
+        this.loginControllerTest = new LoginControllerTest(this.webTestClient, this.userRepository);
     }
 
     @BeforeEach
     void setUp() {
 //        saveTestArticle();
+        cookie = loginControllerTest.getLoginCookie(defaultEmail, defaultPassword);
     }
 
     @Test
     void showArticleWritingPageTest() {
         webTestClient.get()
-                .uri("/writing")
+                .uri("/articles/writing").header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -50,7 +60,7 @@ public class ArticleControllerTests {
     @Test
     void saveArticlePageTest() {
         webTestClient.post()
-                .uri("/articles")
+                .uri("/articles").header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", testTitle)
@@ -62,7 +72,7 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     String redirectUrl = response.getResponseHeaders().getLocation().toString();
-                    webTestClient.get().uri(redirectUrl)
+                    webTestClient.get().uri(redirectUrl)//.header("Cookie", cookie)
                             .exchange()
                             .expectStatus()
                             .isOk()
@@ -107,16 +117,18 @@ public class ArticleControllerTests {
 
     @Test
     void updateArticleByIdPageTest() {
+        String updateId = "1";
         String updatedTitle = "포비의 글";
         String updatedCoverUrl = "http://www.kinews.net/news/photo/200907/bjs.jpg";
         String updatedContents = "나는 우아한형제들에서 짱이다.";
         String updatedUniContents = StringEscapeUtils.escapeJava(updatedContents);
 
         webTestClient.put()
-                .uri("/articles/1")
+                .uri("/articles/1").header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", updatedTitle)
+                        .with("id", updateId)
                         .with("coverUrl", updatedCoverUrl)
                         .with("contents", updatedContents))
                 .exchange()
@@ -153,7 +165,7 @@ public class ArticleControllerTests {
     @Test
     void deleteArticleByIdTest() {
         webTestClient.post()
-                .uri("/articles")
+                .uri("/articles").header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", testTitle)
@@ -175,7 +187,7 @@ public class ArticleControllerTests {
     @Test
     void showArticleEditingPage() {
         webTestClient.get()
-                .uri("/articles/1/edit")
+                .uri("/articles/1/edit").header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk()

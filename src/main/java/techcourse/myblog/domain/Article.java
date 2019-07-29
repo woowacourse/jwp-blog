@@ -28,6 +28,7 @@ public class Article {
     }
 
     public Article(Long id, String title, String contents, String coverUrl, User author) {
+        this.id = id;
         this.title = title;
         this.contents = contents;
         this.coverUrl = coverUrl;

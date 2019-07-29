@@ -4,18 +4,18 @@
 
 - [x] ~~방향 관계 결정 - 양방향? 단반향? 결정 : 단방향, 주인은 article~~
 - [x] ~~연관관계 매핑 설정(Article)~~
-- [ ] 비 로그인 유저가 /articles/{articleId}/* 로 접근하면 안되게 구현
+- [x] ~~비 로그인 유저가 /articles/{articleId}/* 로 접근하면 안되게 구현~~
 - [x] ~~비 로그인 유저가 GET /articles/{articleId} 는 접근가능하게 구현~~
 - [x] ~~비 로그인 유저가 GET /articles/{articleId} 접근 가능한 테스트~~
 - [x] ~~비 로그인 유저가 GET /articles/{articleId}/edit으로 접근하면 "/login"로 보내는 테스트~~
 - [x] ~~비 로그인 유저가 PUT /articles/{articleId}으로 접근하면 "/login"로 보내는 테스트~~
 - [x] ~~비 로그인 유저가 DELETE /articles/{articleId}으로 접근하면 "/login"로 보내는 테스트~~
-- [ ] 비 로그인 유저가 쓰기버튼 접근하면 "/login"으로 보내는 구현
-- [ ] 비 로그인 유저가 쓰기버튼 접근하면 "/login"으로 보내는 테스트
-- [ ] 홈에서 비 로그인유저한텐 게시글 작성 버튼 노출 안되게 구현
+- [x] ~~비 로그인 유저가 쓰기버튼 접근하면 "/login"으로 보내는 구현~~
+- [x] ~~비 로그인 유저가 쓰기버튼 접근하면 "/login"으로 보내는 테스트~~
+- [x] ~~홈에서 비 로그인유저한텐 게시글 작성 버튼 노출 안되게 구현~~
 - [x] ~~articleDto 생성~~
-- [ ] articleDto를 사용하도록 controller 변경
-- [ ] articleDto를 사용하도록 thymeleaf 변경
+- [x] ~~articleDto를 사용하도록 controller 변경~~
+- [x] ~~기존 article 테스트 모두 돌아가게 변경 (로그인 한 후 실행하도록 변경)~~
 - [ ] 비 로그인 유저가 GET /articles/{articleId} 는 접근했을 때 수정 버튼 안보이는지 테스트
 - [ ] 로그인 유저가 자기 글이 아닌 GET /articles/{articleId} 에 접근했을 때 수정 버튼 안보이는지 테스트
 - [ ] 자기 글이 아닌 GET /articles/{articleId} 에 접근했을 때 수정 버튼 보이는지 테스트

@@ -6,7 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.web.dto.ArticleDto;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -19,16 +22,17 @@ public class ArticleController {
         this.articleRepository = articleRepository;
     }
 
-    @GetMapping("/writing")
+    @GetMapping("/articles/writing")
     public String showArticleWritingPage() {
         return "article-edit";
     }
 
     @PostMapping("/articles")
-    public String saveArticlePage(Article article) {
-        log.debug(">>> save article : {}", article);
+    public String saveArticlePage(HttpSession httpSession, ArticleDto articleDto) {
+        log.debug(">>> save article : {}", articleDto);
+        User user = (User)httpSession.getAttribute("user");
 
-        articleRepository.save(article);
+        Article article = articleRepository.save(articleDto.toArticle(user));
         return "redirect:/articles/" + article.getId();
     }
 
@@ -54,9 +58,12 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticleByIdPage(Article article) {
-        log.debug(">>> Article : {}", article);
-        articleRepository.save(article);
+    public String updateArticleByIdPage(HttpSession httpSession, ArticleDto articleDto) {
+        log.debug(">>> put ArticleDto : {}", articleDto);
+        User user = (User)httpSession.getAttribute("user");
+        log.debug(">>> put Article before save: {}",articleDto.toArticle(user));
+        Article article = articleRepository.save(articleDto.toArticle(user));
+        log.debug(">>> put Article : {}", article);
         return "redirect:/articles/" + article.getId();
     }
 
