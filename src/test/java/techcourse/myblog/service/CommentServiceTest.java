@@ -15,21 +15,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CommentServiceTest {
+    private static final String EMAIL = "aiden1@naver.com";
 
     @Autowired
     private CommentService commentService;
     private Comment beforeComment;
     private User user;
-    private UserDto userDto;
     @Autowired
     private UserService userService;
 
     @BeforeEach
     void setUp() {
-        userDto = new UserDto("aiden",
-                "aiden1@naver.com",
+        UserDto userDto = new UserDto("aiden",
+                EMAIL,
                 "aiden3");
         user = userService.save(userDto);
+        beforeComment = commentService.save(new CommentDto(user, "brand new comment"));
     }
 
     @Test
@@ -39,5 +40,12 @@ class CommentServiceTest {
         );
         assertThat(commentService.findById(comment.getId()))
                 .isEqualTo(comment);
+    }
+
+    @Test
+    void 수정_테스트() {
+        CommentDto newCommentDto = new CommentDto(user, "asdf");
+        Comment newComment = commentService.update(beforeComment.getId(), newCommentDto);
+        assertThat(newComment.getContents()).isEqualTo("asdf");
     }
 }
