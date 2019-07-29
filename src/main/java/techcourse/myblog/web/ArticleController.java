@@ -5,16 +5,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.dto.ArticleDto;
 
 @Controller
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
     private final ArticleService articleService;
+    private final CommentService commentService;
 
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/")
@@ -30,7 +34,9 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String show(@PathVariable Long articleId, Model model) {
-        model.addAttribute("article", articleService.findById(articleId));
+        Article article = articleService.findById(articleId);
+        model.addAttribute("article", article);
+        model.addAttribute("comments", commentService.findByArticle(article));
         return "article";
     }
 
