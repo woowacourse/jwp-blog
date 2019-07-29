@@ -145,7 +145,7 @@
                                     <p class="width-80" th:text="${comment.contents}">브라운 멋져</p>
                                 </div>
                                 <form accept-charset="utf-8" method="post"
-                                      th:action="'/articles/' + ${article.id} + '/comments/'"
+                                      th:action="'/articles/' + ${article.id} + '/comments/' +${comment.id}"
                                       th:if="${editCommentId} == ${comment.id}">
                                     <div class="add-comment">
                                         <input id="comment-contents2" name="contents" type="hidden">
