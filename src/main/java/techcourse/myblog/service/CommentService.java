@@ -34,7 +34,9 @@ public class CommentService {
         return commentRepository.save(selectedComment.update(commentDto));
     }
 
-    public void delete(Long commentId) {
+    public Long delete(Long commentId) {
+        Long articleId = findById(commentId).getArticleId();
         commentRepository.deleteById(commentId);
+        return articleId;
     }
 }
