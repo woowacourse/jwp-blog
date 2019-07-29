@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techcourse.myblog.article.domain.Article;
-import techcourse.myblog.comment.dto.CommentDto;
 import techcourse.myblog.user.domain.User;
 
 import javax.persistence.*;
