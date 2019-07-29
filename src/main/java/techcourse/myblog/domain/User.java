@@ -13,20 +13,22 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode(of = {"id"})
 @ToString
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email", name = "uniqueEmailConstraint")}
+)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotNull
+    @Column(nullable = false)
     private String name;
-    @NotNull
+    @Column(nullable = false)
     private String password;
-    @NotNull
-    @Column(unique = true)
+    @Column(nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "author")  // User가 종속적인 엔티티이고, Article이 주인 엔티티
-    private List<Article> articles = new ArrayList<>();
+//    @OneToMany(mappedBy = "author")  // User가 종속적인 엔티티이고, Article이 주인 엔티티
+//    private List<Article> articles = new ArrayList<>();
 
     public User(String name, String password, String email) {
         this.name = name;
@@ -45,7 +47,7 @@ public class User {
                 && password.equals(userRequestDto.getPassword());
     }
 
-    public void addArticle(Article persistArticle) {
-        this.articles.add(persistArticle);
-    }
+//    public void addArticle(Article persistArticle) {
+//        this.articles.add(persistArticle);
+//    }
 }

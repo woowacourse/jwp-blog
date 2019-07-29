@@ -4,7 +4,6 @@ import lombok.*;
 import techcourse.myblog.service.dto.ArticleRequestDto;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @NoArgsConstructor
@@ -15,11 +14,11 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotNull
+    @Column(nullable = false)
     private String title;
-    @NotNull
+    @Column(nullable = false)
     private String contents;
-    @NotNull
+    @Column(nullable = false)
     private String coverUrl;
 
     @ManyToOne
