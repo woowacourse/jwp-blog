@@ -63,7 +63,7 @@
         viewer: true,
         height: '100%',
         initialValue: initValue
-    })
+    });
 
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
@@ -71,13 +71,11 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
+                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
             }
         },
         height: '200px'
     });
-
-
-
 </script>
 </body>
 </html>

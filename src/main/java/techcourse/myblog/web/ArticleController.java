@@ -37,12 +37,15 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}")
     public String getArticle(@PathVariable long articleId, Model model) {
         ModelUtil.addAttribute(model, "article", articleService.findArticle(articleId));
+        ModelUtil.addAttribute(model, "comments", articleService.getCommentsByArticleId(articleId));
+
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String getEditArticle(@PathVariable long articleId, Model model) {
         ModelUtil.addAttribute(model, "article", articleService.findArticle(articleId));
+
         return "article-edit";
     }
 
@@ -54,9 +57,10 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String getModifiedArticle(@PathVariable long articleId, ArticleRequestDto articleRequestDto, Model model) {
-        ModelUtil.addAttribute(model, "article", articleService.update(articleId, articleRequestDto));
-        return "article";
+    public String modifyArticle(@PathVariable long articleId, ArticleRequestDto articleRequestDto) {
+        articleService.update(articleId, articleRequestDto);
+
+        return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}")

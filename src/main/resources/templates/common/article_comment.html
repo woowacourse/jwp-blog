@@ -1,42 +1,37 @@
 <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
     <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
         <span class="font-size-16">댓글</span>
-        <span class="font-size-16 text-info">2</span>
+        <span th:text="${#lists.size(comments)}" class="font-size-16 text-info"></span>
     </div>
     <div class="comment">
-        <ul class="list-unstyled list-info">
+        <ul th:each="comment : ${comments}" class="list-unstyled list-info">
             <li class="comment-item border bottom mrg-btm-30">
                 <img alt=""
                      class="thumb-img img-circle"
                      src="https://avatars3.githubusercontent.com/u/50367798?v=4">
                 <div class="info">
-                    <span class="text-bold inline-block" href="">Jun</span>
+                    <span th:text="${comment.commenter.name}" class="text-bold inline-block" href=""></span>
                     <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
+                                    <span th:text="${comment.date}">6 min ago</span>
                             </span>
-                    <p class="width-80">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로 살다
-                        보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄
-                        수 있는 계기가 되었다.</p>
+                    <p th:text="${comment.contents}" class="width-80"></p>
                 </div>
             </li>
-
-            <li class="comment-item border bottom mrg-btm-30">
-                <img alt="" class="thumb-img img-circle"
-                     src="https://avatars2.githubusercontent.com/u/3433096?v=4">
-                <div class="info">
-                    <span class="text-bold inline-block" href="">Jun</span>
-                    <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
-                                </span>
-                    <p class="width-80">브라운 멋져</p>
-                </div>
-            </li>
-
         </ul>
-        <div class="add-comment">
-            <div id="editSection"></div>
-        </div>
+
+        <form th:action="@{/comment/{articleId}(articleId=${article.id})}" th:method="post">
+            <div class="add-comment">
+                <div id="editSection"></div>
+                <input id="comment-contents" name="contents" type="hidden">
+            </div>
+            <div class="col-lg-1 col-md-1">
+                <div class="btn-group btn-group-vertical">
+                    <button class="btn btn-default" id="save-btn" type="submit">
+                        <i class="ti-save"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

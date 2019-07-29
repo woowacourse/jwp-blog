@@ -7,12 +7,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.ArticleException;
 import techcourse.myblog.exception.UserException;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.utils.converter.DtoConverter;
 import techcourse.myblog.utils.page.PageRequest;
@@ -29,10 +31,12 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
-    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository) {
+    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository, CommentRepository commentRepository) {
         this.articleRepository = articleRepository;
         this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Transactional(readOnly = true)
@@ -59,15 +63,23 @@ public class ArticleService {
         return article;
     }
 
-    @Transactional()
+    @Transactional
     public Article update(long articleId, ArticleRequestDto articleRequestDto) {
         Article originArticle = findArticle(articleId);
         originArticle.update(DtoConverter.convert(articleRequestDto));
         return originArticle;
     }
 
-    @Transactional()
+    @Transactional
     public void delete(long articleId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(ArticleException::new);
+        commentRepository.deleteAllByArticle(article);
         articleRepository.deleteById(articleId);
+    }
+
+    @Transactional
+    public List<Comment> getCommentsByArticleId(Long articleId){
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException());
+        return commentRepository.findByArticle(article);
     }
 }
