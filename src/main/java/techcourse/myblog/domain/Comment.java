@@ -74,4 +74,8 @@ public class Comment {
     public boolean isSameAuthor(String email) {
         return this.author.getEmail().equals(email);
     }
+
+    public void changeContents(String contents) {
+        this.contents = contents;
+    }
 }

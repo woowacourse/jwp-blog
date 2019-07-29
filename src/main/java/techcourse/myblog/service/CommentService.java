@@ -8,6 +8,7 @@ import techcourse.myblog.service.exception.CommentNotFoundException;
 import techcourse.myblog.service.exception.NoArticleException;
 import techcourse.myblog.service.exception.NoUserException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -42,5 +43,10 @@ public class CommentService {
 
     public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
+    }
+
+    @Transactional
+    public void updateComment(Comment comment, CommentRequest commentRequest) {
+        comment.changeContents(commentRequest.getContents());
     }
 }

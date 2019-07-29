@@ -79,14 +79,13 @@
                     <ul class="list-unstyled list-info">
                         <li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
                             <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
-
                             <div class="info">
                                 <span class="text-bold inline-block" th:text="${comment.author.name}"></span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span th:text="${#temporals.format(comment.updatedTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
                                 </span>
-                                <p class="width-80" th:text="${comment.contents}"></p>
+                                <p class="width-80" th:id="'commentContents'+${comment.id}" th:text="${comment.contents}"></p>
                                 <div class="comment-button" style = "margin-bottom:90px">
                                     <form method="post" th:action="'/articles/' + ${article.id} + '/comments/' + ${comment.id}">
                                         <input name="_method" type="hidden" value="delete" />
@@ -94,9 +93,17 @@
                                             <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
                                         </button>
                                     </form>
-                                    <a href="" class="float-right pointer btn btn-icon">
-                                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                                    </a>
+                                    <form th:id="'comment-update-form'+${comment.id}" th:action="'/articles/' + ${article.id} + '/comments/' + ${comment.id}" method="post">
+                                        <input name="_method" type="hidden" value="put"/>
+                                        <input class= "none" type="text" th:id="'content-input' + ${comment.id}" th:value="${comment.contents}" name="contents">
+                                    </form>
+                                    <button th:id="'show-button' + ${comment.id}" th:onclick="'showCommentInput(' + ${comment.id} + ')'" class="float-right pointer btn btn-icon">
+                                        수정
+                                        <!--<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>-->
+                                    </button>
+                                    <button th:id="'update-button' + ${comment.id}" th:onclick="'updateComment(' + ${comment.id} + ')'" class="none float-right pointer btn btn-icon">
+                                        확인
+                                    </button>
                                 </div>
                             </div>
                         </li>
@@ -145,6 +152,30 @@
         }
         document.getElementById("commentContents").value = contents;
         document.getElementById("commentForm").submit();
+    }
+
+    function showCommentInput(commentId){
+        let commentContents = document.querySelector("#commentContents" + commentId);
+        let showButton = document.querySelector("#show-button" + commentId);
+        let updateButton = document.querySelector("#update-button" + commentId);
+        let contentInput = document.querySelector("#content-input" + commentId);
+
+        contentInput.classList.remove("none");
+        showButton.classList.add("none");
+        commentContents.classList.add("none");
+        updateButton.classList.remove("none");
+    }
+
+    function updateComment(commentId){
+        let commentUpdateForm = document.querySelector("#comment-update-form" + commentId);
+        let contentInput = document.querySelector("#content-input" + commentId);
+
+        if (contentInput.value === "") {
+            alert("내용을 입력하세요!")
+            return;
+        }
+
+        commentUpdateForm.submit();
     }
 </script>
 </body>
