@@ -82,15 +82,12 @@
     function submitForm(){
         var password = document.querySelector("#password").value;
         var passwordCheck = document.querySelector("#password-check").value;
-
         if(password !== passwordCheck){
             alert("잘못된 비밀번호입니다");
             return false;
         }
-
         document.querySelector("#user-form").submit();
     }
-
 </script>
 </body>
 </html>
