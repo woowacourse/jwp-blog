@@ -7,24 +7,23 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import techcourse.myblog.interceptor.CertificationInterceptor;
+import techcourse.myblog.interceptor.AuthenticatedInterceptor;
 
 @Configuration
-public class CertificationWebMvcConfig implements WebMvcConfigurer {
+public class AuthenticatedConfig implements WebMvcConfigurer {
 
-    @Qualifier(value = "certificationInterceptor")
+    @Qualifier(value = "authenticatedInterceptor")
     private HandlerInterceptor handlerInterceptor;
 
     @Autowired
-    public CertificationWebMvcConfig(CertificationInterceptor certificationInterceptor) {
-        this.handlerInterceptor = certificationInterceptor;
+    public AuthenticatedConfig(AuthenticatedInterceptor authenticatedInterceptor) {
+        this.handlerInterceptor = authenticatedInterceptor;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(handlerInterceptor)
-                .addPathPatterns("/mypage/**")
-                .addPathPatterns("/articles/**")
-                .addPathPatterns("/logout");
+                .addPathPatterns("/signup")
+                .addPathPatterns("/login");
     }
 }
