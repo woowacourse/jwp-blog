@@ -3,6 +3,7 @@ package techcourse.myblog.domain;
 import techcourse.myblog.web.dto.ArticleDto;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,7 +23,7 @@ public class Article {
 
     @OneToMany
     @JoinColumn(name = "comments", foreignKey = @ForeignKey(name = "fk_article_to_comment"))
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     public Article() {
     }
@@ -58,6 +59,10 @@ public class Article {
 
     public void setAuthor(User persistUser) {
         this.author = persistUser;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
     }
 
     @Override
