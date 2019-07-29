@@ -1,8 +1,8 @@
 package techcourse.myblog.articles.comments;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.articles.Article;
 import techcourse.myblog.users.User;
 
@@ -21,11 +21,11 @@ public class Comment {
     @Lob
     private String contents;
 
-    @CreatedDate
+    @CreationTimestamp
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
     private LocalDateTime regDate;
 
-    @LastModifiedDate
+    @UpdateTimestamp
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime modifiedDate;
 
