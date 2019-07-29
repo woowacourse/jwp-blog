@@ -13,7 +13,7 @@ public class AuthExceptionAdvice {
     private static final Logger log = LoggerFactory.getLogger(AuthExceptionAdvice.class);
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(AuthException.class)
     public String common(Exception e) {
 
         log.info(e.toString());
