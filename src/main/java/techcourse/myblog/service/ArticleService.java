@@ -1,9 +1,10 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+
+import java.util.Optional;
 
 @Service
 public class ArticleService {
@@ -13,11 +14,8 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public boolean tryRender(long articleId, Model model) {
-        return articleRepository.findById(articleId).map(article -> {
-                                                            model.addAttribute("article", article);
-                                                            return true;
-                                                        }).orElse(false);
+    public Optional<Article> maybeArticle(long articleId) {
+        return articleRepository.findById(articleId);
     }
 
     public Iterable<Article> loadEveryArticles() {

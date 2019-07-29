@@ -33,12 +33,19 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String read(@PathVariable long articleId, Model model) {
-        return articleService.tryRender(articleId, model) ? "article" : "redirect:/";
+        return articleService.maybeArticle(articleId).map(article -> {
+            model.addAttribute("article", article);
+            model.addAttribute("comment", article.getComments());
+            return "article";
+        }).orElse("redirect:/");
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String updateForm(@PathVariable long articleId, Model model) {
-        return articleService.tryRender(articleId, model) ? "article-edit" : "redirect:/";
+        return articleService.maybeArticle(articleId).map(article -> {
+            model.addAttribute("article", article);
+            return "article-edit";
+        }).orElse("redirect:/");
     }
 
     @PutMapping("/articles/{articleId}")
