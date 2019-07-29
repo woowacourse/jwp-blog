@@ -106,6 +106,22 @@ class ArticleControllerTests extends BaseControllerTests {
                 .expectHeader().valueMatches("location", ".*/articles/" + articleId);
     }
 
+    @Test
+    void 다른_사용자가_edit_시도_예외처리() {
+        String title = "1";
+        String coverUrl = "2";
+        String contents = "3";
+
+        webTestClient.put().uri("/articles/" + articleId)
+                .cookie(JSESSIONID, getJSessionId())
+                .body(BodyInserters.fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectHeader().valueMatches("location", ".*/");
+    }
+
     @AfterEach
     void tearDown() {
         webTestClient.delete().uri("/articles/" + articleId)

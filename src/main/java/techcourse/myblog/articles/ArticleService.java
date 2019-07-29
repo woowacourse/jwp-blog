@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.advice.AuthException;
 import techcourse.myblog.users.User;
 import techcourse.myblog.users.UserRepository;
 
@@ -74,7 +75,7 @@ public class ArticleService {
 
     private void validateAuthor(final User user, final Article article) {
         if (!article.isWrittenBy(user)) {
-            throw new IllegalArgumentException("작성자가 아닙니다.");
+            throw new AuthException("작성자가 아닙니다.");
         }
     }
 }
