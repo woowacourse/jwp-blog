@@ -44,7 +44,7 @@ public class UserDto {
                 message = "올바른 이름 형식이 아닙니다.")
         private String name;
 
-        public User toUser(long id, String email, String password) {
+        public User toUser(Long id, String email, String password) {
             return User.builder()
                     .id(id)
                     .name(name)
@@ -56,7 +56,7 @@ public class UserDto {
 
     @Data
     public static class Response {
-        private long id;
+        private Long id;
         private String email;
         private String name;
     }

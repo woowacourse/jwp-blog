@@ -25,10 +25,6 @@ public class ArticleController {
 
     @GetMapping("/writing")
     public String renderCreatePage(HttpSession httpSession, Model model) {
-        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
-        if (userSession.isPresent()) {
-            model.addAttribute("user", userSession.get());
-        }
         return "article-edit";
     }
 
@@ -36,39 +32,42 @@ public class ArticleController {
     public String createArticle(ArticleDto.Create articleDto, HttpSession httpSession) {
         UserDto.Response user = (UserDto.Response) httpSession.getAttribute("user");
 
-        long newArticleId = articleService.save(user, articleDto);
+        Long newArticleId = articleService.save(user, articleDto);
         return "redirect:/articles/" + newArticleId;
     }
 
     @GetMapping("/articles/{articleId}")
-    public String readArticle(@PathVariable long articleId, HttpSession httpSession, Model model) {
-        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
-        if (userSession.isPresent()) {
-            model.addAttribute("user", userSession.get());
-        }
+    public String readArticle(@PathVariable Long articleId, HttpSession httpSession, Model model) {
         model.addAttribute("article", articleService.findById(articleId));
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String renderUpdatePage(@PathVariable long articleId, HttpSession httpSession, Model model) {
-        Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
-        if (userSession.isPresent()) {
-            model.addAttribute("user", userSession.get());
+    public String renderUpdatePage(@PathVariable Long articleId, HttpSession httpSession, Model model) {
+        Optional<UserDto.Response> userDto = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (userDto.isPresent()) {
+            model.addAttribute("article", articleService.findById(userDto.get(), articleId));
         }
-        model.addAttribute("article", articleService.findById(articleId));
         return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable long articleId, ArticleDto.Update articleDto, HttpSession httpSession) {
-        long updatedArticleId = articleService.update(articleId, articleDto);
-        return "redirect:/articles/" + updatedArticleId;
+    public String updateArticle(@PathVariable Long articleId, ArticleDto.Update articleDto, HttpSession httpSession) {
+        Optional<UserDto.Response> userDto = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (userDto.isPresent()) {
+            Long updatedArticleId = articleService.update(userDto.get(), articleId, articleDto);
+            return "redirect:/articles/" + updatedArticleId;
+        }
+        return null;
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable long articleId, HttpSession httpSession) {
-        articleService.deleteById(articleId);
-        return "redirect:/";
+    public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
+        Optional<UserDto.Response> userDto = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
+        if (userDto.isPresent()) {
+            articleService.deleteById(userDto.get(), articleId);
+            return "redirect:/";
+        }
+        return null;
     }
 }

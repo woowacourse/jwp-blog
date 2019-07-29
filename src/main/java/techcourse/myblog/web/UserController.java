@@ -44,7 +44,7 @@ public class UserController {
 
     @PutMapping("/users/{userId}")
     public RedirectView updateUser(HttpSession httpSession, @Valid UserDto.Update userDto,
-                                   BindingResult bindingResult, @PathVariable long userId) {
+                                   BindingResult bindingResult, @PathVariable Long userId) {
         Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
         UserDto.Response user = userService.findById(userId);
         UserDto.Response sessionUser = userSession.get();
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{userId}")
-    public RedirectView deleteUser(@PathVariable long userId, HttpSession httpSession) {
+    public RedirectView deleteUser(@PathVariable Long userId, HttpSession httpSession) {
 
         Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
         UserDto.Response user = userService.findById(userId);
@@ -78,14 +78,14 @@ public class UserController {
     }
 
     @GetMapping("/mypage/{userId}")
-    public String renderMypage(@PathVariable long userId, Model model) {
+    public String renderMypage(@PathVariable Long userId, Model model) {
         UserDto.Response user = userService.findById(userId);
         model.addAttribute("user", user);
         return "mypage";
     }
 
     @GetMapping("/mypage/{userId}/edit")
-    public String renderEditMypage(@PathVariable long userId, HttpSession httpSession, Model model) {
+    public String renderEditMypage(@PathVariable Long userId, HttpSession httpSession, Model model) {
         Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
         UserDto.Response user = userService.findById(userId);
         UserDto.Response sessionUser = userSession.get();

@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class ArticleServiceTest extends AbstractTest {
-    private static long articleId = 1;
+    private static Long articleId = Long.valueOf(1);
     private static Long userId;
 
     @Autowired
@@ -31,10 +31,11 @@ class ArticleServiceTest extends AbstractTest {
     private ModelMapper modelMapper;
 
     private Article article;
+    private User user;
 
     @BeforeEach
     void setUp() {
-        User user = User.builder()
+        user = User.builder()
                         .email("aaa@gamil.com")
                         .name("asd")
                         .password("123qwe!@#")
@@ -70,20 +71,24 @@ class ArticleServiceTest extends AbstractTest {
 
     @Test
     void 게시글_수정_테스트() {
-        Article updatedUser = Article.builder()
+        Article updatedArticle = Article.builder()
                 .id(articleId)
                 .title("updatedTitle")
                 .coverUrl("updatedCoverUrl")
                 .contents("updatedContents")
                 .build();
-        long updatedArticleId = articleService.update(articleId, modelMapper.map(updatedUser, ArticleDto.Update.class));
+
+        long updatedArticleId = articleService.update(modelMapper.map(user, UserDto.Response.class),
+            articleId, modelMapper.map(updatedArticle, ArticleDto.Update.class));
+
         assertThat(articleService.findById(updatedArticleId))
-                .isEqualTo(modelMapper.map(updatedUser, ArticleDto.Response.class));
+            .isEqualTo(modelMapper.map(updatedArticle, ArticleDto.Response.class));
     }
 
     @AfterEach
     void tearDown() {
-        articleService.deleteById(articleId++);
+        articleService.deleteById(modelMapper.map(user, UserDto.Response.class),
+            articleId++);
         userService.deleteById(userId);
     }
 }
