@@ -11,12 +11,13 @@ import java.util.Objects;
 
 @Entity
 public class User {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Convert(converter = UserNameConverter.class)
     private UserName name;
+
     @Convert(converter = UserPasswordConverter.class)
     private UserPassword password;
 
