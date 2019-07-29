@@ -75,6 +75,11 @@
                                     <span>6 min ago</span>
                                 </span>
                                 <p th:text="${comment.getComment()}" class="width-80"></p>
+                                <form th:action="@{/comments/{id}(id=${comment.getId()})}" th:method="delete">
+                                    <button id="remove-btn" type="submit" class="btn btn-default">
+                                        <i class="ti-close"></i>
+                                    </button>
+                                </form>
                             </div>
                         </li>
                     </ul>
@@ -87,6 +92,7 @@
                             <i class="ti-save"></i>
                         </button>
                     </form>
+
                 </div>
             </div>
         </div>

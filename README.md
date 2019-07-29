@@ -121,4 +121,4 @@
 - ~~Add addNewComment controller method in ArticleController~~
 - ~~Show comments related to articles~~
 - Add modifyCommentById controller method in CommentController
-- Add deleteCommentById controller method in CommentController
+- ~~Add deleteCommentById controller method in CommentController~~
