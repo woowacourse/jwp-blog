@@ -7,14 +7,15 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
+import techcourse.myblog.exception.AuthException;
 
 @ControllerAdvice
-public class AuthExceptionAdvice {
-    private static final Logger log = LoggerFactory.getLogger(AuthExceptionAdvice.class);
+public class ExceptionAdvice {
+    private static final Logger log = LoggerFactory.getLogger(ExceptionAdvice.class);
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(AuthException.class)
-    public String common(Exception e) {
+    public String handleAuthException(Exception e) {
 
         log.info(e.toString());
 

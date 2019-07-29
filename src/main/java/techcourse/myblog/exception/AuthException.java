@@ -1,4 +1,4 @@
-package techcourse.myblog.advice;
+package techcourse.myblog.exception;
 
 public class AuthException extends RuntimeException {
 
