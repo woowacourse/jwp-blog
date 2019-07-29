@@ -1,6 +1,7 @@
 package techcourse.myblog.user;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Email;
@@ -11,21 +12,22 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor
+@EqualsAndHashCode
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(nullable = false, length = 6)
-    @Length(min = 2, max = 6)
+    @Column(nullable = false, length = 10)
+    @Length(min = 2, max = 10)
     private String userName;
 
-    @Column(nullable = false, unique = true, length = 25)
+    @Column(nullable = false, unique = true, length = 50)
     @Email
     private String email;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 30)
     @Length(min = 8)
     private String password;
 

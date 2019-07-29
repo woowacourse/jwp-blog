@@ -1,20 +1,30 @@
 package techcourse.myblog.web;
 
 import groovy.util.logging.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.article.Article;
+import techcourse.myblog.exception.InvalidAuthorException;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.CommentDto;
+import techcourse.myblog.user.User;
+
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
+
     private ArticleService articleService;
 
-    ArticleController(ArticleService articleService) {
+    ArticleController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
     }
 
@@ -24,8 +34,9 @@ public class ArticleController {
     }
 
     @PostMapping("/new")
-    public String createArticle(ArticleDto articleDto, Model model) {
-        Article article = articleService.createArticle(articleDto);
+    public String createArticle(ArticleDto articleDto, Model model, HttpSession httpSession) {
+        User author = (User) httpSession.getAttribute("user");
+        Article article = articleService.createArticle(articleDto, author);
         model.addAttribute("article", article);
         return "redirect:/articles/" + article.getArticleId();
     }
@@ -38,15 +49,18 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}/edit")
-    public String showUpdateArticle(@PathVariable Long articleId, Model model) {
+    public String showUpdateArticle(@PathVariable Long articleId, Model model, HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
         Article article = articleService.findArticle(articleId);
+        article.checkCorrespondingAuthor(user);
         model.addAttribute("article", article);
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
-    public String updateArticle(@PathVariable Long articleId, ArticleDto updateArticleDto, Model model) {
-        Article updateArticle = articleService.updateArticle(articleId, updateArticleDto.toEntity());
+    public String updateArticle(@PathVariable Long articleId, ArticleDto updateArticleDto, Model model, HttpSession httpSession) {
+        User author = (User) httpSession.getAttribute("user");
+        Article updateArticle = articleService.updateArticle(articleId, updateArticleDto.toEntity(author));
         model.addAttribute("article", updateArticle);
         return "redirect:/articles/" + articleId;
     }
@@ -56,5 +70,4 @@ public class ArticleController {
         articleService.deleteArticle(articleId);
         return "redirect:/";
     }
-
 }

@@ -3,6 +3,8 @@ package techcourse.myblog.article;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import techcourse.myblog.exception.InvalidAuthorException;
+import techcourse.myblog.user.User;
 
 import javax.persistence.*;
 
@@ -23,11 +25,16 @@ public class Article {
 
     private String contents;
 
+    @ManyToOne
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    private User author;
+
     @Builder
-    public Article(String title, String coverUrl, String contents) {
+    public Article(String title, String coverUrl, String contents, User author) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.author = author;
     }
 
     public void update(Article article) {
@@ -37,4 +44,9 @@ public class Article {
 
     }
 
+    public void checkCorrespondingAuthor(User user) {
+        if (!this.author.equals(user)) {
+            throw new InvalidAuthorException();
+        }
+    }
 }
