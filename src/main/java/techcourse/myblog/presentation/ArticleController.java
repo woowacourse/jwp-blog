@@ -5,12 +5,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.persistence.ArticleRepository;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.dto.ArticleRequestDto;
 import techcourse.myblog.service.exception.ArticleNotFoundException;
 
+import javax.servlet.http.HttpSession;
+
 import java.util.List;
+
+import static techcourse.myblog.service.UserService.LOGGED_IN_USER_SESSION_KEY;
 
 @Slf4j
 @Controller
@@ -29,8 +34,10 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String addNewArticle(ArticleRequestDto articleRequestDto) {
+    public String addNewArticle(ArticleRequestDto articleRequestDto, HttpSession session) {
+        User user = (User) session.getAttribute(LOGGED_IN_USER_SESSION_KEY);
         Article newArticle = articleRequestDto.toArticle();
+        newArticle.setAuthor(user);
         articleRepository.save(newArticle);
         return "redirect:/articles/" + newArticle.getId();
     }

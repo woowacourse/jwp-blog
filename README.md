@@ -106,3 +106,18 @@
 - [x] ~~html에서 form 중복 제거하기 (header.html)~~
 - [ ] 테스트할 때만 h2 사용하기  
 - [ ] 자기가 쓴 글만 수정할 수 있도록 하기
+
+
+=================================
+
+- ~~게시글 작성 시 작성자가 같이 저장~~
+
+댓글작성 기능 구현
+- ~~커멘트 엔터티 생성~~
+- Add createdAt column into Comment entity
+- 커맨트 레파지토리 구현
+- 커맨트 서비스 구현
+- Comment Controller
+- Add addNewComment controller method in ArticleController
+- Add modifyCommentById controller method in CommentController
+- Add deleteCommentById controller method in CommentController

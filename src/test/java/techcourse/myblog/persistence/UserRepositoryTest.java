@@ -15,6 +15,8 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
     @Autowired
     private TestEntityManager testEntityManager;
+    @Autowired
+    private ArticleRepository articleRepository;
 
     @Test
     public void findById() {
@@ -22,33 +24,17 @@ public class UserRepositoryTest {
         User persistUser = testEntityManager.persist(user);
 
         Article article = new Article("Moomin's article", "Happy Jpa", "hihi");
+        Article article2 = new Article("Ko's article", "Sad Jpa", "heyhey");
         article.setAuthor(persistUser);
+        article2.setAuthor(persistUser);
         testEntityManager.persist(article);
+        testEntityManager.persist(article2);
 
         testEntityManager.flush();
         testEntityManager.clear();
 
         User actualUser = userRepository.findById(persistUser.getId()).get();
 
-        assertThat(actualUser.getArticles().size()).isEqualTo(1);
+        assertThat(articleRepository.findByAuthor(actualUser).size()).isEqualTo(2);
     }
-
-    @Test
-    public void findById2() {
-        Article article = new Article("Moomin's article", "Happy Jpa", "hihi");
-        Article persistArticle = testEntityManager.persist(article);
-
-        User user = new User("Moomin", "123!@#qweQWE", "moomin@woowahan.com");
-        user.addArticle(persistArticle);  // 주인이 아닌 엔티티로 해봐야 데이터베이스에 반영이 안 됨. 영속성 컨텍스트에서는 반영이 됨?
-
-        User persistUser = testEntityManager.persist(user);
-
-        testEntityManager.flush();
-        testEntityManager.clear();
-
-        User actualUser = userRepository.findById(persistUser.getId()).get();
-
-        assertThat(actualUser.getArticles().size()).isEqualTo(0);  // 위에서 article 을 추가했음에도 불구하고 데이터베이스에 반영되지 않았음
-    }
-
 }
