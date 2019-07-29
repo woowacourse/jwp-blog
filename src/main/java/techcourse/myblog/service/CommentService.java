@@ -34,10 +34,11 @@ public class CommentService {
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글"));
         comment.setUser(user);
         comment.setArticle(article);
+        article.add(comment);
         return commentRepository.save(comment);
     }
 
-    public void delete(long commentId, User user) {
+    public void delete(Long commentId, User user, Long articleId) {
         Comment comment = commentRepository
                 .findById(commentId)
                 .orElseThrow(() -> new NotFoundCommentException("존재하지 않는 댓글"));
@@ -45,6 +46,11 @@ public class CommentService {
         if (!user.equals(comment.getUser())) {
             throw new IllegalRequestException("권한이 없는 사용자 입니다.");
         }
+
+        articleRepository
+                .findById(articleId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글"))
+                .remove(comment);
 
         commentRepository.delete(comment);
     }

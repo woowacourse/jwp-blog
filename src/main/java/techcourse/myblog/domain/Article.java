@@ -1,11 +1,15 @@
 package techcourse.myblog.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -36,6 +40,9 @@ public class Article {
     @ManyToOne
     private User author;
 
+    @OneToMany
+    private List<Comment> comments = new ArrayList<>();
+
     public Article(String title, String coverUrl, String contents) {
         this.title = title;
         this.contents = contents;
@@ -46,5 +53,13 @@ public class Article {
         title = article.getTitle();
         coverUrl = article.getCoverUrl();
         contents = article.getContents();
+    }
+
+    public void add(Comment comment) {
+        comments.add(comment);
+    }
+
+    public void remove(Comment comment) {
+        comments.add(comment);
     }
 }
