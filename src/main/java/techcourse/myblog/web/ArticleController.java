@@ -57,24 +57,41 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{id}")
-    public ModelAndView updateArticle(@PathVariable final Long id, final ArticleDto articleDTO) {
-        articleService.update(id, articleDTO);
+    public ModelAndView updateArticle(@PathVariable final Long id, final ArticleDto articleDTO, final HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
+        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
+        if (!user.getId().equals(articleService.findAuthor(id).getId())) {
+            modelAndView.setView(new RedirectView("/articles/" + id));
+            return modelAndView;
+        }
+        articleService.update(id, articleDTO);
         modelAndView.setView(new RedirectView("/articles/" + id));
         return modelAndView;
     }
 
     @DeleteMapping("/articles/{id}")
-    public ModelAndView deleteArticle(@PathVariable final Long id) {
-        articleService.delete(id);
+    public ModelAndView deleteArticle(@PathVariable final Long id, final HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
+        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
+        if (!user.getId().equals(articleService.findAuthor(id).getId())) {
+            modelAndView.setView(new RedirectView("/articles/" + id));
+            return modelAndView;
+        }
+        articleService.delete(id);
         modelAndView.setView(new RedirectView("/"));
         return modelAndView;
     }
 
     @GetMapping("/articles/{id}/edit")
-    public String showEditPage(@PathVariable final Long id, Model model) {
-        model.addAttribute("articleDTO", articleService.findById(id));
-        return "article-edit";
+    public ModelAndView showEditPage(@PathVariable final Long id, final HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
+        if (!user.getId().equals(articleService.findAuthor(id).getId())) {
+            modelAndView.setView(new RedirectView("/articles/" + id));
+            return modelAndView;
+        }
+        modelAndView.addObject("articleDTO", articleService.findById(id));
+        modelAndView.setViewName("article-edit");
+        return modelAndView;
     }
 }

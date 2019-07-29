@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+    private static final Long DEFAULT_ARTICLE_ID = 999L;
     @Autowired
     private WebTestClient webTestClient;
 
@@ -212,19 +213,7 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*/articles/\\d*")
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(Objects.requireNonNull(response.getResponseBody()));
-                    assertThat(body).contains("newTitle");
-                    assertThat(body).contains(coverUrl);
-                    assertThat(body).contains("newContents");
-                });
-
-        webTestClient.delete().uri("/mypage")
-                .cookie("JSESSIONID", outsiderSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/logout");
+                .expectBody();
     }
 
     @Test
@@ -236,28 +225,16 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*/articles/\\d*");
-
-        webTestClient.delete().uri("/mypage")
-                .cookie("JSESSIONID", outsiderSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/logout");
     }
 
     @Test
     void 다른_사용자가_게시글_수정_페이지_이동() {
         String outsiderSessionId = getJSessionId("paul123@example.com", "p@ssW0rd");
 
-        webTestClient.get().uri("/mypage")
+        webTestClient.get().uri("/articles/" + DEFAULT_ARTICLE_ID + "/edit")
                 .cookie("JSESSIONID", outsiderSessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*/articles/\\d*");
-
-        webTestClient.delete().uri("/mypage")
-                .cookie("JSESSIONID", outsiderSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/logout");
     }
 }

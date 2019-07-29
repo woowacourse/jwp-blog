@@ -33,8 +33,8 @@ public class LoginController {
     public ModelAndView processLogin(final HttpSession session, final String email, final String password) {
         ModelAndView modelAndView = new ModelAndView();
         UserResponseDto userResponseDto = loginservice.findByEmailAndPassword(email, password);
-
         UserResponseDto retrieveUser = loginservice.findByEmail(userResponseDto.getEmail());
+
         session.setAttribute(USER_SESSION_KEY, retrieveUser);
         modelAndView.setView(new RedirectView("/"));
         return modelAndView;

@@ -10,6 +10,8 @@ import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.presentation.ArticleRepository;
 import techcourse.myblog.presentation.UserRepository;
 import techcourse.myblog.service.dto.article.ArticleDto;
+import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.user.UserAssembler;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +42,12 @@ public class ArticleService {
         return articleRepository.findById(Objects.requireNonNull(id))
                 .map(ArticleAssembler::convertToDto)
                 .orElseThrow(ArticleNotFoundException::new);
+    }
+
+    public UserResponseDto findAuthor(final Long id) {
+        return UserAssembler.convertToDto(articleRepository.findById(id)
+                .orElseThrow(ArticleNotFoundException::new)
+                .getAuthor());
     }
 
     public Long save(final ArticleDto articleDTO, final Long authorId) {
