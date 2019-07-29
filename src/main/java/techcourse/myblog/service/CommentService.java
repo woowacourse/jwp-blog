@@ -9,6 +9,8 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentSaveRequestDto;
 import techcourse.myblog.repository.CommentRepository;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,5 +28,9 @@ public class CommentService {
                 .user(user)
                 .build();
         return commentRepository.save(comment);
+    }
+
+    public List<Comment> findByArticleId(Long articleId) {
+        return commentRepository.findByArticleId(articleId);
     }
 }
