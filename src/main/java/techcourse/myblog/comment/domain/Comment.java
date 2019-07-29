@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techcourse.myblog.article.domain.Article;
+import techcourse.myblog.comment.dto.CommentDto;
 import techcourse.myblog.user.domain.User;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(length = 200)
     private String contents;
 
     @ManyToOne
@@ -30,5 +32,13 @@ public class Comment {
         this.contents = contents;
         this.author = author;
         this.article = article;
+    }
+
+    public void updateComment(String contents) {
+        this.contents = contents;
+    }
+
+    public boolean notMatchAuthorId(long authorId) {
+        return author.getId() != authorId;
     }
 }
