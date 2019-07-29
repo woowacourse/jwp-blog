@@ -3,12 +3,11 @@ package techcourse.myblog.domain;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
+@EqualsAndHashCode
 @Entity
 public class User {
     @Id
@@ -27,8 +26,6 @@ public class User {
     @Column(length = 100)
     private String password;
 
-    @OneToMany(mappedBy = "author")
-    private List<Article> articles = new ArrayList<>();
 
     public boolean matchPassword(String password) {
         return this.password.equals(password);
@@ -39,9 +36,4 @@ public class User {
         this.email = user.email;
         this.password = user.password;
     }
-
-    public void addArticle(Article persistArticle) {
-        articles.add(persistArticle);
-    }
-
 }
