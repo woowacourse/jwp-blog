@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleSaveParams;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.repository.ArticleRepository;
@@ -21,7 +22,8 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public Article save(Article article) {
+    public Article save(Article article, User author) {
+        article.setAuthor(author);
         log.debug("save article={}", article);
         return articleRepository.save(article);
     }

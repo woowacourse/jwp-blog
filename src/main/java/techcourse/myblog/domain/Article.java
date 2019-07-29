@@ -4,12 +4,9 @@ import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import techcourse.myblog.dto.ArticleSaveParams;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString
@@ -22,13 +19,20 @@ public class Article {
 
     private String title;
     private String coverUrl;
+
+    @Lob
     private String contents;
 
+    @ManyToOne
+    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    private User author;
+
     @Builder
-    public Article(String title, String coverUrl, String contents) {
+    public Article(String title, String coverUrl, String contents, User author) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.author = author;
     }
 
     public boolean isCoverUrl() {
@@ -39,5 +43,9 @@ public class Article {
         this.title = articleSaveParams.getTitle();
         this.coverUrl = articleSaveParams.getCoverUrl();
         this.contents = articleSaveParams.getContents();
+    }
+
+    public void setAuthor(User user) {
+        this.author = user;
     }
 }

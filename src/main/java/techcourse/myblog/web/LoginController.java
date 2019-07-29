@@ -36,7 +36,7 @@ public class LoginController {
 
         User user = loginService.findByEmail(userLoginParams.getEmail());
         httpSession.setAttribute(USER, user);
-        return "index";
+        return "redirect:/";
     }
 
     @GetMapping("/logout")

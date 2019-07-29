@@ -7,17 +7,17 @@ import techcourse.myblog.exception.IllegalUserParamsException;
 import javax.persistence.*;
 import java.util.regex.Pattern;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString
 @Entity
 public class User {
-    private static final Pattern NAME_PATTERN = Pattern.compile("[가-힣ㅣa-zA-Z]{2,10}");
+    private static final Pattern NAME_PATTERN = Pattern.compile("[가-힣ㅣa-zA-Z]{2,8}");
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$");
     private static final Pattern PASSWORD_PATTERN
             = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,}$");
-    private static final String ERROR_ILLEGAL_USER_NAME_MESSAGE = "이름은 2~10자의 정확한 문자로 입력해 주세요!";
+    private static final String ERROR_ILLEGAL_USER_NAME_MESSAGE = "이름은 2~8자의 정확한 문자로 입력해 주세요!";
     private static final String ERROR_ILLEGAL_USER_EMAIL_MESSAGE = "이메일 형식에 맞게 입력해 주세요!";
     private static final String ERROR_ILLEGAL_USER_PASSWORD_MESSAGE = "비밀번호는 8자 이상의 문자, 숫자, 특수문자 조합으로 입력해 주세요!";
 
@@ -25,9 +25,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 8)
     private String name;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 50)
     private String email;
 
     private String password;
