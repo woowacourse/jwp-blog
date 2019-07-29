@@ -1,61 +1,74 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.exception.NotFoundUserException;
-import techcourse.myblog.domain.repository.UserRepository;
-import techcourse.myblog.web.controller.dto.LoginDto;
-import techcourse.myblog.web.controller.dto.UserDto;
-import techcourse.myblog.web.exception.CouldNotRegisterException;
+import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.service.dto.UserLoginRequest;
+import techcourse.myblog.service.dto.UserRequest;
+import techcourse.myblog.service.exception.EditException;
+import techcourse.myblog.service.exception.LoginException;
+import techcourse.myblog.service.exception.SignUpException;
+import techcourse.myblog.support.encryptor.EncryptHelper;
 
-import java.util.List;
-import java.util.Optional;
+import javax.transaction.Transactional;
 
 @Service
-@Transactional
 public class UserService {
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
+    private EncryptHelper encryptHelper;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, EncryptHelper encryptHelper) {
         this.userRepository = userRepository;
+        this.encryptHelper = encryptHelper;
     }
 
-    @Transactional(readOnly = true)
-    public List<User> findAll() {
+    public User saveUser(UserRequest userRequest) {
+        User user = createUser(userRequest);
+        return userRepository.save(user);
+    }
+
+    private User createUser(UserRequest userRequest) {
+        try {
+            return new User(userRequest.getName(), userRequest.getEmail(), encryptHelper.encrypt(userRequest.getPassword()));
+        } catch (IllegalArgumentException e) {
+            throw new SignUpException(e.getMessage());
+        }
+    }
+
+    public Iterable<? extends User> findAll() {
         return userRepository.findAll();
     }
 
-    public User save(UserDto userDto) {
-        if (userRepository.existsByEmail(userDto.getEmail())) {
-            throw new CouldNotRegisterException("중복된 이메일입니다.");
-        }
-        return userRepository.save(new User(userDto.getName(), userDto.getEmail(), userDto.getPassword()));
+    public User findUserByEmail(UserLoginRequest userLoginRequest) {
+        User user = userRepository.findUserByEmail(userLoginRequest.getEmail())
+                .orElseThrow(() -> new LoginException("email 없음"));
+
+        checkPassword(userLoginRequest, user);
+        return user;
     }
 
-    @Transactional(readOnly = true)
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    private void checkPassword(UserLoginRequest userLoginRequest, User user) {
+        if (!encryptHelper.isMatch(userLoginRequest.getPassword(), user.getPassword())) {
+            throw new LoginException("비밀번호 틀림");
+        }
     }
 
     @Transactional
-    public User update(String email, UserDto updatedUser) {
-        User user = findByEmail(email).orElseThrow(NotFoundUserException::new);
-        return user.update(updatedUser.getName());
+    public User editUserName(Long userId, String name) {
+        User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        changeName(name, user);
+        return user;
     }
 
-    public void remove(String email) {
-        User user = findByEmail(email).orElseThrow(NotFoundUserException::new);
-        userRepository.delete(user);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<User> login(LoginDto loginDto) {
-        User user = userRepository.findByEmail(loginDto.getEmail())
-                .orElseThrow(() -> new NotFoundUserException("이메일과 비밀번호를 다시 확인해주세요."));
-        if (user.authenticate(loginDto.getEmail(), loginDto.getPassword())) {
-            return Optional.of(user);
+    private void changeName(String name, User user) {
+        try {
+            user.changeName(name);
+        } catch (IllegalArgumentException e) {
+            throw new EditException(e.getMessage());
         }
-        return Optional.empty();
+    }
+
+    public void deleteById(Long userId) {
+        userRepository.deleteById(userId);
     }
 }

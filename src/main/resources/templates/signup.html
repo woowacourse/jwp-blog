@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<head>
-    <th:block th:include="fragments/head :: head"/>
-</head>
+
+<head th:replace="/fragments/signup-head :: signUpHead"></head>
+
 <body>
+<div th:if="${error} != null" class="alert alert-danger" th:text="${error.errorMessage}"></div>
 <div class="app">
     <div class="header navbar bg-transparent no-border">
         <div class="header-container pdd-right-15">
             <ul class="nav-left mrg-left-0">
                 <li>
-                    <a href="index.html">
-                        <div class="logo logo-dark d-none" style="background-image: url('/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white" style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                    <a href="/">
+                        <div class="logo logo-dark d-none" style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white" style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
@@ -19,7 +20,7 @@
     </div>
     <div class="authentication">
         <div class="sign-in-2">
-            <div class="container-fluid no-pdd-horizon overlay-dark bg" style="background-image: url('/images/default/bg.jpg')">
+            <div class="container-fluid no-pdd-horizon overlay-dark bg" style="background-image: url('/static/images/default/bg.jpg')">
                 <div class="row">
                     <div class="col-md-10 mr-auto ml-auto">
                         <div class="row">
@@ -32,23 +33,27 @@
                                                     <div class="mrg-btm-30">
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">회원가입</h2>
                                                     </div>
-                                                    <form method="post" action="/user">
-                                                        <p th:text="${errorMessage}"></p>
+                                                    <form method="post" action="/users" th:object="${userRequest}">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input type="text" name="name" class="form-control">
+                                                            <input id="name" type="text" name="name" class="form-control" required th:field="*{name}">
+                                                            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></span>
+                                                            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></span>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
-                                                            <input type="email" name="email" class="form-control">
+                                                            <input id="email" type="email" name="email" class="form-control"  required th:field="*{email}">
+                                                            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red"></span>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
-                                                            <input type="password" name="password" class="form-control" placeholder="Password">
+                                                            <input id="password "type="password" name="password" class="form-control" placeholder="Password" required th:field="*{password}">
+                                                            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red"></span>
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm Password</label>
-                                                            <input type="password" class="form-control" placeholder="Password">
+                                                            <input type="password" name="reconfirmPassword" class="form-control" placeholder="Password" required th:field="*{reconfirmPassword}">
+                                                            <span th:if="${#fields.hasErrors('reconfirmPassword')}" th:errors="*{reconfirmPassword}" style="color:red"></span>
                                                         </div>
                                                         <div class="form-group">
                                                             <button type="submit" class="btn btn-info btn-block border-radius-6 font-size-16 text-white">가입하기</button>
@@ -72,10 +77,7 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js" integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
-<script src="/js/index.js"></script>
+<th:block th:include="/fragments/main-js :: mainJs"/>
+
 </body>
 </html>
