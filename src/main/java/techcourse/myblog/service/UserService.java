@@ -19,12 +19,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public void save(UserDto.Create userDto) {
+    public Long save(UserDto.Create userDto) {
         User newUser = userDto.toUser();
         if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
             throw new DuplicatedUserException();
         }
-        userRepository.save(newUser);
+        return userRepository.save(newUser).getId();
     }
 
     public List<UserDto.Response> findAll() {

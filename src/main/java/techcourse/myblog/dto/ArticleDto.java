@@ -2,6 +2,7 @@ package techcourse.myblog.dto;
 
 import lombok.Data;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 
 public class ArticleDto {
 
@@ -11,11 +12,12 @@ public class ArticleDto {
         private String coverUrl;
         private String contents;
 
-        public Article toArticle() {
+        public Article toArticle(User author) {
             return Article.builder()
                     .title(title)
                     .coverUrl(coverUrl)
                     .contents(contents)
+                    .author(author)
                     .build();
         }
     }

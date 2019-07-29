@@ -34,7 +34,9 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String createArticle(ArticleDto.Create articleDto, HttpSession httpSession) {
-        long newArticleId = articleService.save(articleDto);
+        UserDto.Response user = (UserDto.Response) httpSession.getAttribute("user");
+
+        long newArticleId = articleService.save(user, articleDto);
         return "redirect:/articles/" + newArticleId;
     }
 

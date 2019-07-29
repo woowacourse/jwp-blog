@@ -12,9 +12,9 @@ import java.util.Optional;
 public class ArticleInterceptor extends HandlerInterceptorAdapter {
 
     @Override
+
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Optional<UserDto.Response> user = Optional.ofNullable((UserDto.Response) request.getSession().getAttribute("user"));
-
         if (request.getMethod().equals("GET") && request.getRequestURI().matches("(\\/articles\\/)([0-9]+)$")){
             return true;
         }
