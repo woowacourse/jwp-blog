@@ -9,6 +9,8 @@ import techcourse.myblog.exception.AuthException;
 import techcourse.myblog.users.User;
 import techcourse.myblog.users.UserRepository;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -57,5 +59,12 @@ public class CommentService {
         if (!comment.isWrittenBy(user)) {
             throw new AuthException("작성자가 아닙니다.");
         }
+    }
+
+    public List<Comment> findAllByArticle(final Long articleId) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("등록된 글이 아닙니다."));
+
+        return commentRepository.findAllByArticle(article);
     }
 }

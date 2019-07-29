@@ -5,13 +5,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.articles.comments.Comment;
+import techcourse.myblog.articles.comments.CommentService;
 import techcourse.myblog.users.UserSession;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/articles")
 @RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
+    private final CommentService commentService;
 
     @GetMapping("/new")
     public String writeForm() {
@@ -22,13 +27,17 @@ public class ArticleController {
     public String write(UserSession userSession, Article article) {
         Long userId = userSession.getId();
         Article savedArticle = articleService.save(userId, article);
+
         return "redirect:/articles/" + savedArticle.getId();
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
-        Article article = articleService.findById(id);
+        final Article article = articleService.findById(id);
+        final List<Comment> comments = commentService.findAllByArticle(article.getId());
+
         model.addAttribute(article);
+        model.addAttribute("comments", comments);
         return "article";
     }
 
@@ -46,6 +55,7 @@ public class ArticleController {
         Long userId = userSession.getId();
 
         Article article = articleService.edit(userId, editedArticle);
+
         return "redirect:/articles/" + article.getId();
     }
 
