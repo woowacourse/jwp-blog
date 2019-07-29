@@ -67,8 +67,10 @@
                             <img class="thumb-img img-circle"
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                             <div class="info">
-                                <input name="id" type="hidden" th:value="${comment.id}">
                                 <span class="text-bold inline-block" th:text="${comment.writer.name}">Jun</span>
+                                <a th:href="|/comment/${comment.id}/edit|" class="btn-sm btn-dark btn-icon btn-rounded sns-btn">
+                                    <i class="ti-pencil font-size-12"></i>
+                                </a>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span th:text="${comment.createdTimeAt}">6 min ago</span>
