@@ -78,7 +78,7 @@ public abstract class BaseControllerTests {
                 .expectHeader().valueMatches("location", ".*/");
     }
 
-    protected void deleteUser(){
+    protected void deleteUser() {
         deleteUser(id, email, password);
     }
 }

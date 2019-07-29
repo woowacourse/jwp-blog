@@ -255,6 +255,6 @@ public class UserControllerTests extends BaseControllerTests {
 
     @AfterEach
     void tearDown() {
-       deleteUser(id, email, password);
+        deleteUser(id, email, password);
     }
 }

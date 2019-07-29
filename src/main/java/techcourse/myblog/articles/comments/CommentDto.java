@@ -11,7 +11,7 @@ public class CommentDto {
     @Getter
     @Setter
     @NoArgsConstructor
-    public static class Create{
+    public static class Create {
         private Long articleId;
         private String contents;
 
@@ -27,7 +27,7 @@ public class CommentDto {
     @Getter
     @Setter
     @NoArgsConstructor
-    public static class Update{
+    public static class Update {
         private Long id;
         private Long articleId;
         private String contents;

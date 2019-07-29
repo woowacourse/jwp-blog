@@ -34,7 +34,7 @@ public class Comment {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="article_id",foreignKey = @ForeignKey(name = "fk_comment_to_article"), nullable = false)
+    @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_comment_to_article"), nullable = false)
     private Article article;
 
     @Builder

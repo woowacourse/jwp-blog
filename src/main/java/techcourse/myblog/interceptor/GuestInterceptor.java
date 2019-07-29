@@ -41,7 +41,7 @@ public class GuestInterceptor extends HandlerInterceptorAdapter {
         return path.equals("/users") && method.equals("POST");
     }
 
-    private boolean isShow(String path, String method){
+    private boolean isShow(String path, String method) {
         return ARTICLE_PATTERN.matcher(path).find() && method.equals("GET");
     }
 

@@ -25,7 +25,7 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public String edit(CommentDto.Update commentDto, UserSession userSession){
+    public String edit(CommentDto.Update commentDto, UserSession userSession) {
         commentService.update(commentDto, userSession.getId());
 
         return "redirect:/articles/" + commentDto.getArticleId();
@@ -34,7 +34,7 @@ public class CommentController {
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Long articleId,
                          @PathVariable Long id,
-                         UserSession userSession){
+                         UserSession userSession) {
 
         final Long userId = userSession.getId();
         commentService.delete(id, userId);
