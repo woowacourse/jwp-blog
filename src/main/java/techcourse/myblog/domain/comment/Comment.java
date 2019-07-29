@@ -21,6 +21,10 @@ public class Comment {
     @ManyToOne
     private Article article;
 
+    private Comment() {
+
+    }
+
     public Comment(String comment, User author, Article article) {
         this.comment = comment;
         this.author = author;
@@ -29,5 +33,9 @@ public class Comment {
 
     public String getComment() {
         return comment;
+    }
+
+    public String getAuthorName() {
+        return author.getName();
     }
 }

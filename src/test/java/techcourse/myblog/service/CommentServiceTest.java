@@ -1,12 +1,16 @@
 package techcourse.myblog.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.service.dto.ArticleDto;
-import techcourse.myblog.service.dto.CommentDto;
+import techcourse.myblog.service.dto.CommentRequestDto;
+import techcourse.myblog.service.dto.CommentResponseDto;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,9 +33,25 @@ class CommentServiceTest {
 
     @Test
     void saveComment() {
-        CommentDto commentDto = new CommentDto("TEST");
-        Comment comment = commentService.save(1L, articleId, commentDto);
+        CommentRequestDto commentRequestDto = new CommentRequestDto("TEST Comment");
+        Comment comment = commentService.save(1L, articleId, commentRequestDto);
 
-        assertThat(comment.getComment()).isEqualTo(commentDto.getComment());
+        assertThat(comment.getComment()).isEqualTo(commentRequestDto.getComment());
+    }
+
+    @Test
+    void findCommentsByArticleId() {
+        CommentRequestDto commentRequestDto = new CommentRequestDto("TEST Comment");
+        Comment comment = commentService.save(1L, articleId, commentRequestDto);
+        List<CommentResponseDto> comments = commentService.findCommentsByArticleId(articleId);
+
+        assertThat(comments.size()).isEqualTo(1);
+        assertThat(comments.get(0).getComment()).isEqualTo(comment.getComment());
+        assertThat(comments.get(0).getAuthorName()).isEqualTo(comment.getAuthorName());
+    }
+
+    @AfterEach
+    void tearDown() {
+        commentService.deleteAll();
     }
 }

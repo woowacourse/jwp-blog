@@ -4,10 +4,10 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 
-public class CommentDto {
+public class CommentRequestDto {
     private String comment;
 
-    public CommentDto(String comment) {
+    public CommentRequestDto(String comment) {
         this.comment = comment;
     }
 
