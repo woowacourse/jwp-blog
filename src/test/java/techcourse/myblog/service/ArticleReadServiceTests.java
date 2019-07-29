@@ -7,7 +7,6 @@ import techcourse.myblog.service.common.ArticleCommonServiceTests;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 
 class ArticleReadServiceTests extends ArticleCommonServiceTests {
@@ -25,8 +24,7 @@ class ArticleReadServiceTests extends ArticleCommonServiceTests {
         Long articleId = Long.valueOf(1);
         given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
 
-        Optional<Article> articleOpt = articleReadService.findById(articleId);
-        assertTrue(articleOpt.isPresent());
-        compareArticle(articleOpt.get(), article);
+        Article foundArticle = articleReadService.findById(articleId);
+        compareArticle(foundArticle, article);
     }
 }

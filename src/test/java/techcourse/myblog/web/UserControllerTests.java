@@ -1,48 +1,23 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
-import org.springframework.test.web.reactive.server.StatusAssertions;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.web.common.ControllerTestTemplate;
 
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpMethod.*;
 import static techcourse.myblog.dto.UserDto.*;
 import static techcourse.myblog.service.UserWriteService.DUPLICATED_USER_MESSAGE;
 import static techcourse.myblog.web.controller.UserController.LOGIN_FAIL_MESSAGE;
 
 class UserControllerTests extends ControllerTestTemplate {
-    @Autowired
-    private UserRepository userRepository;
-
-    private String name;
-    private String email;
-    private String password;
-    private UserDto savedUserDto;
-
-    @BeforeEach
-    void setup() {
-        name = "name";
-        email = "email@email.com";
-        password = "passw0RD!";
-        savedUserDto = new UserDto("savedName", "saved@email.com", "savedPassw0RD!");
-        userRepository.save(savedUserDto.toUser());
-    }
-
     @Test
     void 로그아웃상태_회원가입_페이지_요청() {
         httpRequest(GET, "/signup").isOk();
@@ -56,19 +31,20 @@ class UserControllerTests extends ControllerTestTemplate {
     @Test
     void 회원가입_성공시_리다이렉트() {
         UserDto userDto = new UserDto(name, email, password);
-        httpRequest(POST, "/users", parser(userDto)).isFound();
+        httpRequest(POST, "/users", parseUser(userDto)).isFound();
     }
 
+    //todo : 테스트 깨짐
     @ParameterizedTest(name = "{index}: {3}")
     @MethodSource("invalidParameters")
     void 회원가입_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
-        String redirectUrl = requestAndGetRedirectUrl(POST, "/users", parser(new UserDto(name, email, password)));
-        String responseBody = requestAndGetBody(GET, redirectUrl);
+        String redirectUrl = getRedirectUrl(httpRequest(POST, "/users", parseUser(new UserDto(name, email, password))));
+        String responseBody = getResponseBody(httpRequest(GET, redirectUrl));
 
         assertThat(responseBody).contains(errorMsg);
     }
 
-    static Stream<Arguments> invalidParameters() throws Throwable {
+    static Stream<Arguments> invalidParameters() {
         return Stream.of(
                 Arguments.of("wrong!name", "e@mail.com", "p@ssw0RD!", NAME_CONSTRAINT_MESSAGE),
                 Arguments.of("name", "wrong", "p@ssw00RD!", EMAIL_CONSTRAINT_MESSAGE),
@@ -94,19 +70,20 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인_성공_시_메인_화면으로_리다이렉트() {
-        httpRequest(POST, "/login", parser(savedUserDto)).isFound();
+        httpRequest(POST, "/login", parseUser(savedUserDto)).isFound();
     }
 
+    //todo : 테스트 깨짐
     @ParameterizedTest(name = "{index}: {3}")
     @MethodSource("invalidLoginParameters")
     void 로그인_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
-        String redirectUrl = requestAndGetRedirectUrl(POST, "/login", parser(new UserDto(name, email, password)));
-        String responseBody = requestAndGetBody(GET, redirectUrl);
+        String redirectUrl = getRedirectUrl(httpRequest(POST, "/login", parseUser(new UserDto(name, email, password))));
+        String responseBody = getResponseBody(httpRequest(GET, redirectUrl));
 
         assertThat(responseBody).contains(errorMsg);
     }
 
-    static Stream<Arguments> invalidLoginParameters() throws Throwable {
+    static Stream<Arguments> invalidLoginParameters() {
         return Stream.of(
                 Arguments.of(null, "e@mail.com", "p@sswsavedPassw0RD!", LOGIN_FAIL_MESSAGE),
                 Arguments.of(null, "saved@email.com", "edPassw0RD!", LOGIN_FAIL_MESSAGE)
@@ -141,7 +118,7 @@ class UserControllerTests extends ControllerTestTemplate {
     @Test
     void 로그인_상태에서_정보수정_결과_확인() {
         UserDto update = new UserDto("newname", savedUserDto.getEmail(), savedUserDto.getPassword());
-        loginAndRequest(PUT, "/mypage", parser(update)).isFound();
+        loginAndRequest(PUT, "/mypage", parseUser(update)).isFound();
 
         User savedUser = userRepository.findByEmail(savedUserDto.getEmail()).get();
         assertThat(savedUser.getName().equals(update.getName())).isTrue();
@@ -151,7 +128,7 @@ class UserControllerTests extends ControllerTestTemplate {
     @Test
     void 로그아웃상태_정보수정_불가() {
         UserDto update = new UserDto("newname", savedUserDto.getEmail(), savedUserDto.getPassword());
-        httpRequest(PUT, "/mypage", parser(update)).isFound();
+        httpRequest(PUT, "/mypage", parseUser(update)).isFound();
 
         User savedUser = userRepository.findByEmail(savedUserDto.getEmail()).get();
         assertThat(savedUser.getName().equals(update.getName())).isFalse();
@@ -160,47 +137,15 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그아웃상태_탈퇴시도_실패() {
-        httpRequest(DELETE, "/users/" + savedUserDto.getEmail()).isFound();
+        String redirectUrl = getRedirectUrl(httpRequest(DELETE, "/mypage"));
+        assertEquals(redirectUrl, "/login");
         assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isTrue();
     }
 
     @Test
     void 로그인상태_자기자신_탈퇴시도_성공() {
-        loginAndRequest(DELETE, "/users").isFound();
+        String redirectUrl = getRedirectUrl(loginAndRequest(DELETE, "/mypage"));
+        assertEquals(redirectUrl, "/logout");
         assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isFalse();
-    }
-
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAll();
-    }
-
-    private StatusAssertions loginAndRequest(HttpMethod method, String path, MultiValueMap<String, String> data) {
-        return httpRequest(
-                makeRequestSpec(method, path, data)
-                        .cookie("JSESSIONID", getLoginSessionId()));
-    }
-
-    private StatusAssertions loginAndRequest(HttpMethod method, String path) {
-        return httpRequest(
-                makeRequestSpec(method, path)
-                        .cookie("JSESSIONID", getLoginSessionId()));
-    }
-
-    private String getLoginSessionId() {
-        return Objects.requireNonNull(httpRequest(POST, "/login", parser(savedUserDto))
-                .isFound()
-                .returnResult(Void.class)
-                .getResponseCookies()
-                .getFirst("JSESSIONID"))
-                .getValue();
-    }
-
-    private MultiValueMap<String, String> parser(UserDto userDto) {
-        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-        multiValueMap.add("email", userDto.getEmail());
-        multiValueMap.add("name", userDto.getName());
-        multiValueMap.add("password", userDto.getPassword());
-        return multiValueMap;
     }
 }

@@ -1,6 +1,7 @@
 package techcourse.myblog.dto;
 
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -18,10 +19,16 @@ public class ArticleDto {
     @NotBlank(message = CONTENTS_CONSTRAINT_MESSAGE)
     private String contents;
 
+    private User author;
+
     public ArticleDto(String title, String url, String contents) {
         this.title = title;
         this.coverUrl = url;
         this.contents = contents;
+    }
+
+    public Article toArticle() {
+        return new Article(title, coverUrl, contents, author);
     }
 
     public String getTitle() {
@@ -48,8 +55,11 @@ public class ArticleDto {
         this.contents = contents;
     }
 
+    public void setAuthor(User author) {
+        this.author = author;
+    }
 
-    public Article toArticle() {
-        return new Article(title, coverUrl, contents);
+    public User getAuthor() {
+        return author;
     }
 }

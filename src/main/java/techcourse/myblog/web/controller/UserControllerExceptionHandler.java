@@ -7,8 +7,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.DuplicatedEmailException;
+import techcourse.myblog.service.MismatchAuthorException;
+import techcourse.myblog.service.NotFoundArticleException;
 
-@ControllerAdvice(basePackageClasses = UserController.class)
+@ControllerAdvice
 public class UserControllerExceptionHandler {
     @ExceptionHandler(BindException.class)
     public RedirectView handleBindError(BindException e, RedirectAttributes redirectAttributes) {
@@ -27,5 +29,17 @@ public class UserControllerExceptionHandler {
     public RedirectView handleSignupFail(DuplicatedEmailException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/signup");
+    }
+
+    @ExceptionHandler(MismatchAuthorException.class)
+    public RedirectView handleArticleFail(MismatchAuthorException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        return new RedirectView("/");
+    }
+
+    @ExceptionHandler(NotFoundArticleException.class)
+    public RedirectView handleArticleFail2(NotFoundArticleException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        return new RedirectView("/");
     }
 }
