@@ -11,7 +11,6 @@ import techcourse.myblog.domain.user.UserDto;
 import techcourse.myblog.domain.user.UserRepository;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,5 +56,13 @@ public class ArticleService {
 
     public List<ArticleDto> readByCategoryId(long categoryId) {
         return new ArticleDtos(articleRepository.findByCategoryId(categoryId)).getArticleDtos();
+    }
+
+    public void checkAuthor(long articleId, long userId) {
+        articleRepository.findById(articleId).ifPresent(article -> {
+            if (article.getId() != userId) {
+                throw new IllegalArgumentException("허가되지 않은 사용자입니다.");
+            }
+        });
     }
 }

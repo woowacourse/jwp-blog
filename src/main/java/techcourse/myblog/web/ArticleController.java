@@ -44,7 +44,9 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String update(@PathVariable long articleId, ArticleDto articleDto) {
+    public String update(@PathVariable long articleId, ArticleDto articleDto, HttpSession session) {
+        Object userId = session.getAttribute("userId");
+        articleService.checkAuthor(articleId, (long) userId);
         ArticleDto toArticleDto = articleService.updateByArticle(articleId, articleDto);
 
         return "redirect:/articles/" + toArticleDto.getId();
