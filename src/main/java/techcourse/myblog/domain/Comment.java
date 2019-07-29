@@ -55,6 +55,10 @@ public class Comment {
         return this;
     }
 
+    public Long getArticleId() {
+        return article.getId();
+    }
+
     public LocalDateTime getCreatedTimeAt() {
         return createdTimeAt;
     }
