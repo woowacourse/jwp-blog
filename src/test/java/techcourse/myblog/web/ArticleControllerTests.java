@@ -178,20 +178,6 @@ public class ArticleControllerTests {
                 });
     }
 
-    private void saveTestArticle() {
-        webTestClient.post()
-                .uri("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", testTitle)
-                        .with("coverUrl", testCoverUrl)
-                        .with("contents", testContents))
-                .exchange()
-                .expectStatus()
-                .is3xxRedirection();
-    }
-
-
     @Test
     void 첫_페이지_방문_시_사용자_이름_GUEST_확인() {
         webTestClient.get()
@@ -206,6 +192,47 @@ public class ArticleControllerTests {
                     assertThat(body.contains("로그인")).isTrue();
                     assertThat(body.contains("회원가입")).isTrue();
                     assertThat(body.contains("로그아웃")).isFalse();
+                });
+    }
+
+
+    @Test
+    void 댓글_잘_나오는지_테스트() {
+        webTestClient.get()
+                .uri("/articles/1")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains("first")).isTrue();
+                    assertThat(body.contains("second")).isTrue();
+                    assertThat(body.contains("third")).isTrue();
+                });
+    }
+
+    @Test
+    void 댓글_추가_테스트() {
+        webTestClient.post()
+                .uri("/articles/1/comments")
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("comment", "good article"))
+                .exchange()
+                .expectStatus()
+                .isFound();
+
+        webTestClient.get()
+                .uri("/articles/1")
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains("good article")).isTrue();
                 });
     }
 
