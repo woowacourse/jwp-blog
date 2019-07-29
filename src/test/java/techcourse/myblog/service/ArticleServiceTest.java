@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import techcourse.myblog.AbstractTest;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.UserDto;
 
 import java.util.Arrays;
 
@@ -17,9 +19,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class ArticleServiceTest extends AbstractTest {
     private static long articleId = 1;
+    private static Long userId;
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -28,6 +34,15 @@ class ArticleServiceTest extends AbstractTest {
 
     @BeforeEach
     void setUp() {
+        User user = User.builder()
+                        .email("aaa@gamil.com")
+                        .name("asd")
+                        .password("123qwe!@#")
+                        .build();
+
+        //TODO : User 저장
+        userId = userService.save(modelMapper.map(user, UserDto.Create.class));
+
         article = Article.builder()
                 .id(articleId)
                 .title("title")
@@ -35,7 +50,11 @@ class ArticleServiceTest extends AbstractTest {
                 .contents("contents")
                 .build();
 
-        articleService.save(modelMapper.map(article, ArticleDto.Create.class));
+        UserDto.Response userDto = modelMapper.map(user, UserDto.Response.class);
+        userDto.setId(userId);
+
+        articleService.save(userDto,
+            modelMapper.map(article, ArticleDto.Create.class));
     }
 
     @Test
@@ -65,5 +84,6 @@ class ArticleServiceTest extends AbstractTest {
     @AfterEach
     void tearDown() {
         articleService.deleteById(articleId++);
+        userService.deleteById(userId);
     }
 }

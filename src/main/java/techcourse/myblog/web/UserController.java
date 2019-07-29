@@ -63,12 +63,15 @@ public class UserController {
 
     @DeleteMapping("/users/{userId}")
     public RedirectView deleteUser(@PathVariable long userId, HttpSession httpSession) {
+
         Optional<UserDto.Response> userSession = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
         UserDto.Response user = userService.findById(userId);
         UserDto.Response sessionUser = userSession.get();
+
         if (!sessionUser.getEmail().equals(user.getEmail())) {
             return new RedirectView("/");
         }
+
         userService.deleteById(userId);
         httpSession.removeAttribute("user");
         return new RedirectView("/");
