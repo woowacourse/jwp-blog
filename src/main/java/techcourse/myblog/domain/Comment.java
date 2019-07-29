@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -27,6 +28,8 @@ public class Comment {
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_ARTICLE"), name = "article")
     private Article article;
 
+    private LocalDateTime createdAt;
+
     public Comment(String comment) {
         this.comment = comment;
     }
@@ -37,5 +40,10 @@ public class Comment {
 
     public void setArticle(Article article) {
         this.article = article;
+    }
+
+    @PrePersist
+    public void createdAt() {
+        this.createdAt = LocalDateTime.now();
     }
 }
