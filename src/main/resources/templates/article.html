@@ -104,6 +104,11 @@
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                             <div class="info">
                                 <span class="text-bold inline-block" href="" th:text="${comment.author.username}">Jun</span>
+                                <form accept-charset="utf-8" method="post" th:action="@{/comments/{articleId}/{commentId} (articleId = ${article.id}, commentId = ${comment.id})}" >
+                                    <input name="_method" type="hidden" value="DELETE">
+                                    <button type="submit"><i class="ti-close"></i></button>
+                                </form>
+
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span>6 min ago</span>
@@ -116,7 +121,7 @@
 
                     </ul>
                     <div class="add-comment">
-                        <form method="post" th:action="@{/comments/{id}(id = ${article.id})}">
+                        <form method="post" th:action="@{/comments/{articleId}(articleId = ${article.id})}">
                         <div id="editSection"></div>
                             <input id="comment-contents" name="contents" type="hidden">
                             <button class="float-right pointer btn btn-icon" type="submit">작성</button>

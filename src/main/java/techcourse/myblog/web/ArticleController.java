@@ -12,6 +12,7 @@ import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,12 +94,14 @@ public class ArticleController {
 		model.addAttribute("article", article);
 	}
 	//Todo : test
+	@Transactional
 	@DeleteMapping("/articles/{articleId}")
 	public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
 		if (!existSession(httpSession)) {
 			return "redirect:/";
 		}
 		confirmAuthor(articleId, httpSession);
+		commentRepository.deleteByArticleId(articleId);
 		articleRepository.deleteById(articleId);
 		return "redirect:/";
 	}
