@@ -105,15 +105,33 @@
                     <ul class="list-unstyled list-info" th:each="comment : ${comments}">
 
                         <li class="comment-item border bottom mrg-btm-30">
-                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
-                            <div class="info">
-                                <span href="" class="text-bold inline-block" th:text="${comment.author.name}">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
-                                </span>
-                                <p class="width-80" th:text="${comment.contents}">브라운 멋져</p>
-                            </div>
+                                <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
+                                <div class="info">
+                                    <span href="" class="text-bold inline-block" th:text="${comment.author.name}">Jun</span>
+                                    <span class="sub-title inline-block pull-right">
+                                        <i class="ti-timer pdd-right-5"></i>
+                                        <span>6 min ago</span>
+                                    </span>
+
+                                    <div th:if ="${comment.matchAuthor}">
+                                        <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}">
+                                            <input type="hidden" name="_method" value="put"/>
+                                            <button type="submit" class="float-right pointer btn btn-icon">
+                                                <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                            </button>
+                                        </form>
+
+                                        <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}">
+                                            <input type="hidden" name="_method" value="delete"/>
+                                            <button type="submit" class="float-right pointer btn btn-icon">
+                                                <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+
+
+                                    <p class="width-80" th:text="${comment.contents}">브라운 멋져</p>
+                                </div>
                         </li>
 
                     </ul>

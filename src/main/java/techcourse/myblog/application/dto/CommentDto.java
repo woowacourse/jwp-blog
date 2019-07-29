@@ -8,8 +8,10 @@ public class CommentDto {
     private String contents;
     private User author;
     private Article article;
+    private Boolean matchAuthor;
 
-    public CommentDto(String contents, User author, Article article) {
+    public CommentDto(Long id, String contents, User author, Article article) {
+        this.id = id;
         this.contents = contents;
         this.article = article;
         this.author = author;
@@ -37,5 +39,17 @@ public class CommentDto {
 
     public void setArticle(Article article) {
         this.article = article;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Boolean getMatchAuthor() {
+        return matchAuthor;
+    }
+
+    public void matchAuthor(String email) {
+        this.matchAuthor = author.compareEmail(email);
     }
 }

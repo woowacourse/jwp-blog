@@ -9,7 +9,7 @@ public class CommentConverter extends Converter<CommentDto, Comment> {
 
     CommentConverter() {
         super(commentDto -> new Comment(commentDto.getContents(), commentDto.getAuthor(), commentDto.getArticle()),
-                comment -> new CommentDto(comment.getContents(), comment.getAuthor(), comment.getArticle()));
+                comment -> new CommentDto(comment.getId(), comment.getContents(), comment.getAuthor(), comment.getArticle()));
     }
 
     public static CommentConverter getInstance() {

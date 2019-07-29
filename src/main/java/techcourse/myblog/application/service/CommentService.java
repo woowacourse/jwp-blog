@@ -47,9 +47,13 @@ public class CommentService {
         commentRepository.save(commentConverter.convertFromDto(commentDto));
     }
 
-    public List<Comment> findAllCommentsByArticleId(Long articleId) {
+    public List<CommentDto> findAllCommentsByArticleId(Long articleId, String sessionEmail) {
         Article article = articleService.findById(articleId);
         List<Comment> comments = commentRepository.findByArticle(article);
-        return comments;
+        List<CommentDto> commentDtos = commentConverter.createFromEntities(comments);
+        for (CommentDto commentDto : commentDtos) {
+            commentDto.matchAuthor(sessionEmail);
+        }
+        return commentDtos;
     }
 }

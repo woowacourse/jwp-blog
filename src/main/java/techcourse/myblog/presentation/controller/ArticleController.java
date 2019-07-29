@@ -6,12 +6,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.ArticleDto;
+import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.ArticleService;
 import techcourse.myblog.application.service.CommentService;
 import techcourse.myblog.domain.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class ArticleController {
@@ -33,10 +35,12 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}")
-    public ModelAndView readArticlePageByArticleId(@PathVariable Long articleId) {
+    public ModelAndView readArticlePageByArticleId(@PathVariable Long articleId, HttpSession httpSession) {
         ModelAndView modelAndView = new ModelAndView("/article");
         modelAndView.addObject("article", articleService.findById(articleId));
-        modelAndView.addObject("comments", commentService.findAllCommentsByArticleId(articleId));
+        String sessionEmail = (String) httpSession.getAttribute("email");
+        List<CommentDto> check = commentService.findAllCommentsByArticleId(articleId, sessionEmail);
+        modelAndView.addObject("comments", commentService.findAllCommentsByArticleId(articleId, sessionEmail));
         return modelAndView;
     }
 
