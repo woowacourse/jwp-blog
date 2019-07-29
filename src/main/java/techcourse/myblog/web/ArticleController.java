@@ -6,11 +6,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleSaveParams;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CommentService;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 import static techcourse.myblog.util.SessionKeys.USER;
 
@@ -20,6 +23,7 @@ import static techcourse.myblog.util.SessionKeys.USER;
 @RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
+    private final CommentService commentService;
 
     @GetMapping("/writing")
     public String writeArticleForm() {
@@ -37,7 +41,10 @@ public class ArticleController {
     @GetMapping("/{id}")
     public String fetchArticle(@PathVariable long id, Model model) {
         Article article = articleService.findById(id);
+        List<Comment> comments = commentService.findByArticleId(id);
+
         model.addAttribute("article", article);
+        model.addAttribute("comments", comments);
         return "article";
     }
 
