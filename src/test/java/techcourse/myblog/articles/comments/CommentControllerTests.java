@@ -60,6 +60,17 @@ class CommentControllerTests extends BaseControllerTests {
     }
 
     @Test
+    void 로그인_안하고_update() {
+
+        webTestClient.put().uri("/articles/{articleId}/comments/{id}", articleId, 1)
+                .body(fromFormData("contents", "modifiedContents"))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader()
+                .valueMatches("location", ".*/users/login");
+    }
+
+    @Test
     void 다른_사용자가_update() {
 
         webTestClient.put().uri("/articles/{articleId}/comments/{id}", articleId, 1)
@@ -67,5 +78,15 @@ class CommentControllerTests extends BaseControllerTests {
                 .body(fromFormData("contents", "modifiedContents"))
                 .exchange()
                 .expectStatus().isForbidden();
+    }
+
+    @Test
+    void delete() {
+
+        webTestClient.delete().uri("/articles/{articleId}/comments/{id}", articleId, 4)
+                .cookie(JSESSIONID, jSessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles/" + articleId);
     }
 }

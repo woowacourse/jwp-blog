@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.users.UserSession;
 
 @Controller
@@ -32,4 +30,16 @@ public class CommentController {
 
         return "redirect:/articles/" + commentDto.getArticleId();
     }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Long articleId,
+                         @PathVariable Long id,
+                         UserSession userSession){
+
+        final Long userId = userSession.getId();
+        commentService.deleteById(id, userId);
+
+        return "redirect:/articles/" + articleId;
+    }
+
 }

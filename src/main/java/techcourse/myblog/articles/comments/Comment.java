@@ -47,4 +47,8 @@ public class Comment {
     public void update(final Comment other) {
         this.contents = other.contents;
     }
+
+    public boolean isWrittenBy(final User other) {
+        return this.user.equals(other);
+    }
 }
