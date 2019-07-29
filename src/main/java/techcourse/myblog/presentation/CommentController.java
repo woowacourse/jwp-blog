@@ -7,14 +7,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.persistence.CommentRepository;
+import techcourse.myblog.service.CommentService;
+import techcourse.myblog.service.dto.CommentRequestDto;
 
 @Slf4j
 @Controller
 public class CommentController {
     private final CommentRepository commentRepository;
+    private final CommentService commentService;
 
-    public CommentController(CommentRepository commentRepository) {
+    public CommentController(CommentRepository commentRepository, CommentService commentService) {
         this.commentRepository = commentRepository;
+        this.commentService = commentService;
     }
 
     @DeleteMapping("/comments/{commentId}")
@@ -22,5 +26,10 @@ public class CommentController {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
         commentRepository.delete(comment);
         return "redirect:/articles/" + comment.getArticle().getId();
+    }
+
+    @PutMapping("/comments/{commentId}")
+    public String processUpdateComment(@PathVariable long commentId, CommentRequestDto commentRequestDto) {
+        return "redirect:/articles/" + commentService.update(commentId, commentRequestDto).getArticle().getId();
     }
 }

@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
+import techcourse.myblog.service.dto.CommentRequestDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -49,5 +50,9 @@ public class Comment {
     @PrePersist
     public void createdAt() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    public void update(CommentRequestDto commentRequestDto) {
+        this.comment = commentRequestDto.getComment();
     }
 }
