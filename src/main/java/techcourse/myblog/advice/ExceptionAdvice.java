@@ -23,4 +23,17 @@ public class ExceptionAdvice {
         model.addAttribute("path", "/");
         return "error";
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(RuntimeException.class)
+    public String handleRuntimeException(Exception e, Model model) {
+
+        log.info(e.toString());
+
+        model.addAttribute("errorMessage", e.getMessage());
+        model.addAttribute("path", "/");
+        return "error";
+    }
+
+
 }
