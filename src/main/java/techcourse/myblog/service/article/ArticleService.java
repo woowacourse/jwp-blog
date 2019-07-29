@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.presentation.ArticleRepository;
-import techcourse.myblog.service.dto.article.ArticleDto;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.exception.UserNotFoundException;
+import techcourse.myblog.presentation.ArticleRepository;
+import techcourse.myblog.presentation.UserRepository;
+import techcourse.myblog.service.dto.article.ArticleDto;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,10 +21,12 @@ import static techcourse.myblog.service.article.ArticleAssembler.convertToEntity
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ArticleService(final ArticleRepository articleRepository) {
+    public ArticleService(final ArticleRepository articleRepository, UserRepository userRepository) {
         this.articleRepository = articleRepository;
+        this.userRepository = userRepository;
     }
 
     public List<ArticleDto> findAll() {
@@ -37,17 +42,23 @@ public class ArticleService {
                 .orElseThrow(ArticleNotFoundException::new);
     }
 
-    public Long save(final ArticleDto articleDTO) {
-        Article article = convertToEntity(Objects.requireNonNull(articleDTO));
+    public Long save(final ArticleDto articleDTO, final Long authorId) {
+        User author = userRepository.findById(authorId)
+                .orElseThrow(UserNotFoundException::new);
+        Article article = convertToEntity(articleDTO, author);
         Article persistArticle = articleRepository.save(article);
         return persistArticle.getId();
     }
 
     @Transactional
     public void update(final Long id, final ArticleDto articleDTO) {
-        Article article = convertToEntity(Objects.requireNonNull(articleDTO));
+        Objects.requireNonNull(articleDTO);
         articleRepository.findById(Objects.requireNonNull(id))
-                .ifPresent((retrieveArticle -> retrieveArticle.update(article)));
+                .ifPresent((retrieveArticle -> retrieveArticle.update(new Article(
+                        articleDTO.getTitle(),
+                        articleDTO.getCoverUrl(),
+                        articleDTO.getContents(),
+                        retrieveArticle.getAuthor()))));
     }
 
     public void delete(final Long id) {

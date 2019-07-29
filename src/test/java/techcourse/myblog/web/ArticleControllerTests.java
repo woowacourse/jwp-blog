@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,22 +32,11 @@ public class ArticleControllerTests {
         coverUrl = "";
         contents = "contents";
 
-        jSessionId = getJSessionId("done", "done@woowa.com", "12345678");
+        jSessionId = getJSessionId("john123@example.com", "p@ssW0rd");
         location = getArticleLocation(jSessionId);
     }
 
-    private String getJSessionId(String userName, String email, String password) {
-        webTestClient.post().uri("/users")
-                .body(BodyInserters
-                        .fromFormData("name", userName)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/.*")
-                .expectBody()
-                .returnResult();
-
+    private String getJSessionId(String email, String password) {
         EntityExchangeResult<byte[]> loginResult = webTestClient.post().uri("/users/login")
                 .body(BodyInserters
                         .fromFormData("email", email)
@@ -90,21 +78,6 @@ public class ArticleControllerTests {
                 .getResponseHeaders().getLocation();
     }
 
-    @AfterEach
-    void tearDown() {
-        webTestClient.delete().uri(location)
-                .cookie("JSESSIONID", jSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/");
-
-        webTestClient.delete().uri("/mypage")
-                .cookie("JSESSIONID", jSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/logout");
-    }
-
     @Test
     void 메인화면() {
         webTestClient.get().uri("/")
@@ -131,7 +104,7 @@ public class ArticleControllerTests {
                         .with("contents", contents))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/articles/.")
+                .expectHeader().valueMatches("location", ".*/articles/\\d*")
                 .expectBody()
                 .returnResult()
                 .getRequestHeaders().getLocation();
@@ -166,7 +139,7 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void 게시글_수정() {
+    void 게시글_작성자가_게시글_수정() {
         URI articleLocation = webTestClient.put().uri(location)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .cookie("JSESSIONID", jSessionId)
@@ -176,7 +149,7 @@ public class ArticleControllerTests {
                         .with("contents", "newContents"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/articles/.")
+                .expectHeader().valueMatches("location", ".*/articles/\\d*")
                 .expectBody()
                 .returnResult()
                 .getResponseHeaders().getLocation();
@@ -193,7 +166,7 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void 게시글_삭제() {
+    void 게시글_작성자가_게시글_삭제() {
         URI articleLocation = webTestClient.post().uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .cookie("JSESSIONID", jSessionId)
@@ -218,10 +191,73 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void 게시글_수정_페이지_이동() {
+    void 게시글_작성자가_게시글_수정_페이지_이동() {
         webTestClient.get().uri(location + "/edit")
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void 다른_사용자가_게시글_수정() {
+        String outsiderSessionId = getJSessionId("paul123@example.com", "p@ssW0rd");
+
+        webTestClient.put().uri(location)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .cookie("JSESSIONID", outsiderSessionId)
+                .body(BodyInserters
+                        .fromFormData("title", "newTitle")
+                        .with("coverUrl", coverUrl)
+                        .with("contents", "newContents"))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles/\\d*")
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(Objects.requireNonNull(response.getResponseBody()));
+                    assertThat(body).contains("newTitle");
+                    assertThat(body).contains(coverUrl);
+                    assertThat(body).contains("newContents");
+                });
+
+        webTestClient.delete().uri("/mypage")
+                .cookie("JSESSIONID", outsiderSessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("Location", ".*/logout");
+    }
+
+    @Test
+    void 다른_사용자가_게시글_삭제() {
+        String outsiderSessionId = getJSessionId("paul123@example.com", "p@ssW0rd");
+
+        webTestClient.delete().uri(location)
+                .cookie("JSESSIONID", outsiderSessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles/\\d*");
+
+        webTestClient.delete().uri("/mypage")
+                .cookie("JSESSIONID", outsiderSessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("Location", ".*/logout");
+    }
+
+    @Test
+    void 다른_사용자가_게시글_수정_페이지_이동() {
+        String outsiderSessionId = getJSessionId("paul123@example.com", "p@ssW0rd");
+
+        webTestClient.get().uri("/mypage")
+                .cookie("JSESSIONID", outsiderSessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles/\\d*");
+
+        webTestClient.delete().uri("/mypage")
+                .cookie("JSESSIONID", outsiderSessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("Location", ".*/logout");
     }
 }

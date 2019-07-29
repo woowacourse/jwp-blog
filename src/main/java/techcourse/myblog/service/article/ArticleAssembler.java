@@ -1,6 +1,7 @@
 package techcourse.myblog.service.article;
 
 import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.article.ArticleDto;
 
 import java.util.Objects;
@@ -19,12 +20,12 @@ public class ArticleAssembler {
         return articleDto;
     }
 
-    public static Article convertToEntity(final ArticleDto articleDto) {
+    public static Article convertToEntity(final ArticleDto articleDto, final User user) {
         Objects.requireNonNull(articleDto);
 
         String title = articleDto.getTitle();
         String coverUrl = articleDto.getCoverUrl();
         String contents = articleDto.getContents();
-        return new Article(title, coverUrl, contents);
+        return new Article(title, coverUrl, contents, Objects.requireNonNull(user));
     }
 }

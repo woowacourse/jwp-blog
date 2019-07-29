@@ -6,9 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.service.article.ArticleService;
 import techcourse.myblog.service.dto.article.ArticleDto;
 import techcourse.myblog.service.dto.user.UserResponseDto;
-import techcourse.myblog.service.article.ArticleService;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -43,8 +43,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public ModelAndView createArticle(final ArticleDto articleDTO) {
-        Long id = articleService.save(articleDTO);
+    public ModelAndView createArticle(final ArticleDto articleDTO, final HttpSession session) {
+        Long id = articleService.save(articleDTO, ((UserResponseDto) session.getAttribute(USER_SESSION_KEY)).getId());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/articles/" + id));
         return modelAndView;

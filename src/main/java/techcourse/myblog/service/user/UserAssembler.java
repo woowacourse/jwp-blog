@@ -10,9 +10,10 @@ public class UserAssembler {
     public static UserResponseDto convertToDto(final User user) {
         Objects.requireNonNull(user);
 
+        Long id = user.getId();
         String email = user.getEmail();
         String name = user.getName();
-        return new UserResponseDto(email, name);
+        return new UserResponseDto(id, email, name);
     }
 
     public static User convertToEntity(final UserRequestDto userRequestDto) {
