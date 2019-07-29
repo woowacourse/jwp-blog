@@ -13,8 +13,7 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-//    @ManyToOne
-//    private User author;
+    private User user;
 
     private Article() {
 

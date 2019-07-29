@@ -28,7 +28,7 @@ public class UserService {
 
     @Transactional
     public void save(UserDto userDto) {
-        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+        if (userRepository.countUserByEmail(userDto.getEmail()) != 0) {
             throw new DuplicatedIdException("이미 사용중인 이메일입니다.");
         }
 
@@ -41,12 +41,12 @@ public class UserService {
         return userConverter.createFromEntities(userRepository.findAll());
     }
 
-    public UserDto findById(String email) {
-        return userConverter.convertFromEntity(findUserById(email));
+    public UserDto findByEmail(String email) {
+        return userConverter.convertFromEntity(findUserByEmail(email));
     }
 
     @Transactional(readOnly = true)
-    User findUserById(String email) {
+    User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login"));
     }
@@ -54,7 +54,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public void login(LoginDto loginDto) {
         String requestPassword = loginDto.getPassword();
-        User user = findUserById(loginDto.getEmail());
+        User user = findUserByEmail(loginDto.getEmail());
 
         if (!user.isSamePassword(requestPassword)) {
             throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
@@ -63,7 +63,7 @@ public class UserService {
 
     @Transactional
     public void modify(@Valid UserDto userDto, String email) {
-        User user = findUserById(userDto.getEmail());
+        User user = findUserByEmail(userDto.getEmail());
 
         if (user.isDifferentEmail(email)) {
             throw new IllegalArgumentException();
@@ -74,7 +74,7 @@ public class UserService {
 
     @Transactional
     public void removeById(UserDto userDto, String email) {
-        User user = findUserById(userDto.getEmail());
+        User user = findUserByEmail(userDto.getEmail());
 
         if (user.isDifferentEmail(email)) {
             throw new IllegalArgumentException();
