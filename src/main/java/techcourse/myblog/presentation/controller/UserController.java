@@ -59,8 +59,9 @@ public class UserController {
     public ModelAndView readMyPage(HttpSession httpSession) {
         ModelAndView modelAndView = new ModelAndView();
         String email = (String) httpSession.getAttribute("email");
+        System.out.println(email);
         modelAndView.setViewName("mypage");
-        modelAndView.addObject("user", userService.findById(email));
+        modelAndView.addObject("user", userService.findByEmail(email));
 
         return modelAndView;
     }
@@ -70,7 +71,7 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         String email = (String) httpSession.getAttribute("email");
         modelAndView.setViewName("mypage-edit");
-        modelAndView.addObject("user", userService.findById(email));
+        modelAndView.addObject("user", userService.findByEmail(email));
         return modelAndView;
     }
 

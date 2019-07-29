@@ -21,12 +21,19 @@ public class Comment {
     @ManyToOne
     private Article article;
 
+    public Comment() {
+    }
+
     public Comment(String contents, User user, Article article) {
         localDate = LocalDate.now();
         localTime = LocalTime.now();
         this.contents = contents;
         this.user = user;
         this.article = article;
+    }
+
+    public void modify(String contents) {
+        this.contents = contents;
     }
 
     public long getId() {
@@ -51,10 +58,6 @@ public class Comment {
 
     public Article getArticle() {
         return article;
-    }
-
-    public void modify(String contents) {
-        this.contents = contents;
     }
 
     @Override

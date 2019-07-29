@@ -6,20 +6,25 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.ArticleDto;
+import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.ArticleService;
+import techcourse.myblog.application.service.CommentService;
+
+import java.util.List;
 
 @Controller
 public class ArticleController {
     private final ArticleService articleService;
+    private final CommentService commentService;
 
     @Autowired
-    public ArticleController(final ArticleService articleService) {
+    public ArticleController(final ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
+        this.commentService = commentService;
     }
 
     @PostMapping("/articles")
     public RedirectView createArticles(ArticleDto article) {
-
         Long id = articleService.save(article);
 
         return new RedirectView("/articles/" + id);
@@ -29,6 +34,9 @@ public class ArticleController {
     public ModelAndView readArticlePageByArticleId(@PathVariable Long articleId) {
         ModelAndView modelAndView = new ModelAndView("/article");
         modelAndView.addObject("article", articleService.findById(articleId));
+
+        List<CommentDto> commentDtos = commentService.findAllByArticleId(articleId);
+        modelAndView.addObject("comments", commentDtos);
         return modelAndView;
     }
 
