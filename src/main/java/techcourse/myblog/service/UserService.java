@@ -19,11 +19,13 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void save(UserDto userDto) {
+    public Long save(UserDto userDto) {
         if (isExistEmail(userDto)) {
             throw new EmailDuplicatedException("이미 사용중인 이메일입니다.");
         }
-        userRepository.save(new User(userDto.getUserName(), userDto.getEmail(), userDto.getPassword()));
+        User newUser = new User(userDto.getUserName(), userDto.getEmail(), userDto.getPassword());
+        userRepository.save(newUser);
+        return newUser.getId();
     }
 
     private boolean isExistEmail(UserDto userDto) {
@@ -31,8 +33,7 @@ public class UserService {
     }
 
     public List<User> getUsers() {
-        List<User> users = userRepository.findAll();
-        return users;
+        return userRepository.findAll();
     }
 
     @Transactional

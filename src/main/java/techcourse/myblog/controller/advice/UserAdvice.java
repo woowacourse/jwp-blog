@@ -3,10 +3,7 @@ package techcourse.myblog.controller.advice;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import techcourse.myblog.exception.EmailDuplicatedException;
-import techcourse.myblog.exception.LoginFailException;
-import techcourse.myblog.exception.UserArgumentException;
-import techcourse.myblog.exception.UserNotFoundException;
+import techcourse.myblog.exception.*;
 
 @ControllerAdvice
 public class UserAdvice {
@@ -33,5 +30,11 @@ public class UserAdvice {
     public String handleException(LoginFailException e, Model model) {
         model.addAttribute("error", e.getMessage());
         return "login";
+    }
+
+    @ExceptionHandler(UserUpdateFailException.class)
+    public String handleException(UserUpdateFailException e, Model model) {
+        model.addAttribute("error", e.getMessage());
+        return "mypage-edit";
     }
 }

@@ -3,11 +3,13 @@ package techcourse.myblog.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.exception.UserArgumentException;
+import techcourse.myblog.exception.UserUpdateFailException;
 import techcourse.myblog.model.User;
 import techcourse.myblog.service.UserService;
 
@@ -43,5 +45,33 @@ public class UserController {
         userService.delete(user.getId());
         sessionStatus.setComplete();
         return "redirect:/";
+    }
+
+    @PutMapping
+    public String updateUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            log.error(bindingResult.getFieldError().getDefaultMessage());
+            throw new UserUpdateFailException(bindingResult.getFieldError().getDefaultMessage());
+        }
+        User user =  userService.update(userDto);
+
+        model.addAttribute("user", user);
+        return "redirect:/users/mypage";
+    }
+
+    @GetMapping("/mypage")
+    public String myPageForm() {
+        return "mypage";
+    }
+
+    @GetMapping("/mypage-edit")
+    public String myPageEditForm() {
+        return "mypage-edit";
+    }
+
+    @GetMapping
+    public String userListForm(Model model) {
+        model.addAttribute("users", userService.getUsers());
+        return "user-list";
     }
 }

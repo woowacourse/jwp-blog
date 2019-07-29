@@ -24,26 +24,36 @@
                 <div class="card">
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
-                        <a href="mypage-edit.html" class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
+                        <form action="/users" method="post">
+                            <input type="hidden" name="_method" value="delete">
+                            <button type="submit" class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
+                                <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                            </button>
+                        </form>
+                        <a href="/users/mypage-edit" class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </a>
+
+
                     </div>
                     <div class="card-block">
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"> <b>Name</b></p>
+                                <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10">Brown</p>
+                                <p th:if="${session.user != null}" th:text="${session.user.userName}" class="mrg-top-10">Brown</p>
+                                <p th:unless="${session.user != null}" class="mrg-top-10">Brown</p>
                             </div>
                         </div>
                         <hr>
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"> <b>Email</b></p>
+                                <p class="mrg-top-10 text-dark"><b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10">gracefulBrown@woowahan.com</p>
+                                <p th:if="${session.user != null}" th:text="${session.user.email}" class="mrg-top-10">gracefulBrown@woowahan.com</p>
+                                <p th:unless="${session.user != null}" class="mrg-top-10">gracefulBrown@woowahan.com</p>
                             </div>
                         </div>
                         <hr>

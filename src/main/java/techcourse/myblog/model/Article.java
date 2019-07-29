@@ -27,6 +27,7 @@ public class Article {
 
     @NonNull
     @Column(name = "CONTENTS", nullable = false, columnDefinition = "TEXT")
+    @Lob
     private String contents;
 
     @NonNull

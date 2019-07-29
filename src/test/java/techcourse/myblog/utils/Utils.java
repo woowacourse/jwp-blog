@@ -25,7 +25,8 @@ public class Utils {
                 .body(fromFormData("userName", userDto.getUserName())
                         .with("email", userDto.getEmail())
                         .with("password", userDto.getPassword()))
-                .exchange();
+                .exchange()
+                .expectStatus().isFound();
     }
 
     public static String getLoginCookie(WebTestClient webTestClient, LoginDto loginDto) {

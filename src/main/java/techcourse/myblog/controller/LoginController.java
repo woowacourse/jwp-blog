@@ -8,13 +8,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.model.User;
 import techcourse.myblog.service.LoginService;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 @SessionAttributes("user")
-@RequestMapping("/login")
 public class LoginController {
     private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
@@ -24,16 +26,21 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-    @GetMapping
+    @GetMapping("/login")
     public String loginForm() {
         return "login";
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public String login(LoginDto loginDto, Model model) {
         User user = loginService.getLoginUser(loginDto);
         model.addAttribute("user", user);
-        log.info("userName : {}", user.getUserName());
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(SessionStatus sessionStatus) {
+        sessionStatus.setComplete();
         return "redirect:/";
     }
 
