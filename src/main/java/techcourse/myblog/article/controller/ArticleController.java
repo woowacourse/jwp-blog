@@ -8,12 +8,14 @@ import techcourse.myblog.argumentresolver.UserSession;
 import techcourse.myblog.article.dto.ArticleDto;
 import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.article.service.ArticleService;
+import techcourse.myblog.comment.service.CommentService;
 
 @Controller
 @RequiredArgsConstructor
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final CommentService commentService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -35,6 +37,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}")
     public String readArticle(@PathVariable long articleId, Model model) {
         model.addAttribute("article", articleService.findById(articleId));
+        model.addAttribute("comments", commentService.findAllByArticleId(articleId));
         return "article";
     }
 
