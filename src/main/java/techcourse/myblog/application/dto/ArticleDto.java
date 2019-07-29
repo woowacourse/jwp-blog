@@ -1,16 +1,20 @@
 package techcourse.myblog.application.dto;
 
+import techcourse.myblog.domain.User;
+
 public class ArticleDto {
     private Long id;
     private String title;
     private String coverUrl;
     private String contents;
+    private User author;
 
-    public ArticleDto(Long id, String title, String coverUrl, String contents) {
+    public ArticleDto(Long id, String title, String coverUrl, String contents, User author) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.author = author;
     }
 
     public String getTitle() {
@@ -27,6 +31,14 @@ public class ArticleDto {
 
     public Long getId() {
         return id;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public void setId(Long id) {

@@ -43,20 +43,20 @@ public class UserService {
 
     @Valid
     @Transactional(readOnly = true)
-    public User findUserById(String email) {
+    public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login"));
     }
 
     @Transactional(readOnly = true)
-    public UserDto findById(String email) {
-        return userConverter.convertFromEntity(findUserById(email));
+    public UserDto findByEmail(String email) {
+        return userConverter.convertFromEntity(findUserByEmail(email));
     }
 
     @Transactional(readOnly = true)
     public void login(LoginDto loginDto) {
         String password = loginDto.getPassword();
-        User user = findUserById(loginDto.getEmail());
+        User user = findUserByEmail(loginDto.getEmail());
         if (!user.authenticate(password)) {
             throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
         }
@@ -70,7 +70,7 @@ public class UserService {
     }
 
     @Transactional
-    public void removeById(String email) {
+    public void removeByEmail(String email) {
         userRepository.deleteByEmail(email);
     }
 }

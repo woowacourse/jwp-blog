@@ -51,7 +51,7 @@ public class UserController {
 
     @GetMapping("/logout")
     public RedirectView logout(HttpSession httpSession) {
-        httpSession.invalidate();
+        httpSession.removeAttribute("email");
 
         return new RedirectView("/");
     }
@@ -61,7 +61,7 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         String email = (String) httpSession.getAttribute("email");
         modelAndView.setViewName("mypage");
-        modelAndView.addObject("user", userService.findById(email));
+        modelAndView.addObject("user", userService.findByEmail(email));
 
         return modelAndView;
     }
@@ -71,7 +71,7 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         String email = (String) httpSession.getAttribute("email");
         modelAndView.setViewName("mypage-edit");
-        modelAndView.addObject("user", userService.findById(email));
+        modelAndView.addObject("user", userService.findByEmail(email));
         return modelAndView;
     }
 
@@ -95,7 +95,7 @@ public class UserController {
         String email = (String) httpSession.getAttribute("email");
 
         if (user.compareEmail(email)) {
-            userService.removeById(email);
+            userService.removeByEmail(email);
             httpSession.invalidate();
         }
 

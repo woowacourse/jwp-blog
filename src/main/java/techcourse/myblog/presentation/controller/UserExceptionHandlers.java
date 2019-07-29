@@ -1,5 +1,7 @@
 package techcourse.myblog.presentation.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,10 +13,13 @@ import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 import techcourse.myblog.presentation.controller.exception.InvalidUpdateException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
 
 @ControllerAdvice(basePackages = {"techcourse.myblog.presentation.controller"})
 public class UserExceptionHandlers {
+    private static final Logger log = LoggerFactory.getLogger(UserExceptionHandlers.class);
+
     @ExceptionHandler(DuplicatedIdException.class)
     public RedirectView handleDuplicatedIdError(RedirectAttributes redirectAttributes, DuplicatedIdException e) {
         RedirectView redirectView = new RedirectView("/signup");

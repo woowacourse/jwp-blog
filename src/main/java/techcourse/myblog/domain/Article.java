@@ -1,9 +1,6 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -16,14 +13,18 @@ public class Article {
     private String coverUrl;
     private String contents;
 
-    private Article() {
+    @ManyToOne
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    private User author;
 
+    private Article() {
     }
 
     public static class ArticleBuilder {
         private String title;
         private String coverUrl;
         private String contents;
+        private User author;
 
         public ArticleBuilder title(String title) {
             this.title = title;
@@ -40,6 +41,11 @@ public class Article {
             return this;
         }
 
+        public ArticleBuilder author(User author) {
+            this.author = author;
+            return this;
+        }
+
         public Article build() {
             return new Article(this);
         }
@@ -49,6 +55,7 @@ public class Article {
         this.title = articleBuilder.title;
         this.coverUrl = articleBuilder.coverUrl;
         this.contents = articleBuilder.contents;
+        this.author = articleBuilder.author;
     }
 
     public Article(String title, String coverUrl, String contents) {
@@ -79,6 +86,10 @@ public class Article {
         return contents;
     }
 
+    public User getAuthor() {
+        return author;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -99,6 +110,7 @@ public class Article {
                 ", title='" + title + '\'' +
                 ", coverUrl='" + coverUrl + '\'' +
                 ", contents='" + contents + '\'' +
+                ", author='" + author + '\'' +
                 '}';
     }
 }

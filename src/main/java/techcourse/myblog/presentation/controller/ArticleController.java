@@ -7,6 +7,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.service.ArticleService;
+import techcourse.myblog.domain.User;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class ArticleController {
@@ -18,8 +22,9 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public RedirectView createArticles(ArticleDto article) {
-        Long id = articleService.save(article);
+    public RedirectView createArticles(ArticleDto article, HttpSession httpSession) {
+        String email = (String) httpSession.getAttribute("email");
+        Long id = articleService.save(article, email);
 
         return new RedirectView("/articles/" + id);
     }
@@ -32,7 +37,8 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public ModelAndView readArticleEditPage(@PathVariable Long articleId) {
+    public ModelAndView readArticleEditPage(@PathVariable Long articleId, HttpSession httpSession) {
+        articleService.checkAuthor(articleId, (String)httpSession.getAttribute("email"));
         ModelAndView modelAndView = new ModelAndView("/article-edit");
         modelAndView.addObject("article", articleService.findById(articleId));
         modelAndView.addObject("method", "put");

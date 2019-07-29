@@ -43,6 +43,10 @@ public class User {
         return this.password.equals(password);
     }
 
+    public boolean compareEmail(String email) {
+        return email.equals(this.email);
+    }
+
     public String getEmail() {
         return email;
     }
@@ -66,5 +70,11 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(email);
+    }
+
+    @Override
+    public String toString() {
+        return "User{id : " + id +
+                " email : " + email + "}";
     }
 }
