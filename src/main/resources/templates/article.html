@@ -79,7 +79,7 @@
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span>6 min ago</span>
                                 </span>
-                                <form method="post" th:action="'/comments/' + ${article.id} + '/' + ${comment.id}">
+                                <form method="post" th:action="'/articles/' + ${article.id} + '/comments/' + ${comment.id}">
                                     <input name="_method" type="hidden" value="DELETE" />
                                     <button class="btn btn-icon float-right pointer" type="submit">
                                         <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
@@ -95,7 +95,7 @@
                         </div>
                     </div>
                     <div class="add-comment">
-                        <form th:action="'/comments/' + ${article.id}" name="comment" method="post"
+                        <form th:action="'/articles/' + ${article.id} + '/comments'" name="comment" method="post"
                               accept-charset="utf-8">
                             <input id="comment-contents" name="contents" type="hidden" required>
                             <div id="editSection"></div>
