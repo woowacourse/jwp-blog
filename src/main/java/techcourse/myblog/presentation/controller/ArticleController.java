@@ -7,6 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.service.ArticleService;
+import techcourse.myblog.application.service.CommentService;
 import techcourse.myblog.domain.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,10 +16,12 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class ArticleController {
     private final ArticleService articleService;
+    private final CommentService commentService;
 
     @Autowired
-    public ArticleController(final ArticleService articleService) {
+    public ArticleController(final ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
+        this.commentService = commentService;
     }
 
     @PostMapping("/articles")
@@ -33,6 +36,7 @@ public class ArticleController {
     public ModelAndView readArticlePageByArticleId(@PathVariable Long articleId) {
         ModelAndView modelAndView = new ModelAndView("/article");
         modelAndView.addObject("article", articleService.findById(articleId));
+        modelAndView.addObject("comments", commentService.findAllCommentsByArticleId(articleId));
         return modelAndView;
     }
 

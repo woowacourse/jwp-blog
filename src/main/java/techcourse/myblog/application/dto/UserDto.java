@@ -5,6 +5,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 public class UserDto {
+    private Long id;
+
     @NotBlank(message = "이메일을 작성해주세요.")
     @Email(message = "메일의 양식을 지켜주세요.")
     private String email;
@@ -17,13 +19,11 @@ public class UserDto {
     @Pattern(regexp = "^([a-zA-Z0-9!@#$%^&*]{8,})$", message = "8자리 이상의 글자, 숫자, 특수문자를 입력해야합니다.")
     private String password;
 
-    public UserDto(String email, String name, String password) {
+    public UserDto(Long id, String email, String name, String password) {
+        this.id = id;
         this.email = email;
         this.name = name;
         this.password = password;
-    }
-
-    public UserDto() {
     }
 
     public boolean compareEmail(String email) {
@@ -52,5 +52,13 @@ public class UserDto {
 
     public String getPassword() {
         return password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

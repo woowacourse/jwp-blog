@@ -38,11 +38,9 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public ArticleDto findById(Long articleId) {
-        Article article = articleRepository.findById(articleId)
+    public Article findById(Long articleId) {
+        return articleRepository.findById(articleId)
                 .orElseThrow(() -> new NotExistArticleIdException("존재하지 않는 Article 입니다."));
-
-        return articleConverter.convertFromEntity(article);
     }
 
     @Transactional

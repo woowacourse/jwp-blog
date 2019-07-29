@@ -77,4 +77,8 @@ public class User {
         return "User{id : " + id +
                 " email : " + email + "}";
     }
+
+    public Long getId() {
+        return id;
+    }
 }
