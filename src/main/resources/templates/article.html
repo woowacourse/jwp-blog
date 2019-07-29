@@ -86,14 +86,18 @@
                                     </button>
                                 </form>
                                 <p class="width-80" th:text="${comment.contents}">내용</p>
-
                             </div>
                         </li>
                     </ul>
+                    <div class="form-group">
+                        <div th:if="${errors}" class="error-box">
+                            <span class="error-text" th:text="${errors}"></span>
+                        </div>
+                    </div>
                     <div class="add-comment">
                         <form th:action="'/comments/' + ${article.id}" name="comment" method="post"
                               accept-charset="utf-8">
-                            <input id="comment-contents" name="contents" type="hidden">
+                            <input id="comment-contents" name="contents" type="hidden" required>
                             <div id="editSection"></div>
                             <div class="col-lg-1 col-md-1">
                                 <div class="btn-group btn-group-vertical">
