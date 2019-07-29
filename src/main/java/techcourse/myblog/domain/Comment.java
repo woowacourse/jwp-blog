@@ -18,12 +18,16 @@ public class Comment {
     String contents;
     @CreationTimestamp
     private LocalDateTime createdTimeAt;
+    @ManyToOne
+    @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_article_to_comment"))
+    private Article article;
 
     public Comment() {}
 
-    public Comment(User writer, String contents) {
+    public Comment(User writer, String contents, Article article) {
         this.writer = writer;
         this.contents = contents;
+        this.article = article;
     }
 
     public Long getId() {
@@ -49,6 +53,10 @@ public class Comment {
     public Comment update(CommentDto commentDto) {
         this.contents = commentDto.getContents();
         return this;
+    }
+
+    public LocalDateTime getCreatedTimeAt() {
+        return createdTimeAt;
     }
 
     @Override
