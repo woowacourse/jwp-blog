@@ -1,15 +1,15 @@
-package techcourse.myblog.service.converter;
+package techcourse.myblog.service.assembler;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Converter<T, U> {
+public class Assembler<T, U> {
     private final Function<T, U> toEntity;
     private final Function<U, T> toDto;
 
-    public Converter(final Function<T, U> toEntity, final Function<U, T> toDto){
+    public Assembler(final Function<T, U> toEntity, final Function<U, T> toDto){
         this.toEntity = toEntity;
         this.toDto = toDto;
     }

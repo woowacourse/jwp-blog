@@ -1,18 +1,18 @@
-package techcourse.myblog.service.converter;
+package techcourse.myblog.service.assembler;
 
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.dto.ArticleDto;
 
-public class ArticleConverter extends Converter<ArticleDto, Article> {
-    private static class ArticleConverterLazyHolder {
-        private static final ArticleConverter INSTANCE = new ArticleConverter();
+public class ArticleAssembler extends Assembler<ArticleDto, Article> {
+    private static class ArticleAssemblerLazyHolder {
+        private static final ArticleAssembler INSTANCE = new ArticleAssembler();
     }
 
-    public static ArticleConverter getInstance() {
-        return ArticleConverterLazyHolder.INSTANCE;
+    public static ArticleAssembler getInstance() {
+        return ArticleAssemblerLazyHolder.INSTANCE;
     }
 
-    private ArticleConverter(){
+    private ArticleAssembler(){
         super(articleDto -> new Article(articleDto.getTitle(),
                 articleDto.getCoverUrl(),
                 articleDto.getContents())
