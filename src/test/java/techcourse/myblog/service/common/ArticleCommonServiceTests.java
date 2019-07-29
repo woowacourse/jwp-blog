@@ -24,8 +24,8 @@ public class ArticleCommonServiceTests {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        articleWriteService = new ArticleWriteService(articleRepository);
         articleReadService = new ArticleReadService(articleRepository);
+        articleWriteService = new ArticleWriteService(articleRepository, articleReadService);
         author = new User("author", "author@mail.com", "Auth0r!12");
         article = new Article("title", "coverUrl", "contents", author);
     }
