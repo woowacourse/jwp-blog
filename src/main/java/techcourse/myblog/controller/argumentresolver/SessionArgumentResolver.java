@@ -1,4 +1,4 @@
-package techcourse.myblog.controller.session;
+package techcourse.myblog.controller.argumentresolver;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -9,6 +9,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import techcourse.myblog.controller.session.UserSession;
 import techcourse.myblog.domain.User;
 
 public class SessionArgumentResolver implements HandlerMethodArgumentResolver {

@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
-import techcourse.myblog.controller.session.SessionArgumentResolver;
+import techcourse.myblog.controller.argumentresolver.SessionArgumentResolver;
 
 @Configuration
 public class MyBlogGlobalMvcConfig implements WebMvcConfigurer {
