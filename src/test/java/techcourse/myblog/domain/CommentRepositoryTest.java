@@ -18,8 +18,9 @@ class CommentRepositoryTest {
     private static final String TEST_NAME = "donut";
     private static final String TEST_EMAIL = "donut@woowa.com";
     private static final String TEST_PASSWORD = "qwer1234";
+    private static final String TEST_EMAIL_2 = "2" + TEST_EMAIL;
     private static final User TEST_USER = new User(TEST_NAME, TEST_EMAIL, TEST_PASSWORD);
-    private static final Comment TEST_COMMENT = new Comment(TEST_USER, "ㅎㅇ");
+    private static final User TEST_USER_2 = new User(TEST_NAME, TEST_EMAIL_2, TEST_PASSWORD);
 
     @Autowired
     private CommentRepository commentRepository;
@@ -29,8 +30,9 @@ class CommentRepositoryTest {
     private TestEntityManager testEntityManager;
 
     @Test
-    public void findById() {
-        Comment persistentComment = testEntityManager.persist(TEST_COMMENT);
+    public void commentWriteFindByArticleTest() {
+        User persistentUser = testEntityManager.persist(TEST_USER);
+        Comment persistentComment = testEntityManager.persist(new Comment(persistentUser, "ㅎㅇ"));
         TEST_ARTICLE.writeComment(persistentComment);
         Article persistentArticle = testEntityManager.persist(TEST_ARTICLE);
         testEntityManager.flush();
@@ -38,17 +40,14 @@ class CommentRepositoryTest {
         Article actualArticle = articleRepository.findById(persistentArticle.getId()).get();
         assertThat(actualArticle.getComments().size()).isEqualTo(1);
     }
-//
-//    @Test
-//    public void findById2() {
-//        _Article _article = new _Article("Zemoc", "MyDragon");
-//        _Article _persistentArticle = testEntityManager.persist(_article);
-//        _User user = new _User("Donatsu");
-//        user.addArticle(_persistentArticle);
-//        _User _persistentUser = testEntityManager.persist(user);
-//        testEntityManager.flush();
-//        testEntityManager.clear();
-//        _User _actualUser = _userRepository.findById(_persistentUser.getId()).get();
-//        assertThat(_actualUser.getArticles().size()).isEqualTo(0);
-//    }
+
+    @Test
+    public void commentWriteFindByUserTest() {
+        User persistentUser = testEntityManager.persist(TEST_USER_2);
+        Comment persistentComment = testEntityManager.persist(new Comment(persistentUser, "ㅎㅇ"));
+        testEntityManager.flush();
+        testEntityManager.clear();
+        Comment actualComment = commentRepository.findById(persistentComment.getId()).get();
+        assertThat(actualComment.getAuthor().getEmail()).isEqualTo(TEST_EMAIL_2);
+    }
 }

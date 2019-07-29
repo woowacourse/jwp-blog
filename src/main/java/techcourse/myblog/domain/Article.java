@@ -6,18 +6,14 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "article")
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @OneToOne
-    private User author;
     private String title;
     private String coverUrl;
     private String contents;
-    @OneToMany(mappedBy = "article")
-    @JoinColumn
+    @OneToMany
     private List<Comment> comments = new ArrayList<>();
 
     public Article() {}
@@ -35,8 +31,6 @@ public class Article {
     public void setId(long id) {
         this.id = id;
     }
-
-    public User getAuthor() { return this.author; }
 
     public String getTitle() {
         return this.title;
