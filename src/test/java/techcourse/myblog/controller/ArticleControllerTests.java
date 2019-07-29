@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +35,7 @@ public class ArticleControllerTests {
     private String default2Password = "abcdEFGH123!@#";
     private String default2Email = "default2@default.com";
     private LoginControllerTest loginControllerTest;
+
     @Autowired
     private UserRepository userRepository;
     String cookie;

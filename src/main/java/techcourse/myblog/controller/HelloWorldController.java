@@ -1,4 +1,4 @@
-package techcourse.myblog;
+package techcourse.myblog.controller;
 
 import org.springframework.web.bind.annotation.*;
 

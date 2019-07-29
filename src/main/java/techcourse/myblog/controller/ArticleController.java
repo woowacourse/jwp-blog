@@ -1,15 +1,13 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.web.dto.ArticleDto;
+import techcourse.myblog.domain.*;
+import techcourse.myblog.controller.dto.ArticleDto;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -17,9 +15,12 @@ import java.util.List;
 @Controller
 public class ArticleController {
     private ArticleRepository articleRepository;
+    private CommentRepository commentRepository;
 
-    public ArticleController(ArticleRepository articleRepository) {
+    @Autowired
+    public ArticleController(ArticleRepository articleRepository, CommentRepository commentRepository) {
         this.articleRepository = articleRepository;
+        this.commentRepository = commentRepository;
     }
 
     @GetMapping("/articles/writing")
@@ -57,7 +58,10 @@ public class ArticleController {
         log.debug(">>> article Id : {}", articleId);
         Article article = articleRepository.findById(articleId).get();
         log.debug(">>> get article : {}", article);
+        List<Comment> comments = commentRepository.findAllByArticle_Id(article.getId());
+        log.debug(">>> get article comment size : {}", comments.size());
         model.addAttribute("article", article);
+        model.addAttribute("comments", comments);
         return "article";
     }
 

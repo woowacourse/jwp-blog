@@ -1,13 +1,13 @@
-package techcourse.myblog.web.dto;
+package techcourse.myblog.controller.dto;
 
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 
-import javax.persistence.*;
-
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Slf4j
 public class ArticleDto {
     private long id;

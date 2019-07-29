@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -7,7 +7,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.web.dto.UserDto;
+import techcourse.myblog.controller.dto.UserDto;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;

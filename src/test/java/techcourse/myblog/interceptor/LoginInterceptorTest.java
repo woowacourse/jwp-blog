@@ -1,4 +1,4 @@
-package techcourse.myblog.web.interceptor;
+package techcourse.myblog.interceptor;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
