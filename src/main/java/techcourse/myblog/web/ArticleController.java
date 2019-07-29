@@ -46,7 +46,7 @@ public class ArticleController {
         Article article = articleService.findById(id);
         User user = (User) httpSession.getAttribute(USER);
         User author = article.getAuthor();
-        
+
         if (!user.equals(author)) {
             return "redirect:/articles/" + id;
         }

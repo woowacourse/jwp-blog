@@ -11,6 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.dto.UserSaveParams;
+import techcourse.myblog.testutil.LoginTestUtil;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -24,8 +25,8 @@ class UserControllerTests {
 
     @BeforeEach
     void setUp() {
-        LoginTestConfig.signUp(webTestClient);
-        jSessionId = LoginTestConfig.getJSessionId(webTestClient);
+        LoginTestUtil.signUp(webTestClient);
+        jSessionId = LoginTestUtil.getJSessionId(webTestClient);
     }
 
     @Test
@@ -65,7 +66,7 @@ class UserControllerTests {
 
     @Test
     void mypage_edit_페이지_이동() {
-        UserSaveParams userSaveParams = LoginTestConfig.getUserSaveParams();
+        UserSaveParams userSaveParams = LoginTestUtil.getUserSaveParams();
 
         webTestClient.post().uri("/mypage/edit")
                 .body(BodyInserters
@@ -77,8 +78,8 @@ class UserControllerTests {
 
     @Test
     void mypage_delete() {
-        LoginTestConfig.signUp(webTestClient, signUpParams);
-        String jSessionIdByDelete = LoginTestConfig.getJSessionId(webTestClient, signUpParams);
+        LoginTestUtil.signUp(webTestClient, signUpParams);
+        String jSessionIdByDelete = LoginTestUtil.getJSessionId(webTestClient, signUpParams);
 
         webTestClient.delete().uri("/mypage")
                 .cookie("JSESSIONID", jSessionIdByDelete)
@@ -88,6 +89,6 @@ class UserControllerTests {
 
     @AfterEach
     void tearDown() {
-        LoginTestConfig.deleteUser(webTestClient);
+        LoginTestUtil.deleteUser(webTestClient);
     }
 }
