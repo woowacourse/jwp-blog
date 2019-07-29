@@ -139,13 +139,13 @@ public class UserServiceTest {
     void deleteUserWithCascadeArticles() {
         UserDto userDto = new UserDto("delete", "email11@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
         User author = userService.save(userDto);
-        ArticleDto articleDto = new ArticleDto(1L, author.getId(), "title",
+        ArticleDto articleDto = new ArticleDto(null, author.getId(), "title",
                 "coverUrl", "contents");
 
-        articleService.save(author.getId(), articleDto);
+        ArticleDto article = articleService.save(author.getId(), articleDto);
         userService.delete(author.getId());
 
-        assertThatThrownBy(() -> articleService.findArticleDtoById(articleDto.getId()))
+        assertThatThrownBy(() -> articleService.findArticleDtoById(article.getId()))
                 .isInstanceOf(NotFoundArticleException.class);
     }
 }

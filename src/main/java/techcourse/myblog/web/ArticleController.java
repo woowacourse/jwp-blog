@@ -4,13 +4,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.CommentResponseDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.web.exception.NotLoggedInException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class ArticleController {
@@ -18,10 +21,12 @@ public class ArticleController {
 
     private ArticleService articleService;
     private UserService userService;
+    private CommentService commentService;
 
-    public ArticleController(ArticleService articleService, UserService userService) {
+    public ArticleController(ArticleService articleService, UserService userService, CommentService commentService) {
         this.articleService = articleService;
         this.userService = userService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/articles")
@@ -43,6 +48,9 @@ public class ArticleController {
 
         UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoById(articleDto.getUserId());
         model.addAttribute("articleUser", userPublicInfoDto);
+
+        List<CommentResponseDto> commentResponseDtos = commentService.findCommentsByArticleId(id);
+        model.addAttribute("comments", commentResponseDtos);
         return "article";
     }
 

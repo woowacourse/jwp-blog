@@ -33,16 +33,16 @@ class CommentServiceTest {
 
     @Test
     void saveComment() {
-        CommentRequestDto commentRequestDto = new CommentRequestDto("TEST Comment");
-        Comment comment = commentService.save(1L, articleId, commentRequestDto);
+        CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
+        Comment comment = commentService.save(1L, commentRequestDto);
 
         assertThat(comment.getComment()).isEqualTo(commentRequestDto.getComment());
     }
 
     @Test
     void findCommentsByArticleId() {
-        CommentRequestDto commentRequestDto = new CommentRequestDto("TEST Comment");
-        Comment comment = commentService.save(1L, articleId, commentRequestDto);
+        CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
+        Comment comment = commentService.save(1L, commentRequestDto);
         List<CommentResponseDto> comments = commentService.findCommentsByArticleId(articleId);
 
         assertThat(comments.size()).isEqualTo(1);

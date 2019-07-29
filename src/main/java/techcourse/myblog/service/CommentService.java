@@ -23,9 +23,9 @@ public class CommentService {
         this.articleService = articleService;
     }
 
-    public Comment save(Long userId, Long articleId, CommentRequestDto commentRequestDto) {
+    public Comment save(Long userId, CommentRequestDto commentRequestDto) {
         User user = userService.findById(userId);
-        Article article = articleService.findById(articleId);
+        Article article = articleService.findById(commentRequestDto.getArticleId());
         Comment comment = commentRequestDto.toEntity(user, article);
         return commentRepository.save(comment);
     }

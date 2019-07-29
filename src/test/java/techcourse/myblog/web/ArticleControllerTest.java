@@ -196,7 +196,6 @@ public class ArticleControllerTest {
                 });
     }
 
-
     @Test
     void editArticleWhenUserMismatch() {
         String newTitle = "test";
