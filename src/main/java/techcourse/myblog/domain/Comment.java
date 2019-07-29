@@ -1,6 +1,16 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
 
 @Entity
 public class Comment {
@@ -14,13 +24,19 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-   // @Column(nullable = false)
+    // @Column(nullable = false)
     private User author;
 
     @ManyToOne
     @JoinColumn(name = "article_id")
     //@Column(nullable = false)
     private Article article;
+
+    @CreationTimestamp
+    private LocalDateTime createdTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedTime;
 
     private Comment() {
     }
@@ -29,5 +45,33 @@ public class Comment {
         this.contents = contents;
         this.author = author;
         this.article = article;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getContents() {
+        return contents;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public LocalDateTime getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public boolean isSameAuthor(String email) {
+        return this.author.getEmail().equals(email);
     }
 }

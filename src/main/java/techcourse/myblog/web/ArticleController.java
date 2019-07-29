@@ -3,20 +3,27 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.ArticleDto;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 public class ArticleController {
     private static final String ARTICLE_INFO = "article";
     private static final String ARTICLES_INFO = "articles";
+    private static final String COMMENTS_INFO = "comments";
 
-    private ArticleService articleService;
+    private final ArticleService articleService;
+    private final CommentService commentService;
 
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/")
@@ -42,15 +49,17 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String selectArticle(@PathVariable("articleId") long articleId, Model model) {
-        ArticleDto article = articleService.findById(articleId);
+        Article article = articleService.findById(articleId);
+        List<Comment> comments = commentService.findByArticle(article);
         model.addAttribute(ARTICLE_INFO, article);
+        model.addAttribute(COMMENTS_INFO, comments);
 
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String edit(@PathVariable("articleId") long articleId, Model model) {
-        ArticleDto article = articleService.findById(articleId);
+        Article article = articleService.findById(articleId);
         model.addAttribute(ARTICLE_INFO, article);
 
         return "article-edit";

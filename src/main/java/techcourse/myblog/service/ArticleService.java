@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.service.assembler.ArticleAssembler;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.exception.NoArticleException;
 

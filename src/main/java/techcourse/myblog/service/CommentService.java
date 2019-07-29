@@ -4,8 +4,11 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.*;
 import techcourse.myblog.service.dto.CommentRequest;
 import techcourse.myblog.service.dto.UserResponse;
+import techcourse.myblog.service.exception.CommentNotFoundException;
 import techcourse.myblog.service.exception.NoArticleException;
 import techcourse.myblog.service.exception.NoUserException;
+
+import java.util.List;
 
 @Service
 public class CommentService {
@@ -27,5 +30,17 @@ public class CommentService {
         Comment comment = new Comment(commentRequest.getContents(), user, article);
 
         commentRepository.save(comment);
+    }
+
+    public List<Comment> findByArticle(Article article) {
+        return commentRepository.findAllByArticle(article);
+    }
+
+    public Comment findCommentById(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("존재하지 않는 댓글입니다."));
+    }
+
+    public void deleteComment(Long commentId) {
+        commentRepository.deleteById(commentId);
     }
 }

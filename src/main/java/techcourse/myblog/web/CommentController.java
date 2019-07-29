@@ -2,11 +2,14 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import techcourse.myblog.domain.Comment;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.CommentRequest;
 import techcourse.myblog.service.dto.UserResponse;
+import techcourse.myblog.service.exception.NotSameAuthorException;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -28,6 +31,19 @@ public class CommentController {
             commentService.save(commentRequest, articleId, user.getId());
         }
 
+        return "redirect:/articles/" + articleId;
+    }
+
+    @DeleteMapping("/articles/{articleId}/comments/{commentId}")
+    public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, HttpSession httpSession) {
+        Comment comment = commentService.findCommentById(commentId);
+        UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
+
+        if (!comment.isSameAuthor(userResponse.getEmail())) {
+            throw new NotSameAuthorException("해당 댓글의 작성자가 아닙니다.");
+        }
+
+        commentService.deleteComment(commentId);
         return "redirect:/articles/" + articleId;
     }
 }
