@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,10 +28,10 @@ public class Comment {
     @NotBlank(message = "내용을 입력해주세요.")
     private String contents;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Article article;
 
     public Comment(final String contents) {
