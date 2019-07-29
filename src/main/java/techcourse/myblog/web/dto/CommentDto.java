@@ -7,20 +7,17 @@ public class CommentDto {
     private User writer;
     private String contents;
 
+    public CommentDto(User writer, String contents) {
+        this.writer = writer;
+        this.contents = contents;
+    }
+
     public User getWriter() {
         return writer;
     }
 
-    public void setWriter(User writer) {
-        this.writer = writer;
-    }
-
     public String getContents() {
         return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
     }
 
     public Comment create() {
