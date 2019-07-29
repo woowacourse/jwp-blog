@@ -102,9 +102,15 @@
                         </li>
 
                     </ul>
-                    <div class="add-comment">
-                        <div id="editSection"></div>
-                    </div>
+                    <form id="commentForm" method="post" th:action="'/articles/' + ${article.id} + '/comments'">
+                        <input type="hidden" name="contents" id="commentContents"/>
+                        <div class="add-comment">
+                            <div id="editSection"></div>
+                            <button type="button" onclick="saveComment()" id="saveCommentBtn" class="float-right pointer btn btn-icon">
+                                <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -131,6 +137,17 @@
         },
         height: '200px'
     });
+
+    function saveComment() {
+        var contents = editor.getMarkdown();
+        if (contents === "") {
+            alert('내용을 입력하세요!');
+            return;
+        }
+        document.getElementById("commentContents").value = contents;
+        document.getElementById("commentForm").submit();
+    }
 </script>
 </body>
 </html>
+

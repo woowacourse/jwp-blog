@@ -14,12 +14,12 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @Column(nullable = false)
+   // @Column(nullable = false)
     private User author;
 
     @ManyToOne
     @JoinColumn(name = "article_id")
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private Article article;
 
     private Comment() {
