@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CommentControllerTest {
     private static final Long SAMPLE_ARTICLE_ID = 1L;
+    private static final Long SAMPLE_COMMENT_ID = 1L;
 
     @Autowired
     WebTestClient webTestClient;
@@ -49,6 +50,29 @@ class CommentControllerTest {
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
                     assertThat(body.contains(testComment)).isTrue();
+                });
+    }
+
+    @Test
+    void updateComment() {
+        String updateComment = "update comment";
+
+        webTestClient.put()
+                .uri("/comment/" + SAMPLE_COMMENT_ID.toString())
+                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .body(BodyInserters.fromFormData("comment", updateComment)
+                        .with("articleId", SAMPLE_ARTICLE_ID.toString()))
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location", ".*/articles/" + SAMPLE_ARTICLE_ID + ".*");
+
+        webTestClient.get().uri("/articles/" + SAMPLE_ARTICLE_ID.toString())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(updateComment)).isTrue();
                 });
     }
 }

@@ -31,6 +31,18 @@ public class Comment {
         this.article = article;
     }
 
+    public boolean matchAuthorId(Long userId) {
+        return this.author.matchId(userId);
+    }
+
+    public void updateComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
     public String getComment() {
         return comment;
     }

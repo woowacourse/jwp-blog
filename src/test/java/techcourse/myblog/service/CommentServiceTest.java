@@ -50,6 +50,16 @@ class CommentServiceTest {
         assertThat(comments.get(0).getAuthorName()).isEqualTo(comment.getAuthorName());
     }
 
+    @Test
+    void updateComment() {
+        CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
+        Comment comment = commentService.save(1L, commentRequestDto);
+        CommentRequestDto updateRequestDto = new CommentRequestDto(articleId, "UPDATE Comment");
+        Comment updatedComment = commentService.update(1L, comment.getId(), updateRequestDto);
+
+        assertThat(updatedComment.getComment()).isEqualTo("UPDATE Comment");
+    }
+
     @AfterEach
     void tearDown() {
         commentService.deleteAll();

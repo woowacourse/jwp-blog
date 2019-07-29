@@ -7,7 +7,9 @@ import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.service.exception.NotFoundCommentException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,15 +35,24 @@ public class CommentService {
     public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
         Article article = articleService.findById(articleId);
         return commentRepository.findAllByArticle(article).stream()
-                .map(comment -> toCommentResponceDto(comment.getAuthorName(), comment.getComment()))
+                .map(comment -> toCommentResponseDto(comment.getId(), comment.getAuthorName(), comment.getComment()))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Comment update(Long userId, Long commentId, CommentRequestDto commentRequestDto) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+        if (comment.matchAuthorId(userId)) {
+            comment.updateComment(commentRequestDto.getComment());
+        }
+        return comment;
     }
 
     public void deleteAll() {
         commentRepository.deleteAll();
     }
 
-    private CommentResponseDto toCommentResponceDto(String userName, String comment) {
-        return new CommentResponseDto(userName, comment);
+    private CommentResponseDto toCommentResponseDto(Long commentId, String userName, String comment) {
+        return new CommentResponseDto(commentId, userName, comment);
     }
 }

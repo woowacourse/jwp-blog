@@ -7,6 +7,7 @@ import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.exception.NotFoundArticleException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,12 +41,12 @@ public class ArticleService {
         return toArticleDto(articleRepository.save(articleDto.toEntity(author)));
     }
 
+    @Transactional
     public void update(Long articleId, Long userId, ArticleDto articleDto) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
         if (article.matchUserId(userId)) {
             article.updateArticle(articleDto.toVo());
-            articleRepository.save(article);
         }
     }
 

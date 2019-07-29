@@ -1,7 +1,9 @@
 package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
@@ -24,6 +26,15 @@ public class CommentController {
     public String createComment(CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
         Long userId = getLoggedInUser(httpServletRequest).getId();
         commentService.save(userId, commentRequestDto);
+        return "redirect:/articles/" + commentRequestDto.getArticleId();
+    }
+
+    @PutMapping("/comment/{id}")
+    public String updateComment(@PathVariable("id") Long commentId,
+                                CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
+
+        Long userId = getLoggedInUser(httpServletRequest).getId();
+        commentService.update(userId, commentId, commentRequestDto);
         return "redirect:/articles/" + commentRequestDto.getArticleId();
     }
 
