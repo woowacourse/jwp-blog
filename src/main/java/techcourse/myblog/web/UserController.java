@@ -1,26 +1,19 @@
 package techcourse.myblog.web;
 
 import org.slf4j.Logger;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.LoginDto;
-import techcourse.myblog.dto.MyPageEditDto;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.UserService;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
-import java.util.NoSuchElementException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -41,17 +34,10 @@ public class UserController {
     private static final String PAGE_USER_LIST = "user-list";
     private static final String PAGE_MYPAGE = "mypage";
     private static final String PAGE_MYPAGE_EDIT = "mypage-edit";
-    private static final String DUPLICATED_EMAIL = "이미 가입되어 있는 이메일 주소입니다. 다른 이메일 주소를 입력해 주세요.";
-    private static final String WRONG_LOGIN = "잘못된 이메일 주소 또는 패스워드를 입력하셨습니다.";
+    private final UserService userService;
 
-    private final UserRepository userRepository;
-
-    public UserController(final UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    private boolean isDuplicatedEmail(final String email) {
-        return userRepository.findByEmail(email).isPresent();
+    public UserController(final UserService userService) {
+        this.userService = userService;
     }
 
     private String loginFirstOr(final String elsePage, final HttpSession session) {
@@ -68,28 +54,14 @@ public class UserController {
 
     @GetMapping(ROUTE_USERS)
     public String userList(final Model model) {
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userService.findAll());
         return PAGE_USER_LIST;
     }
 
     @Transactional
     @PostMapping(ROUTE_USERS)
-    public String signup(final Model model, @Valid UserDto userDto, final Errors errors, final HttpServletResponse response) {
-        if (errors.hasErrors()) {
-            final FieldError error = errors.getFieldError();
-            LOG.debug("클라이언트에서 전송된 필드에 오류 있음: {}", error.getDefaultMessage());
-            model.addAttribute(ERROR, error.getDefaultMessage());
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            return ROUTE_SIGNUP;
-        }
-        if (isDuplicatedEmail(userDto.getEmail())) {
-            LOG.debug("중복 이메일 계정: {}", userDto.getEmail());
-            model.addAttribute(ERROR, DUPLICATED_EMAIL);
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            return ROUTE_SIGNUP;
-        }
-        final User user = new User(userDto);
-        userRepository.save(user);
+    public String signup(final UserDto userDto) {
+        userService.signup(userDto);
         LOG.debug("회원 가입 성공");
         LOG.debug("username: {}", userDto.getUsername());
         LOG.debug("password: {}", userDto.getPassword());
@@ -107,27 +79,16 @@ public class UserController {
     }
 
     @PostMapping(ROUTE_LOGIN)
-    public String userLogin(final Model model, final LoginDto loginDto, final HttpSession session, final HttpServletResponse response) {
+    public String userLogin(final LoginDto loginDto, final HttpSession session) {
         LOG.debug("로그인 시도 시작");
-        try {
-            LOG.debug("received email: {}", loginDto.getEmail());
-            LOG.debug("received password: {}", loginDto.getPassword());
-            final User existUser = userRepository.findByEmailAndPassword(loginDto.getEmail(), loginDto.getPassword()).get();
-            session.setAttribute(USER, existUser);
-            LOG.debug("로그인 성공!");
-            LOG.debug("user: {}", existUser);
-            return REDIRECT + ROUTE_ROOT;
-        } catch (NoSuchElementException e) {
-            LOG.debug("이메일 주소 또는 패스워드 오류: {}", e.getMessage());
-            model.addAttribute(ERROR, WRONG_LOGIN);
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            return ROUTE_LOGIN;
-        } catch (Exception e) {
-            LOG.debug("로그인 오류: {}", e.getMessage());
-            model.addAttribute(ERROR, e.getMessage());
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            return ROUTE_LOGIN;
-        }
+//        try {
+        LOG.debug("received email: {}", loginDto.getEmail());
+        LOG.debug("received password: {}", loginDto.getPassword());
+        final User existUser = userService.login(loginDto);
+        session.setAttribute(USER, existUser);
+        LOG.debug("로그인 성공!");
+        LOG.debug("user: {}", existUser);
+        return REDIRECT + ROUTE_ROOT;
     }
 
     @GetMapping(ROUTE_LOGOUT)
@@ -152,39 +113,24 @@ public class UserController {
     }
 
     @PutMapping(ROUTE_MYPAGE + ROUTE_EDIT)
-    public String mypageEdit(final Model model, final HttpSession session, @Valid final MyPageEditDto dto, final Errors errors, final HttpServletResponse response) {
-        if (errors.hasErrors()) {
-            final FieldError error = errors.getFieldError();
-            LOG.debug("수정 중 오류 발생: {}", error.getDefaultMessage());
-            model.addAttribute(ERROR, error.getDefaultMessage());
-            model.addAttribute(USER, session.getAttribute(USER));
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            return loginFirstOr(PAGE_MYPAGE_EDIT, session);
-        }
-        try {
+    public String mypageEdit(final Model model, final HttpSession session, final UserDto dto) {
             final User loginUser = (User) session.getAttribute(USER);
-            final User user = userRepository.findById(loginUser.getId()).get();
+            final Long userId = loginUser.getId();
             LOG.debug("사용자 변경");
-            LOG.debug("user: {}", user);
+            LOG.debug("user: {}", loginUser);
             LOG.debug("DTO: {}", dto.getUsername());
-            user.setUsername(dto.getUsername());
-            userRepository.save(user);
-            session.setAttribute(USER, user);
+            final User updatedUser = userService.update(userId, dto);
+            session.setAttribute(USER, updatedUser);
             return REDIRECT + ROUTE_MYPAGE;
-        } catch (Exception e) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            return REDIRECT + ROUTE_LOGIN;
-        }
     }
 
     @DeleteMapping(ROUTE_MYPAGE + ROUTE_EDIT)
     public String deleteUser(final HttpSession session) {
         try {
             final User loginUser = (User) session.getAttribute(USER);
-            final User user = userRepository.findById(loginUser.getId()).get();
             LOG.debug("사용자 계정 삭제");
-            LOG.debug("삭제되는 계정: {}", user.getEmail());
-            userRepository.delete(user);
+            LOG.debug("삭제되는 계정: {}", loginUser.getEmail());
+            userService.delete(loginUser);
             session.setAttribute(USER, null);
             return REDIRECT + ROUTE_LOGOUT;
         } catch (Exception e) {

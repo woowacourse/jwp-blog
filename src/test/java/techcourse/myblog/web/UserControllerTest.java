@@ -75,12 +75,12 @@ class UserControllerTest {
 
     @Test
     void 없는_이메일로_로그인_시도() {
-        assertThat(login("a@a.com", PASSWORD).getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(login("a@a.com", PASSWORD).getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
     void 잘못된_패스워드로_로그인_시도() {
-        assertThat(login(EMAIL, "qwerty").getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(login(EMAIL, "qwerty").getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -99,15 +99,15 @@ class UserControllerTest {
 
         // 너무 짧은 이름
         signupTry = signup("a", "a@a.com", PASSWORD);
-        assertThat(signupTry.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(signupTry.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
 
         // 패스워드 규칙 위반
         signupTry = signup("abc", "a@a.com", "1234");
-        assertThat(signupTry.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(signupTry.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
 
         // 중복 이메일
         signupTry = signup(USERNAME, EMAIL, PASSWORD);
-        assertThat(signupTry.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        assertThat(signupTry.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST);
 
         // 가입 성공
         signupTry = signup(USERNAME, "a@a.com", PASSWORD);
