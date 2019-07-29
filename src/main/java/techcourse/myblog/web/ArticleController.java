@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.domain.Comment;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.UserService;
@@ -14,9 +14,10 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class ArticleController {
+    private final UserService userService;
     private final ArticleService articleService;
     private final CommentService commentService;
-    private final UserService userService;
+
     public ArticleController(ArticleService articleService, CommentService commentService, UserService userService) {
         this.userService = userService;
         this.articleService = articleService;
@@ -70,9 +71,12 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/{articleId}/comment")
-    public RedirectView writeComment(@PathVariable long articleId, String contents, HttpSession session){
-        String currentEmail = (String)session.getAttribute("email");
-        commentService.write(articleService.maybeArticle(articleId), userService.getUserByEmail(currentEmail),contents);
-        return
+    public RedirectView writeComment(@PathVariable long articleId, String contents, HttpSession session) {
+        return articleService.maybeArticle(articleId).map(article -> {
+            article.writeComment(
+                    new Comment(userService.getUserByEmail((String) session.getAttribute("email")), contents)
+            );
+            return new RedirectView("/articles/" + articleId);
+        }).orElse(new RedirectView("/"));
     }
 }
