@@ -11,6 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.dto.UserSaveParams;
+import techcourse.myblog.testutil.LoginTestUtil;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -24,8 +25,8 @@ class LoginControllerTests {
 
     @BeforeEach
     void setUp() {
-        LoginTestConfig.signUp(webTestClient);
-        jSessionId = LoginTestConfig.getJSessionId(webTestClient);
+        LoginTestUtil.signUp(webTestClient);
+        jSessionId = LoginTestUtil.getJSessionId(webTestClient);
     }
 
     @Test
@@ -44,7 +45,7 @@ class LoginControllerTests {
 
     @Test
     void login() {
-        UserSaveParams userSaveParams = LoginTestConfig.getUserSaveParams();
+        UserSaveParams userSaveParams = LoginTestUtil.getUserSaveParams();
 
         webTestClient.post().uri("/login")
                 .body(BodyInserters
@@ -64,6 +65,6 @@ class LoginControllerTests {
 
     @AfterEach
     void tearDown() {
-        LoginTestConfig.deleteUser(webTestClient);
+        LoginTestUtil.deleteUser(webTestClient);
     }
 }
