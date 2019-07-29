@@ -1,57 +1,76 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.dto.ArticleDTO;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.repository.ArticleRepository;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Controller
 public class ArticleController {
-    private ArticleRepository articleRepository;
+    private static final Logger LOG = getLogger(ArticleController.class);
+    private static final String REDIRECT = "redirect:";
+    private static final String ROOT = "/";
+    private static final String ROUTE_ARTICLES = "/articles";
+    private static final String ROUTE_WRITING = "/writing";
+    private static final String ROUTE_ID = "/{id}";
+    private static final String ROUTE_EDIT = "/edit";
+    private static final String ROUTE_ARTICLE_ID = ROUTE_ARTICLES + ROUTE_ID;
+    private static final String PAGE_ARTICLE = "article";
+    private static final String PAGE_EDIT = "article-edit";
 
-    public ArticleController(final ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
+    @Autowired
+    private ArticleRepository articleRepository;
 
 //    @Autowired
 //    void setArticleRepository(final ArticleRepository articleRepository) {
 //        this.articleRepository = articleRepository;
 //    } // TODO: 검색 - 생성자 주입 필드 주입
 
-    @GetMapping("/writing")
+    @GetMapping(ROUTE_WRITING)
     public String getNewArticlePage() {
-        return "article-edit";
+        return PAGE_EDIT;
     }
 
-    @PostMapping("/articles")
-    public RedirectView writeNewArticle(@ModelAttribute("article") final ArticleDTO articleDTO) {
-        final int index = articleRepository.addArticle(articleDTO);
-        return new RedirectView("/articles/" + index);
+    @PostMapping(ROUTE_ARTICLES)
+    public String createArticle(@ModelAttribute(PAGE_ARTICLE) final ArticleDto articleDto) {
+        final Article article = new Article(articleDto);
+        LOG.trace("{}", article);
+        articleRepository.save(article);
+        return REDIRECT + ROUTE_ARTICLES + ROOT + article.getId();
     }
 
-    @GetMapping("/articles/{articleId}")
-    public String showArticle(final Model model, @PathVariable final int articleId) {
-        model.addAttribute("article", articleRepository.findById(articleId));
-        return "article";
+    @GetMapping(ROUTE_ARTICLE_ID)
+    public ModelAndView showArticle(@PathVariable final Long id) {
+        final ModelAndView mav = new ModelAndView(PAGE_ARTICLE);
+        mav.addObject(PAGE_ARTICLE, articleRepository.findById(id).get());
+        return mav;
     }
 
-    @GetMapping("/articles/{articleId}/edit")
-    public String editArticlePage(final Model model, @PathVariable final int articleId) {
-        model.addAttribute("article", articleRepository.findById(articleId));
-        return "article-edit";
+    @GetMapping(ROUTE_ARTICLE_ID + ROUTE_EDIT)
+    public String editArticlePage(final Model model, @PathVariable final Long id) {
+        model.addAttribute(PAGE_ARTICLE, articleRepository.findById(id).get());
+        return PAGE_EDIT;
     }
 
-    @PutMapping("/articles/{articleId}")
-    public RedirectView editArticle(@PathVariable final int articleId, @ModelAttribute("article") final ArticleDTO articleDTO) {
-        articleRepository.updateById(articleId, articleDTO);
-        return new RedirectView("/articles/" + articleId);
+    @PutMapping(ROUTE_ARTICLE_ID)
+    public RedirectView editArticle(@PathVariable final Long id, @ModelAttribute(PAGE_ARTICLE) final ArticleDto articleDto) {
+        final Article article = articleRepository.findById(id).get();
+        article.write(articleDto);
+        articleRepository.save(article);
+        return new RedirectView(ROUTE_ARTICLES + ROOT + article.getId());
     }
 
-    @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable final int articleId) {
-        articleRepository.deleteById(articleId);
-        return "redirect:/";
+    @DeleteMapping(ROUTE_ARTICLE_ID)
+    public String deleteArticle(@PathVariable final Long id) {
+        articleRepository.deleteById(id);
+        return REDIRECT + ROOT;
     }
 }
