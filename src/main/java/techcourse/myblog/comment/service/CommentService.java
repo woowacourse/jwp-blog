@@ -56,4 +56,9 @@ public class CommentService {
         }
         commentRepository.deleteById(commentId);
     }
+
+    public CommentDto.Response findById(long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+        return modelMapper.map(comment, CommentDto.Response.class);
+    }
 }

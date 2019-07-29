@@ -32,5 +32,6 @@ public class CommentDto {
         private long id;
         private String contents;
         private User author;
+        private Article article;
     }
 }
