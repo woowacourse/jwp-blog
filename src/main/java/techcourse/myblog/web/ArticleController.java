@@ -58,8 +58,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String createArticle(ArticleDto articleDto, HttpServletRequest httpServletRequest) {
-        articleDto.setUserId(getLoggedInUser(httpServletRequest).getId());
-        ArticleDto savedArticleDto = articleService.save(articleDto);
+        ArticleDto savedArticleDto = articleService.save(getLoggedInUser(httpServletRequest).getId(), articleDto);
         return "redirect:/articles/" + savedArticleDto.getId();
     }
 

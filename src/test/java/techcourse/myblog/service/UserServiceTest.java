@@ -142,7 +142,7 @@ public class UserServiceTest {
         ArticleDto articleDto = new ArticleDto(1L, author.getId(), "title",
                 "coverUrl", "contents");
 
-        articleService.save(articleDto);
+        articleService.save(author.getId(), articleDto);
         userService.delete(author.getId());
 
         assertThatThrownBy(() -> articleService.findById(articleDto.getId()))

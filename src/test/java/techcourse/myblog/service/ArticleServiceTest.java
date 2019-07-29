@@ -18,7 +18,7 @@ public class ArticleServiceTest {
     @BeforeEach
     void setUp() {
         ArticleDto articleDto = articleService.save(
-                new ArticleDto(5L, 1L, "title", "coverUrl", "contents"));
+                1L, new ArticleDto(5L, 1L, "title", "coverUrl", "contents"));
         articleId = articleDto.getId();
     }
 

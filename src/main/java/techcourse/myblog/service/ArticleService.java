@@ -31,8 +31,8 @@ public class ArticleService {
                 .orElseThrow(NotFoundArticleException::new));
     }
 
-    public ArticleDto save(ArticleDto articleDto) {
-        User author = userService.findById(articleDto.getUserId());
+    public ArticleDto save(Long userId, ArticleDto articleDto) {
+        User author = userService.findById(userId);
         return toArticleDto(articleRepository.save(articleDto.toEntity(author)));
     }
 
