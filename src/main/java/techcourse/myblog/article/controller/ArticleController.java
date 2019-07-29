@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.argumentresolver.UserSession;
 import techcourse.myblog.article.dto.ArticleDto;
 import techcourse.myblog.article.service.ArticleService;
 
@@ -25,8 +26,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(ArticleDto.Creation articleDto) {
-        long newArticleId = articleService.save(articleDto);
+    public String createArticle(ArticleDto.Creation articleDto, UserSession userSession) {
+        long newArticleId = articleService.save(articleDto, userSession.getId());
         return "redirect:/articles/" + newArticleId;
     }
 
