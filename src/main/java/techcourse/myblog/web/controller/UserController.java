@@ -97,7 +97,7 @@ public class UserController {
         return new RedirectView("/mypage");
     }
 
-    @DeleteMapping("/users")
+    @DeleteMapping("/mypage")
     public RedirectView removeUser(LoginUser loginUser) {
         userWriteService.remove(loginUser.getUser());
 

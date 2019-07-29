@@ -3,6 +3,7 @@ package techcourse.myblog.domain;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 @Entity
@@ -12,11 +13,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String name;
 
-    @Column(nullable = false,
-            unique = true)
+    @Column(nullable = false, unique = true, length = 25)
     private String email;
 
     @Column(nullable = false)
@@ -28,9 +28,6 @@ public class User {
     private static final String emailPattern = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$";
     @Transient
     private static final String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}$";
-
-//    @Transient
-//    public static final String AUTH_FAIL_MESSAGE = "인증에 실패하였습니다.";
 
     private User() {
     }
@@ -66,17 +63,6 @@ public class User {
         return (text == null) || ("").equals(text);
     }
 
-//    public void authenticate(String email, String password) {
-//        if (this.password == null) {
-//            throw new IllegalUserException("password 값이 설정되어 있지 않습니다.");
-//        }
-//
-//        if (this.email.equals(email) && this.password.equals(password)) {
-//            return;
-//        }
-//        throw new AuthenticationFailedException(AUTH_FAIL_MESSAGE);
-//    }
-
     public User modifyName(String name) {
         validateName(name);
         this.name = name;
@@ -97,6 +83,19 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
