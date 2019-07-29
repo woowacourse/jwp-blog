@@ -7,24 +7,24 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import techcourse.myblog.interceptor.UnauthenticatedInterceptor;
+import techcourse.myblog.interceptor.ArticleViewInterceptor;
+import techcourse.myblog.interceptor.AuthenticatedInterceptor;
 
 @Configuration
-public class UnauthenticatedConfig implements WebMvcConfigurer {
+public class ArticleViewConfig implements WebMvcConfigurer {
 
-    @Qualifier(value = "unauthenticatedInterceptor")
+    @Qualifier(value = "articleViewInterceptor")
     private HandlerInterceptor handlerInterceptor;
 
     @Autowired
-    public UnauthenticatedConfig(UnauthenticatedInterceptor unauthenticatedInterceptor) {
-        this.handlerInterceptor = unauthenticatedInterceptor;
+    public ArticleViewConfig(ArticleViewInterceptor articleViewInterceptor) {
+        this.handlerInterceptor = articleViewInterceptor;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(handlerInterceptor)
-                .addPathPatterns("/mypage/**")
-                .addPathPatterns("/articles/writing")
-                .addPathPatterns("/logout");
+                .excludePathPatterns("/articles/writing")
+                .addPathPatterns("/articles/**");
     }
 }
