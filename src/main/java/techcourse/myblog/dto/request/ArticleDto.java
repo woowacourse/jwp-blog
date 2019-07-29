@@ -57,8 +57,8 @@ public class ArticleDto {
 		this.coverUrl = coverUrl;
 	}
 
-	public Article valueOfArticle(Long articleId) {
-		return new Article(articleId, this.title, this.contents, this.coverUrl);
+	public Article valueOfArticle() {
+		return new Article(this.title, this.contents, this.coverUrl);
 	}
 
 	public Article valueOfArticle(User user) {

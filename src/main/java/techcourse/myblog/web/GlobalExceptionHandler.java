@@ -51,4 +51,11 @@ public class GlobalExceptionHandler {
 		model.addAttribute("error", unauthorizedException.getMessage());
 		return "index";
 	}
+
+	@ExceptionHandler(value = NotFoundCommentException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public String handlerExistEmailException(NotFoundCommentException notFoundCommentException, Model model) {
+		model.addAttribute("error", notFoundCommentException.getMessage());
+		return "index";
+	}
 }

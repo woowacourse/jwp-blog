@@ -64,6 +64,10 @@ public class Comment {
 		return article;
 	}
 
+	public void update(Comment comment) {
+		this.contents = comment.contents;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -83,9 +87,5 @@ public class Comment {
 	@Override
 	public int hashCode() {
 		return Objects.hash(getId(), contents, createDate, author, article);
-	}
-
-	public void update(Comment comment) {
-		this.contents = comment.contents;
 	}
 }

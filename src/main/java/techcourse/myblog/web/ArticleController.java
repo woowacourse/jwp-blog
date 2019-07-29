@@ -2,35 +2,27 @@ package techcourse.myblog.web;
 
 import javax.servlet.http.HttpSession;
 
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.request.ArticleDto;
-import techcourse.myblog.exception.NotFoundArticleException;
-import techcourse.myblog.exception.UnauthorizedException;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.CommentRepository;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CommentService;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class ArticleController {
-	private final ArticleRepository articleRepository;
-	private final UserRepository userRepository;
-	private final CommentRepository commentRepository;
+	private final ArticleService articleService;
+	private final CommentService commentService;
 
-	public ArticleController(ArticleRepository articleRepository, UserRepository userRepository, CommentRepository commentRepository) {
-		this.articleRepository = articleRepository;
-		this.userRepository = userRepository;
-		this.commentRepository = commentRepository;
+	public ArticleController(ArticleService articleService, CommentService commentService) {
+		this.articleService = articleService;
+		this.commentService = commentService;
 	}
 
 	@GetMapping("/")
 	public String index(Model model) {
-		model.addAttribute("articles", articleRepository.findAll());
+		model.addAttribute("articles", articleService.findAll());
 		return "index";
 	}
 
@@ -47,36 +39,25 @@ public class ArticleController {
 		if (!existSession(httpSession)) {
 			return "redirect:/";
 		}
-		User user = userRepository.findByEmail(httpSession.getAttribute("email").toString()).get();
-		Article article = articleDto.valueOfArticle(user);
-		Long id = articleRepository.save(article).getId();
+		String email = httpSession.getAttribute("email").toString();
+		Long id = articleService.saveArticle(email, articleDto);
 		return "redirect:/articles/" + id;
 	}
-	@Transactional
+
 	@PutMapping("/articles/{articleId}")
 	public String modifyArticle(@PathVariable Long articleId, ArticleDto articleDto, HttpSession httpSession) {
 		if (!existSession(httpSession)) {
 			return "redirect:/";
 		}
-		confirmAuthor(articleId, httpSession);
-		Article article = articleRepository.findById(articleId).get();
-		article.update(articleDto.valueOfArticle(articleId));
-
+		String email = httpSession.getAttribute("email").toString();
+		articleService.update(articleId, email, articleDto);
 		return "redirect:/articles/" + articleId;
-	}
-
-	private void confirmAuthor(Long articleId, HttpSession httpSession) {
-		User user = userRepository.findByEmail(httpSession.getAttribute("email").toString()).get();
-		User articleUser = articleRepository.findById(articleId).get().getAuthor();
-		if(!user.equals(articleUser)) {
-			throw new UnauthorizedException();
-		}
 	}
 
 	@GetMapping("/articles/{articleId}")
 	public String getArticle(@PathVariable long articleId, Model model) {
-		getArticleWhenExists(articleId, model);
-		model.addAttribute("comments", commentRepository.findByArticleId(articleId));
+		model.addAttribute("article", articleService.findById(articleId));
+		model.addAttribute("comments", commentService.findByArticleId(articleId));
 		return "article";
 	}
 
@@ -85,25 +66,21 @@ public class ArticleController {
 		if (!existSession(httpSession)) {
 			return "redirect:/";
 		}
-		getArticleWhenExists(articleId, model);
+		String email = httpSession.getAttribute("email").toString();
+		articleService.confirmAuthorization(email, articleId);
+		model.addAttribute("article", articleService.findById(articleId));
 		return "article-edit";
 	}
 
-	private void getArticleWhenExists(long articleId, Model model) {
-		Article article = articleRepository.findById(articleId)
-				.orElseThrow(NotFoundArticleException::new);
-		model.addAttribute("article", article);
-	}
-	//Todo : test
-	@Transactional
 	@DeleteMapping("/articles/{articleId}")
 	public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
 		if (!existSession(httpSession)) {
 			return "redirect:/";
 		}
-		confirmAuthor(articleId, httpSession);
-		commentRepository.deleteByArticleId(articleId);
-		articleRepository.deleteById(articleId);
+		String email = httpSession.getAttribute("email").toString();
+		articleService.confirmAuthorization(email, articleId);
+		commentService.deleteByArticleId(articleId);
+		articleService.delete(articleId);
 		return "redirect:/";
 	}
 
