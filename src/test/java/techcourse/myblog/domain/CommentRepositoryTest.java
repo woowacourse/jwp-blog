@@ -31,7 +31,7 @@ class CommentRepositoryTest {
     @Test
     public void findById() {
         Comment persistentComment = testEntityManager.persist(TEST_COMMENT);
-        TEST_ARTICLE.addComment(persistentComment);
+        TEST_ARTICLE.writeComment(persistentComment);
         Article persistentArticle = testEntityManager.persist(TEST_ARTICLE);
         testEntityManager.flush();
         testEntityManager.clear();

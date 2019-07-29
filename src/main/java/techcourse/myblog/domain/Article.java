@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "article")
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +16,8 @@ public class Article {
     private String title;
     private String coverUrl;
     private String contents;
-    @OneToMany
+    @OneToMany(mappedBy = "article")
+    @JoinColumn
     private List<Comment> comments = new ArrayList<>();
 
     public Article() {}
