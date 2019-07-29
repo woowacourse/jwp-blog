@@ -16,9 +16,7 @@ import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.domain.UserRepository;
 import techcourse.myblog.user.exception.NotFoundUserException;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
