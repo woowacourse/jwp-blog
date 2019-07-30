@@ -86,7 +86,7 @@
                                     <span th:text="${#temporals.format(comment.updatedTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
                                 </span>
                                 <p class="width-80" th:id="'commentContents'+${comment.id}" th:text="${comment.contents}"></p>
-                                <div class="comment-button" style = "margin-bottom:90px">
+                                <div th:if="${session.user} ? ${comment.author.id} == ${session.user.id} : false" class="comment-button" style = "margin-bottom:90px">
                                     <form method="post" th:action="'/articles/' + ${article.id} + '/comments/' + ${comment.id}">
                                         <input name="_method" type="hidden" value="delete" />
                                         <button class="btn btn-icon float-right pointer" type="submit">
