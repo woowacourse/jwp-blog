@@ -74,16 +74,12 @@ public class Article {
     }
 
     public void checkAuthor(User user) {
-        if (isAuthor(user)) {
+        if (!this.author.equals(user)) {
             throw new InvalidAuthorException("작성자가 일치하지 않습니다.");
         }
     }
 
     public void setAuthor(User user) {
         this.author = user;
-    }
-
-    public boolean isAuthor(User user) {
-        return this.author.equals(user);
     }
 }
