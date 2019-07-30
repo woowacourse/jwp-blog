@@ -108,7 +108,7 @@
                             </div>
                         </li>
                     </ul>
-                    <form id="commentForm" method="post" th:action="'/articles/' + ${article.id} + '/comments'">
+                    <form th:if="${session.user}" id="commentForm" method="post" th:action="'/articles/' + ${article.id} + '/comments'">
                         <input type="hidden" name="contents" id="commentContents"/>
                         <div class="add-comment">
                             <div id="editSection"></div>

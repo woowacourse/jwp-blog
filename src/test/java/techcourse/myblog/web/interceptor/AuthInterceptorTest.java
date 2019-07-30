@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.User;
 
 @AutoConfigureWebTestClient
@@ -41,6 +42,27 @@ public class AuthInterceptorTest {
                 .exchange()
                 .expectStatus()
                 .isOk();
+    }
+
+    @Test
+    void 로그인하지_않고_댓글_작성_Redirect() {
+        webTestClient.post().uri("/articles/1/comments")
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .expectHeader()
+                .valueMatches("location", ".*/login");
+    }
+
+    @Test
+    void 로그인_후_댓글_작성() {
+        login();
+        webTestClient.post().uri("/articles/1/comments")
+                .body(BodyInserters.fromFormData("contents", "contents"))
+                .exchange()
+                .expectStatus()
+                .isOk()
+        ;
     }
 
     private void login() {
