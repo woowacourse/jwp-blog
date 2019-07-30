@@ -13,7 +13,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     @ManyToOne
-    @JoinColumn(name="writer", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
+    @JoinColumn(name = "writer", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
     User writer;
     String contents;
     @CreationTimestamp
@@ -22,7 +22,8 @@ public class Comment {
     @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_article_to_comment"))
     private Article article;
 
-    public Comment() {}
+    public Comment() {
+    }
 
     public Comment(User writer, String contents, Article article) {
         this.writer = writer;

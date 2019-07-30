@@ -80,7 +80,7 @@ public class ArticleControllerTest {
         String title = "제목";
         String coverUrl = "https://i.pinimg.com/736x/78/28/39/7828390ef4efbe704e480440f3bd3875.jpg";
         String contents = "CONTENTS";
-		signUp();
+        signUp();
         mockMvc.perform(
                 put(creatArticle().andReturn().getResponse().getRedirectedUrl())
                         .param("title", title)
@@ -91,11 +91,11 @@ public class ArticleControllerTest {
                 .andExpect(status().is3xxRedirection());
     }
 
-	@Test
-	void 게시글_삭제() throws Exception {
-		signUp();
-    	mockMvc.perform(delete(creatArticle().andReturn().getResponse().getRedirectedUrl()).session(session))
-				.andDo(print())
-				.andExpect(status().is3xxRedirection());
-	}
+    @Test
+    void 게시글_삭제() throws Exception {
+        signUp();
+        mockMvc.perform(delete(creatArticle().andReturn().getResponse().getRedirectedUrl()).session(session))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection());
+    }
 }

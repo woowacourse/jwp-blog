@@ -8,9 +8,9 @@ import techcourse.myblog.service.exception.WrongEmailAndPasswordException;
 @ControllerAdvice
 public class LoginAdvice {
 
-	@ExceptionHandler(WrongEmailAndPasswordException.class)
-	public String wrongEmailAndPassword(WrongEmailAndPasswordException e, Model model) {
-		model.addAttribute("errorMessage", e.getMessage());
-		return "login";
-	}
+    @ExceptionHandler(WrongEmailAndPasswordException.class)
+    public String wrongEmailAndPassword(WrongEmailAndPasswordException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "login";
+    }
 }
