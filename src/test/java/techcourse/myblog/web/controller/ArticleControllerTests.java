@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controller;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -7,12 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.web.common.ControllerTestTemplate;
+import techcourse.myblog.web.controller.common.ControllerTestTemplate;
 
 import java.util.stream.Stream;
 
@@ -30,7 +28,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
     @BeforeEach
     protected void setup() {
         super.setup();
-        savedArticleUrl = getRedirectUrl(loginAndRequest(POST, "/articles/write", parser(articleDto)));
+        savedArticleUrl = getRedirectUrl(loginAndRequest(POST, "/articles/write", parseArticle(articleDto)));
     }
 
     @Test
@@ -46,7 +44,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("articlesStream")
     void 로그인상태_게시글_작성_테스트(ArticleDto articleDto) {
-        String redirectUrl = getRedirectUrl(loginAndRequest(POST, "/articles/write", parser(articleDto)));
+        String redirectUrl = getRedirectUrl(loginAndRequest(POST, "/articles/write", parseArticle(articleDto)));
         String responseBody = getResponseBody((loginAndRequest(GET, redirectUrl)));
 
         ArticleDto escapedArticle = applyEscapeArticle(articleDto);
@@ -59,7 +57,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("articlesStream")
     void 로그아웃상태_게시글_작성_테스트(ArticleDto articleDto) {
-        String redirectUrl = getRedirectUrl(httpRequest(POST, "/articles/write", parser(articleDto)));
+        String redirectUrl = getRedirectUrl(httpRequest(POST, "/articles/write", parseArticle(articleDto)));
         assertEquals(redirectUrl, "/login");
     }
 
@@ -119,7 +117,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
     void 로그아웃상태_게시글_수정_요청() {
         ArticleDto editedArticleDto = new ArticleDto("new title", "new url", "new contents");
 
-        String redirectUrl = getRedirectUrl(httpRequest(PUT, savedArticleUrl, parser(editedArticleDto)));
+        String redirectUrl = getRedirectUrl(httpRequest(PUT, savedArticleUrl, parseArticle(editedArticleDto)));
         assertEquals(redirectUrl, "/login");
     }
 
@@ -127,7 +125,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
     void 로그인상태_게시글_수정_요청() {
         ArticleDto editedArticleDto = new ArticleDto("new title", "new url", "new contents");
 
-        String redirectUrl = getRedirectUrl(loginAndRequest(PUT, savedArticleUrl, parser(editedArticleDto)));
+        String redirectUrl = getRedirectUrl(loginAndRequest(PUT, savedArticleUrl, parseArticle(editedArticleDto)));
         String responseBody = getResponseBody(loginAndRequest(GET, redirectUrl));
 
         assertThat(responseBody).contains(editedArticleDto.getTitle());
@@ -141,7 +139,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
         userRepository.save(other.toUser());
         ArticleDto editedArticleDto = new ArticleDto("new title", "new url", "new contents");
 
-        String redirectUrl = getRedirectUrl(loginAndRequest(PUT, savedArticleUrl, parser(editedArticleDto), other));
+        String redirectUrl = getRedirectUrl(loginAndRequest(PUT, savedArticleUrl, parseArticle(editedArticleDto), other));
 
         assertEquals(redirectUrl, "/");
     }
@@ -179,14 +177,6 @@ public class ArticleControllerTests extends ControllerTestTemplate {
     protected void tearDown() {
         articleRepository.deleteAll();
         super.tearDown();
-    }
-
-    private MultiValueMap<String, String> parser(ArticleDto articleDto) {
-        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-        multiValueMap.add("title", articleDto.getTitle());
-        multiValueMap.add("coverUrl", articleDto.getCoverUrl());
-        multiValueMap.add("contents", articleDto.getContents());
-        return multiValueMap;
     }
 
     private void checkLoginRedirect(String url) {
