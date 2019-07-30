@@ -1,7 +1,6 @@
 package techcourse.myblog.model;
 
 import lombok.*;
-import techcourse.myblog.controller.dto.ArticleDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;

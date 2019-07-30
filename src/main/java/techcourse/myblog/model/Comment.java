@@ -1,18 +1,13 @@
 package techcourse.myblog.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode
 @RequiredArgsConstructor
 public class Comment {
     @Id
@@ -28,14 +23,6 @@ public class Comment {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ARTICLE_ID", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     private Article article;
-
-//    @CreationTimestamp
-//    @Column(name = "CURRENT_TIME", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false, nullable = false)
-//    private LocalDateTime createdTime;
-//
-//    @UpdateTimestamp
-//    @Column(name = "UPDATE_TIME", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
-//    private LocalDateTime updatedTime;
 
     @Column(name = "CONTENTS", nullable = false, columnDefinition = "TEXT")
     @NonNull
