@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -8,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Entity
+@EntityListeners(value = {AuditingEntityListener.class})
 public class User {
     private static final int MAX_NAME_LENGTH = 10;
     private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z]*$");

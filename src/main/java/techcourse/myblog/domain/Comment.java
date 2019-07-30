@@ -1,10 +1,14 @@
 package techcourse.myblog.domain;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(value = {AuditingEntityListener.class})
 public class Comment {
     @Id
     @GeneratedValue
@@ -13,8 +17,11 @@ public class Comment {
     @Column(nullable = false, length = 500)
     private String contents;
 
-    @Column
-    private LocalDateTime createdTime;
+    @CreatedDate
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    private LocalDateTime modifiedDate;
 
     @ManyToOne
     private User commenter;
@@ -30,7 +37,6 @@ public class Comment {
         this.contents = contents;
         this.article = article;
         this.commenter = user;
-        this.createdTime = LocalDateTime.now();
     }
 
     private void checkContents(String contents) {
@@ -47,8 +53,8 @@ public class Comment {
         return contents;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
     public User getCommenter() {
