@@ -73,10 +73,10 @@
 								<div class="info">
 									<span th:text="${comment.user.name}" class="text-bold inline-block"></span>
 									<span class="sub-title inline-block pull-right">
-										<a onclick="showCommentInput()">
+										<a th:if="${comment.user.equals(session.user)}" onclick="showCommentInput()">
 											<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
 										</a>
-										<a onclick="deleteComment()">
+										<a th:if="${comment.user.equals(session.user)}" onclick="deleteComment()">
 											<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
 										</a>
 									</span>
