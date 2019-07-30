@@ -73,7 +73,7 @@
                     <span th:text="${#lists.size(comments)}" class="font-size-16 text-info"></span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
+                    <ul class="list-unstyled list-info" id="comment-list">
                         <li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
                             <img class="thumb-img img-circle"
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
@@ -85,12 +85,18 @@
                             </span>
                                 <p th:text="${comment.comment}" class="width-80"></p>
                             </div>
+                            <button id="update-btn" class="btn" th:value="${comment.id}">
+                                <i class="ti-pencil"></i>
+                            </button>
+                            <button id="delete-btn" class="btn" th:value="${comment.id}">
+                                <i class="ti-trash"></i>
+                            </button>
                         </li>
                     </ul>
                     <div class="add-comment">
                         <form action="/comment" method="post">
                             <input id="comment-contents" name="comment" type="hidden">
-                            <input name="articleId" type="hidden" th:value="${article?.id}">
+                            <input id="article-id" name="articleId" type="hidden" th:value="${article?.id}">
                             <button id="save-btn" type="submit" class="btn btn-default">
                                 <i class="ti-save"></i>
                             </button>
@@ -105,6 +111,7 @@
 
 <th:block th:replace="fragments/script :: scriptFragment"></th:block>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<script src="/js/comment.js"></script>
 <script th:inline="javascript">
     const initValue = [[${article.contents}]]
     const viewer = tui.Editor.factory({
@@ -125,7 +132,5 @@
         },
         height: '200px'
     });
-
-
 </script>
 </html>
