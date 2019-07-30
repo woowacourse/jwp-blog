@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
+import techcourse.myblog.application.service.exception.NotExistCommentException;
 import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 
@@ -46,6 +47,14 @@ public class UserExceptionHandler {
                 .collect(Collectors.joining("\n"));
 
         redirectAttributes.addFlashAttribute("errormessage", errorMessages);
+        return redirectView;
+    }
+
+    @ExceptionHandler(NotExistCommentException.class)
+    public RedirectView handleNotMacthCommentUserError(RedirectAttributes redirectAttributes, NotExistCommentException e) {
+        RedirectView redirectView = new RedirectView("/");
+        redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
+
         return redirectView;
     }
 }
