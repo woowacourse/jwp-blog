@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.argumentresolver.UserSession;
 import techcourse.myblog.user.dto.UserDto;
+import techcourse.myblog.user.exception.AuthenticationFailException;
 import techcourse.myblog.user.exception.InvalidEditFormException;
 import techcourse.myblog.user.exception.InvalidSignUpFormException;
 import techcourse.myblog.user.service.UserService;
@@ -53,7 +54,7 @@ public class UserController {
     public String renderEditMyPage(@PathVariable long userId, UserSession session, Model model) {
         UserDto.Response user = userService.findById(userId);
         if (!session.getEmail().equals(user.getEmail())) {
-            return "redirect:/";
+            throw new AuthenticationFailException();
         }
         model.addAttribute("user", user);
         return "mypage-edit";

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.argumentresolver.UserSession;
 import techcourse.myblog.article.dto.ArticleDto;
 import techcourse.myblog.article.exception.NotMatchUserException;
@@ -29,9 +30,9 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(ArticleDto.Creation articleDto, UserSession userSession) {
+    public RedirectView createArticle(ArticleDto.Creation articleDto, UserSession userSession) {
         long newArticleId = articleService.save(articleDto, userSession.getId());
-        return "redirect:/articles/" + newArticleId;
+        return new RedirectView("/articles/" + newArticleId);
     }
 
     @GetMapping("/articles/{articleId}")
@@ -52,14 +53,14 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable long articleId, ArticleDto.Updation articleDto, UserSession userSession) {
+    public RedirectView updateArticle(@PathVariable long articleId, ArticleDto.Updation articleDto, UserSession userSession) {
         long updatedArticleId = articleService.update(articleId, articleDto, userSession.getId());
-        return "redirect:/articles/" + updatedArticleId;
+        return new RedirectView("/articles/" + updatedArticleId);
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable long articleId, UserSession userSession) {
+    public RedirectView deleteArticle(@PathVariable long articleId, UserSession userSession) {
         articleService.deleteById(articleId, userSession.getId());
-        return "redirect:/";
+        return new RedirectView("/");
     }
 }

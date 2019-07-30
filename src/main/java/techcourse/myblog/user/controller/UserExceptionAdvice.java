@@ -5,6 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.argumentresolver.UserSession;
 import techcourse.myblog.user.exception.*;
 
@@ -51,5 +53,11 @@ public class UserExceptionAdvice {
     public String handleNotMatchPasswordException(NotMatchPasswordException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         return "/login";
+    }
+
+    @ExceptionHandler(AuthenticationFailException.class)
+    public RedirectView handleAuthenticationFailException(AuthenticationFailException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        return new RedirectView("/");
     }
 }
