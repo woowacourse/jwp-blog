@@ -42,11 +42,12 @@ public class ArticleController {
     }
 
     @GetMapping("/new")
-    public String articleCreateForm(HttpSession session) {
+    public String articleCreateForm(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             throw new UnauthenticatedUserException("로그인이 필요합니다.");
         }
+        model.addAttribute("user", user);
         return "article-edit";
     }
 
