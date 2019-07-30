@@ -21,23 +21,11 @@ class UserControllerTests {
     private WebTestClient webTestClient;
 
     private String jSessionId;
-    private UserSaveRequestDto signUpParams = new UserSaveRequestDto("이름", "test2@test.com", "password2@");
 
     @BeforeEach
-    void setUp() {
+    void setUp_회원가입() {
         LoginTestUtil.signUp(webTestClient);
         jSessionId = LoginTestUtil.getJSessionId(webTestClient);
-    }
-
-    @Test
-    void 회원가입_성공() {
-        webTestClient.post().uri("/users")
-                .body(BodyInserters
-                        .fromFormData("name", signUpParams.getName())
-                        .with("email", signUpParams.getEmail())
-                        .with("password", signUpParams.getPassword()))
-                .exchange()
-                .expectStatus().is3xxRedirection();
     }
 
     @Test
@@ -76,19 +64,8 @@ class UserControllerTests {
                 .expectStatus().isOk();
     }
 
-    @Test
-    void mypage_delete() {
-        LoginTestUtil.signUp(webTestClient, signUpParams);
-        String jSessionIdByDelete = LoginTestUtil.getJSessionId(webTestClient, signUpParams);
-
-        webTestClient.delete().uri("/mypage")
-                .cookie("JSESSIONID", jSessionIdByDelete)
-                .exchange()
-                .expectStatus().is3xxRedirection();
-    }
-
     @AfterEach
-    void tearDown() {
+    void tearDown_유저_삭제() {
         LoginTestUtil.deleteUser(webTestClient);
     }
 }
