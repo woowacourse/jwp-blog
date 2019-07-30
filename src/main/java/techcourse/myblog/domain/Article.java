@@ -1,23 +1,27 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Objects;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Article {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @ManyToOne
+    private User author;
     private String title;
     private String coverUrl;
     private String contents;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     public Article() {}
 
-    public Article(String title, String coverUrl, String contents) {
+    public Article(User author, String title, String coverUrl, String contents) {
+        this.author = author;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
@@ -29,6 +33,18 @@ public class Article {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public User getAuthor() {
+        return this.author;
+    }
+
+    public boolean isSameAuthor(Article article) {
+        return this.author.equals(article.author);
+    }
+
+    public boolean isSameAuthor(User user) {
+        return this.author.equals(user);
     }
 
     public String getTitle() {
@@ -43,22 +59,11 @@ public class Article {
         return this.contents;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Article)) {
-            return false;
-        }
-        Article rhs = (Article) o;
-        return Objects.equals(this.title, rhs.title) &&
-                Objects.equals(this.coverUrl, rhs.coverUrl) &&
-                Objects.equals(this.contents, rhs.contents);
+    public void writeComment(Comment comment) {
+        comments.add(comment);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.id, this.title, this.coverUrl, this.contents);
+    public List<Comment> getComments() {
+        return this.comments;
     }
 }

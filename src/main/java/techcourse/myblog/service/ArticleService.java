@@ -1,9 +1,11 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.User;
+
+import java.util.Optional;
 
 @Service
 public class ArticleService {
@@ -13,11 +15,8 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public boolean tryRender(long articleId, Model model) {
-        return articleRepository.findById(articleId).map(article -> {
-                                                            model.addAttribute("article", article);
-                                                            return true;
-                                                        }).orElse(false);
+    public Optional<Article> maybeArticle(long articleId) {
+        return articleRepository.findById(articleId);
     }
 
     public Iterable<Article> loadEveryArticles() {
@@ -29,14 +28,21 @@ public class ArticleService {
     }
 
     public boolean tryUpdate(long articleId, Article toUpdate) {
-        return articleRepository.findById(articleId).map(ifExists -> {
-                                                            toUpdate.setId(articleId);
-                                                            articleRepository.save(toUpdate);
-                                                            return true;
+        return articleRepository.findById(articleId).map(original -> {
+                                                            if (original.isSameAuthor(toUpdate)) {
+                                                                toUpdate.setId(articleId);
+                                                                articleRepository.save(toUpdate);
+                                                                return true;
+                                                            }
+                                                            return false;
                                                         }).orElse(false);
     }
 
-    public void delete(long articleId) {
-        articleRepository.deleteById(articleId);
+    public void tryDelete(long articleId, User user) {
+        articleRepository.findById(articleId).ifPresent(article -> {
+            if (article.isSameAuthor(user)) {
+                articleRepository.deleteById(articleId);
+            }
+        });
     }
 }
