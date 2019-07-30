@@ -23,11 +23,14 @@ public class ArticleService {
         this.userRepository = userRepository;
     }
 
-    public Long save(ArticleDto articleDto) {
-        User author = userRepository.findByEmail(articleDto.getEmail()).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+    public Long save(ArticleDto articleDto, User author) {
         Article newArticle = new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents(), author);
         articleRepository.save(newArticle);
         return newArticle.getId();
+    }
+
+    public Article findById(Long id){
+        return articleRepository.findById(id).orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
     }
 
     public List<Article> getAllArticles() {
@@ -35,10 +38,17 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article update(ArticleDto articleDto) {
-        User author = userRepository.findByEmail(articleDto.getEmail()).orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+    public Article update(ArticleDto articleDto, User author) {
         Article oldArticle = articleRepository.findById(articleDto.getId()).orElseThrow(() -> new ArticleNotFoundException("글을 찾을 수 없습니다."));
         Article updatedArticle = new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents(), author);
         return oldArticle.update(updatedArticle);
+    }
+
+    public void delete(Long articleId) {
+        articleRepository.deleteById(articleId);
+    }
+
+    public void deleteAll(User user) {
+        articleRepository.deleteByUser(user);
     }
 }

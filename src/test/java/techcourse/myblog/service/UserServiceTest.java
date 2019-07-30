@@ -21,14 +21,14 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 public class UserServiceTest {
-    static final String TEST_EMAIL_1 = "test1@test.com";
-    static final String TEST_EMAIL_2 = "test2@test.com";
-    static final String TEST_PASSWORD_1 = "!Q@W3e4r";
-    static final String TEST_PASSWORD_2 = "!Q@W3e4r5t";
-    static final String TEST_USERNAME_1 = "test1";
-    static final String TEST_USERNAME_2 = "test2";
+    private  static final String TEST_EMAIL_1 = "test1@test.com";
+    private static final String TEST_EMAIL_2 = "test2@test.com";
+    private static final String TEST_PASSWORD_1 = "!Q@W3e4r";
+    private static final String TEST_PASSWORD_2 = "!Q@W3e4r5t";
+    private static final String TEST_USERNAME_1 = "test1";
+    private static final String TEST_USERNAME_2 = "test2";
 
-    static final User USER_1 = new User(TEST_USERNAME_1, TEST_EMAIL_1, TEST_PASSWORD_1);
+    private static final User USER_1 = new User(TEST_USERNAME_1, TEST_EMAIL_1, TEST_PASSWORD_1);
     private static final User USER_2 = new User(TEST_USERNAME_2, TEST_EMAIL_2, TEST_PASSWORD_2);
     private static final User USER_3 = new User("test3", "test3@test.com", "QW!@ER#$");
     private static final UserDto USER_DTO_1 = new UserDto(TEST_USERNAME_1, TEST_EMAIL_1, TEST_PASSWORD_1);

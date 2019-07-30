@@ -2,11 +2,13 @@ package techcourse.myblog.utils;
 
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import techcourse.myblog.controller.dto.ArticleDto;
 import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.controller.dto.UserDto;
 
 import java.io.UnsupportedEncodingException;
 
+import static io.restassured.RestAssured.given;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 public class Utils {
@@ -29,6 +31,22 @@ public class Utils {
                 .expectStatus().isFound();
     }
 
+    public static String createArticle(ArticleDto articleDto, String cookie, String baseUrl) {
+        return given()
+                .param("title", articleDto.getTitle())
+                .param("coverUrl", articleDto.getCoverUrl())
+                .param("contents", articleDto.getContents())
+                .cookie(cookie)
+                .post(baseUrl + "/articles")
+                .getHeader("Location");
+    }
+
+    public static void deleteAll(WebTestClient webTestClient) {
+        webTestClient.delete().uri("/articles")
+                .exchange()
+                .expectStatus().is3xxRedirection();
+    }
+
     public static String getLoginCookie(WebTestClient webTestClient, LoginDto loginDto) {
         return webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -36,5 +54,11 @@ public class Utils {
                         .with("password", loginDto.getPassword()))
                 .exchange()
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+    }
+
+    public static void deleteUser(WebTestClient webTestClient, String cookie) {
+        webTestClient.delete().uri("/users")
+                .header("Cookie", cookie)
+                .exchange();
     }
 }

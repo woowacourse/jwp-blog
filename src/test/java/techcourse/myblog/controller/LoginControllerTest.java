@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.utils.Utils;
 
@@ -25,14 +26,16 @@ class LoginControllerTest {
     private static final String EMAIL = "test@test.com";
     private static final String PASSWORD = "passWord!1";
     private static final String WRONG_EMAIL = "test2@test.com";
-    private static final String WRODN__PASSWORD = "passWord!2";
+    private static final String WRONG_PASSWORD = "passWord!2";
 
     @Autowired
     private WebTestClient webTestClient;
+    private String cookie;
 
     @BeforeEach
     void setUp() {
-
+        Utils.createUser(webTestClient, new UserDto(USER_NAME, EMAIL, PASSWORD));
+        cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL, PASSWORD));
     }
 
     @Test
@@ -46,8 +49,6 @@ class LoginControllerTest {
     @Test
     @DisplayName("로그인을 성공하면 메인페이지를 보여준다.")
     void successLogin() {
-        Utils.createUser(webTestClient, new UserDto(USER_NAME, EMAIL, PASSWORD));
-
         webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("email", EMAIL)
@@ -70,17 +71,37 @@ class LoginControllerTest {
     @Test
     @DisplayName("email이 없는 경우 로그인에 실패한다.")
     void failLoginWhenWrongEmailInput() {
-
+        webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("email", WRONG_EMAIL)
+                        .with("password", PASSWORD))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = Utils.getResponseBody(response.getResponseBody());
+                    assertThat(body).contains("아이디가 없습니다.");
+                });
     }
 
     @Test
     @DisplayName("비밀번호가 틀린 경우 로그인에 실패한다.")
     void failLoginWhenWrongPassword() {
-
+        webTestClient.post().uri("/login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("email", EMAIL)
+                        .with("password", WRONG_PASSWORD))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = Utils.getResponseBody(response.getResponseBody());
+                    assertThat(body).contains("비밀번호가 일치하지 않습니다.");
+                });
     }
 
     @AfterEach
     void tearDown() {
-
+        Utils.deleteUser(webTestClient, cookie);
     }
 }

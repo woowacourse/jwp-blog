@@ -25,7 +25,8 @@ dependencies {
 	implementation "org.hibernate.validator:hibernate-validator"
 	implementation "org.apache.tomcat.embed:tomcat-embed-el"
 	implementation 'org.springframework.boot:spring-boot-devtools'
-	
+    
+	testImplementation 'io.rest-assured:rest-assured:3.3.0'	
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 	testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'
