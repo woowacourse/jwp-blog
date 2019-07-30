@@ -5,13 +5,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
 import techcourse.myblog.AbstractTest;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicatedUserException;
 import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.exception.NotMatchPasswordException;
+import techcourse.myblog.exception.NotMatchUserException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,9 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class UserServiceTest extends AbstractTest {
-    private static long userId = 1;
 
     @Autowired
     private UserService userService;
@@ -30,7 +28,13 @@ class UserServiceTest extends AbstractTest {
     @Autowired
     private ModelMapper modelMapper;
 
+    private Long userId;
     private User user;
+    private UserDto.Response userDto;
+
+    private Long otherUserId;
+    private User otherUser;
+    private UserDto.Response otherUserDto;
 
     @BeforeEach
     void setUp() {
@@ -41,11 +45,23 @@ class UserServiceTest extends AbstractTest {
                 .name("name")
                 .build();
 
-        userService.save(modelMapper.map(user, UserDto.Create.class));
+        otherUser = User.builder()
+            .email("bbb@gamil.com")
+            .name("asd")
+            .password("123qwe!@#")
+            .build();
+
+        userId = userService.save(modelMapper.map(user, UserDto.Create.class));
+        userDto = modelMapper.map(user, UserDto.Response.class);
+        userDto.setId(userId);
+
+        otherUserId = userService.save(modelMapper.map(otherUser, UserDto.Create.class));
+        otherUserDto = modelMapper.map(otherUser, UserDto.Response.class);
+        otherUserDto.setId(otherUserId);
     }
 
     @Test
-    void 회원정보_등록시_예외처리() {
+    void 회원정보_등록시_이메일_중복() {
         UserDto.Create duplicatedUser = modelMapper.map(user, UserDto.Create.class);
         assertThrows(DuplicatedUserException.class, () -> userService.save(duplicatedUser));
     }
@@ -53,18 +69,28 @@ class UserServiceTest extends AbstractTest {
     @Test
     void 회원정보_전체_조회_테스트() {
         List<UserDto.Response> users = userService.findAll();
-        assertThat(users).isEqualTo(Arrays.asList(modelMapper.map(user, UserDto.Response.class)));
+        assertThat(users).isEqualTo(Arrays.asList(userDto, otherUserDto));
     }
 
     @Test
     void 회원정보_단건_성공_조회_테스트() {
-        assertThat(userService.findById(userId)).isEqualTo(modelMapper.map(user, UserDto.Response.class));
+        assertThat(userService.findById(userId)).isEqualTo(userDto);
     }
 
     @Test
     void 회원정보_단건_실패_조회_테스트() {
-        long notExistedUserId = userId - 1;
+        long notExistedUserId = userId + 100;
         assertThrows(NotFoundUserException.class, () -> userService.findById(notExistedUserId));
+    }
+
+    @Test
+    void 유저_확인_회원정보_단건_성공_조회_테스트() {
+        assertThat(userService.findById(userDto, userId)).isEqualTo(userDto);
+    }
+
+    @Test
+    void 유저_확인_회원정보_단건_실패_조회_테스트() {
+        assertThrows(NotMatchUserException.class, () -> userService.findById(otherUserDto, userId));
     }
 
     @Test
@@ -97,12 +123,32 @@ class UserServiceTest extends AbstractTest {
                 .password("password")
                 .name("updatedName")
                 .build();
-        UserDto.Response result = userService.update(userId, modelMapper.map(updatedUser, UserDto.Update.class));
+        UserDto.Response result = userService.update(userDto, userId, modelMapper.map(updatedUser, UserDto.Update.class));
         assertThat(result).isEqualTo(modelMapper.map(updatedUser, UserDto.Response.class));
+    }
+
+    @Test
+    void 회원_정보_실패_테스트() {
+        User updatedUser = User.builder()
+            .id(userId)
+            .email("email")
+            .password("password")
+            .name("updatedName")
+            .build();
+
+        assertThrows(NotMatchUserException.class, () ->
+            userService.update(otherUserDto, userId, modelMapper.map(updatedUser, UserDto.Update.class)));
+    }
+
+    @Test
+    void 회원_탈퇴_실패_테스트() {
+        assertThrows(NotMatchUserException.class, () ->
+            userService.deleteById(otherUserDto, userId));
     }
 
     @AfterEach
     void tearDown() {
-        userService.deleteById(userId++);
+        userService.deleteById(userDto, userId);
+        userService.deleteById(otherUserDto, otherUserId);
     }
 }
