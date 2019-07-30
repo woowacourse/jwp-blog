@@ -21,7 +21,7 @@ public class Comment {
 
     private String contents;
 
-    @Column(name = "create_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "create_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createTime;
 
     @ManyToOne
