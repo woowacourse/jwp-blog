@@ -1,12 +1,14 @@
 package techcourse.myblog.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.UserMismatchException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.repository.UserRepository;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoginService {
@@ -16,11 +18,13 @@ public class LoginService {
 
     public void checkLogin(String email, String password) {
         if (!existsEmail(email)) {
+            log.error("error check login by duplicate email={}", email);
             throw new UserNotFoundException(ERROR_USER_NOT_FOUND_MESSAGE);
         }
 
         User user = findByEmail(email);
         if (!user.matchPassword(password)) {
+            log.error("error check login by unmatch password={}, email={}", password, email);
             throw new UserMismatchException(ERROR_MISMATCH_PASSWORD_MESSAGE);
         }
     }

@@ -29,7 +29,10 @@ public class UserService {
 
     public User findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> {
+                    log.error("error find user by id={}", id);
+                    return new UserNotFoundException();
+                });
     }
 
     public Iterable<User> findAll() {

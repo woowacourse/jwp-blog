@@ -52,7 +52,10 @@ public class CommentService {
 
     public Comment findById(Long id) {
         return commentRepository.findById(id)
-                .orElseThrow(CommentNotFoundException::new);
+                .orElseThrow(() -> {
+                    log.error("error find comment by id={}", id);
+                    return new CommentNotFoundException();
+                });
     }
 
     public void deleteById(Long id) {

@@ -32,7 +32,10 @@ public class ArticleService {
 
     public Article findById(long id) {
         return articleRepository.findById(id)
-                .orElseThrow(() -> new ArticleNotFoundException(ERROR_ARTICLE_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> {
+                    log.error("error find article by id={}", id);
+                    return new ArticleNotFoundException(ERROR_ARTICLE_NOT_FOUND_MESSAGE);
+                });
     }
 
     @Transactional
