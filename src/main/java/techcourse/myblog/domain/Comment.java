@@ -64,26 +64,30 @@ public class Comment {
     }
 
     @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", writer=" + writer +
-                ", contents='" + contents + '\'' +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
         return Objects.equals(id, comment.id) &&
                 Objects.equals(writer, comment.writer) &&
-                Objects.equals(contents, comment.contents);
+                Objects.equals(contents, comment.contents) &&
+                Objects.equals(createdTimeAt, comment.createdTimeAt) &&
+                Objects.equals(article, comment.article);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, writer, contents);
+        return Objects.hash(id, writer, contents, createdTimeAt, article);
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", writer=" + writer +
+                ", contents='" + contents + '\'' +
+                ", createdTimeAt=" + createdTimeAt +
+                ", article=" + article +
+                '}';
     }
 }
