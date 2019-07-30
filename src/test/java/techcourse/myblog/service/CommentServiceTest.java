@@ -1,0 +1,88 @@
+package techcourse.myblog.service;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.CommentSaveRequestDto;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
+class CommentServiceTest {
+
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private ArticleService articleService;
+
+    @Autowired
+    private UserService userService;
+
+    private Comment comment;
+    private Article article;
+    private User author;
+
+    @BeforeEach
+    void setUp() {
+        author = User.builder()
+                .name("이름")
+                .email("test123@test.com")
+                .password("asdfas1!")
+                .build();
+        userService.save(author);
+
+        article = articleService.save(Article.builder()
+                .title("title")
+                .coverUrl("coverUrl")
+                .contents("contents")
+                .build(), author);
+
+        Long articleId = article.getId();
+
+        CommentSaveRequestDto commentSaveRequestDto = new CommentSaveRequestDto();
+        commentSaveRequestDto.setArticleId(articleId);
+        commentSaveRequestDto.setComment("댓글");
+        comment = commentService.save(commentSaveRequestDto, author);
+    }
+
+    @Test
+    void findByArticleId() {
+        List<Comment> comments = commentService.findByArticleId(article.getId());
+
+        assertThat(comments.size()).isEqualTo(1);
+        assertThat(comments.get(0)).isEqualTo(comment);
+    }
+
+    @Test
+    void update() {
+        String editedContents = "수정된내용";
+        commentService.update(comment.getId(), editedContents);
+
+        Comment editedComment = commentService.findById(this.comment.getId());
+        assertThat(editedComment.getContents()).isEqualTo(editedContents);
+    }
+
+    @Test
+    void findArticleIdById() {
+        Long articleId = commentService.findArticleIdById(comment.getId());
+
+        assertThat(articleId).isEqualTo(article.getId());
+    }
+
+    @AfterEach
+    void tearDown() {
+        commentService.deleteById(comment.getId());
+
+        articleService.deleteById(article.getId());
+
+        userService.deleteUser(author.getId());
+    }
+}

@@ -47,7 +47,7 @@ public class CommentService {
         return comment.getArticle().getId();
     }
 
-    private Comment findById(Long id) {
+    public Comment findById(Long id) {
         return commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new);
     }
