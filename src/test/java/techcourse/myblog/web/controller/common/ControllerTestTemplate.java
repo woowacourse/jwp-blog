@@ -1,4 +1,4 @@
-package techcourse.myblog.web.common;
+package techcourse.myblog.web.controller.common;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,9 @@ import org.springframework.test.web.reactive.server.WebTestClient.RequestHeaders
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.UserRepository;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserDto;
 
 import java.util.Objects;
@@ -37,13 +39,15 @@ public class ControllerTestTemplate {
     protected String password;
     protected UserDto savedUserDto;
 
+    protected User savedUser;
+
     @BeforeEach
     protected void setup() {
         name = "name";
         email = "email@email.com";
         password = "passw0RD!";
         savedUserDto = new UserDto("savedName", "saved@email.com", "savedPassw0RD!");
-        userRepository.save(savedUserDto.toUser());
+        savedUser = userRepository.save(savedUserDto.toUser());
     }
 
     @AfterEach
@@ -129,6 +133,15 @@ public class ControllerTestTemplate {
         multiValueMap.add("email", userDto.getEmail());
         multiValueMap.add("name", userDto.getName());
         multiValueMap.add("password", userDto.getPassword());
+        return multiValueMap;
+    }
+
+
+    protected MultiValueMap<String, String> parseArticle(ArticleDto articleDto) {
+        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+        multiValueMap.add("title", articleDto.getTitle());
+        multiValueMap.add("coverUrl", articleDto.getCoverUrl());
+        multiValueMap.add("contents", articleDto.getContents());
         return multiValueMap;
     }
 }

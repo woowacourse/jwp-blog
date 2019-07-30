@@ -1,7 +1,7 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controller;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.web.common.ControllerTestTemplate;
+import techcourse.myblog.web.controller.common.ControllerTestTemplate;
 
 import static org.springframework.http.HttpMethod.GET;
 
