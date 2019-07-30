@@ -32,13 +32,13 @@ public class UserControllerExceptionHandler {
     }
 
     @ExceptionHandler(MismatchAuthorException.class)
-    public RedirectView handleArticleFail(MismatchAuthorException e, RedirectAttributes redirectAttributes) {
+    public RedirectView handleMismatchArticleAuthorFail(MismatchAuthorException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/");
     }
 
     @ExceptionHandler(NotFoundArticleException.class)
-    public RedirectView handleArticleFail2(NotFoundArticleException e, RedirectAttributes redirectAttributes) {
+    public RedirectView handleArticleFail(NotFoundArticleException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/");
     }
