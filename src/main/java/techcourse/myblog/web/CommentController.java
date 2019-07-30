@@ -33,7 +33,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(HttpSession httpSession, CommentDto.Delete commentDto){
+    public String delete(HttpSession httpSession, CommentDto.Response commentDto){
         UserDto.Response userDto = (UserDto.Response) httpSession.getAttribute("user");
         commentService.delete(userDto, commentDto);
         return "redirect:/articles/"+commentDto.getArticleId();

@@ -5,6 +5,8 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 
+import java.time.LocalDateTime;
+
 public class CommentDto {
     @Data
     public static class Create {
@@ -34,8 +36,10 @@ public class CommentDto {
     }
 
     @Data
-    public static class Delete {
+    public static class Response {
         private Long id;
         private Long articleId;
+        private LocalDateTime regDate;
+        private String contents;
     }
 }
