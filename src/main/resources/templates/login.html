@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="ko"
-      layout:decorate="~{layout/layout}"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+      layout:decorate="~{layout/layout}"
+      lang="ko">
 <th:block layout:fragment="content">
     <div class="app">
         <div class="header navbar bg-transparent no-border">
             <div class="header-container pdd-right-15">
                 <ul class="nav-left mrg-left-0">
                     <li>
-                        <a href="/">
+                        <a href="index.html">
                             <div class="logo logo-dark d-none"
                                  style="background-image: url('/images/logo/logo_full_dark.png')"></div>
                             <div class="logo logo-white"
@@ -36,16 +36,14 @@
                                                             <h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">
                                                                 로그인</h2>
                                                         </div>
-                                                        <form action="/auth/login" method="post">
+                                                        <form>
                                                             <div class="form-group">
-                                                                <input class="form-control" name="email"
-                                                                       placeholder="Email"
-                                                                       type="email">
+                                                                <input type="email" class="form-control"
+                                                                       placeholder="Id">
                                                             </div>
                                                             <div class="form-group">
-                                                                <input class="form-control" name="password"
-                                                                       placeholder="Password"
-                                                                       type="password">
+                                                                <input type="password" class="form-control"
+                                                                       placeholder="Password">
                                                             </div>
                                                             <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
                                                                 <input id="agreement" name="agreement" type="checkbox">
@@ -55,20 +53,12 @@
                                                                 <a href="">Forgot Password?</a>
                                                             </div>
                                                             <div class="mrg-top-20 text-right">
-                                                                <button class="btn btn-tumblr" type="submit">로그인
-                                                                </button>
+                                                                <a href="user-list.html" class="btn btn-tumblr">로그인</a>
                                                             </div>
-                                                            <div class="alert alert-danger" role="alert"
-                                                                 th:if="${errorMessage} != null"
-                                                                 th:text="${errorMessage}">
                                                         </form>
-                                                        <div class="alert alert-danger" role="alert"
-                                                             th:if="${errorMessage} != ''"
-                                                             th:text="${errorMessage}"></div>
                                                         <div class="text-dark">
                                                             <span>아직 회원이 아니신가요?</span>
-                                                            <a class="text-info pointer mrg-left-5"
-                                                               href="/users/signup">회원가입</a>
+                                                            <a href="signup.html" class="text-info pointer mrg-left-5">회원가입</a>
                                                         </div>
                                                     </div>
                                                 </div>

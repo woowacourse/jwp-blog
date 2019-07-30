@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko"
-      layout:decorate="~{layout/layout}"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+      layout:decorate="~{layout/layout}"
+      lang="ko">
 <head>
-    <link href="/css/mypage.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/mypage.css">
 </head>
 
 <th:block layout:fragment="content">
@@ -19,14 +19,14 @@
             </div>
         </div>
 
-        <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30" th:object="${user}">
+        <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
             <div class="row">
                 <div class="col-md-7 mx-auto">
                     <div class="card">
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
-                            <a class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5"
-                               th:href="@{/users/{email}/edit(email=*{email})}">
+                            <a href="mypage-edit.html"
+                               class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                                 <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                             </a>
                         </div>
@@ -36,7 +36,7 @@
                                     <p class="mrg-top-10 text-dark"><b>Name</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mrg-top-10" th:text="*{name}"></p>
+                                    <p class="mrg-top-10">Brown</p>
                                 </div>
                             </div>
                             <hr>
@@ -45,7 +45,7 @@
                                     <p class="mrg-top-10 text-dark"><b>Email</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mrg-top-10" th:text="*{email}">gracefulBrown@woowahan.com</p>
+                                    <p class="mrg-top-10">gracefulBrown@woowahan.com</p>
                                 </div>
                             </div>
                             <hr>
@@ -55,9 +55,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div>
-                                        <img alt=""
-                                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
-                                             width="117">
+                                        <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
+                                             width="117" alt="">
                                     </div>
                                 </div>
                             </div>
@@ -95,10 +94,6 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    <form class="col-12" th:action="@{/users/{email}(email=*{email})}"
-                                          th:method="delete">
-                                        <button class="col-12 btn btn-danger">회원 탈퇴</button>
-                                    </form>
                                 </div>
                             </div>
                         </div>
