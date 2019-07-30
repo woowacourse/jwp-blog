@@ -113,11 +113,5 @@
         </div>
     </div>
     <th:block th:replace="fragment/footer :: main-footer"></th:block>
-    <script th:inline="javascript" type="text/javascript">
-        const errorMessage = [[${errorMessage}]];
-        if (errorMessage !== null) {
-            alert(errorMessage);
-        }
-    </script>
 </th:block>
 </html>

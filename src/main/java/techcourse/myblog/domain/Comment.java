@@ -1,6 +1,9 @@
 package techcourse.myblog.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -9,13 +12,16 @@ import java.time.LocalDateTime;
 
 @Entity
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String Contents;
+    private String contents;
 
     @CreationTimestamp
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false, updatable = false)
@@ -33,4 +39,11 @@ public class Comment {
     @JoinColumn(name = "article_id")
     private Article article;
 
+    public void update(Comment other) {
+        this.contents = other.contents;
+    }
+
+    public boolean isWrittenBy(User other) {
+        return user.equals(other);
+    }
 }
