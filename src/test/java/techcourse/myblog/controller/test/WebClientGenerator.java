@@ -52,6 +52,13 @@ public class WebClientGenerator {
                 .exchange();
     }
 
+    private WebTestClient.RequestHeadersSpec<?> requestWithCookie(HttpMethod method, String uri, MultiValueMap<String, String> data) {
+        return webTestClient.method(method)
+                .uri(uri)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData(data));
+    }
+
     protected WebTestClient.ResponseSpec logInResponseSpec(HttpMethod method, String uri, UserDto userDto) {
         return logInResponseSpec(method, uri, userDto, new LinkedMultiValueMap<>());
     }
@@ -62,13 +69,6 @@ public class WebClientGenerator {
         multiValueMap.add("name", userDto.getName());
         multiValueMap.add("password", userDto.getPassword());
         return multiValueMap;
-    }
-
-    private WebTestClient.RequestHeadersSpec<?> requestWithCookie(HttpMethod method, String uri, MultiValueMap<String, String> data) {
-        return webTestClient.method(method)
-                .uri(uri)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData(data));
     }
 
     protected String responseBody(WebTestClient.ResponseSpec responseSpec) {

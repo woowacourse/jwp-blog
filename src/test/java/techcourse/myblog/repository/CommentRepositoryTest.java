@@ -30,7 +30,7 @@ class CommentRepositoryTest {
 
     private User persistUser;
     private Article persistArticle;
-    private Comment comment;
+    private Comment persistComment;
 
     @BeforeEach
     void setUp() {
@@ -39,54 +39,55 @@ class CommentRepositoryTest {
 
         Article article = new Article("제목", "coverUrl", "내용");
         article.setAuthor(persistUser);
+
         persistArticle = testEntityManager.persist(article);
-    }
 
-    @Test
-    public void Comment_생성시_User_와_Article_매핑_확인_모두_일치() {
-        addDefaultComment();
-        commentRepository.findById(comment.getId()).ifPresent(savedComment -> {
-            assertEquals(savedComment.getUser(), persistUser);
-            assertEquals(savedComment.getArticle(), persistArticle);
-        });
-    }
-
-    private void addDefaultComment() {
-        comment = new Comment("댓글내용");
+        Comment comment = new Comment("댓글내용");
         comment.setUser(persistUser);
         comment.setArticle(persistArticle);
-        testEntityManager.persist(comment);
+
+        persistComment = testEntityManager.persist(comment);
+        persistArticle.add(persistComment);
 
         testEntityManager.flush();
         testEntityManager.clear();
     }
 
     @Test
-    public void Comment_생성시_User_와_Article_매핑_확인_유저_불일치() {
-        addDefaultComment();
+    public void Comment_생성시_User_매핑_일치_확인() {
+        Comment savedComment = commentRepository
+                .findById(persistComment.getId())
+                .orElseThrow(() ->
+                        new IllegalArgumentException("존재하지 않음"));
 
+        assertEquals(savedComment.getUser(), persistUser);
+    }
+
+    @Test
+    public void Comment_생성시_User_와_Article_매핑_확인_유저_불일치() {
         User unrelatedUser = new User("루피", "luffy@luffy.com", "12345678");
 
-        commentRepository.findById(comment.getId()).ifPresent(savedComment -> {
-            assertNotEquals(savedComment.getUser(), unrelatedUser);
-            assertEquals(savedComment.getArticle(), persistArticle);
-        });
+        Comment savedComment = commentRepository
+                .findById(persistComment.getId())
+                .orElseThrow(() ->
+                        new IllegalArgumentException("없음"));
+
+        assertNotEquals(savedComment.getUser(), unrelatedUser);
     }
 
     @Test
     public void Comment_생성시_User_와_Article_매핑_확인_아티클_불일치() {
-        addDefaultComment();
-
         Article unrelatedArticle = new Article("상관없는아티클제목", "coverUrl", "내용");
 
-        commentRepository.findById(comment.getId()).ifPresent(savedComment -> {
-            assertEquals(savedComment.getUser(), persistUser);
+        commentRepository.findById(persistComment.getId()).ifPresent(savedComment -> {
             assertNotEquals(savedComment.getArticle(), unrelatedArticle);
         });
     }
 
     @Test
     public void articleId로_모든_코멘트_찾기() {
+        commentRepository.deleteAll();
+
         IntStream.rangeClosed(1, 8)
                 .forEach(i -> addCommentAt(persistArticle, i));
 
@@ -101,8 +102,8 @@ class CommentRepositoryTest {
         testEntityManager.persist(comment);
     }
 
-     @AfterEach
-     void tearDown() {
-         commentRepository.deleteAll();
-     }
+    @AfterEach
+    void tearDown() {
+        commentRepository.deleteAll();
+    }
 }

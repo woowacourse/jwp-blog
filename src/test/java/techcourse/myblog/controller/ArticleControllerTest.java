@@ -11,8 +11,11 @@ import org.springframework.util.LinkedMultiValueMap;
 
 import techcourse.myblog.controller.test.WebClientGenerator;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.UserRepository;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.springframework.http.HttpMethod.DELETE;
@@ -25,19 +28,32 @@ public class ArticleControllerTest extends WebClientGenerator {
     @Autowired
     private ArticleRepository articleRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private ArticleDto articleDto = new ArticleDto("title", "coverUrl", "contents");
     private Article saved;
 
+    private UserDto userDto;
+    private User user;
+
     @BeforeEach
     void setup() {
-        if (saved == null) {
-            saved = articleRepository.save(articleDto.toDomain());
-        }
+        userDto = new UserDto("루피", "pirates@luff.com", "12345678");
+        responseSpec(POST, "/users", parser(userDto));
+
+        user = userRepository
+                .findByEmail("pirates@luff.com")
+                .orElseThrow(() -> new IllegalArgumentException("dd"));
+
+        Article article = articleDto.toDomain();
+        article.setAuthor(user);
+        saved = articleRepository.save(article);
     }
 
     @Test
     void articleForm() {
-        responseSpec(GET, "/articles/writing", new LinkedMultiValueMap<>())
+        logInResponseSpec(GET, "/articles/writing", userDto)
                 .expectStatus()
                 .isOk();
     }
@@ -50,7 +66,7 @@ public class ArticleControllerTest extends WebClientGenerator {
         ArticleDto articleDto = new ArticleDto(titleKo, coverUrlKo, contentsKo);
         Article savedArticle = new Article(titleKo, coverUrlKo, StringEscapeUtils.escapeJava(contentsKo));
 
-        responseSpec(POST, "/articles/write", parser(articleDto))
+        logInResponseSpec(POST, "/articles/write", userDto, parser(articleDto))
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -66,7 +82,7 @@ public class ArticleControllerTest extends WebClientGenerator {
 
     @Test
     void create_article_en() {
-        responseSpec(POST, "/articles/write", parser(articleDto))
+        logInResponseSpec(POST, "/articles/write", userDto, parser(articleDto))
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -89,17 +105,19 @@ public class ArticleControllerTest extends WebClientGenerator {
 
     @Test
     void 게시글_수정페이지_이동() {
-        responseSpec(GET, "/articles/" + saved.getId())
+        logInResponseSpec(GET, "/articles/" + saved.getId(), userDto)
                 .expectStatus()
                 .isOk();
     }
 
     @Test
     void 게시글_수정() {
-        Article article = articleRepository.save(articleDto.toDomain());
+        Article inputArticleForm = articleDto.toDomain();
+        inputArticleForm.setAuthor(user);
+        Article article = articleRepository.save(inputArticleForm);
         ArticleDto editedArticle = new ArticleDto("new title", "new url", "new contents");
 
-        responseSpec(PUT, "/articles/" + article.getId(), parser(editedArticle))
+        logInResponseSpec(PUT, "/articles/" + article.getId(), userDto, parser(editedArticle))
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -108,10 +126,18 @@ public class ArticleControllerTest extends WebClientGenerator {
 
     @Test
     void 게시글_삭제() {
-        Article article = articleRepository.save(articleDto.toDomain());
+        Article inputArticleForm = articleDto.toDomain();
+        inputArticleForm.setAuthor(user);
+        Article article = articleRepository.save(inputArticleForm);
 
-        responseSpec(DELETE, "/articles/" + article.getId())
+        logInResponseSpec(DELETE, "/articles/" + article.getId(), userDto)
                 .expectStatus()
                 .isFound();
+    }
+
+    @Test
+    void tearDown() {
+        articleRepository.deleteAll();
+        userRepository.deleteAll();
     }
 }
