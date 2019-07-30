@@ -12,7 +12,6 @@ import techcourse.myblog.repository.CommentRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
