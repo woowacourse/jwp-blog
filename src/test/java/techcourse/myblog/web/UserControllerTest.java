@@ -46,7 +46,7 @@ class UserControllerTest {
     @Test
     void 회원등록_테스트() {
         String email = "pobi@naver.com";
-        
+
         getExchange(DEFAULT_NAME, email, DEFAULT_PASSWORD, NAME, EMAIL, PASSWORD)
                 .expectHeader().valueMatches(LOCATION, "http://localhost:[0-9]+/login")
                 .expectStatus().is3xxRedirection();
