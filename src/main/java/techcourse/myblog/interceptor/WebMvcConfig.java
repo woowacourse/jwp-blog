@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
     private final ArticleInterceptor articleInterceptor;
     private final UserInterceptor userInterceptor;
+    private final CommentInterceptor commentInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -23,6 +24,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
             .addPathPatterns("/mypage/**")
             .addPathPatterns("/login")
             .addPathPatterns("/logout");
+
+        registry.addInterceptor(commentInterceptor)
+            .addPathPatterns("/comments/**");
 
     }
 }
