@@ -25,7 +25,7 @@ public class Comment {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
     private User author;
 

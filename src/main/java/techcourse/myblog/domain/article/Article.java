@@ -28,7 +28,7 @@ public class Article {
     @Column(name = "coverUrl")
     private String coverUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
