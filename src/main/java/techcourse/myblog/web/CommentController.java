@@ -3,10 +3,7 @@ package techcourse.myblog.web;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentSaveRequestDto;
 import techcourse.myblog.service.CommentService;
@@ -18,18 +15,19 @@ import static techcourse.myblog.util.SessionKeys.USER;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/comment")
 public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/comment/writing")
+    @PostMapping("/writing")
     public String saveComment(CommentSaveRequestDto commentSaveRequestDto, HttpSession httpSession) {
         commentService.save(commentSaveRequestDto, (User) httpSession.getAttribute(USER));
 
         return "redirect:/articles/" + commentSaveRequestDto.getArticleId();
     }
 
-    @PutMapping("/comment/edit/{id}")
+    @PutMapping("/edit/{id}")
     public String editComment(@PathVariable Long id, String editedContents) {
         commentService.update(id, editedContents);
 
@@ -38,7 +36,7 @@ public class CommentController {
         return "redirect:/articles/" + articleId;
     }
 
-    @DeleteMapping("/comment/edit/{id}")
+    @DeleteMapping("/edit/{id}")
     public String deleteComment(@PathVariable Long id) {
         Long articleId = commentService.findArticleIdById(id);
         commentService.deleteById(id);
