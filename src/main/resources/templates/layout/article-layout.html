@@ -6,7 +6,10 @@
         </th:block>
     </head>
     <body>
+
         <div>
+            <header th:replace="fragments/article-header :: articleHeaderFragment">
+            </header>
             <th:block layout:fragment="content">
             </th:block>
         </div>

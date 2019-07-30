@@ -100,5 +100,13 @@
         </div>
     </th:block>
 </div>
+<th:block>
+    <script th:if="${articleError != null}" th:inline="javascript">
+        /* <![CDATA[ */
+        const error = [[ ${articleError}]];
+        alert(error)
+        /* ]]> */
+    </script>
+</th:block>
 </body>
 </html>

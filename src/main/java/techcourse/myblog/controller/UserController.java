@@ -37,7 +37,7 @@ public class UserController {
             return new RedirectView("/login");
         } catch (EmailRepetitionException e) {
             log.error(e.getMessage());
-            redirectAttributes.addFlashAttribute("signUpStatus", e.getMessage());
+            redirectAttributes.addAttribute("signUpStatus", e.getMessage());
             return new RedirectView("/users/signup");
         }
     }
