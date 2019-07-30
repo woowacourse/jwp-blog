@@ -3,6 +3,7 @@ package techcourse.myblog.domain;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import techcourse.myblog.service.exception.InvalidAuthorException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -44,6 +45,12 @@ public class Comment {
     private void checkContents(String contents) {
         if (contents == null) {
             throw new IllegalArgumentException("본문이 없습니다");
+        }
+    }
+
+    public void checkCommenter(User user) {
+        if (!this.commenter.equals(user)) {
+            throw new InvalidAuthorException("작성자가 일지하지 않습니다.");
         }
     }
 

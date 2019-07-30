@@ -9,12 +9,9 @@ import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserEditRequest;
 import techcourse.myblog.service.dto.UserLoginRequest;
 import techcourse.myblog.service.dto.UserRequest;
-import techcourse.myblog.service.dto.UserResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class UserController {

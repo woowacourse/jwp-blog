@@ -7,7 +7,7 @@ import techcourse.myblog.domain.CommentRepository;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.dto.CommentRequest;
 import techcourse.myblog.service.dto.CommentResponse;
-import techcourse.myblog.service.exception.InvalidAuthorException;
+import techcourse.myblog.service.exception.NoCommentException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -29,27 +29,31 @@ public class CommentService {
     }
 
     public List<CommentResponse> findByArticle(Article article) {
+        // FIXME: 2019-07-31 search more simple way
         return commentRepository.findByArticle(article).stream()
                 .map(comment -> new CommentResponse(comment.getId(),
                         comment.getContents(),
                         comment.getCreatedDate().until(LocalDateTime.now(), ChronoUnit.MILLIS),
                         comment.getCommenter(),
-                        comment.getArticle())).collect(Collectors.toList());
+                        comment.getArticle()))
+                .collect(Collectors.toList());
     }
 
     @Transactional
     public Comment update(CommentRequest commentRequest, User user, Long commentId) {
-        Comment comment = findByCommenterAndId(user, commentId);
+        Comment comment = findByIdWithUser(user, commentId);
         return comment.updateContents(commentRequest.getContents());
     }
 
-    public Comment findByCommenterAndId(User user, Long commentId) {
-        return commentRepository.findByCommenterAndId(user, commentId)
-                .orElseThrow(() -> new InvalidAuthorException("작성자가 아닙니다"));
+    public Comment findByIdWithUser(User user, Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NoCommentException("존재하지 않는 댓글입니다."));
+        comment.checkCommenter(user);
+        return comment;
     }
 
     public void deleteById(Long commentId, User user) {
-        findByCommenterAndId(user, commentId);
+        Comment comment = findByIdWithUser(user, commentId);
         commentRepository.deleteById(commentId);
     }
 }

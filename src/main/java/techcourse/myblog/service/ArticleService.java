@@ -8,7 +8,6 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.dto.ArticleRequest;
-import techcourse.myblog.service.exception.InvalidAuthorException;
 import techcourse.myblog.service.exception.NoArticleException;
 
 import javax.transaction.Transactional;
