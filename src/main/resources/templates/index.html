@@ -1,18 +1,68 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <th:block th:include="layout/head :: common_head"></th:block>
+    <th:block th:include="includes/common-head"></th:block>
     <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
 <div>
-    <div th:include="layout/header :: common_header"></div>
+    <header id="header" class="header navbar bg-transparent no-border">
+        <div class="header-container">
+            <ul class="nav-left mrg-left-0">
+                <li>
+                    <a href="index.html">
+                        <div class="logo logo-dark d-none"
+                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white"
+                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav-right">
+                <th:block th:if="${user}">
+                <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
+                    <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
+                        <img class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
+                        <div class="user-info text-white">
+                            <span class="name pdd-right-5" th:text="${user.name}" >Brown</span>
+                            <i class="ti-angle-down font-size-10"></i>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="text-dark">
+                            <a href="/mypage">
+                                <i class="ti-user pdd-right-10"></i>
+                                <span class="text-dark">마이 페이지</span>
+                            </a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li class="text-dark">
+                            <a href="/logout">
+                                <i class="ti-power-off pdd-right-10"></i>
+                                <span class="text-dark">로그아웃</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                </th:block>
+                <th:block th:unless="${user}">
+                <li class="user-profile">
+                    <a href="/login">
+                        <div class="user-info login-btn pointer mrg-right-10">
+                            <span class="name pdd-right-5 text-white">Login</span>
+                        </div>
+                    </a>
+                </li>
+                </th:block>
+            </ul>
+        </div>
+    </header>
 
     <div class="about-cover card no-border mrg-btm-0">
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
         <div class="welcome-text-container">
             <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5" th:text="${blogName}">Welcome Brown!</h1>
+                <h1 class="text-white border bottom font-size-35 padding-5">우아한테크코스</h1>
             </div>
         </div>
     </div>
@@ -34,23 +84,21 @@
                         </li>
                     </ul>
                     <div class="width-100 fixed left-0 border bottom"></div>
-                    <div class="none-article" th:if="${articles.size() == 0}"><span>작성된 게시글이 없습니다.</span></div>
-                    <div class="tab-content" th:if="${articles.size() > 0}" th:each="article : ${articles}">
+                    <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
-                            <div class="pdd-horizon-15 pdd-vertical-20">
-                                <a th:href="@{/articles/{id}(id=${article.id})}" class="card article-container">
+                            <div class="pdd-horizon-15 pdd-vertical-20" th:each="articleDTO : ${articleDtos}">
+                                <a href="article.html" th:href="@{/articles/{id}(id=${articleDTO.id})}" class="card article-container">
                                     <div class="card-horizon">
                                         <div class="image-container col-md-4">
                                             <div class="background-holder has-content"
-                                                 th:style="'background-image: url('+${article.coverUrl}+');'"></div>
+                                                 style="background-image: url('/images/pages/index/study.jpg')"></div>
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
                                                 <div class="col-md-8 ml-auto">
                                                     <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 th:text="${article.title}"
-                                                            class="mrg-btm-20 text-bold"></h2>
-                                                        <p th:text="${article.contents}"></p>
+                                                        <h2 class="mrg-btm-20 text-bold" th:text="${articleDTO.title}">-</h2>
+                                                        <p th:text="${articleDTO.contents}">-</p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
                                                                 <i class="ti-heart text-danger pdd-right-5"></i>
@@ -103,17 +151,6 @@
             기술블로그</a>
     </div>
 </footer>
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"
-        integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
-<script src="/js/index.js"></script>
+<th:block th:include="includes/common-js"></th:block>
 </body>
 </html>

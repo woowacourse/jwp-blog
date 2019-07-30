@@ -4,61 +4,73 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.dto.ArticleDto;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.service.ArticleService;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class ArticleController {
-    private final ArticleRepository articleRepository;
+    private ArticleService articleService;
 
     @Autowired
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
+    public String showMain(Model model, final HttpSession session) {
+        List<ArticleDto> articleDtos = articleService.findAll();
+        model.addAttribute("articleDTOs", articleDtos);
+        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        if (!Objects.isNull(user)) {
+            model.addAttribute("user", user);
+        }
         return "index";
     }
 
     @GetMapping("/writing")
-    public String createArticleForm() {
+    public String showWritingPage() {
         return "article-edit";
     }
 
     @PostMapping("/articles")
-    public String createArticle(ArticleDto articleDto, Model model) {
-        Article article = new Article(articleRepository.newArticleId(), articleDto);
-        model.addAttribute("article", article);
-        articleRepository.add(article);
-        return "redirect:/articles/" + article.getId();
+    public ModelAndView createArticle(ArticleDto articleDTO) {
+        int id = articleService.save(articleDTO);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setView(new RedirectView("/articles/" + id));
+        return modelAndView;
     }
 
-    @GetMapping("/articles/{articleId}")
-    public String selectArticle(@PathVariable int articleId, Model model) {
-        model.addAttribute("article", this.articleRepository.findById(articleId));
+    @GetMapping("/articles/{id}")
+    public String showArticle(@PathVariable int id, Model model) {
+        model.addAttribute("articleDTO", articleService.findById(id));
         return "article";
     }
 
-    @GetMapping("/articles/{articleId}/edit")
-    public String updateArticleForm(@PathVariable int articleId, Model model) {
-        model.addAttribute("article", this.articleRepository.findById(articleId));
+    @PutMapping("/articles/{id}")
+    public ModelAndView updateArticle(@PathVariable int id, ArticleDto articleDTO) {
+        articleService.update(id, articleDTO);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setView(new RedirectView("/articles/" + id));
+        return modelAndView;
+    }
+
+    @DeleteMapping("/articles/{id}")
+    public ModelAndView deleteArticle(@PathVariable int id) {
+        articleService.delete(id);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setView(new RedirectView("/"));
+        return modelAndView;
+    }
+
+    @GetMapping("/articles/{id}/edit")
+    public String showEditPage(@PathVariable int id, Model model) {
+        model.addAttribute("articleDTO", articleService.findById(id));
         return "article-edit";
-    }
-
-    @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable int articleId, ArticleDto articleDto, Model model) {
-        articleRepository.update(articleId, articleDto);
-        Article updatedArticle = articleRepository.findById(articleId);
-        model.addAttribute("article", updatedArticle);
-        return "redirect:/articles/" + updatedArticle.getId();
-    }
-
-    @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable int articleId) {
-        articleRepository.remove(articleId);
-        return "redirect:/";
     }
 }
