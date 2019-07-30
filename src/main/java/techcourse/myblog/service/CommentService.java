@@ -27,6 +27,15 @@ public class CommentService {
         return commentRepository.findAllByArticle(article);
     }
 
+    public void save(UserDto.Response userDto, CommentDto.Create commentDto) {
+        User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundUserException::new);
+        Article article = articleRepository.findById(commentDto.getArticleId()).orElseThrow(NotFoundArticleException::new);
+
+        Comment comment = commentDto.toComment(user, article);
+
+        commentRepository.save(comment);
+    }
+
     @Transactional
     public void update(UserDto.Response userDto, CommentDto.Update commentDto) {
         Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(NotFoundCommentException::new);

@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
