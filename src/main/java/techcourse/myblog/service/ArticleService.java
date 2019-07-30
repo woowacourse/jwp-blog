@@ -46,7 +46,7 @@ public class ArticleService {
 		}
 	}
 
-	public Article findById(long articleId) {
+	public Article findById(Long articleId) {
 		return articleRepository.findById(articleId)
 				.orElseThrow(NotFoundArticleException::new);
 	}

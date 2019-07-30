@@ -20,14 +20,14 @@ public class CommentController {
 	}
 
 	@PostMapping("/comments/{articleId}")
-	public String save(CommentDto commentDto, @PathVariable long articleId, HttpSession session) {
+	public String save(CommentDto commentDto, @PathVariable Long articleId, HttpSession session) {
 		String email = session.getAttribute("email").toString();
 		commentService.save(email, articleId, commentDto);
 		return "redirect:/articles/" + articleId;
 	}
 
 	@PutMapping("/comments/{articleId}/{commentId}")
-	public String update(CommentDto commentDto, @PathVariable long articleId, @PathVariable long commentId, HttpSession session) {
+	public String update(CommentDto commentDto, @PathVariable Long articleId, @PathVariable Long commentId, HttpSession session) {
 		String email = session.getAttribute("email").toString();
 		commentDto.setId(commentId);
 		commentService.update(email, articleId, commentDto);
@@ -35,7 +35,7 @@ public class CommentController {
 	}
 
 	@DeleteMapping("/comments/{articleId}/{commentId}")
-	public String delete(@PathVariable long articleId, @PathVariable long commentId, HttpSession session) {
+	public String delete(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession session) {
 		String email = session.getAttribute("email").toString();
 		commentService.delete(email, articleId, commentId);
 		return "redirect:/articles/" + articleId;

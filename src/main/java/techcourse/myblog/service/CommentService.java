@@ -30,11 +30,11 @@ public class CommentService {
 		commentRepository.deleteByArticleId(articleId);
 	}
 
-	public List<Comment> findByArticleId(long articleId) {
+	public List<Comment> findByArticleId(Long articleId) {
 		return commentRepository.findByArticleId(articleId);
 	}
 
-	public Comment save(String email, long articleId, CommentDto commentDto) {
+	public Comment save(String email, Long articleId, CommentDto commentDto) {
 		User user = userService.findUser(email);
 		Article article = articleService.findById(articleId);
 		Comment comment = commentDto.valueOf(user, article);
@@ -42,19 +42,19 @@ public class CommentService {
 	}
 
 	@Transactional
-	public void update(String email, long articleId, CommentDto commentDto) {
+	public void update(String email, Long articleId, CommentDto commentDto) {
 		Comment comment = findById(commentDto.getId());
 		existArticle(articleId);
 		confirmAuthorization(email, comment.getAuthor().getId());
 		comment.update(commentDto.valueOf());
 	}
 
-	public Comment findById(long commentId) {
+	public Comment findById(Long commentId) {
 		return commentRepository.findById(commentId)
 				.orElseThrow(NotFoundCommentException::new);
 	}
 
-	private void existArticle(long articleId) {
+	private void existArticle(Long articleId) {
 		articleService.findById(articleId);
 	}
 
@@ -66,7 +66,7 @@ public class CommentService {
 	}
 
 	@Transactional
-	public void delete(String email, long articleId, long commentId) {
+	public void delete(String email, Long articleId, Long commentId) {
 		Comment comment = findById(commentId);
 		confirmAuthorization(email, comment.getAuthor().getId());
 		existArticle(articleId);
