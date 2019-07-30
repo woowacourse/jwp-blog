@@ -29,7 +29,7 @@ class ArticleServiceTest {
     private Article article;
 
     @BeforeEach
-    void setUp() {
+    void setUp_article_save() {
         author = User.builder()
                 .name("이름")
                 .email("test123@test.com")
@@ -37,11 +37,8 @@ class ArticleServiceTest {
                 .build();
         userService.save(author);
 
-        article = articleService.save(Article.builder()
-                .title("title")
-                .coverUrl("coverUrl")
-                .contents("contents")
-                .build(), author);
+        ArticleSaveRequestDto articleSaveRequestDto = new ArticleSaveRequestDto("title", "coverUrl", "contents");
+        article = articleService.save(articleSaveRequestDto, author);
     }
 
     @Test
@@ -52,22 +49,6 @@ class ArticleServiceTest {
         }
 
         assertThat(articles.contains(article)).isTrue();
-    }
-
-    @Test
-    void save() {
-        Article newArticle = Article.builder()
-                .title("newTitle")
-                .coverUrl("newCoverUrl")
-                .contents("newContents")
-                .build();
-        Article savedArticle = articleService.save(newArticle, author);
-
-        assertThat(savedArticle.getTitle()).isEqualTo(newArticle.getTitle());
-        assertThat(savedArticle.getCoverUrl()).isEqualTo(newArticle.getCoverUrl());
-        assertThat(savedArticle.getContents()).isEqualTo(newArticle.getContents());
-
-        articleService.deleteById(savedArticle.getId());
     }
 
     @Test
@@ -92,24 +73,11 @@ class ArticleServiceTest {
         assertThat(updatedArticle.getContents()).isEqualTo(articleSaveRequestDto.getContents());
     }
 
-    @Test
-    void deleteById() {
-        Article newArticle = Article.builder()
-                .title("newTitle")
-                .coverUrl("newCoverUrl")
-                .contents("newContents")
-                .build();
-        Article savedArticle = articleService.save(newArticle, author);
-        Long id = savedArticle.getId();
-
-        articleService.deleteById(id);
-
-        assertThrows(ArticleNotFoundException.class, () -> articleService.findById(id));
-    }
-
     @AfterEach
-    void tearDown() {
+    void tearDown_article_delete() {
         articleService.deleteById(article.getId());
+        assertThrows(ArticleNotFoundException.class, () -> articleService.findById(article.getId()));
+
         userService.deleteUser(author.getId());
     }
 }

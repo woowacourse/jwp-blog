@@ -44,8 +44,4 @@ public class Article {
         this.coverUrl = articleSaveRequestDto.getCoverUrl();
         this.contents = articleSaveRequestDto.getContents();
     }
-
-    public void setAuthor(User user) {
-        this.author = user;
-    }
 }

@@ -24,8 +24,14 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public Article save(Article article, User author) {
-        article.setAuthor(author);
+    public Article save(ArticleSaveRequestDto articleSaveRequestDto, User author) {
+        Article article = Article.builder()
+                .title(articleSaveRequestDto.getTitle())
+                .coverUrl(articleSaveRequestDto.getCoverUrl())
+                .contents(articleSaveRequestDto.getContents())
+                .author(author)
+                .build();
+
         log.debug("save article={}", article);
         return articleRepository.save(article);
     }

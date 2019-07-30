@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.dto.CommentSaveRequestDto;
 
 import java.util.List;
@@ -39,11 +40,8 @@ class CommentServiceTest {
                 .build();
         userService.save(author);
 
-        article = articleService.save(Article.builder()
-                .title("title")
-                .coverUrl("coverUrl")
-                .contents("contents")
-                .build(), author);
+        ArticleSaveRequestDto articleSaveRequestDto = new ArticleSaveRequestDto("title", "coverUrl", "contents");
+        article = articleService.save(articleSaveRequestDto, author);
 
         Long articleId = article.getId();
 
