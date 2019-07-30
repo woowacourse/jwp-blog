@@ -36,4 +36,8 @@ public class Comment {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public void update(String editedContents) {
+        this.contents = editedContents;
+    }
 }

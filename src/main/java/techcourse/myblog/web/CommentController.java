@@ -3,7 +3,9 @@ package techcourse.myblog.web;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentSaveRequestDto;
 import techcourse.myblog.service.CommentService;
@@ -24,5 +26,14 @@ public class CommentController {
         commentService.save(commentSaveRequestDto, (User) httpSession.getAttribute(USER));
 
         return "redirect:/articles/" + commentSaveRequestDto.getArticleId();
+    }
+
+    @PutMapping("/comment/edit/{id}")
+    public String editComment(@PathVariable Long id, String editedContents) {
+        commentService.update(id, editedContents);
+
+        Long articleId = commentService.findArticleIdById(id);
+
+        return "redirect:/articles/" + articleId;
     }
 }
