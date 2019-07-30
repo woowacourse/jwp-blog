@@ -21,7 +21,7 @@ public class Article {
     @Lob
     private String contents;
     @ManyToOne
-    @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(name = "FK_ARTICLE_USER"))
+    @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(name = "FK_ARTICLE_USER"), nullable = false)
     private User author;
 
     @Builder
