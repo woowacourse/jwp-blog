@@ -15,7 +15,11 @@ public class WebConfig {
                 registry.addInterceptor(new AuthInterceptor())
                         .addPathPatterns("/profile")
                         .addPathPatterns("/profile/edit")
-                        .addPathPatterns("/article/*/comment");
+                        .addPathPatterns("/writing")
+                        .addPathPatterns("/articles")
+                        .addPathPatterns("/articles/*/edit")
+                        .addPathPatterns("/articles/*/comment")
+                        .addPathPatterns("/articles/*/comment/*");
             }
         };
     }
