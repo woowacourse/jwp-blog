@@ -3,10 +3,13 @@ package techcourse.myblog.articles;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import techcourse.myblog.articles.comments.Comment;
 import techcourse.myblog.users.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -39,6 +42,9 @@ public class Article {
     @LastModifiedDate
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime modifiedDate;
+
+    @OneToMany(mappedBy = "article", orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     private Article(final String title, final String contents, final String coverUrl) {

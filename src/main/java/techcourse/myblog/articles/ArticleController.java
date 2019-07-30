@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
-    private final CommentService commentService;
 
     @GetMapping("/new")
     public String writeForm() {
@@ -34,7 +33,7 @@ public class ArticleController {
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
         final Article article = articleService.findById(id);
-        final List<Comment> comments = commentService.findAllByArticle(article.getId());
+        final List<Comment> comments = article.getComments();
 
         model.addAttribute(article);
         model.addAttribute("comments", comments);
