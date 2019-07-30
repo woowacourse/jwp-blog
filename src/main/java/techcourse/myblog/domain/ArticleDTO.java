@@ -1,17 +1,17 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.domain;
 
-public class ArticleDto {
-    private long articleId;
+public class ArticleDTO {
+    private int id;
     private String title;
     private String coverUrl;
     private String contents;
 
-    public long getArticleId() {
-        return articleId;
+    public int getId() {
+        return id;
     }
 
-    public void setArticleId(long articleId) {
-        this.articleId = articleId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {

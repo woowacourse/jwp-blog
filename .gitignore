@@ -30,7 +30,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-
-### OS Gerernated files ###
-.DS_Store*
