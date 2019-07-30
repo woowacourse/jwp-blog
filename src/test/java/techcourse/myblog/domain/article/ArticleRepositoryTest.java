@@ -21,7 +21,7 @@ class ArticleRepositoryTest {
     @Test
     void 작성() {
         UserDto userDto = UserDto.builder().name("test")
-                .email("test@test.com").password("testtset123").build();
+                .email("testtest@test.com").password("testtset123").build();
 
         User user = testEntityManager.persist(userDto.toEntity());
         testEntityManager.flush();
