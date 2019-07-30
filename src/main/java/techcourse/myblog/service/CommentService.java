@@ -7,9 +7,12 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentSaveRequestDto;
+import techcourse.myblog.exception.CommentNotFoundException;
 import techcourse.myblog.repository.CommentRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -32,5 +35,21 @@ public class CommentService {
 
     public List<Comment> findByArticleId(Long articleId) {
         return commentRepository.findByArticleId(articleId);
+    }
+
+    @Transactional
+    public void update(Long id, String editedContents) {
+        Comment comment = findById(id);
+        comment.update(editedContents);
+    }
+
+    public Long findArticleIdById(Long id) {
+        Comment comment = findById(id);
+        return comment.getArticle().getId();
+    }
+
+    private Comment findById(Long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(CommentNotFoundException::new);
     }
 }
