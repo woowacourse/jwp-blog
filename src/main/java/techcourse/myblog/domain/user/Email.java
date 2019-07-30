@@ -7,22 +7,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Embeddable
-public class UserEmail {
+public class Email {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9.\\-_]+@[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)$");
     private static final String EMAIL_ERROR = "올바른 이메일을 입력하세요";
 
     @Column(name = "email", nullable = false)
     private String email;
 
-    public UserEmail(String email) {
+    public Email(String email) {
         this.email = validate(email);
     }
 
-    public UserEmail() {
+    public Email() {
     }
 
-    public static UserEmail of(String email) {
-        return new UserEmail(email);
+    public static Email of(String email) {
+        return new Email(email);
     }
 
     private String validate(String email) {
@@ -45,8 +45,8 @@ public class UserEmail {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserEmail userEmail = (UserEmail) o;
-        return Objects.equals(email, userEmail.email);
+        Email email = (Email) o;
+        return Objects.equals(this.email, email.email);
     }
 
     @Override

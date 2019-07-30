@@ -2,8 +2,8 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.domain.user.Email;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.domain.user.UserException;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
@@ -35,13 +35,13 @@ public class UserService {
 
     @Transactional
     public void updateUser(String userEmail, UserDto userDto) {
-        User user = userRepository.findByEmail(UserEmail.of(userEmail)).orElseThrow(UserException::new);
+        User user = userRepository.findByEmail(Email.of(userEmail)).orElseThrow(UserException::new);
         user.updateNameAndEmail(userDto.getName(), userDto.getEmail());
     }
 
     @Transactional(readOnly = true)
     public User getUserByEmail(String userEmail) {
-        return userRepository.findByEmail(UserEmail.of(userEmail)).orElseThrow(UserException::new);
+        return userRepository.findByEmail(Email.of(userEmail)).orElseThrow(UserException::new);
     }
 
     @Transactional

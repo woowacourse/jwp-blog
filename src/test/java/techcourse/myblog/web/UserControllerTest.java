@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.user.UserEmail;
+import techcourse.myblog.domain.user.Email;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -65,7 +65,7 @@ class UserControllerTest extends AuthedWebTestClient {
                         .with("email", "edit@gmail.com"))
                 .exchange().expectStatus().is3xxRedirection();
 
-        assertDoesNotThrow(() -> userRepository.findByEmail(UserEmail.of("edit@gmail.com")).orElseThrow(IllegalAccessError::new));
+        assertDoesNotThrow(() -> userRepository.findByEmail(Email.of("edit@gmail.com")).orElseThrow(IllegalAccessError::new));
     }
 
     @Test
@@ -73,7 +73,7 @@ class UserControllerTest extends AuthedWebTestClient {
         delete("/users")
                 .exchange().expectStatus().is3xxRedirection();
 
-        assertThrows(IllegalArgumentException.class, () -> userRepository.findByEmail(UserEmail.of("andole@gmail.com")).orElseThrow(IllegalArgumentException::new));
+        assertThrows(IllegalArgumentException.class, () -> userRepository.findByEmail(Email.of("andole@gmail.com")).orElseThrow(IllegalArgumentException::new));
 
     }
 }

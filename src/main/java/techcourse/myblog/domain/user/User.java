@@ -23,7 +23,7 @@ public class User {
 
     @Column(unique = true)
     @Embedded
-    private UserEmail email;
+    private Email email;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Article> aritlces = new ArrayList<>();
@@ -37,7 +37,7 @@ public class User {
     public User(String name, String password, String email) {
         this.name = UserName.of(name);
         this.password = UserPassword.of(password);
-        this.email = UserEmail.of(email);
+        this.email = Email.of(email);
     }
 
     public Long getId() {
@@ -58,7 +58,7 @@ public class User {
 
     public void updateNameAndEmail(String name, String email) {
         this.name = UserName.of(name);
-        this.email = UserEmail.of(email);
+        this.email = Email.of(email);
     }
 
     public boolean isMatchPassword(UserDto dto) {
@@ -70,7 +70,7 @@ public class User {
     }
 
     public boolean isMatchEmail(String email) {
-        return this.email.equals(UserEmail.of(email));
+        return this.email.equals(Email.of(email));
     }
 
     @Override
