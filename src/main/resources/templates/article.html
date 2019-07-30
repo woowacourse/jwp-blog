@@ -67,38 +67,42 @@
                     <span class="font-size-16 text-info">2</span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30">
-                            <img class="thumb-img img-circle"
-                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                            <div class="info">
-                                <span href="" class="text-bold inline-block">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
-                            </span>
-                                <p class="width-80">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로 살다
-                                    보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄
-                                    수 있는 계기가 되었다.</p>
-                            </div>
-                        </li>
+                    <ul class="list-unstyled list-info" id="comment-list">
 
-                        <li class="comment-item border bottom mrg-btm-30">
-                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4"
-                                 alt="">
-                            <div class="info">
-                                <span href="" class="text-bold inline-block">Jun</span>
-                                <span class="sub-title inline-block pull-right">
+                        <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
+                            <form accept-charset="utf-8" method="post" name="comment-update"
+                                  th:action="@{/comments/{articleId}/{commentId} (articleId = ${article.id}, commentId = ${comment.id})}">
+                                <input name="_method" type="hidden" value="DELETE">
+                                <img class="thumb-img img-circle"
+                                     src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+                                <div class="info view">
+                                    <span class="text-bold inline-block" href="" th:text="${comment.author.username}">Jun</span>
+
+                                    <button type="submit"><i class="ti-close"></i></button>
+
+                                    <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span>6 min ago</span>
                                 </span>
-                                <p class="width-80">브라운 멋져</p>
-                            </div>
+                                    <label class="width-80 label" th:text="${comment.contents}">3주라는 짧은 기간에 효과적으로 연습하도록
+                                        하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로 살다
+                                        보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의 중요성을
+                                        느낄
+                                        수 있는 계기가 되었다.</label>
+                                </div>
+                                <div>
+                                    <input class="edit" name="contents">
+                                </div>
+                            </form>
                         </li>
 
                     </ul>
                     <div class="add-comment">
-                        <div id="editSection"></div>
+                        <form method="post" th:action="@{/comments/{articleId}(articleId = ${article.id})}">
+                            <div id="editSection"></div>
+                            <input id="comment-contents" name="contents" type="hidden">
+                            <button class="float-right pointer btn btn-icon" type="submit">작성</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -134,10 +138,70 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
+                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
             }
         },
         height: '200px'
     });
+
+    function submitUpdate() {
+        if (confirm('수정 하시겠습니까?')) {
+            document.querySelector("form[name=comment-update] input[name=_method]").setAttribute("value", "put");
+            document.querySelector("form[name=comment-update]").submit();
+        }
+    }
+
+    const TODOAPP = (function () {
+        const ENTER_KEY = 13;
+        const ESC_KEY = 27;
+        const TodoController = function () {
+            const todoService = new TodoService();
+            const commentList = document.getElementById('comment-list');
+            const canUpdateTodo = function () {
+                commentList.addEventListener('dblclick', function (event) {
+                    if (event.target.classList.contains('label')) {
+                        todoService.focus(event)
+                    }
+                })
+            };
+            const init = function () {
+                canUpdateTodo()
+            };
+            return {
+                init: init
+            }
+        };
+        const TodoService = function () {
+            const focus = function (event) {
+                const updatedElement = event.target.closest('li');
+                updatedElement.classList.toggle('editing');
+                updatedElement.addEventListener('keydown', update)
+            };
+            const update = function (event) {
+                const updatedElement = event.target.closest('li');
+                const inputValue = updatedElement.querySelector('input.edit').value;
+                if (event.which === ESC_KEY) {
+                    updatedElement.classList.toggle('editing')
+                }
+                if (event.which === ENTER_KEY && inputValue !== '') {
+                    updatedElement.querySelector('label').innerText = inputValue;
+                    updatedElement.classList.toggle('editing');
+                    submitUpdate();
+                }
+            };
+            return {
+                focus: focus
+            }
+        };
+        const init = function () {
+            const todoController = new TodoController();
+            todoController.init()
+        };
+        return {
+            init: init,
+        };
+    })();
+    TODOAPP.init();
 </script>
 </body>
 </html>

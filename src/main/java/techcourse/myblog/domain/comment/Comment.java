@@ -44,6 +44,10 @@ public class Comment {
         this.article = article;
     }
 
+    public void update(Comment comment) {
+        this.contents = comment.getContents();
+    }
+
     @Override
     public String toString() {
         return "Comment{" +

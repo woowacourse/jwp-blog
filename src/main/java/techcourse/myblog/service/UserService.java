@@ -27,6 +27,12 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("아이디, 비밀번호 확인!"));
     }
 
+    public UserDto findByUserId(long userId) {
+        Optional<User> maybeUser = userRepository.findById(userId);
+        return maybeUser.map(UserDto::from)
+                .orElseThrow(() -> new IllegalArgumentException("없는 유저!"));
+    }
+
     public UserDto create(UserDto userDto) {
         try {
             User user = userRepository.save(userDto.toEntity());
