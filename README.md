@@ -3,7 +3,7 @@
 ## 게시글 생성
 * 게시글 작성 페이지 이동
     * 메인페이지(index.html)에서 게시글 생성 버튼을 누르기
-    * GET /writing 으로 요청
+    * GET /articles/edit 으로 요청
     * 작성 페이지(article-edit.html)로 이동
 * 게시글 작성
     * POST /articles 으로 요청

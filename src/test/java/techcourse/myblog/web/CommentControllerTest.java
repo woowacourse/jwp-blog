@@ -58,7 +58,7 @@ public class CommentControllerTest {
                 .expectStatus().isFound();
 
         // 댓글작성
-        webTestClient.post().uri("/comment")
+        webTestClient.post().uri("/comments")
                 .body(BodyInserters.fromFormData("contents", "kk")
                         .with("articleId", "1"))
                 .header("Cookie", cookie)
@@ -69,7 +69,7 @@ public class CommentControllerTest {
 
     @Test
     void 댓글작성자_댓글수정() {
-        webTestClient.put().uri("/comment/1")
+        webTestClient.put().uri("/comments/1")
                 .body(BodyInserters.fromFormData("contents", "kk")
                         .with("articleId", "1"))
                 .header("Cookie", cookie)
@@ -80,7 +80,7 @@ public class CommentControllerTest {
 
     @Test
     void 댓글작성자_댓글삭제() {
-        webTestClient.delete().uri("/comment/1")
+        webTestClient.delete().uri("/comments/1")
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()

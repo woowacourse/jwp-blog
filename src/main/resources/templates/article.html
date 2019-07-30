@@ -88,8 +88,8 @@
                                 </span>
                                 <p class="width-80" th:text="${comment.contents}">브라운 멋져</p>
                                 <th:block th:if="${comment.commenter.id == session.user?.id}">
-                                    <a th:href="@{'/comment/' + ${comment.id}}">수정</a>
-                                    <form th:action="@{'/comment/' + ${comment.id}}" method="post">
+                                    <a th:href="@{'/comments/' + ${comment.id}}">수정</a>
+                                    <form th:action="@{'/comments/' + ${comment.id}}" method="post">
                                         <input type="hidden" name="_method" value="delete"/>
                                         <button type="submit" class="warning">삭제</button>
                                     </form>
@@ -101,7 +101,7 @@
                         <div class="add-comment">
                             <div id="editSection"></div>
                         </div>
-                        <form action="/comment", method="post">
+                        <form action="/comments" method="post">
                             <button id="comment-submit" type="submit" class="button">댓글달기</button>
                             <input id="comment-contents" name="contents" type="hidden"/>
                             <input name="articleId" type="hidden" th:value="${article.id}"/>

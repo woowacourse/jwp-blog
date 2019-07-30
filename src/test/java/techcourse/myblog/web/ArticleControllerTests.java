@@ -68,7 +68,7 @@ public class ArticleControllerTests {
 
     @Test
     void 글쓰기_접근() {
-        webTestClient.get().uri("/writing")
+        webTestClient.get().uri("/articles/edit")
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk();
