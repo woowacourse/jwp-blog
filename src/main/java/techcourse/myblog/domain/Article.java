@@ -1,30 +1,46 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.domain.dto.ArticleDto;
+import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 
+
+@Entity
 public class Article {
-    private final int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private String title;
     private String coverUrl;
     private String contents;
 
-    public Article(int id, ArticleDto articleDto) {
-        this.id = id;
-        this.title = articleDto.getTitle();
-        this.coverUrl = articleDto.getCoverUrl();
-        this.contents = articleDto.getContents();
+    public Article() {
     }
 
-    public boolean matchId(int id) {
-        return this.id == id;
+    public Article(final String title, final String coverUrl, final String contents) {
+        checkNull(title, coverUrl, contents);
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
     }
 
-    public void update(ArticleDto articleDto) {
-        this.title = articleDto.getTitle();
-        this.coverUrl = articleDto.getCoverUrl();
-        this.contents = articleDto.getContents();
+    private void checkNull(String title, String coverUrl, String contents) {
+        if (Objects.isNull(title) || Objects.isNull(coverUrl) || Objects.isNull(contents)) {
+            throw new NullPointerException();
+        }
+    }
+
+    public void update(final Article article) {
+        if (Objects.isNull(article)) {
+            throw new ArticleToUpdateNotFoundException("업데이트 해야할 게시글이 없습니다.");
+        }
+        this.title = article.getTitle();
+        this.coverUrl = article.getCoverUrl();
+        this.contents = article.getContents();
     }
 
     public int getId() {
