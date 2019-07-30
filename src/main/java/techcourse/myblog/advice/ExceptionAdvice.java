@@ -17,7 +17,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(AuthException.class)
     public String handleAuthException(Exception e, Model model) {
 
-        log.info(e.toString());
+        log.error(e.toString());
 
         model.addAttribute("errorMessage", e.getMessage());
         model.addAttribute("path", "/");
@@ -28,7 +28,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(IllegalArgumentException.class)
     public String handleRuntimeException(Exception e, Model model) {
 
-        log.info(e.toString());
+        log.error(e.toString());
 
         model.addAttribute("errorMessage", e.getMessage());
         model.addAttribute("path", "/");
