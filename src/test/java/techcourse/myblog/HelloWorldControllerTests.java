@@ -12,7 +12,6 @@ import reactor.core.publisher.Mono;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HelloWorldControllerTests {
-
     @Autowired
     private WebTestClient webTestClient;
 
@@ -38,7 +37,6 @@ public class HelloWorldControllerTests {
     @Test
     void passParamWithPost() {
         String blogName = "helloWorld";
-
         webTestClient.post()
                 .uri("/helloworld")
                 .body(Mono.just(blogName), String.class)

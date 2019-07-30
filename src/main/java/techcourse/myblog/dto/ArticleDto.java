@@ -1,20 +1,15 @@
 package techcourse.myblog.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import techcourse.myblog.domain.User;
 
+@Getter
+@Setter
 public class ArticleDto {
-
-    @Data
-    public static class Create {
-        private String title;
-        private String coverUrl;
-        private String contents;
-    }
-
-    @Data
-    public static class Update {
-        private String title;
-        private String coverUrl;
-        private String contents;
-    }
+    private Long id;
+    private String title;
+    private String coverUrl;
+    private String contents;
+    private User author;
 }

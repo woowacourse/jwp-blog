@@ -1,57 +1,35 @@
 package techcourse.myblog.domain;
 
-public class Article {
-    private static long articleId = 1;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-    private long id;
+import javax.persistence.*;
+
+@Entity
+@Getter
+@NoArgsConstructor
+@EqualsAndHashCode(of = {"id"})
+public class Article {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ARTICLE_ID")
+    private Long id;
     private String title;
     private String coverUrl;
+    @Lob
     private String contents;
+    @ManyToOne
+    @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(name = "FK_ARTICLE_USER"), nullable = false)
+    private User author;
 
-    public Article(String title, String coverUrl, String contents) {
-        this(articleId++, title, coverUrl, contents);
-    }
-
-    public Article(long id, String title, String coverUrl, String contents) {
+    @Builder
+    private Article(Long id, String title, String coverUrl, String contents, User author) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
-    public boolean equals(long articleId) {
-        return this.id == articleId;
+        this.author = author;
     }
 }
