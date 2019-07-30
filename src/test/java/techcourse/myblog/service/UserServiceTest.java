@@ -9,6 +9,9 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserEditRequestDto;
 import techcourse.myblog.exception.UserNotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -54,9 +57,12 @@ class UserServiceTest {
 
     @Test
     void findAll() {
-        Iterable<User> users = userService.findAll();
+        List<User> users = new ArrayList<>();
+        for (User foundUser : userService.findAll()) {
+            users.add(foundUser);
+        }
 
-        assertThat(users.iterator().next()).isEqualTo(user);
+        assertThat(users.contains(user)).isTrue();
     }
 
     @Test

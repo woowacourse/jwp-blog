@@ -10,6 +10,9 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -43,9 +46,12 @@ class ArticleServiceTest {
 
     @Test
     void findAllArticles() {
-        Iterable<Article> articles = articleService.findAllArticles();
+        List<Article> articles = new ArrayList<>();
+        for (Article foundArticle : articleService.findAllArticles()) {
+            articles.add(foundArticle);
+        }
 
-        assertThat(articles.iterator().next()).isEqualTo(article);
+        assertThat(articles.contains(article)).isTrue();
     }
 
     @Test

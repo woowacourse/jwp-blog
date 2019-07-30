@@ -42,7 +42,9 @@ class ArticleControllerTests {
                         .with("coverUrl", "주소")
                         .with("contents", "내용"))
                 .cookie("JSESSIONID", jSessionId)
-                .exchange();
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles/.*");
     }
 
     @Test
@@ -51,19 +53,6 @@ class ArticleControllerTests {
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isOk();
-    }
-
-    @Test
-    void saveArticle() {
-        webTestClient.post().uri("/articles")
-                .body(BodyInserters
-                        .fromFormData("title", "제목")
-                        .with("coverUrl", "주소")
-                        .with("contents", "내용"))
-                .cookie("JSESSIONID", jSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/articles/.*");
     }
 
     @Test
@@ -103,30 +92,15 @@ class ArticleControllerTests {
                         .with("contents", "수정된_내용"))
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
-                .expectStatus().isFound();
-    }
-
-    @Test
-    void deleteArticle() {
-        webTestClient.post().uri("/articles")
-                .body(BodyInserters
-                        .fromFormData("title", "제목")
-                        .with("coverUrl", "주소")
-                        .with("contents", "내용"))
-                .cookie("JSESSIONID", jSessionId)
-                .exchange();
-
-        webTestClient.delete().uri("/articles/2")
-                .cookie("JSESSIONID", jSessionId)
-                .exchange()
-                .expectStatus().isFound();
+                .expectStatus().is3xxRedirection();
     }
 
     @AfterEach
     void tearDown() {
         webTestClient.delete().uri(location)
                 .cookie("JSESSIONID", jSessionId)
-                .exchange();
+                .exchange()
+                .expectStatus().is3xxRedirection();
 
         LoginTestUtil.deleteUser(webTestClient);
     }
