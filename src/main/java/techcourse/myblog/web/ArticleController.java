@@ -1,71 +1,66 @@
 package techcourse.myblog.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.service.ArticleService;
+import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.domain.ArticleDto;
+import techcourse.myblog.domain.ArticleRepository;
+
+import java.util.List;
 
 @Controller
 public class ArticleController {
-    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
-    private final ArticleService articleService;
+    private final ArticleRepository articleRepository;
 
     @Autowired
-    public ArticleController(final ArticleService articleService) {
-        this.articleService = articleService;
+    public ArticleController(final ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
     }
 
     @GetMapping("/")
     public String index(Model model) {
-        final Iterable<Article> articles = articleService.findAll();
+        List<ArticleDto> articles = articleRepository.findAll();
         model.addAttribute("articles", articles);
         return "index";
     }
 
     @GetMapping("/writing")
     public String showWritingPage() {
-        return "article/article-edit";
+        return "article-edit";
     }
 
     @PostMapping("/articles")
-    public String save(final Article articleParam) {
-        Article article = articleService.save(articleParam);
-        return "redirect:/articles/" + article.getId();
+    public RedirectView addArticle(final ArticleDto articleParam) {
+        long latestId = articleRepository.add(articleParam);
+        return new RedirectView("/articles/" + latestId);
     }
 
     @GetMapping("/articles/{articleId}")
-    public String findById(@PathVariable final long articleId, final Model model) {
-        Article article = articleService.findById(articleId);
+    public String showArticleById(@PathVariable final long articleId, final Model model) {
+        ArticleDto article = articleRepository.findById(articleId);
         model.addAttribute("article", article);
-        return "/article/article";
+        return "article";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String update(@PathVariable final long articleId, final Article articleParam) {
-        log.debug("articleId in update : {}", articleId);
-        log.debug("articleParam in update : {}", articleParam);
-
-        long id = articleService.update(articleId, articleParam);
-
-        log.debug("after update) articleId : {}", id);
-        return "redirect:/articles/" + id;
+    public RedirectView updateArticle(@PathVariable final long articleId, final ArticleDto articleParam) {
+        long updateId = articleRepository.updateById(articleParam, articleId);
+        return new RedirectView("/articles/" + updateId);
     }
 
-    @DeleteMapping("/articles/{articleId}")
-    public String delete(@PathVariable final long articleId) {
-        articleService.deleteById(articleId);
-        return "redirect:/";
+    @DeleteMapping("articles/{articleId}")
+    public RedirectView deleteArticle(@PathVariable final long articleId) {
+        articleRepository.deleteById(articleId);
+        return new RedirectView("/");
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String editPage(@PathVariable final long articleId, final Model model) {
-        Article article = articleService.findById(articleId);
+    public String updateArticle(@PathVariable final long articleId, final Model model) {
+        ArticleDto article = articleRepository.findById(articleId);
         model.addAttribute("article", article);
-        return "/article/article-edit";
+        return "article-edit";
     }
 }

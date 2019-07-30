@@ -23,18 +23,10 @@ configurations {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'com.h2database:h2'
-	compile 'mysql:mysql-connector-java:5.1.46'
-	compile('javax.xml.bind:jaxb-api:2.3.0')
-	compile group: 'org.javassist', name: 'javassist', version: '3.23.1-GA'
-	
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
     }
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 	developmentOnly "org.springframework.boot:spring-boot-devtools"
-
-	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 }
