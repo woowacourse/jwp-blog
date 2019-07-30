@@ -118,13 +118,13 @@
                                         <i class="ti-timer pdd-right-5"></i>
                                         <span th:text="${comment.localDate}"></span>
                                         <span th:text="${comment.localTime}"></span>
-                                </span>
-<!--                                    <form th:action="${'/articles/' + article.id + '/' + comment.id}" method="post" id="delete-form">-->
-<!--                                        <input type="hidden" name="_method" value="delete" />-->
-<!--                                        <a class="float-right pointer btn btn-icon" onclick="document.getElementById('delete-form').submit();">-->
-<!--                                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>-->
-<!--                                        </a>-->
-<!--                                    </form>-->
+                                    </span>
+                                    <!--                                    <form th:action="${'/articles/' + article.id + '/' + comment.id}" method="post" id="delete-form">-->
+                                    <!--                                        <input type="hidden" name="_method" value="delete" />-->
+                                    <!--                                        <a class="float-right pointer btn btn-icon" onclick="document.getElementById('delete-form').submit();">-->
+                                    <!--                                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>-->
+                                    <!--                                        </a>-->
+                                    <!--                                    </form>-->
                                     <form th:action="${'/articles/' + article.id + '/' + comment.id}" method="post">
                                         <input type="hidden" name="_method" value="delete"/>
                                         <a class="float-right pointer btn btn-icon">
@@ -133,15 +133,38 @@
                                             </button>
                                         </a>
                                     </form>
-                                    <a th:href="'/comment/' + ${comment.id} + '/edit'" class="float-right pointer btn btn-icon">
-                                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                                    </a>
+                                    <form th:action="${'/articles/' + article.id + '/comment-edit/' + comment.id}" method="post">
+                                        <input type="hidden" name="_method" value="put"/>
+                                        <a class="float-right pointer btn btn-icon" data-toggle="modal" th:data-target="'#commentEdit-' + ${comment.id}">
+                                            <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                        </a>
+                                        <div class="modal fade" th:id="'commentEdit-' + ${comment.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel" th:text="${comment.userName}"></h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label th:for="'commentEditContents-' + ${comment.id}"></label>
+                                                            <textarea class="form-control" th:id="'commentEditContents-' + ${comment.id}" rows="3" th:text="${comment.contents}" name="contents"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
                                     <p class="width-80" th:text="${comment.contents}"></p>
                                 </div>
                             </li>
                         </div>
-
-
                     </ul>
                     <div class="add-comment">
                         <form th:action="${'/articles/' + article.id}" method="post">

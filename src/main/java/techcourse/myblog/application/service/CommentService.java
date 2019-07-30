@@ -2,6 +2,7 @@ package techcourse.myblog.application.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.exception.NotExistCommentException;
 import techcourse.myblog.application.service.exception.NotExistUserIdException;
@@ -24,6 +25,7 @@ public class CommentService {
         this.articleRepository = articleRepository;
     }
 
+    @Transactional
     public long save(CommentDto commentDto, String userEmail, long articleId) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new NotExistUserIdException("해당 유저가 존재하지 않습니다."));
@@ -34,7 +36,7 @@ public class CommentService {
         return commentRepository.save(comment).getId();
     }
 
-
+    @Transactional(readOnly = true)
     public List<CommentDto> findAllByArticleId(Long articleId) {
         List<Comment> comments = commentRepository.findAllByArticleId(articleId);
         return comments.stream()
@@ -49,19 +51,21 @@ public class CommentService {
                 }).collect(Collectors.toList());
     }
 
-
-    public void update(CommentDto commentDto) {
-        Comment comment = commentRepository.findById(commentDto.getId())
+    @Transactional
+    public void update(long commentId, CommentDto commentDto) {
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
 
         comment.modify(commentDto.getContents());
     }
 
+    @Transactional
     public void delete(Long commentId) {
         commentRepository.deleteById(commentId);
     }
 
-    public void findCommentWrtier(Long commentId, String email) {
+    @Transactional
+    public void findCommentWriter(Long commentId, String email) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
 
