@@ -2,9 +2,6 @@ package techcourse.myblog.domain.user;
 
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
-import techcourse.myblog.domain.user.UserConverter.UserEmailConverter;
-import techcourse.myblog.domain.user.UserConverter.UserNameConverter;
-import techcourse.myblog.domain.user.UserConverter.UserPasswordConverter;
 import techcourse.myblog.dto.UserDto;
 
 import javax.persistence.*;
@@ -18,14 +15,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Convert(converter = UserNameConverter.class)
+    @Embedded
     private UserName name;
 
-    @Convert(converter = UserPasswordConverter.class)
+    @Embedded
     private UserPassword password;
 
     @Column(unique = true)
-    @Convert(converter = UserEmailConverter.class)
+    @Embedded
     private UserEmail email;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)

@@ -1,17 +1,24 @@
 package techcourse.myblog.domain.user;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Embeddable
 public class UserPassword {
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$@$!%*#?&])[A-Za-z[0-9]$@$!%*#?&]{8,}$");
     private static final String PASSWORD_ERROR = "대소문자, 특수문자, 숫자를 포함한 8자리 이상 문자를 입력하세요. 싫으면 시집가시고";
 
+    @Column(name = "password", nullable = false)
     private String password;
 
     public UserPassword(String password) {
         this.password = validate(password);
+    }
+
+    public UserPassword() {
     }
 
     public static UserPassword of(String password) {

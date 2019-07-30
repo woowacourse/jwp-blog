@@ -29,7 +29,7 @@ public class Comment {
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
     private User author;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     private Article article;
 
