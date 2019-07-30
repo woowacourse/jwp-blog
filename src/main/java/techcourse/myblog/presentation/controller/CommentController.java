@@ -32,17 +32,19 @@ public class CommentController {
     public RedirectView delete(HttpSession httpSession, @PathVariable Long articleId, @PathVariable Long commentId) {
         String email = (String) httpSession.getAttribute("email");
 
-        commentService.findCommentWrtier(commentId, email);
+        commentService.findCommentWriter(commentId, email);
         commentService.delete(commentId);
         return new RedirectView("/articles/" + articleId);
     }
 
     @PutMapping("/articles/{articleId}/comment-edit/{commentId}")
     public RedirectView update(HttpSession httpSession, CommentDto commentDto, @PathVariable Long articleId, @PathVariable Long commentId) {
+        System.out.println("comment id : " + commentDto.getContents());
+        System.out.println("article id : " + articleId);
         String email = (String) httpSession.getAttribute("email");
 
-        commentService.findCommentWrtier(commentId, email);
-        commentService.update(commentDto);
+        commentService.findCommentWriter(commentId, email);
+        commentService.update(commentId, commentDto);
         return new RedirectView("/articles/" + articleId);
     }
 }
