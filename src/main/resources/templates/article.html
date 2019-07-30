@@ -65,6 +65,11 @@
                 </div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
+                <div class="form-group">
+                    <div th:if="${errors}" class="error-box">
+                        <span class="error-text" th:text="${errors}"></span>
+                    </div>
+                </div>
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
                     <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
@@ -93,11 +98,6 @@
                             </div>
                         </li>
                     </ul>
-                    <div class="form-group">
-                        <div th:if="${errors}" class="error-box">
-                            <span class="error-text" th:text="${errors}"></span>
-                        </div>
-                    </div>
                     <div class="add-comment">
                         <form th:action="'/articles/' + ${article.id} + '/comments'" name="comment" method="post"
                               accept-charset="utf-8">

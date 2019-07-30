@@ -14,10 +14,10 @@ import techcourse.myblog.exception.NotFoundCommentException;
 
 @Slf4j
 @ControllerAdvice
-public class CommentExceptionAdvice {
+public class ArticleExceptionAdvice {
 
-    @ExceptionHandler({NotFoundCommentException.class, IllegalRequestException.class})
-    public RedirectView commentExceptionHandler(CommentException e, RedirectAttributes redirectAttributes, Redirection redirection) {
+    @ExceptionHandler({InvalidUserSessionException.class})
+    public RedirectView articleExceptionHandler(RuntimeException e, RedirectAttributes redirectAttributes, Redirection redirection) {
         log.debug(e.getMessage());
         redirectAttributes.addFlashAttribute("errors", e.getMessage());
         return new RedirectView(redirection.getRedirectUrl());

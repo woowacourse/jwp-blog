@@ -29,18 +29,28 @@ public class ArticleService {
                         new UnFoundArticleException("해당 게시글이 존재하지 않습니다."));
     }
 
-    public void update(long id, Article updateArticle) {
-        articleRepository
+    public void update(long id, Article updateArticle, User user) {
+        Article article = articleRepository
                 .findById(id)
-                .orElseThrow(() ->
-                        new UnFoundArticleException("해당 게시글이 존재하지 않습니다."))
-                .update(updateArticle);
+                .orElseThrow(() -> new UnFoundArticleException("해당 게시글이 존재하지 않습니다."));
+
+        if (user == null || !user.equals(article.getAuthor())) {
+            throw new InvalidUserSessionException("권한이 없습니다.");
+        }
+
+        article.update(updateArticle);
     }
 
-    public void delete(long id) {
-        commentRepository.findAllByArticleId(id).forEach(commentRepository::delete);
-        articleRepository
+    public void delete(long id, User user) {
+        Article article = articleRepository
                 .findById(id)
-                .ifPresent(articleRepository::delete);
+                .orElseThrow(() -> new UnFoundArticleException("해당 게시글이 존재하지 않습니다."));
+
+        if (user == null || !user.equals(article.getAuthor())) {
+            throw new InvalidUserSessionException("권한이 없습니다.");
+        }
+
+        commentRepository.findAllByArticleId(id).forEach(commentRepository::delete);
+        articleRepository.delete(article);
     }
 }

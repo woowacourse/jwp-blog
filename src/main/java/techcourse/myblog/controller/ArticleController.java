@@ -54,14 +54,17 @@ public class ArticleController {
 
     @PutMapping("/{articleId}")
     @Transactional
-    public RedirectView editArticle(@PathVariable long articleId, @Valid ArticleDto articleDto) {
-        articleService.update(articleId, articleDto.toDomain());
+    public RedirectView editArticle(@PathVariable long articleId,
+                                    @Valid ArticleDto articleDto,
+                                    UserSession userSession) {
+        articleService.update(articleId, articleDto.toDomain(), userSession.getUser());
         return new RedirectView("/articles/" + articleId);
     }
 
     @DeleteMapping("/{articleId}")
-    public RedirectView deleteArticle(@PathVariable long articleId) {
-        articleService.delete(articleId);
+    public RedirectView deleteArticle(@PathVariable long articleId,
+                                      UserSession userSession) {
+        articleService.delete(articleId, userSession.getUser());
         return new RedirectView("/");
     }
 }

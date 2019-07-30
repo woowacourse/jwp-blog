@@ -53,7 +53,7 @@ public class CommentService {
                 .findById(commentId)
                 .orElseThrow(() -> new NotFoundCommentException("존재하지 않는 댓글"));
 
-        if (!user.equals(comment.getUser())) {
+        if (user == null || !user.equals(comment.getUser())) {
             throw new IllegalRequestException("권한이 없는 사용자 입니다.");
         }
 
@@ -70,7 +70,7 @@ public class CommentService {
                 .findById(commentId)
                 .orElseThrow(() -> new NotFoundCommentException("존재하지 않는 댓글"));
 
-        if (!user.equals(comment.getUser())) {
+        if (user == null || !user.equals(comment.getUser())) {
             throw new IllegalRequestException("권한이 없는 사용자 입니다.");
         }
 

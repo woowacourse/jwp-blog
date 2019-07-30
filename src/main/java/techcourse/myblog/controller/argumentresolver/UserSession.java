@@ -12,9 +12,6 @@ public class UserSession {
     private User user;
 
     public User getUser() {
-        if (user == null) {
-            throw new InvalidUserSessionException("세션 만료");
-        }
         return user;
     }
 }
