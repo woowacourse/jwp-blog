@@ -9,8 +9,6 @@ import techcourse.myblog.exception.AuthException;
 import techcourse.myblog.users.User;
 import techcourse.myblog.users.UserRepository;
 
-import java.util.List;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -27,13 +25,15 @@ public class CommentService {
         return commentRepository.save(comment).getId();
     }
 
-    public void update(final CommentDto.Update commentDto, final Long userId) {
+    public CommentDto.Response update(final CommentDto.Update commentDto, final Long userId) {
         final Comment comment = findCommentById(commentDto.getId());
         final User user = findUserById(userId);
 
         validateAuthor(user, comment);
 
         comment.update(commentDto.toComment());
+
+        return CommentDto.Response.createByComment(comment);
     }
 
     public void delete(final Long commentId, final Long userId) {
@@ -64,11 +64,5 @@ public class CommentService {
     private Article findArticleById(final Long articleId) {
         return articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("등록된 글이 아닙니다."));
-    }
-
-    public List<Comment> findAllByArticle(final Long articleId) {
-        Article article = findArticleById(articleId);
-
-        return commentRepository.findAllByArticle(article);
     }
 }
