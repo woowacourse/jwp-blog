@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class CommentController {
 
-    CommentService commentService;
+    private CommentService commentService;
 
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
