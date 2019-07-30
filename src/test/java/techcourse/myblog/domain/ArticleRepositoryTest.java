@@ -1,29 +1,27 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleRepositoryTest {
-
-    @Autowired
-    private ArticleRepository articleRepository;
 
     @Test
     void addArticle() {
-        Article newArticle = articleRepository.save(Article.of("title", "http://background.com", "가나다라마바사"));
-        assertThat(newArticle).isNotNull();
+        ArticleRepository articleRepository = new ArticleRepository();
+        articleRepository.addArticle(Article.of("title", "http://background.com", "가나다라마바사"));
+
+        assertThat(articleRepository.findAll()).hasSize(1);
     }
 
     @Test
     void findById() {
-        Article newArticle = articleRepository.save(Article.of("title", "http://background.com", "가나다라마바사"));
+        ArticleRepository articleRepository = new ArticleRepository();
+
+        Article newArticle = Article.of("title", "http://background.com", "가나다라마바사");
+        articleRepository.addArticle(newArticle);
 
         Optional<Article> maybeArticle = articleRepository.findById(newArticle.getId());
         assertThat(maybeArticle.isPresent()).isTrue();
@@ -32,13 +30,14 @@ public class ArticleRepositoryTest {
 
     @Test
     void update() {
-        Article newArticle = articleRepository.save(Article.of("title", "http://background.com", "가나다라마바사"));
+        ArticleRepository articleRepository = new ArticleRepository();
+
+        Article newArticle = Article.of("title", "http://background.com", "가나다라마바사");
+        articleRepository.addArticle(newArticle);
 
         Article articleFound = articleRepository.findById(newArticle.getId())
             .orElseThrow(IllegalStateException::new);
-        articleFound.update(Article.of("changed title", articleFound.getCoverUrl(), articleFound.getContents()));
-        articleRepository.save(articleFound);
-
+        articleFound.setTitle("changed title");
         Article articleToAssert = articleRepository.findById(newArticle.getId())
             .orElseThrow(IllegalStateException::new);
 
@@ -47,9 +46,12 @@ public class ArticleRepositoryTest {
 
     @Test
     void delete() {
-        Article newArticle = articleRepository.save(Article.of("title", "http://background.com", "가나다라마바사"));
+        ArticleRepository articleRepository = new ArticleRepository();
+
+        Article newArticle = Article.of("title", "http://background.com", "가나다라마바사");
+        articleRepository.addArticle(newArticle);
         articleRepository.deleteById(newArticle.getId());
 
-        assertThat(articleRepository.findById(newArticle.getId()).isPresent()).isFalse();
+        assertThat(articleRepository.findAll()).hasSize(0);
     }
 }
