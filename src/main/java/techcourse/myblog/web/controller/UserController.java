@@ -2,8 +2,10 @@ package techcourse.myblog.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.UserInfo;
 import techcourse.myblog.domain.User;
@@ -102,5 +104,12 @@ public class UserController {
         userWriteService.remove(loginUser.getUser());
 
         return new RedirectView("/logout");
+    }
+
+    @ExceptionHandler(BindException.class)
+    public RedirectView handleBindError(BindException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("userDto", new UserDto("", "", ""));
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userDto", e.getBindingResult());
+        return new RedirectView(e.getObjectName());
     }
 }
