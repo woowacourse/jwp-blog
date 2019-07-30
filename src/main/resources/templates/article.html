@@ -98,7 +98,6 @@
                 </div>
                 <div class="comment">
                     <ul class="list-unstyled list-info" id="comment-list">
-
                         <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
                             <form accept-charset="utf-8" method="post" name="comment-update" th:action="@{/comments/{articleId}/{commentId} (articleId = ${article.id}, commentId = ${comment.id})}" >
                                 <input name="_method" type="hidden" value="DELETE">
@@ -160,11 +159,12 @@
     });
     /*]]>*/
 
-    function submitUpdate(){
+    function submitUpdate(updatedElement){
         if (confirm('수정 하시겠습니까?')) {
-            document.querySelector("form[name=comment-update] input[name=_method]").setAttribute("value","put");
-            document.querySelector("form[name=comment-update]").submit();
+            updatedElement.querySelector("form[name=comment-update] input[name=_method]").setAttribute("value","PUT");
+            updatedElement.querySelector("form[name=comment-update]").submit();
         }
+
     }
 
     const TODOAPP = (function () {
@@ -205,10 +205,10 @@
                 if (event.which === ESC_KEY) {
                     updatedElement.classList.toggle('editing')
                 }
-                if (event.which === ENTER_KEY && inputValue !== ''){
+                if (event.which === ENTER_KEY && inputValue !== "") {
                     updatedElement.querySelector('label').innerText = inputValue;
                     updatedElement.classList.toggle('editing');
-                    submitUpdate();
+                    submitUpdate(updatedElement);
                 }
             };
 
