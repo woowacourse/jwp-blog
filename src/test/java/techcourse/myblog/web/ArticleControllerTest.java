@@ -32,7 +32,7 @@ public class ArticleControllerTest {
     private WebTestClient webTestClient;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         baseUrl = "http://localhost:" + randomServerPort;
 
         setUpArticleUrl = given()
@@ -45,21 +45,21 @@ public class ArticleControllerTest {
     }
 
     @Test
-    void index() {
+    public void index() {
         webTestClient.get().uri("/")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void showArticles() {
+    public void showArticles() {
         webTestClient.get().uri("/articles")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void showCreatePageWhenUserLogIn() {
+    public void showCreatePageWhenUserLogIn() {
         webTestClient.get().uri("/articles/new")
                 .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                 .exchange()
@@ -67,14 +67,14 @@ public class ArticleControllerTest {
     }
 
     @Test
-    void showCreatePageWhenUserLogOut() {
+    public void showCreatePageWhenUserLogOut() {
         webTestClient.get().uri("/articles/new")
                 .exchange()
                 .expectStatus().isFound();
     }
 
     @Test
-    void createArticleWhenLogin() {
+    public void createArticleWhenLogin() {
         String newTitle = "New Title";
         String newCoverUrl = "New Cover Url";
         String newContents = "New Contents";
@@ -106,7 +106,7 @@ public class ArticleControllerTest {
     }
 
     @Test
-    void createArticleWhenLogout() {
+    public void createArticleWhenLogout() {
         String newTitle = "New Title";
         String newCoverUrl = "New Cover Url";
         String newContents = "New Contents";
@@ -124,7 +124,7 @@ public class ArticleControllerTest {
     }
 
     @Test
-    void showArticle() {
+    public void showArticle() {
         webTestClient.get()
                 .uri(setUpArticleUrl)
                 .exchange()
@@ -138,7 +138,7 @@ public class ArticleControllerTest {
     }
 
     @Test
-    void showEditPageWhenUserMatch() {
+    public void showEditPageWhenUserMatch() {
         webTestClient.get()
                 .uri(setUpArticleUrl + "/edit")
                 .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
@@ -154,7 +154,7 @@ public class ArticleControllerTest {
     }
 
     @Test
-    void showEditPageWhenUserMismatch() {
+    public void showEditPageWhenUserMismatch() {
         webTestClient.get()
                 .uri(setUpArticleUrl + "/edit")
                 .cookie("JSESSIONID",
@@ -165,7 +165,7 @@ public class ArticleControllerTest {
     }
 
     @Test
-    void editArticleWhenUserMatch() {
+    public void editArticleWhenUserMatch() {
         String newTitle = "test";
         String newCoverUrl = "newCorverUrl";
         String newContents = "newContents";
@@ -197,7 +197,7 @@ public class ArticleControllerTest {
     }
 
     @Test
-    void editArticleWhenUserMismatch() {
+    public void editArticleWhenUserMismatch() {
         String newTitle = "test";
         String newCoverUrl = "newCorverUrl";
         String newContents = "newContents";
@@ -217,7 +217,7 @@ public class ArticleControllerTest {
     }
 
     @Test
-    void deleteArticleWithMatchUser() {
+    public void deleteArticleWithMatchUser() {
         webTestClient.delete()
                 .uri(setUpArticleUrl)
                 .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
@@ -231,7 +231,7 @@ public class ArticleControllerTest {
     }
 
     @Test
-    void deleteArticleWithMismatchUser() {
+    public void deleteArticleWithMismatchUser() {
         webTestClient.delete()
                 .uri(setUpArticleUrl)
                 .cookie("JSESSIONID", LogInControllerTest.logInAsMismatchUser(webTestClient))
@@ -245,7 +245,7 @@ public class ArticleControllerTest {
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         delete(setUpArticleUrl);
     }
 }

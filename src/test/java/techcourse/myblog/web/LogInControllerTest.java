@@ -15,7 +15,7 @@ import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
 import static techcourse.myblog.service.exception.LogInException.NOT_FOUND_USER_MESSAGE;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class LogInControllerTest {
+public class LogInControllerTest {
     public static final String USER_NAME = "test";
     public static final String USER_EMAIL = "test@test.test";
     public static final String USER_PASSWORD = VALID_PASSWORD;
@@ -30,7 +30,7 @@ class LogInControllerTest {
 
     @Test
     @DisplayName("로그인 페이지를 보여준다.")
-    void showLoginPage() {
+    public void showLoginPage() {
         webTestClient.get()
                 .uri("/login")
                 .exchange()
@@ -39,7 +39,7 @@ class LogInControllerTest {
 
     @Test
     @DisplayName("로그아웃시 메인 화면을 띄운다.")
-    void logOut() {
+    public void logOut() {
         webTestClient.get()
                 .uri("/logout")
                 .exchange()
@@ -48,7 +48,7 @@ class LogInControllerTest {
 
     @Test
     @DisplayName("로그인 성공 시 메인 화면을 띄우고 우측 상단에 사용자 이름을 띄운다.")
-    void successLogIn() {
+    public void successLogIn() {
         String jsessiontId = logInAsBaseUser(webTestClient);
 
         webTestClient.get()
@@ -64,7 +64,7 @@ class LogInControllerTest {
 
     @Test
     @DisplayName("없는 이메일로 로그인 했을때 에러 메세지 출력한다.")
-    void failLogIn() {
+    public void failLogIn() {
         String name = "testName";
         String email = "logintest2@woowa.com";
         String password = VALID_PASSWORD;
@@ -115,7 +115,7 @@ class LogInControllerTest {
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         webTestClient.get().uri("/logout");
     }
 }

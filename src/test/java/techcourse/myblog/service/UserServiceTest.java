@@ -30,7 +30,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("이메일이 중복되는 경우에 예외를 던져준다.")
-    void checkEmailDuplication() {
+    public void checkEmailDuplication() {
         UserDto userDto1 = new UserDto("name", "email@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
         UserDto userDto2 = new UserDto("name", "email@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
 
@@ -42,7 +42,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("이름이 2자 미만인 경우에 예외를 던져준다.")
-    void underValidNameLength() {
+    public void underValidNameLength() {
         UserDto userDto = new UserDto("a", "email1@woowa.com",
                 VALID_PASSWORD, VALID_PASSWORD);
 
@@ -52,7 +52,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("이름이 10자 초과인 경우에 예외를 던져준다.")
-    void exceedValidNameLength() {
+    public void exceedValidNameLength() {
         UserDto userDto = new UserDto("abcdefghijk", "email2@woowa.com",
                 VALID_PASSWORD, VALID_PASSWORD);
 
@@ -62,7 +62,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("이름이 숫자를 포함하는 경우에 예외를 던져준다.")
-    void includeNumberInName() {
+    public void includeNumberInName() {
         UserDto userDto = new UserDto("abcde1", "email3@woowa.com",
                 VALID_PASSWORD, VALID_PASSWORD);
 
@@ -72,7 +72,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("이름이 특수문자를 포함하는 경우에 예외를 던져준다.")
-    void includeSpecialCharacterInName() {
+    public void includeSpecialCharacterInName() {
         UserDto userDto = new UserDto("abcde!@", "email4@woowa.com",
                 VALID_PASSWORD, VALID_PASSWORD);
 
@@ -82,7 +82,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("password가 8자 미만인 경우 예외를 던져준다.")
-    void underValidPasswordLength() {
+    public void underValidPasswordLength() {
         UserDto userDto = new UserDto("abcde", "email5@woowa.com",
                 "passwor", "passwor");
 
@@ -92,7 +92,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("password에 소문자가 포함되지 않으면 예외를 던져준다.")
-    void checkUndercaseInPassword() {
+    public void checkUndercaseInPassword() {
         UserDto userDto = new UserDto("abcde", "email6@woowa.com",
                 "PASSWORD1!", "PASSWORD1!");
 
@@ -102,7 +102,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("password에 대문자가 포함되지 않으면 예외를 던져준다.")
-    void checkUppercaseInPassword() {
+    public void checkUppercaseInPassword() {
         UserDto userDto = new UserDto("abcde", "email7@woowa.com",
                 "password1!", "password1!");
 
@@ -112,7 +112,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("password에 숫자가 포함되지 않으면 예외를 던져준다.")
-    void checkNumberInPassword() {
+    public void checkNumberInPassword() {
         UserDto userDto = new UserDto("abcde", "email8@woowa.com",
                 "passWORD!", "passWORD!");
 
@@ -122,7 +122,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("password에 특수문자가 포함되지 않으면 예외를 던져준다.")
-    void checkSpecialCharacterInPassword() {
+    public void checkSpecialCharacterInPassword() {
         UserDto userDto = new UserDto("abcde", "email9@woowa.com",
                 "passWORD1", "passWORD1");
 
@@ -132,7 +132,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("password에 한글이 포함되면 예외를 던져준다.")
-    void checkPasswordDoesNotContainsKorean() {
+    public void checkPasswordDoesNotContainsKorean() {
         UserDto userDto = new UserDto("abcde", "email10@woowa.com",
                 "passWORD가1!", "passWORD가1!");
 
@@ -142,7 +142,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("User를 삭제했을 때 작성한 Article도 삭제된다")
-    void deleteUserWithCascadeArticles() {
+    public void deleteUserWithCascadeArticles() {
         UserDto userDto = new UserDto("delete", "email11@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
         User author = userService.save(userDto);
         ArticleDto articleDto = new ArticleDto(null, author.getId(), "title",
@@ -157,7 +157,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("User를 삭제했을 때 작성한 Comment도 삭제된다")
-    void deleteUserWithCascadeComments() {
+    public void deleteUserWithCascadeComments() {
         UserDto userDto = new UserDto("delete", "email11@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
         User author = userService.save(userDto);
 

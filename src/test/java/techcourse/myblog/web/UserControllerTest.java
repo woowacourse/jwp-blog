@@ -17,7 +17,8 @@ import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
 import static techcourse.myblog.service.exception.SignUpException.SIGN_UP_FAIL_MESSAGE;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserControllerTest {
+public class UserControllerTest {
+
     @LocalServerPort
     int randomPortNumber;
 
@@ -26,7 +27,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 페이지를 보여준다.")
-    void showRegisterPage() {
+    public void showRegisterPage() {
         webTestClient.get()
                 .uri("/users/sign-up")
                 .exchange()
@@ -35,7 +36,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("유저 목록을 보여준다.")
-    void showUserList() {
+    public void showUserList() {
         webTestClient.get()
                 .uri("/users")
                 .exchange()
@@ -44,7 +45,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("회원 가입 페이지에서 유저 정보를 넘겨받아 새로운 유저를 생성한다.")
-    void createUser() {
+    public void createUser() {
         String name = "hibri";
         String email = "test1@woowa.com";
         String password = VALID_PASSWORD;
@@ -70,7 +71,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("email이 중복되는 경우 error message를 담은 페이지를 되돌려준다.")
-    void isDuplicatedEmail() {
+    public void isDuplicatedEmail() {
         String name = "Deock";
         String email = "test2@woowa.com";
         String password = VALID_PASSWORD;
@@ -106,7 +107,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("이름이 2자 미만인 경우 error message를 담은 페이지를 되돌려준다.")
-    void underValidNameLength() {
+    public void underValidNameLength() {
         String name = "a";
         String email = "test3@woowa.com";
         String password = VALID_PASSWORD;
@@ -131,7 +132,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("이름이 10자 초과인 경우 error message를 담은 페이지를 되돌려준다.")
-    void exceedValidNameLength() {
+    public void exceedValidNameLength() {
         String name = "abcdefghijk";
         String email = "test4@woowa.com";
         String password = VALID_PASSWORD;
@@ -156,7 +157,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("잘못된 이름인 경우 error message를 담은 페이지를 되돌려준다.")
-    void checkInvalidName() {
+    public void checkInvalidName() {
         String name = "afghij1";
         String email = "test4@woowa.com";
         String password = VALID_PASSWORD;
@@ -181,7 +182,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("비밀번호 길이가 8자 미만인 경우 error message를 담은 페이지를 되돌려준다.")
-    void checkInvalidPasswordLength() {
+    public void checkInvalidPasswordLength() {
         String name = "name";
         String email = "test5@woowa.com";
         String password = "passwor";
@@ -206,7 +207,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("잘못된 비밀번호인 경우 error message를 담은 페이지를 되돌려준다.")
-    void checkInvalidPassword() {
+    public void checkInvalidPassword() {
         String name = "name";
         String email = "test5@woowa.com";
         String password = "wrong password";
@@ -231,7 +232,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("비밀번호 확인과 비밀번호가 다른 경우 에러 메시지를 담은 페이지를 되돌려준다.")
-    void confirmPassword() {
+    public void confirmPassword() {
         String name = "name";
         String email = "test5@woowa.com";
         String password = VALID_PASSWORD;
@@ -256,7 +257,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("로그인한 유저가 자신의 프로필을 변경하는 경우 변경에 성공한다.")
-    void updateUserWhenLogIn() {
+    public void updateUserWhenLogIn() {
         String jssesionId = LogInControllerTest.logIn(webTestClient, "update@test.test", VALID_PASSWORD);
 
         webTestClient.put()
@@ -280,7 +281,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("로그인 되어있지 않을 때 프로필을 변경하는 경우 변경되지 않는다.")
-    void updateUserWhenLogOut() {
+    public void updateUserWhenLogOut() {
         webTestClient.put()
                 .uri("/users/1")
                 .body(BodyInserters.fromFormData("name", "updated")
@@ -301,7 +302,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("로그인한 유저가 자신의 프로필을 삭제하는 경우 삭제에 성공한다.")
-    void deleteUserWhenLogIn() {
+    public void deleteUserWhenLogIn() {
         String jssesionId = LogInControllerTest.logIn(webTestClient, "delete@test.test", VALID_PASSWORD);
 
         webTestClient.delete()
@@ -323,7 +324,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("로그인 되어있지 않을 때 회원 탈퇴하려는 경우 실패한다.")
-    void deleteUserWhenLogOut() {
+    public void deleteUserWhenLogOut() {
         webTestClient.delete()
                 .uri("/users/1")
                 .exchange()

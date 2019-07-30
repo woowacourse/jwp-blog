@@ -8,18 +8,18 @@ import techcourse.myblog.domain.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ArticleTests {
+public class ArticleTest {
     private Article article;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         User author = new User("name", "test@test.test", "passWORD1!");
         ArticleVo articleVo = new ArticleVo("title", "url", "contents");
         article = new Article(author, articleVo);
     }
 
     @Test
-    void updateArticle() {
+    public void updateArticle() {
         String newTitle = "new Title";
         String newCoverUrl = "new CoverUrl";
         String newContents = "new Contents";

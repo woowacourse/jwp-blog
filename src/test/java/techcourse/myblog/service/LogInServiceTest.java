@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class LogInServiceTest {
+public class LogInServiceTest {
     private User user;
 
     @Autowired
@@ -27,14 +27,14 @@ class LogInServiceTest {
     UserRepository userRepository;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         user = new User("name", "login1@woowa.com", VALID_PASSWORD);
         userRepository.save(user);
     }
 
     @Test
     @DisplayName("이메일과 비밀번호를 넘겨받아 로그인에 성공한다.")
-    void loginSuccess() {
+    public void loginSuccess() {
         LogInInfoDto logInInfoDto = new LogInInfoDto("login1@woowa.com", VALID_PASSWORD);
 
         UserPublicInfoDto userPublicInfoDto = logInService.logIn(logInInfoDto);
@@ -44,7 +44,7 @@ class LogInServiceTest {
 
     @Test
     @DisplayName("이메일이 없는 경우 로그인에 실패한다.")
-    void logInFailWhenEmailIsNotInRepository() {
+    public void logInFailWhenEmailIsNotInRepository() {
         LogInInfoDto logInInfoDto = new LogInInfoDto("test2@email.com", VALID_PASSWORD);
 
         assertThatThrownBy(() -> logInService.logIn(logInInfoDto)).isInstanceOf(LogInException.class);
@@ -52,14 +52,14 @@ class LogInServiceTest {
 
     @Test
     @DisplayName("비밀번호가 다른 경우 로그인에 실패한다.")
-    void logInFailWhenDifferentPassword() {
+    public void logInFailWhenDifferentPassword() {
         LogInInfoDto logInInfoDto = new LogInInfoDto("login1@woowa.com", VALID_PASSWORD + "diff");
 
         assertThatThrownBy(() -> logInService.logIn(logInInfoDto)).isInstanceOf(LogInException.class);
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         userRepository.delete(user);
     }
 }

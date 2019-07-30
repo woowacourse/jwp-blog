@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CommentControllerTest {
+public class CommentControllerTest {
     private static final Long SAMPLE_ARTICLE_ID = 1L;
     private static final Long SAMPLE_COMMENT_ID = 1L;
     private static final Long SAMPLE_DELETE_COMMENT_ID = 2L;
@@ -18,7 +18,7 @@ class CommentControllerTest {
     WebTestClient webTestClient;
 
     @Test
-    void createComment() {
+    public void createComment() {
         webTestClient.post()
                 .uri("/comment")
                 .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
@@ -31,7 +31,7 @@ class CommentControllerTest {
     }
 
     @Test
-    void showCommentsInArticle() {
+    public void showCommentsInArticle() {
         String testComment = "test comment";
 
         webTestClient.post()
@@ -55,7 +55,7 @@ class CommentControllerTest {
     }
 
     @Test
-    void updateComment() {
+    public void updateComment() {
         String updateComment = "update comment";
 
         webTestClient.put()
@@ -78,7 +78,7 @@ class CommentControllerTest {
     }
 
     @Test
-    void deleteComment() {
+    public void deleteComment() {
         String deleteComment = "delete comment";
 
         webTestClient.delete()
