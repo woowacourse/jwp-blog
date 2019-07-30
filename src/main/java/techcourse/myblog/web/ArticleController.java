@@ -1,7 +1,6 @@
 package techcourse.myblog.web;
 
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,13 +25,11 @@ public class ArticleController {
     private static final String PAGE_ARTICLE = "article";
     private static final String PAGE_EDIT = "article-edit";
 
-    @Autowired
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
-//    @Autowired
-//    void setArticleRepository(final ArticleRepository articleRepository) {
-//        this.articleRepository = articleRepository;
-//    } // TODO: 검색 - 생성자 주입 필드 주입
+    public ArticleController(final ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     @GetMapping(ROUTE_WRITING)
     public String getNewArticlePage() {

@@ -28,7 +28,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void signup(final UserDto dto) {
+    public void signUp(final UserDto dto) {
         if (isDuplicatedEmail(dto.getEmail())) {
             throw new ValidationException(DUPLICATED_EMAIL);
         }
