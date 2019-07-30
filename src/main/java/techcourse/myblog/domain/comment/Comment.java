@@ -1,4 +1,4 @@
-package techcourse.myblog.domain.coment;
+package techcourse.myblog.domain.comment;
 
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
@@ -17,7 +17,8 @@ public class Comment {
     @ManyToOne
     private Article article;
 
-    public Comment() {}
+    public Comment() {
+    }
 
     public Comment(String contents, User author, Article article) {
         this.contents = contents;

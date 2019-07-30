@@ -1,15 +1,9 @@
 package techcourse.myblog.service.dto.article;
 
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.dto.user.UserRequestDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
-
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-public class ArticleDto {
-    private Long id;
-
+public class ArticleRequestDto {
     @NotNull
     private String title;
 
@@ -19,22 +13,10 @@ public class ArticleDto {
     @NotNull
     private String contents;
 
-    public ArticleDto(final String title, final String coverUrl, final String contents) {
-        Objects.requireNonNull(title);
-        Objects.requireNonNull(coverUrl);
-        Objects.requireNonNull(contents);
-
+    public ArticleRequestDto(@NotNull String title, @NotNull String coverUrl, @NotNull String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -53,7 +35,7 @@ public class ArticleDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ArticleDto that = (ArticleDto) o;
+        ArticleRequestDto that = (ArticleRequestDto) o;
         return Objects.equals(title, that.title) &&
                 Objects.equals(coverUrl, that.coverUrl) &&
                 Objects.equals(contents, that.contents);

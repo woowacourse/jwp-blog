@@ -3,7 +3,7 @@ package techcourse.myblog.service.comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.coment.Comment;
+import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.CommentNotFoundException;
@@ -38,9 +38,9 @@ public class CommentService {
         return convertToDto(persistComment);
     }
 
-    public CommentResponseDto update(final String commentContent, final Long commentId) {
+    public CommentResponseDto update(final CommentRequestDto commentRequestDto, final Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
-        comment.update(commentContent);
+        comment.update(commentRequestDto.getComment());
         return convertToDto(comment);
     }
 

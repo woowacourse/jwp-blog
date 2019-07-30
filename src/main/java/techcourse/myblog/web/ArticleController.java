@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.service.article.ArticleService;
-import techcourse.myblog.service.dto.article.ArticleDto;
+import techcourse.myblog.service.dto.article.ArticleRequestDto;
+import techcourse.myblog.service.dto.article.ArticleResponseDto;
 import techcourse.myblog.service.dto.user.UserResponseDto;
 
 import javax.servlet.http.HttpSession;
@@ -28,7 +29,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String showMain(Model model, final HttpSession session) {
-        List<ArticleDto> articleDtos = articleService.findAll();
+        List<ArticleResponseDto> articleDtos = articleService.findAll();
         model.addAttribute("articleDtos", articleDtos);
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
         if (!Objects.isNull(user)) {
@@ -43,7 +44,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public ModelAndView createArticle(final ArticleDto articleDTO, final HttpSession session) {
+    public ModelAndView createArticle(final ArticleRequestDto articleDTO, final HttpSession session) {
         Long id = articleService.save(articleDTO, ((UserResponseDto) session.getAttribute(USER_SESSION_KEY)).getId());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/articles/" + id));
@@ -57,7 +58,7 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{id}")
-    public ModelAndView updateArticle(@PathVariable final Long id, final ArticleDto articleDTO, final HttpSession session) {
+    public ModelAndView updateArticle(@PathVariable final Long id, final ArticleRequestDto articleDTO, final HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
         if (!user.getId().equals(articleService.findAuthor(id).getId())) {
