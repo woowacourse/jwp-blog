@@ -4,18 +4,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.LoginRequest;
 import techcourse.myblog.service.dto.UserEditRequest;
-import techcourse.myblog.service.dto.UserLoginRequest;
 import techcourse.myblog.service.dto.UserRequest;
-import techcourse.myblog.service.dto.UserResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class UserController {
@@ -29,7 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String createLoginForm(UserLoginRequest userLoginRequest) {
+    public String createLoginForm(LoginRequest loginRequest) {
         return "login";
     }
 
@@ -70,12 +66,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid UserLoginRequest userLoginRequest, BindingResult bindingResult, HttpSession httpSession) {
+    public String login(@Valid LoginRequest loginRequest, BindingResult bindingResult, HttpSession httpSession) {
         if (bindingResult.hasErrors()) {
             return "login";
         }
 
-        httpSession.setAttribute(USER_INFO, userService.findUserByEmail(userLoginRequest));
+        httpSession.setAttribute(USER_INFO, userService.checkLogin(loginRequest));
 
         return "redirect:/";
     }

@@ -73,7 +73,7 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info" th:text="${comments.size()}"></span>
+                    <span class="font-size-16 text-info" th:text="${comments==null ? 0 : comments.size()}"></span>
                 </div>
                 <div class="comment">
                     <ul class="list-unstyled list-info">
