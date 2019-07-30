@@ -28,7 +28,7 @@ public class Comment {
     @NotBlank(message = "내용을 입력해주세요.")
     private String contents;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private User user;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
