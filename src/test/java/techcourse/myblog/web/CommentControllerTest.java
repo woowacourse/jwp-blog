@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -18,6 +19,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
+@TestPropertySource("classpath:application_test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CommentControllerTest {
     private static String title = "TEST";
@@ -25,7 +27,7 @@ class CommentControllerTest {
     private static String contents = "testtest";
     private static String categoryId = "1";
 
-    private static final String name = "미스터코";
+    private static final String name = "name";
     private static final String email = "test@test.com";
     private static final String password = "123123123";
 
@@ -79,7 +81,7 @@ class CommentControllerTest {
     public <T> BodyInserters.FormInserter<String> createFormData(Class<T> classType, String... parameters) {
         BodyInserters.FormInserter<String> body = BodyInserters.fromFormData(Strings.EMPTY, Strings.EMPTY);
         for (int i = 1; i < classType.getDeclaredFields().length; i++) {
-            if (classType.getDeclaredFields()[i].getName() != "userDto") {
+            if (classType.getDeclaredFields()[i].getName() != "author") {
                 body.with(classType.getDeclaredFields()[i].getName(), parameters[i - 1]);
             }
         }

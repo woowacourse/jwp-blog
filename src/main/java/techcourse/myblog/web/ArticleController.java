@@ -9,6 +9,7 @@ import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.user.UserDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CategoryService;
+import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -23,7 +24,7 @@ public class ArticleController {
     private CategoryService categoryService;
 
     @Autowired
-    private CommentRepository commentRepository;
+    private CommentService commentService;
 
     @GetMapping("/articles/new")
     public String showArticleWritingPage(Model model) {
@@ -42,7 +43,7 @@ public class ArticleController {
     public String showArticleById(@PathVariable long articleId, Model model) {
         ArticleDto articleDto = articleService.readById(articleId);
         model.addAttribute("article", articleDto);
-        model.addAttribute("comments", commentRepository.findByArticleId(articleId));
+        model.addAttribute("comments", commentService.findByArticleId(articleId));
         return "article";
     }
 
@@ -69,8 +70,9 @@ public class ArticleController {
     public String delete(@PathVariable long articleId, HttpSession session) {
         Object userId = session.getAttribute("userId");
         articleService.checkAuthor(articleId, (long) userId);
-        commentRepository.deleteByArticleId(articleId);
+        commentService.deleteByArticleId(articleId);
         articleService.deleteById(articleId);
+
         return "redirect:/";
     }
 }
