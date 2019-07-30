@@ -70,15 +70,11 @@ public class Article {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return Objects.equals(id, article.id) &&
-                Objects.equals(title, article.title) &&
-                Objects.equals(contents, article.contents) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(author, article.author);
+        return Objects.equals(id, article.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, contents, coverUrl, author);
+        return Objects.hash(id);
     }
 }
