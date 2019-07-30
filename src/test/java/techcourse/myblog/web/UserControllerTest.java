@@ -7,9 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.user.UserEmail;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserControllerTest extends AuthedWebTestClient {
 
@@ -73,7 +73,7 @@ class UserControllerTest extends AuthedWebTestClient {
         delete("/users")
                 .exchange().expectStatus().is3xxRedirection();
 
-        assertThatThrownBy(() -> userRepository.findByEmail(UserEmail.of("andole@gmail.com")).orElseThrow(IllegalAccessError::new))
-                .isInstanceOf(IllegalAccessError.class);
+        assertThrows(IllegalArgumentException.class, () -> userRepository.findByEmail(UserEmail.of("andole@gmail.com")).orElseThrow(IllegalArgumentException::new));
+
     }
 }
