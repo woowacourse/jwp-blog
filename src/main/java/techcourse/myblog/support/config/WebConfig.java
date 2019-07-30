@@ -22,7 +22,7 @@ public class WebConfig {
                         .addPathPatterns("/mypage")
                         .addPathPatterns("/mypage/*")
                         .addPathPatterns("/articles/*/comments")
-                        ;
+                ;
             }
         };
     }
@@ -36,6 +36,5 @@ public class WebConfig {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
-
 
 }

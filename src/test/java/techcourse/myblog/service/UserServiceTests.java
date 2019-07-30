@@ -32,14 +32,14 @@ public class UserServiceTests {
     @Mock
     private UserRepository userRepository;
 
-    private static final UserRequest USER_REQUEST_1 = new UserRequest("amo","amo@woowahan.com", "PassWord123!");
+    private static final UserRequest USER_REQUEST_1 = new UserRequest("amo", "amo@woowahan.com", "PassWord123!");
     private static final UserRequest USER_REQUEST_2 = new UserRequest("bmo", "bmo@woowahan.com", "PassWord123!");
     private static final UserRequest USER_REQUEST_3 = new UserRequest("cmo", "cmo@woowahan.com", "PassWord123!");
     private static final LoginRequest LOGIN_REQUEST = new LoginRequest("amo@woowahan.com", "PassWord123!");
 
-    private static final User USER_1 = new User("amo","amo@woowahan.com", "PassWord123!");
-    private static final User USER_2 = new User("bmo","bmo@woowahan.com", "PassWord123!");
-    private static final User USER_3 = new User("cmo","cmo@woowahan.com", "PassWord123!");
+    private static final User USER_1 = new User("amo", "amo@woowahan.com", "PassWord123!");
+    private static final User USER_2 = new User("bmo", "bmo@woowahan.com", "PassWord123!");
+    private static final User USER_3 = new User("cmo", "cmo@woowahan.com", "PassWord123!");
     private InOrder inOrder;
 
     @BeforeEach
@@ -55,7 +55,7 @@ public class UserServiceTests {
         verify(userRepository, times(1)).save(USER_1);
         verify(userRepository, times(1)).save(USER_2);
         verify(userRepository, never()).save(USER_3);
-        
+
         inOrder.verify(userRepository).save(USER_1);
         inOrder.verify(userRepository).save(USER_2);
 

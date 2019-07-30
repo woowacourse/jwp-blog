@@ -1,7 +1,6 @@
 package techcourse.myblog.web.interceptor;
 
 import org.springframework.web.servlet.HandlerInterceptor;
-import techcourse.myblog.domain.User;
 import techcourse.myblog.service.dto.UserResponse;
 
 import javax.servlet.http.HttpServletRequest;

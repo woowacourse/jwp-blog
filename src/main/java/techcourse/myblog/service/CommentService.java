@@ -3,7 +3,6 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.*;
 import techcourse.myblog.service.dto.CommentRequest;
-import techcourse.myblog.service.dto.UserResponse;
 import techcourse.myblog.service.exception.CommentNotFoundException;
 import techcourse.myblog.service.exception.NoArticleException;
 import techcourse.myblog.service.exception.NoUserException;
