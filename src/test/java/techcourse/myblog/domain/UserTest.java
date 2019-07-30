@@ -1,7 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.dto.UserEditParams;
+import techcourse.myblog.dto.UserEditRequestDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,10 +27,10 @@ class UserTest {
                 .password("password1!")
                 .build();
 
-        UserEditParams userEditParams = new UserEditParams();
-        userEditParams.setName("newName");
+        UserEditRequestDto userEditRequestDto = new UserEditRequestDto();
+        userEditRequestDto.setName("newName");
 
-        user.update(userEditParams);
+        user.update(userEditRequestDto);
 
         assertThat(user.getName()).isEqualTo("newName");
     }

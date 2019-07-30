@@ -1,7 +1,7 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
-import techcourse.myblog.dto.UserEditParams;
+import techcourse.myblog.dto.UserEditRequestDto;
 import techcourse.myblog.exception.IllegalUserParamsException;
 
 import javax.persistence.*;
@@ -61,7 +61,7 @@ public class User {
         return this.password.equals(password);
     }
 
-    public void update(UserEditParams userEditParams) {
-        this.name = userEditParams.getName();
+    public void update(UserEditRequestDto userEditRequestDto) {
+        this.name = userEditRequestDto.getName();
     }
 }

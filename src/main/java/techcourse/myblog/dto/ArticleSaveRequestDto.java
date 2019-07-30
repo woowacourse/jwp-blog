@@ -10,7 +10,7 @@ import techcourse.myblog.domain.Article;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ArticleSaveParams {
+public class ArticleSaveRequestDto {
     private String title;
     private String coverUrl;
     private String contents;

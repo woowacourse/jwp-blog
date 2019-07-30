@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserLoginParams;
+import techcourse.myblog.dto.UserLoginRequestDto;
 import techcourse.myblog.service.LoginService;
 
 import javax.servlet.http.HttpSession;
@@ -30,11 +30,11 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(UserLoginParams userLoginParams, HttpSession httpSession) {
-        log.info("login post request params={}", userLoginParams);
-        loginService.checkLogin(userLoginParams.getEmail(), userLoginParams.getPassword());
+    public String login(UserLoginRequestDto userLoginRequestDto, HttpSession httpSession) {
+        log.info("login post request params={}", userLoginRequestDto);
+        loginService.checkLogin(userLoginRequestDto.getEmail(), userLoginRequestDto.getPassword());
 
-        User user = loginService.findByEmail(userLoginParams.getEmail());
+        User user = loginService.findByEmail(userLoginRequestDto.getEmail());
         httpSession.setAttribute(USER, user);
         return "redirect:/";
     }

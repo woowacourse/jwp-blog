@@ -1,7 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.dto.ArticleSaveParams;
+import techcourse.myblog.dto.ArticleSaveRequestDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,12 +33,12 @@ class ArticleTest {
                 .contents("contents")
                 .build();
 
-        ArticleSaveParams articleSaveParams = new ArticleSaveParams();
-        articleSaveParams.setTitle("newTitle");
-        articleSaveParams.setCoverUrl("newCoverUrl");
-        articleSaveParams.setContents("newContents");
+        ArticleSaveRequestDto articleSaveRequestDto = new ArticleSaveRequestDto();
+        articleSaveRequestDto.setTitle("newTitle");
+        articleSaveRequestDto.setCoverUrl("newCoverUrl");
+        articleSaveRequestDto.setContents("newContents");
 
-        article.update(articleSaveParams);
+        article.update(articleSaveRequestDto);
 
         assertThat(article.getTitle()).isEqualTo("newTitle");
         assertThat(article.getCoverUrl()).isEqualTo("newCoverUrl");
