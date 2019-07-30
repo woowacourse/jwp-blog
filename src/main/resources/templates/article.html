@@ -67,7 +67,7 @@
 					<ul class="list-unstyle list-info">
 						<li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
 							<form th:id="'comment-update-form' + ${comment.id}" method="post"
-							      th:action="'/comment/edit/' + ${comment.id}">
+							      th:action="'/comment/' + ${comment.id}">
 								<input id="comment-update" type="hidden" name="_method" value="put"/>
 								<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
 								<div class="info">

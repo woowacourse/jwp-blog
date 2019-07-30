@@ -58,7 +58,7 @@ class CommentControllerTests {
         Comment comment = commentService.findByArticleId(Long.parseLong(articleId)).get(0);
         Long commentId = comment.getId();
 
-        webTestClient.put().uri("/comment/edit/" + commentId)
+        webTestClient.put().uri("/comment/" + commentId)
                 .body(BodyInserters
                         .fromFormData("editedContents", "수정된댓글"))
                 .cookie("JSESSIONID", jSessionId)

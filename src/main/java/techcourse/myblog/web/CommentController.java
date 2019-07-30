@@ -28,7 +28,7 @@ public class CommentController {
         return "redirect:/articles/" + commentSaveRequestDto.getArticleId();
     }
 
-    @PutMapping("/edit/{id}")
+    @PutMapping("/{id}")
     public String editComment(@PathVariable Long id, String editedContents) {
         log.info("edit comment put request id={}, editedContents={}", id, editedContents);
         commentService.update(id, editedContents);
@@ -38,7 +38,7 @@ public class CommentController {
         return "redirect:/articles/" + articleId;
     }
 
-    @DeleteMapping("/edit/{id}")
+    @DeleteMapping("/{id}")
     public String deleteComment(@PathVariable Long id) {
         log.info("delete comment delete request id={}", id);
         Long articleId = commentService.findArticleIdById(id);

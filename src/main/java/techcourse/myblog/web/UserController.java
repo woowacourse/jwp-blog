@@ -64,7 +64,7 @@ public class UserController {
         return "mypage-edit";
     }
 
-    @PutMapping("/mypage/edit")
+    @PutMapping("/mypage")
     public String editMyPage(UserEditRequestDto userEditRequestDto, HttpSession httpSession) {
         log.info("edit mypage put request params={}", userEditRequestDto);
         User lastUser = (User) httpSession.getAttribute(USER);
