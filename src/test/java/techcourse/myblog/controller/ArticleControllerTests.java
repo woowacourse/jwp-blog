@@ -13,6 +13,7 @@ import techcourse.myblog.MyblogApplicationTests;
 import techcourse.myblog.domain.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.controller.ArticleController.ARTICLE_URL;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -44,7 +45,7 @@ public class ArticleControllerTests extends MyblogApplicationTests {
     @Test
     void showArticleWritingPageTest() {
         webTestClient.get()
-                .uri("/articles/writing").header("Cookie", cookie)
+                .uri(ARTICLE_URL + "/writing").header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -53,7 +54,7 @@ public class ArticleControllerTests extends MyblogApplicationTests {
     @Test
     void saveArticlePageTest() {
         webTestClient.post()
-                .uri("/articles").header("Cookie", cookie)
+                .uri(ARTICLE_URL).header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", testTitle)
@@ -96,7 +97,7 @@ public class ArticleControllerTests extends MyblogApplicationTests {
 
     @Test
     void showArticleByIdPageTest() {
-        webTestClient.get().uri("/articles/1")
+        webTestClient.get().uri(ARTICLE_URL + "/1")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -114,7 +115,7 @@ public class ArticleControllerTests extends MyblogApplicationTests {
         String deleteCoverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
         String deleteContents = "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 \"선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?\"였다.";
         webTestClient.post()
-                .uri("/articles").header("Cookie", cookie)
+                .uri(ARTICLE_URL).header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", deleteTitle)
@@ -143,7 +144,7 @@ public class ArticleControllerTests extends MyblogApplicationTests {
     @Test
     void showArticleEditingPage() {
         webTestClient.get()
-                .uri("/articles/1/edit").header("Cookie", cookie)
+                .uri(ARTICLE_URL + "/1/edit").header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -165,7 +166,7 @@ public class ArticleControllerTests extends MyblogApplicationTests {
         String updatedUniContents = StringEscapeUtils.escapeJava(updatedContents);
 
         webTestClient.put()
-                .uri("/articles/1").header("Cookie", cookie)
+                .uri(ARTICLE_URL + "/1").header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", updatedTitle)
@@ -192,7 +193,7 @@ public class ArticleControllerTests extends MyblogApplicationTests {
                 });
 
         webTestClient.put()
-                .uri("/articles/1").header("Cookie", cookie)
+                .uri(ARTICLE_URL + "/1").header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", ARTICLE_TITLE)
@@ -206,10 +207,10 @@ public class ArticleControllerTests extends MyblogApplicationTests {
 
     @Test
     void 비로그인_ArticlePage_접근시_수정_삭제버튼_미노출() {
-        String editUrl = "/articles/1/edit";
+        String editUrl = ARTICLE_URL + "/1/edit";
         String deleteBtnId = "delete-btn";
         webTestClient.get()
-                .uri("/articles/1")
+                .uri(ARTICLE_URL + "/1")
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -224,10 +225,10 @@ public class ArticleControllerTests extends MyblogApplicationTests {
     @Test
     void 본인이_아닌_ArticlePage_접근시_수정_삭제버튼_미노출() {
         String cookie = loginControllerTest.getLoginCookie(default2Email, default2Password);
-        String editUrl = "/articles/1/edit";
+        String editUrl = ARTICLE_URL + "/1/edit";
         String deleteBtnId = "delete-btn";
         webTestClient.get()
-                .uri("/articles/1").header("Cookie", cookie)
+                .uri(ARTICLE_URL + "/1").header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -244,7 +245,7 @@ public class ArticleControllerTests extends MyblogApplicationTests {
         String cookie = loginControllerTest.getLoginCookie(default2Email, default2Password);
 
         webTestClient.get()
-                .uri("/articles/1/edit").header("Cookie", cookie)
+                .uri(ARTICLE_URL + "/1/edit").header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isFound();
@@ -259,7 +260,7 @@ public class ArticleControllerTests extends MyblogApplicationTests {
         String updatedContents = "나는 우아한형제들에서 짱이다.";
 
         webTestClient.put()
-                .uri("/articles/1").header("Cookie", cookie)
+                .uri(ARTICLE_URL + "/1").header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", updatedTitle)
@@ -282,7 +283,7 @@ public class ArticleControllerTests extends MyblogApplicationTests {
         String deleteCoverUrl = "https://t1.daumcdn.net/thumb/R1280x0/?fname=http://t1.daumcdn.net/brunch/service/user/5tdm/image/7OdaODfUPkDqDYIQKXk_ET3pfKo.jpeg";
         String deleteContents = "나는 우아한형제들에서 우아한테크코스 교육 과정을 진행하고 있다. 우테코를 설계하면서 고민스러웠던 부분 중의 하나는 \"선발 과정을 어떻게 하면 의미 있는 시간으로 만들 것인가?\"였다.";
         webTestClient.post()
-                .uri("/articles").header("Cookie", cookie)
+                .uri(ARTICLE_URL).header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", deleteTitle)

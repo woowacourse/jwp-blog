@@ -25,6 +25,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static techcourse.myblog.controller.CommentController.COMMENT_URL;
 
 public class CommentControllerTests extends MyblogApplicationTests {
     @Autowired
@@ -50,7 +51,7 @@ public class CommentControllerTests extends MyblogApplicationTests {
 
     @Test
     void comment생성_save() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(post("/comment").session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        MvcResult mvcResult = mockMvc.perform(post(COMMENT_URL).session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("contents", "abc")
                 .param("articleId", "1"))
                 .andDo(print())
@@ -63,7 +64,7 @@ public class CommentControllerTests extends MyblogApplicationTests {
 
     @Test
     void comment수정페이지_접근() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/comment/1/edit").session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED))
+        MvcResult mvcResult = mockMvc.perform(get(COMMENT_URL + "/1/edit").session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andDo(print())
                 .andExpect(status()
                         .isOk())
@@ -74,7 +75,7 @@ public class CommentControllerTests extends MyblogApplicationTests {
 
     @Test
     void comment수정() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(put("/comment").session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        MvcResult mvcResult = mockMvc.perform(put(COMMENT_URL).session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("articleId", String.valueOf(ARTICLE_ID))
                 .param("contents", "updatedContents"))
                 .andDo(print())
@@ -86,7 +87,7 @@ public class CommentControllerTests extends MyblogApplicationTests {
 
     @Test
     void comment삭제() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(delete("/comment").session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        MvcResult mvcResult = mockMvc.perform(delete(COMMENT_URL).session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("articleId", String.valueOf(ARTICLE_ID))
                 .param("contents", COMMENT_CONTENTS))
                 .andDo(print())
