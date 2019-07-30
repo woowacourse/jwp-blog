@@ -6,12 +6,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.repository.ArticleRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 
@@ -45,21 +51,22 @@ public class ArticleControllerTests {
     }
 
     @Test
-    void articleForm() {
-        webTestClient.get().uri("/articles/new")
-                .exchange()
-                .expectStatus().isOk();
+    void 로그인_안_했을때_articleForm() {
+        responseSpec(GET, "/articles/new")
+                .expectStatus()
+                .is5xxServerError();
     }
 
     @Test
     void articleAddTest() {
-        webTestClient.post().uri("/articles/write")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().is3xxRedirection()
+        MultiValueMap<String, String> parsedArticleDto = new LinkedMultiValueMap<>();
+        parsedArticleDto.add("title", title);
+        parsedArticleDto.add("coverUrl", coverUrl);
+        parsedArticleDto.add("contents", contents);
+
+        responseSpec(POST, "/articles/write", parsedArticleDto)
+                .expectStatus()
+                .is3xxRedirection()
                 .expectBody()
                 .consumeWith(response -> {
                     String url = response.getResponseHeaders().get("Location").get(0);
@@ -74,6 +81,43 @@ public class ArticleControllerTests {
                                 assertThat(body.contains(coverUrl)).isTrue();
                             });
                 });
+
+//        webTestClient.post().uri("/articles/write")
+//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//                .body(fromFormData("title", title)
+//                        .with("coverUrl", coverUrl)
+//                        .with("contents", contents))
+//                .exchange()
+//                .expectStatus().is3xxRedirection()
+//                .expectBody()
+//                .consumeWith(response -> {
+//                    String url = response.getResponseHeaders().get("Location").get(0);
+//                    webTestClient.get().uri(url)
+//                            .exchange()
+//                            .expectStatus().isOk()
+//                            .expectBody()
+//                            .consumeWith(redirectResponse -> {
+//                                String body = new String(redirectResponse.getResponseBody());
+//                                assertThat(body.contains(title)).isTrue();
+//                                assertThat(body.contains(StringEscapeUtils.escapeJava(contents))).isTrue();
+//                                assertThat(body.contains(coverUrl)).isTrue();
+//                            });
+//                });
+    }
+
+    private WebTestClient.ResponseSpec responseSpec(HttpMethod method, String uri) {
+        return webTestClient.method(method)
+                .uri(uri)
+                .exchange();
+    }
+
+    private WebTestClient.ResponseSpec responseSpec(HttpMethod method, String uri, MultiValueMap<String, String> form) {
+
+        return webTestClient.method(method)
+                .uri(uri)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData(form))
+                .exchange();
     }
 
     @Test
@@ -81,7 +125,8 @@ public class ArticleControllerTests {
 
         webTestClient.get().uri("/articles/" + article.getId())
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk();
     }
 
     @Test

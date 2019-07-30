@@ -72,7 +72,7 @@ public class ArticleController {
                         new NotFoundArticleException("게시글이 존재하지 않습니다."));
 
         User user = (User) session.getAttribute("user");
-        if (user != savedArticle.getAuthor()) {
+        if (!user.equals(savedArticle.getAuthor())) {
             throw new UnauthenticatedUserException("수정 권한이 없습니다.");
         }
 
@@ -98,7 +98,7 @@ public class ArticleController {
                         new NotFoundArticleException("게시글이 존재하지 않습니다."));
 
         User user = (User) session.getAttribute("user");
-        if (user != savedArticle.getAuthor()) {
+        if (!user.equals(savedArticle.getAuthor())) {
             throw new UnauthenticatedUserException("삭제 권한이 없습니다.");
         }
 
