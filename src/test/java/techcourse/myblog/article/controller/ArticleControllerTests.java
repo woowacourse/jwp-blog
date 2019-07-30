@@ -10,6 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.article.ArticleDataForTest;
+import techcourse.myblog.util.ArticleUtilForTest;
+import techcourse.myblog.util.UserUtilForTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,31 +28,9 @@ public class ArticleControllerTests {
 
     @BeforeEach
     void setUp() {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!")
-                        .with("name", "name"))
-                .exchange();
-
-        cookie = webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!"))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-
-        webTestClient.post()
-                .uri("/articles")
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", "jaemok")
-                        .with("coverUrl", "yuarel")
-                        .with("contents", "naeyong"))
-                .exchange();
+        UserUtilForTest.signUp(webTestClient);
+        cookie = UserUtilForTest.loginAndGetCookie(webTestClient);
+        ArticleUtilForTest.createArticle(webTestClient, cookie);
     }
 
     @Test
@@ -76,8 +57,6 @@ public class ArticleControllerTests {
 
     @Test
     void 게시물_조회_테스트() {
-        String title = "jaemok";
-        String contents = "naeyong";
 
         webTestClient.get().uri("/articles/" + currentArticleId)
                 .header("Cookie", cookie)
@@ -86,26 +65,24 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    //assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
+                    assertThat(body.contains(ArticleDataForTest.ARTICLE_TITLE)).isTrue();
+                    //assertThat(body.contains(ArticleDataForTest.ARTICLE_COVER_URL)).isTrue();
+                    assertThat(body.contains(ArticleDataForTest.ARTICLE_CONTENTS)).isTrue();
+
                 });
     }
 
     @Test
     void 게시물_추가_요청_테스트() {
-        String newTitle = "newTitle";
-        String newCoverUrl = "newCoverUrl";
-        String newContents = "newContents";
 
         webTestClient.post()
                 .uri("/articles")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", newTitle)
-                        .with("coverUrl", newCoverUrl)
-                        .with("contents", newContents))
+                        .fromFormData("title", ArticleDataForTest.NEW_TITLE)
+                        .with("coverUrl", ArticleDataForTest.NEW_COVER_URL)
+                        .with("contents", ArticleDataForTest.NEW_CONTENTS))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectBody()
@@ -116,9 +93,9 @@ public class ArticleControllerTests {
                             .expectBody()
                             .consumeWith(res -> {
                                 String body = new String(res.getResponseBody());
-                                assertThat(body.contains(newTitle)).isTrue();
-                                //assertThat(body.contains(updatedCoverUrl)).isTrue();
-                                assertThat(body.contains(newContents)).isTrue();
+                                assertThat(body.contains(ArticleDataForTest.NEW_TITLE)).isTrue();
+                                //assertThat(body.contains(ArticleDataForTest.NEW_COVER_URL)).isTrue();
+                                assertThat(body.contains(ArticleDataForTest.NEW_CONTENTS)).isTrue();
                             });
                 });
     }
@@ -133,17 +110,14 @@ public class ArticleControllerTests {
 
     @Test
     void 게시물_수정_요청_테스트() {
-        String updatedTitle = "updatedTitle";
-        String updatedCoverUrl = "updatedCoverUrl";
-        String updatedContents = "updatedContents";
 
         webTestClient.put().uri("/articles/" + currentArticleId)
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", updatedTitle)
-                        .with("coverUrl", updatedCoverUrl)
-                        .with("contents", updatedContents))
+                        .fromFormData("title", ArticleDataForTest.UPDATE_TITLE)
+                        .with("coverUrl", ArticleDataForTest.UPDATE_COVER_URL)
+                        .with("contents", ArticleDataForTest.UPDATE_CONTENTS))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectBody()
@@ -153,9 +127,9 @@ public class ArticleControllerTests {
                         .expectBody()
                         .consumeWith(res -> {
                             String body = new String(res.getResponseBody());
-                            assertThat(body.contains(updatedTitle)).isTrue();
-                            //assertThat(body.contains(updatedCoverUrl)).isTrue();
-                            assertThat(body.contains(updatedContents)).isTrue();
+                            assertThat(body.contains(ArticleDataForTest.UPDATE_TITLE)).isTrue();
+                            //assertThat(body.contains(ArticleDataForTest.UPDATE_COVER_URL)).isTrue();
+                            assertThat(body.contains(ArticleDataForTest.UPDATE_CONTENTS)).isTrue();
                         }));
     }
 

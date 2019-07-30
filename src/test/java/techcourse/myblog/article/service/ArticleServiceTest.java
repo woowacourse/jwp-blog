@@ -1,4 +1,4 @@
-package techcourse.myblog.article.servcice;
+package techcourse.myblog.article.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.dto.ArticleDto;
-import techcourse.myblog.article.service.ArticleService;
 import techcourse.myblog.user.UserDataForTest;
 import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.domain.UserRepository;

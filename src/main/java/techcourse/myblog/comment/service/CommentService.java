@@ -28,10 +28,10 @@ public class CommentService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public void save(long articleId, long authorId, CommentDto.Creation commentDto) {
+    public Comment save(long articleId, long authorId, CommentDto.Creation commentDto) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
         User author = userRepository.findById(authorId).orElseThrow(NotFoundUserException::new);
-        commentRepository.save(commentDto.toComment(author, article));
+        return commentRepository.save(commentDto.toComment(author, article));
     }
 
     public List<CommentDto.Response> findAllByArticleId(long articleId) {
