@@ -44,7 +44,7 @@ class UserControllerTests {
 
 	@Test
 	void userList() {
-		request(HttpMethod.GET, "/user-list").isOk();
+		request(HttpMethod.GET, "/user-list").isFound();
 	}
 
 	@Test

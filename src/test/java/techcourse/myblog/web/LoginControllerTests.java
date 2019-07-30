@@ -16,6 +16,8 @@ import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,6 +40,7 @@ class LoginControllerTests {
 
 		user.saveUser(userDto);
 		userRepository.save(user);
+		assertTrue(userRepository.findAll().size() == 1);
 	}
 
 	@Test
@@ -55,13 +58,13 @@ class LoginControllerTests {
 		requestForLogin("tiber@naver.com", "asdfASDF1@!").isBadRequest();
 	}
 
-	private StatusAssertions requestForLogin(String email, String requestUri) {
+	private StatusAssertions requestForLogin(String email, String password) {
 		return webTestClient.post()
 				.uri("/login")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.body(BodyInserters
 						.fromFormData("email", email)
-						.with("password", requestUri))
+						.with("password", password))
 				.exchange()
 				.expectStatus();
 	}

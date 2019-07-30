@@ -1,9 +1,9 @@
 package techcourse.myblog.web;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.request.ArticleDto;
 import techcourse.myblog.dto.request.UserDto;
@@ -52,6 +52,11 @@ public class ArticleControllerTests {
 		userRepository.save(user);
 	}
 
+	@AfterEach
+	void tearDown() {
+		articleRepository.deleteAll();
+	}
+
 	private String getCookie() {
 		return webTestClient
 				.post()
@@ -96,7 +101,8 @@ public class ArticleControllerTests {
 
 	@Test
 	void findByIndex() {
-		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+		ArticleDto articleDto = new ArticleDto(title, contents, coverUrl);
+		Long articleId = articleRepository.save(articleDto.valueOfArticle(user)).getId();
 		requestWithSession(HttpMethod.GET, "/articles" + articleId).isOk();
 	}
 
@@ -154,7 +160,8 @@ public class ArticleControllerTests {
 
 	@Test
 	void canNotUpdateArticle() {
-		Long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+		ArticleDto articleDto = new ArticleDto(title, contents, coverUrl);
+		Long articleId = articleRepository.save(articleDto.valueOfArticle(user)).getId();
 		StatusAssertions statusAssertions = articlePutOrPostRequest(HttpMethod.PUT, "/articles/" + articleId, "updatedTitle", "updatedCoverUrl", "updatedContents");
 		checkRedirect(statusAssertions, "Location", ".+/");
 	}
