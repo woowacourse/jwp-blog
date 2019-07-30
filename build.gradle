@@ -21,6 +21,7 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'mysql:mysql-connector-java'
+    implementation group: 'org.hibernate', name: 'hibernate-java8', version: '5.0.0.CR1'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
