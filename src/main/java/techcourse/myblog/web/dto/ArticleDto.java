@@ -1,6 +1,7 @@
 package techcourse.myblog.web.dto;
 
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 
 import java.util.Objects;
 
@@ -8,6 +9,7 @@ public class ArticleDto {
     private String title;
     private String coverUrl;
     private String contents;
+    private User author;
 
     public ArticleDto(String title, String coverUrl, String contents) {
         this.title = title;
@@ -39,8 +41,16 @@ public class ArticleDto {
         this.contents = contents;
     }
 
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
     public Article create() {
-        return new Article(title, coverUrl, contents);
+        return new Article(title, coverUrl, contents, author);
     }
 
     @Override
