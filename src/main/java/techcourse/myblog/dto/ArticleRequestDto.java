@@ -1,7 +1,11 @@
 package techcourse.myblog.dto;
 
+import javax.validation.constraints.NotNull;
+
 public class ArticleRequestDto {
+    @NotNull
     private String title;
+    @NotNull
     private String contents;
     private String coverUrl;
 

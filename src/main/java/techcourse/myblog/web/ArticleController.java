@@ -10,6 +10,7 @@ import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.utils.model.ModelUtil;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import static techcourse.myblog.utils.session.SessionContext.USER;
 
@@ -51,7 +52,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String saveArticle(ArticleRequestDto articleRequestDto) {
+    public String saveArticle(@Valid ArticleRequestDto articleRequestDto) {
         UserResponseDto userResponseDto = (UserResponseDto) session.getAttribute(USER);
         Article article = articleService.save(articleRequestDto, userResponseDto);
 
@@ -59,7 +60,7 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String modifyArticle(@PathVariable long articleId, ArticleRequestDto articleRequestDto) {
+    public String modifyArticle(@PathVariable long articleId, @Valid ArticleRequestDto articleRequestDto) {
         articleService.update(articleId, articleRequestDto);
 
         return "redirect:/articles/" + articleId;

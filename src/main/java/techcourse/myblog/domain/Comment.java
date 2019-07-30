@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedDate;
 import techcourse.myblog.dto.CommentRequestDto;
 
@@ -9,10 +10,13 @@ import java.util.Objects;
 
 @Entity
 public class Comment {
+    private static final int MAX_CONTENTS_LENGTH = 200;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    @Length(max = MAX_CONTENTS_LENGTH)
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
