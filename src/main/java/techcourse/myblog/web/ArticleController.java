@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.article.Article;
+import techcourse.myblog.comment.Comment;
 import techcourse.myblog.exception.InvalidAuthorException;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
@@ -47,7 +48,7 @@ public class ArticleController {
     public String showArticle(@PathVariable Long articleId, Model model) {
         Article article = articleService.findArticle(articleId);
         model.addAttribute("article", article);
-        model.addAttribute("comments", commentService.findAll(article));
+        model.addAttribute("comments", articleService.findAllComments(article));
         return "article";
     }
 
@@ -70,17 +71,24 @@ public class ArticleController {
 
     @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
-        User author = (User) httpSession.getAttribute("user");
-        articleService.deleteArticle(articleId, author);
+        User user = (User) httpSession.getAttribute("user");
+        articleService.deleteArticle(articleId, user);
         return "redirect:/";
     }
 
 
     @PostMapping("/{articleId}/comment/new")
-    public String createComment(@PathVariable Long articleId, CommentDto commentDto, Model model, HttpSession httpSession) {
+    public String createComment(@PathVariable Long articleId, CommentDto commentDto, HttpSession httpSession) {
         User author = (User) httpSession.getAttribute("user");
-        Article article = articleService.findArticle(articleId);
-        commentService.createComment(commentDto, article, author);
+        Comment comment = commentService.createComment(commentDto, author);
+        articleService.addComment(articleId, comment);
+        return "redirect:/articles/" + articleId;
+    }
+
+    @DeleteMapping("/{articleId}/comment/{commentId}")
+    public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+        commentService.deleteComment(commentId, user);
         return "redirect:/articles/" + articleId;
     }
 

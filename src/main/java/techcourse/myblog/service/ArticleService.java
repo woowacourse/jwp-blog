@@ -3,11 +3,13 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.article.Article;
 import techcourse.myblog.article.ArticleRepository;
+import techcourse.myblog.comment.Comment;
 import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.user.User;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class ArticleService {
@@ -41,5 +43,15 @@ public class ArticleService {
         Article article = findArticle(articleId);
         article.checkCorrespondingAuthor(user);
         articleRepository.deleteById(articleId);
+    }
+
+    public List<Comment> findAllComments(Article article) {
+        return article.getComments();
+    }
+
+    @Transactional
+    public void addComment(Long articleId, Comment comment) {
+        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new);
+        article.addComment(comment);
     }
 }

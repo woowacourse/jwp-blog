@@ -67,7 +67,7 @@
                 <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                     <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                         <span class="font-size-16">댓글</span>
-                        <span class="font-size-16 text-info">2</span>
+                        <span class="font-size-16 text-info" th:text="${article.countOfComment}"></span>
                     </div>
                     <div class="comment">
                         <ul class="list-unstyled list-info">
@@ -80,8 +80,24 @@
                                     <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span>6 min ago</span>
+
                             </span>
                                     <p class="width-80" th:text="${comment.contents}"></p>
+                                    <p>
+                                        <a class="pointer btn btn-icon" style="float: left;"
+                                           th:href="@{/articles/{articleId}/edit(articleId=${article.articleId})}"
+                                           type="submit">
+                                            <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                        </a>
+                                    <form method="post"
+                                          th:action="@{/articles/{articleId}/comment/{commentId}(articleId=${article.articleId}, commentId=${comment.id})}">
+                                        <input name="_method" type="hidden" value="delete">
+                                        <button class="pointer btn btn-icon" style="float: left;" type="submit">
+                                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                                        </button>
+                                    </form>
+                                    </p>
+                                    <p style="clear: both;"></p>
                                 </div>
                             </li>
                         </ul>

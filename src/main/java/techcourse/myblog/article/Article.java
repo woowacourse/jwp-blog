@@ -3,10 +3,13 @@ package techcourse.myblog.article;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import techcourse.myblog.comment.Comment;
 import techcourse.myblog.exception.InvalidAuthorException;
 import techcourse.myblog.user.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,6 +32,10 @@ public class Article {
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_article_to_comments"))
+    private List<Comment> comments = new ArrayList<>();
+
     @Builder
     public Article(String title, String coverUrl, String contents, User author) {
         this.title = title;
@@ -41,12 +48,19 @@ public class Article {
         this.title = article.title;
         this.contents = article.contents;
         this.coverUrl = article.coverUrl;
-
     }
 
     public void checkCorrespondingAuthor(User user) {
         if (!this.author.equals(user)) {
             throw new InvalidAuthorException();
         }
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
+
+    public int getCountOfComment() {
+        return comments.size();
     }
 }
