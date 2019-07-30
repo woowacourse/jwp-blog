@@ -12,13 +12,14 @@ import techcourse.myblog.domain.User;
 @NoArgsConstructor
 @Slf4j
 public class ArticleDto {
+    private static final int EMPTY_ID = 0;
     private long id;
     private String title;
     private String contents;
     private String coverUrl;
 
     public Article toArticle(User author) {
-        if (id != 0) {
+        if (id != EMPTY_ID) {
             return new Article(id, title, contents, coverUrl, author);
         }
         return new Article(title, contents, coverUrl, author);

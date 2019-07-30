@@ -12,9 +12,14 @@ import techcourse.myblog.domain.*;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+import static techcourse.myblog.controller.ArticleController.ARTICLE_URL;
+
+
 @Slf4j
 @Controller
+@RequestMapping(ARTICLE_URL)
 public class ArticleController {
+    public static final String ARTICLE_URL = "/articles";
     private ArticleRepository articleRepository;
     private CommentRepository commentRepository;
 
@@ -24,12 +29,12 @@ public class ArticleController {
         this.commentRepository = commentRepository;
     }
 
-    @GetMapping("/articles/writing")
+    @GetMapping("writing")
     public String showArticleWritingPage() {
         return "article-edit";
     }
 
-    @PostMapping("/articles")
+    @PostMapping()
     public String saveArticlePage(HttpSession httpSession, ArticleDto articleDto) {
         log.debug(">>> save article : {}", articleDto);
         User user = (User) httpSession.getAttribute("user");
@@ -38,14 +43,7 @@ public class ArticleController {
         return "redirect:/articles/" + article.getId();
     }
 
-    @GetMapping("/")
-    public String showArticlesPage(Model model) {
-        List<Article> articles = articleRepository.findAll();
-        model.addAttribute("articles", articles);
-        return "index";
-    }
-
-    @GetMapping("/articles/{articleId}/edit")
+    @GetMapping("{articleId}/edit")
     public String showArticleEditingPage(@PathVariable long articleId, HttpSession httpSession, Model model) {
         log.debug(">>> article Id : {}", articleId);
         Article article = articleRepository.findById(articleId).get();
@@ -54,7 +52,7 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @GetMapping("/articles/{articleId}")
+    @GetMapping("{articleId}")
     public String showArticleByIdPage(@PathVariable long articleId, Model model) {
         log.debug(">>> article Id : {}", articleId);
         Article article = articleRepository.findById(articleId).get();
@@ -66,7 +64,7 @@ public class ArticleController {
         return "article";
     }
 
-    @PutMapping("/articles/{articleId}")
+    @PutMapping("{articleId}")
     public String updateArticleByIdPage(HttpSession httpSession, ArticleDto articleDto) {
         log.debug(">>> put ArticleDto : {}", articleDto);
         User user = (User) httpSession.getAttribute("user");
@@ -81,7 +79,7 @@ public class ArticleController {
     }
 
     @Transactional
-    @DeleteMapping("/articles/{articleId}")
+    @DeleteMapping("{articleId}")
     public String deleteArticleByIdPage(@PathVariable long articleId, HttpSession httpSession) {
         log.debug(">>> article Id : {}", articleId);
         Article article = articleRepository.findById(articleId).get();

@@ -13,22 +13,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
+import static techcourse.myblog.controller.AccountController.ACCOUNT_URL;
+
 @Slf4j
 @Controller
+@RequestMapping(ACCOUNT_URL)
 public class AccountController {
+    public static final String ACCOUNT_URL = "/accounts";
     private UserRepository userRepository;
 
     public AccountController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/accounts/signup")
+    @GetMapping("signup")
     public String showSignupPage(Model model) {
         model.addAttribute("userDto", new UserDto());
         return "signup";
     }
 
-    @PostMapping("/accounts/user")
+    @PostMapping("user")
     public String processSignup(@Valid UserDto userDto, Errors errors) {
         log.debug(">>> UserDto : {} Error : {}", userDto, errors);
         if (errors.hasErrors()) {
@@ -46,7 +50,7 @@ public class AccountController {
         return "redirect:/";
     }
 
-    @DeleteMapping("/accounts/user")
+    @DeleteMapping("user")
     public String deleteUser(HttpServletRequest request) {
         log.debug(">>> deleteUser: request : {}", request);
         log.debug(">>> deleteUser: requestMethod : {}", request.getMethod());
@@ -56,14 +60,14 @@ public class AccountController {
         return "redirect:/";
     }
 
-    @GetMapping("/accounts/users")
+    @GetMapping("users")
     public String showUserList(Model model) {
         List<User> users = userRepository.findAll();
         model.addAttribute("users", users);
         return "user-list";
     }
 
-    @GetMapping("/accounts/profile/{id}")
+    @GetMapping("profile/{id}")
     public String showProfilePage(@PathVariable Long id, Model model) {
         User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
         model.addAttribute("user", user);
@@ -71,13 +75,13 @@ public class AccountController {
         return "mypage";
     }
 
-    @GetMapping("/accounts/profile/edit")
+    @GetMapping("profile/edit")
     public String showProfileEditPage(Model model) {
         model.addAttribute("userDto", new UserDto());
         return "mypage-edit";
     }
 
-    @PutMapping("/accounts/profile/edit")
+    @PutMapping("profile/edit")
     public String processUpdateProfile(HttpServletRequest request, @Valid UserDto userDto, Errors errors) {
         if (errors.hasErrors()) {
             return "mypage-edit";

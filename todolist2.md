@@ -27,7 +27,7 @@
 
 추가 
 
-- [ ] ArticleDto  0상수로 변경하기 
+- [x] ArticleDto  0상수로 변경하기 
 - [ ] ArticleController에 /articles를 상수로 변경 후 테스트에서 사용
 - [ ] Article showArticleByIdPageTest() 전체 테스트 돌렸을때 돌아가게 변경
 - [ ] showArticleEditingPage() 전체 테스트로 돌렸을 때 돌아가게 변경

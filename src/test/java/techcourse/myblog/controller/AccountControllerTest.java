@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.MyblogApplicationTests;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.controller.AccountController.ACCOUNT_URL;
 
 @AutoConfigureWebTestClient
 public class AccountControllerTest extends MyblogApplicationTests {
@@ -24,7 +25,7 @@ public class AccountControllerTest extends MyblogApplicationTests {
     @Test
     void showSignupPageTest() {
         webTestClient.get()
-                .uri("/accounts/signup")
+                .uri(ACCOUNT_URL+"/signup")
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -172,7 +173,7 @@ public class AccountControllerTest extends MyblogApplicationTests {
 
     @Test
     void 마이페이지_접근() {
-        webTestClient.get().uri("/accounts/profile/" + USER_ID)
+        webTestClient.get().uri(ACCOUNT_URL+"/profile/" + USER_ID)
                 .exchange()
                 .expectStatus()
                 .isOk().expectBody().consumeWith(response -> {
@@ -186,7 +187,7 @@ public class AccountControllerTest extends MyblogApplicationTests {
     void 본인_마이페이지_수정_페이지_접근() {
         String cookie = loginControllerTest.getLoginCookie(USER_EMAIL, USER_PASSWORD);
 
-        webTestClient.get().uri("/accounts/profile/edit").header("Cookie", cookie)
+        webTestClient.get().uri(ACCOUNT_URL+"/profile/edit").header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -200,7 +201,7 @@ public class AccountControllerTest extends MyblogApplicationTests {
 
     @Test
     void 미로그인시_본인_마이페이지_수정_페이지_접근() {
-        webTestClient.get().uri("/accounts/profile/edit")
+        webTestClient.get().uri(ACCOUNT_URL+"/profile/edit")
                 .exchange()
                 .expectStatus()
                 .isFound()
@@ -214,7 +215,7 @@ public class AccountControllerTest extends MyblogApplicationTests {
     void 마이페이지_수정_후_저장_성공() {
         String cookie = loginControllerTest.getLoginCookie(USER_EMAIL, USER_PASSWORD);
 
-        webTestClient.put().uri("/accounts/profile/edit").header("Cookie", cookie)
+        webTestClient.put().uri(ACCOUNT_URL+"/profile/edit").header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("name", USER_NAME + "a")
@@ -226,7 +227,7 @@ public class AccountControllerTest extends MyblogApplicationTests {
                 .isFound()
                 .expectBody()
                 .consumeWith(response -> {
-                    webTestClient.get().uri("/accounts/profile/edit").header("Cookie", cookie)
+                    webTestClient.get().uri(ACCOUNT_URL+"/profile/edit").header("Cookie", cookie)
                             .exchange()
                             .expectStatus()
                             .isOk()
@@ -237,7 +238,7 @@ public class AccountControllerTest extends MyblogApplicationTests {
                                 assertThat(body.contains(USER_EMAIL)).isTrue();
                             });
 
-                    webTestClient.put().uri("/accounts/profile/edit").header("Cookie", cookie)
+                    webTestClient.put().uri(ACCOUNT_URL+"/profile/edit").header("Cookie", cookie)
                             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                             .body(BodyInserters
                                     .fromFormData("name", USER_NAME)
@@ -252,7 +253,7 @@ public class AccountControllerTest extends MyblogApplicationTests {
 
     @Test
     void showUsersPage() {
-        webTestClient.get().uri("/accounts/users")
+        webTestClient.get().uri(ACCOUNT_URL+"/users")
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -273,12 +274,12 @@ public class AccountControllerTest extends MyblogApplicationTests {
 
         testSignupProcess(name, password, email);
         String cookie = loginControllerTest.getLoginCookie(email, password);
-        webTestClient.delete().uri("/accounts/user").header("Cookie", cookie)
+        webTestClient.delete().uri(ACCOUNT_URL+"/user").header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isFound();
 
-        webTestClient.get().uri("/accounts/users")
+        webTestClient.get().uri(ACCOUNT_URL+"/users")
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -293,19 +294,7 @@ public class AccountControllerTest extends MyblogApplicationTests {
 
     protected WebTestClient.ResponseSpec testSignupProcess(String name, String password, String email) {
         return webTestClient.post()
-                .uri("/accounts/user")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("name", name)
-                        .with("password", password)
-                        .with("email", email))
-                .exchange()
-                ;
-    }
-
-    private WebTestClient.ResponseSpec testSignupProcessWithCookie(String name, String password, String email, String cookie) {
-        return webTestClient.post()
-                .uri("/accounts/user").header("Cookie", cookie)
+                .uri(ACCOUNT_URL+"/user")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("name", name)
