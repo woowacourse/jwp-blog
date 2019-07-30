@@ -4,7 +4,7 @@ window.addEventListener('scroll', function (evt) {
     const header = document.getElementById("header");
     const logoDark = document.querySelector(".logo-dark");
     const logoWhite = document.querySelector(".logo-white")
-    const userInfo = document.querySelector(".users-info span")
+    const userInfo = document.querySelector(".user-info span")
 
     if (window.pageYOffset > 10) {
         header.classList.remove("no-border")
