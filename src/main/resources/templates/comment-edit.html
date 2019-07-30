@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <head th:include="includes/meta :: common_meta"></head>
+  <head th:include="includes/css :: common_css"></head>
+  <head th:include="includes/article_js :: article_js"></head>
+  <link rel="stylesheet" href="/static/css/article.css">
+</head>
+<body>
+<div>
+  <th:block th:include="includes/header :: header"></th:block>
+  <div class="about-cover card no-border ">
+    <div class="cover-img overlay-dark bg"
+         style="background-image: url('/static/images/pages/index/study.jpg')">
+      <div class="padding-30">
+        <h1 class="text-center cover-title">댓글 수정</h1>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+
+        <div class="form-group">
+          <div th:if="${errors}" class="error-box">
+            <span class="error-text" th:text="${errors}"></span>
+          </div>
+        </div>
+        <div class="add-comment">
+          <form th:action="'/articles/' + ${articleId} + '/comments/' + ${comment.id}" name="comment"
+                method="post"
+                accept-charset="utf-8">
+            <input name="_method" type="hidden" value="PUT"/>
+            <input id="comment-contents" name="contents" type="hidden" required>
+            <div id="editSection"></div>
+            <div class="col-lg-1 col-md-1">
+              <div class="btn-group btn-group-vertical">
+                <button id="save-btn" type="submit" class="btn btn-default">
+                  댓글 수정
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<body th:include="includes/js :: common_js"></body>
+
+<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    /* <![CDATA[ */
+    const initValue = /*[[${comment.contents}]]*/;
+    /*]]>*/
+    const viewer = tui.Editor.factory({
+        el: document.querySelector('#viewerSection'),
+        viewer: true,
+        height: '100%',
+        initialValue: initValue
+    })
+
+    const editor = new tui.Editor({
+        el: document.querySelector('#editSection'),
+        initialEditType: 'markdown',
+        previewStyle: 'horizontal',
+        events: {
+            change: function () {
+                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
+            }
+        },
+        height: '200px'
+    });
+</script>
+</body>
+</html>

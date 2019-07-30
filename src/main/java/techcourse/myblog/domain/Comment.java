@@ -37,4 +37,8 @@ public class Comment {
     public Comment(final String contents) {
         this.contents = contents;
     }
+
+    public void update(Comment comment) {
+        contents = comment.getContents();
+    }
 }

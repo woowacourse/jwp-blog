@@ -86,6 +86,9 @@
                                         <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
                                     </button>
                                 </form>
+                                <a th:href="'/articles/' + ${article.id} + '/comments/' + ${comment.id}" class="float-right pointer btn btn-icon">
+                                  <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                </a>
                                 <p class="width-80" th:text="${comment.contents}">내용</p>
                             </div>
                         </li>
