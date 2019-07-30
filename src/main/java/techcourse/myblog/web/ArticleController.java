@@ -85,6 +85,13 @@ public class ArticleController {
         return "redirect:/articles/" + articleId;
     }
 
+    @PutMapping("/{articleId}/comment/{commentId}")
+    public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, CommentDto commentDto, HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+        commentService.updateComment(commentId, user, commentDto);
+        return "redirect:/articles/" + articleId;
+    }
+
     @DeleteMapping("/{articleId}/comment/{commentId}")
     public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");

@@ -34,4 +34,8 @@ public class Comment {
             throw new InvalidAuthorException();
         }
     }
+
+    public void update(Comment updateComment) {
+        this.contents = updateComment.contents;
+    }
 }

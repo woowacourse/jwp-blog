@@ -7,6 +7,8 @@ import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.service.dto.CommentDto;
 import techcourse.myblog.user.User;
 
+import javax.transaction.Transactional;
+
 @Service
 public class CommentService {
 
@@ -25,5 +27,13 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundObjectException::new);
         comment.checkCorrespondingAuthor(user);
         commentRepository.deleteById(commentId);
+    }
+
+    @Transactional
+    public void updateComment(Long commentId, User user, CommentDto commentDto) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundObjectException::new);
+        comment.checkCorrespondingAuthor(user);
+        Comment updateComment = commentDto.toEntity(user);
+        comment.update(updateComment);
     }
 }
