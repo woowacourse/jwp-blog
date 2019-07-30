@@ -4,6 +4,8 @@ import lombok.*;
 import techcourse.myblog.controller.dto.ArticleDto;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -35,6 +37,21 @@ public class Article {
     @JoinColumn(name = "USER_ID", nullable = false, foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User user;
 
+    @OneToMany(mappedBy = "article")
+    private List<Comment> comments = new ArrayList<>();
+
+    public void addComments(Comment comment) {
+        this.comments.add(comment);
+        if(comment.getArticle() != this) {
+            comment.setArticle(this);
+        }
+    }
+
+    public List<Comment> getComments() {
+        System.out.println(comments.isEmpty());
+        return comments;
+    }
+
     public Article update(Article article) {
         this.title = article.getTitle();
         this.coverUrl = article.getCoverUrl();
@@ -43,4 +60,6 @@ public class Article {
 
         return this;
     }
+
+
 }
