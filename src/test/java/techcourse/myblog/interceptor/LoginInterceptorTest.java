@@ -32,7 +32,7 @@ class LoginInterceptorTest extends MyblogApplicationTests {
     }
 
     @Test
-    void 비로그인시_articles_writing_접근시_로그인으로_리다이렉트_확인() throws Exception{
+    void 비로그인시_articles_writing_접근시_로그인으로_리다이렉트_확인() throws Exception {
         mockMvc.perform(delete("/articles/writing")).andDo(print()).andExpect(redirectedUrl("/login"));
     }
 
@@ -42,25 +42,25 @@ class LoginInterceptorTest extends MyblogApplicationTests {
     }
 
     @Test
-    void 비로그인시_post_article_로그인으로_리다이렉트_확인() throws Exception{
+    void 비로그인시_post_article_로그인으로_리다이렉트_확인() throws Exception {
         mockMvc.perform(post("/articles")).andDo(print()).andExpect(redirectedUrl("/login"));
     }
 
     @Test
-    void 비로그인시_put_article_로그인으로_리다이렉트_확인() throws Exception{
+    void 비로그인시_put_article_로그인으로_리다이렉트_확인() throws Exception {
         mockMvc.perform(put("/articles/1")).andDo(print()).andExpect(redirectedUrl("/login"));
     }
 
     @Test
-    void 비로그인시_delete_article_로그인으로_리다이렉트_확인() throws Exception{
+    void 비로그인시_delete_article_로그인으로_리다이렉트_확인() throws Exception {
         mockMvc.perform(delete("/articles/1")).andDo(print()).andExpect(redirectedUrl("/login"));
     }
 
     @Test
-    void comment생성_비로그인시_로그인으로_리다이렉트_확인() throws Exception{
+    void comment생성_비로그인시_로그인으로_리다이렉트_확인() throws Exception {
         MvcResult mvcResult = mockMvc.perform(post("/comment").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("contents","abc")
-                .param("articleId","1"))
+                .param("contents", "abc")
+                .param("articleId", "1"))
                 .andDo(print())
                 .andExpect(status()
                         .isFound())
@@ -69,7 +69,7 @@ class LoginInterceptorTest extends MyblogApplicationTests {
     }
 
     @Test
-    void comment수정페이지_비로그인접근시_로그인으로_리다이렉트_확인() throws Exception{
+    void comment수정페이지_비로그인접근시_로그인으로_리다이렉트_확인() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/comment/1/edit").contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andDo(print())
                 .andExpect(status()
@@ -79,10 +79,10 @@ class LoginInterceptorTest extends MyblogApplicationTests {
     }
 
     @Test
-    void comment수정_비로그인접근시_로그인으로_리다이렉트확신() throws Exception{
+    void comment수정_비로그인접근시_로그인으로_리다이렉트확신() throws Exception {
         MvcResult mvcResult = mockMvc.perform(put("/comment").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("articleId",String.valueOf(ARTICLE_ID))
-                .param("contents","updatedContents"))
+                .param("articleId", String.valueOf(ARTICLE_ID))
+                .param("contents", "updatedContents"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
@@ -90,10 +90,10 @@ class LoginInterceptorTest extends MyblogApplicationTests {
     }
 
     @Test
-    void comment삭제() throws Exception{
+    void comment삭제() throws Exception {
         MvcResult mvcResult = mockMvc.perform(delete("/comment").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("articleId",String.valueOf(ARTICLE_ID))
-                .param("contents",COMMENT_CONTENTS))
+                .param("articleId", String.valueOf(ARTICLE_ID))
+                .param("contents", COMMENT_CONTENTS))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andReturn();

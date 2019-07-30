@@ -18,9 +18,9 @@ public class CommentController {
     private final CommentRepository commentRepository;
 
     @PostMapping("/comment")
-    public String save(HttpSession session, CommentDto commentDto){
+    public String save(HttpSession session, CommentDto commentDto) {
         log.debug(">>> post commentDto : {}", commentDto);
-        User user = (User)session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
         Article article = articleRepository.findById(commentDto.getArticleId()).get();
         Comment comment = commentDto.toComment(user, article);
         log.debug(">>> post comment : {}", comment);
@@ -32,7 +32,7 @@ public class CommentController {
     @DeleteMapping("/comment")
     public String delete(HttpSession session, CommentDto commentDto) {
         log.debug(">>> delete commentDto : {}", commentDto);
-        User user = (User)session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
         Article article = articleRepository.findById(commentDto.getArticleId()).get();
         Comment comment = commentDto.toComment(user, article);
         log.debug(">>> delete comment : {}", comment);
@@ -41,18 +41,18 @@ public class CommentController {
     }
 
     @GetMapping("/comment/{id}/edit")
-    public String showEditPage(@PathVariable long id,  Model model){
+    public String showEditPage(@PathVariable long id, Model model) {
         Comment comment = commentRepository.findById(id).get();
-        model.addAttribute("comment",comment);
-       return "comment-edit";
+        model.addAttribute("comment", comment);
+        return "comment-edit";
     }
 
     @PutMapping("/comment")
-    public String update(CommentDto commentDto, HttpSession httpSession){
-        log.debug(">>> update commentDto : {}",commentDto);
+    public String update(CommentDto commentDto, HttpSession httpSession) {
+        log.debug(">>> update commentDto : {}", commentDto);
         Article article = articleRepository.findById(commentDto.getArticleId()).get();
-        User user =(User)httpSession.getAttribute("user");
-        Comment comment = commentDto.toComment(user,article);
+        User user = (User) httpSession.getAttribute("user");
+        Comment comment = commentDto.toComment(user, article);
         commentRepository.save(comment);
         return "redirect:/articles/" + article.getId();
     }
