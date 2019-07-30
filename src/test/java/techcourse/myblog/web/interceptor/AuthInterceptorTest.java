@@ -27,6 +27,17 @@ public class AuthInterceptorTest {
     }
 
     @Test
+    void 로그인하지_않고_userlist_페이지_접근_Redirect() {
+        webTestClient.get().uri("/users")
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .expectHeader()
+                .valueMatches("location", ".*/login")
+        ;
+    }
+
+    @Test
     void 로그인후_mypage_페이지_접근() {
         login();
         webTestClient.get().uri("/mypage")
@@ -36,12 +47,34 @@ public class AuthInterceptorTest {
     }
 
     @Test
+    void 로그인하지_않고_mypage_페이지_접근_Redirect() {
+        webTestClient.get().uri("/mypage")
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .expectHeader()
+                .valueMatches("location", ".*/login")
+        ;
+    }
+
+    @Test
     void 로그인후_mypage_edit_페이지_접근() {
         login();
         webTestClient.get().uri("/mypage-edit")
                 .exchange()
                 .expectStatus()
                 .isOk();
+    }
+
+    @Test
+    void 로그인하지_않고_mypage_edit_페이지_접근_Redirect() {
+        webTestClient.get().uri("/mypage-edit")
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .expectHeader()
+                .valueMatches("location", ".*/login")
+        ;
     }
 
     @Test
