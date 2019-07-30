@@ -69,7 +69,7 @@
                         <span class="font-size-16 text-info" th:text="${#lists.size(comments)}">0</span>
                     </div>
                     <div class="comment">
-                        <ul class="list-unstyled list-info">
+                        <ul id="comments" class="list-unstyled list-info">
                             <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
                                 <img alt=""
                                      class="thumb-img img-circle"
@@ -119,13 +119,18 @@
 <th:block layout:fragment="custom-js">
     <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
     <script>
+        const comments = document.getElementById("comments");
         const editor = new tui.Editor({
             el: document.querySelector('#editSection'),
             initialEditType: 'markdown',
             previewStyle: 'horizontal',
             events: {
                 change: function () {
-                    document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
+                    document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown());
+                    comments.querySelectorAll("input[name='content']").forEach(content => {
+                        console.log(content);
+                        content.setAttribute('value', editor.getMarkdown());
+                    });
                 }
             },
             height: '200px'
