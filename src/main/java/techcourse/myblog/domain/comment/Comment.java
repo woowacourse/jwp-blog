@@ -8,11 +8,12 @@ import javax.persistence.*;
 @Entity
 public class Comment {
     private static final int COMMENT_LENGTH = 100;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = COMMENT_LENGTH)
+    @Column(nullable = false, length = COMMENT_LENGTH)
     private String comment;
 
     @ManyToOne

@@ -1,10 +1,12 @@
 package techcourse.myblog.domain.user;
 
+import org.hibernate.validator.constraints.Length;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.exception.UserArgumentException;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -15,19 +17,30 @@ public class User {
     private static final int MIN_NAME_LENGTH = 2;
     private static final int MAX_NAME_LENGTH = 10;
     private static final int MIN_PASSWORD_LENGTH = 8;
-    private static final Pattern KOREAN_ENGLISH_PATTERN = Pattern.compile("^[(ㄱ-ㅎ가-힣a-zA-Z)]+$");
-    private static final Pattern LOWER_CASE_PATTERN = Pattern.compile("[(a-z)]+");
-    private static final Pattern UPPER_CASE_PATTERN = Pattern.compile("[(A-Z)]+");
-    private static final Pattern NUMBER_PATTERN = Pattern.compile("[(0-9)]+");
-    private static final Pattern SPECIAL_CHARACTER_PATTERN =
-            Pattern.compile("[ `~!@#[$]%\\^&[*]\\(\\)_-[+]=\\{\\}\\[\\][|]'\":;,.<>/?]+");
-    private static final Pattern KOREAN_PATTERN = Pattern.compile("[(ㄱ-ㅎ가-힣)]+");
+
+    private static final String NAME_REGEX = "^[가-힣|a-zA-Z]+$";
+    private static final String PASSWORD_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s)" +
+            "(?=.*[`~!@#[$]%\\^&[*]\\(\\)_-[+]=\\{\\}\\[\\][|]'\":;,.<>/?])(?!.*[가-힣])(?!.*[ㄱ-ㅎ])(?!.*[ㅏ-ㅣ]).*$";
+
+    private static final Pattern NAME_PATTERN = Pattern.compile(NAME_REGEX);
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    @Length(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH)
+    @javax.validation.constraints.Pattern(regexp = NAME_REGEX)
     private String name;
+
+    @Email
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(nullable = false)
+    @Length(min = MIN_PASSWORD_LENGTH)
+    @javax.validation.constraints.Pattern(regexp = PASSWORD_REGEX)
     private String password;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
@@ -65,7 +78,7 @@ public class User {
     }
 
     private void checkValidNameCharacters(String name) {
-        if (!matchRegex(name, KOREAN_ENGLISH_PATTERN)) {
+        if (!matchRegex(name, NAME_PATTERN)) {
             throw new UserArgumentException(NAME_INCLUDE_INVALID_CHARACTERS_MESSAGE);
         }
     }
@@ -82,11 +95,7 @@ public class User {
     }
 
     private void checkValidPasswordCharacters(String password) {
-        if (!matchRegex(password, LOWER_CASE_PATTERN)
-                || !matchRegex(password, UPPER_CASE_PATTERN)
-                || !matchRegex(password, NUMBER_PATTERN)
-                || !matchRegex(password, SPECIAL_CHARACTER_PATTERN)
-                || matchRegex(password, KOREAN_PATTERN)) {
+        if (!matchRegex(password, PASSWORD_PATTERN)) {
             throw new UserArgumentException(INVALID_PASSWORD_MESSAGE);
         }
     }
