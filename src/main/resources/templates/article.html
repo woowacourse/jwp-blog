@@ -85,12 +85,16 @@
                             </span>
                                 <p th:text="${comment.comment}" class="width-80"></p>
                             </div>
-                            <button id="update-btn" class="btn" th:value="${comment.id}">
-                                <i class="ti-pencil"></i>
-                            </button>
-                            <button id="delete-btn" class="btn" th:value="${comment.id}">
-                                <i class="ti-trash"></i>
-                            </button>
+                            <th:block th:if="${comment.authorId == session.loggedInUser?.id}">
+                                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+                                        data-target="#myModal"
+                                        th:onclick="'changeCommentEditAction(' + ${article.id} + ', ' + ${comment.id} + ')'">
+                                    <i class="ti-pencil"></i>
+                                </button>
+                                <button id="delete-btn" class="btn" th:value="${comment.id}">
+                                    <i class="ti-trash"></i>
+                                </button>
+                            </th:block>
                         </li>
                     </ul>
                     <div class="add-comment">
@@ -105,6 +109,28 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">댓글 수정</h4>
+            </div>
+            <form id="comment-edit-form" action="/articles/1/comment/1" method="post">
+                <input type="hidden" name="_method" value="put"/>
+                <div class="modal-body">
+                    <input id="comment-edit-contents" name="comment" type="hidden">
+                    <div id="commentEditSection"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+                    <button type="submit" class="btn btn-primary">수정</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -132,5 +158,25 @@
         },
         height: '200px'
     });
+
+    const editComment = new tui.Editor({
+        el: document.querySelector('#commentEditSection'),
+        initialEditType: 'markdown',
+        previewStyle: 'horizontal',
+        placeholder: '수정할 내용을 입력해 주세요.',
+        events: {
+            change: function () {
+                console.log("cg")
+                document.getElementById('comment-edit-contents').setAttribute('value', editComment.getMarkdown())
+            }
+        },
+        height: '200px'
+    });
+
+    function changeCommentEditAction(articleId, commentId) {
+        const action = "/articles/" + articleId + "/comment/" + commentId
+        document.getElementById('comment-edit-form').setAttribute('action', action)
+    }
+
 </script>
 </html>

@@ -35,7 +35,7 @@ public class CommentService {
     public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
         Article article = articleService.findById(articleId);
         return commentRepository.findAllByArticle(article).stream()
-                .map(comment -> toCommentResponseDto(comment.getId(), comment.getAuthorName(), comment.getComment()))
+                .map(comment -> toCommentResponseDto(comment.getId(), comment.getAuthorId(), comment.getAuthorName(), comment.getComment()))
                 .collect(Collectors.toList());
     }
 
@@ -59,7 +59,7 @@ public class CommentService {
         commentRepository.deleteAll();
     }
 
-    private CommentResponseDto toCommentResponseDto(Long commentId, String userName, String comment) {
-        return new CommentResponseDto(commentId, userName, comment);
+    private CommentResponseDto toCommentResponseDto(Long commentId, Long authorId, String userName, String comment) {
+        return new CommentResponseDto(commentId, authorId, userName, comment);
     }
 }
