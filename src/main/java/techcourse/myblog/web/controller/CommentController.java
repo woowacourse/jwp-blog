@@ -1,6 +1,7 @@
 package techcourse.myblog.web.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
@@ -27,6 +28,13 @@ public class CommentController {
         commentDto.setWriter(loginUser.getUser());
         commentService.save(commentDto);
 
+        return new RedirectView("/articles/" + articleId);
+    }
+
+    @DeleteMapping("/articles/{articleId}/comment/{commentId}")
+    public RedirectView removeComment(@PathVariable Long commentId, @PathVariable Long articleId, LoginUser loginUser) {
+        commentService.findByIdAndWriter(commentId, loginUser.getUser());
+        commentService.deleteById(commentId);
         return new RedirectView("/articles/" + articleId);
     }
 }
