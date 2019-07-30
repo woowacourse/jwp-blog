@@ -55,6 +55,7 @@ public class ArticleService {
     @Transactional
     public void deleteById(long id) {
         log.debug("delete article id={}", id);
+
         commentRepository.deleteByArticleId(id);
         articleRepository.deleteById(id);
     }

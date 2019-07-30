@@ -49,7 +49,7 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        log.debug("delete user id={}", id);
         userRepository.deleteById(id);
+        log.debug("delete user id={}", id);
     }
 }

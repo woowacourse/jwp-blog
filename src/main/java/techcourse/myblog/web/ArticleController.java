@@ -33,6 +33,7 @@ public class ArticleController {
     @PostMapping
     public String saveArticle(ArticleSaveRequestDto articleSaveRequestDto, HttpSession httpSession) {
         log.info("save article post request params={}", articleSaveRequestDto);
+
         Article article = articleService.save(articleSaveRequestDto, (User) httpSession.getAttribute(USER));
         Long id = article.getId();
         return "redirect:/articles/" + id;
@@ -63,6 +64,7 @@ public class ArticleController {
     @PutMapping("/{id}")
     public String saveEditedArticle(@PathVariable long id, ArticleSaveRequestDto articleSaveRequestDto) {
         log.info("save edited article post request params={}", articleSaveRequestDto);
+
         articleService.update(articleSaveRequestDto, id);
         return "redirect:/articles/" + id;
     }
@@ -70,6 +72,7 @@ public class ArticleController {
     @DeleteMapping("/{id}")
     public String deleteArticle(@PathVariable long id) {
         log.info("delete article delete request id={}", id);
+
         articleService.deleteById(id);
         return "redirect:/";
     }

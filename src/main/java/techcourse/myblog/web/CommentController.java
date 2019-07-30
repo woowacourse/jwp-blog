@@ -30,8 +30,8 @@ public class CommentController {
 
     @PutMapping("/{id}")
     public String editComment(@PathVariable Long id, String editedContents) {
-        log.info("edit comment put request id={}, editedContents={}", id, editedContents);
         commentService.update(id, editedContents);
+        log.info("edit comment put request id={}, editedContents={}", id, editedContents);
 
         Long articleId = commentService.findArticleIdById(id);
 
@@ -41,6 +41,7 @@ public class CommentController {
     @DeleteMapping("/{id}")
     public String deleteComment(@PathVariable Long id) {
         log.info("delete comment delete request id={}", id);
+
         Long articleId = commentService.findArticleIdById(id);
         commentService.deleteById(id);
         return "redirect:/articles/" + articleId;

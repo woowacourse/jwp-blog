@@ -31,8 +31,8 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(UserLoginRequestDto userLoginRequestDto, HttpSession httpSession) {
-        log.info("login post request params={}", userLoginRequestDto);
         loginService.checkLogin(userLoginRequestDto.getEmail(), userLoginRequestDto.getPassword());
+        log.info("login post request params={}", userLoginRequestDto);
 
         User user = loginService.findByEmail(userLoginRequestDto.getEmail());
         httpSession.setAttribute(USER, user);
@@ -42,6 +42,7 @@ public class LoginController {
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
         log.info("logout get request params={}", httpSession.getAttribute(USER));
+
         httpSession.removeAttribute(USER);
         return "redirect:/";
     }

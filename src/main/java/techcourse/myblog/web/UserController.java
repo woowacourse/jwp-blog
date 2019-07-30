@@ -29,6 +29,7 @@ public class UserController {
     @PostMapping("/users")
     public String signUp(UserSaveRequestDto userSaveRequestDto, RedirectAttributes redirectAttributes) {
         log.info("sign up post request params={}", userSaveRequestDto);
+
         userService.save(userSaveRequestDto.toEntity());
         redirectAttributes.addFlashAttribute("successMessage", SUCCESS_SIGN_UP_MESSAGE);
         return "redirect:/login";
@@ -67,6 +68,7 @@ public class UserController {
     @PutMapping("/mypage")
     public String editMyPage(UserEditRequestDto userEditRequestDto, HttpSession httpSession) {
         log.info("edit mypage put request params={}", userEditRequestDto);
+
         User lastUser = (User) httpSession.getAttribute(USER);
         Long id = lastUser.getId();
         User user = userService.update(id, userEditRequestDto);

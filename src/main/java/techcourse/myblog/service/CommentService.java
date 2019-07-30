@@ -30,6 +30,7 @@ public class CommentService {
                 .user(user)
                 .build();
         log.debug("save comment={}", comment);
+
         return commentRepository.save(comment);
     }
 
