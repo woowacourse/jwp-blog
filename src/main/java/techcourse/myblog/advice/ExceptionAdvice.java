@@ -25,7 +25,7 @@ public class ExceptionAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(IllegalArgumentException.class)
     public String handleRuntimeException(Exception e, Model model) {
 
         log.info(e.toString());

@@ -118,8 +118,7 @@ class ArticleControllerTests extends BaseControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().isForbidden()
-                .expectHeader().valueMatches("location", ".*/");
+                .expectStatus().isForbidden();
     }
 
     @AfterEach
