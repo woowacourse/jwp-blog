@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CommentServiceTest {
+    private static final Long BASE_USER_ID = 1L;
+    private static final Long MISMATCH_USER_ID = 2L;
+
     @Autowired
     private CommentService commentService;
 
@@ -25,15 +29,15 @@ class CommentServiceTest {
 
     @BeforeEach
     void setUp() {
-        ArticleDto articleDto = articleService.save(1L,
-                new ArticleDto(null, 1L, "title", "url", "contents"));
+        ArticleDto articleDto = articleService.save(BASE_USER_ID,
+                new ArticleDto(null, BASE_USER_ID, "title", "url", "contents"));
         articleId = articleDto.getId();
     }
 
     @Test
     void saveComment() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
-        Comment comment = commentService.save(1L, commentRequestDto);
+        Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
 
         assertThat(comment.getComment()).isEqualTo(commentRequestDto.getComment());
     }
@@ -41,7 +45,7 @@ class CommentServiceTest {
     @Test
     void findCommentsByArticleId() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
-        Comment comment = commentService.save(1L, commentRequestDto);
+        Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
         List<CommentResponseDto> comments = commentService.findCommentsByArticleId(articleId);
 
         assertThat(comments.size()).isEqualTo(1);
@@ -52,20 +56,40 @@ class CommentServiceTest {
     @Test
     void updateComment() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
-        Comment comment = commentService.save(1L, commentRequestDto);
+        Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
         CommentRequestDto updateRequestDto = new CommentRequestDto(articleId, "UPDATE Comment");
-        Comment updatedComment = commentService.update(1L, comment.getId(), updateRequestDto);
+        Comment updatedComment = commentService.update(BASE_USER_ID, comment.getId(), updateRequestDto);
 
         assertThat(updatedComment.getComment()).isEqualTo("UPDATE Comment");
     }
 
     @Test
     void deleteComment() {
-        Long userId = 1L;
         CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
-        Comment comment = commentService.save(1L, commentRequestDto);
+        Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
 
-        commentService.delete(userId, comment.getId());
+        commentService.delete(BASE_USER_ID, comment.getId());
         assertThat(commentService.findCommentsByArticleId(articleId).size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("Comment를 등록한 User가 다를때 수정 실패")
+    void failUpdatingCommentWhenMismatchUser() {
+        CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
+        Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
+        CommentRequestDto updateRequestDto = new CommentRequestDto(articleId, "UPDATE Comment");
+        Comment updateComment = commentService.update(MISMATCH_USER_ID, comment.getId(), updateRequestDto);
+
+        assertThat(updateComment.getComment()).isEqualTo("TEST Comment");
+    }
+
+    @Test
+    @DisplayName("Comment를 등록한 User가 다를때 삭제 실패")
+    void failDeletingCommentWhenMismatchUser() {
+        CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
+        Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
+
+        commentService.delete(MISMATCH_USER_ID, comment.getId());
+        assertThat(commentService.findCommentsByArticleId(articleId).size()).isEqualTo(1);
     }
 }

@@ -25,6 +25,18 @@ public class CommentService {
         this.articleService = articleService;
     }
 
+    public Comment findById(Long id) {
+        return commentRepository.findById(id).orElseThrow(NotFoundCommentException::new);
+    }
+
+    public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
+        Article article = articleService.findById(articleId);
+        return commentRepository.findAllByArticle(article).stream()
+                .map(comment -> toCommentResponseDto(comment.getId(), comment.getAuthorId(),
+                        comment.getAuthorName(), comment.getComment()))
+                .collect(Collectors.toList());
+    }
+
     public Comment save(Long userId, CommentRequestDto commentRequestDto) {
         User user = userService.findById(userId);
         Article article = articleService.findById(commentRequestDto.getArticleId());
@@ -32,16 +44,9 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
-        Article article = articleService.findById(articleId);
-        return commentRepository.findAllByArticle(article).stream()
-                .map(comment -> toCommentResponseDto(comment.getId(), comment.getAuthorId(), comment.getAuthorName(), comment.getComment()))
-                .collect(Collectors.toList());
-    }
-
     @Transactional
     public Comment update(Long userId, Long commentId, CommentRequestDto commentRequestDto) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+        Comment comment = findById(commentId);
         if (comment.matchAuthorId(userId)) {
             comment.updateComment(commentRequestDto.getComment());
         }
@@ -49,7 +54,7 @@ public class CommentService {
     }
 
     public void delete(Long userId, Long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+        Comment comment = findById(commentId);
         if (comment.matchAuthorId(userId)) {
             commentRepository.deleteById(commentId);
         }
