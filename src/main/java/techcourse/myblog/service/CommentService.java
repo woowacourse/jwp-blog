@@ -29,6 +29,7 @@ public class CommentService {
                 .article(article)
                 .user(user)
                 .build();
+        log.debug("save comment={}", comment);
         return commentRepository.save(comment);
     }
 
@@ -40,6 +41,8 @@ public class CommentService {
     public void update(Long id, String editedContents) {
         Comment comment = findById(id);
         comment.update(editedContents);
+
+        log.debug("update comment id={}, editedContents={}", id, editedContents);
     }
 
     public Long findArticleIdById(Long id) {
@@ -54,5 +57,6 @@ public class CommentService {
 
     public void deleteById(Long id) {
         commentRepository.deleteById(id);
+        log.debug("delete comment id={}", id);
     }
 }

@@ -22,6 +22,7 @@ public class CommentController {
 
     @PostMapping("/writing")
     public String saveComment(CommentSaveRequestDto commentSaveRequestDto, HttpSession httpSession) {
+        log.info("save comment post request params={}", commentSaveRequestDto);
         commentService.save(commentSaveRequestDto, (User) httpSession.getAttribute(USER));
 
         return "redirect:/articles/" + commentSaveRequestDto.getArticleId();
@@ -29,6 +30,7 @@ public class CommentController {
 
     @PutMapping("/edit/{id}")
     public String editComment(@PathVariable Long id, String editedContents) {
+        log.info("edit comment put request id={}, editedContents={}", id, editedContents);
         commentService.update(id, editedContents);
 
         Long articleId = commentService.findArticleIdById(id);
@@ -38,6 +40,7 @@ public class CommentController {
 
     @DeleteMapping("/edit/{id}")
     public String deleteComment(@PathVariable Long id) {
+        log.info("delete comment delete request id={}", id);
         Long articleId = commentService.findArticleIdById(id);
         commentService.deleteById(id);
         return "redirect:/articles/" + articleId;
