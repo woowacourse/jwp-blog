@@ -46,6 +46,7 @@ public class ArticleService {
         article.update(articleSaveRequestDto);
     }
 
+    @Transactional
     public void deleteById(long id) {
         log.debug("delete article id={}", id);
         commentRepository.deleteByArticleId(id);
