@@ -3,6 +3,7 @@ package techcourse.myblog.web;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,6 +35,13 @@ public class CommentController {
 
         Long articleId = commentService.findArticleIdById(id);
 
+        return "redirect:/articles/" + articleId;
+    }
+
+    @DeleteMapping("/comment/edit/{id}")
+    public String deleteComment(@PathVariable Long id) {
+        Long articleId = commentService.findArticleIdById(id);
+        commentService.deleteById(id);
         return "redirect:/articles/" + articleId;
     }
 }
