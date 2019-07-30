@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.*;
+import techcourse.myblog.exception.valid.InvalidEditFormException;
+import techcourse.myblog.exception.valid.InvalidSignUpFormException;
 
 import javax.servlet.http.HttpSession;
 
@@ -59,6 +61,14 @@ public class ExceptionAdvice {
     @ExceptionHandler(NotMatchAuthorException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleNotMatchAuthorException(NotMatchAuthorException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        model.addAttribute("path", "/");
+        return "error";
+    }
+
+    @ExceptionHandler(NotMatchUserException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleNotMatchUserException(NotMatchUserException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         model.addAttribute("path", "/");
         return "error";

@@ -8,6 +8,7 @@ import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicatedUserException;
 import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.exception.NotMatchPasswordException;
+import techcourse.myblog.exception.NotMatchUserException;
 import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
@@ -18,6 +19,15 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+
+    public UserDto.Response login(UserDto.Login userDto) {
+        User user = userRepository.findByEmail(userDto.getEmail()).orElseThrow(NotFoundUserException::new);
+        if (!user.getPassword().equals(userDto.getPassword())) {
+            throw new NotMatchPasswordException();
+        }
+
+        return modelMapper.map(user, UserDto.Response.class);
+    }
 
     public Long save(UserDto.Create userDto) {
         User newUser = userDto.toUser();
@@ -30,8 +40,8 @@ public class UserService {
     public List<UserDto.Response> findAll() {
         List<User> users = (List<User>) userRepository.findAll();
         return users.stream()
-                .map(user -> modelMapper.map(user, UserDto.Response.class))
-                .collect(Collectors.toList());
+            .map(user -> modelMapper.map(user, UserDto.Response.class))
+            .collect(Collectors.toList());
     }
 
     public UserDto.Response findById(Long userId) {
@@ -39,23 +49,27 @@ public class UserService {
         return modelMapper.map(user, UserDto.Response.class);
     }
 
-    public UserDto.Response login(UserDto.Login userDto) {
-        User user = userRepository.findByEmail(userDto.getEmail()).orElseThrow(NotFoundUserException::new);
-
-        if (!user.getPassword().equals(userDto.getPassword())) {
-            throw new NotMatchPasswordException();
-        }
-
-        return modelMapper.map(user, UserDto.Response.class);
+    public UserDto.Response findById(UserDto.Response userSession, Long userId) {
+        checkUser(userSession, userId);
+        return findById(userId);
     }
 
-    public UserDto.Response update(Long userId, UserDto.Update userDto) {
+    public UserDto.Response update(UserDto.Response userSession, Long userId, UserDto.Update userDto) {
+        checkUser(userSession, userId);
         User user = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
         User updatedUser = userDto.toUser(userId, user.getEmail(), user.getPassword());
         return modelMapper.map(userRepository.save(updatedUser), UserDto.Response.class);
     }
 
-    public void deleteById(Long userId) {
+    public void deleteById(UserDto.Response userSession, Long userId) {
+        checkUser(userSession, userId);
         userRepository.deleteById(userId);
+    }
+
+    //TODO : Update에서 ID를 가져야할거 같음
+    private void checkUser(UserDto.Response userSession, Long userId) {
+        if (!(userSession.getId() == userId)) {
+            throw new NotMatchUserException();
+        }
     }
 }
