@@ -80,6 +80,7 @@ public class CommentControllerTests extends MyblogApplicationTests {
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
+
         assertThat(mvcResult.getResponse().getHeader("Location").contains("articles")).isTrue();
     }
 

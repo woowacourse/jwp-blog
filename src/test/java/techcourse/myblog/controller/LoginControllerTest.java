@@ -9,19 +9,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.MyblogApplicationTests;
 import techcourse.myblog.domain.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LoginControllerTest {
+public class LoginControllerTest extends MyblogApplicationTests {
     private WebTestClient webTestClient;
-    private long defaultId = 1;
-    private String defaultName = "default";
-    private String defaultPassword = "abcdEFGH123!@#";
-    private String defaultEmail = "default@default.com";
 
     private UserRepository userRepository;
 
@@ -33,7 +29,7 @@ public class LoginControllerTest {
 
     @Test
     void 로그인_테스트() {
-        testSuccessLogin(defaultEmail, defaultPassword);
+        testSuccessLogin(USER_EMAIL, USER_PASSWORD);
     }
 
     @Test
@@ -47,7 +43,7 @@ public class LoginControllerTest {
 
     @Test
     void showLoginPage_로그인_상태일_경우() {
-        String cookie = getLoginCookie(defaultEmail, defaultPassword);
+        String cookie = getLoginCookie(USER_EMAIL, USER_PASSWORD);
 
         webTestClient.get().uri("/login").header("Cookie",cookie)
                 .exchange()
@@ -64,14 +60,14 @@ public class LoginControllerTest {
     void 로그인_테스트_실패_아이디_틀림() {
         String wrongEmail = "aa";
 
-        testFailLogin(defaultPassword, wrongEmail);
+        testFailLogin(USER_PASSWORD, wrongEmail);
     }
 
     @Test
     void 로그인_테스트_실패_비밀번호_틀림() {
         String wrongPW = "aa";
 
-        testFailLogin(wrongPW, defaultEmail);
+        testFailLogin(wrongPW, USER_EMAIL);
     }
 
     @Test
@@ -128,7 +124,7 @@ public class LoginControllerTest {
     }
 
     private void testSuccessLogout() {
-        String cookie = getLoginCookie(defaultEmail, defaultPassword);
+        String cookie = getLoginCookie(USER_EMAIL, USER_PASSWORD);
 
         webTestClient.get().uri("/logout").header("Cookie", cookie)
                 .exchange()
