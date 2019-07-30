@@ -1,9 +1,15 @@
 package techcourse.myblog.domain;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public interface ArticleRepository extends CrudRepository<Article, Long> {
-    List<Article> findByCategoryId(long categoryId);
+@Repository
+public class ArticleRepository {
+    private List<Article> articles = new ArrayList<>();
+
+    public List<Article> findAll() {
+        return articles;
+    }
 }
