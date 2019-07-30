@@ -28,7 +28,7 @@
 
                 <form th:if="${article.author.equals(user)}" method="post" th:action="'/articles/' + ${article.id}">
                     <input name="_method" type="hidden" value="DELETE" />
-                    <button class="btn btn-icon float-right pointer" id="delete-button" type="submit">
+                    <button class="btn btn-icon float-right pointer" id="article-delete-button" type="submit">
                         <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
                     </button>
                 </form>
@@ -69,24 +69,37 @@
                     <span class="font-size-16 text-info" th:text="${comments.size()}"></span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
+                    <ul class="list-unstyled list-info" id="comment-list">
                         <li class="comment-item border bottom mrg-btm-30" th:each="comment: ${comments}">
                             <img class="thumb-img img-circle"
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                            <div class="info">
+                            <div class="info view">
                                 <span href="" class="text-bold inline-block" th:text="${comment.writer.name}"></span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span>6 min ago</span>
+                                    <button class="btn btn-icon float-right pointer comment-modify" type="button">
+                                        <i class ="ti-pencil text-dark font-size-16 pdd-horizon-5 comment-modify"></i>
+                                    </button>
                                     <form th:if="${comment.writer.equals(user)}" method="post" th:action="${article.id} + '/comment/'+ ${comment.id}">
                                         <input name="_method" type="hidden" value="DELETE" />
-                                        <button class="btn btn-icon float-right pointer" id="delete-button" type="submit">
+                                        <button type="submit" class="btn btn-icon float-right pointer">
                                             <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
                                         </button>
                                     </form>
                                 </span>
                                 <p class="width-80" th:text="${comment.contents}"></p>
                             </div>
+                            <form  method="post" th:action="${article.id} + '/comment/'+ ${comment.id}" class="edit edit-form">
+                                <input name="_method" type="hidden" value="PUT" />
+                                <input class="edit" name="contents" th:value="${comment.contents}">
+                                <button type="submit" class="btn btn-default">
+                                    <i class="ti-save "></i>
+                                </button>
+                                <button type="button" class="btn btn-default comment-modify">
+                                    <i class="ti-close comment-modify"></i>
+                                </button>
+                            </form>
                         </li>
                     </ul>
 
@@ -104,7 +117,10 @@
 </div>
 <th:block th:include="includes/js :: common_js"></th:block>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
+    `use strict`
+
     /* <![CDATA[ */
     const initValue = /*[[${article.contents}]]*/;
     /*]]>*/
@@ -125,6 +141,50 @@
         },
         height: '200px'
     });
+
+    const button = (function() {
+
+        const CommentController = function() {
+            const commentService = new CommentService();
+
+            const updateComment = function() {
+                const commentList = document.getElementById('comment-list');
+                commentList.addEventListener('click', commentService.modify);
+            };
+
+            const init = function() {
+                updateComment();
+            };
+
+            return {
+                init: init
+            }
+        };
+
+        const CommentService = function() {
+            const modify = function(event) {
+                if (event.target.classList.contains('comment-modify')) {
+                    const commentList = event.target.closest("li");
+                    commentList.classList.toggle('editing');
+                }
+            };
+
+            return {
+                modify: modify
+            }
+        };
+
+        const init = function() {
+            const buttonController = new CommentController();
+            buttonController.init();
+        };
+
+        return {
+            init: init
+        }
+    })();
+
+    button.init();
 </script>
 </body>
 </html>
