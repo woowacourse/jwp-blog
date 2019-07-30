@@ -14,25 +14,27 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.controller.dto.ArticleDto;
 import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.controller.dto.UserDto;
-import techcourse.myblog.model.Article;
 import techcourse.myblog.utils.Utils;
 
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.linesOf;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest {
-    private static final String USER_NAME = "test";
-    private static final String EMAIL = "test@test.com";
-    private static final String PASSWORD = "passWord!1";
+    private static final String USER_NAME = "atest";
+    private static final String EMAIL = "atest@test.com";
+    private static final String PASSWORD = "apassWord!1";
 
-    private static final String TITLE = "title";
-    private static final String COVER_URL = "coverUrl";
-    private static final String CONTENTS = "contents blabla.";
+    private static final String TITLE = "atitle";
+    private static final String COVER_URL = "acoverUrl";
+    private static final String CONTENTS = "acontents blabla.";
+
+    private static final String TITLE_2 = "atitle2";
+    private static final String COVER_URL_2 = "acoverUrl2";
+    private static final String CONTENTS_2 = "acontents blabla.2";
 
     @LocalServerPort
     private int serverPort;
@@ -61,7 +63,7 @@ public class ArticleControllerTest {
     @Test
     void index() {
         webTestClient.get().uri("/")
-                .header("Cookie",cookie)
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -69,7 +71,7 @@ public class ArticleControllerTest {
     @Test
     void articleForm() {
         webTestClient.get().uri("/articles/writing")
-                .header("Cookie",cookie)
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -120,18 +122,41 @@ public class ArticleControllerTest {
     @Test
     @DisplayName("게시물을 수정한다.")
     void updateArticle() {
-
+        webTestClient.put().uri(articleUrl)
+                .header("Cookie", cookie)
+                .body(fromFormData("title", TITLE_2)
+                        .with("coverUrl", COVER_URL_2)
+                        .with("contents", CONTENTS_2))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody()
+                .consumeWith(response -> {
+                    URI location = response.getResponseHeaders().getLocation();
+                    webTestClient.get().uri(location)
+                            .header("Cookie", cookie)
+                            .exchange()
+                            .expectBody()
+                            .consumeWith(redirectResponse -> {
+                                String body = Utils.getResponseBody(redirectResponse.getResponseBody());
+                                assertThat(body).contains(TITLE_2);
+                                assertThat(body).contains(COVER_URL_2);
+                                assertThat(body).contains(CONTENTS_2);
+                            });
+                });
     }
 
     @Test
     @DisplayName("게시물을 삭제한다.")
     void deleteArticle() {
-
+        webTestClient.delete().uri(articleUrl)
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus().is3xxRedirection();
     }
 
     @AfterEach
     void tearDown() {
-        Utils.deleteAll(webTestClient);
+        Utils.delete(webTestClient, articleUrl);
         Utils.deleteUser(webTestClient, cookie);
     }
 }
