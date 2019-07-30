@@ -3,6 +3,9 @@ package techcourse.myblog.application.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.application.service.exception.NotExistCommentException;
+import techcourse.myblog.application.service.exception.NotExistUserIdException;
+import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 import techcourse.myblog.domain.*;
 
 import java.util.List;
@@ -10,7 +13,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
-
     private CommentRepository commentRepository;
     private UserRepository userRepository;
     private ArticleRepository articleRepository;
@@ -22,12 +24,11 @@ public class CommentService {
         this.articleRepository = articleRepository;
     }
 
-    // todo 예외던지기
     public long save(CommentDto commentDto, String userEmail, long articleId) {
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new NotExistUserIdException("해당 유저가 존재하지 않습니다."));
         Article article = articleRepository.findById(articleId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new NotMatchPasswordException("해당 게시글이 존재하지 않습니다."));
 
         Comment comment = new Comment(commentDto.getContents(), user, article);
         return commentRepository.save(comment).getId();
@@ -48,9 +49,10 @@ public class CommentService {
                 }).collect(Collectors.toList());
     }
 
+
     public void update(CommentDto commentDto) {
         Comment comment = commentRepository.findById(commentDto.getId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
 
         comment.modify(commentDto.getContents());
     }
@@ -61,9 +63,10 @@ public class CommentService {
 
     public void findCommentWrtier(Long commentId, String email) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
+
         if (comment.getUser().isDifferentEmail(email)) {
-            throw new IllegalArgumentException();
+            throw new NotExistCommentException("수정 권한이 없습니다.");
         }
     }
 }
