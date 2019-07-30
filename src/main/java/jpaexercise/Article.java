@@ -1,4 +1,4 @@
-//package techcourse.myblog.jpaexercise;
+//package jpaexercise;
 //
 //import javax.persistence.*;
 //

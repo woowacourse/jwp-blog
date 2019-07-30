@@ -1,4 +1,4 @@
-//package techcourse.myblog.jpaexercise;
+//package jpaexercise;
 //
 //import org.springframework.data.jpa.repository.JpaRepository;
 //

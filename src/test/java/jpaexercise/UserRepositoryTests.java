@@ -1,4 +1,4 @@
-//package techcourse.myblog.jpaexercise;
+//package jpaexercise;
 //
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;

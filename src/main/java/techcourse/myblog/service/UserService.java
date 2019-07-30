@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.NotValidLoginException;
 import techcourse.myblog.repository.UserRepository;
 
 import javax.transaction.Transactional;
@@ -28,6 +27,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User findByEmail(final String email) {
+        return userRepository
+                .findByEmail(email).get();
+    }
+
     public void signUp(final UserDto dto) {
         if (isDuplicatedEmail(dto.getEmail())) {
             throw new ValidationException(DUPLICATED_EMAIL);
@@ -38,8 +42,7 @@ public class UserService {
 
     public User login(final LoginDto dto) {
         return userRepository
-                .findByEmailAndPassword(dto.getEmail(), dto.getPassword())
-                .orElseThrow(() -> new NotValidLoginException(WRONG_LOGIN));
+                .findByEmailAndPassword(dto.getEmail(), dto.getPassword()).get();
     }
 
     @Transactional

@@ -60,7 +60,7 @@ public class ArticleController {
     @PutMapping(ROUTE_ARTICLE_ID)
     public RedirectView editArticle(@PathVariable final Long id, @ModelAttribute(PAGE_ARTICLE) final ArticleDto articleDto) {
         final Article article = articleRepository.findById(id).get();
-        article.write(articleDto);
+        article.update(articleDto);
         articleRepository.save(article);
         return new RedirectView(ROUTE_ARTICLES + ROOT + article.getId());
     }
