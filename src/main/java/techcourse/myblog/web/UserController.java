@@ -56,9 +56,9 @@ public class UserController {
     @GetMapping(path = {"/{email}", "/{email}/edit"})
     public String showMyPageEdit(@PathVariable String email, HttpServletRequest req, Model model) {
         HttpSession session = req.getSession();
-        String sessionEmail = (String) session.getAttribute("email");
+        User user = (User) session.getAttribute("user");
 
-        User authenticatedUser = userService.getAuthenticatedUser(email, sessionEmail);
+        User authenticatedUser = userService.getAuthenticatedUser(email, user.getEmail());
         model.addAttribute("user", authenticatedUser);
 
         if (req.getRequestURI().contains("edit")) {
@@ -73,8 +73,8 @@ public class UserController {
             throw new UpdateUserInputException("잘못된 입력값입니다.");
         }
 
-        String sessionEmail = (String) session.getAttribute("email");
-        User updatedUser = userService.update(userDto, email, sessionEmail);
+        User user = (User) session.getAttribute("user");
+        User updatedUser = userService.update(userDto, email, user.getEmail());
 
         session.setAttribute("username", updatedUser.getName());
         return new RedirectView("/users/" + email);
@@ -82,9 +82,9 @@ public class UserController {
 
     @DeleteMapping("/{email}")
     public RedirectView exitUser(@PathVariable String email, HttpSession session) {
-        String sessionEmail = (String) session.getAttribute("email");
+        User user = (User) session.getAttribute("user");
 
-        userService.exit(email, sessionEmail);
+        userService.exit(email, user.getEmail());
         session.invalidate();
 
         return new RedirectView("/");
