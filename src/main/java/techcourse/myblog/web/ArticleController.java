@@ -20,9 +20,6 @@ public class ArticleController {
     @Autowired
     private CategoryService categoryService;
 
-    @Autowired
-    private UserService userService;
-
     @GetMapping("/articles/new")
     public String showArticleWritingPage(Model model) {
         model.addAttribute("categories", categoryService.readAll());
