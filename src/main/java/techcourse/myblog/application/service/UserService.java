@@ -46,9 +46,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    User findUserByEmail(String email) {
+    public User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다.", "/login"));
+                .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다."));
     }
 
     @Transactional(readOnly = true)
