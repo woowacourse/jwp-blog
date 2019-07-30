@@ -63,7 +63,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleNotMatchAuthorException(NotMatchAuthorException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "forward:/";
+        model.addAttribute("path", "/");
+        return "error";
     }
-    //TODO : 에러 페이지 만들기 링크
 }

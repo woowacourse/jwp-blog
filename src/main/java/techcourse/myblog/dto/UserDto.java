@@ -59,6 +59,14 @@ public class UserDto {
         private Long id;
         private String email;
         private String name;
+
+        public User toUser() {
+            return User.builder()
+                .id(id)
+                .name(name)
+                .email(email)
+                .build();
+        }
     }
 
     @Data
