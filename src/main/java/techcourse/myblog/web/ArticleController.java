@@ -1,29 +1,18 @@
 package techcourse.myblog.web;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.exception.UserException;
-import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.domain.ArticleRepository;
 
 import java.util.List;
 
-@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class ArticleController {
-    private final ArticleService articleService;
-
-    @GetMapping("/")
-    public String showArticles(Model model) {
-        List<Article> articles = articleService.findAll();
-        model.addAttribute("articles", articles);
-        return "index";
-    }
+    private final ArticleRepository articleRepository;
 
     @GetMapping("/writing")
     public String showArticleWritingPage() {
@@ -31,36 +20,41 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String writeArticle(ArticleDto articleDto, Model model) {
-        Article newArticle = articleService.write(articleDto);
-        model.addAttribute("article", newArticle);
+    public String writeArticle(Article article, Model model) {
+        articleRepository.save(article);
+        model.addAttribute("article", articleRepository.getLatestArticle());
+        return "article";
+    }
 
-        return "redirect:/articles/" + newArticle.getId();
+    @GetMapping("/")
+    public String showArticles(Model model) {
+        List<Article> articles = articleRepository.findAll();
+        model.addAttribute("articles", articles);
+        return "index";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String showArticleEditingPage(@PathVariable int articleId, Model model) {
-        model.addAttribute("article", articleService.findById(articleId));
+        model.addAttribute("article", articleRepository.findById(articleId));
         return "article-edit";
     }
 
     @GetMapping("/articles/{articleId}")
-    public String showArticleById(@PathVariable int articleId, Model model) throws UserException {
-        model.addAttribute("article", articleService.findById(articleId));
+    public String showArticleById(@PathVariable int articleId, Model model) {
+        model.addAttribute("article", articleRepository.findById(articleId));
         return "article";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable int articleId, ArticleDto articleDto, Model model) {
-        Article updatedArticle = articleService.update(articleDto, articleId);
-        model.addAttribute("article", updatedArticle);
-
+    public String updateArticle(@PathVariable int articleId, Article article, Model model) {
+        articleRepository.update(articleId, article);
+        model.addAttribute("article", articleRepository.findById(articleId));
         return "article";
     }
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable int articleId) {
-        articleService.deleteById(articleId);
+        articleRepository.delete(articleId);
         return "redirect:/";
     }
 }

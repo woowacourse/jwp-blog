@@ -1,6 +1,7 @@
 package techcourse.myblog.web;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.Article;
 
 import java.util.Objects;
 
@@ -45,25 +47,39 @@ public class ArticleControllerTests {
     @Test
     void showArticleWritingPages() {
         checkGetStatus("/writing");
+
+    }
+
+    @Test
+    void showArticles() {
+        checkStatus(webTestClient.post(), "/articles");
+
+        uniContents = contents;
+
+        checkGetStatus("/")
+                .expectBody()
+                .consumeWith(this::checkBodyResponse);
+        deleteMethod();
     }
 
     @Test
     void findArticleById() {
-        EntityExchangeResult<byte[]> result = addArticle();
+        checkStatus(webTestClient.post(), "/articles");
 
-        checkGetStatus("/articles/" + getArticleId(result))
+        checkGetStatus("/articles/1")
                 .expectBody()
                 .consumeWith(this::checkBodyResponse);
-    }
 
+        deleteMethod();
+    }
 
     @Test
     void saveArticle() {
         checkStatus(webTestClient.post(), "/articles")
-                .expectStatus()
-                .is3xxRedirection()
                 .expectBody()
-                .returnResult();
+                .consumeWith(this::checkBodyResponse);
+
+        deleteMethod();
     }
 
     @Test
@@ -72,26 +88,30 @@ public class ArticleControllerTests {
         coverUrl = "http://www.kinews.net/news/photo/200907/bjs.jpg";
         contents = "나는 우아한형제들에서 짱이다.";
         uniContents = StringEscapeUtils.escapeJava(contents);
-        EntityExchangeResult<byte[]> result = addArticle();
 
-        int articleId = getArticleId(result);
+        checkStatus(webTestClient.post(), "/articles");
 
-        checkStatus(webTestClient.put(), "/articles/" + articleId)
+        checkStatus(webTestClient.put(), "/articles/1")
                 .expectBody()
-                .consumeWith(this::checkBodyResponse)
-                .returnResult();
+                .consumeWith(this::checkBodyResponse);
+
+        deleteMethod();
     }
 
     @Test
     void deleteTest() {
-        EntityExchangeResult<byte[]> result = addArticle();
+        checkStatus(webTestClient.post(), "/articles");
 
+        deleteMethod();
 
-        deleteMethod(getArticleId(result));
-
-        webTestClient.get().uri("/articles/" + getArticleId(result))
+        webTestClient.get().uri("/articles/1")
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus().is4xxClientError();
+    }
+
+    @AfterEach
+    void tearDown() {
+        Article.initCurrentId();
     }
 
     private WebTestClient.ResponseSpec checkStatus(WebTestClient.RequestBodyUriSpec requestMethod, String uri) {
@@ -102,16 +122,17 @@ public class ArticleControllerTests {
                         .fromFormData("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
-                .exchange();
+                .exchange()
+                .expectStatus().isOk();
     }
 
-    private void deleteMethod(int id) {
+    private void deleteMethod() {
         webTestClient.delete()
-                .uri("/articles/" + id)
+                .uri("/articles/1")
                 .exchange()
                 .expectStatus().is3xxRedirection();
     }
-
+    
     private void checkBodyResponse(EntityExchangeResult<byte[]> response) {
         String body = new String(Objects.requireNonNull(response.getResponseBody()));
         assertThat(body.contains(title)).isTrue();
@@ -123,16 +144,6 @@ public class ArticleControllerTests {
         return webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isOk();
-    }
-
-    private EntityExchangeResult<byte[]> addArticle() {
-        return checkStatus(webTestClient.post(), "/articles")
-                .expectBody()
-                .returnResult();
-    }
-
-    private int getArticleId(EntityExchangeResult<byte[]> result) {
-        return Integer.parseInt(Objects.requireNonNull(result.getResponseHeaders().getLocation()).getPath().split("/")[2]);
     }
 }
 
