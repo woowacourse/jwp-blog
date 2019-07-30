@@ -17,7 +17,6 @@ public class GuestInterceptor extends HandlerInterceptorAdapter {
     ) throws Exception {
         HttpSession session = request.getSession();
 
-//        if (isLoggedOut(session) && !isGetArticles(request)) {
         if (isLoggedOut(session) && !isSave(request)) {
             response.sendRedirect("/login");
             return false;
