@@ -24,13 +24,19 @@ public class UserController {
 		this.userService = userService;
 	}
 
+	@GetMapping("/signup")
+	public String singUp(UserDto userDto, HttpSession httpSession) {
+		if (hasSession(httpSession)) return REDIRECT_INDEX;
+		return "signup";
+	}
+
 	@GetMapping("/login")
 	public String loginForm(HttpSession httpSession, LoginDto loginDto) {
-		if (checkSession(httpSession)) return REDIRECT_INDEX;
+		if (hasSession(httpSession)) return REDIRECT_INDEX;
 		return "login";
 	}
 
-	private boolean checkSession(HttpSession httpSession) {
+	private boolean hasSession(HttpSession httpSession) {
 		return httpSession.getAttribute("user") != null;
 	}
 
@@ -39,9 +45,7 @@ public class UserController {
 		if (bindingResult.hasErrors()) {
 			return "login";
 		}
-		User user = userService.login(loginDto);
-
-		httpSession.setAttribute("user", user);
+		httpSession.setAttribute("user", userService.login(loginDto));
 		return "redirect:/";
 	}
 
@@ -53,19 +57,16 @@ public class UserController {
 
 	@GetMapping("/mypage")
 	public String showMyPage(HttpSession httpSession) {
-		if (!checkSession(httpSession)) return REDIRECT_INDEX;
 		return "mypage";
 	}
 
 	@GetMapping("/mypage/edit")
 	public String showMyPageEdit(HttpSession httpSession) {
-		if (!checkSession(httpSession)) return REDIRECT_INDEX;
 		return "mypage-edit";
 	}
 
 	@PutMapping("/mypage/edit")
 	public String updateUser(UserDto userDto, HttpSession httpSession) {
-		if (!checkSession(httpSession)) return REDIRECT_INDEX;
 		User user = (User) httpSession.getAttribute("user");
 		userDto.setEmail(user.getEmail());
 		httpSession.setAttribute("user", userService.update(userDto));
@@ -75,7 +76,6 @@ public class UserController {
 
 	@DeleteMapping("/mypage/edit")
 	public String deleteUser(HttpSession httpSession) {
-		if (!checkSession(httpSession)) return REDIRECT_INDEX;
 		User user = (User) httpSession.getAttribute("user");
 		userService.remove(user.getEmail());
 		return "redirect:/logout";
@@ -83,7 +83,6 @@ public class UserController {
 
 	@GetMapping("/users")
 	public String users(Model model, HttpSession httpSession) {
-		if (!checkSession(httpSession)) return REDIRECT_INDEX;
 		model.addAttribute("users", userService.findAll());
 		return "user-list";
 	}
@@ -99,11 +98,5 @@ public class UserController {
 		}
 		userService.save(userDto);
 		return "redirect:/login";
-	}
-
-	@GetMapping("/signup")
-	public String singUp(UserDto userDto, HttpSession httpSession) {
-		if (checkSession(httpSession)) return REDIRECT_INDEX;
-		return "signup";
 	}
 }

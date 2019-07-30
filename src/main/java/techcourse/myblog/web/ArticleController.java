@@ -6,9 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.dto.ArticleDto;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class ArticleController {
@@ -19,12 +22,6 @@ public class ArticleController {
     public ArticleController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
         this.commentService = commentService;
-    }
-
-    @GetMapping("/")
-    public String goIndex(Model model) {
-        model.addAttribute("articles", articleService.findAll());
-        return "index";
     }
 
     @GetMapping("/articles")
@@ -47,7 +44,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String create(ArticleDto articleDto) {
+    public String create(ArticleDto articleDto, HttpSession httpSession) {
+        articleDto.setAuthor((User) httpSession.getAttribute("user"));
         log.debug("articleDto : {}", articleDto);
         return "redirect:/articles/" + articleService.save(articleDto).getId();
     }
