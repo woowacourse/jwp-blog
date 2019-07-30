@@ -15,20 +15,18 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 							 Object handler) throws IOException {
 		String email = (String) request.getSession().getAttribute("email");
 		String path = request.getRequestURI();
-
 		if (email != null) {
 			return isAccessibleLoginUser(response, path);
 		}
-
-		return !isAccessibleNonLoginUser(response, path);
+		return isAccessibleNonLoginUser(response, path);
 	}
 
 	private boolean isAccessibleNonLoginUser(HttpServletResponse response, String path) throws IOException {
-		if ((path.equals("/mypage") || path.equals("/mypage/edit") || path.equals("/leave"))) {
+		if ((!path.equals("/")) && (!path.equals("/signup")) && (!path.equals("/login") && (!path.equals("/users")))) {
 			response.sendRedirect("/login");
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	private boolean isAccessibleLoginUser(HttpServletResponse response, String path) throws IOException {
