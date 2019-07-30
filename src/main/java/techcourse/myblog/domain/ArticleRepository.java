@@ -1,11 +1,15 @@
 package techcourse.myblog.domain;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.service.dto.ArticleDto;
+import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
-public interface ArticleRepository extends CrudRepository<Article, Long> {
+@Repository
+public class ArticleRepository {
+    private List<Article> articles = new ArrayList<>();
 
+    public List<Article> findAll() {
+        return articles;
+    }
 }
