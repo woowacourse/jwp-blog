@@ -49,7 +49,7 @@ public class ArticleService {
 
     public Long update(UserDto.Response userDto, Long articleId, ArticleDto.Update articleDto) {
         checkAuthor(userDto, articleId);
-        Article updatedArticle = articleDto.toArticle(articleId);
+        Article updatedArticle = articleDto.toArticle(articleId, userDto.toUser());
         return articleRepository.save(updatedArticle).getId();
     }
 
