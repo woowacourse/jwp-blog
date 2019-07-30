@@ -19,6 +19,7 @@ dependencies {
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'com.h2database:h2'
+	implementation 'org.projectlombok:lombok'
 	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 	compile("mysql:mysql-connector-java:5.1.46")
 	compile group: 'org.projectlombok', name: 'lombok', version: '1.18.6'
