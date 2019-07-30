@@ -3,16 +3,23 @@ package techcourse.myblog.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.*;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.exception.NotFoundCommentException;
 import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.exception.NotMatchAuthorException;
+import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.CommentRepository;
+import techcourse.myblog.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -22,9 +29,12 @@ public class CommentService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public List<Comment> findAllByArticle(Long articleId) {
+    public List<CommentDto.Response> findAllByArticle(Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        return commentRepository.findAllByArticle(article);
+        List<Comment> comments = commentRepository.findAllByArticle(article);
+        return comments.stream()
+            .map(comment -> modelMapper.map(comment, CommentDto.Response.class))
+            .collect(toList());
     }
 
     public void save(UserDto.Response userDto, CommentDto.Create commentDto) {
@@ -39,23 +49,23 @@ public class CommentService {
     @Transactional
     public void update(UserDto.Response userDto, CommentDto.Update commentDto) {
         Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(NotFoundCommentException::new);
-        User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundUserException::new);
 
-        if (!comment.isWrittenBy(userDto.toUser())) {
-            throw new NotMatchAuthorException();
-        }
+        checkAuthor(userDto, comment);
 
         comment.update(commentDto.toComment());
     }
 
-    public void delete(UserDto.Response userDto, CommentDto.Delete commentDto) {
+    public void delete(UserDto.Response userDto, CommentDto.Response commentDto) {
         Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(NotFoundCommentException::new);
-        User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundUserException::new);
 
+        checkAuthor(userDto, comment);
+
+        commentRepository.deleteById(commentDto.getId());
+    }
+
+    private void checkAuthor(UserDto.Response userDto, Comment comment) {
         if (!comment.isWrittenBy(userDto.toUser())) {
             throw new NotMatchAuthorException();
         }
-
-        commentRepository.deleteById(commentDto.getId());
     }
 }
