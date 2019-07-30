@@ -27,8 +27,7 @@ public class ArticleService {
     }
 
     public Article save(ArticleRequest articleRequest, User user) {
-        Article article = articleRequest.toArticle();
-        article.setAuthor(user);
+        Article article = articleRequest.addAuthorAndToArticle(user);
         return articleRepository.save(article);
     }
 
@@ -40,7 +39,7 @@ public class ArticleService {
     public Article findByIdWithUser(long articleId, User user) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new NoArticleException("게시글이 존재하지 않습니다"));
-        checkAuthor(user, article);
+        article.checkAuthor(user);
         return article;
     }
 
@@ -51,15 +50,9 @@ public class ArticleService {
         return article;
     }
 
-    private void checkAuthor(User user, Article article) {
-        if (!article.isAuthor(user)) {
-            throw new InvalidAuthorException("작성자가 아닙니다");
-        }
-    }
-
     public void deleteById(long articleId, User user) {
         Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-        checkAuthor(user, article);
+        article.checkAuthor(user);
         articleRepository.deleteById(articleId);
     }
 }

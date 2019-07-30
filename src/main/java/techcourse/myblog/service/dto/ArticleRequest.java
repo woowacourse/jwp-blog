@@ -1,6 +1,7 @@
 package techcourse.myblog.service.dto;
 
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 
 public class ArticleRequest {
     private String title;
@@ -15,6 +16,10 @@ public class ArticleRequest {
 
     public Article toArticle() {
         return new Article(title, coverUrl, contents);
+    }
+
+    public Article addAuthorAndToArticle(User author) {
+        return new Article(title, coverUrl, contents, author);
     }
 
     public String getTitle() {

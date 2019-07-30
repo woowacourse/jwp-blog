@@ -31,7 +31,7 @@ public class Article {
     private LocalDateTime modifiedDate;
 
     @ManyToOne
-    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_article_user"))
     private User author;
 
     private Article() {
@@ -41,6 +41,13 @@ public class Article {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+    }
+
+    public Article(String title, String coverUrl, String contents, User author) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+        this.author = author;
     }
 
     public Long getId() {
@@ -66,7 +73,7 @@ public class Article {
         this.contents = article.contents;
     }
 
-    private void checkAuthor(User user) {
+    public void checkAuthor(User user) {
         if (isAuthor(user)) {
             throw new InvalidAuthorException("작성자가 일치하지 않습니다.");
         }
