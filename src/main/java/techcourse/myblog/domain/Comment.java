@@ -21,13 +21,13 @@ public class Comment {
     private String contents;
 
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "writer", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User writer;
 
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
     public Comment(String contents, User writer, Article article) {
