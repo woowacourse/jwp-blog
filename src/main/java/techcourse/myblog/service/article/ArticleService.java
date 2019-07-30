@@ -9,7 +9,8 @@ import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.presentation.ArticleRepository;
 import techcourse.myblog.presentation.UserRepository;
-import techcourse.myblog.service.dto.article.ArticleDto;
+import techcourse.myblog.service.dto.article.ArticleRequestDto;
+import techcourse.myblog.service.dto.article.ArticleResponseDto;
 import techcourse.myblog.service.dto.user.UserResponseDto;
 import techcourse.myblog.service.user.UserAssembler;
 
@@ -31,14 +32,15 @@ public class ArticleService {
         this.userRepository = userRepository;
     }
 
-    public List<ArticleDto> findAll() {
+    public List<ArticleResponseDto> findAll() {
         List<Article> articles = articleRepository.findAll();
+
         return Collections.unmodifiableList(articles.stream()
                 .map(ArticleAssembler::convertToDto)
                 .collect(Collectors.toList()));
     }
 
-    public ArticleDto findById(final Long id) {
+    public ArticleResponseDto findById(final Long id) {
         return articleRepository.findById(Objects.requireNonNull(id))
                 .map(ArticleAssembler::convertToDto)
                 .orElseThrow(ArticleNotFoundException::new);
@@ -50,7 +52,7 @@ public class ArticleService {
                 .getAuthor());
     }
 
-    public Long save(final ArticleDto articleDTO, final Long authorId) {
+    public Long save(final ArticleRequestDto articleDTO, final Long authorId) {
         User author = userRepository.findById(authorId)
                 .orElseThrow(UserNotFoundException::new);
         Article article = convertToEntity(articleDTO, author);
@@ -59,7 +61,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public void update(final Long id, final ArticleDto articleDTO) {
+    public void update(final Long id, final ArticleRequestDto articleDTO) {
         Objects.requireNonNull(articleDTO);
         articleRepository.findById(Objects.requireNonNull(id))
                 .ifPresent((retrieveArticle -> retrieveArticle.update(new Article(

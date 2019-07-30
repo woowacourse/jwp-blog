@@ -26,20 +26,20 @@ public class CommentServiceTest {
     void 댓글_작성() {
         CommentRequestDto commentDto = new CommentRequestDto("comment");
         CommentResponseDto persistComment = commentService.save(commentDto, DEFAULT_USER_ID, DEFAULT_ARTICLE_ID);
-        assertThat(persistComment).isEqualTo(new CommentResponseDto("comment", "john"));
+        assertThat(persistComment).isEqualTo(new CommentResponseDto(DEFAULT_COMMENT_ID, "comment", 1000L, "john"));
     }
 
     @Test
     void 댓글_수정() {
         CommentRequestDto commentDto = new CommentRequestDto("new Hello");
-        CommentResponseDto updateComment = commentService.update(commentDto.getComment(), DEFAULT_COMMENT_ID);
-        assertThat(updateComment).isEqualTo(new CommentResponseDto("new Hello", "paul"));
+        CommentResponseDto updateComment = commentService.update(commentDto, DEFAULT_COMMENT_ID);
+        assertThat(updateComment).isEqualTo(new CommentResponseDto(DEFAULT_COMMENT_ID, "new Hello", 1000L, "paul"));
     }
 
     @Test
     void 댓글_삭제() {
         commentService.delete(DEFAULT_COMMENT_ID);
         assertThatExceptionOfType(CommentNotFoundException.class)
-                .isThrownBy(()-> commentService.findById(DEFAULT_COMMENT_ID));
+                .isThrownBy(() -> commentService.findById(DEFAULT_COMMENT_ID));
     }
 }

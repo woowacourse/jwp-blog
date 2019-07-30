@@ -1,4 +1,4 @@
-package techcourse.myblog.domain.coment;
+package techcourse.myblog.domain.comment;
 
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.article.Article;

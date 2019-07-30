@@ -1,9 +1,11 @@
 package techcourse.myblog.domain.article;
 
+import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -25,6 +27,10 @@ public class Article {
     @ManyToOne()
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
+
+    @OneToMany(mappedBy = "article")
+    private List<Comment> comments;
+
 
     public Article() {
     }
@@ -64,6 +70,10 @@ public class Article {
 
     public User getAuthor() {
         return author;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
     }
 
     @Override
