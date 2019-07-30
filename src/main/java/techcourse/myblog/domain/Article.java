@@ -1,64 +1,38 @@
 package techcourse.myblog.domain;
 
-import java.util.Objects;
+import lombok.*;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Getter
+@ToString
+@EqualsAndHashCode(of = {"id"})
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Article {
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String title;
-    private String coverUrl;
     private String contents;
+    private String coverUrl;
+    @ManyToOne
+    private User author;
 
-    public Article(String title, String coverUrl, String contents) {
+    public Article(String title, String contents, String coverUrl, User author) {
         this.title = title;
-        this.coverUrl = coverUrl;
         this.contents = contents;
+        this.coverUrl = coverUrl;
+        this.author = author;
     }
 
-    public void updateTitle(Article updatedArticle) {
-        this.title = updatedArticle.title;
-    }
-
-    public void updateUrl(Article updatedArticle) {
-        this.coverUrl = updatedArticle.coverUrl;
-    }
-
-    public void updateContents(Article updatedArticle) {
-        this.contents = updatedArticle.contents;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
+    public Article(Long id, String title, String contents, String coverUrl, User author) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return id == article.id &&
-                Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents);
+        this.title = title;
+        this.contents = contents;
+        this.coverUrl = coverUrl;
+        this.author = author;
     }
 }
