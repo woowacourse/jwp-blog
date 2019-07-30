@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
-import techcourse.myblog.exception.ArticleException;
-import techcourse.myblog.exception.LoginException;
-import techcourse.myblog.exception.SignUpException;
-import techcourse.myblog.exception.UserException;
+import techcourse.myblog.exception.*;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -57,6 +54,18 @@ public class ControllerExceptionHandler {
         mav.addObject("error", e.getMessage());
         mav.setViewName("signup");
         return mav;
+    }
+
+    /**
+     * 댓글을 수정 또는 삭제하려는 사용자가
+     * 댓글 작성자가 아닌 경우
+     *
+     * @param e
+     * @return 인덱스 페이지로
+     */
+    @ExceptionHandler(CommentAuthenticationException.class)
+    public String handleCommentAuthenticationException(CommentAuthenticationException e) {
+        return "redirect:/";
     }
 
     @ExceptionHandler(UserException.class)

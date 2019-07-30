@@ -1,12 +1,15 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.ArticleException;
+import techcourse.myblog.exception.CommentAuthenticationException;
+import techcourse.myblog.exception.CommentException;
 import techcourse.myblog.exception.UserException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
@@ -24,6 +27,7 @@ public class CommentService {
         this.articleRepository = articleRepository;
     }
 
+    @Transactional
     public Comment addComment(CommentRequestDto commentRequestDto, UserResponseDto userResponseDto, Long articleId) {
         String contents = commentRequestDto.getContents();
         User commenter = findUserByEmail(userResponseDto.getEmail());
@@ -42,5 +46,31 @@ public class CommentService {
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserException("해당 회원이 존재하지 않습니다."));
+    }
+
+    @Transactional
+    public void update(Long commentId, CommentRequestDto commentRequestDto) {
+        Comment comment = getCommentFindById(commentId);
+        comment.update(commentRequestDto);
+    }
+
+    private Comment getCommentFindById(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentException("댓글을 찾을 수 없습니다."));
+    }
+
+    @Transactional
+    public void remove(Long commentId) {
+        commentRepository.deleteById(commentId);
+    }
+
+    public void checkAuthentication(UserResponseDto userResponseDto, Long commentId) {
+        String userEmail = userResponseDto.getEmail();
+        Comment comment = getCommentFindById(commentId);
+        String commenterEmail = comment.getCommenter().getEmail();
+
+        if (!userEmail.equals(commenterEmail)) {
+            throw new CommentAuthenticationException();
+        }
     }
 }

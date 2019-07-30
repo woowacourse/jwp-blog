@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.springframework.data.annotation.CreatedDate;
+import techcourse.myblog.dto.CommentRequestDto;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -52,6 +53,10 @@ public class Comment {
 
     public Article getArticle() {
         return article;
+    }
+
+    public void update(CommentRequestDto commentRequestDto) {
+        this.contents = commentRequestDto.getContents();
     }
 
     @Override
