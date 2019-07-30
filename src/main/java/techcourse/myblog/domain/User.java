@@ -3,8 +3,6 @@ package techcourse.myblog.domain;
 import techcourse.myblog.web.dto.UserDto;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -14,17 +12,22 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
+    @Column(nullable = false)
     private String email;
+    @Column(length = 10, nullable = false)
     private String name;
+    @Column(length = 14, nullable = false)
     private String password;
-
-    @OneToMany(mappedBy = "author")
-    private List<Article> articles = new ArrayList<>();
 
     public User() {
     }
 
     public User(String name, String email, String password) {
+        this(null, name, email, password);
+    }
+
+    public User(Long id, String name, String email, String password) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -67,14 +70,6 @@ public class User {
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 '}';
-    }
-
-    public List<Article> getArticles() {
-        return this.articles;
-    }
-
-    public void addArticle(Article persistArticle) {
-        articles.add(persistArticle);
     }
 
     @Override
