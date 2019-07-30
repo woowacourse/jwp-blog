@@ -2,24 +2,19 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-public class UserControllerTests {
+public class UserControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
@@ -32,24 +27,21 @@ public class UserControllerTests {
                         .with("reconfirmPassword", "PassWord1!"))
                 .exchange()
                 .expectStatus()
-                .isFound()
-        ;
+                .isFound();
     }
 
     @Test
     void loginForm() {
         webTestClient.get().uri("/login")
                 .exchange()
-                .expectStatus().isOk()
-        ;
+                .expectStatus().isOk();
     }
 
     @Test
     void signUpForm() {
         webTestClient.get().uri("/signup")
                 .exchange()
-                .expectStatus().isOk()
-        ;
+                .expectStatus().isOk();
     }
 
     @Test
@@ -64,10 +56,9 @@ public class UserControllerTests {
                 .isOk()
                 .expectBody()
                 .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
+                    String body = new String(Objects.requireNonNull(response.getResponseBody()));
                     assertTrue(body.contains("이메일 중복입니다"));
-                })
-        ;
+                });
     }
 
     @Test
@@ -77,8 +68,7 @@ public class UserControllerTests {
                         .with("password", "PassWord1!")
                         .with("reconfirmPassword", "PassWord1!"))
                 .exchange()
-                .expectStatus().is3xxRedirection()
-        ;
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
@@ -92,10 +82,9 @@ public class UserControllerTests {
                 .isOk()
                 .expectBody()
                 .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
+                    String body = new String(Objects.requireNonNull(response.getResponseBody()));
                     assertTrue(body.contains("email 없음"));
-                })
-        ;
+                });
     }
 
     @Test
@@ -111,8 +100,7 @@ public class UserControllerTests {
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
                     assertTrue(body.contains("비밀번호 틀림"));
-                })
-        ;
+                });
     }
 
     @Test
@@ -122,8 +110,7 @@ public class UserControllerTests {
                 .expectHeader()
                 .valueMatches("location", ".*/login")
                 .expectStatus()
-                .is3xxRedirection()
-        ; // 로그인 화면으로 갈 것임
+                .is3xxRedirection();
     }
 
     @Test
@@ -133,8 +120,7 @@ public class UserControllerTests {
                 .expectHeader()
                 .valueMatches("location", ".*/login")
                 .expectStatus()
-                .is3xxRedirection()
-        ; // 로그인 화면으로 갈 것임
+                .is3xxRedirection();
     }
 
     @Test
@@ -144,8 +130,7 @@ public class UserControllerTests {
                 .expectHeader()
                 .valueMatches("location", ".*/login")
                 .expectStatus()
-                .is3xxRedirection()
-        ; // 로그인 화면으로 갈 것임
+                .is3xxRedirection();
     }
 
     @Test
@@ -155,8 +140,7 @@ public class UserControllerTests {
         webTestClient.get().uri("/users")
                 .header("Cookie", cookie)
                 .exchange()
-                .expectStatus().isOk()
-        ;
+                .expectStatus().isOk();
     }
 
     @Test
@@ -166,8 +150,7 @@ public class UserControllerTests {
         webTestClient.get().uri("/mypage")
                 .header("Cookie", cookie)
                 .exchange()
-                .expectStatus().isOk()
-        ;
+                .expectStatus().isOk();
     }
 
     @Test
@@ -177,8 +160,7 @@ public class UserControllerTests {
         webTestClient.get().uri("/mypage-edit")
                 .header("Cookie", cookie)
                 .exchange()
-                .expectStatus().isOk()
-        ;
+                .expectStatus().isOk();
     }
 
     private String getCookie() {

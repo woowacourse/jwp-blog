@@ -9,7 +9,6 @@ import techcourse.myblog.support.encryptor.EncryptHelper;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SaltEncryptTest {
     @Autowired
@@ -18,9 +17,7 @@ class SaltEncryptTest {
     @Test
     void 비밀번호_검증() {
         String password = "JasonPassword!1";
-
         String encrypted = encryptHelper.encrypt(password);
-
         assertTrue(encryptHelper.isMatch(password, encrypted));
     }
 }

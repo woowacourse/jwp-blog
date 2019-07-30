@@ -15,11 +15,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
 public class CommentControllerTest {
     @Autowired
     private WebTestClient webTestClient;
@@ -36,8 +33,7 @@ public class CommentControllerTest {
                         .with("reconfirmPassword", "PassWord1!"))
                 .exchange()
                 .expectStatus()
-                .isFound()
-        ;
+                .isFound();
 
         cookie = getCookie("test@gmail.com");
 
@@ -79,12 +75,34 @@ public class CommentControllerTest {
     }
 
     @Test
+    void 작성자가_아닐_때_댓글수정() {
+        webTestClient.put().uri("/comments/1")
+                .body(BodyInserters.fromFormData("contents", "kk")
+                        .with("articleId", "1"))
+                .exchange()
+                .expectHeader()
+                .valueMatches("location", ".*/;.*")
+                .expectStatus()
+                .is3xxRedirection();
+    }
+
+    @Test
     void 댓글작성자_댓글삭제() {
         webTestClient.delete().uri("/comments/1")
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isFound();
+    }
+
+    @Test
+    void 작성자가_아닐_때_댓글삭제() {
+        webTestClient.delete().uri("/comments/1")
+                .exchange()
+                .expectHeader()
+                .valueMatches("location", ".*/;.*")
+                .expectStatus()
+                .is3xxRedirection();
     }
 
     private String getCookie(String email) {

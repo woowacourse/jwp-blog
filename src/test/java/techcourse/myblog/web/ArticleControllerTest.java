@@ -15,12 +15,9 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-public class ArticleControllerTests {
+public class ArticleControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
@@ -36,8 +33,7 @@ public class ArticleControllerTests {
                         .with("reconfirmPassword", "PassWord1!"))
                 .exchange()
                 .expectStatus()
-                .isFound()
-        ;
+                .isFound();
 
         cookie = getCookie("test@gmail.com");
 
@@ -114,8 +110,7 @@ public class ArticleControllerTests {
                         .with("reconfirmPassword", "PassWord1!"))
                 .exchange()
                 .expectStatus()
-                .isFound()
-        ;
+                .isFound();
 
         String cookie = getCookie("test2@gmail.com");
 
@@ -125,8 +120,7 @@ public class ArticleControllerTests {
                 .expectHeader()
                 .valueMatches("location", ".*/")
                 .expectStatus()
-                .isFound()
-        ;
+                .isFound();
     }
 
     @Test
@@ -142,8 +136,7 @@ public class ArticleControllerTests {
                         .with("reconfirmPassword", "PassWord1!"))
                 .exchange()
                 .expectStatus()
-                .isFound()
-        ;
+                .isFound();
 
         String cookie = getCookie("test2@gmail.com");
 
@@ -153,8 +146,7 @@ public class ArticleControllerTests {
                 .expectHeader()
                 .valueMatches("location", ".*/")
                 .expectStatus()
-                .isFound()
-        ;
+                .isFound();
     }
 
     @Test
