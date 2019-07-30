@@ -38,7 +38,7 @@ public class ArticleService {
                 .orElseThrow(() -> new NoArticleException("게시글이 존재하지 않습니다"));
     }
 
-    public Article findById2(long articleId, User user) {
+    public Article findByIdWithUser(long articleId, User user) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new NoArticleException("게시글이 존재하지 않습니다"));
         checkAuthor(user, article);
@@ -59,7 +59,9 @@ public class ArticleService {
         }
     }
 
-    public void deleteById(long articleId) {
+    public void deleteById(long articleId, User user) {
+        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+        checkAuthor(user, article);
         articleRepository.deleteById(articleId);
     }
 }
