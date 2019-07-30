@@ -3,13 +3,13 @@ package techcourse.myblog.domain;
 import org.hibernate.validator.constraints.Length;
 import techcourse.myblog.dto.UserDto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -23,6 +23,7 @@ public class User {
 
     @Id
     @GeneratedValue
+    @Column(name = "user_id")
     private Long id;
 
     @Length(min = 2, max = 10, message = NAME_LENGTH)
@@ -42,16 +43,26 @@ public class User {
     @Valid
     private String email;
 
+    @OneToMany(mappedBy = "author")
+    private List<Article> articles = new ArrayList<>();
+
     public User() {}
 
-    public User(final UserDto userDto) {
-        write(userDto);
+    public User(final String username, final String email, final String password) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
     }
 
-    public void write(final UserDto userDto) {
+    public User(final UserDto userDto) {
+        update(userDto);
+    }
+
+    public User update(final UserDto userDto) {
         this.username = userDto.getUsername();
         this.password = userDto.getPassword();
         this.email = userDto.getEmail();
+        return this;
     }
 
     public Long getId() {
@@ -74,17 +85,28 @@ public class User {
         return email;
     }
 
+    public List<Article> getArticles() {
+        return this.articles;
+    }
+
+    public void addArticle(final Article article) {
+        articles.add(article);
+    }
+
     @Override
     public boolean equals(final Object another) {
         if (this == another) return true;
         if (!(another instanceof User)) return false;
         final User user = (User) another;
-        return id.equals(user.id);
+        return id.equals(user.id) &&
+                Objects.equals(username, user.username) &&
+                password.equals(user.password) &&
+                email.equals(user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, username, password, email);
     }
 
     @Override

@@ -34,6 +34,7 @@ public class UserController {
     private static final String PAGE_USER_LIST = "user-list";
     private static final String PAGE_MYPAGE = "mypage";
     private static final String PAGE_MYPAGE_EDIT = "mypage-edit";
+
     private final UserService userService;
 
     public UserController(final UserService userService) {
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @GetMapping(ROUTE_SIGNUP)
-    public String singupPage() {
+    public String signUpPage() {
         return "signup";
     }
 
@@ -60,8 +61,8 @@ public class UserController {
 
     @Transactional
     @PostMapping(ROUTE_USERS)
-    public String signup(final UserDto userDto) {
-        userService.signup(userDto);
+    public String signUp(final UserDto userDto) {
+        userService.signUp(userDto);
         LOG.debug("회원 가입 성공");
         LOG.debug("username: {}", userDto.getUsername());
         LOG.debug("password: {}", userDto.getPassword());
@@ -94,7 +95,7 @@ public class UserController {
     @GetMapping(ROUTE_LOGOUT)
     public String userLogout(final HttpSession session) {
         LOG.debug("사용자 로그아웃");
-        session.setAttribute(USER, null);
+        session.invalidate();
         return REDIRECT + ROUTE_ROOT;
     }
 
@@ -106,14 +107,14 @@ public class UserController {
     }
 
     @GetMapping(ROUTE_MYPAGE + ROUTE_EDIT)
-    public String mypageEditor(final Model model, final HttpSession session) {
+    public String myPageEditor(final Model model, final HttpSession session) {
         final User user = (User) session.getAttribute(USER);
         model.addAttribute(USER, user);
         return loginFirstOr(PAGE_MYPAGE_EDIT, session);
     }
 
     @PutMapping(ROUTE_MYPAGE + ROUTE_EDIT)
-    public String mypageEdit(final Model model, final HttpSession session, final UserDto dto) {
+    public String myPageEdit(final Model model, final HttpSession session, final UserDto dto) {
             final User loginUser = (User) session.getAttribute(USER);
             final Long userId = loginUser.getId();
             LOG.debug("사용자 변경");

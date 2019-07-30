@@ -14,7 +14,7 @@ import javax.validation.ValidationException;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ControllerAdvice
-@ResponseStatus(HttpStatus.BAD_REQUEST)
+@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 public class UserAdvice {
     private static final String ERROR = "error";
     private static final String ROUTE_LOGIN = "/login";
@@ -29,7 +29,7 @@ public class UserAdvice {
     }
 
     @ExceptionHandler({ValidationException.class, ConstraintViolationException.class, RollbackException.class})
-    public String notValidSignup(final Exception e, final Model model) {
+    public String notValidSignUp(final Exception e, final Model model) {
         LOG.debug("ValidationException: {}", e.getMessage());
         model.addAttribute(ERROR, e.getMessage());
         return ROUTE_SIGNUP;
