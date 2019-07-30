@@ -79,3 +79,13 @@
 .edit {
     display: none;
 }
+
+.comment-btn{
+
+}
+.form {
+    display:inline;
+}
+.comment-btn > button{
+    display:inline;
+}
