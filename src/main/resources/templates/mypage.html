@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <head th:include="fragments/main/main_head :: mainHead"></head>
+    <!-- include fragments/head -->
+    <th:block th:replace="fragments/head"></th:block>
+
+    <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/mypage.css">
 </head>
 <body>
 <div>
-    <div th:replace="fragments/main/header :: header"></div>
+    <header th:replace="fragments/header :: header"> </header>
+
     <div class="about-cover card no-border">
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
             <div class="display-block height-100">
@@ -21,7 +25,7 @@
                 <div class="card">
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
-                        <a href="mypage-edit.html"
+                        <a th:if="${session.user.id} == ${user.id}" th:href="'/user/update/' + ${user.id}"
                            class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </a>
@@ -29,37 +33,36 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"><b>Name</b></p>
+                                <p class="mrg-top-10 text-dark"> <b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10">Brown</p>
+                                <p class="mrg-top-10" th:text="${user.name}"></p>
                             </div>
                         </div>
                         <hr>
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"><b>Email</b></p>
+                                <p class="mrg-top-10 text-dark"> <b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10">gracefulBrown@woowahan.com</p>
+                                <p class="mrg-top-10" th:text="${user.email}"></p>
                             </div>
                         </div>
                         <hr>
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"><b>Avatar</b></p>
+                                <p class="mrg-top-10 text-dark"> <b>Avatar</b></p>
                             </div>
                             <div class="col-md-6">
                                 <div>
-                                    <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" width="117"
-                                         alt="">
+                                    <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" width="117" alt="">
                                 </div>
                             </div>
                         </div>
                         <hr>
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"><b>SNS</b></p>
+                                <p class="mrg-top-10 text-dark"> <b>SNS</b></p>
                             </div>
                             <div class="col-md-12">
                                 <div class="row">
@@ -92,22 +95,27 @@
                                 <hr>
                             </div>
                         </div>
+                        <form th:if="${session.user.id} == ${user.id}" th:action="'/user/delete/' + ${user.id}" id="deleteForm" method="post">
+                            <input type="hidden" name="_method" value="delete">
+                            <button type="button" id="deleteButton" class="btn btn-default no-border-line" onclick="deleteUser()">
+                                <i class="ti-trash font-size-16"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"
-        integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
-<script src="/js/index.js"></script>
+
+<script >
+    function deleteUser() {
+        if (confirm("정말로 탈퇴하시겠습니까") === true) {
+            document.getElementById("deleteForm").submit();
+        }
+    }
+</script>
+<!-- include fragments/footer -->
+<th:block th:replace="fragments/common_script"></th:block>
 </body>
 </html>

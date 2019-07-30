@@ -1,52 +1,82 @@
 package techcourse.myblog.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import javax.persistence.*;
+import java.util.Objects;
 
-@Getter
-@Setter
-@EqualsAndHashCode
+@Entity
+@Table(name = "article")
 public class Article {
-    private static int currentId = 1;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private long id;
 
-    private int id;
+    @Column(name = "title", nullable = false)
     private String title;
-    private String contents;
+
+    @Column(name = "coverUrl", nullable = false)
     private String coverUrl;
 
-    public Article(String title, String contents, String coverUrl) {
+    @Column(name = "contents", nullable = false)
+    private String contents;
+
+    @ManyToOne
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"), nullable = false)
+    private User author;
+
+    public Article() {
+    }
+
+    public Article(String title, String coverUrl, String contents) {
         this.title = title;
-        this.contents = contents;
         this.coverUrl = coverUrl;
-    }
-
-    private Article(int id, String title, String contents, String coverUrl) {
-        this.id = id;
-        this.title = title;
         this.contents = contents;
-        this.coverUrl = coverUrl;
     }
 
-    public Article copyArticles() {
-        return new Article(id, title, contents, coverUrl);
+    public void update(Article articleToUpdate) {
+        this.title = articleToUpdate.title;
+        this.coverUrl = articleToUpdate.coverUrl;
+        this.contents = articleToUpdate.contents;
     }
 
-    public boolean isEqualId(int articleId) {
-        return articleId == id;
+    public void setAuthor(User persistUser) {
+        this.author = persistUser;
     }
 
-    public int getCurrentId() {
-        return currentId++;
+    public long getId() {
+        return id;
     }
 
-    public static void initCurrentId() {
-        currentId = 1;
+    public String getTitle() {
+        return title;
     }
 
-    public void editArticle(Article article) {
-        this.title = article.getTitle();
-        this.contents = article.getContents();
-        this.coverUrl = article.getCoverUrl();
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public String getContents() {
+        return contents;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return id == article.id &&
+                Objects.equals(title, article.title) &&
+                Objects.equals(coverUrl, article.coverUrl) &&
+                Objects.equals(contents, article.contents) &&
+                Objects.equals(author, article.author);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, coverUrl, contents, author);
     }
 }
