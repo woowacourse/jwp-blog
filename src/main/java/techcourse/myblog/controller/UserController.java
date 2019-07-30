@@ -19,7 +19,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.dto.UserInfo;
-import techcourse.myblog.controller.session.UserSession;
+import techcourse.myblog.controller.argumentresolver.UserSession;
 import techcourse.myblog.controller.session.UserSessionManager;
 
 @Controller
@@ -50,7 +50,7 @@ public class UserController {
 
     @PostMapping("/users")
     public RedirectView save(@ModelAttribute("/signup") @Validated({Default.class, UserInfo.class}) UserDto userDto) {
-        userService.save(userDto.toUser());
+        userService.save(userDto.toDomain());
         return new RedirectView("/login");
     }
 
@@ -68,7 +68,7 @@ public class UserController {
 
     @PostMapping("/login")
     public RedirectView login(@ModelAttribute("/login") UserDto userDto) {
-        userSessionManager.setUser(userService.login(userDto.toUser()));
+        userSessionManager.setUser(userService.login(userDto.toDomain()));
         return new RedirectView("/");
     }
 

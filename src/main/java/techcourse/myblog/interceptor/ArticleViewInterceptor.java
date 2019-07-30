@@ -8,21 +8,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import techcourse.myblog.domain.User;
+
 @Component
-public class CertificationInterceptor extends HandlerInterceptorAdapter {
+public class ArticleViewInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HttpSession session = request.getSession();
-        if (session == null || session.getAttribute("user") == null) {
-            response.sendRedirect(request.getContextPath() + "/");
-            return false;
-        }
+//        HttpSession session = request.getSession();
+//        if (session == null || session.getAttribute("user") == null) {
+//            return false;
+//        }
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         HttpSession session = request.getSession();
-        modelAndView.addObject("user", session.getAttribute("user"));
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            modelAndView.addObject("user", user);
+        }
     }
 }

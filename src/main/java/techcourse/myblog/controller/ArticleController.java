@@ -14,9 +14,11 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
+import techcourse.myblog.controller.argumentresolver.UserSession;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.service.CommentService;
 
 @RequestMapping("/articles")
 @Controller
@@ -24,6 +26,7 @@ import techcourse.myblog.dto.ArticleDto;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final CommentService commentService;
 
     @GetMapping("/writing")
     public String createArticleForm() {
@@ -31,35 +34,37 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public RedirectView createArticle(@Valid ArticleDto articleDto) {
-        Article article = articleService.save(articleDto.toArticle());
+    public RedirectView createArticle(@Valid ArticleDto articleDto, UserSession userSession) {
+        Article article = articleService.save(articleDto.toDomain(), userSession.getUser());
         return new RedirectView("/articles/" + article.getId());
     }
 
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable long articleId, Model model) {
-        Article article = articleService.select(articleId);
-        model.addAttribute("article", article);
+        model.addAttribute("article", articleService.select(articleId));
+        model.addAttribute("comments", commentService.findAll(articleId));
         return "article";
     }
 
     @GetMapping("/{articleId}/edit")
     public String editArticleForm(@PathVariable long articleId, Model model) {
-        Article article = articleService.select(articleId);
-        model.addAttribute("article", article);
+        model.addAttribute("article", articleService.select(articleId));
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
     @Transactional
-    public RedirectView editArticle(@PathVariable long articleId, @Valid ArticleDto articleDto) {
-        articleService.update(articleId, articleDto.toArticle());
+    public RedirectView editArticle(@PathVariable long articleId,
+                                    @Valid ArticleDto articleDto,
+                                    UserSession userSession) {
+        articleService.update(articleId, articleDto.toDomain(), userSession.getUser());
         return new RedirectView("/articles/" + articleId);
     }
 
     @DeleteMapping("/{articleId}")
-    public RedirectView deleteArticle(@PathVariable long articleId) {
-        articleService.delete(articleId);
+    public RedirectView deleteArticle(@PathVariable long articleId,
+                                      UserSession userSession) {
+        articleService.delete(articleId, userSession.getUser());
         return new RedirectView("/");
     }
 }

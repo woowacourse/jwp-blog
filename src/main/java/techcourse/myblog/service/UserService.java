@@ -3,15 +3,14 @@ package techcourse.myblog.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.exception.DuplicatedUserException;
-import techcourse.myblog.domain.exception.NotMatchPasswordException;
-import techcourse.myblog.domain.exception.UnFoundUserException;
+import techcourse.myblog.exception.DuplicatedUserException;
+import techcourse.myblog.exception.NotMatchPasswordException;
+import techcourse.myblog.exception.UnFoundUserException;
 import techcourse.myblog.repository.UserRepository;
 
 @Service
@@ -33,7 +32,6 @@ public class UserService {
         }
     }
 
-    @Transactional
     public User update(User originalUser, String newName) {
         return findBy(originalUser.getEmail())
                 .modifyName(newName);

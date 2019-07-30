@@ -73,7 +73,7 @@
 - [X] 비밀번호 불일치 경우 -> 에러
 - [X] 로그아웃 요청 시 메인 화면(index.html)으로 redirect
 - [X] 로그인 한 유저가 로그인/회원가입 화면에 접근할 경우 메인 화면(index.html)으로 redirect
-- [ ] 로그인 한 유저가 로그인/회원가입 화면에 접근할 경우 메인 화면(index.html)으로 redirect 테스트!
+- [X] 로그인 한 유저가 로그인/회원가입 화면에 접근할 경우 메인 화면(index.html)으로 redirect 테스트!
 - [X] 로그인하지 않은 유저가 로그인/회원가입 화면에 접근할 경우 200 OK
 
 ### 회원 수정
@@ -85,3 +85,15 @@
 ### 회원 탈퇴
 - [X] MyPage > profile 하단 > 탈퇴 버튼 추가
 - [X] 탈퇴버튼 클릭시 ``DELETE /users`` 로 요청 ~ 탈퇴 처리 후 ``GET /`` 로 redirect
+
+### 게시글 수정
+- [ ] 작성자만 게시글 수정 가능하도록 하기
+- [X] 게시글 생성 시 사용자 정보 같이 저장하기
+- [X] 객체 연관관계 수정하기
+
+### 댓글 등록 및 수정
+- [X] 댓글 생성 기능 구현 ``POST /comments/{article_id}``
+- [X] 댓글 조회 기능 구현 - CommentService
+- [ ] 댓글 수정 기능 구현 ``PUT /comments/{comment_id}``
+- [X] 댓글 삭제 기능 구현 ``DELETE /comments/{article_id}/{comment_id}``
+- [ ] 수정/삭제는 댓글 작성자만 가능
