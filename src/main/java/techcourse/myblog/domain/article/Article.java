@@ -22,7 +22,7 @@ public class Article {
     @Column(name = "title", length = 40, nullable = false)
     private String title;
 
-    @Column(name = "contents", columnDefinition = "text", nullable = false)
+    @Lob
     private String contents;
 
     @Column(name = "coverUrl")
