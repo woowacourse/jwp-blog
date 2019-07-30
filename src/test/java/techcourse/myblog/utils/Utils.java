@@ -27,8 +27,7 @@ public class Utils {
                 .body(fromFormData("userName", userDto.getUserName())
                         .with("email", userDto.getEmail())
                         .with("password", userDto.getPassword()))
-                .exchange()
-                .expectStatus().isFound();
+                .exchange();
     }
 
     public static String createArticle(ArticleDto articleDto, String cookie, String baseUrl) {
@@ -41,10 +40,9 @@ public class Utils {
                 .getHeader("Location");
     }
 
-    public static void deleteAll(WebTestClient webTestClient) {
-        webTestClient.delete().uri("/articles")
-                .exchange()
-                .expectStatus().is3xxRedirection();
+    public static void delete(WebTestClient webTestClient, String articleUrl) {
+        webTestClient.delete().uri(articleUrl)
+                .exchange();
     }
 
     public static String getLoginCookie(WebTestClient webTestClient, LoginDto loginDto) {

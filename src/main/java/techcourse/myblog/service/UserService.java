@@ -2,7 +2,6 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.exception.EmailDuplicatedException;
 import techcourse.myblog.exception.UserNotFoundException;

@@ -14,15 +14,14 @@ import techcourse.myblog.repository.UserRepository;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
-import static techcourse.myblog.service.UserServiceTest.*;
 
 @ExtendWith(SpringExtension.class)
 class LoginServiceTest {
-    private  static final String TEST_EMAIL_1 = "test1@test.com";
+    private static final String TEST_EMAIL_1 = "test1@test.com";
     private static final String TEST_EMAIL_2 = "test2@test.com";
     private static final String TEST_PASSWORD_1 = "!Q@W3e4r";
     private static final String TEST_PASSWORD_2 = "!Q@W3e4r5t";

@@ -53,7 +53,7 @@ public class UserController {
             log.error(bindingResult.getFieldError().getDefaultMessage());
             throw new UserUpdateFailException(bindingResult.getFieldError().getDefaultMessage());
         }
-        User user =  userService.update(userDto);
+        User user = userService.update(userDto);
 
         model.addAttribute("user", user);
         return "redirect:/users/mypage";

@@ -21,6 +21,8 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 class CommentServiceTest {
+    private static final String COMMENTS_CONTENTS = "comment_contents";
+    private static final String COMMENTS_CONTENTS_2 = "comment_contents2";
     private static final Long TEST_COMMENT_ID = 1l;
     private static final Long TEST_ARTICLE_ID = 2l;
     private static final String USER_NAME = "test";
@@ -29,9 +31,6 @@ class CommentServiceTest {
     private static final String TITLE = "title";
     private static final String COVER_URL = "cover_url";
     private static final String CONTENTS = "contents";
-    public static final String COMMENTS_CONTENTS = "comment_contents";
-    public static final String COMMENTS_CONTENTS_2 = "comment_contents2";
-
     private static final User USER = new User(USER_NAME, EMAIL, PASSWORD);
     private static final Article ARTICLE = new Article(TITLE, COVER_URL, CONTENTS, USER);
 

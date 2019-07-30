@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 public class UserServiceTest {
-    private  static final String TEST_EMAIL_1 = "test1@test.com";
+    private static final String TEST_EMAIL_1 = "test1@test.com";
     private static final String TEST_EMAIL_2 = "test2@test.com";
     private static final String TEST_PASSWORD_1 = "!Q@W3e4r";
     private static final String TEST_PASSWORD_2 = "!Q@W3e4r5t";

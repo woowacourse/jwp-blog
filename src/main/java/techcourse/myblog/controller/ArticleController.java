@@ -21,12 +21,12 @@ public class ArticleController {
     }
 
     @GetMapping("/writing")
-    public String articleForm(){
+    public String articleForm() {
         return "article-edit";
     }
 
     @PostMapping
-    public String createArticle(ArticleDto articleDto, @ModelAttribute User user){
+    public String createArticle(ArticleDto articleDto, @ModelAttribute User user) {
         Long newArticleId = articleService.save(articleDto, user);
         return "redirect:/articles/" + newArticleId;
     }
@@ -55,12 +55,6 @@ public class ArticleController {
     @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable Long articleId) {
         articleService.delete(articleId);
-        return "redirect:/";
-    }
-
-    @DeleteMapping
-    public String deleteAllArticles(@ModelAttribute User user){
-        articleService.deleteAll(user);
         return "redirect:/";
     }
 }

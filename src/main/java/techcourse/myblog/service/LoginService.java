@@ -21,7 +21,7 @@ public class LoginService {
     public User getLoginUser(LoginDto loginDto) {
         User user = findUser(loginDto.getEmail());
         if (!user.checkPassword(loginDto.getPassword())) {
-            log.error(loginDto.getPassword()+"adsf" + user.getPassword());
+            log.error(loginDto.getPassword() + "adsf" + user.getPassword());
             throw new LoginFailException("비밀번호가 일치하지 않습니다.");
         }
         return user;

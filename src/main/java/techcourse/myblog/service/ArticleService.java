@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.ArticleDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
-import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.model.Article;
 import techcourse.myblog.model.Comment;
 import techcourse.myblog.model.User;
@@ -33,7 +32,7 @@ public class ArticleService {
         return newArticle.getId();
     }
 
-    public Article findById(Long id){
+    public Article findById(Long id) {
         return articleRepository.findById(id).orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
     }
 
@@ -50,10 +49,6 @@ public class ArticleService {
 
     public void delete(Long articleId) {
         articleRepository.deleteById(articleId);
-    }
-
-    public void deleteAll(User user) {
-        articleRepository.deleteByUser(user);
     }
 
     public List<Comment> findAllComment(Long articleId) {

@@ -6,14 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.model.User;
 import techcourse.myblog.service.LoginService;
-
-import javax.servlet.http.HttpSession;
 
 @Controller
 @SessionAttributes("user")

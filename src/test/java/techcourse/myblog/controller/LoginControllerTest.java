@@ -13,7 +13,6 @@ import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.utils.Utils;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,11 +21,11 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LoginControllerTest {
-    private static final String USER_NAME = "test";
-    private static final String EMAIL = "test@test.com";
-    private static final String PASSWORD = "passWord!1";
-    private static final String WRONG_EMAIL = "test2@test.com";
-    private static final String WRONG_PASSWORD = "passWord!2";
+    private static final String USER_NAME = "Ltest";
+    private static final String EMAIL = "Ltest@test.com";
+    private static final String PASSWORD = "LpassWord!1";
+    private static final String WRONG_EMAIL = "Ltest23333@test.com";
+    private static final String WRONG_PASSWORD = "LpassWord!2";
 
     @Autowired
     private WebTestClient webTestClient;

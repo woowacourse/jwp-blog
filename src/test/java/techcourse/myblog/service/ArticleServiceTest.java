@@ -30,7 +30,7 @@ class ArticleServiceTest {
     private static final String COVER_URL_2 = "coverUrl2";
     private static final String CONTENTS_2 = "Contents2";
 
-    private static final User USER = new User("test","test@test.com","passWord!1");
+    private static final User USER = new User("test", "test@test.com", "passWord!1");
 
     @InjectMocks
     ArticleService articleService;

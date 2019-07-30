@@ -15,7 +15,7 @@ public class Article {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="ARTICLE_ID")
+    @Column(name = "ARTICLE_ID")
     private Long id;
 
     @NonNull
@@ -41,7 +41,7 @@ public class Article {
 
     public void addComments(Comment comment) {
         this.comments.add(comment);
-        if(comment.getArticle() != this) {
+        if (comment.getArticle() != this) {
             comment.setArticle(this);
         }
     }
