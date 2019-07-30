@@ -1,19 +1,5 @@
 #TODO
-- [ ] 게시글 생성 시 사용자 정보 같이 저장하기
-- [ ] 댓글 관련 기능 구현
-    - [X] 댓글 작성 시 작성자와 게시글 정보가 같이 저장됨
-    - [X] 댓글 생성 기능 구현
-    - [X] 댓글 조회 기능 구현
-    - [ ] 댓글 수정 기능 구현
-    - [ ] 댓글 삭제 기능 구현
-        - [ ] 수정은 댓글 작성자만 가능
-        - [ ] 삭제는 댓글 작성자만 가능
-
-- [ ] articleController, userController convention 통일
-
-
-(선택) 1. interceptor 구현     
-(선택) 2. controllerAdvice 구현
+- uri convention 통일(refactor articleController)
 
 
 
@@ -25,3 +11,14 @@
 2. 테스트 케이스 이름들을 더 구체적인 이름으로 수정한다
 3. th:unless 제거한다.
 4. getResponseBody를 삭제한다
+- [x] 게시글 생성 시 사용자 정보 같이 저장하기
+- [x] 댓글 관련 기능 구현
+    - [X] 댓글 작성 시 작성자와 게시글 정보가 같이 저장됨
+    - [X] 댓글 생성 기능 구현
+    - [X] 댓글 조회 기능 구현
+    - [X] 댓글 수정 기능 구현
+    - [X] 댓글 삭제 기능 구현
+        - [X] 수정은 댓글 작성자만 가능
+        - [X] 삭제는 댓글 작성자만 가능
+
+- [X] articleController, userController 메서드 이름 convention 통일
