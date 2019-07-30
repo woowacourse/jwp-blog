@@ -78,7 +78,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public List<Comment> getCommentsByArticleId(Long articleId){
+    public List<Comment> getCommentsByArticleId(Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException());
         return commentRepository.findByArticle(article);
     }
