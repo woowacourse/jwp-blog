@@ -76,7 +76,7 @@
                                 <img class="thumb-img img-circle"
                                      src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                                 <div class="info view">
-                                    <span class="text-bold inline-block" href="" th:text="${comment.author.username}">Jun</span>
+                                    <span class="text-bold inline-block" href="" th:text="${comment.author.name}">Jun</span>
 
                                     <button type="submit"><i class="ti-close"></i></button>
 
@@ -144,10 +144,10 @@
         height: '200px'
     });
 
-    function submitUpdate() {
+    function submitUpdate(updatedElement) {
         if (confirm('수정 하시겠습니까?')) {
-            document.querySelector("form[name=comment-update] input[name=_method]").setAttribute("value", "put");
-            document.querySelector("form[name=comment-update]").submit();
+            updatedElement.querySelector("form[name=comment-update] input[name=_method]").setAttribute("value", "put");
+            updatedElement.querySelector("form[name=comment-update]").submit();
         }
     }
 
@@ -171,6 +171,7 @@
                 init: init
             }
         };
+
         const TodoService = function () {
             const focus = function (event) {
                 const updatedElement = event.target.closest('li');
@@ -180,25 +181,27 @@
             const update = function (event) {
                 const updatedElement = event.target.closest('li');
                 const inputValue = updatedElement.querySelector('input.edit').value;
+
                 if (event.which === ESC_KEY) {
                     updatedElement.classList.toggle('editing')
                 }
                 if (event.which === ENTER_KEY && inputValue !== '') {
                     updatedElement.querySelector('label').innerText = inputValue;
                     updatedElement.classList.toggle('editing');
-                    submitUpdate();
+                    submitUpdate(updatedElement);
                 }
             };
             return {
                 focus: focus
             }
         };
+
         const init = function () {
             const todoController = new TodoController();
             todoController.init()
         };
         return {
-            init: init,
+            init: init
         };
     })();
     TODOAPP.init();

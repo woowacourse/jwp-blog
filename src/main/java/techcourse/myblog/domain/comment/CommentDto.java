@@ -19,11 +19,19 @@ public class CommentDto {
     }
 
     public Comment toEntity(User user, Article article) {
-        return Comment.builder().article(article).author(user).build();
+        return Comment.builder().article(article).author(user).contents(this.contents).build();
 
     }
 
     public Comment toEntity() {
         return Comment.builder().contents(contents).build();
+    }
+
+    @Override
+    public String toString() {
+        return "CommentDto{" +
+                "id=" + id +
+                ", contents='" + contents + '\'' +
+                '}';
     }
 }

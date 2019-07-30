@@ -5,12 +5,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.article.ArticleDto;
+import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.user.UserDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CategoryService;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 
 @Controller
 public class ArticleController {
@@ -19,6 +21,9 @@ public class ArticleController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @GetMapping("/articles/new")
     public String showArticleWritingPage(Model model) {
@@ -37,6 +42,7 @@ public class ArticleController {
     public String showArticleById(@PathVariable long articleId, Model model) {
         ArticleDto articleDto = articleService.readById(articleId);
         model.addAttribute("article", articleDto);
+        model.addAttribute("comments", commentRepository.findByArticleId(articleId));
         return "article";
     }
 
@@ -58,10 +64,12 @@ public class ArticleController {
         return "article-edit";
     }
 
+    @Transactional
     @DeleteMapping("articles/{articleId}")
     public String delete(@PathVariable long articleId, HttpSession session) {
         Object userId = session.getAttribute("userId");
         articleService.checkAuthor(articleId, (long) userId);
+        commentRepository.deleteByArticleId(articleId);
         articleService.deleteById(articleId);
         return "redirect:/";
     }

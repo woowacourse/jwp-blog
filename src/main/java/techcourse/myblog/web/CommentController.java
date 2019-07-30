@@ -68,8 +68,8 @@ public class CommentController {
     }
 
     private void checkAuthor(long commentId, long userId) {
-        commentRepository.findById(commentId).ifPresent(article -> {
-            if (article.getId() != userId) {
+        commentRepository.findById(commentId).ifPresent(comment -> {
+            if (comment.getAuthor().getId() != userId) {
                 throw new IllegalArgumentException("허가되지 않은 사용자입니다.");
             }
         });
