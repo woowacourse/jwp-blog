@@ -66,4 +66,12 @@ public class ArticleController {
         articleService.removeById(articleId);
         return redirectView;
     }
+
+//    @DeleteMapping("/articles/{articleId}")
+//    public RedirectView deleteArticle(@PathVariable Long articleId) {
+//        RedirectView redirectView = new RedirectView("/");
+//        commentService.removeByArticle(articleId);
+//        articleService.removeById(articleId);
+//        return redirectView;
+//    }
 }

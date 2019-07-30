@@ -90,13 +90,13 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public RedirectView deleteUser(HttpSession httpSession, @Valid UserDto user) {
+    public RedirectView deleteUser(HttpSession httpSession, UserDto user) {
         RedirectView redirectView = new RedirectView("/");
         String email = (String) httpSession.getAttribute("email");
 
         if (user.compareEmail(email)) {
             userService.removeByEmail(email);
-            httpSession.invalidate();
+            httpSession.removeAttribute("email");
         }
 
         return redirectView;

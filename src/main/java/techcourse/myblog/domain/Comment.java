@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.application.dto.CommentDto;
 
 import javax.persistence.*;
@@ -13,10 +15,12 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
     @ManyToOne
     @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
     public Comment() {

@@ -18,6 +18,7 @@ public class Article {
 
     @ManyToOne
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
     private Article() {
