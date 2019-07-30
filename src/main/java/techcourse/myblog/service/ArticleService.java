@@ -1,11 +1,14 @@
 package techcourse.myblog.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.ArticleDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.model.Article;
+import techcourse.myblog.model.Comment;
 import techcourse.myblog.model.User;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
@@ -14,6 +17,7 @@ import java.util.List;
 
 @Service
 public class ArticleService {
+    private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
 
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
@@ -39,7 +43,7 @@ public class ArticleService {
 
     @Transactional
     public Article update(ArticleDto articleDto, User author) {
-        Article oldArticle = articleRepository.findById(articleDto.getId()).orElseThrow(() -> new ArticleNotFoundException("글을 찾을 수 없습니다."));
+        Article oldArticle = findById(articleDto.getId());
         Article updatedArticle = new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents(), author);
         return oldArticle.update(updatedArticle);
     }
@@ -50,5 +54,10 @@ public class ArticleService {
 
     public void deleteAll(User user) {
         articleRepository.deleteByUser(user);
+    }
+
+    public List<Comment> findAllComment(Long articleId) {
+        Article foundArticle = findById(articleId);
+        return foundArticle.getComments();
     }
 }

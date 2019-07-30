@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.controller.dto.ArticleDto;
-import techcourse.myblog.model.Article;
 import techcourse.myblog.model.User;
 import techcourse.myblog.service.ArticleService;
 
@@ -35,6 +34,7 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     public String findArticle(@PathVariable Long articleId, Model model) {
         model.addAttribute("article", articleService.findById(articleId));
+        model.addAttribute("comments", articleService.findAllComment(articleId));
         return "article";
     }
 
