@@ -29,9 +29,9 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public String editComment(@PathVariable Long id, String editedContents) {
-        commentService.update(id, editedContents);
-        log.info("edit comment put request id={}, editedContents={}", id, editedContents);
+    public String editComment(@PathVariable Long id, String editedContents, HttpSession httpSession) {
+        commentService.update(id, editedContents, (User) httpSession.getAttribute(USER));
+        log.info("update comment put request id={}, editedContents={}", id, editedContents);
 
         Long articleId = commentService.findArticleIdById(id);
 

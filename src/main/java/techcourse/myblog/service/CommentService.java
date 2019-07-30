@@ -8,6 +8,8 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentSaveRequestDto;
 import techcourse.myblog.exception.CommentNotFoundException;
+import techcourse.myblog.exception.IllegalArticleUpdateRequestException;
+import techcourse.myblog.exception.IllegalCommentUpdateRequestException;
 import techcourse.myblog.repository.CommentRepository;
 
 import javax.transaction.Transactional;
@@ -39,10 +41,15 @@ public class CommentService {
     }
 
     @Transactional
-    public void update(Long id, String editedContents) {
+    public void update(Long id, String editedContents, User user) {
         Comment comment = findById(id);
-        comment.update(editedContents);
+        if (!comment.isUser(user)) {
+            log.debug("update comment request by illegal user id={}, comment id={}, editedContents={}"
+                    , user.getId(), id, editedContents);
+            throw new IllegalCommentUpdateRequestException();
+        }
 
+        comment.update(editedContents);
         log.debug("update comment id={}, editedContents={}", id, editedContents);
     }
 

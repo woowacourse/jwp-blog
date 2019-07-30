@@ -62,10 +62,10 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public String saveEditedArticle(@PathVariable long id, ArticleSaveRequestDto articleSaveRequestDto) {
+    public String saveEditedArticle(@PathVariable long id, ArticleSaveRequestDto articleSaveRequestDto, HttpSession httpSession) {
+        articleService.update(articleSaveRequestDto, id, (User) httpSession.getAttribute(USER));
         log.info("save edited article post request params={}", articleSaveRequestDto);
 
-        articleService.update(articleSaveRequestDto, id);
         return "redirect:/articles/" + id;
     }
 

@@ -36,4 +36,8 @@ public class Comment {
     public void update(String editedContents) {
         this.contents = editedContents;
     }
+
+    public boolean isUser(User user) {
+        return this.user.equals(user);
+    }
 }

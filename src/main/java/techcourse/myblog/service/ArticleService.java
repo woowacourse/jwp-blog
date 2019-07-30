@@ -7,6 +7,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.exception.IllegalArticleUpdateRequestException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 
@@ -45,10 +46,14 @@ public class ArticleService {
     }
 
     @Transactional
-    public void update(ArticleSaveRequestDto articleSaveRequestDto, long id) {
-        log.debug("update article params={}", articleSaveRequestDto);
-
+    public void update(ArticleSaveRequestDto articleSaveRequestDto, long id, User user) {
         Article article = findById(id);
+        if (!article.isAuthor(user)) {
+            log.debug("update article request by illegal user id={}, article id={}, articleSaveRequestDto={}"
+                    , user.getId(), id, articleSaveRequestDto);
+            throw new IllegalArticleUpdateRequestException();
+        }
+
         article.update(articleSaveRequestDto);
     }
 

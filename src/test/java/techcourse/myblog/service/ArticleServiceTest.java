@@ -65,7 +65,7 @@ class ArticleServiceTest {
         articleSaveRequestDto.setContents("newContents");
         Long id = article.getId();
 
-        articleService.update(articleSaveRequestDto, id);
+        articleService.update(articleSaveRequestDto, id, author);
 
         Article updatedArticle = articleService.findById(id);
         assertThat(updatedArticle.getTitle()).isEqualTo(articleSaveRequestDto.getTitle());

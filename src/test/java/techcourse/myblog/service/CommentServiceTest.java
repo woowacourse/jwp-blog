@@ -62,7 +62,7 @@ class CommentServiceTest {
     @Test
     void update() {
         String editedContents = "수정된내용";
-        commentService.update(comment.getId(), editedContents);
+        commentService.update(comment.getId(), editedContents, author);
 
         Comment editedComment = commentService.findById(this.comment.getId());
         assertThat(editedComment.getContents()).isEqualTo(editedContents);
