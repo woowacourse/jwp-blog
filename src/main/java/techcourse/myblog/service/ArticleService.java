@@ -24,7 +24,6 @@ import java.util.List;
 @Service
 public class ArticleService {
     private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
-    private static final String NOT_EXIST_ARTICLE = "해당 기사가 없습니다.";
     private static final String ID = "id";
     private static final int START_PAGE = 1;
     private static final int VIEW_ARTICLE_COUNT = 10;
@@ -49,15 +48,17 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public Article findArticle(long articleId) {
-        return articleRepository.findById(articleId)
-                .orElseThrow(() -> new ArticleException(NOT_EXIST_ARTICLE));
+        return getArticle(articleId);
+    }
+
+    private Article getArticle(long articleId) {
+        return articleRepository.findById(articleId).orElseThrow(ArticleException::new);
     }
 
     @Transactional
     public Article save(ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
         Article article = DtoConverter.convert(articleRequestDto);
-        User user = userRepository.findByEmail(userResponseDto.getEmail())
-                .orElseThrow(() -> new UserException("존재하지 않은 회원입니다."));
+        User user = userRepository.findByEmail(userResponseDto.getEmail()).orElseThrow(UserException::new);
         article.setAuthor(user);
         articleRepository.save(article);
         return article;
@@ -72,14 +73,14 @@ public class ArticleService {
 
     @Transactional
     public void delete(long articleId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(ArticleException::new);
+        Article article = getArticle(articleId);
         commentRepository.deleteAllByArticle(article);
         articleRepository.deleteById(articleId);
     }
 
     @Transactional
     public List<Comment> getCommentsByArticleId(Long articleId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException());
+        Article article = getArticle(articleId);
         return commentRepository.findByArticle(article);
     }
 }

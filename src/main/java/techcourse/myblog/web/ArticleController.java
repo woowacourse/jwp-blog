@@ -15,17 +15,18 @@ import static techcourse.myblog.utils.session.SessionContext.USER;
 
 @Controller
 public class ArticleController {
-    private final HttpSession httpSession;
+    private final HttpSession session;
     private final ArticleService articleService;
 
-    public ArticleController(HttpSession httpSession, ArticleService articleService) {
-        this.httpSession = httpSession;
+    public ArticleController(HttpSession session, ArticleService articleService) {
+        this.session = session;
         this.articleService = articleService;
     }
 
     @GetMapping("/")
     public String index(Model model) {
         ModelUtil.addAttribute(model, "articles", articleService.findAll());
+
         return "index";
     }
 
@@ -51,8 +52,9 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String saveArticle(ArticleRequestDto articleRequestDto) {
-        UserResponseDto userResponseDto = (UserResponseDto) httpSession.getAttribute(USER);
+        UserResponseDto userResponseDto = (UserResponseDto) session.getAttribute(USER);
         Article article = articleService.save(articleRequestDto, userResponseDto);
+
         return "redirect:/articles/" + article.getId();
     }
 
@@ -66,6 +68,7 @@ public class ArticleController {
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable long articleId) {
         articleService.delete(articleId);
+
         return "redirect:/";
     }
 }

@@ -35,6 +35,10 @@ public class Comment {
         this.article = article;
     }
 
+    public void update(CommentRequestDto commentRequestDto) {
+        this.contents = commentRequestDto.getContents();
+    }
+
     public Long getId() {
         return id;
     }
@@ -53,10 +57,6 @@ public class Comment {
 
     public Article getArticle() {
         return article;
-    }
-
-    public void update(CommentRequestDto commentRequestDto) {
-        this.contents = commentRequestDto.getContents();
     }
 
     @Override

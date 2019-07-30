@@ -40,12 +40,12 @@ public class CommentService {
 
     private Article findArticleByArticleId(Long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new ArticleException("해당 게시글이 존재하지 않습니다."));
+                .orElseThrow(ArticleException::new);
     }
 
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserException("해당 회원이 존재하지 않습니다."));
+                .orElseThrow(UserException::new);
     }
 
     @Transactional
@@ -56,7 +56,7 @@ public class CommentService {
 
     private Comment getCommentFindById(Long commentId) {
         return commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentException("댓글을 찾을 수 없습니다."));
+                .orElseThrow(CommentException::new);
     }
 
     @Transactional

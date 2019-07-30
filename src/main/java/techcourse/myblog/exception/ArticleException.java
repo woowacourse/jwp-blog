@@ -1,7 +1,11 @@
 package techcourse.myblog.exception;
 
 public class ArticleException extends RuntimeException {
+
+    private static final String NOT_FOUND_ARTICLE = "해당 기사가 없습니다.";
+
     public ArticleException() {
+        super(NOT_FOUND_ARTICLE);
     }
 
     public ArticleException(String message) {
@@ -16,7 +20,7 @@ public class ArticleException extends RuntimeException {
         super(cause);
     }
 
-    public ArticleException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    protected ArticleException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

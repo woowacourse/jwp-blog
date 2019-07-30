@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,13 +23,12 @@ import static techcourse.myblog.utils.session.SessionContext.USER;
 public class UserController {
     private final UserService userService;
     private final LoginService loginService;
-    @Autowired
-    private HttpSession session;
+    private final HttpSession session;
 
-    @Autowired
-    public UserController(UserService userService, LoginService loginService) {
+    public UserController(UserService userService, LoginService loginService, HttpSession session) {
         this.userService = userService;
         this.loginService = loginService;
+        this.session = session;
     }
 
     @GetMapping("/login")
@@ -41,6 +39,7 @@ public class UserController {
     @PostMapping("/logout")
     public String logout() {
         SessionUtil.removeAttribute(session, USER);
+
         return "redirect:/";
     }
 
@@ -49,15 +48,16 @@ public class UserController {
         if (result.hasErrors()) {
             return "login";
         }
-
         UserResponseDto userResponseDto = loginService.loginByEmailAndPwd(userRequestDto);
         SessionUtil.setAttribute(session, USER, userResponseDto);
+
         return "redirect:/";
     }
 
     @GetMapping("/users")
     public String users(Model model) {
         ModelUtil.addAttribute(model, "users", userService.findAll());
+
         return "user-list";
     }
 
@@ -81,9 +81,9 @@ public class UserController {
         if (result.hasErrors()) {
             return "signup";
         }
-
         UserResponseDto userResponseDto = userService.addUser(userRequestDto);
         SessionUtil.setAttribute(session, USER, userResponseDto);
+
         return "redirect:/";
     }
 
@@ -92,10 +92,10 @@ public class UserController {
         if (result.hasErrors()) {
             return "mypage";
         }
-
         UserResponseDto origin = (UserResponseDto) SessionUtil.getAttribute(session, USER);
         UserResponseDto userResponseDto = userService.updateUser(userRequestDto, origin);
         SessionUtil.setAttribute(session, USER, userResponseDto);
+
         return "redirect:/mypage";
     }
 
@@ -104,6 +104,7 @@ public class UserController {
         UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(session, USER);
         userService.deleteUser(userResponseDto);
         SessionUtil.removeAttribute(session, USER);
+
         return "redirect:/";
     }
 }

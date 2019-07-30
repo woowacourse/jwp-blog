@@ -54,6 +54,15 @@ public class User {
         return name;
     }
 
+    public void updateNameAndEmail(UserRequestDto userRequestDto) {
+        this.name = userRequestDto.getName();
+        this.email = userRequestDto.getEmail();
+    }
+
+    public boolean isMatchPassword(UserRequestDto dto) {
+        return this.password.equals(dto.getPassword());
+    }
+
     public Long getId() {
         return id;
     }
@@ -68,15 +77,6 @@ public class User {
 
     public String getEmail() {
         return email;
-    }
-
-    public void updateNameAndEmail(UserRequestDto userRequestDto) {
-        this.name = userRequestDto.getName();
-        this.email = userRequestDto.getEmail();
-    }
-
-    public boolean isMatchPassword(UserRequestDto dto) {
-        return this.password.equals(dto.getPassword());
     }
 
     @Override

@@ -15,13 +15,11 @@ import java.util.regex.Pattern;
 
 @Component
 public class LoginInterceptor extends HandlerInterceptorAdapter {
-    private static final Pattern PATTERN = Pattern.compile("^\\/articles\\/[\\d]+$");
+    private static final Pattern PATTERN = Pattern.compile("^/articles/[\\d]+$");
     private static final Logger log = LoggerFactory.getLogger(LoginInterceptor.class);
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        //Map<?, ?> pathVariables = (Map<?, ?>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-        //log.info("uri : {} ", pathVariables);
 
         Matcher matcher = PATTERN.matcher(request.getRequestURI());
         if (matcher.find() && request.getMethod().equals("GET")) {

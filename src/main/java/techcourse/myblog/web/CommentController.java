@@ -15,38 +15,39 @@ import javax.validation.Valid;
 
 import static techcourse.myblog.utils.session.SessionContext.USER;
 
-// TODO URI 패스를 constant로 분리하자~
 @Controller
 public class CommentController {
-    private final HttpSession httpSession;
+    private final HttpSession session;
     private final CommentService commentService;
 
-    public CommentController(HttpSession httpSession, CommentService commentService) {
-        this.httpSession = httpSession;
+    public CommentController(HttpSession session, CommentService commentService) {
+        this.session = session;
         this.commentService = commentService;
     }
 
     @PostMapping("/comment/{articleId}")
     public String saveComment(@PathVariable Long articleId, @Valid CommentRequestDto commentRequestDto) {
-        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(httpSession, USER);
+        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(session, USER);
         commentService.addComment(commentRequestDto, userResponseDto, articleId);
 
         return "redirect:/articles/" + articleId;
     }
 
     @PutMapping("/comment/{articleId}/{commentId}")
-    public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, CommentRequestDto commentRequestDto) {
-        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(httpSession, USER);
+    public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @Valid CommentRequestDto commentRequestDto) {
+        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(session, USER);
         commentService.checkAuthentication(userResponseDto, commentId);
         commentService.update(commentId, commentRequestDto);
+
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/comment/{articleId}/{commentId}")
     public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId) {
-        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(httpSession, USER);
+        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(session, USER);
         commentService.checkAuthentication(userResponseDto, commentId);
         commentService.remove(commentId);
+
         return "redirect:/articles/" + articleId;
     }
 

@@ -12,7 +12,6 @@ import techcourse.myblog.utils.converter.DtoConverter;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class UserService {
@@ -40,7 +39,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<User> findAll() {
-        return StreamSupport.stream(userRepository.findAll().spliterator(), true)
+        return userRepository.findAll()
+                .parallelStream()
                 .collect(Collectors.toList());
     }
 

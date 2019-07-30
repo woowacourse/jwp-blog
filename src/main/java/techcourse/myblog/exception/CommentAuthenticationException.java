@@ -1,8 +1,11 @@
 package techcourse.myblog.exception;
 
 public class CommentAuthenticationException extends RuntimeException {
+
+    private static final String ACCESS_AUTHENTICATION_ERROR = "댓글에 권한이 없습니다.";
+
     public CommentAuthenticationException() {
-        super("댓글에 권한이 없습니다.");
+        super(ACCESS_AUTHENTICATION_ERROR);
     }
 
     public CommentAuthenticationException(String message) {

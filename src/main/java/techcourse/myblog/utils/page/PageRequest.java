@@ -14,7 +14,7 @@ public class PageRequest {
 
     public PageRequest(int page, int size, Sort.Direction direction, String orderby) {
         this.page = page < MIN_PAGE ? DEFAULT_PAGE : page;
-        this.size = size > MAX_SIZE ? MAX_SIZE : size;
+        this.size = Math.min(size, MAX_SIZE);
         this.direction = direction;
         this.orderby = orderby;
     }
