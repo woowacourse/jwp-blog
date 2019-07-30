@@ -10,14 +10,18 @@ import techcourse.myblog.domain.*;
 
 import javax.servlet.http.HttpSession;
 
+import static techcourse.myblog.controller.CommentController.COMMENT_URL;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@RequestMapping(COMMENT_URL)
 public class CommentController {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
+    public static final String COMMENT_URL = "/comment";
 
-    @PostMapping("/comment")
+    @PostMapping
     public String save(HttpSession session, CommentDto commentDto) {
         log.debug(">>> post commentDto : {}", commentDto);
         User user = (User) session.getAttribute("user");
@@ -29,7 +33,7 @@ public class CommentController {
         return "redirect:/articles/" + commentDto.getArticleId();
     }
 
-    @DeleteMapping("/comment")
+    @DeleteMapping
     public String delete(HttpSession session, CommentDto commentDto) {
         log.debug(">>> delete commentDto : {}", commentDto);
         User user = (User) session.getAttribute("user");
@@ -40,14 +44,14 @@ public class CommentController {
         return "redirect:/articles/" + commentDto.getArticleId();
     }
 
-    @GetMapping("/comment/{id}/edit")
+    @GetMapping("{id}/edit")
     public String showEditPage(@PathVariable long id, Model model) {
         Comment comment = commentRepository.findById(id).get();
         model.addAttribute("comment", comment);
         return "comment-edit";
     }
 
-    @PutMapping("/comment")
+    @PutMapping
     public String update(CommentDto commentDto, HttpSession httpSession) {
         log.debug(">>> update commentDto : {}", commentDto);
         Article article = articleRepository.findById(commentDto.getArticleId()).get();
