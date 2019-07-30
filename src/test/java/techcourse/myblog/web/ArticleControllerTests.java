@@ -21,13 +21,16 @@ class ArticleControllerTests {
     @Autowired
     private WebTestClient webTestClient;
 
+    private UserSaveRequestDto userSaveRequestDto;
     private String location;
     private String jSessionId;
 
     @BeforeEach
     void setUp() {
-        LoginTestUtil.signUp(webTestClient);
-        jSessionId = LoginTestUtil.getJSessionId(webTestClient);
+        userSaveRequestDto = new UserSaveRequestDto("테스트", "article@test.com", "password1!");
+
+        LoginTestUtil.signUp(webTestClient, userSaveRequestDto);
+        jSessionId = LoginTestUtil.getJSessionId(webTestClient, userSaveRequestDto);
 
         location = postArticle()
                 .returnResult(String.class)
@@ -81,6 +84,8 @@ class ArticleControllerTests {
                 .cookie("JSESSIONID", jSessionIdByAnotherUser)
                 .exchange()
                 .expectStatus().is3xxRedirection();
+
+        LoginTestUtil.deleteUser(webTestClient, userSaveRequestDto);
     }
 
     @Test
@@ -102,6 +107,6 @@ class ArticleControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection();
 
-        LoginTestUtil.deleteUser(webTestClient);
+        LoginTestUtil.deleteUser(webTestClient, userSaveRequestDto);
     }
 }

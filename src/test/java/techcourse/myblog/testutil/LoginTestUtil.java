@@ -6,12 +6,6 @@ import techcourse.myblog.dto.UserSaveRequestDto;
 
 public class LoginTestUtil {
 
-    private static UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("이름", "test@test.com", "password1!");
-
-    public static void signUp(WebTestClient webTestClient) {
-        signUp(webTestClient, userSaveRequestDto);
-    }
-
     public static void signUp(WebTestClient webTestClient, UserSaveRequestDto userSaveRequestDto) {
         webTestClient.post().uri("/users")
                 .body(BodyInserters
@@ -21,10 +15,6 @@ public class LoginTestUtil {
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("location", ".*/login.*");
-    }
-
-    public static String getJSessionId(WebTestClient webTestClient) {
-        return getJSessionId(webTestClient, userSaveRequestDto);
     }
 
     public static String getJSessionId(WebTestClient webTestClient, UserSaveRequestDto userSaveRequestDto) {
@@ -40,14 +30,10 @@ public class LoginTestUtil {
                 .getValue();
     }
 
-    public static void deleteUser(WebTestClient webTestClient) {
+    public static void deleteUser(WebTestClient webTestClient, UserSaveRequestDto userSaveRequestDto) {
         webTestClient.delete().uri("/mypage")
-                .cookie("JSESSIONID", getJSessionId(webTestClient))
+                .cookie("JSESSIONID", getJSessionId(webTestClient, userSaveRequestDto))
                 .exchange()
                 .expectStatus().is3xxRedirection();
-    }
-
-    public static UserSaveRequestDto getUserSaveRequestDto() {
-        return userSaveRequestDto;
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Comment;
+import techcourse.myblog.dto.UserSaveRequestDto;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.testutil.LoginTestUtil;
 
@@ -22,13 +23,16 @@ class CommentControllerTests {
     @Autowired
     private CommentService commentService;
 
+    private UserSaveRequestDto userSaveRequestDto;
     private String jSessionId;
     private String articleId;
 
     @BeforeEach
     void setUp() {
-        LoginTestUtil.signUp(webTestClient);
-        jSessionId = LoginTestUtil.getJSessionId(webTestClient);
+        userSaveRequestDto = new UserSaveRequestDto("테스트", "comment@test.com", "password1!");
+
+        LoginTestUtil.signUp(webTestClient, userSaveRequestDto);
+        jSessionId = LoginTestUtil.getJSessionId(webTestClient, userSaveRequestDto);
 
         String[] strings = webTestClient.post().uri("/articles")
                 .body(BodyInserters
@@ -72,5 +76,7 @@ class CommentControllerTests {
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection();
+
+        LoginTestUtil.deleteUser(webTestClient, userSaveRequestDto);
     }
 }

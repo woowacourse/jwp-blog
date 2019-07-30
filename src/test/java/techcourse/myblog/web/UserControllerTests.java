@@ -20,12 +20,15 @@ class UserControllerTests {
     @Autowired
     private WebTestClient webTestClient;
 
+    private UserSaveRequestDto userSaveRequestDto;
     private String jSessionId;
 
     @BeforeEach
     void setUp_회원가입() {
-        LoginTestUtil.signUp(webTestClient);
-        jSessionId = LoginTestUtil.getJSessionId(webTestClient);
+        userSaveRequestDto = new UserSaveRequestDto("테스트", "user@test.com", "password1!");
+
+        LoginTestUtil.signUp(webTestClient, userSaveRequestDto);
+        jSessionId = LoginTestUtil.getJSessionId(webTestClient, userSaveRequestDto);
     }
 
     @Test
@@ -54,8 +57,6 @@ class UserControllerTests {
 
     @Test
     void mypage_edit_페이지_이동() {
-        UserSaveRequestDto userSaveRequestDto = LoginTestUtil.getUserSaveRequestDto();
-
         webTestClient.post().uri("/mypage/edit")
                 .body(BodyInserters
                         .fromFormData("password", userSaveRequestDto.getPassword()))
@@ -66,6 +67,6 @@ class UserControllerTests {
 
     @AfterEach
     void tearDown_유저_삭제() {
-        LoginTestUtil.deleteUser(webTestClient);
+        LoginTestUtil.deleteUser(webTestClient, userSaveRequestDto);
     }
 }

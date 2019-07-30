@@ -22,11 +22,14 @@ class LoginControllerTests {
     private WebTestClient webTestClient;
 
     private String jSessionId;
+    private UserSaveRequestDto userSaveRequestDto;
 
     @BeforeEach
     void setUp() {
-        LoginTestUtil.signUp(webTestClient);
-        jSessionId = LoginTestUtil.getJSessionId(webTestClient);
+        userSaveRequestDto = new UserSaveRequestDto("테스트", "login@test.com", "password1!");
+
+        LoginTestUtil.signUp(webTestClient, userSaveRequestDto);
+        jSessionId = LoginTestUtil.getJSessionId(webTestClient, userSaveRequestDto);
     }
 
     @Test
@@ -45,8 +48,6 @@ class LoginControllerTests {
 
     @Test
     void login() {
-        UserSaveRequestDto userSaveRequestDto = LoginTestUtil.getUserSaveRequestDto();
-
         webTestClient.post().uri("/login")
                 .body(BodyInserters
                         .fromFormData("email", userSaveRequestDto.getEmail())
@@ -65,6 +66,6 @@ class LoginControllerTests {
 
     @AfterEach
     void tearDown() {
-        LoginTestUtil.deleteUser(webTestClient);
+        LoginTestUtil.deleteUser(webTestClient, userSaveRequestDto);
     }
 }
