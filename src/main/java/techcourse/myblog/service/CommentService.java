@@ -35,4 +35,9 @@ public class CommentService {
         return commentRepository.findByIdAndWriter(commentId, user)
                 .orElseThrow(() -> new MismatchAuthorException("작성자가 아닙니다."));
     }
+
+    public void modify(Long commentId, CommentDto commentDto) {
+        commentRepository.findById(commentId)
+                .ifPresent(comment -> comment.update(commentDto.toComment()));
+    }
 }
