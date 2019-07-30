@@ -27,8 +27,7 @@ public class ArticleService {
     }
 
     public Article save(ArticleRequest articleRequest, User user) {
-        Article article = new Article(articleRequest.getTitle(),
-                articleRequest.getCoverUrl(), articleRequest.getContents());
+        Article article = articleRequest.toArticle();
         article.setAuthor(user);
         return articleRepository.save(article);
     }
@@ -48,8 +47,7 @@ public class ArticleService {
     @Transactional
     public Article editArticle(ArticleRequest articleRequest, long articleId, User user) {
         Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-        checkAuthor(user, article);
-        article.updateArticle(new Article(articleRequest.getTitle(), articleRequest.getCoverUrl(), articleRequest.getContents()));
+        article.updateArticle(articleRequest.toArticle(), user);
         return article;
     }
 

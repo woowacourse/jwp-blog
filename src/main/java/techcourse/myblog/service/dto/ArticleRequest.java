@@ -1,5 +1,7 @@
 package techcourse.myblog.service.dto;
 
+import techcourse.myblog.domain.Article;
+
 public class ArticleRequest {
     private String title;
     private String coverUrl;
@@ -9,6 +11,10 @@ public class ArticleRequest {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+    }
+
+    public Article toArticle() {
+        return new Article(title, coverUrl, contents);
     }
 
     public String getTitle() {

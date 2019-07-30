@@ -3,6 +3,7 @@ package techcourse.myblog.domain;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import techcourse.myblog.service.exception.InvalidAuthorException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -58,17 +59,24 @@ public class Article {
         return contents;
     }
 
-    public void updateArticle(Article article) {
+    public void updateArticle(Article article, User user) {
+        checkAuthor(user);
         this.title = article.title;
         this.coverUrl = article.coverUrl;
         this.contents = article.contents;
+    }
+
+    private void checkAuthor(User user) {
+        if (isAuthor(user)) {
+            throw new InvalidAuthorException("작성자가 일치하지 않습니다.");
+        }
     }
 
     public void setAuthor(User user) {
         this.author = user;
     }
 
-    public boolean isAuthor(User author) {
-        return this.author.equals(author);
+    public boolean isAuthor(User user) {
+        return this.author.equals(user);
     }
 }
