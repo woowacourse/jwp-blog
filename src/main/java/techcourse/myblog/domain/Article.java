@@ -13,22 +13,30 @@ public class Article {
     private String coverUrl;
     private String contents;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     private Article() {
-
     }
 
-    public Article(String title, String coverUrl, String contents) {
+    public Article(String title, String coverUrl, String contents, User user) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.user = user;
     }
 
     public void modify(Article article) {
         this.title = article.title;
         this.coverUrl = article.coverUrl;
         this.contents = article.contents;
+    }
+
+    public void checkAuthor(String email) {
+        if (user.isDifferentEmail(email)) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public Long getId() {
@@ -45,6 +53,10 @@ public class Article {
 
     public String getContents() {
         return contents;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override
