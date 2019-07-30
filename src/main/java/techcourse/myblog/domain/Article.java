@@ -27,7 +27,7 @@ public class Article {
     @ManyToOne
     private User author;
 
-    @OneToMany
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     public void setAuthor(User user) {
