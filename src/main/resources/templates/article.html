@@ -78,7 +78,7 @@
                                 <span href="" class="text-bold inline-block" th:text="${comment.writer.name}"></span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
+                                    <span th:text="${comment.updateTimeAt}"></span>
                                     <div th:if="${comment.writer.equals(user)}" class = "comment-btn">
                                         <button class="btn btn-icon pointer comment-modify" type="button">
                                             <i class ="ti-pencil text-dark font-size-16 pdd-horizon-5 comment-modify"></i>
