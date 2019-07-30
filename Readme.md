@@ -1,131 +1,56 @@
-## TODO
+# myblog
 
-- 컨트롤러 네이밍({id}삭제)
-    - 컨트롤러 네이밍 컨벤션에 맞게 수정
-- domain validation
-- 패키지 구조
-- interceptor 중복 로직(argument resolver)
-- 어셈블러 (translation layer)
-- controller advice
-- 테스트코드 추상화
-- basic auth
-- 쿠키와 세션
+## Done
 
+전체 기능구현 완료
 
-# 게시글 생성/조회기능 구현하기
+## Refactoring
 
-# 요구사항
+1. ~~FlashMessage 적용~~
+    현재 error 메세지를 전달할 때 RedirectAttributes를 사용하고 있다. 이때 URI에서 QueryString으로 에러 내용을 노출하고
+    있기 때문에 이를 방지하고자 flash message 적용 예정
+    
+    [참고 : Spring Redirect시에 데이타 숨겨서 넘기는 방법](http://www.coolio.so/spring-redirect%EC%8B%9C%EC%97%90-%EB%8D%B0%EC%9D%B4%ED%83%80-%EC%88%A8%EA%B2%A8%EC%84%9C-%EB%84%98%EA%B8%B0%EB%8A%94-%EB%B0%A9%EB%B2%95/)
+    
+   **적용완료**
+   
+2. ~~Spring Validation~~
+    많은 크루들이 `@Valid`를 사용하는 Spring Validation을 사용하고 있음.
+    그 결과 컨트롤러에서도 클라이언트에서 전송된 값을 검증하는 로직이 있는 것이 좋다고 판단하여 이를 적용하고자함.
+    
+    [참고1 : Spring Validation 공통모듈 만들기](https://jojoldu.tistory.com/129)
+    [참고2 : Spring boot 스프링 부트에서 request Validation 요청값 검증하기](https://velog.io/@junwoo4690/Spring-boot-%EC%8A%A4%ED%94%84%EB%A7%81-%EB%B6%80%ED%8A%B8%EC%97%90%EC%84%9C-request-Validation-%EC%9A%94%EC%B2%AD%EA%B0%92-%EA%B2%80%EC%A6%9D%ED%95%98%EA%B8%B0)
+    
+    **적용완료**
+    
+3. ~~Dto 사용 고려~~
+    현재 Entity 클래스가 `DTO` + `도메인`의 역할을 하고 있다고 생각.
+    하지만 이는 level1에서 배운 도메인 객체에 반하는 것이라고 판단하여 클라이언트에게서 받는 입력값은 Dto로 받도록 생각 중
+    
+    **적용완료**
 
-- 게시글 생성/조회/목록조회 기능 구현
+4. ~~로그인 로직 처리~~
+    cookie를 통한 자동 로그인이 되도록 구현 예정
+    
+    [참고 : 쿠키(Cookie)와 세션(Session) & 로그인 동작 방법](https://cjh5414.github.io/cookie-and-session/)
+    
+    JSESSIONID로 적용
+    
+# 댓글 관련 기능 구현 TODO
 
-------
+1. 작성글과 유저 관계 매핑
 
-## 게시글 생성
+    - CRUD에 유저 관계 매핑 기능 구현
+    - Mockito 이용 테스트
 
-- 게시글 작성 페이지 이동
-  - 메인페이지(index.html)에서 게시글 생성 버튼을 누르기
-  - `GET /writing` 으로 요청
-  - 작성 페이지(article-edit.html)로 이동
-- 게시글 작성
-  - `POST /articles` 으로 요청
-  - 게시글 생성 시 게시글은 ArticleRepository의 `List<Article> articles`에 저장한다.
-  - 게시글 페이지(article.html)로 이동
-
-------
-
-## 게시글 목록 조회
-
-- 메인 페이지 이동
-  - `GET /` 으로 요청으로 이동 시 메인 페이지에 게시글 목록이 노출
-
-------
-
-## 게시글 조회
-
-- 게시글 페이지 이동
-  - 메인페이지(index.html)에서 게시글을 클릭 시 게시글 페이지(article.html)으로 이동
-  - `GET /articles/{articleId}` 으로 요청
-
-------
-
-## 제약조건
-
-- HTML 중복제거
-- 정적 파일 수정 시 재시작 하지 않고 변경사항 반영하기
-- class 파일 수정 시 자동으로 재시작 하기
-
-------
-
-# 힌트
-
-------
-
-## HTML 중복제거
-
-- 같은 형태로 표현되는 head 태그 부분 공통부분으로 만들어 중복된 코드를 제거한다
-  - https://elfinlas.github.io/2018/02/16/thymeleaf-layout-dialect_exam/
-  - https://blog.hanumoka.net/2018/08/07/spring-20180807-spring-thymeleaf-layout-dialect2-head/
-- Header처럼 모든 페이지에서 노출되는 DOM Element의 중복된 코드를 제거한다.
-
-------
-
-## SpringBoot Devtools
-
-> [Spring Boot Document - Developer Tools](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools)
-> [참고 블로그](https://haviyj.tistory.com/11)
-
-- Enable hot swapping
-- Switches template engines to disable caching
-- Enables LiveReload to refresh browser automatically
-- Other reasonable defaults based on development instead of production
-
-------
-
-## 절대경로와 상대경로
-
-- 현재 제공되는 HTML 파일에서는 상대경로로 외부 리소스(js, css 등)에 접근하고 있다.
-- Spring Boot를 거치지 않고 정적 파일로 페이지를 열면 정상 동작하지만 Spring Boot를 통해 요청을 받으면 정상적으로 노출 되지 않을 수 있다.
-
-
-
-# 게시글 수정/삭제기능 구현하기
-
-
-
-# 요구사항
-
-------
-
-## 게시글 수정
-
-- 게시글 수정 페이지 이동
-  - 게시글 페이지(article.html)에서 수정 버튼 누르기
-  - `GET /articles/{articleId}/edit` 으로 요청
-  - 게시글 수정 페이지(article-edit.html)로 이동
-- 게시글 수정
-  - `PUT /articles/{articleId}` 으로 요청
-  - 게시글 페이지(article.html)로 이동
-
-------
-
-## 게시글 삭제
-
-- 게시글 페이지(article.html)에서 삭제 버튼 누르기
-  - `DELETE /articles/{articleId}` 으로 요청
-  - 게시글 목록 조회 페이지(index.html)로 이동
-
-------
-
-# 힌트
-
-------
-
-## 게시글 작성 페이지 공유
-
-- 게시글 생성과 수정이 같은 html 페이지를 사용하므로, 각 상황에 따라 thymeleaf 문법을 활용하기
-
-------
-
-## PUT/DELETE Method
-
-- Form은 기본적으로 GET과 POST 메서드밖에 지원하지 않는다. form 태그에서 PUT/DELETE를 요청하는 방법을 검색해서 해결한다. (힌트: _method)
+2. 작성글이랑 댓글 관계 매핑
+    
+    - Entity 작성
+        - id
+        - content
+        - date
+        - User
+        - Article
+    - CRUD 구현
+    
+    

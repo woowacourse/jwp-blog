@@ -1,12 +1,29 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      layout:decorator="layouts/layout">
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
 <th:block layout:fragment="content">
     <div class="app">
+        <div class="header navbar bg-transparent no-border">
+            <div class="header-container pdd-right-15">
+                <ul class="nav-left mrg-left-0">
+                    <li>
+                        <a href="/">
+                            <div class="logo logo-dark d-none"
+                                 style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                            <div class="logo logo-white"
+                                 style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div class="authentication">
             <div class="sign-in-2">
-                <div class="container-fluid no-pdd-horizon overlay-dark bg" style="background-image: url('../static/images/default/bg.jpg')">
+                <div class="container-fluid no-pdd-horizon overlay-dark bg"
+                     style="background-image: url('/images/default/bg.jpg')">
                     <div class="row">
                         <div class="col-md-10 mr-auto ml-auto">
                             <div class="row">
@@ -17,32 +34,53 @@
                                                 <div class="card-body">
                                                     <div class="pdd-horizon-30 pdd-vertical-30">
                                                         <div class="mrg-btm-30">
-                                                            <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">회원가입</h2>
+                                                            <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
+                                                                회원가입</h2>
                                                         </div>
-                                                        <form id="signUp" method="post" novalidate>
+                                                        <form action="/users" id="form" method="post">
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Username</label>
-                                                                <input type="text" id="name" name="name" class="form-control">
+                                                                <input class="form-control" maxlength="10" minlength="2"
+                                                                       name="name" pattern="[a-zA-Z가-힣]+" required
+                                                                       type="text">
                                                             </div>
                                                             <div class="form-group">
-                                                                <label class="text-normal text-dark">Email Address</label>
-                                                                <input type="email" id="email" name="email" class="form-control">
+                                                                <label class="text-normal text-dark">Email
+                                                                    Address</label>
+                                                                <input class="form-control" name="email" required
+                                                                       type="email">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Password</label>
-                                                                <input type="password" id="password" name="password" class="form-control" placeholder="Password">
+                                                                <input class="form-control" id="password" minlength="8"
+                                                                       name="password" pattern="[a-zA-Z0-9~!@#$%^&*]+"
+                                                                       placeholder="Password" required
+                                                                       type="password">
                                                             </div>
                                                             <div class="form-group">
-                                                                <label class="text-normal text-dark">Confirm Password</label>
-                                                                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Password">
+                                                                <label class="text-normal text-dark">Confirm
+                                                                    Password</label>
+                                                                <input class="form-control" id="password-confirm"
+                                                                       minlength="8"
+                                                                       pattern="[a-zA-Z0-9~!@#$%^&*]+"
+                                                                       placeholder="Password" required
+                                                                       type="password">
+                                                            </div>
+                                                            <div id="not-match"></div>
+                                                            <div class="alert alert-danger" role="alert"
+                                                                 th:if="${errorMessage} != ''"
+                                                                 th:text="${errorMessage}">
                                                             </div>
                                                             <div class="form-group">
-                                                                <button onclick="formSubmit(event)   " class="btn btn-info btn-block border-radius-6 font-size-16 text-white">가입하기</button>
+                                                                <button class="btn btn-info btn-block border-radius-6 font-size-16 text-white"
+                                                                        type="submit">
+                                                                    가입하기
+                                                                </button>
                                                             </div>
                                                         </form>
                                                         <div class="text-dark">
                                                             <span>이미 회원이신가요?</span>
-                                                            <a href="/users/login" class="text-info pointer mrg-left-5">로그인</a>
+                                                            <a class="text-info pointer mrg-left-5" href="login.html">로그인</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -57,57 +95,23 @@
             </div>
         </div>
     </div>
+</th:block>
+<th:block layout:fragment="custom-js">
     <script>
-        function formSubmit(event) {
-            event.preventDefault()
-            let params = jQuery("#signUp").serialize();
-            let isValid = true;
-            let errors = document.querySelectorAll('.error-message');
-            for (let i = 0; i < errors.length; i++)
-                errors[i].innerHTML = '';
+        const password = document.getElementById('password');
+        const passwordConfirm = document.getElementById('password-confirm');
+        const signupForm = document.getElementById('form');
 
-            if ($('#password').val() !== $('#confirmPassword').val()) {
-                $('#password').after('<span class="error-message text-muted text-small text-danger">비밀번호가 일치하지 않습니다.</span>');
-                isValid = false;
-            }
-
-            const regex = new RegExp("[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z]{2,10}");
-            if(!regex.exec($('#name').val())){
-                $('#name').after('<span class="error-message text-muted text-small text-danger">이름은 2자이상 10자이하이며, 숫자나 특수문자가 포함될 수 없습니다.</span>');
-                isValid = false;
-            }
-
-            if (isValid) {
-                $.ajax({
-                    url: '/users',
-                    method: 'POST',
-                    data: params,
-                    success: function (response) {
-                        alert("회원가입 성공");
-                        location.href = "/users/login";
-                    },
-                    error: function (response) {
-                        markingErrorField(response);
-                    }
-                });
-            }
-        };
-        let markingErrorField = function (response) {
-            const errorFields = response.responseJSON.errors;
-            if (!errorFields) {
-                alert(response.response.message);
-                return;
-            }
-            let $field, error;
-            for (let i = 0, length = errorFields.length; i < length; i++) {
-                error = errorFields[i];
-                $field = $('#' + error['field']);
-                if ($field && $field.length > 0) {
-                    $field.siblings('.error-message').remove();
-                    $field.after('<span class="error-message text-muted text-small text-danger">' + error.defaultMessage + '</span>');
-                }
-            }
-            ;
-        };
+        signupForm.addEventListener('submit', e = > {
+            if(password.value !== passwordConfirm.value
+        )
+        {
+            alert('비밀번호를 확인해주세요!');
+            e.preventDefault();
+            return false;
+        }
+        })
+        ;
     </script>
 </th:block>
+</html>
