@@ -7,7 +7,7 @@ import javax.persistence.Id;
 
 import techcourse.myblog.dto.request.UserDto;
 import techcourse.myblog.dto.request.UserEditProfileDto;
-//TODO: @COLUMN 추가하기
+
 @Entity
 public class User {
 	@Id

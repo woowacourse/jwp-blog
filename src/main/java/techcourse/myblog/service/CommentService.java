@@ -60,7 +60,7 @@ public class CommentService {
 
 	private void confirmAuthorization(String email, Long commentAuthorId) {
 		User user = userService.findUser(email);
-		if(!user.matchUserId(commentAuthorId)) {
+		if (!user.matchUserId(commentAuthorId)) {
 			throw new UnauthorizedException();
 		}
 	}

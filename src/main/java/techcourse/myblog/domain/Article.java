@@ -84,10 +84,6 @@ public class Article {
 		this.author = author;
 	}
 
-	public boolean matchUser(User user) {
-		return this.author.equals(user);
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {

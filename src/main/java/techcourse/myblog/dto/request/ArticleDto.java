@@ -18,13 +18,6 @@ public class ArticleDto {
 		this.coverUrl = coverUrl;
 	}
 
-	public ArticleDto(final Long id, String title, String contents, String coverUrl) {
-		this.id = id;
-		this.title = title;
-		this.contents = contents;
-		this.coverUrl = coverUrl;
-	}
-
 	public Long getId() {
 		return id;
 	}
