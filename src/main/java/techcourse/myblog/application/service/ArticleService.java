@@ -77,6 +77,7 @@ public class ArticleService {
         article.checkAuthor(email);
     }
 
+    @Transactional
     public UserDto findAuthor(long articleId) {
         User user = articleRepository.findById(articleId)
                 .orElseThrow(IllegalArgumentException::new)
@@ -85,10 +86,4 @@ public class ArticleService {
                 user.getName(),
                 user.getPassword());
     }
-
-//    public UserDto findUserById(long articleId) {
-//        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-//        User user = article.getUser();
-//        ret
-//    }
 }
