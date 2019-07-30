@@ -25,7 +25,7 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(NotExistUserIdException.class)
     public RedirectView handleNotExistIdError(RedirectAttributes redirectAttributes, NotExistUserIdException e) {
-        RedirectView redirectView = new RedirectView(e.getNextView());
+        RedirectView redirectView = new RedirectView("/login");
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
         return redirectView;
     }
