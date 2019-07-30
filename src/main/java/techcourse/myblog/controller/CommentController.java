@@ -30,9 +30,9 @@ public class CommentController {
     }
 
     @GetMapping("/{commentId}")
-    public String editForm(@PathVariable long articleId,
-                           @PathVariable long commentId,
-                           Model model) {
+    public String updateForm(@PathVariable long articleId,
+                             @PathVariable long commentId,
+                             Model model) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() ->
                         new NotFoundCommentException("존재하지 않는 댓글입니다."));
@@ -107,10 +107,10 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public RedirectView put(@PathVariable long articleId,
-                            @PathVariable long commentId,
-                            @ModelAttribute CommentDTO commentDTO,
-                            HttpSession httpSession) {
+    public RedirectView update(@PathVariable long articleId,
+                               @PathVariable long commentId,
+                               @ModelAttribute CommentDTO commentDTO,
+                               HttpSession httpSession) {
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() ->
@@ -125,7 +125,7 @@ public class CommentController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public RedirectView commentExceptionHandler(RuntimeException exception, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public RedirectView exceptionHandler(RuntimeException exception, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         redirectAttributes.addFlashAttribute("commentError", exception.getMessage());
 
         return new RedirectView(request.getHeader("Referer"));

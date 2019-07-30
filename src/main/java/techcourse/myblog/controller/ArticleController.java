@@ -26,7 +26,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public String showArticle(@PathVariable("articleId") Long articleId, HttpSession session, Model model) {
+    public String show(@PathVariable("articleId") Long articleId, HttpSession session, Model model) {
         Article article = articleRepository.findById(articleId).orElseThrow(() ->
                 new NotFoundArticleException("게시물이 없습니다"));
 
@@ -42,7 +42,7 @@ public class ArticleController {
     }
 
     @GetMapping("/new")
-    public String articleCreateForm(HttpSession session, Model model) {
+    public String createForm(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             throw new UnauthenticatedUserException("로그인이 필요합니다.");
@@ -52,7 +52,7 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public String saveArticle(ArticleDTO articleDTO, HttpSession session) {
+    public String create(ArticleDTO articleDTO, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             throw new UnauthenticatedUserException("로그인이 필요합니다.");
@@ -66,7 +66,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}/edit")
-    public Object articleUpdateForm(@PathVariable("articleId") Long articleId, HttpSession session, Model model) {
+    public Object updateForm(@PathVariable("articleId") Long articleId, HttpSession session, Model model) {
         Article savedArticle = articleRepository
                 .findById(articleId)
                 .orElseThrow(() ->
@@ -84,7 +84,7 @@ public class ArticleController {
 
     @Transactional
     @PutMapping("/{articleId}")
-    public String updateArticle(@PathVariable("articleId") Long articleId, ArticleDTO articleDTO) {
+    public String update(@PathVariable("articleId") Long articleId, ArticleDTO articleDTO) {
         Article article = articleRepository.findById(articleId).get();
         article.update(articleDTO.toDomain());
 
@@ -92,7 +92,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{articleId}")
-    public String deleteArticle(@PathVariable("articleId") Long articleId, HttpSession session) {
+    public String delete(@PathVariable("articleId") Long articleId, HttpSession session) {
         Article savedArticle = articleRepository
                 .findById(articleId)
                 .orElseThrow(() ->
@@ -108,7 +108,7 @@ public class ArticleController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public RedirectView articleExceptionHandler(RuntimeException e, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public RedirectView exceptionHandler(RuntimeException e, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         redirectAttributes.addFlashAttribute("articleError", e.getMessage());
         return new RedirectView(request.getHeader("Referer"));
     }

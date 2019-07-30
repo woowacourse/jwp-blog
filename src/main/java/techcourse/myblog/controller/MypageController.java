@@ -28,7 +28,7 @@ public class MypageController {
     }
 
     @PostMapping("/mypage")
-    public RedirectView updateProfile(@ModelAttribute UserDTO userDTO, HttpServletRequest request) {
+    public RedirectView update(@ModelAttribute UserDTO userDTO, HttpServletRequest request) {
         User user = userService.update(userDTO);
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
@@ -36,7 +36,7 @@ public class MypageController {
     }
 
     @GetMapping("/mypage/edit")
-    public String myPageEdit(HttpSession session, Model model) {
+    public String updateForm(HttpSession session, Model model) {
         setUserToModelBySession(model, session);
         return "mypage-edit";
     }
