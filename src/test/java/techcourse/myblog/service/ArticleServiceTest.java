@@ -38,7 +38,7 @@ public class ArticleServiceTest {
         given(httpSession.getAttribute("user")).willReturn(user);
         given(articleRepository.save(article)).willReturn(article);
 
-        assertDoesNotThrow(() -> articleService.createArticle(articleDto));
+        assertDoesNotThrow(() -> articleService.createArticle(articleDto, user));
     }
 
     @Test

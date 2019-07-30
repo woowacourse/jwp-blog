@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -16,6 +17,7 @@ public class UserControllerTest extends AbstractControllerTest {
     private String email = "buddy@gmail.com";
     private String userName = "Buddy";
     private String password = "Aa12345!";
+    private User user = new User("heejoo", "heejoo@gmail.com", "Aa12345!");
 
     @Autowired
     WebTestClient webTestClient;
@@ -27,7 +29,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void 회원가입_페이지() {
-        getRequest("/users/signup")
+        getRequest("/users/new")
                 .expectStatus().isOk();
     }
 
@@ -39,9 +41,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void 중복_이메일_확인() {
-        create_user(userName, "buddy@buddy.com", password);
-
-        WebTestClient.ResponseSpec responseSpec = getResponseSpec(userName, "buddy@buddy.com", password, password)
+        WebTestClient.ResponseSpec responseSpec = getResponseSpec(userName, user.getEmail(), password, password)
                 .expectStatus().isBadRequest();
 
         checkInvalidUserMessage(responseSpec, "중복된 이메일 입니다.");
@@ -49,8 +49,6 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void 이메일_형식_확인() {
-        create_user(userName, "buddy@buddy.com", password);
-
         WebTestClient.ResponseSpec responseSpec = getResponseSpec(userName, "buddy", password, password)
                 .expectStatus().isBadRequest();
 
@@ -88,7 +86,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void 로그인_후_유저_리스트_확인() {
-        String jSessionId = getJSessionId("Martin", "martin@gmail.com", password);
+        String jSessionId = extractJSessionId(login(user));
 
         webTestClient.get().uri("/users")
                 .cookie("JSESSIONID", jSessionId)
@@ -97,10 +95,11 @@ public class UserControllerTest extends AbstractControllerTest {
                 .isOk()
                 .expectBody().consumeWith(res -> {
             String body = new String(res.getResponseBody());
-            assertThat(body.contains("Martin")).isTrue();
-            assertThat(body.contains("martin@gmail.com")).isTrue();
+            assertThat(body.contains("heejoo")).isTrue();
+            assertThat(body.contains("heejoo@gmail.com")).isTrue();
         });
     }
+
     @Test
     void 로그인_전_마이페이지_접근() {
         getRequest("/users/mypage")
@@ -110,7 +109,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void 로그인_후_마이페이지_접근() {
-        String jSessionId = getJSessionId("jason", "jason@gmail.com", password);
+        String jSessionId = extractJSessionId(login(user));
 
         webTestClient.get().uri("/users/mypage")
                 .cookie("JSESSIONID", jSessionId)
@@ -127,7 +126,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void 로그인_후_회원수정페이지_접근() {
-        String jSessionId = getJSessionId("pobi", "pobi@gmail.com", password);
+        String jSessionId = extractJSessionId(login(user));
         webTestClient.get().uri("/users/mypage/edit")
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()

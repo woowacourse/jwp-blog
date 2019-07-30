@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import techcourse.myblog.user.User;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
@@ -14,7 +15,8 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 public class LoginControllerTest extends AbstractControllerTest{
 
     @Autowired
-    WebTestClient webTestClient;
+    private WebTestClient webTestClient;
+    private User user = new User("heejoo", "heejoo@gmail.com", "Aa12345!");
 
     @Test
     void 로그인_페이지_접근() {
@@ -24,20 +26,16 @@ public class LoginControllerTest extends AbstractControllerTest{
 
     @Test
     void 로그인_후_로그인_페이지_접근() {
-        String jSessionId = getJSessionId("Buddy","buddy@gmail.com","Aa12345!");
+        String jSessionId = extractJSessionId(login(user));
         webTestClient.get().uri("/login")
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
     void 로그인_성공() {
-        String email = "buddy@gmail.com";
-        String password = "Aa12345!";
-        create_user("Buddy",email,password);
-
-        getResponseSpec(email,password)
+        getResponseSpec(user.getEmail(), user.getPassword())
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".*/.*");
     }
@@ -50,9 +48,7 @@ public class LoginControllerTest extends AbstractControllerTest{
 
     @Test
     void 로그인_실패_패스워드_오류() {
-        create_user("ssosso","ssosso@gamil.com","Aa12345!");
-
-        getResponseSpec("ssosso@gmail.com","password")
+        getResponseSpec(user.getEmail(), "password")
                 .expectStatus().isBadRequest();
     }
 

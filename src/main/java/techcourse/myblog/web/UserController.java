@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.exception.NotValidUpdateUserInfoException;
 import techcourse.myblog.exception.NotValidUserInfoException;
@@ -59,8 +60,12 @@ public class UserController {
     @PutMapping("/mypage/edit")
     public String editUserInfo(@Valid UserUpdateRequestDto userUpdateRequestDto,
                                BindingResult bindingResult, HttpSession httpSession) {
+        if (bindingResult.hasErrors()) {
+            FieldError fieldError = bindingResult.getFieldError();
+            throw new NotValidUpdateUserInfoException(fieldError.getDefaultMessage());
+        }
         String email = ((User) httpSession.getAttribute("user")).getEmail();
-        User user = userService.updateUser(bindingResult, email, userUpdateRequestDto);
+        User user = userService.updateUser(email, userUpdateRequestDto);
         httpSession.setAttribute("user", user);
         return "redirect:/users/mypage";
     }

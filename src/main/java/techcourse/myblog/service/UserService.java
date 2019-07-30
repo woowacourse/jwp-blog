@@ -3,10 +3,7 @@ package techcourse.myblog.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import techcourse.myblog.exception.NotFoundObjectException;
-import techcourse.myblog.exception.NotValidUpdateUserInfoException;
 import techcourse.myblog.exception.NotValidUserInfoException;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.dto.UserUpdateRequestDto;
@@ -38,12 +35,7 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUser(BindingResult bindingResult, String email,
-                           UserUpdateRequestDto userUpdateRequestDto) {
-        if (bindingResult.hasErrors()) {
-            FieldError fieldError = bindingResult.getFieldError();
-            throw new NotValidUpdateUserInfoException(fieldError.getDefaultMessage());
-        }
+    public User updateUser(String email, UserUpdateRequestDto userUpdateRequestDto) {
         User user = userRepository.findByEmail(email).orElseThrow(NotFoundObjectException::new);
         user.changeUserName(userUpdateRequestDto.getUserName());
         return user;
