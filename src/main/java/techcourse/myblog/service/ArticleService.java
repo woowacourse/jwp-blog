@@ -23,6 +23,12 @@ public class ArticleService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
+    public Long save(UserDto.Response userDto, ArticleDto.Create articleDto) {
+        User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundUserException::new);
+        Article newArticle = articleDto.toArticle(user);
+        return articleRepository.save(newArticle).getId();
+    }
+
     public List<ArticleDto.Response> findAll() {
         List<Article> articles = (List<Article>) articleRepository.findAll();
         return articles.stream()
@@ -36,41 +42,29 @@ public class ArticleService {
     }
 
     public ArticleDto.Response findById(UserDto.Response userDto, Long articleId) {
+        checkAuthor(userDto, articleId);
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundUserException::new);
-        if (!article.isWrittenBy(user)) {
-            throw new NotMatchAuthorException();
-        }
         return modelMapper.map(article, ArticleDto.Response.class);
     }
 
     public Long update(UserDto.Response userDto, Long articleId, ArticleDto.Update articleDto) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundUserException::new);
-
-        if (!article.isWrittenBy(user)) {
-            throw new NotMatchAuthorException();
-        }
-
-        Article updatedArticle = articleDto.toArticle(article.getId());
+        checkAuthor(userDto, articleId);
+        Article updatedArticle = articleDto.toArticle(articleId);
         return articleRepository.save(updatedArticle).getId();
     }
 
+
     public void deleteById(UserDto.Response userDto, Long articleId) {
+        checkAuthor(userDto, articleId);
+        articleRepository.deleteById(articleId);
+    }
+
+    private void checkAuthor(UserDto.Response userDto, Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
         User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundUserException::new);
 
         if (!article.isWrittenBy(user)) {
             throw new NotMatchAuthorException();
         }
-
-        articleRepository.deleteById(articleId);
-    }
-
-    public Long save(UserDto.Response userDto, ArticleDto.Create articleDto) {
-        User user = userRepository.findById(userDto.getId())
-            .orElseThrow(NotFoundUserException::new);
-        Article newArticle = articleDto.toArticle(user);
-        return articleRepository.save(newArticle).getId();
     }
 }
