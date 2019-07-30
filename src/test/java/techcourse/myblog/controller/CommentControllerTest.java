@@ -79,9 +79,12 @@ class CommentControllerTest extends WebClientGenerator {
     public void 댓글_삭제() {
         generateArticle();
         Article savedArticle = getSavedArticle();
-        generateComment(savedArticle);
 
-        logInResponseSpec(DELETE, "/articles/" + savedArticle.getId() + "/comments/1", userDto)
+        CommentDto commentDto = new CommentDto("댓글입니다.");
+        logInResponseSpec(POST, "/articles/" + savedArticle.getId() + "/comments", userDto, parser(commentDto));
+        Comment savedComment = getSavedComment();
+
+        logInResponseSpec(DELETE, "/articles/" + savedArticle.getId() + "/comments/" + savedComment.getId(), userDto)
                 .expectStatus()
                 .isFound()
                 .expectBody()
@@ -89,6 +92,11 @@ class CommentControllerTest extends WebClientGenerator {
                     String createdArticle = responseBody(responseSpec(GET, getRedirectedUri(response)));
                     assertThat(createdArticle.contains("댓글입니다.")).isFalse();
                 });
+    }
+
+    private Comment getSavedComment() {
+        Iterator<Comment> comments = commentRepository.findAll().iterator();
+        return comments.next();
     }
 
     private void generateComment(Article savedArticle) {
@@ -103,13 +111,15 @@ class CommentControllerTest extends WebClientGenerator {
         generateComment(savedArticle);
 
         CommentDto editCommentDto = new CommentDto("수정된 댓글입니다.");
-        logInResponseSpec(PUT, "/articles/" + savedArticle.getId() + "/comments/1", userDto, parser(editCommentDto))
+        Comment savedComment = getSavedComment();
+
+        logInResponseSpec(PUT, "/articles/" + savedArticle.getId() + "/comments/" + savedComment.getId(), userDto, parser(editCommentDto))
                 .expectStatus()
                 .isFound()
                 .expectBody()
                 .consumeWith(response -> {
-                    String createdArticle = responseBody(responseSpec(GET, getRedirectedUri(response)));
-                    assertThat(createdArticle.contains("수정된 댓글입니다.")).isTrue();
+                    String responseBody = responseBody(responseSpec(GET, getRedirectedUri(response)));
+                    assertThat(responseBody.contains("수정된 댓글입니다.")).isTrue();
                 });
     }
 
