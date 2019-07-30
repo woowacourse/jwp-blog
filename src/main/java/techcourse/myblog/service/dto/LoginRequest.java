@@ -3,7 +3,7 @@ package techcourse.myblog.service.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-public class UserLoginRequest {
+public class LoginRequest {
 
     @NotBlank(message = "이메일을 작성해주세요!")
     @Email(message = "이메일 양식을 지켜주세요!")
@@ -11,6 +11,14 @@ public class UserLoginRequest {
 
     @NotBlank(message = "비밀번호를 작성해주세요!")
     private String password;
+
+    public LoginRequest() {
+    }
+
+    public LoginRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
     public String getEmail() {
         return email;

@@ -4,11 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.service.dto.UserLoginRequest;
+import techcourse.myblog.service.dto.LoginRequest;
 import techcourse.myblog.service.dto.UserRequest;
 import techcourse.myblog.service.dto.UserResponse;
 import techcourse.myblog.service.exception.EditException;
 import techcourse.myblog.service.exception.LoginException;
+import techcourse.myblog.service.exception.NoUserException;
 import techcourse.myblog.support.encrytor.EncryptHelper;
 
 import javax.transaction.Transactional;
@@ -43,29 +44,32 @@ public class UserService {
     }
 
     public List<UserResponse> findAll() {
-        return userRepository.findAll().stream()
+        List<User> users = userRepository.findAll();
+        List<UserResponse> userResponses = users.stream()
                 .map(user -> modelMapper.map(user, UserResponse.class))
                 .collect(Collectors.toList())
                 ;
+
+        return userResponses;
     }
 
-    public UserResponse findUserByEmail(UserLoginRequest userLoginRequest) {
-        User user = userRepository.findUserByEmail(userLoginRequest.getEmail())
+    public UserResponse checkLogin(LoginRequest loginRequest) {
+        User user = userRepository.findUserByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new LoginException("일치하는 email이 없습니다!"));
 
-        checkPassword(userLoginRequest, user);
+        checkPassword(loginRequest, user);
         return modelMapper.map(user, UserResponse.class);
     }
 
-    private void checkPassword(UserLoginRequest userLoginRequest, User user) {
-        if (!encryptHelper.isMatch(userLoginRequest.getPassword(), user.getPassword())) {
+    private void checkPassword(LoginRequest loginRequest, User user) {
+        if (!encryptHelper.isMatch(loginRequest.getPassword(), user.getPassword())) {
             throw new LoginException("비밀번호가 일치하지 않습니다!");
         }
     }
 
     @Transactional
     public UserResponse editUserName(Long userId, String name) {
-        User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoUserException("존재하지 않는 회원입니다!"));
         changeName(name, user);
         return modelMapper.map(user, UserResponse.class);
     }
