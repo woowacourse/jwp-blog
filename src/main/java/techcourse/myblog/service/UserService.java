@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicatedUserException;
 import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.exception.NotMatchPasswordException;
+import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;

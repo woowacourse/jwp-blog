@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Comment;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
@@ -40,7 +40,7 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}")
     public String readArticle(@PathVariable Long articleId, HttpSession httpSession, Model model) {
         model.addAttribute("article", articleService.findById(articleId));
-        List<Comment> comments = commentService.findAllByArticle(articleId);
+        List<CommentDto.Response> comments = commentService.findAllByArticle(articleId);
         model.addAttribute("comments", comments);
         return "article";
     }

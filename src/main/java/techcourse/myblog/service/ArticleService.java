@@ -4,14 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.exception.NotMatchAuthorException;
+import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,7 +52,6 @@ public class ArticleService {
         Article updatedArticle = articleDto.toArticle(articleId);
         return articleRepository.save(updatedArticle).getId();
     }
-
 
     public void deleteById(UserDto.Response userDto, Long articleId) {
         checkAuthor(userDto, articleId);
