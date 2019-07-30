@@ -100,11 +100,12 @@ public class ArticleControllerTests {
         String updatedUniContents = StringEscapeUtils.escapeJava(updatedContents);
 
         webTestClient.put()
-                .uri("/articles/1")
+                .uri("/articles")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", updatedTitle)
+                        .with("id", "1")
                         .with("coverUrl", updatedCoverUrl)
                         .with("contents", updatedContents))
                 .exchange()
@@ -127,11 +128,12 @@ public class ArticleControllerTests {
                 });
 
         webTestClient.put()
-                .uri("/articles/1")
+                .uri("/articles")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", testTitle)
+                        .with("id", "1")
                         .with("coverUrl", testCoverUrl)
                         .with("contents", testContents))
                 .exchange()
