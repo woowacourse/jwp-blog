@@ -1,2 +1,1 @@
---INSERT INTO user (name, email, password) VALUES ("donut", "donut@woowa.com", "qwer1234");
---INSERT INTO article (title, cover_url, contents) VALUES ("ㅎㅇ", "http://abc.def", "hello :)");
+INSERT INTO user (name, email, password) VALUES ("donut", "donut@woowa.com", "qwer1234");

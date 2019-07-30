@@ -9,9 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.*;
-
-import javax.transaction.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -22,16 +21,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 class ArticleControllerTest {
-    private static final String TEST_TITLE = "Jemok";
-    private static final String TEST_COVER_URL = "Baegyung";
-    private static final String TEST_CONTENTS = "Naeyong";
-    private static final Article TEST_ARTICLE = new Article(TEST_TITLE, TEST_COVER_URL, TEST_CONTENTS);
     private static final String TEST_NAME = "도나쓰";
     private static final String TEST_EMAIL = "testdonut@woowa.com";
     private static final String TEST_PASSWORD = "qwer1234";
     private static final User TEST_USER = new User(TEST_NAME, TEST_EMAIL, TEST_PASSWORD);
-    private static final String TEST_COMMENT_CONTENT = "ㅎㅇ";
-
+    private static final String TEST_TITLE = "Jemok";
+    private static final String TEST_COVER_URL = "Baegyung";
+    private static final String TEST_CONTENTS = "Naeyong";
+    private static final Article TEST_ARTICLE = new Article(TEST_USER, TEST_TITLE, TEST_COVER_URL, TEST_CONTENTS);
+    private static final Comment TEST_COMMENT = new Comment(TEST_ARTICLE, TEST_USER, "ㅎㅇㅎㅇ");
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -42,24 +40,25 @@ class ArticleControllerTest {
     @Autowired
     private MockMvc mockMvc;
     private MockHttpSession session;
+    private User testUser;
 
     @BeforeEach
     void setUp() {
         session = new MockHttpSession();
         session.setAttribute("email", TEST_EMAIL);
         session.setAttribute("name", TEST_NAME);
-        userRepository.save(TEST_USER);
+        testUser = userRepository.save(TEST_USER);
     }
 
     @AfterEach
     void tearDown() {
         session.clearAttributes();
         session = null;
-        userRepository.deleteAll();
         articleRepository.deleteAll();
     }
 
     @Test
+    @Transactional
     void indexTest() throws Exception {
         mockMvc.perform(get("/"))
                 .andDo(print())
@@ -67,19 +66,22 @@ class ArticleControllerTest {
     }
 
     @Test
+    @Transactional
     void writingFormTest() throws Exception {
-        mockMvc.perform(get("/writing"))
+        mockMvc.perform(get("/writing").session(session))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
+    @Transactional
     void writeTest() throws Exception {
         mockMvc.perform(
                 post("/articles").contentType(MediaType.APPLICATION_FORM_URLENCODED)
                                 .param("title", TEST_TITLE)
                                 .param("coverUrl", TEST_COVER_URL)
                                 .param("contents", TEST_CONTENTS)
+                                .session(session)
         ).andDo(print())
         .andExpect(status().is3xxRedirection());
         assertThat(articleRepository.count() != 0).isTrue();
@@ -93,6 +95,7 @@ class ArticleControllerTest {
     }
 
     @Test
+    @Transactional
     void readTest() throws Exception {
         final Article written = articleRepository.save(TEST_ARTICLE);
         mockMvc.perform(get("/articles/0"))
@@ -110,12 +113,13 @@ class ArticleControllerTest {
     }
 
     @Test
+    @Transactional
     void updateFormTest() throws Exception {
         final Article written = articleRepository.save(TEST_ARTICLE);
         mockMvc.perform(get("/articles/0/edit"))
                 .andDo(print())
-                .andExpect(redirectedUrl("/"));
-        final String body = mockMvc.perform(get("/articles/" + written.getId() + "/edit"))
+                .andExpect(redirectedUrl("/login"));
+        final String body = mockMvc.perform(get("/articles/" + written.getId() + "/edit").session(session))
                                     .andDo(print())
                                     .andExpect(status().isOk())
                                     .andReturn()
@@ -127,19 +131,18 @@ class ArticleControllerTest {
     }
 
     @Test
+    @Transactional
     void updateTest() throws Exception {
         final String updatedTitle = "제목쓰";
         final String updatedCoverUrl = "배경쓰";
         final String updatedContents = "내용쓰";
         final Article written = articleRepository.save(TEST_ARTICLE);
-        mockMvc.perform(put("/articles/0/"))
-                .andDo(print())
-                .andExpect(redirectedUrl("/"));
         mockMvc.perform(
                 put("/articles/" + written.getId()).contentType(MediaType.APPLICATION_FORM_URLENCODED)
                                                     .param("title", updatedTitle)
                                                     .param("coverUrl", updatedCoverUrl)
                                                     .param("contents", updatedContents)
+                                                    .session(session)
         ).andDo(print())
         .andExpect(status().is3xxRedirection());
         final String body = mockMvc.perform(get("/articles/" + written.getId()))
@@ -156,8 +159,8 @@ class ArticleControllerTest {
     @Test
     void deleteTest() throws Exception {
         final Article written = articleRepository.save(TEST_ARTICLE);
-        mockMvc.perform(delete("/articles/" + written.getId()));
-        assertThat(articleRepository.count()).isEqualTo(0);
+        mockMvc.perform(delete("/articles/" + written.getId()).session(session));
+        assertThat(articleRepository.findById(written.getId()).isPresent()).isFalse();
     }
 
     @Test
@@ -165,12 +168,35 @@ class ArticleControllerTest {
         final Article written = articleRepository.save(TEST_ARTICLE);
         mockMvc.perform(
                 post("/articles/" + written.getId() + "/comment").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                                                .param("contents", TEST_COMMENT_CONTENT)
+                                                                .param("contents", "ㅎㅇ")
                                                                 .session(session)
         ).andDo(print())
         .andExpect(redirectedUrl("/articles/" + written.getId()));
         assertThat(commentRepository.count()).isEqualTo(1);
         articleRepository.deleteAll();
         assertThat(commentRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    @Transactional
+    void updateCommentTest() throws Exception {
+        final String updatedContents = "내용쓰";
+        final Article written = articleRepository.save(new Article(testUser, TEST_TITLE, TEST_COVER_URL, TEST_CONTENTS));
+        final Comment comment = commentRepository.save(new Comment(written, testUser, "ㅎㅇㅎㅇ"));
+        mockMvc.perform(
+                put("/articles/" + written.getId() + "/comment/" + comment.getId()).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("contents", updatedContents)
+                        .session(session)
+        ).andDo(print())
+        .andExpect(status().is3xxRedirection());
+        assertThat(commentRepository.findById(comment.getId()).get().getContents()).isEqualTo(updatedContents);
+    }
+
+    @Test
+    void deleteCommentTest() throws Exception {
+        final Article written = articleRepository.save(TEST_ARTICLE);
+        final Comment comment = commentRepository.save(TEST_COMMENT);
+        mockMvc.perform(delete("/articles/" + written.getId() + "/comment/" + comment.getId()).session(session));
+        assertThat(commentRepository.findById(comment.getId()).isPresent()).isFalse();
     }
 }
