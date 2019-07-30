@@ -60,6 +60,7 @@ public class User {
     public boolean matchEmail(User user) {
         return this.email.equals(user.email);
     }
+
     public Long getId() {
         return id;
     }
