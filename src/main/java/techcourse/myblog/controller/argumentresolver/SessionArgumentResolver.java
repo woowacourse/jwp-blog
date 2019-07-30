@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import techcourse.myblog.domain.User;
+import techcourse.myblog.exception.InvalidUserSessionException;
 
 public class SessionArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
@@ -21,6 +22,10 @@ public class SessionArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         HttpSession session = request.getSession();
-        return new UserSession((User) session.getAttribute("user"));
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            throw new InvalidUserSessionException("세션이 유효하지 않습니다.");
+        }
+        return new UserSession(user);
     }
 }
