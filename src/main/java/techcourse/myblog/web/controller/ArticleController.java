@@ -2,6 +2,7 @@ package techcourse.myblog.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
@@ -35,9 +36,8 @@ public class ArticleController {
         return "article-edit";
     }
 
-    //todo: BindException 처리 (ControllerAdvice 분할..?)
     @PostMapping("/write")
-    public RedirectView createArticle(LoginUser loginUser, @Valid ArticleDto articleDto) {
+    public RedirectView createArticle(LoginUser loginUser, @ModelAttribute("/articles/writing") @Valid ArticleDto articleDto) {
         articleDto.setAuthor(loginUser.getUser());
         Article savedArticle = articleWriteService.save(articleDto.toArticle());
         return new RedirectView("/articles/" + savedArticle.getId());
@@ -60,7 +60,7 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
-    public RedirectView editArticle(LoginUser loginUser, @PathVariable Long articleId, @Valid ArticleDto articleDto) {
+    public RedirectView editArticle(LoginUser loginUser, @PathVariable Long articleId, @ModelAttribute("/") @Valid ArticleDto articleDto) {
         articleDto.setAuthor(loginUser.getUser());
         articleWriteService.update(articleId, articleDto);
 
@@ -69,8 +69,13 @@ public class ArticleController {
 
     @DeleteMapping("/{articleId}")
     public RedirectView deleteArticle(LoginUser loginUser, @PathVariable Long articleId) {
-        articleReadService.findByIdAndAuthor(articleId, loginUser.getUser());  //todo : 리턴값 활용하지 않음..
+        articleReadService.findByIdAndAuthor(articleId, loginUser.getUser());
         articleWriteService.removeById(articleId);
         return new RedirectView("/");
+    }
+
+    @ExceptionHandler(BindException.class)
+    public RedirectView handleBindError(BindException e) {
+        return new RedirectView(e.getObjectName());
     }
 }

@@ -11,8 +11,6 @@ import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.LoginUser;
 
-import javax.validation.Valid;
-
 @Controller
 public class CommentController {
     private final CommentService commentService;
@@ -24,7 +22,7 @@ public class CommentController {
     }
 
     @PostMapping("/articles/{articleId}/comment")
-    public RedirectView createComment(LoginUser loginUser, @PathVariable Long articleId, @Valid CommentDto commentDto) {
+    public RedirectView createComment(LoginUser loginUser, @PathVariable Long articleId, CommentDto commentDto) {
         commentDto.setArticle(articleReadService.findById(articleId));
         commentDto.setWriter(loginUser.getUser());
         commentService.save(commentDto);
@@ -33,7 +31,7 @@ public class CommentController {
     }
 
     @PutMapping("/articles/{articleId}/comment/{commentId}")
-    public RedirectView updateComment(LoginUser loginUser, @PathVariable Long commentId, @PathVariable Long articleId, @Valid CommentDto commentDto) {
+    public RedirectView updateComment(LoginUser loginUser, @PathVariable Long commentId, @PathVariable Long articleId, CommentDto commentDto) {
         commentDto.setArticle(articleReadService.findById(articleId));
         commentDto.setWriter(loginUser.getUser());
         commentService.modify(commentId, commentDto);
