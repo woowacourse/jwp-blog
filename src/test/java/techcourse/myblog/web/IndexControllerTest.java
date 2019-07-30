@@ -3,10 +3,8 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -15,31 +13,10 @@ import techcourse.myblog.domain.ArticleRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTests {
-    private static final String ROOT_URL = "/";
-    private static final String EDIT_URL = "/articles/1/edit";
-    private static final String WRITING_URL = "/writing";
-    private static final String ARTICLE_URL = "/articles";
-    private static final String SPECIFIC_ARTICLE_URL = "/articles/1";
-
-    private static final String ARTICLE_DELIMITER
-            = "<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tab-centered-1\">";
-
-    private static final String TITLE_NAME = "title";
-    private static final String COVER_URL_NAME = "coverUrl";
-    private static final String CONTENTS_NAME = "contents";
-
-    private static final String TITLE_VALUE = "TEST";
-    private static final String COVER_URL_VALUE = "https://img.com";
-    private static final String CONTENTS_VALUE = "TEST_CONTENTS";
-
+class IndexControllerTest {
     @Autowired
-    private ArticleRepository articleRepository;
-
-    @Autowired
-    private WebTestClient webTestClient;
+    WebTestClient webTestClient;
 
     @BeforeEach
     void setUp() {
@@ -99,35 +76,5 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus()
                 .isOk();
-    }
-
-    @Test
-    @DisplayName("ArticleId에_맞는_Article을_변경하는지_테스트")
-    public void updateArticleById() {
-        addArticleTest();
-
-        webTestClient.get()
-                .uri(EDIT_URL)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(TITLE_VALUE)).isTrue();
-                    assertThat(body.contains(COVER_URL_VALUE)).isTrue();
-                    assertThat(body.contains(CONTENTS_VALUE)).isTrue();
-                });
-    }
-
-    @Test
-    @DisplayName("Article을_삭제할때_redirect하는지_테스트")
-    public void deleteArticle() {
-        addArticleTest();
-
-        webTestClient.delete()
-                .uri(SPECIFIC_ARTICLE_URL)
-                .exchange()
-                .expectStatus()
-                .isFound();
     }
 }
