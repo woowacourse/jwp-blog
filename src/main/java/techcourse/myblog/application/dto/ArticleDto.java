@@ -1,29 +1,25 @@
 package techcourse.myblog.application.dto;
 
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
 
 public class ArticleDto {
     private Long id;
     private String title;
     private String coverUrl;
     private String contents;
-    private User user;
 
-    public ArticleDto(Long id, String title, String coverUrl, String contents, User user) {
+    public ArticleDto(Long id, String title, String coverUrl, String contents) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-        this.user = user;
     }
 
     public static ArticleDto of(Article article) {
         return new ArticleDto(article.getId(),
                 article.getTitle(),
                 article.getCoverUrl(),
-                article.getContents(),
-                article.getUser()
+                article.getContents()
                 );
     }
 
