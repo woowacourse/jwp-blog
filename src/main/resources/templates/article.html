@@ -73,10 +73,10 @@
 								<div class="info">
 									<span th:text="${comment.user.name}" class="text-bold inline-block"></span>
 									<span class="sub-title inline-block pull-right">
-										<a th:if="${comment.user.equals(session.user)}" onclick="showCommentInput()">
+										<a th:if="${comment.user.equals(session.user)}" onclick="showCommentInput(event)">
 											<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
 										</a>
-										<a th:if="${comment.user.equals(session.user)}" onclick="deleteComment()">
+										<a th:if="${comment.user.equals(session.user)}" onclick="deleteComment(event)">
 											<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
 										</a>
 									</span>
@@ -148,7 +148,8 @@
         height: '200px'
     });
 
-    function showCommentInput() {
+    function showCommentInput(event) {
+        event.preventDefault()
         const e = document.createElement('span');
         e.innerHTML = '<textarea id="comment-edit-input" name="editedContents"></textarea><button type="submit" class="btn btn-tumblr">수정</button>';
         document.getElementById("comment-edit").appendChild(e);
@@ -159,7 +160,16 @@
         commentContents.parentNode.removeChild(commentContents);
     }
 
-    function deleteComment() {
+    function deleteComment(event) {
+        event.preventDefault()
+		    
+		    const thisElement = event.target;
+
+        thisElement.setAttribute("value", "delete");
+        let formElement = thisElement.parentNode.parentNode.parentNode.parentNode;
+        formElement.querySelector('input').setAttribute("value", "delete");
+        
+        formElement.submit();
     }
 </script>
 </body>
