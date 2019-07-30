@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="ko">
 <head>
     <meta charset="utf-8">
     <meta name="viewport"
@@ -43,12 +43,11 @@
         <div class="header-container">
             <ul class="nav-left mrg-left-0">
                 <li>
-                    <a href="/">
+                    <a href="index.html">
                         <div class="logo logo-dark d-none"
                              style="background-image: url('/images/logo/logo_full_dark.png')"></div>
                         <div class="logo logo-white"
                              style="background-image: url('/images/logo/logo_full_white.png')"></div>
-
                     </a>
                 </li>
             </ul>
@@ -58,22 +57,23 @@
                         <img class="profile-img img-fluid"
                              src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
                         <div class="user-info text-white">
-                            <span th:text="${user.name}" class="name pdd-right-5"></span>
+                            <span class="name pdd-right-5">Brown</span>
                             <i class="ti-angle-down font-size-10"></i>
                         </div>
                     </a>
                     <ul class="dropdown-menu">
                         <li class="text-dark">
-                            <a href="/user/show">
+                            <a href="mypage.html">
                                 <i class="ti-user pdd-right-10"></i>
                                 <span class="text-dark">마이 페이지</span>
                             </a>
                         </li>
                         <li role="separator" class="divider"></li>
                         <li class="text-dark">
-                            <form method="post" action="/user/logout">
-                                <button type="submit" class="ti-power-off pdd-right-10">로그아웃</button>
-                            </form>
+                            <a href="index.html">
+                                <i class="ti-power-off pdd-right-10"></i>
+                                <span class="text-dark">로그아웃</span>
+                            </a>
                         </li>
                     </ul>
                 </li>
@@ -95,16 +95,10 @@
                 <div class="card">
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
-                        <a href="/user/edit"
+                        <a href="mypage-edit.html"
                            class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </a>
-
-                        <form action="/user/delete" method="post"
-                              class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
-                            <input type="hidden" name="_method" value="DELETE" hidden>
-                            <button type="submit" class="ti-trash text-dark font-size-16 pdd-horizontal-5"></button>
-                        </form>
                     </div>
                     <div class="card-block">
                         <div class="row">
@@ -112,7 +106,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${user.name}" class="mrg-top-10"></p>
+                                <p class="mrg-top-10">Brown</p>
                             </div>
                         </div>
                         <hr>
@@ -121,7 +115,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${user.email}" class="mrg-top-10"></p>
+                                <p class="mrg-top-10">gracefulBrown@woowahan.com</p>
                             </div>
                         </div>
                         <hr>

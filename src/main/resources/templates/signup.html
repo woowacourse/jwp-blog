@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="ko">
 <head>
     <meta charset="utf-8">
     <meta name="viewport"
@@ -68,34 +68,28 @@
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
                                                     </div>
-                                                    <form id="signupForm" method="post" action="/user">
+                                                    <form method="post">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input type="text" name="name" class="form-control"
-                                                                   th:pattern="${namePattern}" required>
+                                                            <input type="text" name="name" class="form-control">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
-                                                            <input type="email" name="email" class="form-control"
-                                                                   required th:pattern="${emailPattern}">
+                                                            <input type="email" name="email" class="form-control">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
-                                                            <input id="passwordInput" type="password" name="password"
-                                                                   class="form-control" required
-                                                                   th:pattern="${passwordPattern}"
+                                                            <input type="password" name="password" class="form-control"
                                                                    placeholder="Password">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm
                                                                 Password</label>
-                                                            <input id="passwordConfirmInput" type="password"
-                                                                   class="form-control"
-                                                                   placeholder="Password" required
-                                                                   th:pattern="${passwordPattern}">
+                                                            <input type="password" class="form-control"
+                                                                   placeholder="Password">
                                                         </div>
                                                         <div class="form-group">
-                                                            <button type="submit" onClick="return signupPost()"
+                                                            <button type="submit"
                                                                     class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
                                                                 가입하기
                                                             </button>
@@ -103,7 +97,7 @@
                                                     </form>
                                                     <div class="text-dark">
                                                         <span>이미 회원이신가요?</span>
-                                                        <a href="/user"
+                                                        <a href="login.html"
                                                            class="text-info pointer mrg-left-5">로그인</a>
                                                     </div>
                                                 </div>
@@ -131,18 +125,5 @@
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 <script src="/js/index.js"></script>
-<script>
-    var signupPost = function (e) {
-        var password = document.getElementById("passwordInput").value;
-        var passwordConfirm = document.getElementById("passwordConfirmInput").value;
-        var form = document.getElementById("signupForm");
-        if (password == passwordConfirm && form.checkValidity()) {
-            return true
-        } else if (password != passwordConfirm && form.checkValidity()) {
-            alert("올바른 형식을 입력하세요.");
-            return false
-        }
-    }
-</script>
 </body>
 </html>
