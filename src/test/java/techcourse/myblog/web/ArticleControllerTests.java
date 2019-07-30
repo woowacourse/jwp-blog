@@ -1,14 +1,7 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.request.ArticleDto;
-import techcourse.myblog.dto.request.UserDto;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -20,8 +13,6 @@ import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -29,33 +20,9 @@ public class ArticleControllerTests {
 	private String title = "제목";
 	private String contents = "contents";
 	private String coverUrl = "https://image-notepet.akamaized.net/resize/620x-/seimage/20190222%2F88df4645d7d2a4d2ed42628d30cd83d0.jpg";
-	private User user = new User();
 
 	@Autowired
 	private WebTestClient webTestClient;
-
-	@Autowired
-	private ArticleRepository articleRepository;
-
-	@Autowired
-	private UserRepository userRepository;
-
-	@BeforeEach
-	void setUp() {
-		userRepository.deleteAll();
-		UserDto userDto = new UserDto();
-		userDto.setUsername("tiber");
-		userDto.setEmail("tiber@naver.com");
-		userDto.setPassword("asdfASDF1@");
-
-		user.saveUser(userDto);
-		userRepository.save(user);
-	}
-
-	@AfterEach
-	void tearDown() {
-		articleRepository.deleteAll();
-	}
 
 	private String getCookie() {
 		return webTestClient
@@ -101,19 +68,13 @@ public class ArticleControllerTests {
 
 	@Test
 	void findByIndex() {
-		ArticleDto articleDto = new ArticleDto(title, contents, coverUrl);
-		Long articleId = articleRepository.save(articleDto.valueOfArticle(user)).getId();
-		requestWithSession(HttpMethod.GET, "/articles" + articleId).isOk();
+		requestWithSession(HttpMethod.GET, "/articles" + 1).isOk();
 	}
 
-	//Todo : 본인이 아닐 때
 	@Test
 	void deleteArticle() {
-		ArticleDto articleDto = new ArticleDto(title, contents, coverUrl);
-		Long articleId = articleRepository.save(articleDto.valueOfArticle(user)).getId();
-		StatusAssertions statusAssertions = requestWithSession(HttpMethod.DELETE, "/articles/" + articleId);
+		StatusAssertions statusAssertions = requestWithSession(HttpMethod.DELETE, "/articles/" + 2);
 		checkRedirect(statusAssertions, "Location", ".+/");
-		assertThat(articleRepository.findById(articleId)).isEmpty();
 	}
 
 	@Test
@@ -149,20 +110,17 @@ public class ArticleControllerTests {
 				.expectStatus();
 	}
 
-	//Todo : 본인이 아닐 때
 	@Test
 	void updateArticle() {
-		ArticleDto articleDto = new ArticleDto(title, contents, coverUrl);
-		Long articleId = articleRepository.save(articleDto.valueOfArticle(user)).getId();
-		StatusAssertions statusAssertions = articlePutOrPostRequestWithSession(HttpMethod.PUT, "/articles/" + articleId, "updatedTitle", "updatedCoverUrl", "updatedContents");
+		StatusAssertions statusAssertions = articlePutOrPostRequestWithSession(HttpMethod.PUT, "/articles/" + 1,
+				"updatedTitle", "updatedCoverUrl", "updatedContents");
 		checkRedirect(statusAssertions, "Location", ".+/articles/[1-9][0-9]*");
 	}
 
 	@Test
 	void canNotUpdateArticle() {
-		ArticleDto articleDto = new ArticleDto(title, contents, coverUrl);
-		Long articleId = articleRepository.save(articleDto.valueOfArticle(user)).getId();
-		StatusAssertions statusAssertions = articlePutOrPostRequest(HttpMethod.PUT, "/articles/" + articleId, "updatedTitle", "updatedCoverUrl", "updatedContents");
+		StatusAssertions statusAssertions = articlePutOrPostRequest(HttpMethod.PUT, "/articles/" + 1,
+				"updatedTitle", "updatedCoverUrl", "updatedContents");
 		checkRedirect(statusAssertions, "Location", ".+/");
 	}
 
@@ -198,6 +156,4 @@ public class ArticleControllerTests {
 				.exchange()
 				.expectStatus();
 	}
-
-
 }

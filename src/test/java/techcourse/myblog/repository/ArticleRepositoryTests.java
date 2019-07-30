@@ -1,11 +1,9 @@
 package techcourse.myblog.repository;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.request.ArticleDto;
-import techcourse.myblog.dto.request.UserDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -20,23 +18,12 @@ public class ArticleRepositoryTests {
 	@Autowired
 	private TestEntityManager testEntityManager;
 
-	@BeforeEach
-	void setUp() {
-		UserDto userDto = new UserDto();
-		userDto.setUsername("tiber");
-		userDto.setPassword("asdfASDF1@");
-		userDto.setEmail("tiber@naver.com");
-
-		user = new User();
-		user.saveUser(userDto);
-
-		user = testEntityManager.persist(user);
-		testEntityManager.flush();
-		testEntityManager.clear();
-	}
+	@Autowired
+	private UserRepository userRepository;
 
 	@Test
 	void findById() {
+		User user = userRepository.findById(1L).get();
 		ArticleDto articleDto = new ArticleDto("title", "contents", "www.coverUrl.com");
 		Article article = articleDto.valueOfArticle(user);
 

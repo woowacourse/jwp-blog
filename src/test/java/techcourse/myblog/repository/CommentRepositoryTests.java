@@ -5,9 +5,7 @@ import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.request.ArticleDto;
 import techcourse.myblog.dto.request.CommentDto;
-import techcourse.myblog.dto.request.UserDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,39 +17,34 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CommentRepositoryTests {
 	private User user;
 	private Article article;
+	private Comment actualComment;
 
 	@Autowired
 	private TestEntityManager testEntityManager;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private ArticleRepository articleRepository;
 
 	@Autowired
 	private CommentRepository commentRepository;
 
 	@BeforeEach
 	void setUp() {
-		UserDto userDto = new UserDto();
-		userDto.setUsername("tiber");
-		userDto.setPassword("asdfASDF1@");
-		userDto.setEmail("tiber@naver.com");
+		user = userRepository.findById(1L).get();
+		article = articleRepository.findById(1L).get();
 
-		user = new User();
-		user.saveUser(userDto);
-
-		user = testEntityManager.persist(user);
+		CommentDto commentDto = new CommentDto("title");
+		actualComment = commentDto.valueOf(user, article);
+		actualComment = testEntityManager.persist(actualComment);
 		testEntityManager.flush();
 		testEntityManager.clear();
-
-		ArticleDto articleDto = new ArticleDto("title", "contents", "www.coverUrl.com");
-		article = articleDto.valueOfArticle(user);
-		article = testEntityManager.persist(article);
 	}
 
 	@Test
 	void findById() {
-		CommentDto commentDto = new CommentDto("title");
-		Comment actualComment = commentDto.valueOf(user, article);
-		actualComment = testEntityManager.persist(actualComment);
-		testEntityManager.flush();
-		testEntityManager.clear();
 		Comment expectComment = commentRepository.findById(actualComment.getId()).get();
 
 		assertThat(actualComment.getAuthor()).isEqualTo(expectComment.getAuthor());
@@ -60,25 +53,7 @@ class CommentRepositoryTests {
 	}
 
 	@Test
-	void findByArticleId() {
-		CommentDto commentDto = new CommentDto("title");
-		Comment comment = commentDto.valueOf(user, article);
-		testEntityManager.persist(comment);
-		testEntityManager.flush();
-		testEntityManager.clear();
-		assertThat(commentRepository.findByArticleId(article.getId()).size()).isEqualTo(1);
-	}
-
-	@Test
 	void deleteByArticleId() {
-		CommentDto commentDto = new CommentDto("title");
-		Comment comment = commentDto.valueOf(user, article);
-		Comment comment2 = commentDto.valueOf(user, article);
-		testEntityManager.persist(comment);
-		testEntityManager.persist(comment2);
-		testEntityManager.flush();
-		testEntityManager.clear();
-
 		commentRepository.deleteByArticleId(article.getId());
 		assertThat(commentRepository.findByArticleId(article.getId()).size()).isEqualTo(0);
 	}
