@@ -52,9 +52,8 @@ public class ArticleController {
     public String editArticle(@PathVariable long id, Model model, HttpSession httpSession) {
         Article article = articleService.findById(id);
         User user = (User) httpSession.getAttribute(USER);
-        User author = article.getAuthor();
 
-        if (!user.equals(author)) {
+        if (!article.isAuthor(user)) {
             return "redirect:/articles/" + id;
         }
         model.addAttribute("article", article);

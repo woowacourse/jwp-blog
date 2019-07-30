@@ -44,4 +44,8 @@ public class Article {
         this.coverUrl = articleSaveRequestDto.getCoverUrl();
         this.contents = articleSaveRequestDto.getContents();
     }
+
+    public boolean isAuthor(User user) {
+        return author.equals(user);
+    }
 }
