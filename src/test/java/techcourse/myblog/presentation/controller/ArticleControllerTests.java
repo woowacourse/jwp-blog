@@ -1,17 +1,34 @@
 package techcourse.myblog.presentation.controller;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
-    @Autowired
-    private WebTestClient webTestClient;
+    private static final String EMAIL = "hard@gmail.com";
+    private static final String NAME = "hard";
+    private static final String PASSWORD = "qwerasdf";
 
-    private static Long id = 0L;
+    WebTestClient webTestClient;
+
+    private static Long id = 1L;
+
+    private static String cookie;
+
+    @Autowired
+    public ArticleControllerTests(WebTestClient webTestClient) {
+        this.webTestClient = webTestClient;
+        registerUser();
+        logInAndGetSessionId();
+    }
 
     @Test
     void index() {
@@ -30,6 +47,7 @@ public class ArticleControllerTests {
     @Test
     void save_test() {
         webTestClient.post().uri("/articles")
+                .header("Cookie", cookie)
                 .body(BodyInserters.fromFormData("title", "title")
                         .with("coverUrl", "coverUrl")
                         .with("contents", "contents"))
@@ -45,6 +63,7 @@ public class ArticleControllerTests {
         insertArticle();
 
         webTestClient.put().uri("/articles/" + id)
+                .header("Cookie", cookie)
                 .body(BodyInserters.fromFormData("title", "title")
                         .with("coverUrl", "coverUrl")
                         .with("contents", "contents"))
@@ -61,6 +80,7 @@ public class ArticleControllerTests {
         insertArticle();
 
         webTestClient.delete().uri("/articles/" + id)
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isFound();
@@ -71,13 +91,32 @@ public class ArticleControllerTests {
                 .exchange();
     }
 
+    private void registerUser() {
+        webTestClient.post().uri("/users")
+                .body(BodyInserters.fromFormData("email", EMAIL)
+                        .with("name", NAME)
+                        .with("password", PASSWORD))
+                .exchange();
+    }
+
     private void insertArticle() {
         ++id;
 
         webTestClient.post().uri("/articles")
+                .header("Cookie", cookie)
                 .body(BodyInserters.fromFormData("title", "title")
                         .with("coverUrl", "coverUrl")
                         .with("contents", "contents"))
                 .exchange();
+    }
+
+
+    private void logInAndGetSessionId() {
+        cookie = webTestClient.post()
+                .uri("/login").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("email", EMAIL)
+                        .with("password", PASSWORD))
+                .exchange()
+                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
     }
 }
