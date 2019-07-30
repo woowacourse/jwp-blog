@@ -24,9 +24,11 @@ public class Comment {
     private LocalDateTime modifiedDate;
 
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_user"))
     private User commenter;
 
     @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_comment_article"))
     private Article article;
 
     private Comment() {
