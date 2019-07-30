@@ -1,7 +1,6 @@
 package techcourse.myblog;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +11,13 @@ import reactor.core.publisher.Mono;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class HelloWorldControllerTest {
+public class HelloWorldControllerTests {
 
     @Autowired
     private WebTestClient webTestClient;
 
     @Test
-    @DisplayName("get 요청을 통해 받은 파라미터를 response body에 되돌려준다.")
-    void passParamWithGetTest() {
+    void passParamWithGet() {
         String blogName = "helloWrold";
         webTestClient.get().uri("/helloworld?blogName=" + blogName)
                 .exchange()
@@ -27,15 +25,12 @@ public class HelloWorldControllerTest {
                 .expectBody()
                 .consumeWith(response ->
                         Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
+
     }
 
     @Test
-    @DisplayName("post 요청을 통해 받은 파라미터를 response body에 되돌려준다.")
-    void passParamWithPostTest() {
+    void passParamWithPost() {
         String blogName = "helloWrold";
-
-//        Map<String, String> params = new HashMap<>();
-//        params.put("blogName", blogName);
 
         webTestClient.post()
                 .uri("/helloworld")
@@ -45,5 +40,6 @@ public class HelloWorldControllerTest {
                 .expectBody()
                 .consumeWith(response ->
                         Assertions.assertThat(new String(response.getResponseBody())).isEqualTo(blogName));
+
     }
 }
