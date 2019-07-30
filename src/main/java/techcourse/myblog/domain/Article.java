@@ -10,15 +10,18 @@ public class Article {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @ManyToOne
+    private User author;
     private String title;
     private String coverUrl;
     private String contents;
-    @OneToMany
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     public Article() {}
 
-    public Article(String title, String coverUrl, String contents) {
+    public Article(User author, String title, String coverUrl, String contents) {
+        this.author = author;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
@@ -30,6 +33,18 @@ public class Article {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public User getAuthor() {
+        return this.author;
+    }
+
+    public boolean isSameAuthor(Article article) {
+        return this.author.equals(article.author);
+    }
+
+    public boolean isSameAuthor(User user) {
+        return this.author.equals(user);
     }
 
     public String getTitle() {
