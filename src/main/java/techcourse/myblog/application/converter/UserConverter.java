@@ -8,7 +8,11 @@ public class UserConverter extends Converter<UserDto, User> {
 
     private UserConverter() {
         super(userDto -> new User(userDto.getEmail(), userDto.getName(), userDto.getPassword())
-                , user -> new UserDto(user.getId(), user.getEmail(), user.getName(), user.getPassword()));
+                , user -> {
+                    UserDto userDto = new UserDto(user.getEmail(), user.getName(), user.getPassword());
+                    userDto.setId(user.getId());
+                    return userDto;
+                });
     }
 
     public static UserConverter getInstance() {
