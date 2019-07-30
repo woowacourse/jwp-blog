@@ -18,7 +18,9 @@ public class LoginTestUtil {
                         .fromFormData("name", userSaveRequestDto.getName())
                         .with("email", userSaveRequestDto.getEmail())
                         .with("password", userSaveRequestDto.getPassword()))
-                .exchange();
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
     }
 
     public static String getJSessionId(WebTestClient webTestClient) {
@@ -31,6 +33,7 @@ public class LoginTestUtil {
                         .fromFormData("email", userSaveRequestDto.getEmail())
                         .with("password", userSaveRequestDto.getPassword()))
                 .exchange()
+                .expectStatus().is3xxRedirection()
                 .returnResult(String.class)
                 .getResponseCookies()
                 .get("JSESSIONID").get(0)
@@ -40,7 +43,8 @@ public class LoginTestUtil {
     public static void deleteUser(WebTestClient webTestClient) {
         webTestClient.delete().uri("/mypage")
                 .cookie("JSESSIONID", getJSessionId(webTestClient))
-                .exchange();
+                .exchange()
+                .expectStatus().is3xxRedirection();
     }
 
     public static UserSaveRequestDto getUserSaveRequestDto() {
