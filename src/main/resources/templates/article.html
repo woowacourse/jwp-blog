@@ -213,6 +213,14 @@
             height: '200px'
         });
     </script>
+    <script th:if="${commentError != null}" th:inline="javascript">
+        /* <![CDATA[ */
+        const error = [[ ${commentError}]];
+        alert(error)
+        /* ]]> */
+    </script>
+    <script th:inline="javascript" th:unless="${commentError != null}">
+    </script>
 </th:block>
 </body>
 </html>

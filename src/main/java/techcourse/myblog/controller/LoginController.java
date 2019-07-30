@@ -36,7 +36,7 @@ public class LoginController {
             session.setAttribute("user", user);
             return new RedirectView("/");
         } catch (UserNotExistException | LoginFailException e) {
-            redirectAttributes.addAttribute("loginError", e.getMessage());
+            redirectAttributes.addFlashAttribute("loginError", e.getMessage());
             return new RedirectView("/login");
         }
     }
