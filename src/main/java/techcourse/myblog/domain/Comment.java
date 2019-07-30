@@ -1,16 +1,19 @@
 package techcourse.myblog.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
+    @Column(nullable = false, length = 500)
     private String contents;
 
+    @Column
     private LocalDateTime createdTime;
 
     @ManyToOne
