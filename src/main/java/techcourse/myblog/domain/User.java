@@ -44,7 +44,7 @@ public class User {
     }
 
     public boolean compareEmail(String email) {
-        return email.equals(this.email);
+        return this.email.equals(email);
     }
 
     public String getEmail() {

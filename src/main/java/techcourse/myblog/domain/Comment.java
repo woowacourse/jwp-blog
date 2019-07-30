@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import techcourse.myblog.application.dto.CommentDto;
+
 import javax.persistence.*;
 
 @Entity
@@ -45,5 +47,9 @@ public class Comment {
     @Override
     public String toString() {
         return "Comment{" + contents + "}";
+    }
+
+    public void changeContent(CommentDto commentDto) {
+        contents = commentDto.getContents();
     }
 }

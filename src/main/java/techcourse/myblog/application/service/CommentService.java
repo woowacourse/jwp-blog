@@ -9,6 +9,7 @@ import techcourse.myblog.application.converter.ArticleConverter;
 import techcourse.myblog.application.converter.CommentConverter;
 import techcourse.myblog.application.converter.UserConverter;
 import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.application.service.exception.CommentNotFoundException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.CommentRepository;
@@ -55,5 +56,15 @@ public class CommentService {
             commentDto.matchAuthor(sessionEmail);
         }
         return commentDtos;
+    }
+
+    public void delete(long commentId) {
+        commentRepository.deleteById(commentId);
+    }
+
+    @Transactional
+    public void modify(Long commentId, CommentDto commentDto) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("댓글이 존재하지 않습니다"));
+        comment.changeContent(commentDto);
     }
 }

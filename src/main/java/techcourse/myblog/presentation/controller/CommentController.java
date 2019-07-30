@@ -2,8 +2,10 @@ package techcourse.myblog.presentation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.CommentDto;
@@ -25,5 +27,19 @@ public class CommentController {
         commentService.save(commentDto, articleId, session);
         RedirectView redirectView = new RedirectView("/articles/" + articleId);
         return redirectView;
+    }
+
+    @DeleteMapping("/articles/{articleId}/comments/{commentId}")
+    public ModelAndView deleteComment(@PathVariable Long commentId, @PathVariable Long articleId) {
+        commentService.delete(commentId);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setView(new RedirectView("/articles/"+articleId));
+        return modelAndView;
+    }
+
+    @PutMapping("/articles/{articleId}/comments/{commentId}")
+    public RedirectView updateComment(CommentDto commentDto, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId) {
+        commentService.modify(commentId, commentDto);
+        return new RedirectView("/articles/"+articleId);
     }
 }

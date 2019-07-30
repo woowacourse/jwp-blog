@@ -107,6 +107,7 @@
                         <li class="comment-item border bottom mrg-btm-30">
                                 <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
                                 <div class="info">
+                                    <input type="text" th:id="'content-input'+ ${comment.id}" style="display:none"/>
                                     <span href="" class="text-bold inline-block" th:text="${comment.author.name}">Jun</span>
                                     <span class="sub-title inline-block pull-right">
                                         <i class="ti-timer pdd-right-5"></i>
@@ -114,15 +115,15 @@
                                     </span>
 
                                     <div th:if ="${comment.matchAuthor}">
-                                        <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}">
-                                            <input type="hidden" name="_method" value="put"/>
-                                            <button type="submit" class="float-right pointer btn btn-icon">
-                                                <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                                            </button>
-                                        </form>
-
-                                        <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}">
-                                            <input type="hidden" name="_method" value="delete"/>
+                                        <!-- <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}">
+                                            <input type="hidden" name="_method" value="put"/> -->
+                                        <button type="button" class="float-right pointer btn btn-icon" th:onclick="'clickPencil('+${article.id}+', '+${comment.id}+')'">
+                                            <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                        </button>
+                                        <!-- </form>
+ -->
+                                        <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}" method="post">
+                                            <input type="hidden" name="_method" value="DELETE"/>
                                             <button type="submit" class="float-right pointer btn btn-icon">
                                                 <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
                                             </button>
@@ -130,7 +131,7 @@
                                     </div>
 
 
-                                    <p class="width-80" th:text="${comment.contents}">브라운 멋져</p>
+                                    <p th:id="'commentContents-'+${comment.id}" class="width-80" th:text="${comment.contents}">브라운 멋져</p>
                                 </div>
                         </li>
 
@@ -148,6 +149,27 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="commentModifyForm" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Title</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="_method" value="PUT"/>
+                    <input type="text" id="modalInput" name="contents"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -178,6 +200,13 @@
         },
         height: '200px'
     });
+
+    function clickPencil(articleId, commentId) {
+        let commentContents = document.getElementById("commentContents-"+commentId);
+        $('#modalInput').val(commentContents.textContent)
+        document.getElementById('commentModifyForm').action="/articles/"+articleId+"/comments/"+commentId
+        $('#exampleModal').modal('show')
+    }
 </script>
 </body>
 </html>
