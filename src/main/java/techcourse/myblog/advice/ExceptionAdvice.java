@@ -9,7 +9,6 @@ import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @ControllerAdvice
 public class ExceptionAdvice {
@@ -30,10 +29,8 @@ public class ExceptionAdvice {
     @ExceptionHandler(InvalidEditFormException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handelInvalidEditFormException(InvalidEditFormException e, HttpSession httpSession, Model model) {
-        Optional<UserDto.Response> userDto = Optional.ofNullable((UserDto.Response) httpSession.getAttribute("user"));
-        if (userDto.isPresent()) {
-            model.addAttribute("user", userDto.get());
-        }
+        UserDto.Response userDto = (UserDto.Response) httpSession.getAttribute("user");
+        model.addAttribute("user", userDto);
         model.addAttribute("errorMessage", e.getMessage());
         return "mypage";
     }
