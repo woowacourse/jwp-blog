@@ -1,7 +1,6 @@
 package techcourse.myblog.web.controller;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -171,12 +170,6 @@ public class ArticleControllerTests extends ControllerTestTemplate {
         assertThat(articlePage).contains(articleDto.getTitle());
         assertThat(articlePage).contains(articleDto.getCoverUrl());
         assertThat(articlePage).contains(articleDto.getContents());
-    }
-
-    @AfterEach
-    protected void tearDown() {
-        articleRepository.deleteAll();
-        super.tearDown();
     }
 
     private void checkLoginRedirect(String url) {

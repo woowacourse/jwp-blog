@@ -3,6 +3,8 @@ package techcourse.myblog.domain;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -19,10 +21,12 @@ public class Comment {
     private String contents;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "writer", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
     private User writer;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     private Article article;
 
@@ -46,6 +50,7 @@ public class Comment {
 
         if (comment.article.equals(this.article) && comment.writer.equals(this.writer)) {
             this.contents = comment.contents;
+            return;
         }
 
         throw new InvalidCommentException("댓글을 수정할 수 없습니다.");
