@@ -22,7 +22,8 @@
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
                         <a href="/accounts/profile/edit"
-                           class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5" th:if="${session.user != null && session.user.getId() == user.id}">
+                           class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5"
+                           th:if="${session.user != null && session.user.getId() == user.id}">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </a>
                     </div>
@@ -94,9 +95,9 @@
                                     <div class="col-md-4">
                                         <div class="btn-group">
                                             <form th:method="delete" action="/accounts/user">
-                                            <button type="submit" class="btn btn-default">
-                                                <span>탈퇴</span>
-                                            </button>
+                                                <button type="submit" class="btn btn-default">
+                                                    <span>탈퇴</span>
+                                                </button>
                                             </form>
                                         </div>
                                     </div>

@@ -13,7 +13,10 @@ import org.springframework.web.context.WebApplicationContext;
 import techcourse.myblog.MyblogApplicationTests;
 import techcourse.myblog.controller.dto.ArticleDto;
 import techcourse.myblog.controller.dto.UserDto;
-import techcourse.myblog.domain.*;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.CommentRepository;
+import techcourse.myblog.domain.User;
 
 import java.util.Optional;
 
@@ -38,7 +41,7 @@ public class CommentControllerTests extends MyblogApplicationTests {
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         session = new MockHttpSession();
-        user = new UserDto(USER_ID,USER_NAME,USER_PASSWORD, USER_EMAIL).toUser();
+        user = new UserDto(USER_ID, USER_NAME, USER_PASSWORD, USER_EMAIL).toUser();
         article = new ArticleDto(ARTICLE_ID, ARTICLE_TITLE, ARTICLE_CONTENTS, ARTICLE_COVER_URL).toArticle(user);
         session.setAttribute("user", user);
         comment = new Comment(COMMENT_CONTENTS, user, article);
@@ -46,10 +49,10 @@ public class CommentControllerTests extends MyblogApplicationTests {
     }
 
     @Test
-    void comment생성_save() throws Exception{
+    void comment생성_save() throws Exception {
         MvcResult mvcResult = mockMvc.perform(post("/comment").session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("contents","abc")
-                .param("articleId","1"))
+                .param("contents", "abc")
+                .param("articleId", "1"))
                 .andDo(print())
                 .andExpect(status()
                         .isFound())
@@ -59,8 +62,8 @@ public class CommentControllerTests extends MyblogApplicationTests {
     }
 
     @Test
-    void comment수정페이지_접근() throws Exception{
-      MvcResult mvcResult = mockMvc.perform(get("/comment/1/edit").session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED))
+    void comment수정페이지_접근() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/comment/1/edit").session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andDo(print())
                 .andExpect(status()
                         .isOk())
@@ -70,10 +73,10 @@ public class CommentControllerTests extends MyblogApplicationTests {
     }
 
     @Test
-    void comment수정() throws Exception{
+    void comment수정() throws Exception {
         MvcResult mvcResult = mockMvc.perform(put("/comment").session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("articleId",String.valueOf(ARTICLE_ID))
-                .param("contents","updatedContents"))
+                .param("articleId", String.valueOf(ARTICLE_ID))
+                .param("contents", "updatedContents"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
@@ -81,10 +84,10 @@ public class CommentControllerTests extends MyblogApplicationTests {
     }
 
     @Test
-    void comment삭제() throws Exception{
+    void comment삭제() throws Exception {
         MvcResult mvcResult = mockMvc.perform(delete("/comment").session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("articleId",String.valueOf(ARTICLE_ID))
-                .param("contents",COMMENT_CONTENTS))
+                .param("articleId", String.valueOf(ARTICLE_ID))
+                .param("contents", COMMENT_CONTENTS))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andReturn();

@@ -6,8 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.*;
 import techcourse.myblog.controller.dto.ArticleDto;
+import techcourse.myblog.domain.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -69,7 +69,7 @@ public class ArticleController {
     @PutMapping("/articles/{articleId}")
     public String updateArticleByIdPage(HttpSession httpSession, ArticleDto articleDto) {
         log.debug(">>> put ArticleDto : {}", articleDto);
-        User user = (User)httpSession.getAttribute("user");
+        User user = (User) httpSession.getAttribute("user");
         Article preArticle = articleRepository.findById(articleDto.getId()).get();
         log.debug(">>> put Article before save: {}", articleDto);
 
@@ -85,11 +85,11 @@ public class ArticleController {
     public String deleteArticleByIdPage(@PathVariable long articleId, HttpSession httpSession) {
         log.debug(">>> article Id : {}", articleId);
         Article article = articleRepository.findById(articleId).get();
-        log.debug(">>> before delete comment size : {}",commentRepository.findAllByArticle_Id(articleId).size());
+        log.debug(">>> before delete comment size : {}", commentRepository.findAllByArticle_Id(articleId).size());
         if (isAuthor(article, httpSession)) return "redirect:/";
         articleRepository.deleteById(articleId);
         commentRepository.deleteAllByArticle(article);
-        log.debug(">>> after delete comment size : {}",commentRepository.findAllByArticle_Id(articleId).size());
+        log.debug(">>> after delete comment size : {}", commentRepository.findAllByArticle_Id(articleId).size());
         return "redirect:/";
     }
 

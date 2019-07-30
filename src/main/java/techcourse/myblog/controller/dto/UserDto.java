@@ -3,7 +3,6 @@ package techcourse.myblog.controller.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import techcourse.myblog.domain.User;
 
 import javax.validation.constraints.Email;

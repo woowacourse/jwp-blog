@@ -5,9 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.controller.dto.UserDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
