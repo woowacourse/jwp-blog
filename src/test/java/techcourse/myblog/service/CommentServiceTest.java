@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,10 +67,5 @@ class CommentServiceTest {
 
         commentService.delete(userId, comment.getId());
         assertThat(commentService.findCommentsByArticleId(articleId).size()).isEqualTo(0);
-    }
-
-    @AfterEach
-    void tearDown() {
-        commentService.deleteAll();
     }
 }

@@ -55,10 +55,6 @@ public class CommentService {
         }
     }
 
-    public void deleteAll() {
-        commentRepository.deleteAll();
-    }
-
     private CommentResponseDto toCommentResponseDto(Long commentId, Long authorId, String userName, String comment) {
         return new CommentResponseDto(commentId, authorId, userName, comment);
     }
