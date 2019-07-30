@@ -33,7 +33,7 @@ public class CommentController {
     @GetMapping("/{commentId}")
     public String editCommentPage(HttpSession httpSession, @PathVariable("commentId") Long commentId, Model model) {
         model.addAttribute("comment",
-                commentService.findByCommenterAndId((User) httpSession.getAttribute("user"), commentId));
+                commentService.findByIdWithUser((User) httpSession.getAttribute("user"), commentId));
         return "mycomment-edit";
     }
 
