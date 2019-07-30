@@ -2,10 +2,7 @@ package techcourse.myblog.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.CommentService;
@@ -26,16 +23,16 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public String update(HttpSession httpSession, CommentDto.Update commentDto){
+    public String update(@PathVariable Long commentId, HttpSession httpSession, CommentDto.Update commentDto){
         UserDto.Response userDto = (UserDto.Response) httpSession.getAttribute("user");
-        commentService.update(userDto, commentDto);
+        commentService.update(userDto, commentId, commentDto);
         return "redirect:/articles/"+commentDto.getArticleId();
     }
 
     @DeleteMapping("/{id}")
-    public String delete(HttpSession httpSession, CommentDto.Response commentDto){
+    public String delete(@PathVariable Long commentId, HttpSession httpSession, CommentDto.Response commentDto){
         UserDto.Response userDto = (UserDto.Response) httpSession.getAttribute("user");
-        commentService.delete(userDto, commentDto);
+        commentService.deleteById(userDto, commentId);
         return "redirect:/articles/"+commentDto.getArticleId();
     }
 }

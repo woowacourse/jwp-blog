@@ -39,10 +39,6 @@ public class Comment {
     @JoinColumn(name = "article_id")
     private Article article;
 
-    public void update(Comment other) {
-        this.contents = other.contents;
-    }
-
     public boolean isWrittenBy(User other) {
         return user.equals(other);
     }

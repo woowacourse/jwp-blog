@@ -37,30 +37,30 @@ public class CommentService {
             .collect(toList());
     }
 
-    public void save(UserDto.Response userDto, CommentDto.Create commentDto) {
+    public Long save(UserDto.Response userDto, CommentDto.Create commentDto) {
         User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundUserException::new);
         Article article = articleRepository.findById(commentDto.getArticleId()).orElseThrow(NotFoundArticleException::new);
 
         Comment comment = commentDto.toComment(user, article);
 
-        commentRepository.save(comment);
+        return commentRepository.save(comment).getId();
     }
 
-    @Transactional
-    public void update(UserDto.Response userDto, CommentDto.Update commentDto) {
-        Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(NotFoundCommentException::new);
-
+    //@Transactional 사용하면 엔티티만 변경해도 적용??
+    public Long update(UserDto.Response userDto, Long commentId, CommentDto.Update commentDto) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
         checkAuthor(userDto, comment);
 
-        comment.update(commentDto.toComment());
+        Article article = articleRepository.findById(commentDto.getArticleId()).orElseThrow(NotFoundArticleException::new);
+        Comment updatedComment = commentDto.toComment(commentId, userDto.toUser(), article);
+        return commentRepository.save(updatedComment).getId();
     }
 
-    public void delete(UserDto.Response userDto, CommentDto.Response commentDto) {
-        Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(NotFoundCommentException::new);
-
+    public void deleteById(UserDto.Response userDto, Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
         checkAuthor(userDto, comment);
 
-        commentRepository.deleteById(commentDto.getId());
+        commentRepository.deleteById(commentId);
     }
 
     private void checkAuthor(UserDto.Response userDto, Comment comment) {
