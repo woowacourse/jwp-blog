@@ -1,6 +1,5 @@
 package techcourse.myblog.web.controller;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,13 +85,6 @@ class CommentControllerTests extends ControllerTestTemplate {
         Comment comment = commentRepository.findAll().get(0);
 
         return "/articles/" + comment.getArticle().getId() + "/comment/" + comment.getId();
-    }
-
-    @AfterEach
-    protected void tearDown() {
-        commentRepository.deleteAll();
-        articleRepository.deleteAll();
-        super.tearDown();
     }
 
     private MultiValueMap<String, String> parser(CommentDto commentDto) {
