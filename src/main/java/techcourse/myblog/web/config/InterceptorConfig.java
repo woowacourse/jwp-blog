@@ -14,9 +14,9 @@ public class InterceptorConfig {
             @Override
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(new AuthInterceptor())
-                        .addPathPatterns("/articles*")
-                        .addPathPatterns("/mypage*")
-                        .addPathPatterns("/comment*");
+                        .addPathPatterns("/articles", "/articles/.*")
+                        .addPathPatterns("/mypage", "/mypage/.*")
+                        .addPathPatterns("/comment", "/comment/.*");
             }
         };
     }
