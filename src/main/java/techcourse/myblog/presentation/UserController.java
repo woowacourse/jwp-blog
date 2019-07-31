@@ -1,24 +1,22 @@
 package techcourse.myblog.presentation;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.dto.UserRequestDto;
 import techcourse.myblog.persistence.UserRepository;
+import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.UserRequestDto;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
-
-import static techcourse.myblog.service.UserService.LOGGED_IN_USER_SESSION_KEY;
 
 @Slf4j
 @Controller
@@ -28,7 +26,6 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @Autowired
     public UserController(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
         this.userService = userService;
@@ -58,23 +55,6 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/login")
-    public String showLoginPage() {
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String processLogin(UserRequestDto userRequestDto, HttpServletRequest request) {
-        request.getSession().setAttribute(LOGGED_IN_USER_SESSION_KEY, userService.authenticate(userRequestDto));
-        return "redirect:" + request.getHeader("Referer");
-    }
-
-    @GetMapping("/logout")
-    public String processLogout(HttpServletRequest request) {
-        request.getSession().removeAttribute(LOGGED_IN_USER_SESSION_KEY);
-        return "redirect:/";
-    }
-
     @GetMapping("/accounts/profile/{id}")
     public String showProfilePage(@PathVariable Long id, Model model) {
         User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
@@ -85,7 +65,7 @@ public class UserController {
 
     @GetMapping("/accounts/profile/edit")
     public String showProfileEditPage(Model model, HttpSession session) {
-        model.addAttribute("userRequestDto", new UserRequestDto((User) session.getAttribute(LOGGED_IN_USER_SESSION_KEY)));
+        model.addAttribute("userRequestDto", new UserRequestDto((User) session.getAttribute(LoginService.LOGGED_IN_USER_SESSION_KEY)));
         return "mypage-edit";
     }
 
@@ -96,7 +76,7 @@ public class UserController {
             return "mypage-edit";
         }
         User updatedUser = userService.update(userRequestDto.getEmail(), userRequestDto);
-        request.getSession().setAttribute(LOGGED_IN_USER_SESSION_KEY, updatedUser);
+        request.getSession().setAttribute(LoginService.LOGGED_IN_USER_SESSION_KEY, updatedUser);
 
         return "redirect:/accounts/profile/" + updatedUser.getId();
     }
@@ -110,9 +90,9 @@ public class UserController {
 
     @DeleteMapping("/accounts/delete")
     public String processDelete(HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute(LOGGED_IN_USER_SESSION_KEY);
+        User user = (User) httpSession.getAttribute(LoginService.LOGGED_IN_USER_SESSION_KEY);
         userRepository.deleteById(user.getId());
-        httpSession.removeAttribute(LOGGED_IN_USER_SESSION_KEY);
+        httpSession.removeAttribute(LoginService.LOGGED_IN_USER_SESSION_KEY);
         return "redirect:/";
     }
 }

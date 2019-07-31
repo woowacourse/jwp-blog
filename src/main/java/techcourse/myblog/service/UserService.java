@@ -11,7 +11,6 @@ import javax.transaction.Transactional;
 
 @Service
 public class UserService {
-    public final static String LOGGED_IN_USER_SESSION_KEY = "user";
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -24,13 +23,5 @@ public class UserService {
         user.update(userRequestDto);
 
         return user;
-    }
-
-    public User authenticate(UserRequestDto userRequestDto) {
-        User user = userRepository.findByEmail(userRequestDto.getEmail()).orElseThrow(AuthenticationFailException::new);
-        if (user.isMatch(userRequestDto)) {
-            return user;
-        }
-        throw new AuthenticationFailException();
     }
 }

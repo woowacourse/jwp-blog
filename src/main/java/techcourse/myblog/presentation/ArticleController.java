@@ -15,13 +15,10 @@ import techcourse.myblog.service.dto.ArticleRequestDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
 import techcourse.myblog.service.exception.ArticleNotFoundException;
-
-import javax.servlet.http.HttpSession;
+import techcourse.myblog.web.SessionUser;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static techcourse.myblog.service.UserService.LOGGED_IN_USER_SESSION_KEY;
 
 @Slf4j
 @Controller
@@ -44,10 +41,9 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String addNewArticle(ArticleRequestDto articleRequestDto, HttpSession session) {
-        User user = (User) session.getAttribute(LOGGED_IN_USER_SESSION_KEY);
+    public String addNewArticle(ArticleRequestDto articleRequestDto, @SessionUser User loggedInUser) {
         Article newArticle = articleRequestDto.toArticle();
-        newArticle.setAuthor(user);
+        newArticle.setAuthor(loggedInUser);
         articleRepository.save(newArticle);
         return "redirect:/articles/" + newArticle.getId();
     }
@@ -70,7 +66,7 @@ public class ArticleController {
         Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new);
         model.addAttribute("article", article);
 
-        List<CommentResponseDto> comments =  commentRepository.findByArticleOrderByCreatedAt(article)
+        List<CommentResponseDto> comments = commentRepository.findByArticleOrderByCreatedAt(article)
                 .stream()
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
@@ -92,10 +88,9 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/{articleId}/comments")
-    public String addNewComment(@PathVariable long articleId, CommentRequestDto commentRequestDto, HttpSession httpSession) {
+    public String addNewComment(@PathVariable long articleId, CommentRequestDto commentRequestDto, @SessionUser User loggedInUser) {
         Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new);
-        User commenter = (User) httpSession.getAttribute(LOGGED_IN_USER_SESSION_KEY);
-        Comment newComment = commentRequestDto.toComment(commenter, article);
+        Comment newComment = commentRequestDto.toComment(loggedInUser, article);
         commentRepository.save(newComment);
         return "redirect:/articles/" + articleId;
     }
