@@ -40,7 +40,7 @@ public class ArticleService {
         log.debug("update article params={}", articleSaveRequestDto);
 
         Article article = findById(id);
-        article.update(articleSaveRequestDto);
+        article.update(articleSaveRequestDto.toEntity());
     }
 
     public void deleteById(long id) {

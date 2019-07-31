@@ -39,10 +39,10 @@ public class Article {
         return StringUtils.isNotBlank(coverUrl);
     }
 
-    public void update(ArticleSaveRequestDto articleSaveRequestDto) {
-        this.title = articleSaveRequestDto.getTitle();
-        this.coverUrl = articleSaveRequestDto.getCoverUrl();
-        this.contents = articleSaveRequestDto.getContents();
+    public void update(Article article) {
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
     }
 
     public void setAuthor(User user) {

@@ -69,8 +69,9 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteArticle(@PathVariable long id) {
+    public String deleteArticle(@PathVariable long id, HttpSession httpSession) {
         log.info("delete article delete request id={}", id);
+//        if(httpSession.getAttribute(USER)==articleService.)
         articleService.deleteById(id);
         return "redirect:/";
     }

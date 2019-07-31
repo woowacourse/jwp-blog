@@ -15,7 +15,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession httpSession = request.getSession();
-        if (isAlreadyLogin(httpSession)) {
+        if (isNotAlreadyLogin(httpSession)) {
             response.sendRedirect("/login");
             return false;
         }
@@ -23,7 +23,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
-    private boolean isAlreadyLogin(HttpSession httpSession) {
+    private boolean isNotAlreadyLogin(HttpSession httpSession) {
         return httpSession.getAttribute(USER) == null;
     }
 }
