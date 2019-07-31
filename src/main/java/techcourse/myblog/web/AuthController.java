@@ -40,8 +40,6 @@ public class AuthController {
 
         User user = authService.login(userDto);
         session.setAttribute("user", user);
-//        session.setAttribute("username", user.getName());
-//        session.setAttribute("email", user.getEmail());
 
         return new RedirectView("/");
     }
@@ -55,7 +53,7 @@ public class AuthController {
 
     @GetMapping("/logout")
     public RedirectView logout(HttpSession session) {
-        session.removeAttribute("user");
+        authService.logout(session);
         return new RedirectView("/");
     }
 }
