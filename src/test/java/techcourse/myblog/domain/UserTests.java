@@ -38,13 +38,13 @@ public class UserTests {
 
 		UserEditProfileDto userEditProfileDto = new UserEditProfileDto();
 		userEditProfileDto.setUsername("tiberlee");
-		userEditProfileDto.setFacebookURL("www.facebook.com");
-		userEditProfileDto.setGithubURL("www.github.com");
+		userEditProfileDto.setFaceBookUrl("www.facebook.com");
+		userEditProfileDto.setGithubUrl("www.github.com");
 
 		user.editUser(userEditProfileDto);
 		assertThat(user.getUsername()).isEqualTo(userEditProfileDto.getUsername());
-		assertThat(user.getFacebookURL()).isEqualTo(userEditProfileDto.getFacebookURL());
-		assertThat(user.getGithubURL()).isEqualTo(userEditProfileDto.getGithubURL());
+		assertThat(user.getFacebookUrl()).isEqualTo(userEditProfileDto.getFaceBookUrl());
+		assertThat(user.getGithubUrl()).isEqualTo(userEditProfileDto.getGithubUrl());
 	}
 
 	private User createUser() {

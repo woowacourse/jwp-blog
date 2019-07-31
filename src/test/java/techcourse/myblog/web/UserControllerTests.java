@@ -103,9 +103,9 @@ class UserControllerTests {
 				.expectStatus();
 	}
 
-	private void checkRedirect(StatusAssertions statusAssertions, String name, String redirectURLRegex) {
+	private void checkRedirect(StatusAssertions statusAssertions, String name, String redirectUrlRegex) {
 		statusAssertions.isFound()
 				.expectHeader()
-				.valueMatches(name, redirectURLRegex);
+				.valueMatches(name, redirectUrlRegex);
 	}
 }

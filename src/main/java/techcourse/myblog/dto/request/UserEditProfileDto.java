@@ -13,8 +13,8 @@ public class UserEditProfileDto {
 	@Pattern(regexp = "^[a-zA-Z가-힣]+$")
 	private String username;
 
-	private String githubURL;
-	private String facebookURL;
+	private String githubUrl;
+	private String faceBookUrl;
 
 	public String getUsername() {
 		return username;
@@ -24,19 +24,19 @@ public class UserEditProfileDto {
 		this.username = username;
 	}
 
-	public String getGithubURL() {
-		return githubURL;
+	public String getGithubUrl() {
+		return githubUrl;
 	}
 
-	public void setGithubURL(String githubURL) {
-		this.githubURL = githubURL;
+	public void setGithubUrl(String githubUrl) {
+		this.githubUrl = githubUrl;
 	}
 
-	public String getFacebookURL() {
-		return facebookURL;
+	public String getFaceBookUrl() {
+		return faceBookUrl;
 	}
 
-	public void setFacebookURL(String facebookURL) {
-		this.facebookURL = facebookURL;
+	public void setFaceBookUrl(String faceBookUrl) {
+		this.faceBookUrl = faceBookUrl;
 	}
 }

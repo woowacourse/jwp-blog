@@ -124,13 +124,13 @@ public class ArticleControllerTests {
 		checkRedirect(statusAssertions, "Location", ".+/login");
 	}
 
-	private void checkRedirect(StatusAssertions statusAssertions, String name, String redirectURLRegex) {
+	private void checkRedirect(StatusAssertions statusAssertions, String name, String redirectUrlRegex) {
 		statusAssertions.isFound()
 				.expectHeader()
-				.valueMatches(name, redirectURLRegex);
+				.valueMatches(name, redirectUrlRegex);
 	}
 
-	private StatusAssertions articlePutOrPostRequestWithSession(HttpMethod httpMethod, String requestURI, String title, String coverURL, String contents) {
+	private StatusAssertions articlePutOrPostRequestWithSession(HttpMethod httpMethod, String requestURI, String title, String coverUrl, String contents) {
 		return webTestClient
 				.method(httpMethod)
 				.uri(requestURI)
@@ -138,20 +138,20 @@ public class ArticleControllerTests {
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.body(BodyInserters
 						.fromFormData("title", title)
-						.with("coverUrl", coverURL)
+						.with("coverUrl", coverUrl)
 						.with("contents", contents))
 				.exchange()
 				.expectStatus();
 	}
 
-	private StatusAssertions articlePutOrPostRequest(HttpMethod httpMethod, String requestURI, String title, String coverURL, String contents) {
+	private StatusAssertions articlePutOrPostRequest(HttpMethod httpMethod, String requestURI, String title, String coverUrl, String contents) {
 		return webTestClient
 				.method(httpMethod)
 				.uri(requestURI)
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.body(BodyInserters
 						.fromFormData("title", title)
-						.with("coverUrl", coverURL)
+						.with("coverUrl", coverUrl)
 						.with("contents", contents))
 				.exchange()
 				.expectStatus();

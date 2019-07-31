@@ -17,8 +17,8 @@ public class User {
 	private String username;
 	private String password;
 	private String email;
-	private String githubURL;
-	private String facebookURL;
+	private String githubUrl;
+	private String facebookUrl;
 
 	public User() {
 	}
@@ -31,8 +31,8 @@ public class User {
 
 	public void editUser(UserEditProfileDto userEditProfileDto) {
 		this.username = userEditProfileDto.getUsername();
-		this.githubURL = userEditProfileDto.getGithubURL();
-		this.facebookURL = userEditProfileDto.getFacebookURL();
+		this.githubUrl = userEditProfileDto.getGithubUrl();
+		this.facebookUrl = userEditProfileDto.getFaceBookUrl();
 	}
 
 	public boolean matchPassword(String password) {
@@ -51,12 +51,12 @@ public class User {
 		return email;
 	}
 
-	public String getGithubURL() {
-		return githubURL;
+	public String getGithubUrl() {
+		return githubUrl;
 	}
 
-	public String getFacebookURL() {
-		return facebookURL;
+	public String getFacebookUrl() {
+		return facebookUrl;
 	}
 
 	public Long getId() {
