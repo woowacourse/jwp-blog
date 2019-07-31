@@ -40,6 +40,7 @@ class CommentServiceTest {
         Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
 
         assertThat(comment.getComment()).isEqualTo(commentRequestDto.getComment());
+        assertThat(comment.matchAuthorId(BASE_USER_ID)).isTrue();
     }
 
     @Test
