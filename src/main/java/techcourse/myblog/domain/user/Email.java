@@ -11,7 +11,7 @@ public class Email {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9.\\-_]+@[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)$");
     private static final String EMAIL_ERROR = "올바른 이메일을 입력하세요";
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     public Email(String email) {

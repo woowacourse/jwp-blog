@@ -54,7 +54,7 @@ public class ArticleService {
     public void delete(long articleId, String sessionEmail) {
         Article originArticle = findArticle(articleId);
         validate(originArticle.getAuthor().getEmail(), sessionEmail);
-        articleRepository.delete(originArticle);
+        articleRepository.deleteById(articleId);
     }
 
     private void validate(String email, String sessionEmail) {

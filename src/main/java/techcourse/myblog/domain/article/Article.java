@@ -89,6 +89,7 @@ public class Article {
 
     public void setAuthor(User author) {
         this.author = author;
+        this.author.addArticle(this);
     }
 
     public void addComment(Comment comment) {

@@ -26,9 +26,7 @@ public class CommentService {
     public Comment addComment(Long articleId, String email, CommentDto commentDto) {
         Article article = articleService.findArticle(articleId);
         User author = userService.getUserByEmail(email);
-        Comment comment = commentDto.toEntity();
-        comment.setAuthor(author);
-        comment.setArticle(article);
+        Comment comment = commentDto.toEntity(author, article);
         return commentRepository.save(comment);
     }
 

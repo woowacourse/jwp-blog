@@ -1,32 +1,35 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.repository.UserRepository;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class AuthedWebTestClient {
     private static final Logger log = LoggerFactory.getLogger(AuthedWebTestClient.class);
-
+    public User user = new User("andole", "A!1bcdefg", "andole@gmail.com");
     @Autowired
     protected WebTestClient webTestClient;
     @Autowired
     protected UserRepository userRepository;
 
-
+    @Rollback(value = false)
     protected void init() {
-        userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
+        webTestClient.post().uri("/users")
+                .body(BodyInserters.fromFormData("name", "andole")
+                        .with("password", "A!1bcdefg")
+                        .with("email", "andole@gmail.com"))
+                .exchange();
+//        userRepository.save(user);
     }
 
     protected void end() {
@@ -34,6 +37,9 @@ public class AuthedWebTestClient {
     }
 
     private String loginCookie() {
+        //TODO 왜 아래처럼 되어 있으면 오류가 날까?
+//        long count = userRepository.count();
+//        User newUser = userRepository.findByEmail(Email.of(user.getEmail())).get();
         log.debug("Start Authed Session ...");
         String cookie = webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

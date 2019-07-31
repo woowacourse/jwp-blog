@@ -26,7 +26,7 @@ public class User {
     private Email email;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    private List<Article> aritlces = new ArrayList<>();
+    private List<Article> articles = new ArrayList<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
@@ -38,6 +38,10 @@ public class User {
         this.name = UserName.of(name);
         this.password = UserPassword.of(password);
         this.email = Email.of(email);
+    }
+
+    public void addArticle(Article article) {
+        this.articles.add(article);
     }
 
     public Long getId() {

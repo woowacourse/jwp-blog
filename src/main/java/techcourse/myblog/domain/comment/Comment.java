@@ -40,6 +40,12 @@ public class Comment {
         this.contents = contents;
     }
 
+    public Comment(String contents, User author, Article article) {
+        this.contents = contents;
+        this.author = author;
+        this.article = article;
+    }
+
     public Comment updateContent(String contents) {
         this.contents = contents;
         return this;
