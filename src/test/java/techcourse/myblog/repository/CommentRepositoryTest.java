@@ -43,9 +43,8 @@ class CommentRepositoryTest {
         Article article = new Article("title", "url", "content", user);
         persistArticle = testEntityManager.persist(article);
 
-        Comment comment = new Comment("댓글 내용");
-        comment.setAuthor(persistAuthor);
-        comment.setArticle(persistArticle);
+        Comment comment = new Comment("댓글 내용", persistArticle, persistAuthor);
+
         return testEntityManager.persist(comment);
     }
 
@@ -76,7 +75,6 @@ class CommentRepositoryTest {
                 .orElseThrow(() ->
                         new IllegalArgumentException("Dd"));
 
-        actualComment.setContents(CONTENTS_2);
         flushAndClearEntityManager();
 
         actualComment = commentRepository.findById(persistComment.getId())

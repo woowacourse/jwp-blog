@@ -59,15 +59,11 @@ public class CommentController {
             throw new UnauthenticatedUserException("로그인하지 않으면 댓글을 작성할 수 없습니다.");
         }
 
-        Comment comment = commentDTO.toDomain();
-        comment.setAuthor(user);
-
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
+        Comment comment = commentDTO.toDomain(article, user);
 
-        comment.setArticle(article);
         article.add(comment);
-
         commentRepository.save(comment);
 
         return new RedirectView("/articles/" + articleId);
@@ -109,14 +105,14 @@ public class CommentController {
                                @ModelAttribute CommentDTO commentDTO,
                                HttpSession httpSession) {
 
-        Comment comment = commentRepository.findById(commentId)
+        Comment savedComment = commentRepository.findById(commentId)
                 .orElseThrow(() ->
                         new NotFoundCommentException("해당 덧글이 존재하지 않습니다."));
 
-        validateUser(httpSession, comment);
+        validateUser(httpSession, savedComment);
 
-        comment.setContents(commentDTO.getContents());
-        commentRepository.save(comment);
+        savedComment.update(commentDTO.toDomain(savedComment.getArticle(), savedComment.getAuthor()));
+        commentRepository.save(savedComment);
 
         return new RedirectView("/articles/" + articleId);
     }

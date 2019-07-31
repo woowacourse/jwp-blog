@@ -2,30 +2,32 @@ package techcourse.myblog.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NonNull
     private String contents;
 
     @ManyToOne
+    @NonNull
     private Article article;
 
     @ManyToOne
+    @NonNull
     private User author;
 
-    public Comment(String contents) {
-        this.contents = contents;
+    public void update(Comment comment) {
+        this.contents = comment.contents;
     }
 }
