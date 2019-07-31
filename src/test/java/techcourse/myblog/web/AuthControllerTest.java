@@ -14,7 +14,7 @@ import static techcourse.myblog.web.UserControllerTest.회원_등록;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthControllerTest {
     static String testEmail = "pkch@woowa.com";
-    static String testPassword = "qwerqwer";
+    static String testPassword = "!234Qwer";
 
     @Autowired
     private WebTestClient webTestClient;

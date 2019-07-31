@@ -35,7 +35,7 @@ class UserControllerTest {
         testUserDto = new UserDto();
         testUserDto.setName("pkch");
         testUserDto.setEmail("pkch@woowa.com");
-        testUserDto.setPassword("qwerqwer");
+        testUserDto.setPassword("!234Qwer");
     }
 
     @Test
@@ -91,7 +91,7 @@ class UserControllerTest {
     @Test
     void 로그인_상태에서_마이페이지_접근_테스트() {
         회원_등록(webTestClient, testUserDto);
-        String jSessionId = 로그인_세션_ID(webTestClient, "pkch@woowa.com", "qwerqwer");
+        String jSessionId = 로그인_세션_ID(webTestClient, "pkch@woowa.com", "!234Qwer");
         webTestClient.get().uri("/users/pkch@woowa.com")
                 .header("cookie", jSessionId)
                 .exchange()
@@ -109,7 +109,7 @@ class UserControllerTest {
     @Test
     void 로그인_상태에서_로그인_된_이메일이_아닌_다른_이메일uri로_접근시_메인페이지_리다이렉팅_테스트() {
         회원_등록(webTestClient, testUserDto);
-        String jSessionId = 로그인_세션_ID(webTestClient, "pkch@woowa.com", "qwerqwer");
+        String jSessionId = 로그인_세션_ID(webTestClient, "pkch@woowa.com", "!234Qwer");
         webTestClient.get().uri("/users/park@woowa.com")
                 .header("cookie", jSessionId)
                 .exchange()
@@ -120,7 +120,7 @@ class UserControllerTest {
     @Test
     void 로그인_상태에서_개인정보_수정페이지_접근_테스트() {
         회원_등록(webTestClient, testUserDto);
-        String jSessionId = 로그인_세션_ID(webTestClient, "pkch@woowa.com", "qwerqwer");
+        String jSessionId = 로그인_세션_ID(webTestClient, "pkch@woowa.com", "!234Qwer");
         webTestClient.get().uri("/users/pkch@woowa.com/edit")
                 .header("cookie", jSessionId)
                 .exchange()
@@ -138,7 +138,7 @@ class UserControllerTest {
     @Test
     void 로그인_상태에서_로그인_된_이메일이_아닌_다른_이메일uri로_수정페이지_접근시_메인페이지_리다이렉팅_테스트() {
         회원_등록(webTestClient, testUserDto);
-        String jSessionId = 로그인_세션_ID(webTestClient, "pkch@woowa.com", "qwerqwer");
+        String jSessionId = 로그인_세션_ID(webTestClient, "pkch@woowa.com", "!234Qwer");
         webTestClient.get().uri("/users/park@woowa.com/edit")
                 .header("cookie", jSessionId)
                 .exchange()
@@ -149,7 +149,7 @@ class UserControllerTest {
     @Test
     void 수정_정상_흐름_테스트() {
         회원_등록(webTestClient, testUserDto);
-        String jSessionId = 로그인_세션_ID(webTestClient, "pkch@woowa.com", "qwerqwer");
+        String jSessionId = 로그인_세션_ID(webTestClient, "pkch@woowa.com", "!234Qwer");
         webTestClient.put().uri("/users/pkch@woowa.com")
                 .header("cookie", jSessionId)
                 .body(BodyInserters.fromFormData("name", "park"))
@@ -169,7 +169,7 @@ class UserControllerTest {
     @Test
     void 회원_탈퇴_정상_흐름_테스트() {
         회원_등록(webTestClient, testUserDto);
-        String jSessionId = 로그인_세션_ID(webTestClient, "pkch@woowa.com", "qwerqwer");
+        String jSessionId = 로그인_세션_ID(webTestClient, "pkch@woowa.com", "!234Qwer");
         webTestClient.delete().uri("/users/pkch@woowa.com")
                 .header("cookie", jSessionId)
                 .exchange()

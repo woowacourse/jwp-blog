@@ -14,7 +14,7 @@ public class UserDto {
     @Pattern(regexp = "[a-zA-Z가-힣]{2,10}")
     private String name;
     @Length(min = 8)
-    @Pattern(regexp = "\\w{8,}")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}")
     private String password;
     @Pattern(regexp = "\\b[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,4}\\b")
     private String email;

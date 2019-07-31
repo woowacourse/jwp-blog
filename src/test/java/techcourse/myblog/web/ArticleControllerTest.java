@@ -21,7 +21,7 @@ import static techcourse.myblog.web.UserControllerTest.회원_등록;
 class ArticleControllerTest {
 
     private static final String TEST_LOGIN_ID = "pkch@woowa.com";
-    private static final String TEST_LOGIN_PASSWORD = "qwerqwer";
+    private static final String TEST_LOGIN_PASSWORD = "!234Qwer";
 
     private String title = "제목";
     private String coverUrl = "이미지";
