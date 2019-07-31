@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
     private static final Long DEFAULT_ARTICLE_ID = 999L;
+
     @Autowired
     private WebTestClient webTestClient;
 
@@ -212,8 +213,7 @@ public class ArticleControllerTests {
                         .with("contents", "newContents"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/articles/\\d*")
-                .expectBody();
+                .expectHeader().valueMatches("location", ".*/articles/\\d*");
     }
 
     @Test

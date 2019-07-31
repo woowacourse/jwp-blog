@@ -1,7 +1,5 @@
 package techcourse.myblog.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +19,6 @@ import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
 @Controller
 public class CommentController {
     private final CommentService commentService;
-    private static final Logger log = LoggerFactory.getLogger(CommentController.class);
 
     @Autowired
     public CommentController(CommentService commentService) {
@@ -52,8 +49,10 @@ public class CommentController {
     public ModelAndView deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/articles/" + articleId));
-
-        commentService.delete(commentId);
+        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
+        if (user.getId().equals(commentService.findById(commentId).getAuthorId())) {
+            commentService.delete(commentId);
+        }
         return modelAndView;
     }
 }

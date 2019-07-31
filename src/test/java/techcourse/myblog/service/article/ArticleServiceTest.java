@@ -8,10 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.service.dto.article.ArticleRequestDto;
 import techcourse.myblog.service.dto.article.ArticleResponseDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
-import techcourse.myblog.service.user.UserService;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,21 +21,23 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 public class ArticleServiceTest {
     private static final Long DEFAULT_USER_ID = 999L;
     private static final Long DEFAULT_ARTICLE_ID = 999L;
+    private static final int AUTO_INCREMENT_ID = 1;
 
     @Autowired
     private ArticleService articleService;
 
-    @Autowired
-    private UserService userService;
-
     @Test
     void 게시글_생성_확인() {
-        UserResponseDto retrieveUser = userService.findById(DEFAULT_USER_ID);
         ArticleRequestDto article = new ArticleRequestDto("some title", "", "some contents");
-        Long articleId = articleService.save(article, retrieveUser.getId());
-        assertThat(articleService.findById(articleId)).isEqualTo(article);
+        Long articleId = articleService.save(article, DEFAULT_USER_ID);
+        assertThat(articleService.findById(articleId))
+                .isEqualTo(new ArticleResponseDto(
+                        DEFAULT_ARTICLE_ID + AUTO_INCREMENT_ID,
+                        "some title",
+                        "",
+                        "some contents",
+                        Collections.emptyList()));
     }
-
 
     @Test
     void 게시글_조회_확인() {
@@ -55,7 +56,10 @@ public class ArticleServiceTest {
         ArticleRequestDto updatedArticleDto = new ArticleRequestDto("title", "", "contents");
         articleService.update(DEFAULT_ARTICLE_ID, updatedArticleDto);
         ArticleResponseDto retrievedArticleDto = articleService.findById(DEFAULT_ARTICLE_ID);
-        assertThat(retrievedArticleDto).isEqualTo(updatedArticleDto);
+        assertThat(retrievedArticleDto.getId()).isEqualTo(DEFAULT_ARTICLE_ID);
+        assertThat(retrievedArticleDto.getTitle()).isEqualTo(updatedArticleDto.getTitle());
+        assertThat(retrievedArticleDto.getCoverUrl()).isEqualTo(updatedArticleDto.getCoverUrl());
+        assertThat(retrievedArticleDto.getContents()).isEqualTo(updatedArticleDto.getContents());
     }
 
     @Test

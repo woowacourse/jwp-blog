@@ -17,6 +17,7 @@ public class CommentServiceTest {
     private static final Long DEFAULT_USER_ID = 999L;
     private static final Long DEFAULT_ARTICLE_ID = 999L;
     private static final Long DEFAULT_COMMENT_ID = 999L;
+    private static final int AUTO_INCREMENT_ID = 1;
 
 
     @Autowired
@@ -26,7 +27,7 @@ public class CommentServiceTest {
     void 댓글_작성() {
         CommentRequestDto commentDto = new CommentRequestDto("comment");
         CommentResponseDto persistComment = commentService.save(commentDto, DEFAULT_USER_ID, DEFAULT_ARTICLE_ID);
-        assertThat(persistComment).isEqualTo(new CommentResponseDto(DEFAULT_COMMENT_ID, "comment", 1000L, "john"));
+        assertThat(persistComment).isEqualTo(new CommentResponseDto(DEFAULT_COMMENT_ID + AUTO_INCREMENT_ID, "comment", DEFAULT_USER_ID, "john"));
     }
 
     @Test

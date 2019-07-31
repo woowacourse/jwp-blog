@@ -8,6 +8,7 @@ import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CommentControllerTests {
     private static final Long DEFAULT_ARTICLE_ID = 999L;
     private static final Long DEFAULT_COMMENT_ID = 999L;
+    private static final int AUTO_INCREMENT_ID = 1;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -57,7 +59,7 @@ public class CommentControllerTests {
     void 로그인한_상태로_댓글_작성() {
         webTestClient.post().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments")
                 .cookie("JSESSIONID", jSessionId)
-                .body(BodyInserters.fromFormData("contents", "hello"))
+                .body(BodyInserters.fromFormData("comment", "hello"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".*/articles/\\d*");
@@ -66,15 +68,15 @@ public class CommentControllerTests {
                 .exchange()
                 .expectBody()
                 .consumeWith(response -> {
-                    assertThat(new String(response.getResponseBody()))
-                            .contains("hello");
+                    String body = new String(Objects.requireNonNull(response.getResponseBody()));
+                    assertThat(body).contains("hello");
                 });
     }
 
     @Test
     void 로그인하지_않은_상태로_댓글_작성() {
         webTestClient.post().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments")
-                .body(BodyInserters.fromFormData("contents", "hello"))
+                .body(BodyInserters.fromFormData("comment", "hello"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".*/login");
@@ -83,7 +85,7 @@ public class CommentControllerTests {
     @Test
     void 로그인하지_않은_상태로_댓글_수정() {
         webTestClient.put().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments/" + DEFAULT_COMMENT_ID)
-                .body(BodyInserters.fromFormData("contents", "newHello"))
+                .body(BodyInserters.fromFormData("comment", "newHello"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".*/login");
@@ -93,7 +95,7 @@ public class CommentControllerTests {
     void 댓글작성자가_댓글_수정() {
         webTestClient.put().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments/" + DEFAULT_COMMENT_ID)
                 .cookie("JSESSIONID", jSessionId)
-                .body(BodyInserters.fromFormData("contents", "newHello"))
+                .body(BodyInserters.fromFormData("comment", "newHello"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".*/articles/\\d*");
@@ -105,7 +107,7 @@ public class CommentControllerTests {
 
         webTestClient.put().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments/" + DEFAULT_COMMENT_ID)
                 .cookie("JSESSIONID", outsiderJSessionId)
-                .body(BodyInserters.fromFormData("contents", "newHello"))
+                .body(BodyInserters.fromFormData("comment", "newHello"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".*/articles/\\d*");
@@ -116,16 +118,23 @@ public class CommentControllerTests {
         webTestClient.delete().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments/" + DEFAULT_COMMENT_ID)
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/articles/.*");
+                .expectHeader().valueMatches("Location", ".*/login");
     }
 
     @Test
     void 댓글작성자가_댓글_삭제() {
-        webTestClient.delete().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments/" + DEFAULT_COMMENT_ID)
+        webTestClient.post().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments")
+                .cookie("JSESSIONID", jSessionId)
+                .body(BodyInserters.fromFormData("comment", "hello"))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("Location", ".*/articles/\\d*");
+
+        webTestClient.delete().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments/" + (DEFAULT_COMMENT_ID + AUTO_INCREMENT_ID))
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/articles/.*");
+                .expectHeader().valueMatches("Location", ".*/articles/\\d*");
     }
 
     @Test

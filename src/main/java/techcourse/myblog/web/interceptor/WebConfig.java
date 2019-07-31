@@ -14,13 +14,13 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/mypage/mypage-edit")
                 .addPathPatterns("/writing")
                 .addPathPatterns("/articles")
-                .addPathPatterns("/articles/.*/edit")
-                .addPathPatterns("/articles/.*/comments")
-                .addPathPatterns("/articles/\\d*/comments/\\d*");
+                .addPathPatterns("/articles/*/edit")
+                .addPathPatterns("/articles/*/comments")
+                .addPathPatterns("/articles/*/comments/*");
 
         registry.addInterceptor(new UnAuthenticationInterceptor())
                 .addPathPatterns("/signup")
                 .addPathPatterns("/users")
-                .addPathPatterns("/users/login");
+                .addPathPatterns("/login");
     }
 }

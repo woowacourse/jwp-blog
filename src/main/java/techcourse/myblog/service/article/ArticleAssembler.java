@@ -7,6 +7,7 @@ import techcourse.myblog.service.dto.article.ArticleRequestDto;
 import techcourse.myblog.service.dto.article.ArticleResponseDto;
 import techcourse.myblog.service.dto.comment.CommentResponseDto;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,6 +21,9 @@ public class ArticleAssembler {
         String title = article.getTitle();
         String coverUrl = article.getCoverUrl();
         String contents = article.getContents();
+        if (Objects.isNull(article.getComments())) {
+            return new ArticleResponseDto(id, title, coverUrl, contents, Collections.emptyList());
+        }
         List<CommentResponseDto> comments = article.getComments().stream()
                 .map(CommentAssembler::convertToDto)
                 .collect(toList());
