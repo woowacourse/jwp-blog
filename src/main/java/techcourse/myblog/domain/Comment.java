@@ -3,6 +3,8 @@ package techcourse.myblog.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,6 +25,7 @@ public class Comment {
     @ManyToOne
     private User user;
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
     public void initialize(final User user, final Article article) {
