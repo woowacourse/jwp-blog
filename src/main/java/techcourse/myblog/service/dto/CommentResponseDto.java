@@ -8,6 +8,8 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -24,5 +26,11 @@ public class CommentResponseDto {
         this.comment = comment.getComment();
         this.commenter = comment.getCommenter();
         this.createdAt = comment.getCreatedAt();
+    }
+
+    public static List<CommentResponseDto> of(List<Comment> comments) {
+        return comments.stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList());
     }
 }
