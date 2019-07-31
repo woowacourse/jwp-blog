@@ -3,6 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.ArticleService;
@@ -29,9 +30,9 @@ public class CommentController {
 
     @PostMapping("/articles/{articleId}/comment")
     public String create(@PathVariable Long articleId, CommentDto commentDto, HttpSession httpSession) {
-        commentDto.setWriter((User) httpSession.getAttribute("user"));
-        commentDto.setArticle(articleService.findById(articleId));
-        commentService.save(commentDto);
+        User author = (User)httpSession.getAttribute("user");
+        Article article = articleService.findById(articleId);
+        commentService.save(commentDto, author, article);
         return "redirect:/articles/" + articleId;
     }
 

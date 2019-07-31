@@ -18,13 +18,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CommentServiceTest {
-    private static final String EMAIL = "aiden1@naver.com";
-
     private final UserService userService;
     private final ArticleService articleService;
     private final CommentService commentService;
 
-    private User user;
+    private User author;
     private Article article;
     private Comment beforeComment;
 
@@ -37,31 +35,29 @@ class CommentServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = userService.save(new UserDto("aiden", EMAIL, "aiden3"));
-        article = articleService.save(new ArticleDto("gogo", "coverUrl", "contents"));
-        CommentDto commentDto = new CommentDto(user, "brand new comment");
-        commentDto.setArticle(article);
-        beforeComment = commentService.save(commentDto);
+        author = userService.save(new UserDto("aiden", "aiden1@naver.com", "12Aiden@@"));
+        article = articleService.save(new ArticleDto("gogo", "coverUrl", "contents"), author);
+        CommentDto commentDto = new CommentDto("brand new comment");
+        beforeComment = commentService.save(commentDto, author, article);
     }
 
     @Test
     void 저장_조회_테스트() {
-        Comment comment = commentService.save(new CommentDto(user, "contents"));
+        Comment comment = commentService.save(new CommentDto("contents"), author, article);
         assertThat(commentService.findById(comment.getId())).isEqualTo(comment);
     }
 
     @Test
     void 수정_테스트() {
-        CommentDto newCommentDto = new CommentDto(user, "update");
+        CommentDto newCommentDto = new CommentDto("update");
         Comment newComment = commentService.update(beforeComment.getId(), newCommentDto);
         assertThat(newComment.getContents()).isEqualTo("update");
     }
 
     @Test
     void 코멘트_목록_테스트() {
-        CommentDto commentDto = new CommentDto(user, "brand new comment");
-        commentDto.setArticle(article);
-        commentService.save(commentDto);
+        CommentDto commentDto = new CommentDto("brand new comment");
+        commentService.save(commentDto, author, article);
         assertThat(commentService.findByArticle(article).size()).isEqualTo(2);
     }
 

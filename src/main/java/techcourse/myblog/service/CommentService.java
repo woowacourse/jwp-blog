@@ -3,6 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.web.dto.CommentDto;
 
@@ -25,8 +26,8 @@ public class CommentService {
         return commentRepository.findByArticle(article);
     }
 
-    public Comment save(CommentDto commentDto) {
-        return commentRepository.save(commentDto.create());
+    public Comment save(CommentDto commentDto, User author, Article article) {
+        return commentRepository.save(commentDto.create(author, article));
     }
 
     public Comment update(Long commentId, CommentDto commentDto) {

@@ -14,7 +14,7 @@ public class Comment {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "writer", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
-    private User writer;
+    private User author;
     @Column(nullable = false)
     String contents;
     @CreationTimestamp
@@ -26,8 +26,8 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(User writer, String contents, Article article) {
-        this.writer = writer;
+    public Comment(User author, String contents, Article article) {
+        this.author = author;
         this.contents = contents;
         this.article = article;
     }
@@ -36,8 +36,8 @@ public class Comment {
         return id;
     }
 
-    public User getWriter() {
-        return writer;
+    public User getAuthor() {
+        return author;
     }
 
     public String getContents() {
@@ -63,7 +63,7 @@ public class Comment {
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
         return Objects.equals(id, comment.id) &&
-                Objects.equals(writer, comment.writer) &&
+                Objects.equals(author, comment.author) &&
                 Objects.equals(contents, comment.contents) &&
                 Objects.equals(createdTimeAt, comment.createdTimeAt) &&
                 Objects.equals(article, comment.article);
@@ -71,14 +71,14 @@ public class Comment {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, writer, contents, createdTimeAt, article);
+        return Objects.hash(id, author, contents, createdTimeAt, article);
     }
 
     @Override
     public String toString() {
         return "Comment{" +
                 "id=" + id +
-                ", writer=" + writer +
+                ", author=" + author +
                 ", contents='" + contents + '\'' +
                 ", createdTimeAt=" + createdTimeAt +
                 ", article=" + article +
