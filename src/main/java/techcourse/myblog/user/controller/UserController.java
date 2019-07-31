@@ -51,11 +51,10 @@ public class UserController {
 
     @GetMapping("/mypage/{userId}/edit")
     public String renderEditMyPage(@PathVariable long userId, UserSession session, Model model) {
-        UserDto.Response user = userService.findById(userId);
-        if (!session.getEmail().equals(user.getEmail())) {
+        if (session.getId() !=  userId) {
             return "redirect:/";
         }
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.findById(userId));
         return "mypage-edit";
     }
 
@@ -72,8 +71,7 @@ public class UserController {
 
     @DeleteMapping("/users/{userId}")
     public RedirectView deleteUser(@PathVariable long userId, UserSession session) {
-        UserDto.Response user = userService.findById(userId);
-        if (!session.getEmail().equals(user.getEmail())) {
+        if (session.getId() != userId) {
             return new RedirectView("/");
         }
         userService.deleteById(userId);
