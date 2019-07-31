@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,12 +16,10 @@ import javax.servlet.http.HttpSession;
 public class ArticleController {
     private final UserService userService;
     private final ArticleService articleService;
-    private final CommentService commentService;
 
     public ArticleController(ArticleService articleService, CommentService commentService, UserService userService) {
         this.userService = userService;
         this.articleService = articleService;
-        this.commentService = commentService;
     }
 
     private User getCurrentUser(HttpSession session) {
@@ -86,30 +84,4 @@ public class ArticleController {
         return new RedirectView("/");
     }
 
-    @PostMapping("/articles/{articleId}/comment")
-    public RedirectView writeComment(@PathVariable long articleId, String contents, HttpSession session) {
-        commentService.write(articleService.maybeArticle(articleId).get(), getCurrentUser(session), contents);
-        return new RedirectView("/articles/" + articleId);
-    }
-
-    @PutMapping("/articles/{articleId}/comment/{commentId}")
-    public RedirectView updateComment(
-            @PathVariable long articleId,
-            @PathVariable long commentId,
-            String contents,
-            HttpSession session
-    ) {
-        commentService.tryUpdate(commentId, contents, getCurrentUser(session));
-        return new RedirectView("/articles/" + articleId);
-    }
-
-    @DeleteMapping("/articles/{articleId}/comment/{commentId}")
-    public RedirectView deleteComment(
-            @PathVariable long articleId,
-            @PathVariable long commentId,
-            HttpSession session
-    ) {
-        commentService.delete(commentId, getCurrentUser(session));
-        return new RedirectView("/articles/" + articleId);
-    }
 }

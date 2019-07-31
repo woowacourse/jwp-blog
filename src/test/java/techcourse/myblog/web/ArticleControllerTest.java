@@ -11,6 +11,9 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.*;
+import techcourse.myblog.domain.repository.ArticleRepository;
+import techcourse.myblog.domain.repository.CommentRepository;
+import techcourse.myblog.domain.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

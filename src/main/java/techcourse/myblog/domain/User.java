@@ -1,10 +1,17 @@
 package techcourse.myblog.domain;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
 import javax.persistence.*;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class User {
     private static final Pattern NAME_VALIDATION = Pattern.compile("[a-zA-Z가-힣]+");
     private static final int MIN_NAME_LENGTH = 2;
@@ -16,12 +23,15 @@ public class User {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String name;
-    @Column(unique = true)
-    private String email;
-    private String password;
 
-    public User() {}
+    @Column(nullable = false, length = 20)
+    private String name;
+
+    @Column(nullable = false, unique = true, length = 25)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
 
     public User(String name, String email, String password) {
         this.name = validateName(name);
@@ -35,14 +45,6 @@ public class User {
         return this;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
     private String validateName(String input) {
         return Optional.ofNullable(input).filter(x -> (MIN_NAME_LENGTH <= x.length())
                                                     && (x.length() <= MAX_NAME_LENGTH))
@@ -50,22 +52,10 @@ public class User {
                                         .orElseThrow(IllegalArgumentException::new);
     }
 
-    public String getEmail() {
-        return this.email;
-    }
-
     private String validateEmail(String input) {
         return Optional.ofNullable(input).filter(x -> x.contains("@"))
                                         .filter(x -> x.substring(x.indexOf("@")).contains("."))
                                         .orElseThrow(IllegalArgumentException::new);
-    }
-
-    public boolean emailChanged(String email) {
-        return !this.email.equals(email);
-    }
-
-    public String getPassword() {
-        return this.password;
     }
 
     private String validatePassword(String input) {

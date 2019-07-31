@@ -2,7 +2,7 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.domain.repository.UserRepository;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;

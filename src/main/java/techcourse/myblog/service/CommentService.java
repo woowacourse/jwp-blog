@@ -3,7 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.CommentRepository;
+import techcourse.myblog.domain.repository.CommentRepository;
 import techcourse.myblog.domain.User;
 
 @Service
