@@ -62,10 +62,12 @@ public class Article {
         this.author = articleBuilder.author;
     }
 
-    public Article(String title, String coverUrl, String contents) {
+    public Article(Long id, String title, String coverUrl, String contents, User author) {
+        this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.author = author;
     }
 
     public void modify(Article article) {

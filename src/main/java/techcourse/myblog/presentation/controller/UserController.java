@@ -1,5 +1,7 @@
 package techcourse.myblog.presentation.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,11 +15,14 @@ import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.UserService;
 import techcourse.myblog.presentation.controller.exception.InvalidUpdateException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
 public class UserController {
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
     private final UserService userService;
 
     @Autowired
@@ -40,10 +45,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public RedirectView login(HttpSession httpSession, @Valid LoginDto loginDto) {
+    public RedirectView login(HttpServletRequest request, @Valid LoginDto loginDto) {
         userService.login(loginDto);
-
+        HttpSession httpSession = request.getSession();
         RedirectView redirectView = new RedirectView("/");
+        log.info("Login Session : " + loginDto.getEmail());
         httpSession.setAttribute("email", loginDto.getEmail());
         httpSession.setMaxInactiveInterval(600);
         return redirectView;
@@ -68,6 +74,7 @@ public class UserController {
 
     @GetMapping("/mypage/edit")
     public ModelAndView readMyPageEdit(HttpSession httpSession) {
+        log.info("edit pages");
         ModelAndView modelAndView = new ModelAndView();
         String email = (String) httpSession.getAttribute("email");
         modelAndView.setViewName("mypage-edit");
