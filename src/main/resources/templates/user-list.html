@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="fragments/config :: configFragment"/>
     <title>우아한테크코스 기술블로그</title>
-    <link rel="stylesheet" href="/css/index.css">
+    <link href="/css/index.css" rel="stylesheet">
 </head>
 <body>
 <div>
@@ -27,10 +27,12 @@
                         <ul class="list-unstyled list-info">
                             <li>
                                 <div class="pdd-vertical-10">
-                                    <img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
+                                    <img alt=""
+                                         class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
                                     <div class="info">
-                                        <a th:href="${'/mypage/' + user.id}"
-                                           class="title no-pdd-vertical text-semibold inline-block lh-1" th:text="${user.userName}">Brown</a>
+                                        <a class="title no-pdd-vertical text-semibold inline-block lh-1"
+                                           th:href="${'/mypage/' + user.id}"
+                                           th:text="${user.userName}">Brown</a>
                                         <span class="sub-title">
                                             <span th:text="${user.email}">gracefulBrown@woowahan.com</span>
                                         </span>

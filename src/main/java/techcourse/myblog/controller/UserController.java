@@ -1,7 +1,5 @@
 package techcourse.myblog.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,7 +17,6 @@ import javax.validation.Valid;
 @SessionAttributes("user")
 @RequestMapping("/users")
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private UserService userService;
 
     public UserController(UserService userService) {
@@ -50,7 +47,6 @@ public class UserController {
     @PutMapping
     public String updateUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            log.error(bindingResult.getFieldError().getDefaultMessage());
             throw new UserUpdateFailException(bindingResult.getFieldError().getDefaultMessage());
         }
         User user = userService.update(userDto);

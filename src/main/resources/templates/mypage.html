@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="fragments/config :: configFragment"/>
     <title>우아한테크코스 기술블로그</title>
-    <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/mypage.css">
+    <link href="/css/index.css" rel="stylesheet">
+    <link href="/css/mypage.css" rel="stylesheet">
 </head>
 <body>
 <div>
@@ -25,12 +25,14 @@
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
                         <form action="/users" method="post">
-                            <input type="hidden" name="_method" value="delete">
-                            <button type="submit" class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
+                            <input name="_method" type="hidden" value="delete">
+                            <button class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5"
+                                    type="submit">
                                 <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
                             </button>
                         </form>
-                        <a href="/users/mypage-edit" class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
+                        <a class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5"
+                           href="/users/mypage-edit">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </a>
 
@@ -42,8 +44,9 @@
                                 <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p th:if="${session.user != null}" th:text="${session.user.userName}" class="mrg-top-10">Brown</p>
-                                <p th:unless="${session.user != null}" class="mrg-top-10">Brown</p>
+                                <p class="mrg-top-10" th:if="${session.user != null}"
+                                   th:text="${session.user.userName}">Brown</p>
+                                <p class="mrg-top-10" th:unless="${session.user != null}">Brown</p>
                             </div>
                         </div>
                         <hr>
@@ -52,25 +55,27 @@
                                 <p class="mrg-top-10 text-dark"><b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p th:if="${session.user != null}" th:text="${session.user.email}" class="mrg-top-10">gracefulBrown@woowahan.com</p>
-                                <p th:unless="${session.user != null}" class="mrg-top-10">gracefulBrown@woowahan.com</p>
+                                <p class="mrg-top-10" th:if="${session.user != null}" th:text="${session.user.email}">
+                                    gracefulBrown@woowahan.com</p>
+                                <p class="mrg-top-10" th:unless="${session.user != null}">gracefulBrown@woowahan.com</p>
                             </div>
                         </div>
                         <hr>
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"> <b>Avatar</b></p>
+                                <p class="mrg-top-10 text-dark"><b>Avatar</b></p>
                             </div>
                             <div class="col-md-6">
                                 <div>
-                                    <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" width="117" alt="">
+                                    <img alt="" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
+                                         width="117">
                                 </div>
                             </div>
                         </div>
                         <hr>
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"> <b>SNS</b></p>
+                                <p class="mrg-top-10 text-dark"><b>SNS</b></p>
                             </div>
                             <div class="col-md-12">
                                 <div class="row">

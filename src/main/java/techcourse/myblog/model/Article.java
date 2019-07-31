@@ -1,8 +1,12 @@
 package techcourse.myblog.model;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import techcourse.myblog.exception.MisMatchAuthorException;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +16,6 @@ import java.util.List;
 @EqualsAndHashCode
 @Entity
 public class Article {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ARTICLE_ID")
@@ -31,6 +34,14 @@ public class Article {
     @Lob
     private String contents;
 
+    @CreationTimestamp
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
+    private LocalDateTime currentDateTime;
+
+    @UpdateTimestamp
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime updateTime;
+
     @NonNull
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false, foreignKey = @ForeignKey(name = "fk_article_to_user"))
@@ -39,16 +50,19 @@ public class Article {
     @OneToMany(mappedBy = "article")
     private List<Comment> comments = new ArrayList<>();
 
-    public void addComments(Comment comment) {
+    public void addComment(Comment comment) {
         this.comments.add(comment);
         if (comment.getArticle() != this) {
-            comment.setArticle(this);
+            comment.updateArticle(this);
         }
     }
 
     public List<Comment> getComments() {
-        System.out.println(comments.isEmpty());
         return comments;
+    }
+
+    public void deleteComment(Comment comment) {
+        this.comments.remove(comment);
     }
 
     public Article update(Article article) {
@@ -60,5 +74,9 @@ public class Article {
         return this;
     }
 
-
+    public void checkOwner(User user) {
+        if (!this.user.equals(user)) {
+            throw new MisMatchAuthorException("게시글을 작성한 유저만 수정할 수 있습니다.");
+        }
+    }
 }

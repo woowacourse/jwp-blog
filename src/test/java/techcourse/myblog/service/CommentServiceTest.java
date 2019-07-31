@@ -45,19 +45,21 @@ class CommentServiceTest {
     void save() {
         CommentDto commentDto = new CommentDto();
         commentDto.setContents(COMMENTS_CONTENTS);
-        commentService.save(USER, ARTICLE, commentDto);
+        commentDto.setUser(USER);
+        commentDto.setArticle(ARTICLE);
+        commentService.save(commentDto);
 
-        verify(commentRepository, atLeast(1)).save(new Comment(USER, ARTICLE, COMMENTS_CONTENTS));
+        verify(commentRepository, atLeast(1)).save(new Comment(COMMENTS_CONTENTS, USER, ARTICLE));
     }
 
     @Test
     @DisplayName("Comment를 잘 조회한다.")
     void findById() {
         given(commentRepository.findById(TEST_COMMENT_ID))
-                .willReturn(Optional.of(new Comment(USER, ARTICLE, COMMENTS_CONTENTS)));
+                .willReturn(Optional.of(new Comment(COMMENTS_CONTENTS, USER, ARTICLE)));
         Comment foundComment = commentService.findById(TEST_COMMENT_ID);
 
-        assertThat(foundComment).isEqualTo(new Comment(USER, ARTICLE, COMMENTS_CONTENTS));
+        assertThat(foundComment).isEqualTo(new Comment(COMMENTS_CONTENTS, USER, ARTICLE));
     }
 
     @Test
@@ -68,10 +70,23 @@ class CommentServiceTest {
         commentDto.setContents(COMMENTS_CONTENTS_2);
 
         given(commentRepository.findById(TEST_COMMENT_ID))
-                .willReturn(Optional.of(new Comment(USER, ARTICLE, COMMENTS_CONTENTS)));
+                .willReturn(Optional.of(new Comment(COMMENTS_CONTENTS, USER, ARTICLE)));
 
         Comment updatedComment = commentService.update(commentDto, TEST_COMMENT_ID);
 
         assertThat(updatedComment.getContents()).isEqualTo(COMMENTS_CONTENTS_2);
+    }
+
+    @Test
+    @DisplayName("comment를 삭제한다.")
+    void delete() {
+        Comment comment = new Comment(COMMENTS_CONTENTS, USER, ARTICLE);
+        ARTICLE.addComment(comment);
+        given(commentRepository.findById(TEST_COMMENT_ID))
+                .willReturn(Optional.of(comment));
+
+        commentService.delete(TEST_COMMENT_ID);
+        verify(commentRepository, atLeast(1)).deleteById(TEST_COMMENT_ID);
+        assertThat(ARTICLE.getComments()).doesNotContain(comment);
     }
 }
