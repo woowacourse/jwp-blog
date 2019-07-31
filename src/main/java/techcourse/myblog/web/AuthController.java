@@ -40,8 +40,6 @@ public class AuthController {
 
         User user = authService.login(userDto);
         session.setAttribute("user", user);
-//        session.setAttribute("username", user.getName());
-//        session.setAttribute("email", user.getEmail());
 
         return new RedirectView("/");
     }
