@@ -3,12 +3,14 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
 import techcourse.myblog.application.ArticleService;
 import techcourse.myblog.application.CommentService;
 import techcourse.myblog.application.dto.ArticleDto;
+import techcourse.myblog.application.dto.UserResponse;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -41,8 +43,9 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String saveArticle(@Valid ArticleDto articleDto) {
-        Long articleId = articleService.post(articleDto);
+    public String saveArticle(@Valid ArticleDto articleDto, HttpSession httpSession) {
+        UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
+        Long articleId = articleService.post(articleDto, userResponse);
 
         return "redirect:/articles/" + articleId;
     }
@@ -66,16 +69,20 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleDto articleDto, Model model) {
-        articleService.editArticle(articleDto, articleId);
+    public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleDto articleDto, HttpSession httpSession, Model model) {
+        UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
+
+        articleService.editArticle(articleDto, articleId, userResponse);
         model.addAttribute(ARTICLE_INFO, articleDto);
 
         return "article";
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable("articleId") long articleId) {
-        articleService.deleteById(articleId);
+    public String deleteArticle(@PathVariable("articleId") long articleId, HttpSession httpSession) {
+        UserResponse userResponse = (UserResponse)httpSession.getAttribute("user");
+
+        articleService.deleteById(articleId, userResponse);
 
         return "redirect:/";
     }
