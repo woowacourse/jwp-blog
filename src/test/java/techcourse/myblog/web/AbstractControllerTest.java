@@ -9,10 +9,10 @@ import java.util.stream.Stream;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
-//TODO AbstractControllerTest을 부모 클래스로 두고 있는데 애노테이션 중복까지 제거할 수는 없을까?
 public class AbstractControllerTest {
+
     @Autowired
-    private WebTestClient webTestClient;
+    WebTestClient webTestClient;
 
     EntityExchangeResult<byte[]> login(User user) {
         return webTestClient.post().uri("/login")

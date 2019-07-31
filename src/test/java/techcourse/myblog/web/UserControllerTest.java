@@ -1,29 +1,22 @@
 package techcourse.myblog.web;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.user.UserTest.user;
 
-@AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest extends AbstractControllerTest {
-    private String email = "buddy@gmail.com";
-    private String userName = "Buddy";
-    private String password = "Aa12345!";
-    private User user = new User("heejoo", "heejoo@gmail.com", "Aa12345!");
 
-    @Autowired
-    WebTestClient webTestClient;
+    private static final String email = user.getEmail();
+    private static final String userName = user.getUserName();
+    private static final String password = user.getPassword();
 
     public WebTestClient.ResponseSpec getRequest(String uri) {
-
         return webTestClient.get().uri(uri).exchange();
     }
 
@@ -35,13 +28,13 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void 유저_생성() {
-        getResponseSpec("Brown", "brown@gmail.com", password, password)
+        getResponseSpec(userName, "brown@gmail.com", password, password)
                 .expectStatus().isFound();
     }
 
     @Test
     void 중복_이메일_확인() {
-        WebTestClient.ResponseSpec responseSpec = getResponseSpec(userName, user.getEmail(), password, password)
+        WebTestClient.ResponseSpec responseSpec = getResponseSpec(userName, email, password, password)
                 .expectStatus().isBadRequest();
 
         checkInvalidUserMessage(responseSpec, "중복된 이메일 입니다.");

@@ -1,30 +1,18 @@
 package techcourse.myblog.web;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.article.Article;
-import techcourse.myblog.user.User;
 
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.user.UserTest.user;
+import static techcourse.myblog.user.UserTest.user2;
 
-@AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentControllerTest extends AbstractControllerTest {
-    private String title = "title";
-    private String coverUrl = "coverUrl";
-    private String contents = "contents";
-    private User user1 = new User("heejoo", "heejoo@gmail.com", "Aa12345!");
-    private User user2 = new User("cony", "cony@gmail.com", "Aa12345!");
-    private Article article = new Article(title, coverUrl, contents, user1);
-
-    @Autowired
-    private WebTestClient webTestClient;
 
     @Test
     void 로그인_전_댓글_생성() {
@@ -37,7 +25,7 @@ public class CommentControllerTest extends AbstractControllerTest {
 
     @Test
     void 로그인_후_댓글_생성() {
-        String jSessionId = extractJSessionId(login(user1));
+        String jSessionId = extractJSessionId(login(user));
         webTestClient.post().uri("/articles/1/comment")
                 .cookie("JSESSIONID", jSessionId)
                 .body(BodyInserters
@@ -49,7 +37,7 @@ public class CommentControllerTest extends AbstractControllerTest {
 
     @Test
     void 로그인_후_댓글_수정() {
-        String jSessionId = extractJSessionId(login(user1));
+        String jSessionId = extractJSessionId(login(user));
         String updateComment = "수정된 댓글입니다.";
         WebTestClient.ResponseSpec responseSpec = webTestClient.put().uri("/articles/1/comment/1")
                 .cookie("JSESSIONID", jSessionId)
@@ -76,7 +64,7 @@ public class CommentControllerTest extends AbstractControllerTest {
 
     @Test
     void 로그인_후_댓글_삭제() {
-        String jSessionId = extractJSessionId(login(user1));
+        String jSessionId = extractJSessionId(login(user));
         webTestClient.delete().uri("/articles/1/comment/2")
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
@@ -94,7 +82,8 @@ public class CommentControllerTest extends AbstractControllerTest {
                 .body(BodyInserters
                         .fromFormData("contents", updateComment))
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/");
     }
 
     @Test
@@ -103,7 +92,8 @@ public class CommentControllerTest extends AbstractControllerTest {
         webTestClient.delete().uri("/articles/1/comment/1")
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/");
     }
 
 }

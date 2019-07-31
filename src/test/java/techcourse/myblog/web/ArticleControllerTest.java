@@ -1,32 +1,23 @@
 package techcourse.myblog.web;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.article.Article;
 import techcourse.myblog.service.dto.ArticleDto;
-import techcourse.myblog.user.User;
 
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.article.ArticleTest.article;
+import static techcourse.myblog.user.UserTest.user;
 
-@AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest extends AbstractControllerTest {
-    private String title = "title";
-    private String coverUrl = "coverUrl";
-    private String contents = "contents";
-    private User user1 = new User("heejoo", "heejoo@gmail.com", "Aa12345!");
-    private User user2 = new User("cony", "cony@gmail.com", "Aa12345!");
-    private Article article = new Article(title, coverUrl, contents, user1);
-
-    @Autowired
-    private WebTestClient webTestClient;
+    private static final String title = article.getTitle();
+    private static final String coverUrl = article.getCoverUrl();
+    private static final String contents = article.getContents();
 
     @Test
     void 로그인_전_Article_생성_페이지_접근() {
@@ -37,7 +28,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Test
     void 로그인_후_Article_생성_페이지_접근() {
-        String jSessionId = extractJSessionId(login(user1));
+        String jSessionId = extractJSessionId(login(user));
         webTestClient.get().uri("/articles/new")
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
@@ -55,7 +46,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Test
     void 로그인_후_Article_생성() {
-        String jSessionId = extractJSessionId(login(user1));
+        String jSessionId = extractJSessionId(login(user));
         ArticleDto articleDto = new ArticleDto(title, coverUrl, contents);
 
         WebTestClient.RequestBodySpec requestBodySpec = webTestClient.post().uri("/articles/new")
@@ -82,7 +73,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Test
     void 로그인_후_수정_페이지_접근() {
-        String jSessionId = extractJSessionId(login(user1));
+        String jSessionId = extractJSessionId(login(user));
         webTestClient.get().uri("articles/1/edit")
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
@@ -100,7 +91,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
     @Test
     void 로그인_후_Article_수정() {
         ArticleDto articleDto = new ArticleDto("update title", "update coverUrl", "update contents");
-        String jSessionId = extractJSessionId(login(user1));
+        String jSessionId = extractJSessionId(login(user));
 
         WebTestClient.ResponseSpec responseSpec = getResponse(webTestClient.put().uri("/articles/1"), articleDto, jSessionId);
 
@@ -130,7 +121,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Test
     void 로그인_후_Article_삭제() {
-        String jSessionId = extractJSessionId(login(user1));
+        String jSessionId = extractJSessionId(login(user));
         webTestClient.delete().uri("/articles/2")
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()

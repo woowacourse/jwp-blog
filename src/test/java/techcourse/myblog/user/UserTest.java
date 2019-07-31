@@ -6,14 +6,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserTest {
     public static final User user = User.builder()
-            .userName("buddy")
-            .email("buddy@gmail.com")
+            .userName("heejoo")
+            .email("heejoo@gmail.com")
             .password("Aa12345!")
             .build();
 
     public static final User user2 = User.builder()
-            .userName("buddy2")
-            .email("buddy2@gmail.com")
+            .userName("cony")
+            .email("cony@gmail.com")
             .password("Aa12345!")
             .build();
 
@@ -29,10 +29,9 @@ public class UserTest {
 
     @Test
     void 유저이름_변경() {
-        User user2 = new User("buddy", "buddy@gmail.com", "Aa12345!");
+        User user3 = new User("buddy2", "buddy@gmail.com", "Aa12345!");
+        user3.changeUserName("ssosso");
 
-        user2.changeUserName("ssosso");
-
-        assertThat(user2.getUserName()).isEqualTo("ssosso");
+        assertThat(user3.getUserName()).isEqualTo("ssosso");
     }
 }
