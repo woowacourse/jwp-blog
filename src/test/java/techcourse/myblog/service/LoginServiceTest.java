@@ -31,18 +31,18 @@ class LoginServiceTest {
 
     @Test
     void 정상_로그인() {
-        assertDoesNotThrow(() -> loginService.loginByEmailAndPwd(new UserDto("andole", "A!1bcdefg", "andole@gmail.com")));
+        assertDoesNotThrow(() -> loginService.login(new UserDto("andole", "A!1bcdefg", "andole@gmail.com")));
     }
 
     @Test
     void 이메일_없음() {
-        assertThatThrownBy(() -> loginService.loginByEmailAndPwd(new UserDto("andole", "A!1bcdefg", "abc@abc.com")))
+        assertThatThrownBy(() -> loginService.login(new UserDto("andole", "A!1bcdefg", "abc@abc.com")))
                 .isInstanceOf(UserException.class);
     }
 
     @Test
     void 비밀번호_다름() {
-        assertThatThrownBy(() -> loginService.loginByEmailAndPwd(new UserDto("andole", "B!1bcdefg", "andole@gmail.com")))
+        assertThatThrownBy(() -> loginService.login(new UserDto("andole", "B!1bcdefg", "andole@gmail.com")))
                 .isInstanceOf(UserException.class);
     }
 }
