@@ -1,8 +1,11 @@
 package techcourse.myblog.model;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +33,14 @@ public class Article {
     @Lob
     private String contents;
 
+    @CreationTimestamp
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
+    private LocalDateTime currentDateTime;
+
+    @UpdateTimestamp
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime updateTime;
+
     @NonNull
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false, foreignKey = @ForeignKey(name = "fk_article_to_user"))
@@ -41,7 +52,7 @@ public class Article {
     public void addComment(Comment comment) {
         this.comments.add(comment);
         if (comment.getArticle() != this) {
-            comment.setArticle(this);
+            comment.updateArticle(this);
         }
     }
 
