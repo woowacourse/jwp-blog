@@ -17,7 +17,7 @@ import static techcourse.myblog.service.dto.ArticleDto.TITLE_CONSTRAINT_MESSAGE;
 class ArticleDtoTests {
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    @ParameterizedTest(name = "{index}: {3}")
+    @ParameterizedTest(name = "{index}")
     @MethodSource("invalidArticleParameters")
     void ArticleDto_생성_검증(String title, String coverUrl, String contents, String msg) {
         Set<ConstraintViolation<ArticleDto>> constraintViolations = validator.validate(new ArticleDto(title, coverUrl, contents));
@@ -26,7 +26,7 @@ class ArticleDtoTests {
                 .containsOnly(msg);
     }
 
-    static Stream<Arguments> invalidArticleParameters() throws Throwable {
+    static Stream<Arguments> invalidArticleParameters() {
         return Stream.of(
                 Arguments.of("", "coverUrl", "contents", TITLE_CONSTRAINT_MESSAGE),
                 Arguments.of("title", "coverUrl", "", CONTENTS_CONSTRAINT_MESSAGE)

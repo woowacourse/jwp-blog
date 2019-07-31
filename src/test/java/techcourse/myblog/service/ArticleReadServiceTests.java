@@ -21,7 +21,7 @@ class ArticleReadServiceTests extends ArticleCommonServiceTests {
 
     @Test
     void findById_test() {
-        Long articleId = Long.valueOf(1);
+        Long articleId = 1L;
         given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
 
         Article foundArticle = articleReadService.findById(articleId);

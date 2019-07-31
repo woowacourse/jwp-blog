@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.repository.ArticleRepository;
-import techcourse.myblog.service.dto.ArticleDto;
 
 @Service
 @Transactional
@@ -27,7 +26,7 @@ public class ArticleWriteService {
         articleRepository.deleteById(articleId);
     }
 
-    public void update(Long articleId, ArticleDto articleDto) {
-        articleReadService.findByIdAndAuthor(articleId, articleDto.getAuthor()).update(articleDto.toArticle());
+    public void update(Long articleId, Article article) {
+        articleReadService.findByIdAndAuthor(articleId, article.getAuthor()).update(article);
     }
 }

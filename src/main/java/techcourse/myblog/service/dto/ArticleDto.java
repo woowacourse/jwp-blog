@@ -22,16 +22,14 @@ public class ArticleDto {
 
     @NotBlank(message = CONTENTS_CONSTRAINT_MESSAGE)
     private String contents;
-
-    private User author;
-
+    
     public ArticleDto(String title, String url, String contents) {
         this.title = title;
         this.coverUrl = url;
         this.contents = contents;
     }
 
-    public Article toArticle() {
+    public Article toArticle(User author) {
         return new Article(title, coverUrl, contents, author);
     }
 }

@@ -3,21 +3,22 @@ package techcourse.myblog.web.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.ArticleWriteService;
 import techcourse.myblog.service.CommentService;
+import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.support.argument.LoginUser;
 
-import javax.validation.Valid;
+import javax.validation.groups.Default;
 import java.util.List;
 
-@RequestMapping("/articles")
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
     private final ArticleReadService articleReadService;
     private final ArticleWriteService articleWriteService;
@@ -37,9 +38,8 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public RedirectView createArticle(LoginUser loginUser, @ModelAttribute("/articles/writing") @Valid ArticleDto articleDto) {
-        articleDto.setAuthor(loginUser.getUser());
-        Article savedArticle = articleWriteService.save(articleDto.toArticle());
+    public RedirectView createArticle(LoginUser loginUser, @ModelAttribute("/articles/writing") @Validated(Default.class) ArticleDto articleDto) {
+        Article savedArticle = articleWriteService.save(articleDto.toArticle(loginUser.getUser()));
         return new RedirectView("/articles/" + savedArticle.getId());
     }
 
@@ -60,9 +60,8 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
-    public RedirectView editArticle(LoginUser loginUser, @PathVariable Long articleId, @ModelAttribute("/") @Valid ArticleDto articleDto) {
-        articleDto.setAuthor(loginUser.getUser());
-        articleWriteService.update(articleId, articleDto);
+    public RedirectView editArticle(LoginUser loginUser, @PathVariable Long articleId, @ModelAttribute("/") @Validated(Default.class) ArticleDto articleDto) {
+        articleWriteService.update(articleId, articleDto.toArticle(loginUser.getUser()));
 
         return new RedirectView("/articles/" + articleId);
     }

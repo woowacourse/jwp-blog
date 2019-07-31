@@ -5,8 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.web.controller.common.ControllerTestTemplate;
@@ -18,9 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpMethod.*;
 
 public class ArticleControllerTests extends ControllerTestTemplate {
-    @Autowired
-    private ArticleRepository articleRepository;
-
     private ArticleDto articleDto = new ArticleDto("title", "coverUrl", "contents");
     private String savedArticleUrl;
 
