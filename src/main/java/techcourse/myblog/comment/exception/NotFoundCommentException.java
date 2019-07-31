@@ -1,7 +1,7 @@
 package techcourse.myblog.comment.exception;
 
 public class NotFoundCommentException extends RuntimeException {
-    public NotFoundCommentException() {
-        super("찾을 수 없는 댓글입니다.");
+    public NotFoundCommentException(long commentId) {
+        super("[ " + commentId + "]에 해당하는 댓글을 찾을 수 없습니다.");
     }
 }

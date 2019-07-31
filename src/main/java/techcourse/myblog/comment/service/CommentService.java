@@ -29,8 +29,8 @@ public class CommentService {
     private final ModelMapper modelMapper;
 
     public Comment save(long articleId, long authorId, CommentDto.Creation commentDto) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        User author = userRepository.findById(authorId).orElseThrow(NotFoundUserException::new);
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
+        User author = userRepository.findById(authorId).orElseThrow(() -> new NotFoundUserException(authorId));
         return commentRepository.save(commentDto.toComment(author, article));
     }
 
@@ -42,7 +42,7 @@ public class CommentService {
     }
 
     public void update(long commentId, long authorId, CommentDto.Updation commentDto) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
         if (comment.notMatchAuthorId(authorId)) {
             throw new NotMatchUserException();
         }
@@ -50,7 +50,7 @@ public class CommentService {
     }
 
     public void delete(long commentId, long authorId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
         if (comment.notMatchAuthorId(authorId)) {
             throw new NotMatchUserException();
         }
@@ -58,7 +58,7 @@ public class CommentService {
     }
 
     public CommentDto.Response findById(long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
         return modelMapper.map(comment, CommentDto.Response.class);
     }
 }

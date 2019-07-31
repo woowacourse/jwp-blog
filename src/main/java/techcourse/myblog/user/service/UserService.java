@@ -25,7 +25,7 @@ public class UserService {
     public User save(UserDto.Creation userDto) {
         User newUser = userDto.toUser();
         if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
-            throw new DuplicatedUserException();
+            throw new DuplicatedUserException(newUser.getEmail());
         }
         return userRepository.save(newUser);
     }
@@ -38,12 +38,13 @@ public class UserService {
     }
 
     public UserDto.Response findById(long userId) {
-        User user = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException(userId));
         return modelMapper.map(user, UserDto.Response.class);
     }
 
     public UserDto.Response login(UserDto.Login userDto) {
-        User user = userRepository.findByEmail(Email.of(userDto.getEmail())).orElseThrow(NotFoundUserException::new);
+        User user = userRepository.findByEmail(Email.of(userDto.getEmail()))
+                .orElseThrow(() -> new NotFoundUserException(userDto.getEmail()));
 
         if (!user.checkPassword(userDto.getPassword())) {
             throw new NotMatchPasswordException();
@@ -53,7 +54,7 @@ public class UserService {
     }
 
     public UserDto.Response update(long userId, UserDto.Updation userDto) {
-        User user = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException(userId));
         user.update(userDto.getName());
         return modelMapper.map(user, UserDto.Response.class);
     }

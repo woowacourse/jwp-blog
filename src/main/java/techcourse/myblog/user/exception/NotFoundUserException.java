@@ -1,7 +1,11 @@
 package techcourse.myblog.user.exception;
 
 public class NotFoundUserException extends RuntimeException {
-    public NotFoundUserException() {
-        super("아이디가 존재하지 않습니다.");
+    public NotFoundUserException(long userId) {
+        super("[ " + userId + " ]에 해당하는 계정이 존재하지 않습니다.");
+    }
+
+    public NotFoundUserException(String email) {
+        super("[ " + email + " ]에 해당하는 계정이 존재하지 않습니다.");
     }
 }

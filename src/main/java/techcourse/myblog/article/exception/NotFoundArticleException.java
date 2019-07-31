@@ -1,7 +1,7 @@
 package techcourse.myblog.article.exception;
 
-public class NotFoundArticleException extends IllegalArgumentException {
-    public NotFoundArticleException() {
-        super("찾을 수 없는 게시물입니다.");
+public class NotFoundArticleException extends RuntimeException {
+    public NotFoundArticleException(long articleId) {
+        super("[ "+ articleId + "]에 해당하는 게시물을 찾을 수 없습니다.");
     }
 }

@@ -32,18 +32,18 @@ public class ArticleService {
     }
 
     public Article save(ArticleDto.Creation articleDto, long authorId) {
-        User author = userRepository.findById(authorId).orElseThrow(NotFoundUserException::new);
+        User author = userRepository.findById(authorId).orElseThrow(() -> new NotFoundUserException(authorId));
         Article newArticle = articleDto.toArticle(author);
         return articleRepository.save(newArticle);
     }
 
     public ArticleDto.Response findById(long articleId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
         return modelMapper.map(article, ArticleDto.Response.class);
     }
 
     public long update(long articleId, ArticleDto.Updation articleDto, long authorId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
         if (article.notMatchAuthorId(authorId)) {
             throw new NotMatchUserException();
         }
@@ -52,7 +52,7 @@ public class ArticleService {
     }
 
     public void deleteById(long articleId, long authorId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
         if (article.notMatchAuthorId(authorId)) {
             throw new NotMatchUserException();
         }
