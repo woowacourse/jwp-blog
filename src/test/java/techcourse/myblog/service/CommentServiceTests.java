@@ -19,7 +19,8 @@ import static org.mockito.BDDMockito.given;
 public class CommentServiceTests {
     @Mock
     protected CommentRepository commentRepository;
-    protected CommentService commentService;
+    protected CommentReadService commentReadService;
+    protected CommentWriteService commentWriteService;
     private User user;
     private Article article;
     private Long id = 2L;
@@ -27,7 +28,8 @@ public class CommentServiceTests {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        commentService = new CommentService(commentRepository);
+        commentReadService = new CommentReadService(commentRepository);
+        commentWriteService = new CommentWriteService(commentRepository);
         user = new User("name", "email@email.com", "Passw0rd!");
         article = new Article("title", "coverUrl", "contents", user);
     }
@@ -38,7 +40,7 @@ public class CommentServiceTests {
         CommentDto updateCommentDto = new CommentDto("new comment");
         given(commentRepository.findById(id)).willReturn(Optional.of(comment));
 
-        assertDoesNotThrow(() -> commentService.modify(id, updateCommentDto.toComment(user, article)));
+        assertDoesNotThrow(() -> commentWriteService.modify(id, updateCommentDto.toComment(user, article)));
         compareComment(commentRepository.findById(id).get(), updateCommentDto.toComment(user, article));
     }
 

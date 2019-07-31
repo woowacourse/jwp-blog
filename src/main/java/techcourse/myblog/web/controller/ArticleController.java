@@ -10,7 +10,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.ArticleWriteService;
-import techcourse.myblog.service.CommentService;
+import techcourse.myblog.service.CommentReadService;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.support.argument.LoginUser;
 
@@ -22,14 +22,14 @@ import java.util.List;
 public class ArticleController {
     private final ArticleReadService articleReadService;
     private final ArticleWriteService articleWriteService;
-    private final CommentService commentService;
+    private final CommentReadService commentReadService;
 
     public ArticleController(ArticleReadService articleReadService,
                              ArticleWriteService articleWriteService,
-                             CommentService commentService) {
+                             CommentReadService commentReadService) {
         this.articleReadService = articleReadService;
         this.articleWriteService = articleWriteService;
-        this.commentService = commentService;
+        this.commentReadService = commentReadService;
     }
 
     @GetMapping("/writing")
@@ -46,7 +46,7 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable long articleId, Model model) {
         Article article = articleReadService.findById(articleId);
-        List<Comment> comments = commentService.findByArticleId(articleId);
+        List<Comment> comments = commentReadService.findByArticleId(articleId);
         model.addAttribute("article", article);
         model.addAttribute("comments", comments);
         return "article";

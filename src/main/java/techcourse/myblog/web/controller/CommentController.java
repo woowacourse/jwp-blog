@@ -8,40 +8,41 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.ArticleReadService;
-import techcourse.myblog.service.CommentService;
+import techcourse.myblog.service.CommentReadService;
+import techcourse.myblog.service.CommentWriteService;
 import techcourse.myblog.service.dto.CommentDto;
 import techcourse.myblog.support.argument.LoginUser;
 
 @Controller
 public class CommentController {
-    private final CommentService commentService;
+    private final CommentReadService commentReadService;
+    private final CommentWriteService commentWriteService;
     private final ArticleReadService articleReadService;
 
-    public CommentController(CommentService commentService, ArticleReadService articleReadService) {
-        this.commentService = commentService;
+    public CommentController(CommentReadService commentReadService, CommentWriteService commentWriteService, ArticleReadService articleReadService) {
+        this.commentReadService = commentReadService;
+        this.commentWriteService = commentWriteService;
         this.articleReadService = articleReadService;
     }
 
     @PostMapping("/articles/{articleId}/comment")
     public RedirectView createComment(@PathVariable Long articleId, CommentDto commentDto, LoginUser loginUser) {
         Article article =  articleReadService.findById(articleId);;
-        commentService.save(commentDto.toComment(loginUser.getUser(), article));
-
+        commentWriteService.save(commentDto.toComment(loginUser.getUser(), article));
         return new RedirectView("/articles/" + articleId);
     }
 
     @PutMapping("/articles/{articleId}/comment/{commentId}")
     public RedirectView updateComment(@PathVariable Long commentId, @PathVariable Long articleId, CommentDto commentDto, LoginUser loginUser) {
         Article article = articleReadService.findById(articleId);
-        commentService.modify(commentId, commentDto.toComment(loginUser.getUser(), article));
-
+        commentWriteService.modify(commentId, commentDto.toComment(loginUser.getUser(), article));
         return new RedirectView("/articles/" + articleId);
     }
 
     @DeleteMapping("/articles/{articleId}/comment/{commentId}")
     public RedirectView removeComment(@PathVariable Long commentId, @PathVariable Long articleId, LoginUser loginUser) {
-        commentService.findByIdAndWriter(commentId, loginUser.getUser());
-        commentService.deleteById(commentId);
+        commentReadService.findByIdAndWriter(commentId, loginUser.getUser());
+        commentWriteService.deleteById(commentId);
         return new RedirectView("/articles/" + articleId);
     }
 }

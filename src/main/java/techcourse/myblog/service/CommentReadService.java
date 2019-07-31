@@ -11,11 +11,11 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@Transactional
-public class CommentService {
+@Transactional(readOnly = true)
+public class CommentReadService {
     private final CommentRepository commentRepository;
 
-    public CommentService(CommentRepository commentRepository) {
+    public CommentReadService(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
     }
 
@@ -23,21 +23,8 @@ public class CommentService {
         return Collections.unmodifiableList(commentRepository.findByArticleId(articleId));
     }
 
-    public void save(Comment comment) {
-        commentRepository.save(comment);
-    }
-
-    public void deleteById(Long id) {
-        commentRepository.deleteById(id);
-    }
-
     public Comment findByIdAndWriter(Long commentId, User user) {
         return commentRepository.findByIdAndWriter(commentId, user)
                 .orElseThrow(MismatchAuthorException::new);
-    }
-
-    public void modify(Long commentId, Comment comment) {
-        commentRepository.findById(commentId)
-                .ifPresent(originalComment -> originalComment.update(comment));
     }
 }
