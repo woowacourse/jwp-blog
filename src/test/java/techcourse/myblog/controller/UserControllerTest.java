@@ -14,11 +14,9 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 class UserControllerTest {
     private static final String SIGN_UP_PAGE = "/users/signup";
     private static final String USER_NAME_1 = "test1";
-    private static final String USER_NAME_2 = "test2";
     private static final String EMAIL_1 = "test1@test.com";
     private static final String EMAIL_2 = "test2@test.com";
     private static final String PASSWORD_1 = "123456";
-    private static final String PASSWORD_2 = "12345";
 
     private WebTestClient webTestClient;
     private String cookie;

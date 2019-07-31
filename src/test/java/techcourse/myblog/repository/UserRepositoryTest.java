@@ -15,10 +15,6 @@ class UserRepositoryTest {
     private static final String PASSWORD = "!Q@W3e4r";
     private static final String USERNAME = "test1";
 
-    private static final String ARTICLE_TITLE = "title";
-    private static final String ARTICLE_CONTENT = "content";
-    private static final String ARTICLE_COVER_URL = "coverUrl";
-
     private User user = new User(USERNAME, EMAIL, PASSWORD);
 
     @Autowired

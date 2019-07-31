@@ -28,7 +28,6 @@ class CommentControllerTest {
     private static final String TITLE_1 = "title";
     private static final String CONTENTS_1 = "contents";
     private static final String COVER_URL = "COVER_URL";
-    private static final String TITLE_2 = "title2";
     private static final String CONTENTS_2 = "contents2";
 
     private final ArticleRepository articleRepository;
