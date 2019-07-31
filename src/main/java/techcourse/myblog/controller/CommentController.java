@@ -40,6 +40,10 @@ public class CommentController {
                              CommentDto commentDto,
                              UserSession userSession) {
         commentService.save(commentDto.toDomain(), userSession.getUser(), articleId);
+        return redirectToArticle(articleId);
+    }
+
+    private RedirectView redirectToArticle(@PathVariable long articleId) {
         return new RedirectView("/articles/" + articleId);
     }
 
@@ -48,7 +52,7 @@ public class CommentController {
                                @PathVariable long commentId,
                                UserSession userSession) {
         commentService.delete(commentId, userSession.getUser(), articleId);
-        return new RedirectView("/articles/" + articleId);
+        return redirectToArticle(articleId);
     }
 
     @PutMapping("/{articleId}/comments/{commentId}")
@@ -57,7 +61,7 @@ public class CommentController {
                             CommentDto commentDto,
                             UserSession userSession) {
         commentService.update(commentId, commentDto, userSession.getUser());
-        return new RedirectView("/articles/" + articleId);
+        return redirectToArticle(articleId);
     }
 }
 
