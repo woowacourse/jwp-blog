@@ -17,7 +17,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(of = "id")
 @DynamicUpdate
 public class Article {
-    private static final Integer TITLE_LENGTH = 50;
+    private static final int TITLE_LENGTH = 50;
     private static final String FK_FIELD_NAME = "author";
     private static final String FK_NAME = "fk_article_to_user";
     private static final String MISMATCH_AUTHOR_ERROR_MSG = "작성자가 아닙니다.";
