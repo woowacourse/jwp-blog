@@ -56,8 +56,9 @@ public class Article {
     }
     
     private void validateAuthor(Article article) {
-        if (!article.author.equals(this.author)) {
-            throw new MismatchAuthorException();
+        if (article.author.equals(this.author)) {
+            return;
         }
+        throw new MismatchAuthorException();
     }
 }

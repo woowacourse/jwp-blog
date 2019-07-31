@@ -63,6 +63,7 @@ public class Comment {
     public void update(Comment comment) {
         validateComment(comment);
         validateArticleAndAuthor(comment);
+        this.contents = comment.contents;
     }
     
     private void validateComment(Comment comment) {
@@ -73,7 +74,6 @@ public class Comment {
     
     private void validateArticleAndAuthor(Comment comment) {
         if (comment.article.equals(this.article) && comment.writer.equals(this.writer)) {
-            this.contents = comment.contents;
             return;
         }
         
