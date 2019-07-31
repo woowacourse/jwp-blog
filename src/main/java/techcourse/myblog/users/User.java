@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @EqualsAndHashCode(of = "id")
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 @Table(uniqueConstraints = @UniqueConstraint(name = "email", columnNames = {"email"}))
 public class User {
 
