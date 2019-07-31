@@ -31,7 +31,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public RedirectView createArticle(ArticleDto.Creation articleDto, UserSession userSession) {
-        long newArticleId = articleService.save(articleDto, userSession.getId());
+        long newArticleId = articleService.save(articleDto, userSession.getId()).getId();
         return new RedirectView("/articles/" + newArticleId);
     }
 

@@ -31,10 +31,10 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    public long save(ArticleDto.Creation articleDto, long authorId) {
+    public Article save(ArticleDto.Creation articleDto, long authorId) {
         User author = userRepository.findById(authorId).orElseThrow(NotFoundUserException::new);
         Article newArticle = articleDto.toArticle(author);
-        return articleRepository.save(newArticle).getId();
+        return articleRepository.save(newArticle);
     }
 
     public ArticleDto.Response findById(long articleId) {

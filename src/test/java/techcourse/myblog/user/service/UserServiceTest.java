@@ -25,8 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserServiceTest {
-    private static long userId = 1;
-
     @Autowired
     private UserService userService;
 
@@ -34,17 +32,18 @@ class UserServiceTest {
     private ModelMapper modelMapper;
 
     private User user;
+    private long userId;
 
     @BeforeEach
     void setUp() {
         user = User.builder()
-                .id(userId)
                 .email(UserDataForTest.USER_EMAIL)
                 .password(UserDataForTest.USER_PASSWORD)
                 .name(UserDataForTest.USER_NAME)
                 .build();
 
-        userService.save(modelMapper.map(user, UserDto.Creation.class));
+        user = userService.save(modelMapper.map(user, UserDto.Creation.class));
+        userId = user.getId();
     }
 
     @Test
@@ -79,7 +78,7 @@ class UserServiceTest {
     @Test
     void 로그인_시_아이디_불일치_예외처리() {
         UserDto.Login wrongIdLogin = new UserDto.Login();
-        wrongIdLogin.setEmail("wrong");
+        wrongIdLogin.setEmail("wrong@email.com");
         wrongIdLogin.setPassword(UserDataForTest.USER_PASSWORD);
         assertThrows(NotFoundUserException.class, () -> userService.login(wrongIdLogin));
     }
@@ -88,7 +87,7 @@ class UserServiceTest {
     void 로그인_시_비밀번호_불일치_예외처리() {
         UserDto.Login wrongPasswordLogin = new UserDto.Login();
         wrongPasswordLogin.setEmail(UserDataForTest.USER_EMAIL);
-        wrongPasswordLogin.setPassword("wrong");
+        wrongPasswordLogin.setPassword("wrong1234!!");
         assertThrows(NotMatchPasswordException.class, () -> userService.login(wrongPasswordLogin));
     }
 
@@ -100,6 +99,7 @@ class UserServiceTest {
                 .password(UserDataForTest.USER_PASSWORD)
                 .name("updated")
                 .build();
+
         UserDto.Response result = userService.update(userId, modelMapper.map(updatedUser, UserDto.Updation.class));
         assertThat(result).isEqualTo(modelMapper.map(updatedUser, UserDto.Response.class));
     }

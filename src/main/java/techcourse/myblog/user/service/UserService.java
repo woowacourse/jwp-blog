@@ -22,12 +22,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public void save(UserDto.Creation userDto) {
+    public User save(UserDto.Creation userDto) {
         User newUser = userDto.toUser();
         if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
             throw new DuplicatedUserException();
         }
-        userRepository.save(newUser);
+        return userRepository.save(newUser);
     }
 
     public List<UserDto.Response> findAll() {

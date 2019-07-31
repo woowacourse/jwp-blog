@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ArticleServiceTest {
-    private static long articleId = 1;
 
     @Autowired
     private ArticleService articleService;
@@ -34,6 +33,7 @@ class ArticleServiceTest {
 
     private Article article;
     private User author;
+    private long articleId;
 
     @BeforeEach
     void setUp() {
@@ -44,7 +44,6 @@ class ArticleServiceTest {
                 .build();
 
         article = Article.builder()
-                .id(articleId)
                 .title("title")
                 .coverUrl("coverUrl")
                 .contents("contents")
@@ -53,7 +52,8 @@ class ArticleServiceTest {
 
         User savedAuthor = userRepository.save(author);
 
-        articleService.save(modelMapper.map(article, ArticleDto.Creation.class), savedAuthor.getId());
+        article = articleService.save(modelMapper.map(article, ArticleDto.Creation.class), savedAuthor.getId());
+        articleId = article.getId();
     }
 
     @Test

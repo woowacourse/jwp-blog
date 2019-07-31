@@ -36,6 +36,7 @@ public class CommentServiceTest {
     private User author;
     private Article article;
     private Comment comment;
+    private long commentId;
 
     @BeforeEach
     void setUp() {
@@ -62,11 +63,12 @@ public class CommentServiceTest {
 
         comment = commentService.save(
                 article.getId(), author.getId(), modelMapper.map(comment, CommentDto.Creation.class));
+        commentId = comment.getId();
     }
 
     @Test
     void 댓글_조회_테스트() {
-        assertThat(commentService.findById(comment.getId())).isEqualTo(modelMapper.map(comment, CommentDto.Response.class));
+        assertThat(commentService.findById(commentId)).isEqualTo(modelMapper.map(comment, CommentDto.Response.class));
     }
 
     @Test
@@ -76,13 +78,14 @@ public class CommentServiceTest {
                 .author(author)
                 .article(article)
                 .build();
-        commentService.update(comment.getId(), author.getId(), modelMapper.map(updateComment, CommentDto.Updation.class));
-        assertThat(commentService.findById(comment.getId()).getContents())
+
+        commentService.update(commentId, author.getId(), modelMapper.map(updateComment, CommentDto.Updation.class));
+        assertThat(commentService.findById(commentId).getContents())
                 .isEqualTo(modelMapper.map(updateComment, CommentDto.Response.class).getContents());
     }
 
     @AfterEach
     void tearDown() {
-        commentService.delete(comment.getId(), author.getId());
+        commentService.delete(commentId, author.getId());
     }
 }
