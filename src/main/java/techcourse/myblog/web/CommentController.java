@@ -37,27 +37,16 @@ public class CommentController {
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
     public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, HttpSession httpSession) {
-        Comment comment = commentService.findCommentById(commentId);
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
+        commentService.deleteComment(commentId, userResponse);
 
-        if (!comment.isSameAuthor(userResponse.getEmail())) {
-            throw new NotSameAuthorException("해당 댓글의 작성자가 아닙니다.");
-        }
-
-        commentService.deleteComment(commentId);
         return "redirect:/articles/" + articleId;
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
     public String updateComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, CommentRequest commentRequest, HttpSession httpSession) {
-        Comment comment = commentService.findCommentById(commentId);
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
-
-        if (!comment.isSameAuthor(userResponse.getEmail())) {
-            throw new NotSameAuthorException("해당 댓글의 작성자가 아닙니다.");
-        }
-
-        commentService.updateComment(comment, commentRequest);
+        commentService.updateComment(commentId, userResponse, commentRequest);
 
         return "redirect:/articles/" + articleId;
     }

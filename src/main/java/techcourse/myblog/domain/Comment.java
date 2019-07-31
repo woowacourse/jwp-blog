@@ -65,8 +65,8 @@ public class Comment {
         return updatedTime;
     }
 
-    public boolean isSameAuthor(String email) {
-        return this.author.getEmail().equals(email);
+    public boolean isSameAuthor(User author) {
+        return this.author.equals(author);
     }
 
     public void changeContents(String contents) {
