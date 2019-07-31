@@ -5,7 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
-import techcourse.myblog.exception.*;
+import techcourse.myblog.article.exception.NotFoundArticleException;
+import techcourse.myblog.comment.exception.AuthenticationException;
+import techcourse.myblog.user.exception.LoginException;
+import techcourse.myblog.user.exception.NotFoundUserException;
+import techcourse.myblog.user.exception.SignUpException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
