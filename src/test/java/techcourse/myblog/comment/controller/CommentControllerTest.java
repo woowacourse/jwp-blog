@@ -11,9 +11,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.comment.CommentDataForTest;
 import techcourse.myblog.util.ArticleUtilForTest;
+import techcourse.myblog.util.CommentUtilForTest;
 import techcourse.myblog.util.UserUtilForTest;
-
-import java.net.URI;
+import techcourse.myblog.util.WebTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,42 +33,25 @@ public class CommentControllerTest {
         UserUtilForTest.signUp(webTestClient);
         cookie = UserUtilForTest.loginAndGetCookie(webTestClient);
         path = ArticleUtilForTest.createArticle(webTestClient, cookie);
-
-        webTestClient.post()
-                .uri(path + "/comments")
-                .header("Cookie", cookie)
-                .body(BodyInserters.fromFormData("contents", CommentDataForTest.COMMENT_CONTENTS))
-                .exchange();
+        CommentUtilForTest.createComment(webTestClient, path, cookie);
     }
 
     @Test
     void 댓글_수정_페이지_이동_테스트() {
-        webTestClient.get()
-                .uri("/comments/" + commentId + "/edit")
-                .header("Cookie", cookie)
-                .exchange()
-                .expectStatus()
-                .isOk();
+        WebTest.executeGetTest(webTestClient, "/comments/" + commentId + "/edit", cookie)
+                .expectStatus().isOk();
     }
 
     @Test
     void 댓글_업데이트_테스트() {
-        webTestClient.put()
-                .uri(path + "/comments/" + commentId)
-                .header("Cookie", cookie)
-                .body(BodyInserters.fromFormData("contents", CommentDataForTest.UPDATED_CONTENTS))
-                .exchange()
-                .expectStatus()
-                .isFound()
+        WebTest.executePutTest(webTestClient, path + "/comments/" + commentId, cookie,
+                BodyInserters.fromFormData("contents", CommentDataForTest.UPDATED_CONTENTS))
+                .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(res -> {
-                    URI location = res.getResponseHeaders().getLocation();
-                    webTestClient.get()
-                            .uri(location)
-                            .header("Cookie", cookie)
-                            .exchange()
-                            .expectStatus()
-                            .isOk()
+                    String location = String.valueOf(res.getResponseHeaders().getLocation());
+                    WebTest.executeGetTest(webTestClient, location, cookie)
+                            .expectStatus().isOk()
                             .expectBody()
                             .consumeWith(response -> {
                                 String body = new String(response.getResponseBody());
@@ -79,21 +62,13 @@ public class CommentControllerTest {
 
     @Test
     void 댓글_삭제_테스트() {
-        webTestClient.delete()
-                .uri(path + "/comments/" + commentId)
-                .header("Cookie", cookie)
-                .exchange()
-                .expectStatus()
-                .isFound()
+        WebTest.executeDeleteTest(webTestClient, path + "/comments/" + commentId, cookie)
+                .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(res -> {
-                    URI location = res.getResponseHeaders().getLocation();
-                    webTestClient.get()
-                            .uri(location)
-                            .header("Cookie", cookie)
-                            .exchange()
-                            .expectStatus()
-                            .isOk()
+                    String location = String.valueOf(res.getResponseHeaders().getLocation());
+                    WebTest.executeGetTest(webTestClient, location, cookie)
+                            .expectStatus().isOk()
                             .expectBody()
                             .consumeWith(response -> {
                                 String body = new String(response.getResponseBody());

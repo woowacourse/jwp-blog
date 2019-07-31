@@ -1,28 +1,19 @@
 package techcourse.myblog.util;
 
-import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.user.UserDataForTest;
 
 public class UserUtilForTest {
+
     public static void signUp(WebTestClient webTestClient) {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", UserDataForTest.USER_EMAIL)
-                        .with("password", UserDataForTest.USER_PASSWORD)
-                        .with("name", UserDataForTest.USER_NAME))
-                .exchange();
+        WebTest.executePostTest(webTestClient, "/users", UserDataForTest.EMPTY_COOKIE, UserDataForTest.NEW_USER_BODY);
     }
 
     public static String loginAndGetCookie(WebTestClient webTestClient) {
-        return webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", UserDataForTest.USER_EMAIL)
-                        .with("password", UserDataForTest.USER_PASSWORD))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+        return WebTest.executePostTest(webTestClient, "/login", UserDataForTest.EMPTY_COOKIE,
+                UserDataForTest.LOGIN_BODY)
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .getFirst("Set-Cookie");
     }
 }
