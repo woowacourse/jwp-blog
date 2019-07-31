@@ -16,7 +16,7 @@ public class Comment {
     @JoinColumn(name = "writer", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
     private User author;
     @Column(nullable = false)
-    String contents;
+    private String contents;
     @CreationTimestamp
     private LocalDateTime createdTimeAt;
     @ManyToOne
