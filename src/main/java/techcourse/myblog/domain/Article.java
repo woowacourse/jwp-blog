@@ -11,8 +11,10 @@ public class Article {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String title;
+	@Lob
 	private String contents;
+
+	private String title;
 	private String coverUrl;
 
 	@ManyToOne
