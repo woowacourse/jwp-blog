@@ -10,8 +10,12 @@ import java.util.Optional;
 
 @Service
 public class SnsInfoService {
-    @Autowired
     private SnsInfoRepository snsInfoRepository;
+
+    @Autowired
+    public SnsInfoService(SnsInfoRepository snsInfoRepository) {
+        this.snsInfoRepository = snsInfoRepository;
+    }
 
     public void updateSnsInfo(long snsCode, String snsEmail, User user) {
         Optional<SnsInfo> maybeSnsInfo = user.getSnsInfo(snsCode);

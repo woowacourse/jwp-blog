@@ -1,8 +1,8 @@
 package techcourse.myblog.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.article.ArticleDto;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentDto;
 import techcourse.myblog.domain.comment.CommentRepository;
@@ -10,22 +10,23 @@ import techcourse.myblog.domain.user.UserDto;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
     private CommentRepository commentRepository;
-    private ArticleRepository articleRepository;
 
-    public CommentService(CommentRepository commentRepository, ArticleRepository articleRepository) {
+    private ArticleService articleService;
+
+    @Autowired
+    public CommentService(CommentRepository commentRepository, ArticleService articleService) {
         this.commentRepository = commentRepository;
-        this.articleRepository = articleRepository;
+        this.articleService = articleService;
     }
 
     public void create(long articleId, CommentDto commentDto, UserDto userDto) {
-        Optional<Article> article = articleRepository.findById(articleId);
-        article.ifPresent(value -> commentRepository.save(commentDto.toEntity(userDto.toEntity(), value)));
+        ArticleDto articleDto = articleService.readById(articleId);
+        commentRepository.save(commentDto.toEntity(userDto, articleDto));
     }
 
     @Transactional

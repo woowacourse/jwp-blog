@@ -6,9 +6,7 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleDto;
 import techcourse.myblog.domain.article.ArticleDtos;
 import techcourse.myblog.domain.article.ArticleRepository;
-import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserDto;
-import techcourse.myblog.domain.user.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -16,18 +14,21 @@ import java.util.Optional;
 
 @Service
 public class ArticleService {
-    @Autowired
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
+
+    private final UserService userService;
+    private final CommentService commentService;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private CommentService commentService;
+    public ArticleService(ArticleRepository articleRepository, UserService userService, CommentService commentService) {
+        this.articleRepository = articleRepository;
+        this.userService = userService;
+        this.commentService = commentService;
+    }
 
     public long createArticle(ArticleDto articleDto, long userId) {
-        Optional<User> maybeUser = userRepository.findById(userId);
-        maybeUser.ifPresent(user -> articleDto.setUserDto(UserDto.from(user)));
+        UserDto userDto = userService.findByUserId(userId);
+        articleDto.setUserDto(userDto);
         Article article = articleRepository.save(articleDto.toEntity());
         return article.getId();
     }

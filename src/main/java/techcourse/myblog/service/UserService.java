@@ -13,11 +13,15 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
     private SnsInfoService snsInfoService;
+
+    @Autowired
+    public UserService(UserRepository userRepository, SnsInfoService snsInfoService) {
+        this.userRepository = userRepository;
+        this.snsInfoService = snsInfoService;
+    }
 
     public UserDto findUser(UserDto userDto) {
         Optional<User> maybeUser = userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
