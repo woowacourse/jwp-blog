@@ -11,7 +11,7 @@ import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.SignUpException;
 import techcourse.myblog.exception.UserException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.utils.converter.DtoConverter;
+import techcourse.myblog.utils.converter.UserConverter;
 
 import java.util.Optional;
 
@@ -61,14 +61,14 @@ class UserServiceTest {
         userRequestDto.setName(changedName);
         userRequestDto.setPassword(changedPassword);
 
-        User changedUser = DtoConverter.convert(this.userRequestDto);
+        User changedUser = UserConverter.convert(this.userRequestDto);
 
         when(userRepository.save(this.user)).thenReturn(this.user);
         when(userRepository.save(changedUser)).thenReturn(changedUser);
         when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.of(changedUser));
 
         // when
-        UserResponseDto userResponseDto = userService.updateUser(userRequestDto, DtoConverter.convert(changedUser));
+        UserResponseDto userResponseDto = userService.updateUser(userRequestDto, UserConverter.convert(changedUser));
 
         // then
         assertThat(userResponseDto.getName()).isEqualTo(changedName);
@@ -80,14 +80,14 @@ class UserServiceTest {
         when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.empty());
 
         // then
-        assertThatThrownBy(() -> userService.updateUser(userRequestDto, DtoConverter.convert(this.user)))
+        assertThatThrownBy(() -> userService.updateUser(userRequestDto, UserConverter.convert(this.user)))
                 .isInstanceOf(UserException.class);
     }
 
     @Test
     public void 회원이_정상적으로_탈퇴되는지_테스트() {
         // given
-        UserResponseDto userResponseDto = DtoConverter.convert(this.user);
+        UserResponseDto userResponseDto = UserConverter.convert(this.user);
         when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.of(this.user));
         doNothing().when(userRepository).delete(this.user);
 
@@ -101,7 +101,7 @@ class UserServiceTest {
     @Test
     public void 존재하지_않은_회원이_탈퇴하는_경우_예외처리() {
         // given
-        UserResponseDto userResponseDto = DtoConverter.convert(this.user);
+        UserResponseDto userResponseDto = UserConverter.convert(this.user);
         when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.empty());
 
         // then

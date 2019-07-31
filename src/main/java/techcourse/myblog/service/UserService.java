@@ -8,7 +8,7 @@ import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.SignUpException;
 import techcourse.myblog.exception.UserException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.utils.converter.DtoConverter;
+import techcourse.myblog.utils.converter.UserConverter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,9 +27,9 @@ public class UserService {
     @Transactional()
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
         checkRegisteredEmail(userRequestDto);
-        User user = userRepository.save(DtoConverter.convert(userRequestDto));
+        User user = userRepository.save(UserConverter.convert(userRequestDto));
 
-        return DtoConverter.convert(user);
+        return UserConverter.convert(user);
     }
 
     private void checkRegisteredEmail(UserRequestDto dto) {
@@ -48,7 +48,7 @@ public class UserService {
     public UserResponseDto updateUser(UserRequestDto userRequestDto, UserResponseDto origin) {
         User user = getUserByEmail(origin);
         user.updateNameAndEmail(userRequestDto);
-        return DtoConverter.convert(user);
+        return UserConverter.convert(user);
     }
 
     private User getUserByEmail(UserResponseDto userResponseDto) {

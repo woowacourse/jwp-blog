@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.ArticleRequestDto;
-import techcourse.myblog.utils.converter.DtoConverter;
+import techcourse.myblog.utils.converter.ArticleConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +64,7 @@ class ArticleRepositoryTest {
     void UpdateTest() {
         ArticleRequestDto articleRequestDto = new ArticleRequestDto("a100", "b", "c");
         Article article = articleRepository.findById(1L).orElseThrow(IllegalAccessError::new);
-        article.update(DtoConverter.convert(articleRequestDto));
+        article.update(ArticleConverter.convert(articleRequestDto, article.getAuthor()));
         articleRepository.save(article);
 
         assertThat(articleRepository.findById(1L).get().getTitle()).isEqualTo("a100");

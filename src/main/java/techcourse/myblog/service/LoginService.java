@@ -7,7 +7,7 @@ import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.LoginException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.utils.converter.DtoConverter;
+import techcourse.myblog.utils.converter.UserConverter;
 
 @Service
 public class LoginService {
@@ -25,7 +25,7 @@ public class LoginService {
         User user = getUser(userRequestDto);
         checkMatchPassword(user, userRequestDto);
 
-        return DtoConverter.convert(user);
+        return UserConverter.convert(user);
     }
 
     private User getUser(UserRequestDto userRequestDto) {

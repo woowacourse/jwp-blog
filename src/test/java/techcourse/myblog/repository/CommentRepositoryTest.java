@@ -44,18 +44,17 @@ public class CommentRepositoryTest {
     void setUp() {
         author = new User(AUTHOR_NAME, AUTHOR_PASSWORD, AUTHOR_EMAIL);
         commenter = new User(COMMENTER_NAME, COMMENTER_PASSWORD, COMMENTER_EMAIL);
-        article = new Article(TITLE, CONTENTS, COVER_URL);
+        article = new Article(TITLE, CONTENTS, COVER_URL, author);
         comment = new Comment(COMMENT, commenter, article);
     }
 
     @Test
     public void 특정_게시글에대한_모든_댓글_찾기() {
         // given
-        User persistUser = testEntityManager.persist(author);
+        testEntityManager.persist(author);
         testEntityManager.persist(commenter);
         testEntityManager.persist(comment);
 
-        article.setAuthor(persistUser);
         Article persistArticle = testEntityManager.persist(article);
 
         cleanUpTestEntityManager();

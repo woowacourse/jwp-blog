@@ -16,7 +16,7 @@ import techcourse.myblog.exception.UserException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.utils.converter.DtoConverter;
+import techcourse.myblog.utils.converter.ArticleConverter;
 import techcourse.myblog.utils.page.PageRequest;
 
 import java.util.List;
@@ -25,6 +25,7 @@ import java.util.List;
 public class ArticleService {
     private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
     private static final String NOT_EXIST_ARTICLE = "해당 기사가 없습니다.";
+    private static final String NOT_EXIST_USER = "존재하지 않은 회원입니다.";
     private static final String ID = "id";
     private static final int START_PAGE = 1;
     private static final int VIEW_ARTICLE_COUNT = 10;
@@ -55,10 +56,9 @@ public class ArticleService {
 
     @Transactional
     public Article save(ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
-        Article article = DtoConverter.convert(articleRequestDto);
         User user = userRepository.findByEmail(userResponseDto.getEmail())
-                .orElseThrow(() -> new UserException("존재하지 않은 회원입니다."));
-        article.setAuthor(user);
+                .orElseThrow(() -> new UserException(NOT_EXIST_USER));
+        Article article = ArticleConverter.convert(articleRequestDto, user);
         articleRepository.save(article);
         return article;
     }
@@ -66,7 +66,7 @@ public class ArticleService {
     @Transactional
     public Article update(long articleId, ArticleRequestDto articleRequestDto) {
         Article originArticle = findArticle(articleId);
-        originArticle.update(DtoConverter.convert(articleRequestDto));
+        originArticle.update(ArticleConverter.convert(articleRequestDto, originArticle.getAuthor()));
         return originArticle;
     }
 
