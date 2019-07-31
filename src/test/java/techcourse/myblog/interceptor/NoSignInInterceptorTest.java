@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class LoginInterceptorTest extends MyblogApplicationTests {
+class NoSignInInterceptorTest extends MyblogApplicationTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;

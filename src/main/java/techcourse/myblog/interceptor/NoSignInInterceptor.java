@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @Slf4j
-public class LoginInterceptor extends HandlerInterceptorAdapter {
+public class NoSignInInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if ("/accounts/user".equals(request.getRequestURI()) && "POST".equals(request.getMethod())) {
