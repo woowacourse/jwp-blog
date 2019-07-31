@@ -28,6 +28,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<User> findAll() {
+        //TODO 여기서 방어적 복사를 할 필요가 있을까?
         return new ArrayList<>(userRepository.findAll());
     }
 
