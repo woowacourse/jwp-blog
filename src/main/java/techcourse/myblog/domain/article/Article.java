@@ -8,53 +8,53 @@ import java.util.List;
 
 @Entity
 public class Article {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Embedded
-    private ArticleVo articleVo;
+	@Embedded
+	private ArticleVo articleVo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_article_to_user"))
-    private User author;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_article_to_user"))
+	private User author;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
-    private List<Comment> comments;
+	@OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+	private List<Comment> comments;
 
-    protected Article() {
-    }
+	protected Article() {
+	}
 
-    public Article(User author, ArticleVo articleVo) {
-        this.author = author;
-        this.articleVo = articleVo;
-    }
+	public Article(User author, ArticleVo articleVo) {
+		this.author = author;
+		this.articleVo = articleVo;
+	}
 
-    public void updateArticle(ArticleVo articleVo) {
-        this.articleVo.update(articleVo);
-    }
+	public void updateArticle(ArticleVo articleVo) {
+		this.articleVo.update(articleVo);
+	}
 
-    public boolean matchUserId(Long userId) {
-        return this.author.matchId(userId);
-    }
+	public boolean matchUserId(Long userId) {
+		return this.author.matchId(userId);
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public Long getAuthorId() {
-        return author.getId();
-    }
+	public Long getAuthorId() {
+		return author.getId();
+	}
 
-    public String getTitle() {
-        return articleVo.getTitle();
-    }
+	public String getTitle() {
+		return articleVo.getTitle();
+	}
 
-    public String getCoverUrl() {
-        return articleVo.getCoverUrl();
-    }
+	public String getCoverUrl() {
+		return articleVo.getCoverUrl();
+	}
 
-    public String getContents() {
-        return articleVo.getContents();
-    }
+	public String getContents() {
+		return articleVo.getContents();
+	}
 }

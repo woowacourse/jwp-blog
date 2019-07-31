@@ -17,78 +17,78 @@ import java.util.List;
 
 @Controller
 public class ArticleController {
-    private static final String LOGGED_IN_USER = "loggedInUser";
+	private static final String LOGGED_IN_USER = "loggedInUser";
 
-    private ArticleService articleService;
-    private UserService userService;
-    private CommentService commentService;
+	private ArticleService articleService;
+	private UserService userService;
+	private CommentService commentService;
 
-    public ArticleController(ArticleService articleService, UserService userService, CommentService commentService) {
-        this.articleService = articleService;
-        this.userService = userService;
-        this.commentService = commentService;
-    }
+	public ArticleController(ArticleService articleService, UserService userService, CommentService commentService) {
+		this.articleService = articleService;
+		this.userService = userService;
+		this.commentService = commentService;
+	}
 
-    @GetMapping("/articles")
-    public String showArticles(Model model) {
-        model.addAttribute("articles", articleService.findAll());
-        return "index";
-    }
+	@GetMapping("/articles")
+	public String showArticles(Model model) {
+		model.addAttribute("articles", articleService.findAll());
+		return "index";
+	}
 
-    @GetMapping("/articles/new")
-    public String showCreatePage(HttpSession session) {
-        getLoggedInUser(session);
-        return "article-edit";
-    }
+	@GetMapping("/articles/new")
+	public String showCreatePage(HttpSession session) {
+		getLoggedInUser(session);
+		return "article-edit";
+	}
 
-    @GetMapping("/articles/{id}")
-    public String showArticle(@PathVariable("id") Long id, Model model) {
-        ArticleDto articleDto = articleService.findArticleDtoById(id);
-        model.addAttribute("article", articleDto);
+	@GetMapping("/articles/{id}")
+	public String showArticle(@PathVariable("id") Long id, Model model) {
+		ArticleDto articleDto = articleService.findArticleDtoById(id);
+		model.addAttribute("article", articleDto);
 
-        UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoById(articleDto.getUserId());
-        model.addAttribute("articleUser", userPublicInfoDto);
+		UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoById(articleDto.getUserId());
+		model.addAttribute("articleUser", userPublicInfoDto);
 
-        List<CommentResponseDto> commentResponseDtos = commentService.findCommentsByArticleId(id);
-        model.addAttribute("comments", commentResponseDtos);
-        return "article";
-    }
+		List<CommentResponseDto> commentResponseDtos = commentService.findCommentsByArticleId(id);
+		model.addAttribute("comments", commentResponseDtos);
+		return "article";
+	}
 
-    @GetMapping("/articles/{id}/edit")
-    public String showEditPage(@PathVariable("id") Long articleId, Model model, HttpSession session) {
-        UserPublicInfoDto userPublicInfoDto = getLoggedInUser(session);
-        try {
-            ArticleDto articleDto = articleService.authorize(userPublicInfoDto, articleId);
-            model.addAttribute("article", articleDto);
-            return "article-edit";
-        } catch (UserAuthorizationException e) {
-            return "redirect:/articles/" + articleId;
-        }
-    }
+	@GetMapping("/articles/{id}/edit")
+	public String showEditPage(@PathVariable("id") Long articleId, Model model, HttpSession session) {
+		UserPublicInfoDto userPublicInfoDto = getLoggedInUser(session);
+		try {
+			ArticleDto articleDto = articleService.authorize(userPublicInfoDto, articleId);
+			model.addAttribute("article", articleDto);
+			return "article-edit";
+		} catch (UserAuthorizationException e) {
+			return "redirect:/articles/" + articleId;
+		}
+	}
 
-    @PostMapping("/articles")
-    public String createArticle(ArticleDto articleDto, HttpSession session) {
-        ArticleDto savedArticleDto = articleService.save(getLoggedInUser(session).getId(), articleDto);
-        return "redirect:/articles/" + savedArticleDto.getId();
-    }
+	@PostMapping("/articles")
+	public String createArticle(ArticleDto articleDto, HttpSession session) {
+		ArticleDto savedArticleDto = articleService.save(getLoggedInUser(session).getId(), articleDto);
+		return "redirect:/articles/" + savedArticleDto.getId();
+	}
 
-    @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable("articleId") long articleId, ArticleDto articleDto, HttpSession session) {
-        articleService.update(articleId, getLoggedInUser(session), articleDto);
-        return "redirect:/articles/" + articleId;
-    }
+	@PutMapping("/articles/{articleId}")
+	public String editArticle(@PathVariable("articleId") long articleId, ArticleDto articleDto, HttpSession session) {
+		articleService.update(articleId, getLoggedInUser(session), articleDto);
+		return "redirect:/articles/" + articleId;
+	}
 
-    @DeleteMapping("/articles/{id}")
-    public String deleteArticle(@PathVariable("id") long id, HttpSession session) {
-        articleService.delete(id, getLoggedInUser(session).getId());
-        return "redirect:/";
-    }
+	@DeleteMapping("/articles/{id}")
+	public String deleteArticle(@PathVariable("id") long id, HttpSession session) {
+		articleService.delete(id, getLoggedInUser(session).getId());
+		return "redirect:/";
+	}
 
-    private UserPublicInfoDto getLoggedInUser(HttpSession session) {
-        UserPublicInfoDto user = (UserPublicInfoDto) session.getAttribute(LOGGED_IN_USER);
-        if (user == null) {
-            throw new NotLoggedInException();
-        }
-        return user;
-    }
+	private UserPublicInfoDto getLoggedInUser(HttpSession session) {
+		UserPublicInfoDto user = (UserPublicInfoDto) session.getAttribute(LOGGED_IN_USER);
+		if (user == null) {
+			throw new NotLoggedInException();
+		}
+		return user;
+	}
 }

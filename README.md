@@ -73,21 +73,9 @@
     - 댓글 생성/조회/수정/삭제조회 기능 구현
     
 
-### 피드백 
-    - build.gradle 패키지명?
-    
+### 피드백     
     - articleVo 분리?
-                
-    - ArticleService.class update()에서 메시지 전달
-    
-    - CommentService.class update() 메시지 전달로 수정
-    
-    - HttpServletRequest -> HttpSession으로 수정
-    
-    - ArticleController.class showEditPage() 수정 (if문 getter안쓰고 구현)
-    
-    - 중복된 isLoggedInUserMyPage 하나로 통하   
-    
-    - UserController.class id set() 제거
-        
+                                
+    - 중복된 isLoggedInUserMyPage 하나로 통합  
+            
     - 로그아웃 invalidate로 설정?

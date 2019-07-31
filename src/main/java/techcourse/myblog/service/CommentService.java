@@ -7,6 +7,7 @@ import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.exception.NotFoundCommentException;
 
 import javax.transaction.Transactional;
@@ -15,54 +16,59 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
-    private CommentRepository commentRepository;
-    private UserService userService;
-    private ArticleService articleService;
+	private CommentRepository commentRepository;
+	private UserService userService;
+	private ArticleService articleService;
 
-    public CommentService(CommentRepository commentRepository, UserService userService, ArticleService articleService) {
-        this.commentRepository = commentRepository;
-        this.userService = userService;
-        this.articleService = articleService;
-    }
+	public CommentService(CommentRepository commentRepository, UserService userService, ArticleService articleService) {
+		this.commentRepository = commentRepository;
+		this.userService = userService;
+		this.articleService = articleService;
+	}
 
-    public Comment findById(Long id) {
-        return commentRepository.findById(id).orElseThrow(NotFoundCommentException::new);
-    }
+	public Comment findById(Long id) {
+		return commentRepository.findById(id)
+				.orElseThrow(NotFoundCommentException::new);
+	}
 
-    @Transactional
-    public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
-        Article article = articleService.findById(articleId);
-        return commentRepository.findAllByArticle(article).stream()
-                .map(comment -> toCommentResponseDto(comment.getId(), comment.getAuthorId(),
-                        comment.getAuthorName(), comment.getComment()))
-                .collect(Collectors.toList());
-    }
+	@Transactional
+	public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
+		Article article = articleService.findById(articleId);
+		return commentRepository.findAllByArticle(article)
+				.stream()
+				.map(comment -> toCommentResponseDto(comment.getId(), comment.getAuthorId(),
+						comment.getAuthorName(), comment.getComment()))
+				.collect(Collectors.toList());
+	}
 
-    public Comment save(Long userId, CommentRequestDto commentRequestDto) {
-        User user = userService.findById(userId);
-        Article article = articleService.findById(commentRequestDto.getArticleId());
-        Comment comment = commentRequestDto.toEntity(user, article);
-        return commentRepository.save(comment);
-    }
+	public Comment save(Long userId, CommentRequestDto commentRequestDto) {
+		User user = userService.findById(userId);
+		Article article = articleService.findById(commentRequestDto.getArticleId());
+		Comment comment = commentRequestDto.toEntity(user, article);
+		return commentRepository.save(comment);
+	}
 
-    @Transactional
-    public Comment update(Long userId, Long commentId, CommentRequestDto commentRequestDto) {
-        Comment comment = findById(commentId);
-        if (comment.matchAuthorId(userId)) {
-            comment.updateComment(commentRequestDto.getComment());
-        }
-        return comment;
-    }
+	@Transactional
+	public void update(UserPublicInfoDto userPublicInfo, Long commentId, CommentRequestDto commentRequestDto) {
+		Comment comment = findById(commentId);
+		if (matchUserId(userPublicInfo, comment)) {
+			comment.updateComment(commentRequestDto.getComment());
+		}
+	}
 
-    @Transactional
-    public void delete(Long userId, Long commentId) {
-        Comment comment = findById(commentId);
-        if (comment.matchAuthorId(userId)) {
-            commentRepository.deleteById(commentId);
-        }
-    }
+	@Transactional
+	public void delete(UserPublicInfoDto userPublicInfo, Long commentId) {
+		Comment comment = findById(commentId);
+		if (matchUserId(userPublicInfo, comment)) {
+			commentRepository.deleteById(commentId);
+		}
+	}
 
-    private CommentResponseDto toCommentResponseDto(Long commentId, Long authorId, String userName, String comment) {
-        return new CommentResponseDto(commentId, authorId, userName, comment);
-    }
+	private boolean matchUserId(UserPublicInfoDto loggedInUser, Comment comment) {
+		return comment.matchAuthorId(loggedInUser.getId());
+	}
+
+	private CommentResponseDto toCommentResponseDto(Long commentId, Long authorId, String userName, String comment) {
+		return new CommentResponseDto(commentId, authorId, userName, comment);
+	}
 }

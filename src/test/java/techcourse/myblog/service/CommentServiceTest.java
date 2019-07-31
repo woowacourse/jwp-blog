@@ -9,87 +9,105 @@ import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.exception.NotFoundCommentException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentServiceTest {
-    private static final Long BASE_USER_ID = 1L;
-    private static final Long MISMATCH_USER_ID = 2L;
+	private static final Long BASE_USER_ID = 1L;
+	private static final Long MISMATCH_USER_ID = 2L;
+	public static final String TEST_COMMENT = "TEST Comment";
+	public static final String UPDATE_COMMENT = "UPDATE Comment";
 
-    @Autowired
-    private CommentService commentService;
+	@Autowired
+	private CommentService commentService;
 
-    @Autowired
-    private ArticleService articleService;
+	@Autowired
+	private ArticleService articleService;
 
-    private Long articleId;
+	@Autowired
+	private UserService userService;
 
-    @BeforeEach
-    public void setUp() {
-        ArticleDto articleDto = articleService.save(BASE_USER_ID,
-                new ArticleDto(null, BASE_USER_ID, "title", "url", "contents"));
-        articleId = articleDto.getId();
-    }
+	private Long articleId;
 
-    @Test
-    public void saveComment() {
-        CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
-        Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
+	@BeforeEach
+	public void setUp() {
+		ArticleDto articleDto = articleService.save(BASE_USER_ID,
+				new ArticleDto(null, BASE_USER_ID, "title", "url", "contents"));
+		articleId = articleDto.getId();
+	}
 
-        assertThat(comment.getComment()).isEqualTo(commentRequestDto.getComment());
-    }
+	@Test
+	public void saveComment() {
+		CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, TEST_COMMENT);
+		Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
 
-    @Test
-    public void findCommentsByArticleId() {
-        CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
-        Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
-        List<CommentResponseDto> comments = commentService.findCommentsByArticleId(articleId);
+		assertThat(comment.getComment()).isEqualTo(commentRequestDto.getComment());
+	}
 
-        assertThat(comments.size()).isEqualTo(1);
-        assertThat(comments.get(0).getComment()).isEqualTo(comment.getComment());
-        assertThat(comments.get(0).getAuthorName()).isEqualTo(comment.getAuthorName());
-    }
+	@Test
+	public void findCommentsByArticleId() {
+		CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, TEST_COMMENT);
+		Comment comment1 = commentService.save(BASE_USER_ID, commentRequestDto);
+		Comment comment2 = commentService.save(BASE_USER_ID, commentRequestDto);
+		List<CommentResponseDto> comments = commentService.findCommentsByArticleId(articleId);
 
-    @Test
-    public void updateComment() {
-        CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
-        Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
-        CommentRequestDto updateRequestDto = new CommentRequestDto(articleId, "UPDATE Comment");
-        Comment updatedComment = commentService.update(BASE_USER_ID, comment.getId(), updateRequestDto);
+		assertThat(comments.size()).isEqualTo(2);
+		assertThat(comments.get(0).getComment()).isEqualTo(comment1.getComment());
+		assertThat(comments.get(0).getAuthorName()).isEqualTo(comment1.getAuthorName());
+		assertThat(comments.get(1).getComment()).isEqualTo(comment2.getComment());
+		assertThat(comments.get(1).getAuthorName()).isEqualTo(comment2.getAuthorName());
+	}
 
-        assertThat(updatedComment.getComment()).isEqualTo("UPDATE Comment");
-    }
+	@Test
+	@DisplayName("정상 수정 테스트")
+	public void updateComment() {
+		Comment comment = commentService.findById(BASE_USER_ID);
+		CommentRequestDto updateRequestDto = new CommentRequestDto(articleId, UPDATE_COMMENT);
+		UserPublicInfoDto userPublicInfo = userService.findUserPublicInfoById(BASE_USER_ID);
 
-    @Test
-    public void deleteComment() {
-        CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
-        Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
+		commentService.update(userPublicInfo, comment.getId(), updateRequestDto);
+		Comment updatedComment = commentService.findById(BASE_USER_ID);
+		assertThat(updatedComment.getComment()).isEqualTo(UPDATE_COMMENT);
+	}
 
-        commentService.delete(BASE_USER_ID, comment.getId());
-        assertThat(commentService.findCommentsByArticleId(articleId).size()).isEqualTo(0);
-    }
+	@Test
+	@DisplayName("Comment를 등록한 User가 다를때 수정 실패")
+	public void failUpdatingCommentWhenMismatchUser() {
+		Comment comment = commentService.findById(BASE_USER_ID);
+		CommentRequestDto updateRequestDto = new CommentRequestDto(articleId, UPDATE_COMMENT);
+		UserPublicInfoDto userPublicInfo = userService.findUserPublicInfoById(MISMATCH_USER_ID);
 
-    @Test
-    @DisplayName("Comment를 등록한 User가 다를때 수정 실패")
-    public void failUpdatingCommentWhenMismatchUser() {
-        CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
-        Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
-        CommentRequestDto updateRequestDto = new CommentRequestDto(articleId, "UPDATE Comment");
-        Comment updateComment = commentService.update(MISMATCH_USER_ID, comment.getId(), updateRequestDto);
+		commentService.update(userPublicInfo, comment.getId(), updateRequestDto);
+		Comment updatedComment = commentService.findById(BASE_USER_ID);
+		assertThat(updatedComment.getComment()).isEqualTo(comment.getComment());
+	}
 
-        assertThat(updateComment.getComment()).isEqualTo("TEST Comment");
-    }
+	@Test
+	@DisplayName("정상 삭제 테스트")
+	public void deleteComment() {
+		CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, TEST_COMMENT);
+		Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
+		UserPublicInfoDto userPublicInfo = userService.findUserPublicInfoById(BASE_USER_ID);
 
-    @Test
-    @DisplayName("Comment를 등록한 User가 다를때 삭제 실패")
-    public void failDeletingCommentWhenMismatchUser() {
-        CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
-        Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
+		commentService.delete(userPublicInfo, comment.getId());
+		assertThatThrownBy(() -> commentService.findById(comment.getId()))
+				.isInstanceOf(NotFoundCommentException.class);
+	}
 
-        commentService.delete(MISMATCH_USER_ID, comment.getId());
-        assertThat(commentService.findCommentsByArticleId(articleId).size()).isEqualTo(1);
-    }
+	@Test
+	@DisplayName("Comment를 등록한 User가 다를때 삭제 실패")
+	public void failDeletingCommentWhenMismatchUser() {
+		CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, TEST_COMMENT);
+		Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
+		UserPublicInfoDto userPublicInfo = userService.findUserPublicInfoById(MISMATCH_USER_ID);
+
+		commentService.delete(userPublicInfo, comment.getId());
+		assertThat(commentService.findCommentsByArticleId(articleId).size()).isEqualTo(1);
+	}
 }

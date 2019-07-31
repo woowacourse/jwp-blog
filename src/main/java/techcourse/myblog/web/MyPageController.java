@@ -12,36 +12,36 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class MyPageController {
-    private static final String LOGGED_IN_USER = "loggedInUser";
+	private static final String LOGGED_IN_USER = "loggedInUser";
 
-    private UserService userService;
+	private UserService userService;
 
-    public MyPageController(UserService userService) {
-        this.userService = userService;
-    }
+	public MyPageController(UserService userService) {
+		this.userService = userService;
+	}
 
-    @GetMapping("/mypage/{id}")
-    public String showMyPage(@PathVariable("id") long id, Model model) {
-        model.addAttribute("user", userService.findUserPublicInfoById(id));
-        return "mypage";
-    }
+	@GetMapping("/mypage/{id}")
+	public String showMyPage(@PathVariable("id") long id, Model model) {
+		model.addAttribute("user", userService.findUserPublicInfoById(id));
+		return "mypage";
+	}
 
-    @GetMapping("/mypage/{id}/edit")
-    public String showMyPageEdit(@PathVariable("id") long id, Model model,
-                                 HttpSession session, RedirectAttributes redirectAttributes) {
-        String errorMessage = (String) redirectAttributes.getFlashAttributes().get("errorMessage");
-        if (errorMessage != null) {
-            model.addAttribute("errorMessage", errorMessage);
-        }
-        if (isLoggedInUserMyPage(session, id)) {
-            model.addAttribute("user", userService.findUserPublicInfoById(id));
-            return "mypage-edit";
-        }
-        return "redirect:/mypage/" + id;
-    }
+	@GetMapping("/mypage/{id}/edit")
+	public String showMyPageEdit(@PathVariable("id") long id, Model model,
+	                             HttpSession session, RedirectAttributes redirectAttributes) {
+		String errorMessage = (String) redirectAttributes.getFlashAttributes().get("errorMessage");
+		if (errorMessage != null) {
+			model.addAttribute("errorMessage", errorMessage);
+		}
+		if (isLoggedInUserMyPage(session, id)) {
+			model.addAttribute("user", userService.findUserPublicInfoById(id));
+			return "mypage-edit";
+		}
+		return "redirect:/mypage/" + id;
+	}
 
-    private boolean isLoggedInUserMyPage(HttpSession session, Long id) {
-        UserPublicInfoDto loggedInUser = (UserPublicInfoDto) session.getAttribute(LOGGED_IN_USER);
-        return (loggedInUser != null) && (id.equals(loggedInUser.getId()));
-    }
+	private boolean isLoggedInUserMyPage(HttpSession session, Long id) {
+		UserPublicInfoDto loggedInUser = (UserPublicInfoDto) session.getAttribute(LOGGED_IN_USER);
+		return (loggedInUser != null) && (id.equals(loggedInUser.getId()));
+	}
 }

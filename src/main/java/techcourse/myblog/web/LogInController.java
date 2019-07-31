@@ -11,32 +11,32 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class LogInController {
-    private static final String LOGGED_IN_USER = "loggedInUser";
+	private static final String LOGGED_IN_USER = "loggedInUser";
 
-    private LogInService logInService;
+	private LogInService logInService;
 
-    public LogInController(LogInService logInService) {
-        this.logInService = logInService;
-    }
+	public LogInController(LogInService logInService) {
+		this.logInService = logInService;
+	}
 
-    @GetMapping("/login")
-    public String showLoginPage(HttpSession session) {
-        if (session.getAttribute(LOGGED_IN_USER) != null) {
-            return "redirect:/";
-        }
-        return "login";
-    }
+	@GetMapping("/login")
+	public String showLoginPage(HttpSession session) {
+		if (session.getAttribute(LOGGED_IN_USER) != null) {
+			return "redirect:/";
+		}
+		return "login";
+	}
 
-    @PostMapping("/login")
-    public String logIn(LogInInfoDto logInInfoDto, HttpSession session) {
-        UserPublicInfoDto userPublicInfoDto = logInService.logIn(logInInfoDto);
-        session.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
-        return "redirect:/";
-    }
+	@PostMapping("/login")
+	public String logIn(LogInInfoDto logInInfoDto, HttpSession session) {
+		UserPublicInfoDto userPublicInfoDto = logInService.logIn(logInInfoDto);
+		session.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
+		return "redirect:/";
+	}
 
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.removeAttribute(LOGGED_IN_USER);
-        return "redirect:/";
-    }
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute(LOGGED_IN_USER);
+		return "redirect:/";
+	}
 }

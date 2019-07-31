@@ -7,42 +7,42 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class ArticleVo {
-    private static final int CONTENTS_LENGTH = 1000;
+	private static final int CONTENTS_LENGTH = 1000;
 
-    @Column(nullable = false)
-    private String title;
+	@Column(nullable = false)
+	private String title;
 
-    @URL
-    @Column(nullable = false)
-    private String coverUrl;
+	@URL
+	@Column(nullable = false)
+	private String coverUrl;
 
-    @Column(nullable = false, length = CONTENTS_LENGTH)
-    private String contents;
+	@Column(nullable = false, length = CONTENTS_LENGTH)
+	private String contents;
 
-    private ArticleVo() {
-    }
+	private ArticleVo() {
+	}
 
-    public ArticleVo(String title, String coverUrl, String contents) {
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
-    }
+	public ArticleVo(String title, String coverUrl, String contents) {
+		this.title = title;
+		this.coverUrl = coverUrl;
+		this.contents = contents;
+	}
 
-    public void update(ArticleVo articleVo) {
-        this.title = articleVo.title;
-        this.coverUrl = articleVo.coverUrl;
-        this.contents = articleVo.contents;
-    }
+	public void update(ArticleVo articleVo) {
+		this.title = articleVo.title;
+		this.coverUrl = articleVo.coverUrl;
+		this.contents = articleVo.contents;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public String getCoverUrl() {
-        return coverUrl;
-    }
+	public String getCoverUrl() {
+		return coverUrl;
+	}
 
-    public String getContents() {
-        return contents;
-    }
+	public String getContents() {
+		return contents;
+	}
 }

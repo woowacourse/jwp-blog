@@ -14,42 +14,42 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class CommentController {
-    private static final String LOGGED_IN_USER = "loggedInUser";
+	private static final String LOGGED_IN_USER = "loggedInUser";
 
-    private CommentService commentService;
+	private CommentService commentService;
 
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
+	public CommentController(CommentService commentService) {
+		this.commentService = commentService;
+	}
 
-    @PostMapping("/comment")
-    public String createComment(CommentRequestDto commentRequestDto, HttpSession session) {
-        Long userId = getLoggedInUser(session).getId();
-        commentService.save(userId, commentRequestDto);
-        return "redirect:/articles/" + commentRequestDto.getArticleId();
-    }
+	@PostMapping("/comment")
+	public String createComment(CommentRequestDto commentRequestDto, HttpSession session) {
+		Long userId = getLoggedInUser(session).getId();
+		commentService.save(userId, commentRequestDto);
+		return "redirect:/articles/" + commentRequestDto.getArticleId();
+	}
 
-    @PutMapping("/articles/{articleId}/comment/{commentId}")
-    public String updateComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
-                                CommentRequestDto commentRequestDto, HttpSession session) {
-        Long userId = getLoggedInUser(session).getId();
-        commentService.update(userId, commentId, commentRequestDto);
-        return "redirect:/articles/" + articleId;
-    }
+	@PutMapping("/articles/{articleId}/comment/{commentId}")
+	public String updateComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
+	                            CommentRequestDto commentRequestDto, HttpSession session) {
+		Long userId = getLoggedInUser(session).getId();
+		commentService.update(getLoggedInUser(session), commentId, commentRequestDto);
+		return "redirect:/articles/" + articleId;
+	}
 
-    @DeleteMapping("/articles/{articleId}/comment/{commentId}")
-    public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
-                                HttpSession session) {
-        Long userId = getLoggedInUser(session).getId();
-        commentService.delete(userId, commentId);
-        return "redirect:/articles/" + articleId;
-    }
+	@DeleteMapping("/articles/{articleId}/comment/{commentId}")
+	public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
+	                            HttpSession session) {
+		Long userId = getLoggedInUser(session).getId();
+		commentService.delete(getLoggedInUser(session), commentId);
+		return "redirect:/articles/" + articleId;
+	}
 
-    private UserPublicInfoDto getLoggedInUser(HttpSession session) {
-        UserPublicInfoDto user = (UserPublicInfoDto) session.getAttribute(LOGGED_IN_USER);
-        if (user == null) {
-            throw new NotLoggedInException();
-        }
-        return user;
-    }
+	private UserPublicInfoDto getLoggedInUser(HttpSession session) {
+		UserPublicInfoDto user = (UserPublicInfoDto) session.getAttribute(LOGGED_IN_USER);
+		if (user == null) {
+			throw new NotLoggedInException();
+		}
+		return user;
+	}
 }
