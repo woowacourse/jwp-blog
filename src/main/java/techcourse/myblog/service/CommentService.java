@@ -29,21 +29,23 @@ public class CommentService {
     }
 
     @Transactional
-    public void update(long commentId, CommentDto commentDto) {
+    public void update(long commentId, CommentDto commentDto, long userId) {
+        checkAuthor(commentId, userId);
         Comment comment = commentRepository.findById(commentId).get();
         comment.update(commentDto.toEntity());
     }
 
-    public void checkAuthor(long commentId, long userId) {
+    public void delete(long commentId, long userId) {
+        checkAuthor(commentId, userId);
+        commentRepository.deleteById(commentId);
+    }
+
+    private void checkAuthor(long commentId, long userId) {
         commentRepository.findById(commentId).ifPresent(comment -> {
             if (comment.getAuthor().getId() != userId) {
                 throw new IllegalArgumentException("허가되지 않은 사용자입니다.");
             }
         });
-    }
-
-    public void delete(long commentId) {
-        commentRepository.deleteById(commentId);
     }
 
     public List<CommentDto> findByArticleId(long articleId) {

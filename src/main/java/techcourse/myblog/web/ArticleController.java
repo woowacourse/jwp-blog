@@ -29,13 +29,14 @@ public class ArticleController {
     @GetMapping("/articles/new")
     public String showArticleWritingPage(Model model) {
         model.addAttribute("categories", categoryService.readAll());
+
         return "article-edit";
     }
 
     @PostMapping("/articles/new")
     public String create(ArticleDto articleDto, HttpSession session) {
-        Object userId = session.getAttribute("userId");
-        long articleId = articleService.createArticle(articleDto, (long) userId);
+        long articleId = articleService.createArticle(articleDto, getUserId(session));
+
         return "redirect:/articles/" + articleId;
     }
 
@@ -44,14 +45,13 @@ public class ArticleController {
         ArticleDto articleDto = articleService.readById(articleId);
         model.addAttribute("article", articleDto);
         model.addAttribute("comments", commentService.findByArticleId(articleId));
+
         return "article";
     }
 
     @PutMapping("/articles/{articleId}")
     public String update(@PathVariable long articleId, ArticleDto articleDto, HttpSession session) {
-        Object userId = session.getAttribute("userId");
-        articleService.checkAuthor(articleId, (long) userId);
-        ArticleDto toArticleDto = articleService.updateByArticle(articleId, articleDto);
+        ArticleDto toArticleDto = articleService.updateByArticle(articleId, articleDto, getUserId(session));
 
         return "redirect:/articles/" + toArticleDto.getId();
     }
@@ -68,11 +68,12 @@ public class ArticleController {
     @Transactional
     @DeleteMapping("articles/{articleId}")
     public String delete(@PathVariable long articleId, HttpSession session) {
-        Object userId = session.getAttribute("userId");
-        articleService.checkAuthor(articleId, (long) userId);
-        commentService.deleteByArticleId(articleId);
-        articleService.deleteById(articleId);
+        articleService.deleteById(articleId, getUserId(session));
 
         return "redirect:/";
+    }
+
+    private long getUserId(HttpSession session) {
+        return (long) session.getAttribute("userId");
     }
 }

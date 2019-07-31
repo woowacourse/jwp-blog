@@ -22,6 +22,9 @@ public class ArticleService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CommentService commentService;
+
     public long createArticle(ArticleDto articleDto, long userId) {
         Optional<User> maybeUser = userRepository.findById(userId);
         maybeUser.ifPresent(user -> articleDto.setUserDto(UserDto.from(user)));
@@ -36,7 +39,8 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleDto updateByArticle(long articleId, ArticleDto articleDto) {
+    public ArticleDto updateByArticle(long articleId, ArticleDto articleDto, long userId) {
+        checkAuthor(articleId, userId);
         Optional<Article> maybeArticle = articleRepository.findById(articleId);
         if (maybeArticle.isPresent()) {
             maybeArticle.get().update(articleDto.toEntity());
@@ -46,7 +50,10 @@ public class ArticleService {
         throw new IllegalArgumentException("업데이트 할 수 없습니다.");
     }
 
-    public void deleteById(long articleId) {
+    @Transactional
+    public void deleteById(long articleId, long userId) {
+        checkAuthor(articleId, userId);
+        commentService.deleteByArticleId(articleId);
         articleRepository.deleteById(articleId);
     }
 
@@ -58,7 +65,7 @@ public class ArticleService {
         return new ArticleDtos(articleRepository.findByCategoryId(categoryId)).getArticleDtos();
     }
 
-    public void checkAuthor(long articleId, long userId) {
+    private void checkAuthor(long articleId, long userId) {
         articleRepository.findById(articleId).ifPresent(article -> {
             if (article.getId() != userId) {
                 throw new IllegalArgumentException("허가되지 않은 사용자입니다.");
