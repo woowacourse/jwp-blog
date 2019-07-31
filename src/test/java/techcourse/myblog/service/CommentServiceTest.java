@@ -45,7 +45,9 @@ class CommentServiceTest {
     void save() {
         CommentDto commentDto = new CommentDto();
         commentDto.setContents(COMMENTS_CONTENTS);
-        commentService.save(USER, ARTICLE, commentDto);
+        commentDto.setUser(USER);
+        commentDto.setArticle(ARTICLE);
+        commentService.save(commentDto);
 
         verify(commentRepository, atLeast(1)).save(new Comment(COMMENTS_CONTENTS, USER, ARTICLE));
     }

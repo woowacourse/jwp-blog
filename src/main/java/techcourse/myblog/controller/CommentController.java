@@ -26,7 +26,9 @@ public class CommentController {
     @PostMapping
     public String createComment(CommentDto commentDto, @ModelAttribute User user) {
         Article foundArticle = articleService.findById(commentDto.getArticleId());
-        commentService.save(user, foundArticle, commentDto);
+        commentDto.setUser(user);
+        commentDto.setArticle(foundArticle);
+        commentService.save(commentDto);
         return "redirect:/articles/" + foundArticle.getId();
     }
 

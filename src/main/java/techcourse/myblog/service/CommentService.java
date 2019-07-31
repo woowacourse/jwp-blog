@@ -4,8 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.CommentDto;
 import techcourse.myblog.exception.CommentNotFoundException;
-import techcourse.myblog.exception.MisMatchAuthorException;
-import techcourse.myblog.model.Article;
 import techcourse.myblog.model.Comment;
 import techcourse.myblog.model.User;
 import techcourse.myblog.repository.CommentRepository;
@@ -18,8 +16,8 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public void save(User user, Article article, CommentDto commentDto) {
-        Comment comment = new Comment(commentDto.getContents(), user, article);
+    public void save(CommentDto commentDto) {
+        Comment comment = new Comment(commentDto.getContents(), commentDto.getUser(), commentDto.getArticle());
         commentRepository.save(comment);
         comment.getArticle().addComment(comment);
     }
