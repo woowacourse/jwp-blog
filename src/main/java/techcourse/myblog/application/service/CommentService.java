@@ -1,4 +1,4 @@
-package techcourse.myblog.service;
+package techcourse.myblog.application.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;

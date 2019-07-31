@@ -2,11 +2,16 @@ package techcourse.myblog.web.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import techcourse.myblog.web.controller.CustomArgumentResolver;
+
+import java.util.List;
 
 @Configuration
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer {
     @Bean
     public WebMvcConfigurer interceptorConfigure() {
         return new WebMvcConfigurer() {
@@ -23,4 +28,15 @@ public class WebConfig {
             }
         };
     }
+
+    @Bean
+    public WebMvcConfigurer argumentResolverConfigure(){
+        return new WebMvcConfigurer() {
+            @Override
+            public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
+                resolvers.add(new CustomArgumentResolver());
+            }
+        };
+    }
+
 }

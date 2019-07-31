@@ -1,4 +1,4 @@
-package techcourse.myblog.service;
+package techcourse.myblog.application.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
@@ -19,14 +19,12 @@ public class UserService {
         return userRepository.findByEmail(email).get();
     }
 
-    public boolean tryLogin(String email, String password, HttpSession session) {
-        return userRepository.findByEmail(email)
-                            .filter(user -> user.authenticate(password))
-                            .map(user -> {
-                                session.setAttribute("name", user.getName());
-                                session.setAttribute("email", user.getEmail());
-                                return true;
-                            }).orElse(false);
+    public User tryLogin(String email, String password) {
+        User user = getUserByEmail(email);
+        if(user.authenticate(password)){
+            return user;
+        }
+        throw new IllegalArgumentException();
     }
 
     public Iterable<User> loadEveryUsers() {

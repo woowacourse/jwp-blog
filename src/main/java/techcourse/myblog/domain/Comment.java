@@ -26,11 +26,11 @@ public class Comment {
     private LocalDateTime updateTimeAt;
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     private Article article;
 
     @ManyToOne
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     private User author;
 
     @Column(nullable = false, length = 500)

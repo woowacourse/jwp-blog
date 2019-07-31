@@ -1,4 +1,4 @@
-package techcourse.myblog.service;
+package techcourse.myblog.application.service;
 
 public enum UserQueryResult {
     EMAIL_ALREADY_TAKEN,

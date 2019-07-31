@@ -5,8 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.service.UserQueryResult;
-import techcourse.myblog.service.UserService;
+import techcourse.myblog.application.service.UserQueryResult;
+import techcourse.myblog.application.service.UserService;
 
 import javax.servlet.http.HttpSession;
 
@@ -23,8 +23,7 @@ public class UserController {
     }
 
     private void clearSession(HttpSession session) {
-        session.removeAttribute("email");
-        session.removeAttribute("name");
+        session.removeAttribute("user");
     }
 
     @GetMapping("/login")
@@ -34,20 +33,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public RedirectView login(
-            String email,
-            String password,
-            HttpSession session,
-            RedirectAttributes redirectAttributes
-    ) {
-        if (userService.tryLogin(email, password, session)) {
+    public RedirectView login(String email, String password, HttpSession session, RedirectAttributes redirectAttributes) {
+        try {
+            session.setAttribute("user", userService.tryLogin(email, password));
             return new RedirectView("/");
+        }catch(IllegalArgumentException e){
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "존재하지 않는 사용자이거나 잘못된 비밀번호입니다."
+            );
+            return new RedirectView("/login");
         }
-        redirectAttributes.addFlashAttribute(
-                "errorMessage",
-                "존재하지 않는 사용자이거나 잘못된 비밀번호입니다."
-        );
-        return new RedirectView("/login");
     }
 
     @GetMapping("/logout")

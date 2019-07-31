@@ -4,31 +4,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.application.dto.LoginUser;
+import techcourse.myblog.application.service.ArticleService;
+import techcourse.myblog.application.service.UserService;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.CommentService;
-import techcourse.myblog.service.UserService;
-
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class ArticleController {
     private final UserService userService;
     private final ArticleService articleService;
 
-    public ArticleController(ArticleService articleService, CommentService commentService, UserService userService) {
+    public ArticleController(ArticleService articleService, UserService userService) {
         this.userService = userService;
         this.articleService = articleService;
     }
 
-    private User getCurrentUser(HttpSession session) {
-        return userService.getUserByEmail((String) session.getAttribute("email"));
-    }
-
-
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, LoginUser sessionUser) {
+        model.addAttribute("session", sessionUser.getUser());
         model.addAttribute("articles", articleService.loadEveryArticles());
         return "index";
     }
@@ -39,9 +32,13 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public RedirectView write(String title, String coverUrl, String contents, HttpSession session) {
+    public RedirectView write(String title,
+                              String coverUrl,
+                              String contents,
+                              LoginUser sessionUser
+    ) {
         return new RedirectView("/articles/" + articleService.write(
-                new Article(getCurrentUser(session), title, coverUrl, contents))
+                new Article(sessionUser.getUser(), title, coverUrl, contents))
         );
     }
 
@@ -55,9 +52,9 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String updateForm(@PathVariable long articleId, Model model, HttpSession session) {
+    public String updateForm(@PathVariable long articleId, Model model, LoginUser sessionUser) {
         return articleService.maybeArticle(articleId).map(article -> {
-            if (article.isSameAuthor(getCurrentUser(session))) {
+            if (article.isSameAuthor(sessionUser.getUser())) {
                 model.addAttribute("article", article);
                 return "article-edit";
             }
@@ -71,16 +68,16 @@ public class ArticleController {
             String title,
             String coverUrl,
             String contents,
-            HttpSession session
+            LoginUser sessionUser
     ) {
-        return articleService.tryUpdate(articleId, new Article(getCurrentUser(session), title, coverUrl, contents))
+        return articleService.tryUpdate(articleId, new Article(sessionUser.getUser(), title, coverUrl, contents))
                 ? new RedirectView("/articles/" + articleId)
                 : new RedirectView("/");
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public RedirectView delete(@PathVariable long articleId, HttpSession session) {
-        articleService.tryDelete(articleId, getCurrentUser(session));
+    public RedirectView delete(@PathVariable long articleId, LoginUser sessionUser) {
+        articleService.tryDelete(articleId, sessionUser.getUser());
         return new RedirectView("/");
     }
 
