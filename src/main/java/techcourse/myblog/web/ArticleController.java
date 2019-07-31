@@ -49,15 +49,15 @@ public class ArticleController {
 		UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoById(articleDto.getUserId());
 		model.addAttribute("articleUser", userPublicInfoDto);
 
-		List<CommentResponseDto> commentResponseDtos = commentService.findCommentsByArticleId(id);
-		model.addAttribute("comments", commentResponseDtos);
+		List<CommentResponseDto> commentResponses = commentService.findCommentsByArticleId(id);
+		model.addAttribute("comments", commentResponses);
 		return "article";
 	}
 
 	@GetMapping("/articles/{id}/edit")
 	public String showEditPage(@PathVariable("id") Long articleId, Model model, HttpSession session) {
-		UserPublicInfoDto userPublicInfoDto = getLoggedInUser(session);
 		try {
+			UserPublicInfoDto userPublicInfoDto = getLoggedInUser(session);
 			ArticleDto articleDto = articleService.authorize(userPublicInfoDto, articleId);
 			model.addAttribute("article", articleDto);
 			return "article-edit";

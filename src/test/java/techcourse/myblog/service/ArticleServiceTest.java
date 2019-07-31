@@ -29,12 +29,15 @@ public class ArticleServiceTest {
 	UserService userService;
 
 	private Long articleId;
+	private UserPublicInfoDto userPublicInfo;
 
 	@BeforeEach
 	public void setUp() {
 		ArticleDto articleDto = articleService.save(
 				BASE_USER_ID, new ArticleDto(null, BASE_USER_ID, "title", "coverUrl", "contents"));
 		articleId = articleDto.getId();
+
+		userPublicInfo = userService.findUserPublicInfoById(BASE_USER_ID);
 	}
 
 	@Test
@@ -65,7 +68,7 @@ public class ArticleServiceTest {
 	@DisplayName("Article을 삭제했을 때 포함된 Comment도 삭제된다")
 	public void deleteArticleWithCascadeComments() {
 		CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
-		Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
+		Comment comment = commentService.save(userPublicInfo, commentRequestDto);
 
 		articleService.delete(articleId, BASE_USER_ID);
 

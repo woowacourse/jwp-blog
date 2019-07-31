@@ -9,6 +9,7 @@ import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.exception.NotFoundArticleException;
 import techcourse.myblog.service.exception.NotFoundCommentException;
 import techcourse.myblog.service.exception.SignUpException;
@@ -165,8 +166,9 @@ public class UserServiceTest {
 				"title", "coverUrl", "contents");
 		ArticleDto article = articleService.save(author.getId(), articleDto);
 
+		UserPublicInfoDto userPublicInfo = userService.findUserPublicInfoById(author.getId());
 		CommentRequestDto commentRequestDto = new CommentRequestDto(article.getId(), "TEST Comment");
-		Comment comment = commentService.save(author.getId(), commentRequestDto);
+		Comment comment = commentService.save(userPublicInfo, commentRequestDto);
 
 		userService.delete(author.getId());
 

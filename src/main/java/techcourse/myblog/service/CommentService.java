@@ -41,8 +41,8 @@ public class CommentService {
 				.collect(Collectors.toList());
 	}
 
-	public Comment save(Long userId, CommentRequestDto commentRequestDto) {
-		User user = userService.findById(userId);
+	public Comment save(UserPublicInfoDto userPublicInfo, CommentRequestDto commentRequestDto) {
+		User user = userService.findByUserPublicInfo(userPublicInfo);
 		Article article = articleService.findById(commentRequestDto.getArticleId());
 		Comment comment = commentRequestDto.toEntity(user, article);
 		return commentRepository.save(comment);
@@ -64,8 +64,8 @@ public class CommentService {
 		}
 	}
 
-	private boolean matchUserId(UserPublicInfoDto loggedInUser, Comment comment) {
-		return comment.matchAuthorId(loggedInUser.getId());
+	private boolean matchUserId(UserPublicInfoDto userPublicInfo, Comment comment) {
+		return comment.matchAuthorId(userPublicInfo.getId());
 	}
 
 	private CommentResponseDto toCommentResponseDto(Long commentId, Long authorId, String userName, String comment) {

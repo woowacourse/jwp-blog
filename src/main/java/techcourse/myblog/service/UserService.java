@@ -30,7 +30,13 @@ public class UserService {
 	}
 
 	public User findById(Long id) {
-		return userRepository.findById(id).orElseThrow(NotFoundUserException::new);
+		return userRepository.findById(id)
+				.orElseThrow(NotFoundUserException::new);
+	}
+
+	User findByUserPublicInfo(UserPublicInfoDto userPublicInfo) {
+		return userRepository.findById(userPublicInfo.getId())
+				.orElseThrow(NotFoundUserException::new);
 	}
 
 	public UserPublicInfoDto findUserPublicInfoById(Long id) {
