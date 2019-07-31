@@ -4,16 +4,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.user.UserEmail;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class UserControllerTest extends AuthedWebTestClient {
-
-
     @BeforeEach
     void setUp() {
         init();
@@ -35,10 +34,7 @@ class UserControllerTest extends AuthedWebTestClient {
     void 회원가입_실패_테스트() {
         long count = userRepository.count();
         webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("name", "a")
-                        .with("password", "b")
-                        .with("email", "c"))
+                .body(params(Arrays.asList("name", "password", "email"), "a", "b", "c"))
                 .exchange()
                 .expectStatus().isUnauthorized();
 
@@ -49,9 +45,7 @@ class UserControllerTest extends AuthedWebTestClient {
     void 회원가입_성공_테스트() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("name", "andole")
-                        .with("password", "A!1bcdefg")
-                        .with("email", "test@test.com"))
+                .body(params(Arrays.asList("name", "password", "email"), "andole", "A!1bcdefg", "test@test.com"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".+\\/login");
@@ -61,8 +55,7 @@ class UserControllerTest extends AuthedWebTestClient {
     void 회원정보_수정_테스트() {
         put("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("name", "mobumsaeng")
-                        .with("email", "edit@gmail.com"))
+                .body(params(Arrays.asList("name", "email"), "mobumsaeng", "edit@gmail.com"))
                 .exchange().expectStatus().is3xxRedirection();
 
         assertDoesNotThrow(() -> userRepository.findByEmail(UserEmail.of("edit@gmail.com")).orElseThrow(IllegalAccessError::new));

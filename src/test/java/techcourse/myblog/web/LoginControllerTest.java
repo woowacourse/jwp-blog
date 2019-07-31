@@ -3,21 +3,18 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.repository.UserRepository;
 
+import java.util.Arrays;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LoginControllerTest {
+public class LoginControllerTest extends AuthedWebTestClient {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -39,7 +36,6 @@ public class LoginControllerTest {
     @Test
     void 로그인_성공_테스트() {
         webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData("email", "andole@gmail.com")
                         .with("password", "A!1bcdefg"))
                 .exchange()
@@ -51,9 +47,7 @@ public class LoginControllerTest {
     @Test
     void 이메일_없음_테스트() {
         webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", "xxx@gmail.com")
-                        .with("password", "A!1bcdefg"))
+                .body(params(Arrays.asList("email", "password"), "xxx@gmail.com", "A!1bcdefg"))
                 .exchange()
                 .expectStatus().isUnauthorized()
                 .expectBody()
@@ -67,8 +61,7 @@ public class LoginControllerTest {
     void 비밀번호_틀림_테스트() {
         webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", "andole@gmail.com")
-                        .with("password", "B!1bcdefg"))
+                .body(params(Arrays.asList("email", "password"), "andole@gmail.com", "B!1bcdefg"))
                 .exchange()
                 .expectStatus().isUnauthorized()
                 .expectBody()

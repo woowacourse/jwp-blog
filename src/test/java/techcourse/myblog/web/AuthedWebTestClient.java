@@ -12,9 +12,11 @@ import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.repository.UserRepository;
 
+import java.util.List;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthedWebTestClient {
+public abstract class AuthedWebTestClient {
     private static final Logger log = LoggerFactory.getLogger(AuthedWebTestClient.class);
 
     @Autowired
@@ -44,18 +46,32 @@ public class AuthedWebTestClient {
     }
 
     protected WebTestClient.RequestBodySpec post(String uri) {
-        return webTestClient.post().uri(uri).header("Cookie", loginCookie());
+        return webTestClient.post()
+                .uri(uri)
+                .header("Cookie", loginCookie())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+    }
+
+    protected WebTestClient.RequestBodySpec put(String uri) {
+        return webTestClient.put()
+                .uri(uri)
+                .header("Cookie", loginCookie())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
     }
 
     protected WebTestClient.RequestHeadersSpec get(String uri) {
         return webTestClient.get().uri(uri).header("Cookie", loginCookie());
     }
 
-    protected WebTestClient.RequestBodySpec put(String uri) {
-        return webTestClient.put().uri(uri).header("Cookie", loginCookie());
-    }
-
     protected WebTestClient.RequestHeadersSpec delete(String uri) {
         return webTestClient.delete().uri(uri).header("Cookie", loginCookie());
+    }
+
+    protected BodyInserters.FormInserter<String> params(List<String> keyNames, String... parameters) {
+        BodyInserters.FormInserter<String> body = BodyInserters.fromFormData("", "");
+        for (int i = 0; i < keyNames.size(); i++) {
+            body.with(keyNames.get(i), parameters[i]);
+        }
+        return body;
     }
 }

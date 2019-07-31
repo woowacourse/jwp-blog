@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
-import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.repository.ArticleRepository;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -48,11 +48,7 @@ public class ArticleControllerTest extends AuthedWebTestClient {
     @Test
     void saveArticle() {
         post("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+                .body(params(Arrays.asList("title", "contents", "coverUrl"), title, contents, coverUrl))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".+\\/articles/.+");
@@ -68,11 +64,7 @@ public class ArticleControllerTest extends AuthedWebTestClient {
     void updateArticle() {
         long articleId = setArticleId();
         put("/articles/" + articleId)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", "updatedTitle")
-                        .with("coverUrl", "updatedCoverUrl")
-                        .with("contents", "updatedContents"))
+                .body(params(Arrays.asList("title", "contents", "coverUrl"), "updated", "updated", "updated"))
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -90,9 +82,8 @@ public class ArticleControllerTest extends AuthedWebTestClient {
     }
 
     private long setArticleId() {
-        EntityExchangeResult<byte[]> result = post("/articles").body(BodyInserters.fromFormData("title", "title")
-                .with("contents", "contents")
-                .with("coverUrl", ""))
+        EntityExchangeResult<byte[]> result = post("/articles")
+                .body(params(Arrays.asList("title", "contents", "coverUrl"), "title", "contents", ""))
                 .exchange().expectBody().returnResult();
         return Long.parseLong(result.getResponseHeaders().getLocation().getPath().split("/")[2]);
     }

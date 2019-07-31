@@ -15,7 +15,7 @@ public class CommentControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(ArticleControllerAdvice.class);
 
     @ExceptionHandler(CommentException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     public String commentHandler(CommentException e, RedirectAttributes redirectAttributes) {
         log.debug("Comment Exception : {}", e.getMessage());
         redirectAttributes.addFlashAttribute("error", e.getMessage());

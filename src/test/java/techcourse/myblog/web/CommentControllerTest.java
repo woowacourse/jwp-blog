@@ -7,6 +7,7 @@ import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,7 +31,6 @@ class CommentControllerTest extends AuthedWebTestClient {
     @Test
     void 코멘트_생성_테스트() {
         addComment().expectStatus().is3xxRedirection();
-
         checkBody("comment", true);
     }
 
@@ -64,14 +64,13 @@ class CommentControllerTest extends AuthedWebTestClient {
 
     private WebTestClient.ResponseSpec addComment() {
         return post("/articles/" + articleId + "/comment")
-                .body(BodyInserters.fromFormData("contents", "comment"))
+                .body(params(Arrays.asList("contents"), "comment"))
                 .exchange();
     }
 
     private void setArticleId() {
-        EntityExchangeResult<byte[]> result = post("/articles").body(BodyInserters.fromFormData("title", "title")
-                .with("contents", "contents")
-                .with("coverUrl", ""))
+        EntityExchangeResult<byte[]> result = post("/articles")
+                .body(params(Arrays.asList("title", "contents", "coverUrl"), "title", "contents", "coverUrl"))
                 .exchange().expectBody().returnResult();
         articleId = Long.parseLong(result.getResponseHeaders().getLocation().getPath().split("/")[2]);
     }
