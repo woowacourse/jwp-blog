@@ -33,9 +33,11 @@ public class CommentRepositoryTest {
 
     @Test
     void 댓글_생성시간_작동_테스트() {
-        Comment comment = new Comment("myComment");
-        comment.setArticle(article);
-        comment.setCommenter(user);
+        Comment comment = Comment.builder()
+                .comment("myComment")
+                .commenter(user)
+                .article(article)
+                .build();
         commentRepository.save(comment);
 
         Comment justCreatedComment = commentRepository.findByArticleOrderByCreatedAt(article).get(0);

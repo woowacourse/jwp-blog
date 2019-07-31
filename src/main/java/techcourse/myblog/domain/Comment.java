@@ -28,22 +28,10 @@ public class Comment {
 
     private LocalDateTime createdAt;
 
-    public Comment(String comment) {
-        this.comment = comment;
-    }
-
     @Builder
     public Comment(String comment, User commenter, Article article) {
         this.comment = comment;
         this.commenter = commenter;
-        this.article = article;
-    }
-
-    public void setCommenter(User commenter) {
-        this.commenter = commenter;
-    }
-
-    public void setArticle(Article article) {
         this.article = article;
     }
 
