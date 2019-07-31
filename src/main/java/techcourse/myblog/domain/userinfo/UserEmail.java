@@ -32,4 +32,8 @@ public class UserEmail {
     private boolean isNotCorrect(String name) {
         return (name != null) && !EMAIL_PATTERN.matcher(name).find();
     }
+
+    public boolean match(String email) {
+        return this.email.equals(email);
+    }
 }

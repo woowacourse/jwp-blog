@@ -35,11 +35,31 @@ public class User {
         this.password = new UserPassword(password);
     }
 
-    public boolean matchPassword(UserPassword userPassword) {
-        return this.password.equals(userPassword);
-    }
-
     public void update(UserEditRequestDto userEditRequestDto) {
         this.name = new UserName(userEditRequestDto.getName());
+    }
+
+    public boolean matchName(String name) {
+        return this.name.match(name);
+    }
+
+    public boolean matchName(UserName userName) {
+        return this.name.equals(userName);
+    }
+
+    public boolean matchEmail(String email) {
+        return this.email.match(email);
+    }
+
+    public boolean matchEmail(UserEmail userEmail) {
+        return this.email.equals(userEmail);
+    }
+
+    public boolean matchPassword(String password) {
+        return this.password.match(password);
+    }
+
+    public boolean matchPassword(UserPassword userPassword) {
+        return this.password.equals(userPassword);
     }
 }

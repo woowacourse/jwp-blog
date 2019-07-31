@@ -29,4 +29,8 @@ public class UserName {
     private boolean isNotCorrect(String name) {
         return (name != null) && !NAME_PATTERN.matcher(name).find();
     }
+
+    public boolean match(String name) {
+        return this.name.equals(name);
+    }
 }

@@ -43,11 +43,9 @@ class UserServiceTest {
 
         User savedUser = userService.save(newUser);
 
-        assertThat(savedUser.getName()).isEqualTo(newUser.getName());
-        assertThat(savedUser.getEmail()).isEqualTo(newUser.getEmail());
-        assertThat(savedUser.getPassword()).isEqualTo(newUser.getPassword());
-
-        userService.deleteUser(savedUser.getId());
+        assertThat(savedUser.matchName(newUser.getName())).isTrue();
+        assertThat(savedUser.matchEmail(newUser.getEmail())).isTrue();
+        assertThat(savedUser.matchPassword(newUser.getPassword())).isTrue();
     }
 
     @Test

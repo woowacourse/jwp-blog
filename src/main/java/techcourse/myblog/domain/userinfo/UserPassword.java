@@ -33,4 +33,8 @@ public class UserPassword {
     private boolean isNotCorrect(String name) {
         return (name != null) && !PASSWORD_PATTERN.matcher(name).find();
     }
+
+    public boolean match(String password) {
+        return this.password.equals(password);
+    }
 }

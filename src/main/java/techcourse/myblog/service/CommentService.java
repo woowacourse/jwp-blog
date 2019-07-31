@@ -54,7 +54,9 @@ public class CommentService {
 
     public Long findArticleIdById(Long id) {
         Comment comment = findById(id);
-        return comment.getArticle().getId();
+        Article article = comment.getArticle();
+
+        return article.getId();
     }
 
     public Comment findById(Long id) {

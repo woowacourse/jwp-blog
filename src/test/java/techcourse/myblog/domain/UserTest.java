@@ -1,7 +1,6 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.userinfo.UserName;
 import techcourse.myblog.domain.userinfo.UserPassword;
 import techcourse.myblog.dto.UserEditRequestDto;
 
@@ -37,7 +36,6 @@ class UserTest {
 
         user.update(userEditRequestDto);
 
-        UserName userName = user.getName();
-        assertThat(userName.getName()).isEqualTo("newName");
+        assertThat(user.matchName("newName")).isTrue();
     }
 }
