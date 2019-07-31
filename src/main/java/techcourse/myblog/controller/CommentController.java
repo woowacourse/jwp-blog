@@ -56,8 +56,12 @@ public class CommentController {
     @PutMapping
     public String update(CommentDto commentDto, User user) {
         log.debug(">>> update commentDto : {}", commentDto);
+        Comment comment = commentService.findCommentById(commentDto.getId());
+        if (user.isNotMatch(comment.getUser())) {
+            return "redirect:/";
+        }
         Article article = commentService.findArticleByArticleId(commentDto.getArticleId());
-        Comment comment = commentDto.toComment(user, article);
+        comment = commentDto.toComment(user, article);
         commentService.saveComment(comment);
         return "redirect:/articles/" + article.getId();
     }

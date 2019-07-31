@@ -17,7 +17,7 @@ public class Comment {
     private String contents;
     @OneToOne
     private User user;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "article_id")
     private Article article;
 

@@ -77,7 +77,8 @@ public class CommentControllerTests extends MyblogApplicationTests {
     void comment수정() throws Exception {
         MvcResult mvcResult = mockMvc.perform(put(COMMENT_URL).session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("articleId", String.valueOf(ARTICLE_ID))
-                .param("contents", "updatedContents"))
+                .param("contents", "updatedContents")
+                .param("id", String.valueOf(COMMENT_ID)))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
