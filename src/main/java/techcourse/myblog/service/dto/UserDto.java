@@ -1,12 +1,14 @@
 package techcourse.myblog.service.dto;
 
-import techcourse.myblog.support.validation.UserInfo;
+import lombok.Getter;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.support.validation.UserInfo;
 import techcourse.myblog.support.validation.pattern.UserPattern;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+@Getter
 public class UserDto {
     @NotBlank(message = UserPattern.NO_INPUT_MESSAGE)
     @Pattern(regexp = UserPattern.NAME,
@@ -30,32 +32,7 @@ public class UserDto {
         this.password = password;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     public User toUser() {
         return new User(name, email, password);
-    }
-
-    @Override
-    public String toString() {
-        return "UserDto{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }

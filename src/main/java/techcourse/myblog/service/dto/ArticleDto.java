@@ -1,11 +1,15 @@
 package techcourse.myblog.service.dto;
 
+import lombok.Getter;
+import lombok.Setter;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@Getter
+@Setter
 public class ArticleDto {
     public final static String TITLE_CONSTRAINT_MESSAGE = "제목을 입력해주세요.";
     public final static String CONTENTS_CONSTRAINT_MESSAGE = "내용을 입력해주세요.";
@@ -29,37 +33,5 @@ public class ArticleDto {
 
     public Article toArticle() {
         return new Article(title, coverUrl, contents, author);
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public User getAuthor() {
-        return author;
     }
 }
