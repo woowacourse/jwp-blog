@@ -21,6 +21,7 @@ public class Comment {
     private User author;
 
     @Column(nullable = false)
+    @Lob
     private String contents;
 
     @Builder

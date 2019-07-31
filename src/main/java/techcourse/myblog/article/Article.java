@@ -26,6 +26,7 @@ public class Article {
     @Column(length = 100)
     private String coverUrl;
 
+    @Lob
     private String contents;
 
     @ManyToOne
