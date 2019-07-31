@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.Email;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
@@ -38,8 +39,8 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String saveArticle(ArticleDto dto) {
-        return "redirect:/articles/" + articleService.save(dto.toEntity());
+    public String saveArticle(ArticleDto dto, UserSessionInfo userSessionInfo) {
+        return "redirect:/articles/" + articleService.save(dto.toEntity(), Email.of(userSessionInfo.getEmail()));
     }
 
     @PutMapping("/{articleId}")

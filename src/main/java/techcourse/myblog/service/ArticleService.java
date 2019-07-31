@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleException;
+import techcourse.myblog.domain.user.Email;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
 
@@ -15,9 +17,11 @@ import java.util.List;
 public class ArticleService {
     private static final String NOT_EXIST_ARTICLE = "해당 아티클이 없습니다.";
     private final ArticleRepository articleRepository;
+    private final UserService userService;
 
-    public ArticleService(ArticleRepository articleRepository) {
+    public ArticleService(ArticleRepository articleRepository, UserService userService) {
         this.articleRepository = articleRepository;
+        this.userService = userService;
     }
 
     @Transactional(readOnly = true)
@@ -37,8 +41,10 @@ public class ArticleService {
     }
 
     @Transactional
-    public Long save(Article article) {
+    public Long save(Article article, Email email) {
         Article newArticle = articleRepository.save(article);
+        User user = userService.getUserByEmail(email.getEmail());
+        newArticle.setAuthor(user);
         return newArticle.getId();
     }
 
@@ -54,7 +60,11 @@ public class ArticleService {
     public void delete(long articleId, String sessionEmail) {
         Article originArticle = findArticle(articleId);
         validate(originArticle.getAuthor().getEmail(), sessionEmail);
+
+        System.out.println(originArticle.getAuthor());
         articleRepository.deleteById(articleId);
+//        Article temp = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
+//        System.out.println(temp);
     }
 
     private void validate(String email, String sessionEmail) {

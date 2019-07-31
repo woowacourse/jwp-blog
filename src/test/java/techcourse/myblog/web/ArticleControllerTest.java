@@ -6,16 +6,17 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.repository.ArticleRepository;
 
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+import javax.transaction.Transactional;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+
 public class ArticleControllerTest extends AuthedWebTestClient {
     private static final Logger log = LoggerFactory.getLogger(ArticleControllerTest.class);
 
@@ -77,38 +78,29 @@ public class ArticleControllerTest extends AuthedWebTestClient {
         get("/articles/" + articleId).exchange().expectStatus().isOk();
     }
 
-//    @Test
-//    @Transactional
-//    void updateArticle() {
-//        long articleId = getArticleId();
-//        Article article = articleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("아티클 오류"));
-//        User newUser = userRepository.findByEmail(Email.of(user.getEmail())).get();
-//        article.setAuthor(newUser);
-//
-//        put("/articles/" + articleId)
-//                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-//                .body(BodyInserters
-//                        .fromFormData("title", "updatedTitle")
-//                        .with("coverUrl", "updatedCoverUrl")
-//                        .with("contents", "updatedContents"))
-//                .exchange()
-//                .expectStatus().isOk();
-//    }
-//
-//    @Test
-//    @Transactional
-//    void deleteArticle() {
-//        User newUser = userRepository.findByEmail(Email.of(user.getEmail())).get();
-//        Article article = new Article(title, contents, coverUrl);
-//        long articleId = articleRepository.save(article).getId();
-//        article.setAuthor(newUser);
-//        articleRepository.save(article);
-//        delete("/articles/" + articleId)
-//                .exchange()
-//                .expectStatus()
-//                .is3xxRedirection();
-//
-//        assertThatThrownBy(() -> articleRepository.findById(articleId).orElseThrow(IllegalAccessError::new))
-//                .isInstanceOf(IllegalAccessError.class);
-//    }
+    @Test
+    @Transactional
+    void updateArticle() {
+        long articleId = getArticleId();
+
+        put("/articles/" + articleId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", "updatedTitle")
+                        .with("coverUrl", "updatedCoverUrl")
+                        .with("contents", "updatedContents"))
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void deleteArticle() {
+        long articleId = getArticleId();
+        delete("/articles/" + articleId)
+                .exchange()
+                .expectStatus()
+                .is3xxRedirection();
+        assertThatThrownBy(() -> articleRepository.findById(articleId).orElseThrow(IllegalAccessError::new))
+                .isInstanceOf(IllegalAccessError.class);
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.Email;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.repository.ArticleRepository;
 
@@ -27,6 +28,7 @@ class ArticleServiceTest {
 
     private Article article;
     private User user = new User("andole", "aA1231!!", "andole@gmail.com");
+    private Email email = Email.of("andole@gmail.com");
 
     @BeforeEach
     @Transactional
@@ -39,29 +41,29 @@ class ArticleServiceTest {
 
     @Test
     void findTest() {
-        long id = articleService.save(article);
+        long id = articleService.save(article, email);
         assertThat(articleService.findArticle(id).getTitle()).isEqualTo(article.getTitle());
     }
 
     @Test
     void updateTest() {
-        long id = articleService.save(article);
+        long id = articleService.save(article, email);
         Article editArticle = new Article("edit", "edit", "edit");
         article.update(editArticle);
-        articleService.save(article);
+        articleService.save(article, email);
         assertThat(articleService.findArticle(id).getTitle()).isEqualTo(editArticle.getTitle());
     }
 
     @Test
     void findAllTest() {
-        articleService.save(article);
+        articleService.save(article, email);
         List<Article> articles = articleService.findAll();
         assertThat(articles.size()).isEqualTo(1);
     }
 
     @Test
     void deleteTest() {
-        long id = articleService.save(article);
+        long id = articleService.save(article, email);
         articleService.delete(id, "andole@gmail.com");
         List<Article> articles = articleService.findAll();
         assertThat(articles.size()).isEqualTo(0);
