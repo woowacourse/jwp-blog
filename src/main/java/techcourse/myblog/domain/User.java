@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -43,8 +45,8 @@ public class User {
         }
     }
 
-    private void isEmpty(String string) {
-        if (EMPTY.equals(string) || string == null) {
+    private void isEmpty(String name) {
+        if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("아무것도 입력하지 않았습니다.");
         }
     }
