@@ -17,8 +17,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.UserRepository;
-import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.UserDto;
 
 import java.util.Objects;
 

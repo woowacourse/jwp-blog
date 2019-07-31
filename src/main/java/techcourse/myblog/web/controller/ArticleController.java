@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.ArticleWriteService;
 import techcourse.myblog.service.CommentService;
-import techcourse.myblog.web.LoginUser;
+import techcourse.myblog.support.argument.LoginUser;
 
 import javax.validation.Valid;
 import java.util.List;

@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.support.argument;
 
 import techcourse.myblog.domain.User;
 

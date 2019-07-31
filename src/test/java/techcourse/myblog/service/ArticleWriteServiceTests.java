@@ -1,7 +1,7 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.common.ArticleCommonServiceTests;
 
 import java.util.Optional;

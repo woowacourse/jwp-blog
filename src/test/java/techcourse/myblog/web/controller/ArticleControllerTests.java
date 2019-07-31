@@ -7,8 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import techcourse.myblog.domain.repository.ArticleRepository;
-import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.web.controller.common.ControllerTestTemplate;
 
 import java.util.stream.Stream;

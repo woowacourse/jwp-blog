@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.repository.ArticleRepository;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.service.dto.ArticleDto;
 
 @Service
 @Transactional

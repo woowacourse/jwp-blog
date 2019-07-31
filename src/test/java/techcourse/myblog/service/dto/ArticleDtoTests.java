@@ -1,4 +1,4 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.service.dto;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -11,8 +11,8 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.dto.ArticleDto.CONTENTS_CONSTRAINT_MESSAGE;
-import static techcourse.myblog.dto.ArticleDto.TITLE_CONSTRAINT_MESSAGE;
+import static techcourse.myblog.service.dto.ArticleDto.CONTENTS_CONSTRAINT_MESSAGE;
+import static techcourse.myblog.service.dto.ArticleDto.TITLE_CONSTRAINT_MESSAGE;
 
 class ArticleDtoTests {
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();

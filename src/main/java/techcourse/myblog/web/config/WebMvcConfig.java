@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import techcourse.myblog.web.interceptor.CommonInterceptor;
 import techcourse.myblog.web.interceptor.LoginInterceptor;
 import techcourse.myblog.web.interceptor.LogoutInterceptor;
-import techcourse.myblog.web.support.LoginUserHandlerMethodArgumentResolver;
+import techcourse.myblog.support.argument.LoginUserHandlerMethodArgumentResolver;
 
 import java.util.List;
 

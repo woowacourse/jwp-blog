@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.dto.CommentDto;
+import techcourse.myblog.service.dto.CommentDto;
 import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.CommentService;
-import techcourse.myblog.web.LoginUser;
+import techcourse.myblog.support.argument.LoginUser;
 
 @Controller
 public class CommentController {

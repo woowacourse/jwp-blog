@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.CommentRepository;
-import techcourse.myblog.dto.CommentDto;
+import techcourse.myblog.service.dto.CommentDto;
 
 import java.util.Collections;
 import java.util.List;

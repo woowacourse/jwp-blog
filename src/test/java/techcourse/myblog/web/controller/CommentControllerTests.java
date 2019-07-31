@@ -8,9 +8,9 @@ import org.springframework.util.MultiValueMap;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.domain.repository.CommentRepository;
-import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.dto.CommentDto;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.CommentDto;
+import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.web.controller.common.ControllerTestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;

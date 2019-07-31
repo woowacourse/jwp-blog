@@ -5,7 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.web.controller.common.ControllerTestTemplate;
 
 import java.util.stream.Stream;
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpMethod.*;
-import static techcourse.myblog.dto.UserDto.*;
+import static techcourse.myblog.service.dto.UserDto.*;
 import static techcourse.myblog.service.UserWriteService.DUPLICATED_USER_MESSAGE;
 import static techcourse.myblog.web.controller.UserController.LOGIN_FAIL_MESSAGE;
 
