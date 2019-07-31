@@ -41,7 +41,7 @@ public class ArticleService {
 
 	public void confirmAuthorization(String email, Long articleId) {
 		Article article = findById(articleId);
-		if (!userService.findUser(email).matchUserId(article.getAuthor().getId())) {
+		if (!userService.findUser(email).matchUser(article.getAuthor())) {
 			throw new UnauthorizedException();
 		}
 	}

@@ -13,21 +13,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 public class ArticleRepositoryTests {
-	private User user;
-
 	@Autowired
 	private TestEntityManager testEntityManager;
 
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private ArticleRepository articleRepository;
+
 	@Test
 	void findById() {
 		User user = userRepository.findById(1L).get();
 		ArticleDto articleDto = new ArticleDto("title", "contents", "www.coverUrl.com");
-		Article article = articleDto.valueOfArticle(user);
-
-		article = testEntityManager.persist(article);
-		assertThat(article.getAuthor().getId()).isEqualTo(user.getId());
+		Article actualArticle = articleDto.valueOfArticle(user);
+		actualArticle = testEntityManager.persist(actualArticle);
+		Article expectArticle = articleRepository.findById(actualArticle.getId()).get();
+		assertThat(actualArticle.matchArticle(expectArticle));
 	}
 }

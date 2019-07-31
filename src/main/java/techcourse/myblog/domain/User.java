@@ -1,6 +1,5 @@
 package techcourse.myblog.domain;
 
-import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -68,41 +67,7 @@ public class User {
 		this.id = id;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (!(o instanceof User)) {
-			return false;
-		}
-		final User user = (User) o;
-		return Objects.equals(id, user.id) &&
-				Objects.equals(getUsername(), user.getUsername()) &&
-				Objects.equals(getPassword(), user.getPassword()) &&
-				Objects.equals(getEmail(), user.getEmail()) &&
-				Objects.equals(getGithubURL(), user.getGithubURL()) &&
-				Objects.equals(getFacebookURL(), user.getFacebookURL());
-	}
-
-	public boolean matchUserId(Long userId) {
-		return this.id.equals(userId);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, getUsername(), getPassword(), getEmail(), getGithubURL(), getFacebookURL());
-	}
-
-	@Override
-	public String toString() {
-		return "User{" +
-				"id=" + id +
-				", username='" + username + '\'' +
-				", password='" + password + '\'' +
-				", email='" + email + '\'' +
-				", githubURL='" + githubURL + '\'' +
-				", facebookURL='" + facebookURL + '\'' +
-				'}';
+	public boolean matchUser(User user) {
+		return this.id.equals(user.id);
 	}
 }

@@ -45,7 +45,7 @@ public class CommentService {
 	public void update(String email, Long articleId, CommentDto commentDto) {
 		Comment comment = findById(commentDto.getId());
 		existArticle(articleId);
-		confirmAuthorization(email, comment.getAuthor().getId());
+		confirmAuthorization(email, comment.getAuthor());
 		comment.update(commentDto.valueOf());
 	}
 
@@ -58,9 +58,9 @@ public class CommentService {
 		articleService.findById(articleId);
 	}
 
-	private void confirmAuthorization(String email, Long commentAuthorId) {
+	private void confirmAuthorization(String email, User commentAuthor) {
 		User user = userService.findUser(email);
-		if (!user.matchUserId(commentAuthorId)) {
+		if (!user.matchUser(commentAuthor)) {
 			throw new UnauthorizedException();
 		}
 	}
@@ -68,7 +68,7 @@ public class CommentService {
 	@Transactional
 	public void delete(String email, Long articleId, Long commentId) {
 		Comment comment = findById(commentId);
-		confirmAuthorization(email, comment.getAuthor().getId());
+		confirmAuthorization(email, comment.getAuthor());
 		existArticle(articleId);
 		commentRepository.deleteById(commentId);
 	}

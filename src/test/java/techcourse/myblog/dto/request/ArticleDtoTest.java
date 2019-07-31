@@ -29,13 +29,19 @@ class ArticleDtoTest {
 	void valueOfArticle() {
 		actualArticle = articleDto.valueOfArticle(user);
 		expectedArticle = new Article(articleDto, user);
-		assertThat(actualArticle).isEqualTo(expectedArticle);
+
+		assertThat(actualArticle.getTitle()).isEqualTo(expectedArticle.getTitle());
+		assertThat(actualArticle.getContents()).isEqualTo(expectedArticle.getContents());
+		assertThat(actualArticle.getCoverUrl()).isEqualTo(expectedArticle.getCoverUrl());
 	}
 
 	@Test
 	void valueOfArticleWithArticleId() {
 		actualArticle = articleDto.valueOfArticle(1L, user);
 		expectedArticle = new Article(1L, articleDto, user);
-		assertThat(actualArticle).isEqualTo(expectedArticle);
+
+		assertThat(actualArticle.getTitle()).isEqualTo(expectedArticle.getTitle());
+		assertThat(actualArticle.getContents()).isEqualTo(expectedArticle.getContents());
+		assertThat(actualArticle.getCoverUrl()).isEqualTo(expectedArticle.getCoverUrl());
 	}
 }

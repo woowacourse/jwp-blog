@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 class CommentRepositoryTests {
@@ -46,10 +47,8 @@ class CommentRepositoryTests {
 	@Test
 	void findById() {
 		Comment expectComment = commentRepository.findById(actualComment.getId()).get();
-
-		assertThat(actualComment.getAuthor()).isEqualTo(expectComment.getAuthor());
-		assertThat(actualComment.getArticle()).isEqualTo(expectComment.getArticle());
-		assertThat(actualComment.getContents()).isEqualTo(expectComment.getContents());
+		assertTrue(actualComment.getAuthor().matchUser(expectComment.getAuthor()));
+		assertTrue(actualComment.matchComment(expectComment));
 	}
 
 	@Test

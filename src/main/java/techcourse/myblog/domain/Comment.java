@@ -1,7 +1,6 @@
 package techcourse.myblog.domain;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import javax.persistence.*;
 
 import org.hibernate.annotations.DynamicInsert;
@@ -68,24 +67,7 @@ public class Comment {
 		this.contents = comment.contents;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (!(o instanceof Comment)) {
-			return false;
-		}
-		final Comment comment = (Comment) o;
-		return Objects.equals(getId(), comment.getId()) &&
-				Objects.equals(contents, comment.contents) &&
-				Objects.equals(createDate, comment.createDate) &&
-				Objects.equals(author, comment.author) &&
-				Objects.equals(article, comment.article);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getId(), contents, createDate, author, article);
+	public boolean matchComment(Comment expectComment) {
+		return this.id.equals(expectComment.id);
 	}
 }

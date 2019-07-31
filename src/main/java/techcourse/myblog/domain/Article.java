@@ -1,6 +1,5 @@
 package techcourse.myblog.domain;
 
-import java.util.Objects;
 import javax.persistence.*;
 
 import techcourse.myblog.dto.request.ArticleDto;
@@ -72,38 +71,17 @@ public class Article {
 		this.id = id;
 	}
 
+	public User getAuthor() {
+		return author;
+	}
+
 	public void update(Article article) {
 		this.title = article.title;
 		this.contents = article.contents;
 		this.coverUrl = article.coverUrl;
 	}
 
-	public User getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(User author) {
-		this.author = author;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (!(o instanceof Article)) {
-			return false;
-		}
-		final Article article = (Article) o;
-		return Objects.equals(getId(), article.getId()) &&
-				Objects.equals(getTitle(), article.getTitle()) &&
-				Objects.equals(getContents(), article.getContents()) &&
-				Objects.equals(getCoverUrl(), article.getCoverUrl()) &&
-				Objects.equals(getAuthor(), article.getAuthor());
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getId(), getTitle(), getContents(), getCoverUrl(), getAuthor());
+	public boolean matchArticle(Article expectedArticle) {
+		return this.id.equals(expectedArticle.id);
 	}
 }
