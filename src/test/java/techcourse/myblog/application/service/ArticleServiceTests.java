@@ -5,12 +5,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import techcourse.myblog.application.dto.ArticleDto;
+import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
 import techcourse.myblog.application.service.exception.NotMatchAuthorException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +23,6 @@ import static org.mockito.Mockito.when;
 
 public class ArticleServiceTests {
     private static final String EXIST_EMAIL = "zino@naver.com";
-    private static final String NOT_EXIST_EMAIL = "zino1@naver.com";
     private static final String NAME = "zino";
     private static final String PASSWORD = "zinozino";
     private static final Long EXIST_ARTICLE_ID = 1L;
@@ -32,40 +31,34 @@ public class ArticleServiceTests {
     private static final String CONTENTS = "contents";
     private static final String COVER_URL = "cover_url";
 
+    private final User existUser = new User(EXIST_EMAIL, NAME, PASSWORD);
+
     private ArticleService articleService;
-    private UserService userService;
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Mock
     private ArticleRepository articleRepository;
 
     private ArticleServiceTests() {
         MockitoAnnotations.initMocks(this);
-        userService = new UserService(userRepository);
         articleService = new ArticleService(articleRepository, userService);
-        initUserRepositoryMock();
+        initUserServiceMock();
         initArticleRepositoryMock();
     }
 
-    private void initUserRepositoryMock() {
-        User existUser = new User(EXIST_EMAIL, NAME, PASSWORD);
-        User notExistUser = new User(NOT_EXIST_EMAIL, NAME, PASSWORD);
-
-        when(userRepository.findByEmail(EXIST_EMAIL)).thenReturn(Optional.of(existUser));
-        when(userRepository.findByEmail(NOT_EXIST_EMAIL)).thenReturn(Optional.empty());
-        when(userRepository.save(notExistUser)).thenReturn(notExistUser);
-        Mockito.doNothing().when(userRepository).deleteByEmail(EXIST_EMAIL);
+    private void initUserServiceMock() {
+        when(userService.findByEmail(EXIST_EMAIL)).thenReturn(new UserDto(EXIST_EMAIL, NAME, PASSWORD));
     }
 
     private void initArticleRepositoryMock() {
         Article articleBeforeSave = new Article.ArticleBuilder()
-                .author(userRepository.findByEmail(EXIST_EMAIL).get())
+                .author(existUser)
                 .coverUrl(COVER_URL)
                 .title(TITLE)
                 .contents(CONTENTS).build();
-        Article articleAfterSave = new Article(EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS, userRepository.findByEmail(EXIST_EMAIL).get());
+        Article articleAfterSave = new Article(EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS, existUser);
         when(articleRepository.findById(EXIST_ARTICLE_ID)).thenReturn(Optional.of(articleAfterSave));
         when(articleRepository.findById(NOT_EXIST_ARTICLE_ID)).thenReturn(Optional.empty());
         when(articleRepository.save(articleBeforeSave)).thenReturn(articleAfterSave);
@@ -75,7 +68,7 @@ public class ArticleServiceTests {
 
     @Test
     void Article_생성_테스트() {
-        ArticleDto articleDto = new ArticleDto(NOT_EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS, userRepository.findByEmail(EXIST_EMAIL).get());
+        ArticleDto articleDto = new ArticleDto(NOT_EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS, existUser);
         assertDoesNotThrow(() -> articleService.save(articleDto, EXIST_EMAIL));
     }
 
@@ -87,7 +80,7 @@ public class ArticleServiceTests {
         assertThat(article.getTitle()).isEqualTo(TITLE);
         assertThat(article.getCoverUrl()).isEqualTo(COVER_URL);
         assertThat(article.getContents()).isEqualTo(CONTENTS);
-        assertThat(article.getAuthor().getEmail()).isEqualTo(userRepository.findByEmail(EXIST_EMAIL).get().getEmail());
+        assertThat(article.getAuthor().getEmail()).isEqualTo(existUser.getEmail());
     }
 
     @Test
@@ -110,7 +103,7 @@ public class ArticleServiceTests {
         assertThat(articleDto.getTitle()).isEqualTo(TITLE);
         assertThat(articleDto.getCoverUrl()).isEqualTo(COVER_URL);
         assertThat(articleDto.getContents()).isEqualTo(CONTENTS);
-        assertThat(articleDto.getAuthor().getEmail()).isEqualTo(userRepository.findByEmail(EXIST_EMAIL).get().getEmail());
+        assertThat(articleDto.getAuthor().getEmail()).isEqualTo(existUser.getEmail());
     }
 
     @Test
@@ -120,6 +113,6 @@ public class ArticleServiceTests {
 
     @Test
     void 글작성자와_세션이_다를때_비교_테스트() {
-        assertThrows(NotMatchAuthorException.class, () -> articleService.checkAuthor(EXIST_ARTICLE_ID, NOT_EXIST_EMAIL));
+        assertThrows(NotMatchAuthorException.class, () -> articleService.checkAuthor(EXIST_ARTICLE_ID, "zino1@gmail.com"));
     }
 }

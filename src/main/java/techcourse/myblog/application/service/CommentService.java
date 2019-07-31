@@ -15,7 +15,6 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.CommentRepository;
 import techcourse.myblog.domain.User;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Service
@@ -38,10 +37,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void save(CommentDto commentDto, Long articleId, HttpSession session) {
-        //Article article = articleConverter.convertFromDto(articleService.findById(articleId));
+    public void save(CommentDto commentDto, Long articleId, String sessionEmail) {
         Article article = articleService.findById(articleId);
-        User user = userService.findUserByEmail((String) session.getAttribute("email"));
+        User user = userService.findUserByEmail(sessionEmail);
         commentDto.setArticle(article);
         commentDto.setAuthor(user);
 

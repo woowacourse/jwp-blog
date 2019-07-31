@@ -24,7 +24,7 @@ public class CommentController {
 
     @PostMapping("/articles/{articleId}/comments")
     public RedirectView addComment(CommentDto commentDto, @PathVariable Long articleId, HttpSession session) {
-        commentService.save(commentDto, articleId, session);
+        commentService.save(commentDto, articleId, (String) session.getAttribute("email"));
         RedirectView redirectView = new RedirectView("/articles/" + articleId);
         return redirectView;
     }
