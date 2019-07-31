@@ -31,7 +31,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(UserDto userDto) {
-        UserDto resultDto = loginService.loginByEmailAndPwd(userDto);
+        UserDto resultDto = loginService.login(userDto);
         loginSessionManager.setLoginSession(resultDto.getName(), resultDto.getEmail());
         return "redirect:/";
     }
