@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.support.validation.pattern.UserPattern;
 import techcourse.myblog.web.controller.common.ControllerTestTemplate;
 
 import java.util.stream.Stream;
@@ -46,9 +47,9 @@ class UserControllerTests extends ControllerTestTemplate {
 
     static Stream<Arguments> invalidParameters() {
         return Stream.of(
-                Arguments.of("wrong!name", "e@mail.com", "p@ssw0RD!", NAME_CONSTRAINT_MESSAGE),
-                Arguments.of("name", "wrong", "p@ssw00RD!", EMAIL_CONSTRAINT_MESSAGE),
-                Arguments.of("name", "e@mail.com", "잘못된패스워드", PASSWORD_CONSTRAINT_MESSAGE),
+                Arguments.of("wrong!name", "e@mail.com", "p@ssw0RD!", UserPattern.NAME_CONSTRAINT_MESSAGE),
+                Arguments.of("name", "wrong", "p@ssw00RD!", UserPattern.EMAIL_CONSTRAINT_MESSAGE),
+                Arguments.of("name", "e@mail.com", "잘못된패스워드", UserPattern.PASSWORD_CONSTRAINT_MESSAGE),
                 Arguments.of("name", "saved@email.com", "passw0RD!", DUPLICATED_USER_MESSAGE)
         );
     }
