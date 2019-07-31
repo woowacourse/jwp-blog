@@ -18,7 +18,7 @@ public class UserSerivceTest {
     private static final String TEST_USERNAME = "test1";
     private static final UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
 
-    private static User user;
+    private User user;
 
     private UserService userService;
 

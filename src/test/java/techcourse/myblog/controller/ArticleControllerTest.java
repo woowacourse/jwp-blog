@@ -10,6 +10,8 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 
+import java.util.List;
+
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
@@ -30,7 +32,7 @@ class ArticleControllerTest {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private String cookie;
-    private String cookie2;
+    private String anotherCookie;
     private WebTestClient webTestClient;
 
     @Autowired
@@ -42,7 +44,7 @@ class ArticleControllerTest {
     }
 
     @BeforeAll
-    void 회원가입() {
+    void 회원가입_두_번_그리고_로그인() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("userName", USER_NAME_1)
@@ -64,11 +66,18 @@ class ArticleControllerTest {
                 .exchange()
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
 
+        anotherCookie = webTestClient.post().uri("login")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("email", EMAIL_2)
+                        .with("password", PASSWORD_1))
+                .exchange()
+                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+
     }
 
     @BeforeEach
     void setup() {
-        User user = userRepository.findById(1L).get();
+        User user = userRepository.findByEmail(EMAIL_1).get();
         article.setAuthor(user);
         articleRepository.save(article);
     }
@@ -88,7 +97,10 @@ class ArticleControllerTest {
 
     @Test
     void 로그인했을_때_게시글_수정() {
-        webTestClient.put().uri("/articles/1")
+        List<Article> foundArticles = articleRepository.findAll();
+        Article foundArticle = foundArticles.get(0);
+
+        webTestClient.put().uri("/articles/" + foundArticle.getId())
                 .header("cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("title", TITLE_2)
@@ -96,21 +108,52 @@ class ArticleControllerTest {
                         .with("coverUrl", COVER_URL))
                 .exchange();
 
-        Article article = articleRepository.findById(1L).get();
-        assertThat(article.getTitle()).isEqualTo(TITLE_2);
+        foundArticle = articleRepository.findById(foundArticle.getId()).get();
+        assertThat(foundArticle.getTitle()).isEqualTo(TITLE_2);
     }
 
     @Test
     void 로그인했을_때_게시글_삭제() {
-        webTestClient.delete().uri("/articles/1/")
+        List<Article> foundArticles = articleRepository.findAll();
+        Article foundArticle = foundArticles.get(0);
+
+        webTestClient.delete().uri("/articles/" + foundArticle.getId())
                 .header("cookie", cookie)
                 .exchange();
-        assertThat(articleRepository.findAll().size()).isEqualTo(0);
+
+        assertThat(articleRepository.findById(foundArticle.getId()).isPresent()).isFalse();
+    }
+
+    @Test
+    void 삭제권한_없는_사용자가_게시글_삭제() {
+        List<Article> foundArticles = articleRepository.findAll();
+        Article foundArticle = foundArticles.get(0);
+        String uri = "/articles/" + foundArticle.getId();
+
+        webTestClient.delete().uri(uri)
+                .header("referer", uri)
+                .header("cookie", anotherCookie)
+                .exchange()
+                .expectStatus().isFound()
+                .expectBody()
+                .consumeWith((response) -> {
+                    String location = response.getUrl().getPath();
+                    assertThat(location).isEqualTo(uri);
+                });
+
+        assertThat(articleRepository.findById(foundArticle.getId()).isPresent()).isTrue();
+
     }
 
     @AfterEach
     void tearDown() {
         articleRepository.delete(article);
+    }
+
+    @AfterAll
+    void over() {
+        articleRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
 }
