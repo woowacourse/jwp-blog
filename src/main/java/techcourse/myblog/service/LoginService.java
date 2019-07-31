@@ -20,7 +20,7 @@ public class LoginService {
     }
 
     @Transactional(readOnly = true)
-    public UserDto loginByEmailAndPwd(UserDto userDto) {
+    public UserDto login(UserDto userDto) {
         User user = userRepository.findByEmail(Email.of(userDto.getEmail()))
                 .orElseThrow(() -> new UserException(NOT_EXIST_USER));
         if (!user.isMatchPassword(userDto)) {
