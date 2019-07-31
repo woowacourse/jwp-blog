@@ -10,7 +10,6 @@ import javax.persistence.*;
 @RequiredArgsConstructor
 @NoArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")

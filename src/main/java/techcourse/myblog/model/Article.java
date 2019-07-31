@@ -12,7 +12,6 @@ import java.util.List;
 @EqualsAndHashCode
 @Entity
 public class Article {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ARTICLE_ID")

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>우아한 크루의 블로그</title>
     <th:block th:replace="fragments/config :: configFragment"/>
@@ -21,12 +21,13 @@
                                             <div class="card-body">
                                                 <div class="pdd-horizon-30 pdd-vertical-30">
                                                     <div class="mrg-btm-30">
-                                                        <h4 class="text-center no-mrg-vertical mrg-btm-15 text-dark">
+                                                        <h4 class="text-center no-mrg-vertical mrg-btm-15 text-dark"
+                                                            th:text="${error}">
                                                             Wrong access</h4>
                                                     </div>
                                                     <form action="/" method="get">
                                                         <div class="mrg-top-20 text-right">
-                                                            <button type="submit" class="btn btn-tumblr">홈으로</button>
+                                                            <button class="btn btn-tumblr" type="submit">홈으로</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -43,12 +44,5 @@
     </div>
 </div>
 <th:block th:replace="fragments/script :: scriptFragment"/>
-<script th:inline="javascript">
-    if ([[${error}]]) {
-        $('.alert').alert()
-    } else {
-        $('.alert').alert('close')
-    }
-</script>
 </body>
 </html>

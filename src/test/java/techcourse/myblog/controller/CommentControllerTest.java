@@ -4,8 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,8 +38,6 @@ class CommentControllerTest {
     private static final String COMMENTS_CONTENTS_2 = "Ccomment_contents2";
     private static final String COMMENTS_CONTENTS_3 = "Ccomment_contents3";
     private static final String COMMENTS_CONTENTS_4 = "Ccomment_contents4";
-
-    private static final Logger log = LoggerFactory.getLogger(CommentControllerTest.class);
 
     @LocalServerPort
     private int serverPort;

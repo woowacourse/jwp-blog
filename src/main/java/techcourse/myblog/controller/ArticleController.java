@@ -1,11 +1,10 @@
 package techcourse.myblog.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.controller.dto.ArticleDto;
+import techcourse.myblog.exception.MisMatchAuthorException;
 import techcourse.myblog.model.User;
 import techcourse.myblog.service.ArticleService;
 
@@ -13,7 +12,6 @@ import techcourse.myblog.service.ArticleService;
 @SessionAttributes("user")
 @RequestMapping("/articles")
 public class ArticleController {
-    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
     private final ArticleService articleService;
 
     public ArticleController(ArticleService articleService) {
@@ -39,13 +37,15 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}/edit")
-    public String articleEditForm(@PathVariable Long articleId, Model model) {
+    public String articleEditForm(@PathVariable Long articleId, Model model, @ModelAttribute User user) {
+        checkOwner(articleId, user);
         model.addAttribute("article", articleService.findById(articleId));
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable Long articleId, ArticleDto articleDto, @ModelAttribute User user) {
+        checkOwner(articleId, user);
         articleDto.setId(articleId);
         articleService.update(articleDto, user);
 
@@ -53,9 +53,17 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{articleId}")
-    public String deleteArticle(@PathVariable Long articleId) {
+    public String deleteArticle(@PathVariable Long articleId, @ModelAttribute User user) {
+        checkOwner(articleId, user);
         articleService.delete(articleId);
         return "redirect:/";
+    }
+
+
+    private void checkOwner(Long articleId, User user) {
+        if (!articleService.isOwnerOf(articleId, user)) {
+            throw new MisMatchAuthorException("게시글을 작성한 유저만 수정할 수 있습니다.");
+        }
     }
 }
 

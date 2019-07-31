@@ -7,7 +7,6 @@ import techcourse.myblog.exception.*;
 
 @ControllerAdvice
 public class BlogControllerAdvice {
-
     @ExceptionHandler({EmailDuplicatedException.class, UserArgumentException.class})
     public String handleSignUpException(Exception e, Model model) {
         model.addAttribute("error", e.getMessage());

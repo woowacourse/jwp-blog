@@ -1,7 +1,5 @@
 package techcourse.myblog.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.ArticleDto;
@@ -10,20 +8,15 @@ import techcourse.myblog.model.Article;
 import techcourse.myblog.model.Comment;
 import techcourse.myblog.model.User;
 import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
 
 @Service
 public class ArticleService {
-    private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
-
     private final ArticleRepository articleRepository;
-    private final UserRepository userRepository;
 
-    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository) {
+    public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
-        this.userRepository = userRepository;
     }
 
     public Long save(ArticleDto articleDto, User author) {
@@ -54,5 +47,10 @@ public class ArticleService {
     public List<Comment> findAllComment(Long articleId) {
         Article foundArticle = findById(articleId);
         return foundArticle.getComments();
+    }
+
+    public boolean isOwnerOf(Long articleId, User user) {
+        Article foundArticle = findById(articleId);
+        return foundArticle.getUser().equals(user);
     }
 }
