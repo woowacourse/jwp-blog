@@ -27,6 +27,6 @@ public class UserSessionArgumentResolver implements HandlerMethodArgumentResolve
         HttpSession session = request.getSession();
         UserResponseDto user = (UserResponseDto) session.getAttribute("user");
         log.info("user session {}", user);
-        return new UserSession(user.getId(), user.getEmail(), user.getName());
+        return new UserSession(user);
     }
 }

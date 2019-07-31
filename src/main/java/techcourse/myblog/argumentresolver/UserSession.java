@@ -1,6 +1,7 @@
 package techcourse.myblog.argumentresolver;
 
 import lombok.Getter;
+import techcourse.myblog.user.dto.UserResponseDto;
 
 @Getter
 public class UserSession {
@@ -8,9 +9,9 @@ public class UserSession {
     private String email;
     private String name;
 
-    public UserSession(long id, String email, String name) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
+    public UserSession(UserResponseDto userResponseDto) {
+        this.id = userResponseDto.getId();
+        this.email = userResponseDto.getEmail();
+        this.name = userResponseDto.getName();
     }
 }
