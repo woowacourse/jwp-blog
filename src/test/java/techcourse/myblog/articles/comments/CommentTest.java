@@ -29,18 +29,11 @@ class CommentTest {
 
     @Test
     void isWrittenBy_본인() {
-        assertThat(comment.isWrittenBy(user)).isTrue();
+        assertThat(comment.isWrittenBy(user.getId())).isTrue();
     }
 
     @Test
     void isWrittenBy_다른_작성자() {
-        User anotherUser = User.builder()
-                .id(2L)
-                .email("email1@email.com")
-                .password("P@ssw0rd")
-                .name("name")
-                .build();
-
-        assertThrows(AuthException.class, () -> comment.isWrittenBy(anotherUser));
+        assertThrows(AuthException.class, () -> comment.isWrittenBy(100L));
     }
 }

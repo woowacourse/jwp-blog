@@ -31,7 +31,7 @@ public class ArticleTest {
 
     @Test
     void isWrittenBy_본인() {
-        assertThat(article.isWrittenBy(user)).isTrue();
+        assertThat(article.isWrittenBy(user.getId())).isTrue();
     }
 
     @Test
@@ -43,6 +43,6 @@ public class ArticleTest {
                 .name("name")
                 .build();
 
-        assertThrows(AuthException.class, () -> article.isWrittenBy(anotherUser));
+        assertThrows(AuthException.class, () -> article.isWrittenBy(anotherUser.getId()));
     }
 }

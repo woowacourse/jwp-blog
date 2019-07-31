@@ -48,8 +48,8 @@ public class Article extends BaseEntity {
         this.contents = other.contents;
     }
 
-    boolean isWrittenBy(final User other) {
-        if (this.author.equals(other)) {
+    boolean isWrittenBy(final Long other) {
+        if (author.getId().equals(other)) {
             return true;
         }
         throw new AuthException("작성자가 아닙니다.");

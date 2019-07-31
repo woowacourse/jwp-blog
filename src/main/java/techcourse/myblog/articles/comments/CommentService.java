@@ -17,7 +17,9 @@ public class CommentService {
     private final UserRepository userRepository;
 
     public Long save(final CommentDto.Create commentDto, final Long userId) {
-        final User user = findUserById(userId);
+        final User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 아닙니다."));
+
         final Article article = findArticleById(commentDto.getArticleId());
         final Comment comment = commentDto.toComment(article, user);
 
@@ -26,10 +28,8 @@ public class CommentService {
 
     public CommentDto.Response update(final CommentDto.Update commentDto, final Long userId) {
         final Comment comment = findCommentById(commentDto.getId());
-        final User user = findUserById(userId);
 
-        comment.isWrittenBy(user);
-
+        comment.isWrittenBy(userId);
         comment.update(commentDto.toComment());
 
         return CommentDto.Response.createByComment(comment);
@@ -37,21 +37,14 @@ public class CommentService {
 
     public void delete(final Long commentId, final Long userId) {
         final Comment comment = findCommentById(commentId);
-        final User user = findUserById(userId);
 
-        comment.isWrittenBy(user);
-
+        comment.isWrittenBy(userId);
         commentRepository.delete(comment);
     }
 
     private Comment findCommentById(final Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("등록된 댓글이 아닙니다."));
-    }
-
-    private User findUserById(final Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 아닙니다."));
     }
 
     private Article findArticleById(final Long articleId) {

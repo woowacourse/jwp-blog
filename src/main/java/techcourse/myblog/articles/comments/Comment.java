@@ -37,8 +37,8 @@ public class Comment extends BaseEntity {
         this.contents = other.contents;
     }
 
-    public boolean isWrittenBy(final User other) {
-        if (this.user.equals(other)) {
+    public boolean isWrittenBy(final Long other) {
+        if (user.getId().equals(other)) {
             return true;
         }
         throw new AuthException("작성자가 아닙니다.");

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.articles.comments.Comment;
 import techcourse.myblog.users.UserSession;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller

@@ -10,6 +10,9 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(uniqueConstraints = @UniqueConstraint(name = "email", columnNames = {"email"}))
 public class User extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, length = 50)
     private String email;
