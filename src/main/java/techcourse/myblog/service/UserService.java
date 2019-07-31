@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
-import techcourse.myblog.exception.SignUpException;
-import techcourse.myblog.exception.UserException;
+import techcourse.myblog.exception.DuplicateUserException;
+import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.utils.converter.UserConverter;
 
@@ -16,8 +16,6 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class UserService {
-    private static final String REGISTERED_EMAIL = "이미 등록된 이메일 입니다.";
-    private static final String NOT_FOUND_EMAIL = "이메일을 찾을 수 없습니다.";
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -34,7 +32,7 @@ public class UserService {
 
     private void checkRegisteredEmail(UserRequestDto dto) {
         if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
-            throw new SignUpException(REGISTERED_EMAIL);
+            throw new DuplicateUserException();
         }
     }
 
@@ -53,7 +51,7 @@ public class UserService {
 
     private User getUserByEmail(UserResponseDto userResponseDto) {
         return userRepository.findByEmail(userResponseDto.getEmail())
-                .orElseThrow(() -> new UserException(NOT_FOUND_EMAIL));
+                .orElseThrow(() -> new NotFoundUserException());
     }
 
     @Transactional()

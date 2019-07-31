@@ -18,8 +18,8 @@ public class ControllerExceptionHandler {
      * @param e
      * @return 인덱스 페이지로 이동
      */
-    @ExceptionHandler(ArticleException.class)
-    public String handleArticleException(ArticleException e) {
+    @ExceptionHandler(NotFoundArticleException.class)
+    public String handleArticleException(NotFoundArticleException e) {
         log.error(EXCEPTION, e.getMessage());
         return "/";
     }
@@ -63,13 +63,13 @@ public class ControllerExceptionHandler {
      * @param e
      * @return 인덱스 페이지로
      */
-    @ExceptionHandler(CommentAuthenticationException.class)
-    public String handleCommentAuthenticationException(CommentAuthenticationException e) {
+    @ExceptionHandler(AuthenticationException.class)
+    public String handleCommentAuthenticationException(AuthenticationException e) {
         return "redirect:/";
     }
 
-    @ExceptionHandler(UserException.class)
-    public void handleUserException(UserException e) {
+    @ExceptionHandler(NotFoundUserException.class)
+    public void handleUserException(NotFoundUserException e) {
         log.info(e.getMessage());
     }
 }

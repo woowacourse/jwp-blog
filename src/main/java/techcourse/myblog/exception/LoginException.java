@@ -2,21 +2,10 @@ package techcourse.myblog.exception;
 
 public class LoginException extends RuntimeException {
     public LoginException() {
+        super("로그인에 실패했습니다.");
     }
 
     public LoginException(String message) {
         super(message);
-    }
-
-    public LoginException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public LoginException(Throwable cause) {
-        super(cause);
-    }
-
-    public LoginException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -11,8 +11,8 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
-import techcourse.myblog.exception.ArticleException;
-import techcourse.myblog.exception.UserException;
+import techcourse.myblog.exception.NotFoundArticleException;
+import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
@@ -24,8 +24,6 @@ import java.util.List;
 @Service
 public class ArticleService {
     private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
-    private static final String NOT_EXIST_ARTICLE = "해당 기사가 없습니다.";
-    private static final String NOT_EXIST_USER = "존재하지 않은 회원입니다.";
     private static final String ID = "id";
     private static final int START_PAGE = 1;
     private static final int VIEW_ARTICLE_COUNT = 10;
@@ -51,13 +49,13 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public Article findArticle(long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new ArticleException(NOT_EXIST_ARTICLE));
+                .orElseThrow(() -> new NotFoundArticleException());
     }
 
     @Transactional
     public Article save(ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
         User user = userRepository.findByEmail(userResponseDto.getEmail())
-                .orElseThrow(() -> new UserException(NOT_EXIST_USER));
+                .orElseThrow(() -> new NotFoundUserException());
         Article article = ArticleConverter.convert(articleRequestDto, user);
         articleRepository.save(article);
         return article;
@@ -72,14 +70,14 @@ public class ArticleService {
 
     @Transactional
     public void delete(long articleId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(ArticleException::new);
+        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
         commentRepository.deleteAllByArticle(article);
         articleRepository.deleteById(articleId);
     }
 
     @Transactional
     public List<Comment> getCommentsByArticleId(Long articleId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException());
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException());
         return commentRepository.findByArticle(article);
     }
 }

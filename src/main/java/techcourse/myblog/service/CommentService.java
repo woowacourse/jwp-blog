@@ -7,10 +7,7 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
-import techcourse.myblog.exception.ArticleException;
-import techcourse.myblog.exception.CommentAuthenticationException;
-import techcourse.myblog.exception.CommentException;
-import techcourse.myblog.exception.UserException;
+import techcourse.myblog.exception.*;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
@@ -40,12 +37,12 @@ public class CommentService {
 
     private Article findArticleByArticleId(Long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new ArticleException("해당 게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundArticleException());
     }
 
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserException("해당 회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new NotFoundUserException());
     }
 
     @Transactional
@@ -56,7 +53,7 @@ public class CommentService {
 
     private Comment getCommentFindById(Long commentId) {
         return commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentException("댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NotFoundCommentException());
     }
 
     @Transactional
