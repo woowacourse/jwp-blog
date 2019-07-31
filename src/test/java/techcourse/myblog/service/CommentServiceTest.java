@@ -38,13 +38,17 @@ public class CommentServiceTest {
 
     @Test
     void 댓글_생성_테스트() {
-        Comment comment = new Comment();
+        User user = new User();
         Article article = new Article();
         given(articleRepository.findById(1L)).willReturn(Optional.of(article));
+        Comment comment = Comment.builder()
+                .article(article)
+                .user(user)
+                .content("comment")
+                .build();
         given(commentRepository.save(any(Comment.class))).willReturn(comment);
 
-        User user = new User();
-        Comment createdComment = commentService.create(1L, user, comment);
+        Comment createdComment = commentService.create(1L, user, "comment");
 
         assertThat(createdComment.getUser()).isEqualTo(user);
         assertThat(createdComment.getArticle()).isEqualTo(article);
@@ -54,13 +58,15 @@ public class CommentServiceTest {
     void 댓글_수정_테스트() {
         User user = new User();
         Article article = new Article();
-        Comment comment = new Comment();
-        comment.initialize(user, article);
+        Comment comment = Comment.builder()
+                .user(user)
+                .article(article)
+                .build();
 
         given(articleRepository.findById(1L)).willReturn(Optional.of(article));
         given(commentRepository.findById(1L)).willReturn(Optional.of(comment));
 
-        commentService.update("hello", 1L, user);
+        commentService.update(1L, user, "hello");
 
         assertThat(comment.getContent()).isEqualTo("hello");
     }
@@ -71,12 +77,14 @@ public class CommentServiceTest {
                 .id(1L)
                 .build();
         Article article = new Article();
-        Comment comment = new Comment();
-        comment.initialize(user, article);
+        Comment comment = Comment.builder()
+                .user(user)
+                .article(article)
+                .build();
 
         given(articleRepository.findById(1L)).willReturn(Optional.of(article));
         given(commentRepository.findById(1L)).willReturn(Optional.of(comment));
 
-        assertThrows(NotMatchAuthenticationException.class, () -> commentService.update("hello", 1L, new User()));
+        assertThrows(NotMatchAuthenticationException.class, () -> commentService.update(1L, new User(), "hello"));
     }
 }

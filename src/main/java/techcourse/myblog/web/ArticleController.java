@@ -17,6 +17,7 @@ import techcourse.myblog.service.CommentService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 public class ArticleController {
@@ -57,7 +58,9 @@ public class ArticleController {
     public String readArticle(@PathVariable Long articleId, Model model) {
         Article article = articleService.findById(articleId);
         model.addAttribute("article", article);
-        model.addAttribute("comments", commentService.findAllByArticleId(articleId));
+
+        List<Comment> comments = commentService.findAllByArticleId(articleId);
+        model.addAttribute("comments", comments);
 
         return "article";
     }
@@ -89,20 +92,22 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/{articleId}/comments")
-    public RedirectView createComment(@PathVariable final Long articleId, HttpSession session, Comment comment) {
-        commentService.create(articleId, (User) session.getAttribute("user"), comment);
+    public RedirectView createComment(@PathVariable final Long articleId, HttpSession session, String content) {
+        commentService.create(articleId, (User) session.getAttribute("user"), content);
         return new RedirectView("/articles/" + articleId);
     }
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView deleteComment(@PathVariable final Long articleId, HttpSession session, @PathVariable final Long commentId) {
+    public RedirectView deleteComment(@PathVariable final Long articleId, @PathVariable final Long commentId,
+                                      HttpSession session) {
         commentService.delete(commentId, (User) session.getAttribute("user"));
         return new RedirectView("/articles/" + articleId);
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView updateComment(String content, @PathVariable final Long articleId, @PathVariable final Long commentId, HttpSession session) {
-        commentService.update(content, commentId, (User) session.getAttribute("user"));
+    public RedirectView updateComment(@PathVariable final Long articleId, @PathVariable final Long commentId,
+                                      HttpSession session, String content) {
+        commentService.update(commentId, (User) session.getAttribute("user"), content);
         return new RedirectView("/articles/" + articleId);
     }
 }

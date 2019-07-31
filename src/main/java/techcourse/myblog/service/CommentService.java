@@ -6,7 +6,6 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.CommentNotFoundException;
-import techcourse.myblog.exception.NotMatchAuthenticationException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 
@@ -25,11 +24,15 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-
-    public Comment create(final Long articleId, final User user, final Comment comment) {
+    public Comment create(final Long articleId, final User user, final String content) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("해당 게시물이 없습니다."));
 
-        comment.initialize(user, article);
+        Comment comment = Comment.builder()
+                .content(content)
+                .user(user)
+                .article(article)
+                .build();
+
         return commentRepository.save(comment);
     }
 
@@ -37,21 +40,19 @@ public class CommentService {
         return commentRepository.findAllByArticleId(articleId);
     }
 
-    public void update(final String content, final Long commentId, final User user) {
-        Comment comment = findById(commentId, user);
-        comment.update(content);
+    public void update(final Long commentId, final User user, final String content) {
+        Comment comment = findById(commentId);
+        comment.update(content, user);
     }
 
     public void delete(final Long commentId, final User user) {
-        Comment comment = findById(commentId, user);
+        Comment comment = findById(commentId);
+        comment.authorizeFor(user);
+
         commentRepository.delete(comment);
     }
 
-    private Comment findById(final Long commentId, final User user) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("해당 댓글을 찾을 수 없습니다"));
-        if (!comment.getUser().equals(user)) {
-            throw new NotMatchAuthenticationException("권한이 없습니다.");
-        }
-        return comment;
+    private Comment findById(final Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("해당 댓글을 찾을 수 없습니다"));
     }
 }

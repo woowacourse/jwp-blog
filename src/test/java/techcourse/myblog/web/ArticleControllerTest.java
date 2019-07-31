@@ -144,7 +144,7 @@ class ArticleControllerTest {
 
     @Test
     void commentCreateTest() {
-        given(commentService.create(1L, null, new Comment())).willReturn(new Comment());
+        given(commentService.create(1L, null, "hello")).willReturn(new Comment());
 
         webTestClient.post().uri("/articles/1/comments")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
