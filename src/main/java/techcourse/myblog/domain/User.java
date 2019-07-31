@@ -1,14 +1,20 @@
 package techcourse.myblog.domain;
 
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 import techcourse.myblog.support.exception.IllegalUserException;
 import techcourse.myblog.support.validation.pattern.UserPattern;
 
 import javax.persistence.*;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
+@EqualsAndHashCode(of = {"id"})
 @DynamicUpdate
 public class User {
     @Id
@@ -23,9 +29,6 @@ public class User {
 
     @Column(nullable = false)
     private String password;
-    
-    private User() {
-    }
 
     public User(String name, String email, String password) {
         validateName(name);
@@ -62,44 +65,5 @@ public class User {
         validateName(name);
         this.name = name;
         return this;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
     }
 }
