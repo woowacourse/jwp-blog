@@ -59,8 +59,7 @@ public class ArticleController {
             throw new UnauthenticatedUserException("로그인이 필요합니다.");
         }
 
-        Article article = articleDTO.toDomain();
-        article.setAuthor(user);
+        Article article = articleDTO.toDomain(user);
 
         articleRepository.save(article);
         return "redirect:/articles/" + article.getId();
@@ -87,7 +86,7 @@ public class ArticleController {
                 .orElseThrow(NotFoundArticleException::new);
 
         checkAuthor(session, savedArticle);
-        savedArticle.update(articleDTO.toDomain());
+        savedArticle.update(articleDTO.toDomain(savedArticle.getAuthor()));
 
         return "redirect:/articles/" + articleId;
     }

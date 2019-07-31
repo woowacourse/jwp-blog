@@ -26,7 +26,9 @@ class ArticleControllerTest {
     private static final String CONTENTS = "contents";
     private static final String COVER_URL = "COVER_URL";
     private static final String TITLE_2 = "title2";
-    private final Article article = new Article("title", "contents", "coverUrl");
+
+    private Article article;
+
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private String cookie;
@@ -76,7 +78,7 @@ class ArticleControllerTest {
     @BeforeEach
     void setup() {
         User user = userRepository.findByEmail(EMAIL_1).get();
-        article.setAuthor(user);
+        article = new Article(TITLE_1, CONTENTS, COVER_URL, user);
         articleRepository.save(article);
     }
 

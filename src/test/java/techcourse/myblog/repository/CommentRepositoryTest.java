@@ -40,7 +40,7 @@ class CommentRepositoryTest {
         User user = new User("olleh", "test@test.com", "1234");
         persistAuthor = testEntityManager.persist(user);
 
-        Article article = new Article("title", "url", "content");
+        Article article = new Article("title", "url", "content", user);
         persistArticle = testEntityManager.persist(article);
 
         Comment comment = new Comment("댓글 내용");

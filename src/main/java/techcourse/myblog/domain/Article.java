@@ -25,14 +25,11 @@ public class Article {
     private String coverUrl;
 
     @ManyToOne
+    @NonNull
     private User author;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
-
-    public void setAuthor(User user) {
-        this.author = user;
-    }
 
     public void update(Article article) {
         this.title = article.title;
