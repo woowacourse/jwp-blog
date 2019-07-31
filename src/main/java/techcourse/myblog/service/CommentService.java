@@ -47,9 +47,7 @@ public class CommentService {
     @Transactional
     public Comment update(Long userId, Long commentId, CommentRequestDto commentRequestDto) {
         Comment comment = findById(commentId);
-        if (comment.matchAuthorId(userId)) {
-            comment.updateComment(commentRequestDto.getComment());
-        }
+        comment.updateComment(commentRequestDto.getComment(), userId);
         return comment;
     }
 

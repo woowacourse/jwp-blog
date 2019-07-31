@@ -29,8 +29,10 @@ public class Article {
         this.articleVo = articleVo;
     }
 
-    public void updateArticle(ArticleVo articleVo) {
-        this.articleVo = articleVo;
+    public void updateArticle(ArticleVo articleVo, Long userId) {
+        if (author.matchId(userId)) {
+            this.articleVo = articleVo;
+        }
     }
 
     public boolean matchUserId(Long userId) {

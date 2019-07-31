@@ -23,7 +23,6 @@ public class Comment {
     private Article article;
 
     private Comment() {
-
     }
 
     public Comment(String comment, User author, Article article) {
@@ -36,8 +35,10 @@ public class Comment {
         return this.author.matchId(userId);
     }
 
-    public void updateComment(String comment) {
-        this.comment = comment;
+    public void updateComment(String comment, Long userId) {
+        if (author.matchId(userId)) {
+            this.comment = comment;
+        }
     }
 
     public Long getId() {

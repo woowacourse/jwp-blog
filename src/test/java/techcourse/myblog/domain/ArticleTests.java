@@ -7,28 +7,55 @@ import techcourse.myblog.domain.article.ArticleVo;
 import techcourse.myblog.domain.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ArticleTests {
-    private Article article;
+    private static final Long MATCH_USER_ID = 1L;
+    private static final Long MISMATCH_USER_ID = 2L;
+
+    private User user;
+    private ArticleVo articleVo;
 
     @BeforeEach
     void setUp() {
-        User author = new User("name", "test@test.test", "passWORD1!");
-        ArticleVo articleVo = new ArticleVo("title", "url", "contents");
-        article = new Article(author, articleVo);
+        user = mock(User.class);
+        articleVo = new ArticleVo("title", "url", "contents");
+
+        when(user.getId()).thenReturn(MATCH_USER_ID);
+        when(user.matchId(MATCH_USER_ID)).thenReturn(true);
+        when(user.matchId(MISMATCH_USER_ID)).thenReturn(false);
     }
 
     @Test
-    void updateArticle() {
-        String newTitle = "new Title";
-        String newCoverUrl = "new CoverUrl";
-        String newContents = "new Contents";
-        ArticleVo newArticleVo = new ArticleVo(newTitle, newCoverUrl, newContents);
+    void 자신이_작성한_글인지_확인() {
+        Article article = new Article(user, articleVo);
 
-        article.updateArticle(newArticleVo);
-
-        assertThat(article.getTitle()).isEqualTo(newTitle);
-        assertThat(article.getCoverUrl()).isEqualTo(newCoverUrl);
-        assertThat(article.getContents()).isEqualTo(newContents);
+        assertThat(article.getAuthorId()).isEqualTo(MATCH_USER_ID);
     }
+
+    @Test
+    void 자신이_작성한_게시글_수정() {
+        ArticleVo newArticleVo = new ArticleVo("new Title", "new CoverUrl", "new Contents");
+        Article article = new Article(user, articleVo);
+
+        article.updateArticle(newArticleVo, MATCH_USER_ID);
+
+        assertThat(article.getTitle()).isEqualTo("new Title");
+        assertThat(article.getCoverUrl()).isEqualTo("new CoverUrl");
+        assertThat(article.getContents()).isEqualTo("new Contents");
+    }
+
+    @Test
+    void 자신이_작성한_게시글이_아니면_수정되지_않는다() {
+        ArticleVo newArticleVo = new ArticleVo("new Title", "new CoverUrl", "new Contents");
+        Article article = new Article(user, articleVo);
+
+        article.updateArticle(newArticleVo, MISMATCH_USER_ID);
+
+        assertThat(article.getTitle()).isEqualTo("title");
+        assertThat(article.getCoverUrl()).isEqualTo("url");
+        assertThat(article.getContents()).isEqualTo("contents");
+    }
+
 }

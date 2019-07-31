@@ -45,9 +45,7 @@ public class ArticleService {
     public void update(Long articleId, Long userId, ArticleDto articleDto) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
-        if (article.matchUserId(userId)) {
-            article.updateArticle(articleDto.toVo());
-        }
+        article.updateArticle(articleDto.toVo(), userId);
     }
 
     public void delete(Long articleId, Long userId) {
