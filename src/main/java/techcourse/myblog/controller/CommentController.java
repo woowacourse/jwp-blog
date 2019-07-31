@@ -73,14 +73,15 @@ public class CommentController {
     public RedirectView delete(@PathVariable long articleId,
                                @PathVariable long commentId,
                                HttpSession httpSession) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(NotFoundArticleException::new);
+
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
                 new NotFoundCommentException("해당 덧글이 존재하지 않습니다."));
 
         validateUser(httpSession, comment);
 
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(NotFoundArticleException::new);
         article.remove(comment);
         commentRepository.delete(comment);
 
