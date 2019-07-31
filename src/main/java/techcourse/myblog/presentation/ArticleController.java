@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.persistence.CommentRepository;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.ArticleRequestDto;
@@ -25,12 +24,10 @@ import static techcourse.myblog.service.UserService.LOGGED_IN_USER_SESSION_KEY;
 @Controller
 public class ArticleController {
     private final ArticleService articleService;
-    private final CommentRepository commentRepository;
     private final CommentService commentService;
 
-    public ArticleController(ArticleService articleService, CommentRepository commentRepository, CommentService commentService) {
+    public ArticleController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
-        this.commentRepository = commentRepository;
         this.commentService = commentService;
     }
 
@@ -66,7 +63,7 @@ public class ArticleController {
         Article article = articleService.findById(articleId);
         model.addAttribute("article", article);
 
-        List<CommentResponseDto> comments =  commentRepository.findByArticleOrderByCreatedAt(article)
+        List<CommentResponseDto> comments = commentService.findByArticle(article)
                 .stream()
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
@@ -92,7 +89,7 @@ public class ArticleController {
         Article article = articleService.findById(articleId);
         User commenter = (User) httpSession.getAttribute(LOGGED_IN_USER_SESSION_KEY);
         Comment newComment = commentRequestDto.toComment(commenter, article);
-        commentRepository.save(newComment);
+        commentService.save(newComment);
         return "redirect:/articles/" + articleId;
     }
 }

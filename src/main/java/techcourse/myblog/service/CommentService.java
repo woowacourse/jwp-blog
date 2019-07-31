@@ -8,6 +8,7 @@ import techcourse.myblog.presentation.CommentNotFoundException;
 import techcourse.myblog.service.dto.CommentRequestDto;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -30,5 +31,13 @@ public class CommentService {
         commentRepository.findByArticleOrderByCreatedAt(article)
                 .stream()
                 .forEach(comment -> commentRepository.deleteById(comment.getId()));
+    }
+
+    public void save(Comment newComment) {
+        commentRepository.save(newComment);
+    }
+
+    public List<Comment> findByArticle(Article article) {
+        return commentRepository.findByArticleOrderByCreatedAt(article);
     }
 }
