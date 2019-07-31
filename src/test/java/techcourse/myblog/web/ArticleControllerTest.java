@@ -49,40 +49,20 @@ public class ArticleControllerTest extends AuthedWebTestClient {
 
     @Test
     void saveArticle() {
-        addArticle()
-                .expectStatus().is3xxRedirection()
+        postArticle().expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".+\\/articles/.+");
-    }
-
-    private WebTestClient.ResponseSpec addArticle() {
-        return post("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange();
-    }
-
-    private EntityExchangeResult<byte[]> getExchange() {
-        return addArticle().expectBody().returnResult();
-    }
-
-    private long getArticleId() {
-        return Long.parseLong(getExchange().getResponseHeaders().getLocation().getPath().split("/")[2]);
     }
 
     @Test
     void Article_get_by_id() {
-        long articleId = getArticleId();
+        long articleId = addArticle();
         get("/articles/" + articleId).exchange().expectStatus().isOk();
     }
 
     @Test
     @Transactional
     void updateArticle() {
-        long articleId = getArticleId();
-
+        long articleId = addArticle();
         put("/articles/" + articleId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -95,12 +75,48 @@ public class ArticleControllerTest extends AuthedWebTestClient {
 
     @Test
     void deleteArticle() {
-        long articleId = getArticleId();
+        long articleId = addArticle();
         delete("/articles/" + articleId)
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection();
-        assertThatThrownBy(() -> articleRepository.findById(articleId).orElseThrow(IllegalAccessError::new))
-                .isInstanceOf(IllegalAccessError.class);
+        assertThatThrownBy(() -> articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new))
+                .isInstanceOf(IllegalArgumentException.class);
     }
+
+    private WebTestClient.ResponseSpec postArticle() {
+        return post("/articles")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("title", title)
+                        .with("coverUrl", coverUrl)
+                        .with("contents", contents))
+                .exchange();
+    }
+
+    private EntityExchangeResult<byte[]> getExchange() {
+        return postArticle().expectBody().returnResult();
+    }
+
+    private long addArticle() {
+        return Long.parseLong(getExchange().getResponseHeaders().getLocation().getPath().split("/")[2]);
+    }
+
+    //TODO 아래의 코드가 왜 오류가 나는지 정확하게 이해하기
+    //repository에 직접 접근했을 때 왜 안되는지 정확히 이해하기
+//    @Test
+//    void deleteArticle() {
+//        long articleId = addArticle();
+//        Article article = articleRepository.findById(articleId).orElseThrow(() -> new IllegalArgumentException("아티클 오류"));
+//        User newUser = userRepository.findByEmail(Email.of(user.getEmail())).get();
+//        newUser.updateNameAndEmail("test", "test@gmail.com");
+//        article.setAuthor(newUser);
+//
+//        delete("/articles/" + articleId)
+//                .exchange()
+//                .expectStatus()
+//                .is3xxRedirection();
+//        assertThatThrownBy(() -> articleRepository.findById(articleId).orElseThrow(IllegalAccessError::new))
+//                .isInstanceOf(IllegalAccessError.class);
+//    }
 }
