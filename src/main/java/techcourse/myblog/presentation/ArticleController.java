@@ -7,14 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.persistence.ArticleRepository;
 import techcourse.myblog.persistence.CommentRepository;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.ArticleRequestDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
-import techcourse.myblog.service.exception.ArticleNotFoundException;
 
 import javax.servlet.http.HttpSession;
 
@@ -26,13 +24,11 @@ import static techcourse.myblog.service.UserService.LOGGED_IN_USER_SESSION_KEY;
 @Slf4j
 @Controller
 public class ArticleController {
-    private final ArticleRepository articleRepository;
     private final ArticleService articleService;
     private final CommentRepository commentRepository;
     private final CommentService commentService;
 
-    public ArticleController(ArticleRepository articleRepository, ArticleService articleService, CommentRepository commentRepository, CommentService commentService) {
-        this.articleRepository = articleRepository;
+    public ArticleController(ArticleService articleService, CommentRepository commentRepository, CommentService commentService) {
         this.articleService = articleService;
         this.commentRepository = commentRepository;
         this.commentService = commentService;
@@ -48,26 +44,26 @@ public class ArticleController {
         User user = (User) session.getAttribute(LOGGED_IN_USER_SESSION_KEY);
         Article newArticle = articleRequestDto.toArticle();
         newArticle.setAuthor(user);
-        articleRepository.save(newArticle);
+        articleService.save(newArticle);
         return "redirect:/articles/" + newArticle.getId();
     }
 
     @GetMapping("/")
     public String showArticlesPage(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
+        model.addAttribute("articles", articleService.findAll());
         return "index";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String showArticleEditingPage(@PathVariable long articleId, Model model) {
         model.addAttribute("article",
-                articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new));
-        return "article-edit";
+                articleService.findById(articleId));
+    return "article-edit";
     }
 
     @GetMapping("/articles/{articleId}")
     public String showArticleByIdPage(@PathVariable long articleId, Model model) {
-        Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new);
+        Article article = articleService.findById(articleId);
         model.addAttribute("article", article);
 
         List<CommentResponseDto> comments =  commentRepository.findByArticleOrderByCreatedAt(article)
@@ -86,14 +82,14 @@ public class ArticleController {
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticleById(@PathVariable long articleId) {
-        commentService.deleteByArticle(articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new));
-        articleRepository.deleteById(articleId);
+        commentService.deleteByArticle(articleService.findById(articleId));
+        articleService.deleteById(articleId);
         return "redirect:/";
     }
 
     @PostMapping("/articles/{articleId}/comments")
     public String addNewComment(@PathVariable long articleId, CommentRequestDto commentRequestDto, HttpSession httpSession) {
-        Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new);
+        Article article = articleService.findById(articleId);
         User commenter = (User) httpSession.getAttribute(LOGGED_IN_USER_SESSION_KEY);
         Comment newComment = commentRequestDto.toComment(commenter, article);
         commentRepository.save(newComment);
