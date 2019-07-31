@@ -36,5 +36,9 @@ public class User {
         this.password = password;
         this.email = email;
     }
+
+    public boolean isNotMatch(User target) {
+        return id != target.getId();
+    }
 }
 

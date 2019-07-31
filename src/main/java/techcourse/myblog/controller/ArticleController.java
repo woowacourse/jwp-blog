@@ -43,8 +43,10 @@ public class ArticleController {
     @GetMapping("{articleId}/edit")
     public String showArticleEditingPage(@PathVariable long articleId, Model model, User user) {
         log.debug(">>> article Id : {}", articleId);
-        Article article = articleRepository.findById(articleId).get();
-        if (article.isNotMatchAuthor(user)) return "redirect:/";
+        Article article = articleRepository.findById(articleId).orElseThrow(RuntimeException::new);
+        if (article.isNotMatchAuthor(user)) {
+            return "redirect:/";
+        }
         model.addAttribute("article", article);
         return "article-edit";
     }
@@ -52,7 +54,7 @@ public class ArticleController {
     @GetMapping("{articleId}")
     public String showArticleByIdPage(@PathVariable long articleId, Model model) {
         log.debug(">>> article Id : {}", articleId);
-        Article article = articleRepository.findById(articleId).get();
+        Article article = articleRepository.findById(articleId).orElseThrow(RuntimeException::new);
         List<Comment> comments = commentRepository.findAllByArticle_Id(article.getId());
         model.addAttribute("article", article);
         model.addAttribute("comments", comments);
@@ -62,8 +64,10 @@ public class ArticleController {
     @PutMapping("{articleId}")
     public String updateArticleByIdPage(ArticleDto articleDto, User user) {
         log.debug(">>> put article ArticleDto : {}, user : {}", articleDto, user);
-        Article preArticle = articleRepository.findById(articleDto.getId()).get();
-        if (preArticle.isNotMatchAuthor(user)) return "redirect:/";
+        Article preArticle = articleRepository.findById(articleDto.getId()).orElseThrow(RuntimeException::new);
+        if (preArticle.isNotMatchAuthor(user)) {
+            return "redirect:/";
+        }
         Article article = articleRepository.save(articleDto.toArticle(user));
         return "redirect:/articles/" + article.getId();
     }
@@ -72,8 +76,10 @@ public class ArticleController {
     @DeleteMapping("{articleId}")
     public String deleteArticleByIdPage(@PathVariable long articleId, User user) {
         log.debug(">>> article Id : {}", articleId);
-        Article article = articleRepository.findById(articleId).get();
-        if (article.isNotMatchAuthor(user)) return "redirect:/";
+        Article article = articleRepository.findById(articleId).orElseThrow(RuntimeException::new);
+        if (article.isNotMatchAuthor(user)) {
+            return "redirect:/";
+        }
         articleRepository.deleteById(articleId);
         commentRepository.deleteAllByArticle(article);
         return "redirect:/";
