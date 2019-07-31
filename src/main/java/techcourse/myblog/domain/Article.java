@@ -59,10 +59,6 @@ public class Article {
         return author;
     }
 
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
