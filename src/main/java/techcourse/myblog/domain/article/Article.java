@@ -1,14 +1,19 @@
 package techcourse.myblog.domain.article;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Article {
     private static final String DEFAULT_URL = "/images/default/bg.jpg";
 
@@ -24,6 +29,12 @@ public class Article {
 
     private String coverUrl;
 
+    @CreatedDate
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
+
     @ManyToOne
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
@@ -31,15 +42,15 @@ public class Article {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
+
+    protected Article() {
+    }
+
     public Article(String title, String contents, String coverUrl, User author) {
         this.title = title;
         this.contents = contents;
         this.coverUrl = getDefaultUrl(coverUrl);
         this.author = author;
-    }
-
-    protected Article() {
-
     }
 
     private String getDefaultUrl(String coverUrl) {
@@ -89,6 +100,14 @@ public class Article {
 
     public User getAuthor() {
         return author;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public LocalDateTime getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
     @Override
