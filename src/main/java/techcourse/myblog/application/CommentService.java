@@ -44,7 +44,8 @@ public class CommentService {
 
     public void deleteComment(Long commentId, UserResponse userResponse) {
         Comment comment = findCommentById(commentId);
-        User author = userRepository.findUserByEmail(userResponse.getEmail()).orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
+        User author = userRepository.findById(userResponse.getId())
+                .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
 
         if (!comment.isSameAuthor(author)) {
             throw new NotSameAuthorException("해당 작성자만 댓글을 삭제할 수 있습니다.");
@@ -56,7 +57,7 @@ public class CommentService {
     @Transactional
     public void updateComment(Long commentId, UserResponse userResponse, CommentRequest commentRequest) {
         Comment comment = findCommentById(commentId);
-        User author = userRepository.findUserByEmail(userResponse.getEmail())
+        User author = userRepository.findById(userResponse.getId())
                 .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
 
         try {
