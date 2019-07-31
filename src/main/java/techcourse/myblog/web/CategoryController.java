@@ -10,9 +10,12 @@ import techcourse.myblog.service.CategoryService;
 
 @Controller
 public class CategoryController {
+    private final CategoryService categoryService;
 
     @Autowired
-    private CategoryService categoryService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @PostMapping("/categories/add")
     public String create(CategoryDto categoryDto) {

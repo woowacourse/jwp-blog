@@ -17,14 +17,16 @@ import javax.transaction.Transactional;
 
 @Controller
 public class ArticleController {
-    @Autowired
-    private ArticleService articleService;
+    private final ArticleService articleService;
+    private final CategoryService categoryService;
+    private final CommentService commentService;
 
     @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
-    private CommentService commentService;
+    public ArticleController(ArticleService articleService, CategoryService categoryService, CommentService commentService) {
+        this.articleService = articleService;
+        this.categoryService = categoryService;
+        this.commentService = commentService;
+    }
 
     @GetMapping("/articles/new")
     public String showArticleWritingPage(Model model) {

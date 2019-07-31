@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
-    private ArticleService articleService;
+    private final ArticleService articleService;
 
     @Autowired
     public CommentService(CommentRepository commentRepository, ArticleService articleService) {

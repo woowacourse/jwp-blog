@@ -1,10 +1,10 @@
 package techcourse.myblog.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.user.*;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserDto;
+import techcourse.myblog.domain.user.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -13,9 +13,9 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private SnsInfoService snsInfoService;
+    private final SnsInfoService snsInfoService;
 
     @Autowired
     public UserService(UserRepository userRepository, SnsInfoService snsInfoService) {

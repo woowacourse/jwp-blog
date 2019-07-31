@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Service
 public class SnsInfoService {
-    private SnsInfoRepository snsInfoRepository;
+    private final SnsInfoRepository snsInfoRepository;
 
     @Autowired
     public SnsInfoService(SnsInfoRepository snsInfoRepository) {
