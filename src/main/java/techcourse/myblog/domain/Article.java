@@ -1,8 +1,12 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.*;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
+import javax.persistence.*;
+
+@Getter
+@EqualsAndHashCode(of = "id")
 @Entity
 public class Article {
     @Id
@@ -37,39 +41,6 @@ public class Article {
         if (user.isDifferentEmail(email)) {
             throw new IllegalArgumentException();
         }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return id.equals(article.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     @Override

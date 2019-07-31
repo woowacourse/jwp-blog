@@ -1,11 +1,15 @@
 package techcourse.myblog.domain;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.util.Objects;
 
+@EqualsAndHashCode(of = "id")
+@Getter
 @Entity
 public class User {
 
@@ -35,21 +39,6 @@ public class User {
         this.password = password;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 
     public void modify(User user) {
         this.password = user.password;
@@ -63,18 +52,4 @@ public class User {
     public boolean isDifferentEmail(String email) {
         return !this.email.equals(email);
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return email.equals(user.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(email);
-    }
-
 }

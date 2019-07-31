@@ -1,14 +1,14 @@
 package techcourse.myblog.domain;
 
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Objects;
 
+@EqualsAndHashCode(of = "id")
 @Entity
 public class Comment {
 
@@ -30,8 +30,7 @@ public class Comment {
     @ManyToOne
     private Article article;
 
-    protected Comment() {
-    }
+    protected Comment() {}
 
     public Comment(String contents, User user, Article article) {
         this.contents = contents;
@@ -47,12 +46,12 @@ public class Comment {
         return id;
     }
 
-    public LocalDate getLocalDate() {
-        return createDateTime.toLocalDate();
+    public LocalDateTime getCreateDateTime() {
+        return createDateTime;
     }
 
-    public LocalTime getLocalTime() {
-        return createDateTime.toLocalTime();
+    public LocalDateTime getUpdateDateTime() {
+        return updateDateTime;
     }
 
     public String getContents() {
