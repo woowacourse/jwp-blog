@@ -3,7 +3,6 @@ package techcourse.myblog.repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
@@ -12,7 +11,6 @@ import techcourse.myblog.domain.user.User;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class CommentRepositoryTest {
     @Autowired
     private CommentRepository commentRepository;
