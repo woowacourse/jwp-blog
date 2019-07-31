@@ -28,7 +28,7 @@ dependencies {
         exclude group: 'junit'
     }
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
-    testImplementation 'com.h2database:h2'
+    implementation 'com.h2database:h2'
 
     implementation 'org.springframework.boot:spring-boot-devtools'
     compileOnly 'org.projectlombok:lombok:1.18.8'
