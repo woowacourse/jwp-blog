@@ -9,8 +9,12 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @AutoConfigureWebClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HomeControllerTest {
+    private final WebTestClient webTestClient;
+
     @Autowired
-    private WebTestClient webTestClient;
+    public HomeControllerTest(WebTestClient webTestClient) {
+        this.webTestClient = webTestClient;
+    }
 
     @Test
     void 메인화면_조회() {

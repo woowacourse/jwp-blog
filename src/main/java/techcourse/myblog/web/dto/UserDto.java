@@ -24,7 +24,8 @@ public class UserDto {
             message = "숫자, 특수문자와 대소문자를 포함한 8~14 크기입니다.")
     private String password;
 
-    public UserDto(@Size(min = 2, max = 10) @NotBlank @Pattern(regexp = "^(?!.*[~`!@#$%\\^&*()-])(?!.*\\d).{2,10}$", message = "이름 사이즈는 2~10 크기 입니다.") String name, @Email String email, @Size(min = 8, max = 14) @NotBlank @Pattern(regexp = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-z])(?=.*[A-Z]).{8,14}$",
+    public UserDto(@Size(min = 2, max = 10) @NotBlank @Pattern(regexp = "^(?!.*[~`!@#$%\\^&*()-])(?!.*\\d).{2,10}$", message = "이름 사이즈는 2~10 크기 입니다.") String name,
+                   @Email String email, @Size(min = 8, max = 14) @NotBlank @Pattern(regexp = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-z])(?=.*[A-Z]).{8,14}$",
             message = "숫자, 특수문자와 대소문자를 포함한 8~14 크기입니다.") String password) {
         this.name = name;
         this.email = email;
