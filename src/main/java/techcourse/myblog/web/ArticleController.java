@@ -5,9 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.CommentService;
-import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.application.ArticleService;
+import techcourse.myblog.application.CommentService;
+import techcourse.myblog.application.dto.ArticleDto;
 
 import javax.validation.Valid;
 import java.util.List;

@@ -1,13 +1,13 @@
-package techcourse.myblog.service;
+package techcourse.myblog.application;
 
 import org.springframework.stereotype.Service;
+import techcourse.myblog.application.dto.CommentRequest;
+import techcourse.myblog.application.dto.UserResponse;
+import techcourse.myblog.application.exception.CommentNotFoundException;
+import techcourse.myblog.application.exception.NoArticleException;
+import techcourse.myblog.application.exception.NoUserException;
+import techcourse.myblog.application.exception.NotSameAuthorException;
 import techcourse.myblog.domain.*;
-import techcourse.myblog.service.dto.CommentRequest;
-import techcourse.myblog.service.dto.UserResponse;
-import techcourse.myblog.service.exception.CommentNotFoundException;
-import techcourse.myblog.service.exception.NoArticleException;
-import techcourse.myblog.service.exception.NoUserException;
-import techcourse.myblog.service.exception.NotSameAuthorException;
 
 import javax.transaction.Transactional;
 import java.util.List;

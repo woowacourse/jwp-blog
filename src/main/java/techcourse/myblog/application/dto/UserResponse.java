@@ -1,4 +1,4 @@
-package techcourse.myblog.service.dto;
+package techcourse.myblog.application.dto;
 
 public class UserResponse {
     private Long id;

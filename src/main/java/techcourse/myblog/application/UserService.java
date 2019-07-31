@@ -1,15 +1,15 @@
-package techcourse.myblog.service;
+package techcourse.myblog.application;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.service.dto.LoginRequest;
-import techcourse.myblog.service.dto.UserRequest;
-import techcourse.myblog.service.dto.UserResponse;
-import techcourse.myblog.service.exception.EditException;
-import techcourse.myblog.service.exception.LoginException;
-import techcourse.myblog.service.exception.NoUserException;
+import techcourse.myblog.application.dto.LoginRequest;
+import techcourse.myblog.application.dto.UserRequest;
+import techcourse.myblog.application.dto.UserResponse;
+import techcourse.myblog.application.exception.EditException;
+import techcourse.myblog.application.exception.LoginException;
+import techcourse.myblog.application.exception.NoUserException;
 import techcourse.myblog.support.encrytor.EncryptHelper;
 
 import javax.transaction.Transactional;

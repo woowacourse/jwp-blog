@@ -1,11 +1,11 @@
-package techcourse.myblog.service;
+package techcourse.myblog.application;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.service.dto.ArticleDto;
-import techcourse.myblog.service.exception.NoArticleException;
+import techcourse.myblog.application.dto.ArticleDto;
+import techcourse.myblog.application.exception.NoArticleException;
 
 import javax.transaction.Transactional;
 import java.util.List;

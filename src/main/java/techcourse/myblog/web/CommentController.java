@@ -6,11 +6,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.service.CommentService;
-import techcourse.myblog.service.dto.CommentRequest;
-import techcourse.myblog.service.dto.UserResponse;
-import techcourse.myblog.service.exception.NotSameAuthorException;
+import techcourse.myblog.application.CommentService;
+import techcourse.myblog.application.dto.CommentRequest;
+import techcourse.myblog.application.dto.UserResponse;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;

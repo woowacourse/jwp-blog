@@ -3,12 +3,12 @@ package techcourse.myblog.support.config;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import techcourse.myblog.service.dto.LoginRequest;
-import techcourse.myblog.service.dto.UserEditRequest;
-import techcourse.myblog.service.exception.EditException;
-import techcourse.myblog.service.exception.ErrorMessage;
-import techcourse.myblog.service.exception.LoginException;
-import techcourse.myblog.service.exception.NoArticleException;
+import techcourse.myblog.application.dto.LoginRequest;
+import techcourse.myblog.application.dto.UserEditRequest;
+import techcourse.myblog.application.exception.EditException;
+import techcourse.myblog.application.exception.ErrorMessage;
+import techcourse.myblog.application.exception.LoginException;
+import techcourse.myblog.application.exception.NoArticleException;
 
 @ControllerAdvice
 public class BlogExceptionHandler {
