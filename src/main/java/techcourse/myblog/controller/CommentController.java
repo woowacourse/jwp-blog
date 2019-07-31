@@ -1,5 +1,7 @@
 package techcourse.myblog.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpSession;
 public class CommentController {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
+    private static final Logger log = LoggerFactory.getLogger(CommentController.class);
 
     public CommentController(CommentRepository commentRepository, ArticleRepository articleRepository) {
         this.commentRepository = commentRepository;
@@ -48,7 +51,7 @@ public class CommentController {
         return "article";
     }
 
-    @PostMapping("/")
+    @PostMapping
     public RedirectView create(@ModelAttribute CommentDTO commentDTO,
                                @PathVariable long articleId,
                                HttpSession httpSession) {
@@ -122,6 +125,7 @@ public class CommentController {
     public RedirectView exceptionHandler(RuntimeException exception, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         redirectAttributes.addFlashAttribute("commentError", exception.getMessage());
 
+        log.error("error : {}", exception.getMessage());
         return new RedirectView(request.getHeader("Referer"));
     }
 

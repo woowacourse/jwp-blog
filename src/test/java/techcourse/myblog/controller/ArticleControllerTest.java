@@ -31,9 +31,11 @@ class ArticleControllerTest {
 
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
+    private final WebTestClient webTestClient;
+
     private String cookie;
     private String anotherCookie;
-    private WebTestClient webTestClient;
+
 
     @Autowired
     public ArticleControllerTest(WebTestClient webTestClient, ArticleRepository articleRepository,
@@ -183,6 +185,24 @@ class ArticleControllerTest {
     @Nested
     @DisplayName("로그인하지 않은 경우")
     class without_login {
+        @Test
+        void 게시글_생성() {
+            List<Article> foundArticles = articleRepository.findAll();
+            String uri = "/articles/write";
+
+            webTestClient.post().uri(uri)
+                    .header("referer", uri)
+                    .exchange()
+                    .expectStatus().isFound()
+                    .expectBody()
+                    .consumeWith((response) -> {
+                        String location = response.getUrl().getPath();
+                        assertThat(location).isEqualTo(uri);
+                    });
+
+            assertThat(articleRepository.findAll().size()).isEqualTo(1);
+        }
+
         @Test
         void 게시글_수정() {
             List<Article> foundArticles = articleRepository.findAll();

@@ -1,5 +1,7 @@
 package techcourse.myblog.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -20,6 +22,8 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/articles")
 public class ArticleController {
     private final ArticleRepository articleRepository;
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
+
 
     public ArticleController(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
@@ -115,8 +119,10 @@ public class ArticleController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public RedirectView exceptionHandler(RuntimeException e, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        redirectAttributes.addFlashAttribute("articleError", e.getMessage());
+    public RedirectView exceptionHandler(RuntimeException exception, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        redirectAttributes.addFlashAttribute("articleError", exception.getMessage());
+        log.error("error: {}", exception);
+
         return new RedirectView(request.getHeader("Referer"));
     }
 }
