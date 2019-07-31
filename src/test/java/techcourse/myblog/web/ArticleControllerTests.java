@@ -62,8 +62,7 @@ public class ArticleControllerTests extends LoginTemplate {
 
     @Test
     void findById() {
-        Article article = new Article(title, contents, coverUrl);
-        article.setAuthor(new User("ehem", "@Password12!", "hgenie14@gmail.com"));
+        Article article = new Article(title, contents, coverUrl, new User("ehem", "@Password12!", "hgenie14@gmail.com"));
         long articleId = articleRepository.save(article).getId();
 
         loggedInGetRequest("/articles/" + articleId)
@@ -74,8 +73,7 @@ public class ArticleControllerTests extends LoginTemplate {
 
     @Test
     void updateArticle() {
-        Article article = new Article(title, contents, coverUrl);
-        article.setAuthor(new User("ehem", "@Password12!", "hgenie14@gmail.com"));
+        Article article = new Article(title, contents, coverUrl, new User("ehem", "@Password12!", "hgenie14@gmail.com"));
         long articleId = articleRepository.save(article).getId();
         loggedInPutRequest("/articles/" + articleId)
                 .body(BodyInserters

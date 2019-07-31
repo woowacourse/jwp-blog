@@ -22,6 +22,11 @@ public class Article {
     public Article() {
     }
 
+    public Article(String title, String contents, String coverUrl, User author) {
+        this(title, contents, coverUrl);
+        this.author = author;
+    }
+
     public Article(String title, String contents, String coverUrl) {
         this.title = title;
         this.contents = contents;
@@ -53,10 +58,6 @@ public class Article {
 
     public User getAuthor() {
         return author;
-    }
-
-    public void setAuthor(User persistUser) {
-        this.author = persistUser;
     }
 
     public void update(Article modifiedArticle) {
