@@ -90,24 +90,4 @@ public class ArticleController {
     public RedirectView articleException(Exception exception) {
         return new RedirectView("/");
     }
-
-    @PostMapping("/articles/{articleId}/comments")
-    public RedirectView createComment(@PathVariable final Long articleId, HttpSession session, String content) {
-        commentService.create(articleId, (User) session.getAttribute("user"), content);
-        return new RedirectView("/articles/" + articleId);
-    }
-
-    @DeleteMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView deleteComment(@PathVariable final Long articleId, @PathVariable final Long commentId,
-                                      HttpSession session) {
-        commentService.delete(commentId, (User) session.getAttribute("user"));
-        return new RedirectView("/articles/" + articleId);
-    }
-
-    @PutMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView updateComment(@PathVariable final Long articleId, @PathVariable final Long commentId,
-                                      HttpSession session, String content) {
-        commentService.update(commentId, (User) session.getAttribute("user"), content);
-        return new RedirectView("/articles/" + articleId);
-    }
 }

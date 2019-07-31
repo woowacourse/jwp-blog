@@ -31,9 +31,6 @@ class ArticleControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    @MockBean
-    private CommentService commentService;
-
     @BeforeEach
     void setUp() {
         UserDto testUserDto = new UserDto();
@@ -140,35 +137,5 @@ class ArticleControllerTest {
                         .header("cookie", jSessionId)
                         .exchange()
                         .expectStatus().is3xxRedirection());
-    }
-
-    @Test
-    void commentCreateTest() {
-        given(commentService.create(1L, null, "hello")).willReturn(new Comment());
-
-        webTestClient.post().uri("/articles/1/comments")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .header("cookie", jSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection();
-    }
-
-    @Test
-    void commentUpdateTest() {
-        webTestClient.put().uri("/articles/1/comments/1")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .header("cookie", jSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/articles/1");
-    }
-
-    @Test
-    void commentDeleteTest() {
-        webTestClient.delete().uri("/articles/1/comments/1")
-                .header("cookie", jSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/articles/1");
     }
 }
