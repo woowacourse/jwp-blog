@@ -1,15 +1,29 @@
 package techcourse.myblog.users;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserTest {
+    User user;
+    final String password = "P@ssw0rd";
+
+    @BeforeEach
+    void setUp() {
+        user = User.builder()
+                .name("name")
+                .email("email@gmail.com")
+                .password(password)
+                .build();
+    }
 
     @ParameterizedTest(name = "{index}: {3}")
     @MethodSource("invalidParameters")
@@ -35,4 +49,13 @@ class UserTest {
         );
     }
 
+    @Test
+    void authenticate_패스워드_일치() {
+        assertThat(user.authenticate(password)).isTrue();
+    }
+
+    @Test
+    void authenticate_패스워드_불일치() {
+        assertThat(user.authenticate(password+"good")).isFalse();
+    }
 }
