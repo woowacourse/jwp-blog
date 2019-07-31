@@ -13,7 +13,7 @@ public class ValidUserException extends RuntimeException {
 
     public ValidUserException(String defaultMessage, String field) {
         this.errors = new Error[]{new Error(defaultMessage, field)};
-        log.debug("field : {}, message : {}", field, defaultMessage);
+        log.error("field : {}, message : {}", field, defaultMessage);
     }
 
     public ValidUserException(Error[] errors) {
