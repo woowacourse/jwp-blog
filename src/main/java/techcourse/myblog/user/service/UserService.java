@@ -1,6 +1,5 @@
 package techcourse.myblog.user.service;
 
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,11 +18,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+
+    public UserService(UserRepository userRepository, ModelMapper modelMapper) {
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
 
     public void save(UserCreateDto userCreateDto) {
         User newUser = userCreateDto.toUser();

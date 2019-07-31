@@ -1,6 +1,5 @@
 package techcourse.myblog.configs;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -11,11 +10,15 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final HandlerInterceptorAdapter interceptor;
     private final HandlerMethodArgumentResolver userSessionArgumentResolver;
+
+    public WebMvcConfig(HandlerInterceptorAdapter interceptor, HandlerMethodArgumentResolver userSessionArgumentResolver) {
+        this.interceptor = interceptor;
+        this.userSessionArgumentResolver = userSessionArgumentResolver;
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

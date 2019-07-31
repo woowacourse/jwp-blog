@@ -1,6 +1,5 @@
 package techcourse.myblog.comment.service;
 
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +21,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class CommentService {
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+
+    public CommentService(CommentRepository commentRepository, ArticleRepository articleRepository, UserRepository userRepository, ModelMapper modelMapper) {
+        this.commentRepository = commentRepository;
+        this.articleRepository = articleRepository;
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
 
     public Comment save(long articleId, long authorId, CommentCreateDto commentCreateDto) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);

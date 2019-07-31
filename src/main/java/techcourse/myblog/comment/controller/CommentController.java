@@ -1,6 +1,5 @@
 package techcourse.myblog.comment.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,10 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
-@RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
+
+    public CommentController(CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     @GetMapping("/comments/{commentId}/edit")
     public String renderCommentEditPage(@PathVariable long commentId, Model model) {
