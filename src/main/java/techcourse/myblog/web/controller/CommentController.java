@@ -25,7 +25,7 @@ public class CommentController {
 
     @PostMapping
     public RedirectView createComment(@PathVariable Long articleId, CommentDto commentDto, LoginUser loginUser) {
-        Article article =  articleReadService.findById(articleId);;
+        Article article =  articleReadService.findById(articleId);
         commentWriteService.save(commentDto.toComment(loginUser.getUser(), article));
         return new RedirectView("/articles/" + articleId);
     }
