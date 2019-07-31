@@ -27,9 +27,6 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-//    @OneToMany(mappedBy = "author")  // User가 종속적인 엔티티이고, Article이 주인 엔티티
-//    private List<Article> articles = new ArrayList<>();
-
     public User(String name, String password, String email) {
         this.name = name;
         this.password = password;
@@ -46,8 +43,4 @@ public class User {
         return email.equals(userRequestDto.getEmail())
                 && password.equals(userRequestDto.getPassword());
     }
-
-//    public void addArticle(Article persistArticle) {
-//        this.articles.add(persistArticle);
-//    }
 }
