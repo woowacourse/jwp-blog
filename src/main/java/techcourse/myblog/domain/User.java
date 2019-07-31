@@ -20,15 +20,15 @@ public class User {
     private Long id;
 
     @NotBlank
-    @Column
+    @Column(nullable = false, length = 30)
     private String name;
 
     @Email
-    @Column
+    @Column(unique = true)
     private String email;
 
     @NotBlank
-    @Column
+    @Column(nullable = false, length = 50)
     private String password;
 
     private User() {
