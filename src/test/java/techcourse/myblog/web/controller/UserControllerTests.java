@@ -14,10 +14,11 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpMethod.*;
-import static techcourse.myblog.service.UserWriteService.DUPLICATED_USER_MESSAGE;
-import static techcourse.myblog.web.controller.UserController.LOGIN_FAIL_MESSAGE;
 
 class UserControllerTests extends ControllerTestTemplate {
+    private static final String LOGIN_FAIL_MESSAGE = "이메일이나 비밀번호가 올바르지 않습니다";
+    private static final String DUPLICATED_USER_MESSAGE = "이미 존재하는 email입니다";
+    
     @Test
     void 로그아웃상태_회원가입_페이지_요청() {
         httpRequest(GET, "/signup").isOk();

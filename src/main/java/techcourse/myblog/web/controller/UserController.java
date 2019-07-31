@@ -20,7 +20,6 @@ import java.util.Optional;
 
 @Controller
 public class UserController {
-    public static final String LOGIN_FAIL_MESSAGE = "이메일이나 비밀번호가 올바르지 않습니다";
     private final UserReadService userReadService;
     private final UserWriteService userWriteService;
 
@@ -63,7 +62,7 @@ public class UserController {
             return new RedirectView("/");
         }
 
-        throw new LoginFailedException(LOGIN_FAIL_MESSAGE);
+        throw new LoginFailedException();
     }
 
     @GetMapping("/logout")
