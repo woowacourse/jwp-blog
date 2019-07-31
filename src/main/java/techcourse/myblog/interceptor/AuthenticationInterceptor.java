@@ -13,7 +13,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 							 Object handler) throws IOException {
-		String email = (String) request.getSession().getAttribute("email");
+		Object email = request.getSession().getAttribute("email");
 		String path = request.getRequestURI();
 		if (email != null) {
 			return isAccessibleLoginUser(response, path);

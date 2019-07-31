@@ -63,24 +63,24 @@ public class ArticleControllerTests {
 	@Test
 	void canNotMoveArticleWritingForm() {
 		StatusAssertions statusAssertions = request(HttpMethod.GET, "/writing");
-		checkRedirect(statusAssertions, "Location", ".+/");
+		checkRedirect(statusAssertions, "Location", ".+/login");
 	}
 
 	@Test
 	void findByIndex() {
-		requestWithSession(HttpMethod.GET, "/articles" + 1).isOk();
+		requestWithSession(HttpMethod.GET, "/articles/1").isOk();
 	}
 
 	@Test
 	void deleteArticle() {
-		StatusAssertions statusAssertions = requestWithSession(HttpMethod.DELETE, "/articles/" + 2);
+		StatusAssertions statusAssertions = requestWithSession(HttpMethod.DELETE, "/articles/2");
 		checkRedirect(statusAssertions, "Location", ".+/");
 	}
 
 	@Test
 	void canNotDeleteArticle() {
 		StatusAssertions statusAssertions = request(HttpMethod.DELETE, "/articles/1");
-		checkRedirect(statusAssertions, "Location", ".+/");
+		checkRedirect(statusAssertions, "Location", ".+/login");
 	}
 
 	@Test
@@ -121,7 +121,7 @@ public class ArticleControllerTests {
 	void canNotUpdateArticle() {
 		StatusAssertions statusAssertions = articlePutOrPostRequest(HttpMethod.PUT, "/articles/" + 1,
 				"updatedTitle", "updatedCoverUrl", "updatedContents");
-		checkRedirect(statusAssertions, "Location", ".+/");
+		checkRedirect(statusAssertions, "Location", ".+/login");
 	}
 
 	private void checkRedirect(StatusAssertions statusAssertions, String name, String redirectURLRegex) {

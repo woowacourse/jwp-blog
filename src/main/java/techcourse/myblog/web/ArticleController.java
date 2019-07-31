@@ -27,18 +27,12 @@ public class ArticleController {
 	}
 
 	@GetMapping("/writing")
-	public String createArticle(HttpSession httpSession) {
-		if (!existSession(httpSession)) {
-			return "redirect:/";
-		}
+	public String createArticle() {
 		return "article-edit";
 	}
 
 	@PostMapping("/articles")
 	public String saveArticle(ArticleDto articleDto, HttpSession httpSession) {
-		if (!existSession(httpSession)) {
-			return "redirect:/";
-		}
 		String email = httpSession.getAttribute("email").toString();
 		Long id = articleService.saveArticle(email, articleDto);
 		return "redirect:/articles/" + id;
@@ -46,9 +40,6 @@ public class ArticleController {
 
 	@PutMapping("/articles/{articleId}")
 	public String modifyArticle(@PathVariable Long articleId, ArticleDto articleDto, HttpSession httpSession) {
-		if (!existSession(httpSession)) {
-			return "redirect:/";
-		}
 		String email = httpSession.getAttribute("email").toString();
 		articleService.update(articleId, email, articleDto);
 		return "redirect:/articles/" + articleId;
@@ -63,9 +54,6 @@ public class ArticleController {
 
 	@GetMapping("/articles/{articleId}/edit")
 	public String editArticle(@PathVariable Long articleId, Model model, HttpSession httpSession) {
-		if (!existSession(httpSession)) {
-			return "redirect:/";
-		}
 		String email = httpSession.getAttribute("email").toString();
 		articleService.confirmAuthorization(email, articleId);
 		model.addAttribute("article", articleService.findById(articleId));
@@ -74,18 +62,11 @@ public class ArticleController {
 
 	@DeleteMapping("/articles/{articleId}")
 	public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
-		if (!existSession(httpSession)) {
-			return "redirect:/";
-		}
 		String email = httpSession.getAttribute("email").toString();
 		articleService.confirmAuthorization(email, articleId);
 		commentService.deleteByArticleId(articleId);
 		articleService.delete(articleId);
 		return "redirect:/";
-	}
-
-	private boolean existSession(HttpSession httpSession) {
-		return (httpSession.getAttribute("email") != null);
 	}
 }
 

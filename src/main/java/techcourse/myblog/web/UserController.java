@@ -27,10 +27,7 @@ public class UserController {
 	}
 
 	@GetMapping("/signup")
-	public String signUpPage(HttpSession httpSession) {
-		if (!confirmSession(httpSession, "email")) {
-			return "redirect:/";
-		}
+	public String signUpPage() {
 		return "signup";
 	}
 
@@ -58,24 +55,19 @@ public class UserController {
 
 	@GetMapping("/mypage")
 	public String mypage(HttpSession httpSession, Model model) {
-		if (getUserInformation(httpSession, model)) {
-			return "redirect:/";
-		}
+		String email = (String) httpSession.getAttribute("email");
+		model.addAttribute(userService.findUser(email));
 		return "mypage";
 	}
 
 	@GetMapping("/mypage/edit")
 	public String mypageEdit(HttpSession httpSession, Model model) {
-		if (getUserInformation(httpSession, model)) {
-			return "redirect:/";
-		}
+		String email = (String) httpSession.getAttribute("email");
+		model.addAttribute(userService.findUser(email));
 		return "mypage-edit";
 	}
 
 	private boolean getUserInformation(HttpSession httpSession, Model model) {
-		if (confirmSession(httpSession, "email")) {
-			return true;
-		}
 		User user = userService.findUser((String) httpSession.getAttribute("email"));
 		model.addAttribute("user", user);
 		return false;
@@ -88,26 +80,16 @@ public class UserController {
 	}
 
 	@GetMapping("/leave")
-	public String leave(HttpSession httpSession) {
-		if (confirmSession(httpSession, "email")) {
-			return "redirect:/";
-		}
+	public String leave() {
 		return "leave-user";
 	}
 
 
 	@DeleteMapping("/leave")
 	public String leaveUser(HttpSession httpSession, Model model, String password) {
-		if (confirmSession(httpSession, "email")) {
-			return "redirect:/";
-		}
 		userService.leaveUser((String) httpSession.getAttribute("email"), password);
 		model.addAttribute("result", "회원 탈퇴가 완료되었습니다.");
 		httpSession.invalidate();
 		return "leave-user";
-	}
-
-	private boolean confirmSession(HttpSession httpSession, String attribute) {
-		return (httpSession.getAttribute("email") == null);
 	}
 }

@@ -24,15 +24,8 @@ public class LoginController {
 	}
 
 	@GetMapping("/login")
-	public String login(HttpSession httpSession) {
-		if (confirmSession(httpSession)) {
-			return "redirect:/";
-		}
+	public String login() {
 		return "login";
-	}
-
-	private boolean confirmSession(HttpSession httpSession) {
-		return httpSession.getAttribute("email") != null;
 	}
 
 	@PostMapping("/login")
