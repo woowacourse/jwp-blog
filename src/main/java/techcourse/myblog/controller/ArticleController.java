@@ -26,7 +26,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public String show(@PathVariable("articleId") Long articleId, HttpSession session, Model model) {
+    public String show(@PathVariable Long articleId, HttpSession session, Model model) {
         Article article = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -66,7 +66,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}/edit")
-    public Object updateForm(@PathVariable("articleId") Long articleId, HttpSession session, Model model) {
+    public Object updateForm(@PathVariable Long articleId, HttpSession session, Model model) {
         Article savedArticle = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -80,7 +80,7 @@ public class ArticleController {
 
     @Transactional
     @PutMapping("/{articleId}")
-    public String update(@PathVariable("articleId") Long articleId, HttpSession session, ArticleDTO articleDTO) {
+    public String update(@PathVariable Long articleId, HttpSession session, ArticleDTO articleDTO) {
         Article savedArticle = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -99,7 +99,7 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{articleId}")
-    public String delete(@PathVariable("articleId") Long articleId, HttpSession session) {
+    public String delete(@PathVariable Long articleId, HttpSession session) {
         Article savedArticle = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
