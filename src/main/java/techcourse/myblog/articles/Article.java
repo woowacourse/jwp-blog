@@ -32,7 +32,7 @@ public class Article {
     @Column(nullable = false)
     private String coverUrl;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_article_to_user"), nullable = false)
     private User author;
 
