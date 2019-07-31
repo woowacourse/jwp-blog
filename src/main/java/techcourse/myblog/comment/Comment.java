@@ -3,6 +3,7 @@ package techcourse.myblog.comment;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import techcourse.myblog.date.Date;
 import techcourse.myblog.exception.InvalidAuthorException;
 import techcourse.myblog.user.User;
 
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Comment {
+public class Comment extends Date {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

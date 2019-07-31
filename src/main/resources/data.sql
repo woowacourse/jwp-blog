@@ -1,17 +1,17 @@
-INSERT INTO user(user_name, email, password)
-VALUES ('heejoo', 'heejoo@gmail.com', 'Aa12345!');
+INSERT INTO user(user_name, email, password, create_time)
+VALUES ('heejoo', 'heejoo@gmail.com', 'Aa12345!',now());
 
-INSERT INTO user(user_name, email, password)
-VALUES ('cony', 'cony@gmail.com', 'Aa12345!');
+INSERT INTO user(user_name, email, password, create_time)
+VALUES ('cony', 'cony@gmail.com', 'Aa12345!', now());
 
-INSERT INTO article(title, cover_url, contents, author)
-VALUES ('title', 'coverUrl', 'contents', 1);
+INSERT INTO article(title, cover_url, contents, author, create_time)
+VALUES ('title', 'coverUrl', 'contents', 1, now());
 
-INSERT INTO article(title, cover_url, contents, author)
-VALUES ('title', 'coverUrl', 'contents', 1);
+INSERT INTO article(title, cover_url, contents, author, create_time)
+VALUES ('title', 'coverUrl', 'contents', 1, now());
 
-INSERT INTO comment(contents, author, article_id)
-VALUES ('sdkasdsaldas', 1, 1);
+INSERT INTO comment(contents, author, article_id, create_time)
+VALUES ('sdkasdsaldas', 1, 1, now());
 
-INSERT INTO comment(contents, author, article_id)
-VALUES ('sssssssss', 1, 1);
+INSERT INTO comment(contents, author, article_id, create_time)
+VALUES ('sssssssss', 1, 1, now());

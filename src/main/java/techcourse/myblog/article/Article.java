@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techcourse.myblog.comment.Comment;
+import techcourse.myblog.date.Date;
 import techcourse.myblog.exception.InvalidAuthorException;
 import techcourse.myblog.user.User;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Article {
+public class Article extends Date {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,11 +30,11 @@ public class Article {
     @Lob
     private String contents;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_article_to_comments"))
     private List<Comment> comments = new ArrayList<>();
 

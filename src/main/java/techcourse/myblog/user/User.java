@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
+import techcourse.myblog.date.Date;
 
 import javax.persistence.*;
 
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @EqualsAndHashCode
-public class User {
+public class User extends Date {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
