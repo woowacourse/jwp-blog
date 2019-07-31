@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import techcourse.myblog.domain.user.Email;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
@@ -28,7 +29,7 @@ public class CommentController {
 
     @DeleteMapping("/articles/{articleId}/comment/{commentId}")
     public String deleteComment(@PathVariable long articleId, @PathVariable long commentId, UserSessionInfo userSessionInfo) {
-        commentService.deleteComment(commentId, userSessionInfo.getEmail());
+        commentService.deleteComment(commentId, Email.of(userSessionInfo.getEmail()));
         return "redirect:/articles/" + articleId;
     }
 

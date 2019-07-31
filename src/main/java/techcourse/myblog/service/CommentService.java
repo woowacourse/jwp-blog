@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentException;
+import techcourse.myblog.domain.user.Email;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.repository.CommentRepository;
@@ -31,9 +32,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(long commentId, String email) {
+    public void deleteComment(long commentId, Email email) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentException::new);
-        if (!comment.isAuthor(email)) {
+        if (!comment.isAuthor(email.getEmail())) {
             throw new CommentException("당신은 죽을수도 있습니다.");
         }
         commentRepository.deleteById(commentId);

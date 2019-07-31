@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentException;
+import techcourse.myblog.domain.user.Email;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.repository.ArticleRepository;
@@ -54,7 +55,7 @@ class CommentServiceTest {
     @Test
     void 코멘트_삭제_테스트() {
         Comment comment = commentService.addComment(article.getId(), "andole@gmail.com", new CommentDto("comment"));
-        commentService.deleteComment(comment.getId(), "andole@gmail.com");
+        commentService.deleteComment(comment.getId(), Email.of("andole@gmail.com"));
         assertThatThrownBy(() -> commentRepository.findById(comment.getId()).orElseThrow(CommentException::new))
                 .isInstanceOf(CommentException.class);
     }
