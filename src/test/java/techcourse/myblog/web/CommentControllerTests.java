@@ -28,7 +28,7 @@ class CommentControllerTests {
     private String articleId;
 
     @BeforeEach
-    void setUp() {
+    void setUp_comment_save() {
         userSaveRequestDto = new UserSaveRequestDto("테스트", "comment@test.com", "password1!");
 
         LoginTestUtil.signUp(webTestClient, userSaveRequestDto);
@@ -71,7 +71,7 @@ class CommentControllerTests {
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown_comment_delete() {
         webTestClient.delete().uri("/articles/" + articleId)
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()

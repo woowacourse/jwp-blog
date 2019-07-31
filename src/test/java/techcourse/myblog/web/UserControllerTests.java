@@ -24,7 +24,7 @@ class UserControllerTests {
     private String jSessionId;
 
     @BeforeEach
-    void setUp_회원가입() {
+    void setUp_user_save() {
         userSaveRequestDto = new UserSaveRequestDto("테스트", "user@test.com", "password1!");
 
         LoginTestUtil.signUp(webTestClient, userSaveRequestDto);
@@ -66,7 +66,7 @@ class UserControllerTests {
     }
 
     @AfterEach
-    void tearDown_유저_삭제() {
+    void tearDown_user_delete() {
         LoginTestUtil.deleteUser(webTestClient, userSaveRequestDto);
     }
 }

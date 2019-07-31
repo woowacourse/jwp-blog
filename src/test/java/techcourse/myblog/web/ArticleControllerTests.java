@@ -13,9 +13,11 @@ import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.dto.UserSaveRequestDto;
 import techcourse.myblog.testutil.LoginTestUtil;
 
+import javax.transaction.Transactional;
+
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ArticleControllerTests {
 
     @Autowired
@@ -26,7 +28,7 @@ class ArticleControllerTests {
     private String jSessionId;
 
     @BeforeEach
-    void setUp() {
+    void setUp_save_article() {
         userSaveRequestDto = new UserSaveRequestDto("테스트", "article@test.com", "password1!");
 
         LoginTestUtil.signUp(webTestClient, userSaveRequestDto);
@@ -101,7 +103,7 @@ class ArticleControllerTests {
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown_delete_article() {
         webTestClient.delete().uri(location)
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()

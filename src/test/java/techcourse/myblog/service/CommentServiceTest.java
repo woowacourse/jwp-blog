@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +9,16 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.dto.CommentSaveRequestDto;
+import techcourse.myblog.exception.CommentNotFoundException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Transactional
 class CommentServiceTest {
 
     @Autowired
@@ -75,12 +78,10 @@ class CommentServiceTest {
         assertThat(articleId).isEqualTo(article.getId());
     }
 
-    @AfterEach
-    void tearDown() {
+    @Test
+    void delete() {
         commentService.deleteById(comment.getId());
 
-        articleService.deleteById(article.getId());
-
-        userService.deleteUser(author.getId());
+        assertThrows(CommentNotFoundException.class, () -> commentService.findById(comment.getId()));
     }
 }

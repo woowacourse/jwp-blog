@@ -1,15 +1,14 @@
 package techcourse.myblog.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.userinfo.UserName;
 import techcourse.myblog.dto.UserEditRequestDto;
 import techcourse.myblog.exception.UserNotFoundException;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Transactional
 class UserServiceTest {
 
     @Autowired
@@ -73,29 +73,14 @@ class UserServiceTest {
         userService.update(id, userEditRequestDto);
 
         User updatedUser = userService.findById(id);
-        UserName updatedUserName = updatedUser.getName();
 
-        assertThat(updatedUserName.getName()).isEqualTo(userEditRequestDto.getName());
+        assertThat(updatedUser.matchName(userEditRequestDto.getName())).isTrue();
     }
 
     @Test
     void deleteUser() {
-        User newUser = User.builder()
-                .name("이름")
-                .email("test2@test.com")
-                .password("password1!")
-                .build();
-
-        User savedUser = userService.save(newUser);
-        Long id = savedUser.getId();
-
-        userService.deleteUser(id);
-
-        assertThrows(UserNotFoundException.class, () -> userService.findById(id));
-    }
-
-    @AfterEach
-    void tearDown() {
         userService.deleteUser(user.getId());
+
+        assertThrows(UserNotFoundException.class, () -> userService.findById(user.getId()));
     }
 }

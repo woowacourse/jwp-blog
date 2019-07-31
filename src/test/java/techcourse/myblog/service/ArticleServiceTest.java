@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Transactional
 class ArticleServiceTest {
 
     @Autowired
@@ -73,8 +74,8 @@ class ArticleServiceTest {
         assertThat(updatedArticle.getContents()).isEqualTo(articleSaveRequestDto.getContents());
     }
 
-    @AfterEach
-    void tearDown_article_delete() {
+    @Test
+    void delete() {
         articleService.deleteById(article.getId());
         assertThrows(ArticleNotFoundException.class, () -> articleService.findById(article.getId()));
 

@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,13 @@ import techcourse.myblog.domain.userinfo.UserPassword;
 import techcourse.myblog.exception.UserMismatchException;
 import techcourse.myblog.exception.UserNotFoundException;
 
+import javax.transaction.Transactional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Transactional
 class LoginServiceTest {
 
     @Autowired
@@ -49,10 +51,5 @@ class LoginServiceTest {
     @Test
     void findByEmail() {
         assertThat(loginService.findByEmail(user.getEmail())).isEqualTo(user);
-    }
-
-    @AfterEach
-    void tearDown() {
-        userService.deleteUser(user.getId());
     }
 }
