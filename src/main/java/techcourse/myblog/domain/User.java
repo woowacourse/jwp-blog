@@ -5,12 +5,13 @@ import lombok.*;
 import javax.persistence.*;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 @RequiredArgsConstructor
 @EqualsAndHashCode
 @Entity
 public class User {
     @Id
+    @Column(name = "USER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

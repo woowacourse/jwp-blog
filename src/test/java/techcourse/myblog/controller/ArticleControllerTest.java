@@ -187,7 +187,6 @@ class ArticleControllerTest {
     class without_login {
         @Test
         void 게시글_생성() {
-            List<Article> foundArticles = articleRepository.findAll();
             String uri = "/articles/write";
 
             webTestClient.post().uri(uri)

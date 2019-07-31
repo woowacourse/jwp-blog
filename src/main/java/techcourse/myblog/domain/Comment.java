@@ -13,6 +13,7 @@ import javax.persistence.*;
 @RequiredArgsConstructor
 public class Comment {
     @Id
+    @Column(name = "COMMENT_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -20,11 +21,13 @@ public class Comment {
     @Column
     private String contents;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ARTICLE_ID")
     @NonNull
     private Article article;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
     @NonNull
     private User author;
 
