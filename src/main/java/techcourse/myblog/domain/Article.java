@@ -17,6 +17,7 @@ public class Article {
     @Column(name = "coverUrl", nullable = false)
     private String coverUrl;
 
+    @Lob
     @Column(name = "contents", nullable = false)
     private String contents;
 
@@ -24,7 +25,7 @@ public class Article {
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"), nullable = false)
     private User author;
 
-    public Article() {
+    private Article() {
     }
 
     public Article(String title, String coverUrl, String contents) {
