@@ -58,14 +58,14 @@ public class UserService {
 
     public UserDto.Response findById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Can't find User : " + id));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다. : " + id));
 
         return UserDto.Response.createByUser(user);
     }
 
     public UserDto.Response update(UserDto.Update userDto) {
         User user = userRepository.findById(userDto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Can't find User : " + userDto.getId()));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다. : " + userDto.getId()));
 
         user.update(userDto.toUser());
 
