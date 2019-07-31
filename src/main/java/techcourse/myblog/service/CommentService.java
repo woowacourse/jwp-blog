@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.CommentDto;
 import techcourse.myblog.exception.CommentNotFoundException;
+import techcourse.myblog.exception.MisMatchAuthorException;
 import techcourse.myblog.model.Article;
 import techcourse.myblog.model.Comment;
 import techcourse.myblog.model.User;
@@ -18,7 +19,7 @@ public class CommentService {
     }
 
     public void save(User user, Article article, CommentDto commentDto) {
-        Comment comment = new Comment(user, article, commentDto.getContents());
+        Comment comment = new Comment(commentDto.getContents(), user, article);
         commentRepository.save(comment);
         comment.getArticle().addComment(comment);
     }
@@ -30,18 +31,18 @@ public class CommentService {
     @Transactional
     public Comment update(CommentDto commentDto, Long commentId) {
         Comment oldComment = findById(commentId);
-        Comment updatedComment = new Comment(oldComment.getAuthor(), oldComment.getArticle(), commentDto.getContents());
+        Comment updatedComment = new Comment(commentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle());
         return oldComment.update(updatedComment);
-    }
-
-    public boolean isOwnerOf(Long commentId, User user) {
-        Comment comment = findById(commentId);
-        return comment.getAuthor().getId().equals(user.getId());
     }
 
     public void delete(Long commentId) {
         Comment comment = findById(commentId);
         comment.getArticle().deleteComment(comment);
         commentRepository.deleteById(commentId);
+    }
+
+    public void checkOwner(Long commentId, User user) {
+        Comment comment = findById(commentId);
+        comment.checkOwner(user);
     }
 }

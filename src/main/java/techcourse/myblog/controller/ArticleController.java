@@ -48,7 +48,6 @@ public class ArticleController {
         checkOwner(articleId, user);
         articleDto.setId(articleId);
         articleService.update(articleDto, user);
-
         return "redirect:/articles/" + articleId;
     }
 
@@ -58,7 +57,6 @@ public class ArticleController {
         articleService.delete(articleId);
         return "redirect:/";
     }
-
 
     private void checkOwner(Long articleId, User user) {
         if (!articleService.isOwnerOf(articleId, user)) {

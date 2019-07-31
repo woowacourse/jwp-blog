@@ -1,8 +1,12 @@
 package techcourse.myblog.model;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import techcourse.myblog.exception.MisMatchAuthorException;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -24,9 +28,6 @@ public class Comment {
     @JoinColumn(name = "ARTICLE_ID", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     private Article article;
 
-    @Column(name = "CONTENTS", nullable = false, columnDefinition = "TEXT")
-    @NonNull
-    private String contents;
 
     public Comment update(Comment comment) {
         this.author = comment.getAuthor();
@@ -36,10 +37,16 @@ public class Comment {
         return this;
     }
 
-    public void setArticle(Article article) {
+    public void updateArticle(Article article) {
         this.article = article;
         if (!article.getComments().contains(this)) {
             article.getComments().add(this);
+        }
+    }
+
+    public void checkOwner(User user) {
+        if (!this.author.equals(user)) {
+            throw new MisMatchAuthorException("댓글을 작성한 유저만 수정할 수 있습니다.");
         }
     }
 }

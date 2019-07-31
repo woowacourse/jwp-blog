@@ -77,7 +77,7 @@
                                 <span class="text-bold inline-block" name="author" th:text="${comment.author.userName}">Jun</span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
+                                    <span th:text="${comment.updateTime}">time</span>
                                     <form id="editForm" method="get"
                                           th:action="@{'/comments/' + ${comment.id} + '/edit'}">
                                         <a href="javascript:{}"

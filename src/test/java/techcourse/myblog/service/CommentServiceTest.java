@@ -47,17 +47,17 @@ class CommentServiceTest {
         commentDto.setContents(COMMENTS_CONTENTS);
         commentService.save(USER, ARTICLE, commentDto);
 
-        verify(commentRepository, atLeast(1)).save(new Comment(USER, ARTICLE, COMMENTS_CONTENTS));
+        verify(commentRepository, atLeast(1)).save(new Comment(COMMENTS_CONTENTS, USER, ARTICLE));
     }
 
     @Test
     @DisplayName("Comment를 잘 조회한다.")
     void findById() {
         given(commentRepository.findById(TEST_COMMENT_ID))
-                .willReturn(Optional.of(new Comment(USER, ARTICLE, COMMENTS_CONTENTS)));
+                .willReturn(Optional.of(new Comment(COMMENTS_CONTENTS, USER, ARTICLE)));
         Comment foundComment = commentService.findById(TEST_COMMENT_ID);
 
-        assertThat(foundComment).isEqualTo(new Comment(USER, ARTICLE, COMMENTS_CONTENTS));
+        assertThat(foundComment).isEqualTo(new Comment(COMMENTS_CONTENTS, USER, ARTICLE));
     }
 
     @Test
@@ -68,7 +68,7 @@ class CommentServiceTest {
         commentDto.setContents(COMMENTS_CONTENTS_2);
 
         given(commentRepository.findById(TEST_COMMENT_ID))
-                .willReturn(Optional.of(new Comment(USER, ARTICLE, COMMENTS_CONTENTS)));
+                .willReturn(Optional.of(new Comment(COMMENTS_CONTENTS, USER, ARTICLE)));
 
         Comment updatedComment = commentService.update(commentDto, TEST_COMMENT_ID);
 
@@ -78,7 +78,7 @@ class CommentServiceTest {
     @Test
     @DisplayName("comment를 삭제한다.")
     void delete() {
-        Comment comment = new Comment(USER, ARTICLE, COMMENTS_CONTENTS);
+        Comment comment = new Comment(COMMENTS_CONTENTS, USER, ARTICLE);
         ARTICLE.addComment(comment);
         given(commentRepository.findById(TEST_COMMENT_ID))
                 .willReturn(Optional.of(comment));

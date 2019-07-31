@@ -27,13 +27,13 @@ public class CommentController {
     public String createComment(CommentDto commentDto, @ModelAttribute User user) {
         Article foundArticle = articleService.findById(commentDto.getArticleId());
         commentService.save(user, foundArticle, commentDto);
-
         return "redirect:/articles/" + foundArticle.getId();
     }
 
     @GetMapping("/{commentId}/edit")
     public String editCommentForm(@PathVariable Long commentId, Model model, @ModelAttribute User user) {
-        checkOwner(commentId, user);
+        commentService.checkOwner(commentId, user);
+
         Comment comment = commentService.findById(commentId);
         model.addAttribute("comment", comment);
         return "comment-edit";
@@ -41,24 +41,21 @@ public class CommentController {
 
     @DeleteMapping("/{commentId}")
     private String deleteComment(@PathVariable Long commentId, @ModelAttribute User user) {
-        checkOwner(commentId, user);
+        commentService.checkOwner(commentId, user);
+
         Comment comment = commentService.findById(commentId);
         Long articleId = comment.getArticle().getId();
         commentService.delete(commentId);
-
         return "redirect:/articles/" + articleId;
     }
 
     @PutMapping("/{commentId}")
     public String updateComment(@PathVariable Long commentId, CommentDto commentDto, @ModelAttribute User user) {
-        checkOwner(commentId, user);
+        commentService.checkOwner(commentId, user);
+
         Comment newComment = commentService.update(commentDto, commentId);
-        return "redirect:/articles/" + newComment.getArticle().getId();
+        Article commentedArticle = newComment.getArticle();
+        return "redirect:/articles/" + commentedArticle.getId();
     }
 
-    private void checkOwner(Long commentId, User user) {
-        if (!commentService.isOwnerOf(commentId, user)) {
-            throw new MisMatchAuthorException("댓글을 작성한 유저만 수정할 수 있습니다.");
-        }
-    }
 }
