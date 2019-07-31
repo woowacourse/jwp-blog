@@ -35,11 +35,11 @@ public class CommentServiceTests {
     @Test
     void 댓글_수정() {
         Comment comment = new Comment("comment", user, article);
-        CommentDto updateCommentDto = new CommentDto("new comment", user, article);
+        CommentDto updateCommentDto = new CommentDto("new comment");
         given(commentRepository.findById(id)).willReturn(Optional.of(comment));
 
-        assertDoesNotThrow(() -> commentService.modify(id, updateCommentDto));
-        compareComment(commentRepository.findById(id).get(), updateCommentDto.toComment());
+        assertDoesNotThrow(() -> commentService.modify(id, updateCommentDto.toComment(user, article)));
+        compareComment(commentRepository.findById(id).get(), updateCommentDto.toComment(user, article));
     }
 
     void compareComment(Comment comment1, Comment comment2) {

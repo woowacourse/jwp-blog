@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.CommentRepository;
-import techcourse.myblog.service.dto.CommentDto;
 import techcourse.myblog.support.exception.MismatchAuthorException;
 
 import java.util.Collections;
@@ -24,8 +23,8 @@ public class CommentService {
         return Collections.unmodifiableList(commentRepository.findByArticleId(articleId));
     }
 
-    public void save(CommentDto commentDto) {
-        commentRepository.save(commentDto.toComment());
+    public void save(Comment comment) {
+        commentRepository.save(comment);
     }
 
     public void deleteById(Long id) {
@@ -37,8 +36,8 @@ public class CommentService {
                 .orElseThrow(MismatchAuthorException::new);
     }
 
-    public void modify(Long commentId, CommentDto commentDto) {
+    public void modify(Long commentId, Comment comment) {
         commentRepository.findById(commentId)
-                .ifPresent(comment -> comment.update(commentDto.toComment()));
+                .ifPresent(originalComment -> originalComment.update(comment));
     }
 }

@@ -6,10 +6,10 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import techcourse.myblog.support.argument.LoginUserHandlerMethodArgumentResolver;
 import techcourse.myblog.web.interceptor.CommonInterceptor;
 import techcourse.myblog.web.interceptor.LoginInterceptor;
 import techcourse.myblog.web.interceptor.LogoutInterceptor;
-import techcourse.myblog.support.argument.LoginUserHandlerMethodArgumentResolver;
 
 import java.util.List;
 
