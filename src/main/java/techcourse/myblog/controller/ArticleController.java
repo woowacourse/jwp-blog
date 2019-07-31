@@ -50,7 +50,7 @@ public class ArticleController {
     public String createForm(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            throw new UnauthenticatedUserException("로그인이 필요합니다.");
+            throw new UnauthenticatedUserException();
         }
         model.addAttribute("user", user);
         return "article-edit";
@@ -60,7 +60,7 @@ public class ArticleController {
     public String create(ArticleDTO articleDTO, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            throw new UnauthenticatedUserException("로그인이 필요합니다.");
+            throw new UnauthenticatedUserException();
         }
 
         Article article = articleDTO.toDomain(user);
@@ -99,7 +99,7 @@ public class ArticleController {
     private void checkAuthor(HttpSession session, Article savedArticle) {
         User user = (User) session.getAttribute("user");
         if (!user.equals(savedArticle.getAuthor())) {
-            throw new UnauthenticatedUserException("수정 권한이 없습니다.");
+            throw new UnauthenticatedUserException();
         }
     }
 
@@ -111,7 +111,7 @@ public class ArticleController {
 
         User user = (User) session.getAttribute("user");
         if (!user.isAuthorOf(savedArticle)) {
-            throw new UnauthenticatedUserException("삭제 권한이 없습니다.");
+            throw new UnauthenticatedUserException();
         }
 
         articleRepository.deleteById(articleId);

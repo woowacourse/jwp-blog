@@ -37,8 +37,7 @@ public class CommentController {
                              @PathVariable long commentId,
                              Model model) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() ->
-                        new NotFoundCommentException("존재하지 않는 댓글입니다."));
+                .orElseThrow(NotFoundCommentException::new);
 
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -59,7 +58,7 @@ public class CommentController {
         User user = (User) httpSession.getAttribute("user");
 
         if (user == null) {
-            throw new UnauthenticatedUserException("로그인하지 않으면 댓글을 작성할 수 없습니다.");
+            throw new UnauthenticatedUserException();
         }
 
         Article article = articleRepository.findById(articleId)
@@ -77,9 +76,8 @@ public class CommentController {
                                @PathVariable long commentId,
                                HttpSession httpSession) {
 
-
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
-                new NotFoundCommentException("해당 덧글이 존재하지 않습니다."));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(NotFoundCommentException::new);
 
         validateUser(httpSession, comment);
 
@@ -95,11 +93,11 @@ public class CommentController {
         User user = (User) httpSession.getAttribute("user");
 
         if (user == null) {
-            throw new UnauthenticatedUserException("확인되지 않은 유저입니다.");
+            throw new UnauthenticatedUserException();
         }
 
         if (!user.equals(comment.getAuthor())) {
-            throw new UnauthenticatedUserException("권한이 없습니다.");
+            throw new UnauthenticatedUserException();
         }
     }
 
@@ -110,8 +108,7 @@ public class CommentController {
                                HttpSession httpSession) {
 
         Comment savedComment = commentRepository.findById(commentId)
-                .orElseThrow(() ->
-                        new NotFoundCommentException("해당 덧글이 존재하지 않습니다."));
+                .orElseThrow(NotFoundCommentException::new);
 
         validateUser(httpSession, savedComment);
 
