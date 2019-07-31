@@ -77,6 +77,8 @@ public class UserService {
 			user.updateName(userPublicInfoDto.getName());
 		} catch (NotFoundUserException e) {
 			throw new UserUpdateException(e.getMessage());
+		} catch (UserArgumentException e) {
+			throw new UserUpdateException(e.getMessage());
 		}
 	}
 
