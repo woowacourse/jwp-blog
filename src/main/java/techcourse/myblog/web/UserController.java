@@ -9,6 +9,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.*;
+import techcourse.myblog.service.AuthService;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -84,8 +85,7 @@ public class UserController {
     public RedirectView exitUser(@PathVariable String email, HttpSession session) {
         User user = (User) session.getAttribute("user");
 
-        userService.exit(email, user.getEmail());
-        session.invalidate();
+        userService.exit(email, user.getEmail(), session);
 
         return new RedirectView("/");
     }
