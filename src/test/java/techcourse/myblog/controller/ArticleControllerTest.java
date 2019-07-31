@@ -19,12 +19,10 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ArticleControllerTest {
     private static final String USER_NAME_1 = "test1";
-    private static final String USER_NAME_2 = "test2";
     private static final String EMAIL_1 = "test1@test.com";
     private static final String EMAIL_2 = "test2@test.com";
     private static final String PASSWORD_1 = "123456";
-    private static final String PASSWORD_2 = "12345";
-    private static final String TITLE = "title";
+    private static final String TITLE_1 = "title";
     private static final String CONTENTS = "contents";
     private static final String COVER_URL = "COVER_URL";
     private static final String TITLE_2 = "title2";
@@ -44,7 +42,7 @@ class ArticleControllerTest {
     }
 
     @BeforeAll
-    void 회원가입_두_번_그리고_로그인() {
+    void 회원가입_두_번_그리고_쿠키_발급() {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("userName", USER_NAME_1)
@@ -82,72 +80,143 @@ class ArticleControllerTest {
         articleRepository.save(article);
     }
 
-    @Test
-    void 로그인했을_때_게시글_생성() {
-        webTestClient.post().uri("/articles/write")
-                .header("cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("title", TITLE_2)
-                        .with("contents", CONTENTS)
-                        .with("coverUrl", COVER_URL))
-                .exchange();
-
-        assertThat(articleRepository.findAll().size()).isEqualTo(2);
-    }
-
-    @Test
-    void 로그인했을_때_게시글_수정() {
-        List<Article> foundArticles = articleRepository.findAll();
-        Article foundArticle = foundArticles.get(0);
-
-        webTestClient.put().uri("/articles/" + foundArticle.getId())
-                .header("cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("title", TITLE_2)
-                        .with("contents", CONTENTS)
-                        .with("coverUrl", COVER_URL))
-                .exchange();
-
-        foundArticle = articleRepository.findById(foundArticle.getId()).get();
-        assertThat(foundArticle.getTitle()).isEqualTo(TITLE_2);
-    }
-
-    @Test
-    void 로그인했을_때_게시글_삭제() {
-        List<Article> foundArticles = articleRepository.findAll();
-        Article foundArticle = foundArticles.get(0);
-
-        webTestClient.delete().uri("/articles/" + foundArticle.getId())
-                .header("cookie", cookie)
-                .exchange();
-
-        assertThat(articleRepository.findById(foundArticle.getId()).isPresent()).isFalse();
-    }
-
-    @Test
-    void 삭제권한_없는_사용자가_게시글_삭제() {
-        List<Article> foundArticles = articleRepository.findAll();
-        Article foundArticle = foundArticles.get(0);
-        String uri = "/articles/" + foundArticle.getId();
-
-        webTestClient.delete().uri(uri)
-                .header("referer", uri)
-                .header("cookie", anotherCookie)
-                .exchange()
-                .expectStatus().isFound()
-                .expectBody()
-                .consumeWith((response) -> {
-                    String location = response.getUrl().getPath();
-                    assertThat(location).isEqualTo(uri);
-                });
-
-        assertThat(articleRepository.findById(foundArticle.getId()).isPresent()).isTrue();
-
-    }
-
     @AfterEach
     void tearDown() {
-        articleRepository.delete(article);
+        articleRepository.deleteAll();
+    }
+
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @DisplayName("게시글 저자인 유저가 로그인 한 경우")
+    class with_login_authorized_user {
+
+        @Test
+        void 게시글_생성() {
+            webTestClient.post().uri("/articles/write")
+                    .header("cookie", cookie)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(fromFormData("title", TITLE_2)
+                            .with("contents", CONTENTS)
+                            .with("coverUrl", COVER_URL))
+                    .exchange();
+
+            assertThat(articleRepository.findAll().size()).isEqualTo(2);
+        }
+
+        @Test
+        void 게시글_수정() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+
+            webTestClient.put().uri("/articles/" + foundArticle.getId())
+                    .header("cookie", cookie)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(fromFormData("title", TITLE_2)
+                            .with("contents", CONTENTS)
+                            .with("coverUrl", COVER_URL))
+                    .exchange();
+
+            foundArticle = articleRepository.findById(foundArticle.getId()).get();
+            assertThat(foundArticle.getTitle()).isEqualTo(TITLE_2);
+        }
+
+        @Test
+        void 게시글_삭제() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+
+            webTestClient.delete().uri("/articles/" + foundArticle.getId())
+                    .header("cookie", cookie)
+                    .exchange();
+
+            assertThat(articleRepository.findById(foundArticle.getId()).isPresent()).isFalse();
+        }
+
+
+    }
+
+    @Nested
+    @DisplayName("게시글 저자가 아닌 유저가 로그인되어 있는 경우")
+    class non_author_login {
+        @Test
+        void 게시글_수정() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+            String uri = "/articles/" + foundArticle.getId();
+
+            webTestClient.put().uri(uri)
+                    .header("cookie", anotherCookie,
+                            "referer", uri)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(fromFormData("title", TITLE_2)
+                            .with("contents", CONTENTS)
+                            .with("coverUrl", COVER_URL))
+                    .exchange();
+
+            foundArticle = articleRepository.findById(foundArticle.getId()).get();
+            assertThat(foundArticle.getTitle()).isEqualTo(TITLE_1);
+        }
+
+        @Test
+        void 게시글_삭제() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+            String uri = "/articles/" + foundArticle.getId();
+
+            webTestClient.delete().uri(uri)
+                    .header("referer", uri)
+                    .header("cookie", anotherCookie)
+                    .exchange()
+                    .expectStatus().isFound()
+                    .expectBody()
+                    .consumeWith((response) -> {
+                        String location = response.getUrl().getPath();
+                        assertThat(location).isEqualTo(uri);
+                    });
+
+            assertThat(articleRepository.findById(foundArticle.getId()).isPresent()).isTrue();
+        }
+    }
+
+    @Nested
+    @DisplayName("로그인하지 않은 경우")
+    class without_login {
+        @Test
+        void 게시글_수정() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+            String uri = "/articles/" + foundArticle.getId();
+
+            webTestClient.put().uri(uri)
+                    .header("referer", uri)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(fromFormData("title", TITLE_2)
+                            .with("contents", CONTENTS)
+                            .with("coverUrl", COVER_URL))
+                    .exchange();
+
+            foundArticle = articleRepository.findById(foundArticle.getId()).get();
+            assertThat(foundArticle.getTitle()).isEqualTo(TITLE_1);
+        }
+
+        @Test
+        void 게시글_삭제() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+            String uri = "/articles/" + foundArticle.getId();
+
+            webTestClient.delete().uri(uri)
+                    .header("referer", uri)
+                    .exchange()
+                    .expectStatus().isFound()
+                    .expectBody()
+                    .consumeWith((response) -> {
+                        String location = response.getUrl().getPath();
+                        assertThat(location).isEqualTo(uri);
+                    });
+
+            assertThat(articleRepository.findById(foundArticle.getId()).isPresent()).isTrue();
+        }
     }
 
     @AfterAll
