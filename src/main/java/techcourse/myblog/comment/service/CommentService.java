@@ -56,12 +56,13 @@ public class CommentService {
         comment.updateComment(commentUpdateDto.getContents());
     }
 
-    public void delete(long commentId, long authorId) {
+    public boolean deleteById(long commentId, long authorId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
         if (comment.notMatchAuthorId(authorId)) {
-            throw new NotMatchUserException();
+            return false;
         }
         commentRepository.deleteById(commentId);
+        return true;
     }
 
     public CommentResponseDto findById(long commentId) {

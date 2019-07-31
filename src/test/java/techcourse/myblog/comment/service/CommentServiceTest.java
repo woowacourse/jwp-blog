@@ -85,6 +85,6 @@ public class CommentServiceTest {
 
     @AfterEach
     void tearDown() {
-        commentService.delete(comment.getId(), author.getId());
+        commentService.deleteById(comment.getId(), author.getId());
     }
 }

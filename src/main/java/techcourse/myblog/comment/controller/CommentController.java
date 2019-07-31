@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.argumentresolver.UserSession;
+import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.comment.dto.CommentCreateDto;
 import techcourse.myblog.comment.dto.CommentUpdateDto;
 import techcourse.myblog.comment.exception.InvalidCommentLengthException;
@@ -48,7 +49,9 @@ public class CommentController {
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
     public RedirectView deleteComment(@PathVariable long articleId, @PathVariable long commentId, UserSession userSession) {
-        commentService.delete(commentId, userSession.getId());
+        if (!commentService.deleteById(commentId, userSession.getId())) {
+            throw new NotMatchUserException();
+        }
         return new RedirectView("/articles/" + articleId);
     }
 }
