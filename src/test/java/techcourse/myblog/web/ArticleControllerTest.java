@@ -12,8 +12,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.repository.ArticleRepository;
 
-import javax.transaction.Transactional;
-
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
@@ -60,7 +58,6 @@ public class ArticleControllerTest extends AuthedWebTestClient {
     }
 
     @Test
-    @Transactional
     void updateArticle() {
         long articleId = addArticle();
         put("/articles/" + articleId)

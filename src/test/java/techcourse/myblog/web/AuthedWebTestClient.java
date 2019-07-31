@@ -22,7 +22,6 @@ public class AuthedWebTestClient {
     @Autowired
     protected UserRepository userRepository;
 
-    @Rollback(value = false)
     protected void init() {
         webTestClient.post().uri("/users")
                 .body(BodyInserters.fromFormData("name", "andole")
@@ -31,6 +30,7 @@ public class AuthedWebTestClient {
                 .exchange();
     }
 
+    @Rollback
     protected void end() {
         userRepository.deleteAll();
     }
