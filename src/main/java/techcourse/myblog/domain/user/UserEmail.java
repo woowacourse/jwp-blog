@@ -1,13 +1,20 @@
 package techcourse.myblog.domain.user;
 
+import javax.persistence.Embeddable;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Embeddable
 public class UserEmail {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9.\\-_]+@[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)$");
     private static final String EMAIL_ERROR = "올바른 이메일을 입력하세요";
     private String email;
+
+    private UserEmail() {
+
+    }
+
 
     public UserEmail(String email) {
         this.email = validate(email);

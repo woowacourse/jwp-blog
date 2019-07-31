@@ -14,13 +14,16 @@ public class User {
     @Id
     private Long id;
 
-    @Convert(converter = UserNameConverter.class)
+    @Embedded
+    @Column(nullable = false)
     private UserName name;
-    @Convert(converter = UserPasswordConverter.class)
+
+    @Embedded
+    @Column(nullable = false)
     private UserPassword password;
 
+    @Embedded
     @Column(unique = true)
-    @Convert(converter = UserEmailConverter.class)
     private UserEmail email;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
