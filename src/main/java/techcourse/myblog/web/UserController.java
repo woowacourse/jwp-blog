@@ -44,7 +44,6 @@ public class UserController {
 	public String editUserName(@PathVariable Long id, UserPublicInfoDto userPublicInfoDto, HttpSession session) {
 		if (loginChecker.isLoggedInSameId(session, id)) {
 			userService.update(userPublicInfoDto);
-			userService.findById(id);
 			session.setAttribute(LoginChecker.LOGGED_IN_USER, userPublicInfoDto);
 		}
 		return "redirect:/mypage/" + id;
