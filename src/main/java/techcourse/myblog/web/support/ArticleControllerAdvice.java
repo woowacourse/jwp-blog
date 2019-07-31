@@ -16,7 +16,7 @@ public class ArticleControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(ArticleControllerAdvice.class);
 
     @ExceptionHandler(ArticleException.class)
-    @ResponseStatus(value = HttpStatus.PERMANENT_REDIRECT)
+    @ResponseStatus(value = HttpStatus.FOUND)
     public String articleHandler(ArticleException e, RedirectAttributes redirectAttributes) {
         log.debug("article Manipulate FAILED {}", e.getMessage());
         redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -24,7 +24,7 @@ public class ArticleControllerAdvice {
     }
 
     @ExceptionHandler(CommentException.class)
-    @ResponseStatus(value = HttpStatus.PERMANENT_REDIRECT)
+    @ResponseStatus(value = HttpStatus.FOUND)
     public String commentHandler(CommentException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return "redirect:/error";
