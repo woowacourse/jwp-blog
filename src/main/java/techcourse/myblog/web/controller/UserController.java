@@ -7,12 +7,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.support.validation.UserInfo;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.UserReadService;
 import techcourse.myblog.service.UserWriteService;
+import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.support.argument.LoginUser;
+import techcourse.myblog.support.validation.UserInfo;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.groups.Default;
