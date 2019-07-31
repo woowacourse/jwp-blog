@@ -1,4 +1,4 @@
-package techcourse.myblog.user;
+package techcourse.myblog.data;
 
 public class UserDataForTest {
     public static final String USER_EMAIL = "email@gmail.com";

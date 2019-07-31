@@ -1,4 +1,4 @@
-package techcourse.myblog.article;
+package techcourse.myblog.data;
 
 public class ArticleDataForTest {
     public static final String ARTICLE_TITLE = "article_title";

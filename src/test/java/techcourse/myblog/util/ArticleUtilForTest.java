@@ -3,7 +3,7 @@ package techcourse.myblog.util;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.article.ArticleDataForTest;
+import techcourse.myblog.data.ArticleDataForTest;
 
 public class ArticleUtilForTest {
     public static String createArticle(WebTestClient webTestClient, String cookie) {
