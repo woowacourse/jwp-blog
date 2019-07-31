@@ -36,25 +36,25 @@ public class UserController {
     }
 
     @GetMapping("/mypage-edit")
-    public String editUser() {
+    public String edit() {
         return "mypage-edit";
     }
 
     @PostMapping("/users")
-    public String addUser(UserDto userDto) {
+    public String add(UserDto userDto) {
         userService.addUser(userDto);
         return "redirect:/login";
     }
 
     @PutMapping("/users")
-    public String updateUser(UserDto userDto, UserSessionInfo userSessionInfo) {
+    public String update(UserDto userDto, UserSessionInfo userSessionInfo) {
         userService.updateUser(userSessionInfo.getEmail(), userDto);
         loginSessionManager.setLoginSession(userDto.getName(), userDto.getEmail());
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/users")
-    public String deleteUser(UserSessionInfo userSessionInfo) {
+    public String delete(UserSessionInfo userSessionInfo) {
         userService.deleteUser(userSessionInfo.getEmail());
         loginSessionManager.clearSession();
         return "redirect:/";
