@@ -14,7 +14,6 @@ import java.util.stream.StreamSupport;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-@ExtendWith(SpringExtension.class)
 public class ArticleControllerTests extends LoginTemplate {
     private String title = "제목";
     private String contents = "contents";

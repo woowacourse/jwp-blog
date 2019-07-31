@@ -9,7 +9,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.SignUpException;
-import techcourse.myblog.exception.UserException;
+import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.utils.converter.UserConverter;
 
@@ -81,7 +81,7 @@ class UserServiceTest {
 
         // then
         assertThatThrownBy(() -> userService.updateUser(userRequestDto, UserConverter.convert(this.user)))
-                .isInstanceOf(UserException.class);
+                .isInstanceOf(NotFoundUserException.class);
     }
 
     @Test
@@ -106,6 +106,6 @@ class UserServiceTest {
 
         // then
         assertThatThrownBy(() -> userService.deleteUser(userResponseDto))
-                .isInstanceOf(UserException.class);
+                .isInstanceOf(NotFoundUserException.class);
     }
 }
