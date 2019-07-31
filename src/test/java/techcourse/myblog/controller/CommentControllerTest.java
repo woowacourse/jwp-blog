@@ -119,7 +119,9 @@ class CommentControllerTest {
 
             webTestClient.post().uri(uri)
                     .header("referer", uri)
-                    .exchange().expectStatus().isFound()
+                    .body(fromFormData("contents", CONTENTS_1))
+                    .exchange()
+                    .expectStatus().isFound()
                     .expectBody()
                     .consumeWith((response) -> {
                         String location = response.getUrl().getPath();
@@ -147,7 +149,16 @@ class CommentControllerTest {
 
         @Test
         void 댓글_삭제() {
+            Article foundArticle = articleRepository.findAll().get(0);
+            Comment foundComment = commentReopsitory.findAll().get(0);
 
+            String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
+
+            webTestClient.delete().uri(uri)
+                    .header("referer", uri)
+                    .exchange();
+
+            assertThat(commentReopsitory.findAll().size()).isEqualTo(1);
         }
 
     }
@@ -165,6 +176,7 @@ class CommentControllerTest {
             webTestClient.post().uri(uri)
                     .header("cookie", cookie)
                     .header("referer", uri)
+                    .body(fromFormData("contents", CONTENTS_2))
                     .exchange().expectStatus().isFound()
                     .expectBody()
                     .consumeWith((response) -> {
@@ -176,19 +188,76 @@ class CommentControllerTest {
 
         @Test
         void 댓글_수정() {
+            Article foundArticle = articleRepository.findAll().get(0);
+            Comment foundComment = commentReopsitory.findAll().get(0);
+
+            String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
+
+            webTestClient.put().uri(uri)
+                    .header("cookie", cookie)
+                    .header("referer", uri)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(fromFormData("contents", CONTENTS_2))
+                    .exchange();
+
+            foundComment = commentReopsitory.findById(foundComment.getId()).get();
+            assertThat(foundComment.getContents()).isEqualTo(CONTENTS_2);
 
         }
 
         @Test
         void 댓글_삭제() {
+            Article foundArticle = articleRepository.findAll().get(0);
+            Comment foundComment = commentReopsitory.findAll().get(0);
 
+            String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
+
+            webTestClient.delete().uri(uri)
+                    .header("cookie", cookie)
+                    .header("referer", uri)
+                    .exchange();
+
+            assertThat(commentReopsitory.findAll().size()).isEqualTo(0);
         }
-
     }
 
     @Nested
     @DisplayName("댓글 저자가 아닌 유저가 로그인되어 있는 경우")
     class non_author_login {
+        @Test
+        void 댓글_수정() {
+            Article foundArticle = articleRepository.findAll().get(0);
+            Comment foundComment = commentReopsitory.findAll().get(0);
+
+            String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
+
+            webTestClient.put().uri(uri)
+                    .header("cookie", anotherCookie)
+                    .header("referer", uri)
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(fromFormData("contents", CONTENTS_2))
+                    .exchange();
+
+            foundComment = commentReopsitory.findById(foundComment.getId()).get();
+            assertThat(foundComment.getContents()).isEqualTo(CONTENTS_1);
+
+        }
+
+        @Test
+        void 댓글_삭제() {
+            Article foundArticle = articleRepository.findAll().get(0);
+            Comment foundComment = commentReopsitory.findAll().get(0);
+
+            String uri = "/articles/" + foundArticle.getId() + "/comments/" + foundComment.getId();
+
+            webTestClient.delete().uri(uri)
+                    .header("cookie", anotherCookie)
+                    .header("referer", uri)
+                    .exchange();
+
+            assertThat(commentReopsitory.findAll().size()).isEqualTo(1);
+
+        }
 
     }
 }
