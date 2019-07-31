@@ -40,7 +40,7 @@ class UserControllerTest extends AuthedWebTestClient {
                         .with("password", "b")
                         .with("email", "c"))
                 .exchange()
-                .expectStatus().isUnauthorized();
+                .expectStatus().is3xxRedirection();
 
         assertThat(userRepository.count()).isEqualTo(count);
     }
