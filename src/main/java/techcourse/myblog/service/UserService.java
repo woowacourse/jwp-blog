@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.DuplicatedUserException;
 import techcourse.myblog.exception.NotMatchPasswordException;
@@ -14,11 +13,14 @@ import techcourse.myblog.exception.UnFoundUserException;
 import techcourse.myblog.repository.UserRepository;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -33,24 +35,26 @@ public class UserService {
     }
 
     public User update(User originalUser, String newName) {
-        return findBy(originalUser.getEmail())
+        return findByEmail(originalUser.getEmail())
                 .modifyName(newName);
     }
 
-    private User findBy(String email) {
+    private User findByEmail(String email) {
         return userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new UnFoundUserException("로그인 정보를 확인해주세요."));
     }
 
     public User login(User user) {
-        User loginUser = findBy(user.getEmail());
+        User loginUser = findByEmail(user.getEmail());
+        checkPassword(user, loginUser);
+        return loginUser;
+    }
 
+    private void checkPassword(User user, User loginUser) {
         if (!loginUser.matchPassword(user)) {
             throw new NotMatchPasswordException("로그인 정보를 확인해주세요.");
         }
-
-        return loginUser;
     }
 
     public void delete(User user) {

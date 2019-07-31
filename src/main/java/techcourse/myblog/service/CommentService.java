@@ -6,14 +6,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentDto;
+import techcourse.myblog.exception.IllegalRequestException;
+import techcourse.myblog.exception.NotFoundCommentException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
-import techcourse.myblog.exception.*;
 
+@Slf4j
 @Service
 @Transactional
 public class CommentService {
@@ -32,48 +35,52 @@ public class CommentService {
     }
 
     public Comment find(Long commentId) {
+        return findCommentById(commentId);
+    }
+
+    private Comment findCommentById(Long commentId) {
         return commentRepository
                 .findById(commentId)
-                .orElseThrow(() ->
-                        new NotFoundCommentException("존재하지 않는 코멘트"));
+                .orElseThrow(() -> {
+                    log.debug(String.valueOf(commentId));
+                    throw new NotFoundCommentException("존재하지 않는 댓글");
+                });
     }
 
     public Comment save(Comment comment, User user, Long articleId) {
-        Article article = articleRepository
-                .findById(articleId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글"));
+        Article article = findArticleById(articleId);
         comment.setUser(user);
         comment.setArticle(article);
         article.add(comment);
         return commentRepository.save(comment);
     }
 
-    public void delete(Long commentId, User user, Long articleId) {
-        Comment comment = commentRepository
-                .findById(commentId)
-                .orElseThrow(() -> new NotFoundCommentException("존재하지 않는 댓글"));
-
-        if (!user.equals(comment.getUser())) {
-            throw new IllegalRequestException("권한이 없는 사용자 입니다.");
-        }
-
-        articleRepository
+    private Article findArticleById(Long articleId) {
+        return articleRepository
                 .findById(articleId)
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 게시글"))
-                .remove(comment);
+                .orElseThrow(() -> {
+                    log.debug(String.valueOf(articleId));
+                    throw new RuntimeException("존재하지 않는 게시글");
+                });
+    }
 
+    public void delete(Long commentId, User user, Long articleId) {
+        Comment comment = findCommentById(commentId);
+        checkAuthorizedUser(user, comment);
+        findArticleById(articleId)
+                .remove(comment);
         commentRepository.delete(comment);
     }
 
-    public void update(long commentId, CommentDto commentDto, User user) {
-        Comment comment = commentRepository
-                .findById(commentId)
-                .orElseThrow(() -> new NotFoundCommentException("존재하지 않는 댓글"));
-
+    private void checkAuthorizedUser(User user, Comment comment) {
         if (!user.equals(comment.getUser())) {
             throw new IllegalRequestException("권한이 없는 사용자 입니다.");
         }
+    }
 
+    public void update(long commentId, CommentDto commentDto, User user) {
+        Comment comment = findCommentById(commentId);
+        checkAuthorizedUser(user, comment);
         comment.update(commentDto.toDomain());
     }
 }
