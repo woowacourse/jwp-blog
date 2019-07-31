@@ -7,9 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
-	public AuthenticationInterceptor() {
-	}
-
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 							 Object handler) throws IOException {
