@@ -69,7 +69,7 @@
                         <span class="font-size-16 text-info" th:text="${#lists.size(comments)}">0</span>
                     </div>
                     <div class="comment">
-                        <ul id="comments" class="list-unstyled list-info">
+                        <ul class="list-unstyled list-info" id="comments">
                             <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
                                 <img alt=""
                                      class="thumb-img img-circle"
