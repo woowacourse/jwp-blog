@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.support.exception.DuplicatedEmailException;
 
 @Service
 @Transactional

@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.ArticleRepository;
+import techcourse.myblog.support.exception.MismatchAuthorException;
+import techcourse.myblog.support.exception.NotFoundArticleException;
 
 import java.util.Collections;
 import java.util.List;

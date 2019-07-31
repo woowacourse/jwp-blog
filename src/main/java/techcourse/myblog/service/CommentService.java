@@ -6,6 +6,7 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.CommentRepository;
 import techcourse.myblog.service.dto.CommentDto;
+import techcourse.myblog.support.exception.MismatchAuthorException;
 
 import java.util.Collections;
 import java.util.List;

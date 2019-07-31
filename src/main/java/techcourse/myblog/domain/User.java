@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.hibernate.annotations.DynamicUpdate;
+import techcourse.myblog.support.exception.IllegalUserException;
 
 import javax.persistence.*;
 import java.util.Objects;

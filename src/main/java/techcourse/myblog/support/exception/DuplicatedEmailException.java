@@ -1,4 +1,4 @@
-package techcourse.myblog.service;
+package techcourse.myblog.support.exception;
 
 public class DuplicatedEmailException extends RuntimeException {
     public DuplicatedEmailException(String message) {
