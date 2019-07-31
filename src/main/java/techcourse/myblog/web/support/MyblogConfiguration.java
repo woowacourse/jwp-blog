@@ -28,5 +28,6 @@ public class MyblogConfiguration implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new SessionArgumentResolver());
+        resolvers.add(new LoginSessionArgumentResolver());
     }
 }
