@@ -2,19 +2,14 @@ package techcourse.myblog.comment;
 
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.exception.InvalidAuthorException;
-import techcourse.myblog.user.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static techcourse.myblog.user.UserTest.user;
+import static techcourse.myblog.user.UserTest.user2;
 
-class CommentTest {
-    private static final User user = User.builder()
-            .userName("buddy")
-            .email("buddy@gmail.com")
-            .password("Aa12345!")
-            .build();
-
-    private static final Comment comment = Comment.builder()
+public class CommentTest {
+    public static final Comment comment = Comment.builder()
             .contents("댓글입니다.")
             .author(user)
             .build();
@@ -34,8 +29,6 @@ class CommentTest {
 
     @Test
     void 댓글을_작성자_불일치() {
-        User user2 = new User("cony", "cony@cony.com", "Aa12345!");
-
         assertThrows(InvalidAuthorException.class, () -> comment.update(comment2, user2));
     }
 }
