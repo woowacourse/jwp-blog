@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.article.domain.Article;
-import techcourse.myblog.article.dto.ArticleDto;
+import techcourse.myblog.article.dto.ArticleCreateDto;
+import techcourse.myblog.article.dto.ArticleResponseDto;
+import techcourse.myblog.article.dto.ArticleUpdateDto;
 import techcourse.myblog.user.UserDataForTest;
 import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.domain.UserRepository;
@@ -53,18 +55,18 @@ class ArticleServiceTest {
 
         User savedAuthor = userRepository.save(author);
 
-        articleService.save(modelMapper.map(article, ArticleDto.Creation.class), savedAuthor.getId());
+        articleService.save(modelMapper.map(article, ArticleCreateDto.class), savedAuthor.getId());
     }
 
     @Test
     void 게시글_전체_조회_테스트() {
         assertThat(articleService.findAll()).isEqualTo(
-                Arrays.asList(modelMapper.map(article, ArticleDto.Response.class)));
+                Arrays.asList(modelMapper.map(article, ArticleResponseDto.class)));
     }
 
     @Test
     void 게시글_단건_조회_테스트() {
-        assertThat(articleService.findById(articleId)).isEqualTo(modelMapper.map(article, ArticleDto.Response.class));
+        assertThat(articleService.findById(articleId)).isEqualTo(modelMapper.map(article, ArticleResponseDto.class));
     }
 
     @Test
@@ -78,9 +80,9 @@ class ArticleServiceTest {
                 .build();
 
         long updatedArticleId = articleService.update(
-                articleId, modelMapper.map(updatedUser, ArticleDto.Updation.class), author.getId());
+                articleId, modelMapper.map(updatedUser, ArticleUpdateDto.class), author.getId());
         assertThat(articleService.findById(updatedArticleId))
-                .isEqualTo(modelMapper.map(updatedUser, ArticleDto.Response.class));
+                .isEqualTo(modelMapper.map(updatedUser, ArticleResponseDto.class));
     }
 
     @AfterEach

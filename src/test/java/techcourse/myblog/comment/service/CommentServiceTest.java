@@ -11,7 +11,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.domain.ArticleRepository;
 import techcourse.myblog.comment.domain.Comment;
-import techcourse.myblog.comment.dto.CommentDto;
+import techcourse.myblog.comment.dto.CommentCreateDto;
+import techcourse.myblog.comment.dto.CommentResponseDto;
+import techcourse.myblog.comment.dto.CommentUpdateDto;
 import techcourse.myblog.user.UserDataForTest;
 import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.domain.UserRepository;
@@ -61,12 +63,12 @@ public class CommentServiceTest {
                 .build();
 
         comment = commentService.save(
-                article.getId(), author.getId(), modelMapper.map(comment, CommentDto.Creation.class));
+                article.getId(), author.getId(), modelMapper.map(comment, CommentCreateDto.class));
     }
 
     @Test
     void 댓글_조회_테스트() {
-        assertThat(commentService.findById(comment.getId())).isEqualTo(modelMapper.map(comment, CommentDto.Response.class));
+        assertThat(commentService.findById(comment.getId())).isEqualTo(modelMapper.map(comment, CommentResponseDto.class));
     }
 
     @Test
@@ -76,9 +78,9 @@ public class CommentServiceTest {
                 .author(author)
                 .article(article)
                 .build();
-        commentService.update(comment.getId(), author.getId(), modelMapper.map(updateComment, CommentDto.Updation.class));
+        commentService.update(comment.getId(), author.getId(), modelMapper.map(updateComment, CommentUpdateDto.class));
         assertThat(commentService.findById(comment.getId()).getContents())
-                .isEqualTo(modelMapper.map(updateComment, CommentDto.Response.class).getContents());
+                .isEqualTo(modelMapper.map(updateComment, CommentUpdateDto.class).getContents());
     }
 
     @AfterEach

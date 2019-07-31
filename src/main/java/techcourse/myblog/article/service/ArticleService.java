@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.domain.ArticleRepository;
-import techcourse.myblog.article.dto.ArticleDto;
+import techcourse.myblog.article.dto.ArticleCreateDto;
+import techcourse.myblog.article.dto.ArticleResponseDto;
+import techcourse.myblog.article.dto.ArticleUpdateDto;
 import techcourse.myblog.article.exception.NotFoundArticleException;
 import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.user.domain.User;
@@ -24,30 +26,30 @@ public class ArticleService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public List<ArticleDto.Response> findAll() {
+    public List<ArticleResponseDto> findAll() {
         List<Article> articles = (List<Article>) articleRepository.findAll();
         return articles.stream()
-                .map(article -> modelMapper.map(article, ArticleDto.Response.class))
+                .map(article -> modelMapper.map(article, ArticleResponseDto.class))
                 .collect(Collectors.toList());
     }
 
-    public long save(ArticleDto.Creation articleDto, long authorId) {
+    public long save(ArticleCreateDto articleCreateDto, long authorId) {
         User author = userRepository.findById(authorId).orElseThrow(NotFoundUserException::new);
-        Article newArticle = articleDto.toArticle(author);
+        Article newArticle = articleCreateDto.toArticle(author);
         return articleRepository.save(newArticle).getId();
     }
 
-    public ArticleDto.Response findById(long articleId) {
+    public ArticleResponseDto findById(long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        return modelMapper.map(article, ArticleDto.Response.class);
+        return modelMapper.map(article, ArticleResponseDto.class);
     }
 
-    public long update(long articleId, ArticleDto.Updation articleDto, long authorId) {
+    public long update(long articleId, ArticleUpdateDto articleUpdateDto, long authorId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
         if (article.notMatchAuthorId(authorId)) {
             throw new NotMatchUserException();
         }
-        article.update(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
+        article.update(articleUpdateDto.getTitle(), articleUpdateDto.getCoverUrl(), articleUpdateDto.getContents());
         return article.getId();
     }
 

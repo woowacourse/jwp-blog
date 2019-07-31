@@ -7,7 +7,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.argumentresolver.UserSession;
-import techcourse.myblog.comment.dto.CommentDto;
+import techcourse.myblog.comment.dto.CommentCreateDto;
+import techcourse.myblog.comment.dto.CommentUpdateDto;
 import techcourse.myblog.comment.exception.InvalidCommentLengthException;
 import techcourse.myblog.comment.service.CommentService;
 
@@ -27,19 +28,19 @@ public class CommentController {
     }
 
     @PostMapping("/articles/{articleId}/comments")
-    public RedirectView createComment(@PathVariable long articleId, UserSession userSession, CommentDto.Creation commentDto) {
-        commentService.save(articleId, userSession.getId(), commentDto);
+    public RedirectView createComment(@PathVariable long articleId, UserSession userSession, CommentCreateDto commentCreateDto) {
+        commentService.save(articleId, userSession.getId(), commentCreateDto);
         return new RedirectView("/articles/" + articleId);
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
     public RedirectView updateComment(@PathVariable long articleId, @PathVariable long commentId, UserSession userSession,
-                                      @Valid CommentDto.Updation commentDto, BindingResult result, HttpServletRequest request) {
+                                      @Valid CommentUpdateDto commentUpdateDto, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             request.setAttribute("articleId", articleId);
             throw new InvalidCommentLengthException();
         }
-        commentService.update(commentId, userSession.getId(), commentDto);
+        commentService.update(commentId, userSession.getId(), commentUpdateDto);
         return new RedirectView("/articles/" + articleId);
     }
 
