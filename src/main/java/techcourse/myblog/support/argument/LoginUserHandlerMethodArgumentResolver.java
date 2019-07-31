@@ -6,7 +6,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.web.controller.LoginFailedException;
+import techcourse.myblog.support.exception.LoginFailedException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

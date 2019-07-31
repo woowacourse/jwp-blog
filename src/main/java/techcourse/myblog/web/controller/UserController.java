@@ -12,6 +12,7 @@ import techcourse.myblog.service.UserReadService;
 import techcourse.myblog.service.UserWriteService;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.support.argument.LoginUser;
+import techcourse.myblog.support.exception.LoginFailedException;
 import techcourse.myblog.support.validation.UserInfo;
 
 import javax.servlet.http.HttpSession;
