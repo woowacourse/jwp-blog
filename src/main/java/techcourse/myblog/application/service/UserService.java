@@ -28,9 +28,8 @@ public class UserService {
 
     @Transactional
     public void save(UserDto userDto) {
-        if (userRepository.countUserByEmail(userDto.getEmail()) != 0) {
-            throw new DuplicatedIdException("이미 사용중인 이메일입니다.");
-        }
+        userRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(() -> new DuplicatedIdException("이미 사용중인 이메일입니다."));
 
         User user = userConverter.convertFromDto(userDto);
         userRepository.save(user);

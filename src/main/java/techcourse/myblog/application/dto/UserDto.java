@@ -1,9 +1,9 @@
 package techcourse.myblog.application.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+
+import org.thymeleaf.expression.Objects;
+
 import javax.validation.constraints.Pattern;
-import java.util.Objects;
 
 public class UserDto {
     @NotBlank(message = "이메일을 작성해주세요.")

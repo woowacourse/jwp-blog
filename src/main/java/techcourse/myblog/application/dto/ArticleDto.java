@@ -3,12 +3,12 @@ package techcourse.myblog.application.dto;
 import techcourse.myblog.domain.Article;
 
 public class ArticleDto {
-    private Long id;
+    private long id;
     private String title;
     private String coverUrl;
     private String contents;
 
-    public ArticleDto(Long id, String title, String coverUrl, String contents) {
+    public ArticleDto(long id, String title, String coverUrl, String contents) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;

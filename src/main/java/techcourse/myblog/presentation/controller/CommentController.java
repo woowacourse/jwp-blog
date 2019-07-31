@@ -39,8 +39,6 @@ public class CommentController {
 
     @PutMapping("/articles/{articleId}/comment-edit/{commentId}")
     public RedirectView update(HttpSession httpSession, CommentDto commentDto, @PathVariable Long articleId, @PathVariable Long commentId) {
-        System.out.println("comment id : " + commentDto.getContents());
-        System.out.println("article id : " + articleId);
         String email = (String) httpSession.getAttribute("email");
 
         commentService.findCommentWriter(commentId, email);
