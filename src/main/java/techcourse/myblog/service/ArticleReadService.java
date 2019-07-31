@@ -33,6 +33,6 @@ public class ArticleReadService {
 
     public Article findByIdAndAuthor(Long articleId, User user) {
         return articleRepository.findByIdAndAuthor(articleId, user)
-                .orElseThrow(() -> new MismatchAuthorException("작성자만 접근할 수 있습니다."));
+                .orElseThrow(MismatchAuthorException::new);
     }
 }
