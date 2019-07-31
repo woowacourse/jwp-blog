@@ -29,13 +29,18 @@ public class Comment {
         this.contents = contents;
     }
 
-    public void checkCorrespondingAuthor(User user) {
+    private void checkCorrespondingAuthor(User user) {
         if (!author.equals(user)) {
             throw new InvalidAuthorException();
         }
     }
 
-    public void update(Comment updateComment) {
+    public void update(Comment updateComment, User user) {
+        checkCorrespondingAuthor(user);
         this.contents = updateComment.contents;
+    }
+
+    public void checkAvailableUserForDelete(User user) {
+        checkCorrespondingAuthor(user);
     }
 }

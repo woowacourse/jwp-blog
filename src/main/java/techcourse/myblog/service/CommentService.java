@@ -25,15 +25,14 @@ public class CommentService {
 
     public void deleteComment(Long commentId, User user) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundObjectException::new);
-        comment.checkCorrespondingAuthor(user);
+        comment.checkAvailableUserForDelete(user);
         commentRepository.deleteById(commentId);
     }
 
     @Transactional
     public void updateComment(Long commentId, User user, CommentDto commentDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundObjectException::new);
-        comment.checkCorrespondingAuthor(user);
         Comment updateComment = commentDto.toEntity(user);
-        comment.update(updateComment);
+        comment.update(updateComment, user);
     }
 }
