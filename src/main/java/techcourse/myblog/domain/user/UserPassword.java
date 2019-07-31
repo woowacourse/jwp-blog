@@ -14,11 +14,11 @@ public class UserPassword {
     @Column(name = "password", nullable = false)
     private String password;
 
-    public UserPassword(String password) {
+    private UserPassword(String password) {
         this.password = validate(password);
     }
 
-    public UserPassword() {
+    private UserPassword() {
     }
 
     public static UserPassword of(String password) {

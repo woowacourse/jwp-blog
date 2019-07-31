@@ -11,21 +11,21 @@ public class EmailTest {
 
     @Test
     void 이름_테스트() {
-        assertThatThrownBy(() -> new Email("가나다@gmail.com")).isInstanceOf(UserException.class);
+        assertThatThrownBy(() -> Email.of("가나다@gmail.com")).isInstanceOf(UserException.class);
     }
 
     @Test
     void 골뱅이_테스트() {
-        assertThatThrownBy(() -> new Email("abc#gmail.com")).isInstanceOf(UserException.class);
+        assertThatThrownBy(() -> Email.of("abc#gmail.com")).isInstanceOf(UserException.class);
     }
 
     @Test
     void 도메인_테스트() {
-        assertThatThrownBy(() -> new Email("abc@!gmail.com")).isInstanceOf(UserException.class);
+        assertThatThrownBy(() -> Email.of("abc@!gmail.com")).isInstanceOf(UserException.class);
     }
 
     @Test
     void 정상_테스트() {
-        assertDoesNotThrow(() -> new Email("abc@gmail.com"));
+        assertDoesNotThrow(() -> Email.of("abc@gmail.com"));
     }
 }

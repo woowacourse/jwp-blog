@@ -13,11 +13,11 @@ public class UserName {
     @Column(name = "name", nullable = false)
     private String userName;
 
-    public UserName(String userName) {
+    private UserName(String userName) {
         this.userName = validate(userName);
     }
 
-    public UserName() {
+    private UserName() {
     }
 
     public static UserName of(String userName) {

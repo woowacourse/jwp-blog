@@ -14,11 +14,11 @@ public class Email {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    public Email(String email) {
+    private Email(String email) {
         this.email = validate(email);
     }
 
-    public Email() {
+    private Email() {
     }
 
     public static Email of(String email) {
