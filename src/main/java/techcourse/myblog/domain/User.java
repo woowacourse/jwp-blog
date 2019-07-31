@@ -39,6 +39,11 @@ public class User {
         this.password = password;
     }
     
+    public void modifyName(String name) {
+        validateName(name);
+        this.name = name;
+    }
+    
     private void validateName(String name) {
         if (isEmpty(name) || !Pattern.matches(UserPattern.NAME, name)) {
             throw new IllegalUserException(UserPattern.NAME_CONSTRAINT_MESSAGE);
@@ -59,11 +64,5 @@ public class User {
 
     private boolean isEmpty(String text) {
         return (text == null) || ("").equals(text);
-    }
-
-    public User modifyName(String name) {
-        validateName(name);
-        this.name = name;
-        return this;
     }
 }
