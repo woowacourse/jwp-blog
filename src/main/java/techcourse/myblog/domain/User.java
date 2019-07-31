@@ -17,14 +17,17 @@ import java.util.regex.Pattern;
 @EqualsAndHashCode(of = {"id"})
 @DynamicUpdate
 public class User {
+    public static final int NAME_LENGTH = 20;
+    public static final int EMAIL_LENGTH = 25;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = NAME_LENGTH)
     private String name;
 
-    @Column(nullable = false, unique = true, length = 25)
+    @Column(nullable = false, unique = true, length = EMAIL_LENGTH)
     private String email;
 
     @Column(nullable = false)
