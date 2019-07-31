@@ -8,4 +8,7 @@ import java.util.List;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     List<Article> findByAuthor(User author);
+
+    @Override
+    <S extends Article> S save(S entity);
 }

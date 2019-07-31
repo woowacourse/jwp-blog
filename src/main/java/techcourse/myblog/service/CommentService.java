@@ -33,8 +33,8 @@ public class CommentService {
                 .forEach(comment -> commentRepository.deleteById(comment.getId()));
     }
 
-    public void save(Comment newComment) {
-        commentRepository.save(newComment);
+    public Comment save(Comment newComment) {
+        return commentRepository.save(newComment);
     }
 
     public List<Comment> findByArticle(Article article) {

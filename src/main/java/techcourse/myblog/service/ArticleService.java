@@ -24,8 +24,8 @@ public class ArticleService {
         article.update(articleRequestDto);
     }
 
-    public void save(Article newArticle) {
-        articleRepository.save(newArticle);
+    public Article save(Article newArticle) {
+        return articleRepository.save(newArticle);
     }
 
     public Article findById(long articleId) {

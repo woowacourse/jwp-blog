@@ -41,8 +41,8 @@ public class ArticleController {
         User user = (User) session.getAttribute(LOGGED_IN_USER_SESSION_KEY);
         Article newArticle = articleRequestDto.toArticle();
         newArticle.setAuthor(user);
-        articleService.save(newArticle);
-        return "redirect:/articles/" + newArticle.getId();
+        Article persistArticle = articleService.save(newArticle);
+        return "redirect:/articles/" + persistArticle.getId();
     }
 
     @GetMapping("/")
