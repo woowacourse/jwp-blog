@@ -10,10 +10,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.UserSaveRequestDto;
+import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.testutil.LoginTestUtil;
 
-import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @AutoConfigureWebTestClient
@@ -22,6 +25,9 @@ class ArticleControllerTests {
 
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private ArticleService articleService;
 
     private UserSaveRequestDto userSaveRequestDto;
     private String location;
@@ -34,14 +40,7 @@ class ArticleControllerTests {
         LoginTestUtil.signUp(webTestClient, userSaveRequestDto);
         jSessionId = LoginTestUtil.getJSessionId(webTestClient, userSaveRequestDto);
 
-        location = postArticle()
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .get("Location").get(0);
-    }
-
-    private WebTestClient.ResponseSpec postArticle() {
-        return webTestClient.post().uri("/articles")
+        location = webTestClient.post().uri("/articles")
                 .body(BodyInserters
                         .fromFormData("title", "제목")
                         .with("coverUrl", "주소")
@@ -49,7 +48,10 @@ class ArticleControllerTests {
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/articles/.*");
+                .expectHeader().valueMatches("location", ".*/articles/.*")
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .get("Location").get(0);
     }
 
     @Test
@@ -74,6 +76,48 @@ class ArticleControllerTests {
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void fetchArticle_없는_글_번호로_조회할_경우() {
+        long lastId = getLastArticleId();
+
+        webTestClient.get().uri("/articles/" + (++lastId))
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void editArticle_없는_글_번호로_수정_요청할_경우() {
+        long lastId = getLastArticleId();
+
+        webTestClient.put().uri("/articles/" + (++lastId))
+                .cookie("JSESSIONID", jSessionId)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void deleteArticle_없는_글_번호로_삭제_요청할_경우() {
+        long lastId = getLastArticleId();
+
+        webTestClient.delete().uri("/articles/" + (++lastId))
+                .cookie("JSESSIONID", jSessionId)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    private long getLastArticleId() {
+        List<Article> articles = new ArrayList<>();
+        for (final Article article : articleService.findAllArticles()) {
+            articles.add(article);
+        }
+
+        return articles.stream()
+                .map(Article::getId)
+                .mapToLong(value -> value)
+                .max()
+                .orElse(0L);
     }
 
     @Test

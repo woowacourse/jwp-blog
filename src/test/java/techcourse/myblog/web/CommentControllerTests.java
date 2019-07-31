@@ -70,6 +70,26 @@ class CommentControllerTests {
                 .expectStatus().is3xxRedirection();
     }
 
+    @Test
+    void editComment_다른_user가_수정_요청한_경우() {
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("사용자", "wrongCommentUser@test.com", "password1!");
+
+        LoginTestUtil.signUp(webTestClient, userSaveRequestDto);
+        String jSessionIdByAnotherUser = LoginTestUtil.getJSessionId(webTestClient, userSaveRequestDto);
+
+        Comment comment = commentService.findByArticleId(Long.parseLong(articleId)).get(0);
+        Long commentId = comment.getId();
+
+        webTestClient.put().uri("/comment/" + commentId)
+                .body(BodyInserters
+                        .fromFormData("editedContents", "수정된댓글"))
+                .cookie("JSESSIONID", jSessionIdByAnotherUser)
+                .exchange()
+                .expectStatus().isOk();
+
+        LoginTestUtil.deleteUser(webTestClient, userSaveRequestDto);
+    }
+
     @AfterEach
     void tearDown_comment_delete() {
         webTestClient.delete().uri("/articles/" + articleId)

@@ -60,8 +60,15 @@ public class ArticleService {
     @Transactional
     public void deleteById(long id) {
         log.debug("delete article id={}", id);
+        if (isArticleNotFound(id)) {
+            throw new ArticleNotFoundException(ERROR_ARTICLE_NOT_FOUND_MESSAGE);
+        }
 
         commentRepository.deleteByArticleId(id);
         articleRepository.deleteById(id);
+    }
+
+    private boolean isArticleNotFound(long id) {
+        return findById(id) == null;
     }
 }
