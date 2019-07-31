@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
@@ -29,6 +30,7 @@ class ArticleServiceTest {
 
     @BeforeEach
     @Transactional
+    @Rollback
     void setUp() {
         articleRepository.deleteAll();
         article = new Article("t1", "c1", "c1");
