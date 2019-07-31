@@ -73,6 +73,7 @@ public class ArticleController {
 
         checkAuthor(session, savedArticle);
 
+        model.addAttribute("user", session.getAttribute("user"));
         model.addAttribute("article", savedArticle);
         model.addAttribute("articleId", articleId);
         return "article-edit";
