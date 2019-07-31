@@ -55,7 +55,8 @@ class AuthenticationInterceptorTest {
 
 	@Test
 	void canNotMoveSignUpPageAfterLogin() {
-		getRequestWithSession("/signup").isOk();
+		StatusAssertions statusAssertions = getRequestWithSession("/signup");
+		checkRedirect(statusAssertions, "Location", ".+/");
 	}
 
 	@Test
@@ -65,7 +66,8 @@ class AuthenticationInterceptorTest {
 
 	@Test
 	void canNotMoveLoginPageAfterLogin() {
-		getRequestWithSession("/login").isOk();
+		StatusAssertions statusAssertions = getRequestWithSession("/login");
+		checkRedirect(statusAssertions, "Location", ".+/");
 	}
 
 	@Test
