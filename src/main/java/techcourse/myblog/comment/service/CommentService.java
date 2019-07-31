@@ -36,8 +36,8 @@ public class CommentService {
     }
 
     public Comment save(long articleId, long authorId, CommentCreateDto commentCreateDto) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        User author = userRepository.findById(authorId).orElseThrow(NotFoundUserException::new);
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
+        User author = userRepository.findById(authorId).orElseThrow(() -> new NotFoundUserException(authorId));
         return commentRepository.save(commentCreateDto.toComment(author, article));
     }
 
@@ -49,15 +49,15 @@ public class CommentService {
     }
 
     public void update(long commentId, long authorId, CommentUpdateDto commentUpdateDto) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
         if (comment.notMatchAuthorId(authorId)) {
-            throw new NotMatchUserException();
+            throw new NotMatchUserException(authorId);
         }
         comment.updateComment(commentUpdateDto.getContents());
     }
 
     public boolean deleteById(long commentId, long authorId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
         if (comment.notMatchAuthorId(authorId)) {
             return false;
         }
@@ -66,7 +66,7 @@ public class CommentService {
     }
 
     public CommentResponseDto findById(long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
         return modelMapper.map(comment, CommentResponseDto.class);
     }
 }

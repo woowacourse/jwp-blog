@@ -38,29 +38,29 @@ public class ArticleService {
     }
 
     public long save(ArticleCreateDto articleCreateDto, long authorId) {
-        User author = userRepository.findById(authorId).orElseThrow(NotFoundUserException::new);
+        User author = userRepository.findById(authorId).orElseThrow(() -> new NotFoundUserException(authorId));
         Article newArticle = articleCreateDto.toArticle(author);
         return articleRepository.save(newArticle).getId();
     }
 
     public ArticleResponseDto findById(long articleId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
         return modelMapper.map(article, ArticleResponseDto.class);
     }
 
     public long update(long articleId, ArticleUpdateDto articleUpdateDto, long authorId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
         if (article.notMatchAuthorId(authorId)) {
-            throw new NotMatchUserException();
+            throw new NotMatchUserException(authorId);
         }
         article.update(articleUpdateDto.getTitle(), articleUpdateDto.getCoverUrl(), articleUpdateDto.getContents());
         return article.getId();
     }
 
     public void deleteById(long articleId, long authorId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
         if (article.notMatchAuthorId(authorId)) {
-            throw new NotMatchUserException();
+            throw new NotMatchUserException(authorId);
         }
         articleRepository.deleteById(articleId);
     }

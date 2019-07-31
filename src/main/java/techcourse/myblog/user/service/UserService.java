@@ -44,12 +44,12 @@ public class UserService {
     }
 
     public UserResponseDto findById(long userId) {
-        User user = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException(userId));
         return modelMapper.map(user, UserResponseDto.class);
     }
 
     public UserResponseDto login(UserLoginDto userLoginDto) {
-        User user = userRepository.findByEmail(Email.of(userLoginDto.getEmail())).orElseThrow(NotFoundUserException::new);
+        User user = userRepository.findByEmail(Email.of(userLoginDto.getEmail())).orElseThrow(() -> new NotFoundUserException(userLoginDto.getEmail()));
 
         if (!user.checkPassword(userLoginDto.getPassword())) {
             throw new NotMatchPasswordException();
@@ -59,7 +59,7 @@ public class UserService {
     }
 
     public UserResponseDto update(long userId, UserUpdateDto userUpdateDto) {
-        User user = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException(userId));
         user.update(userUpdateDto.getName());
         return modelMapper.map(user, UserResponseDto.class);
     }

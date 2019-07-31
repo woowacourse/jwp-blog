@@ -50,7 +50,7 @@ public class CommentController {
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
     public RedirectView deleteComment(@PathVariable long articleId, @PathVariable long commentId, UserSession userSession) {
         if (!commentService.deleteById(commentId, userSession.getId())) {
-            throw new NotMatchUserException();
+            throw new NotMatchUserException(userSession.getId());
         }
         return new RedirectView("/articles/" + articleId);
     }

@@ -51,7 +51,7 @@ public class ArticleController {
     public String renderUpdatePage(@PathVariable long articleId, Model model, UserSession userSession) {
         ArticleResponseDto articleResponse = articleService.findById(articleId);
         if (!articleResponse.matchAuthorId(userSession.getId())) {
-            throw new NotMatchUserException();
+            throw new NotMatchUserException(userSession.getId());
         }
         model.addAttribute("article", articleResponse);
         return "article-edit";
