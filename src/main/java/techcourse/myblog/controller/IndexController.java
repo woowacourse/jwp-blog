@@ -5,21 +5,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import lombok.AllArgsConstructor;
-import techcourse.myblog.controller.session.UserSessionManager;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.service.ArticleService;
 
 @Controller
 @AllArgsConstructor
 public class IndexController {
 
-    private final ArticleRepository articleRepository;
-    private final UserSessionManager userSessionManager;
+    private final ArticleService articleService;
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
-        model.addAttribute("user", userSessionManager.getUser());
-
+        model.addAttribute("articles", articleService.findAll());
         return "index";
     }
 }

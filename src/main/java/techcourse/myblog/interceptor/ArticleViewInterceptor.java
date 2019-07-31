@@ -14,10 +14,6 @@ import techcourse.myblog.domain.User;
 public class ArticleViewInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        HttpSession session = request.getSession();
-//        if (session == null || session.getAttribute("user") == null) {
-//            return false;
-//        }
         return true;
     }
 

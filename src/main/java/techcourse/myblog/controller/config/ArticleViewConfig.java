@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import techcourse.myblog.interceptor.ArticleViewInterceptor;
-import techcourse.myblog.interceptor.AuthenticatedInterceptor;
 
 @Configuration
 public class ArticleViewConfig implements WebMvcConfigurer {
@@ -25,6 +24,7 @@ public class ArticleViewConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(handlerInterceptor)
                 .excludePathPatterns("/articles/writing")
-                .addPathPatterns("/articles/**");
+                .addPathPatterns("/articles/**")
+                .addPathPatterns("/");
     }
 }
