@@ -116,7 +116,7 @@
                         </ul>
                         <div class="add-comment">
                             <div id="editSection"></div>
-                            <form th:action="@{/articles/{articleId}/comment/new(articleId=${article.articleId})}"
+                            <form th:action="@{/articles/{articleId}/comment(articleId=${article.articleId})}"
                                   method="post" style="margin-top: 20px;">
                                 <input id="comment-contents" name="contents" type="hidden">
                                 <input class="btn btn-info float-right mrg-btm-0 relative bottom-5" type="submit"
