@@ -24,28 +24,28 @@ class LoginInterceptorTest extends AuthedWebTestClient {
 
 
     @Test
-    void 인터셉터_동작_제외() {
+    void 인터셉터_동작_제외_URL_index() {
         webTestClient.get().uri("/")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void 인터셉터_동작_제외2() {
+    void 인터셉터_동작_제외2_URL_signup() {
         webTestClient.get().uri("/signup")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void 인터셉터_동작_제외3() {
+    void 인터셉터_동작_제외3_URL_login() {
         webTestClient.get().uri("/login")
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    void 인터셉터_우회() {
+    void 인터셉터_우회_URL_users() {
         get("/users")
                 .exchange()
                 .expectStatus().isOk();
