@@ -10,8 +10,8 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-public class Article {
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
+public class Article extends EntityDates {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ARTICLE_ID")
