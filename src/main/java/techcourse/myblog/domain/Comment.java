@@ -1,6 +1,8 @@
 package techcourse.myblog.domain;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.application.dto.CommentRequest;
 
@@ -19,10 +21,12 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
     @ManyToOne
     @JoinColumn(name = "article_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
     @CreationTimestamp

@@ -1,5 +1,8 @@
 package techcourse.myblog.domain;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,6 +13,7 @@ public class Article {
 
     @ManyToOne
     @JoinColumn(name = "user", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
     private String title;
     private String coverUrl;

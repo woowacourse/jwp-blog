@@ -81,7 +81,7 @@ public class ArticleController {
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable("articleId") long articleId, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse)httpSession.getAttribute("user");
-
+        
         articleService.deleteById(articleId, userResponse);
 
         return "redirect:/";
