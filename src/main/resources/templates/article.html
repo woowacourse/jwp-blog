@@ -106,9 +106,9 @@
                     <span class="font-size-16 text-info">2</span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info" th:each="comment: ${articleDTO.comments}">
+                    <ul class="list-unstyled list-info">
 
-                        <li class="comment-item border bottom mrg-btm-30">
+                        <li class="comment-item border bottom mrg-btm-30" th:each="comment: ${articleDTO.comments}">
                             <img class="thumb-img img-circle"
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                             <div class="info">
@@ -123,10 +123,9 @@
                             </div>
                             <button class="btn-update-comment">수정</button>
                             <form th:action="@{'/articles/' + ${articleDTO.id} + '/comments/' + ${comment.id}}"
-                                  method="post" class="d-none">
-                                <textarea name="contents" rows="5"></textarea>
+                                  th:method="'put'" class="d-none" name="commentRequestDto">
+                                <textarea name="comment" rows="5"></textarea>
                                 <button type="submit">수정하기</button>
-                                <input type="hidden" name="_method" value="put"/>
                             </form>
                         </li>
 
@@ -171,7 +170,6 @@
 
 
     function onUpdateClick(event) {
-        console.log(event);
         event.target.parentNode.querySelector('form').classList.remove('d-none');
         event.target.parentNode.querySelector('p').classList.add('d-none');
     }
@@ -180,7 +178,6 @@
 
         document.querySelector('.comment > ul')
             .addEventListener('click', (event) => {
-                console.log(event);
                 if (event.target.classList.contains('btn-update-comment')) {
                     onUpdateClick(event);
                 }

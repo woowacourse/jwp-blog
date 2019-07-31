@@ -1,7 +1,7 @@
 package techcourse.myblog.service.comment;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
@@ -23,7 +23,6 @@ public class CommentService {
     private final UserRepository userRepository;
     private final ArticleRepository articleRepository;
 
-    @Autowired
     public CommentService(CommentRepository commentRepository, UserRepository userRepository, ArticleRepository articleRepository) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
@@ -38,6 +37,7 @@ public class CommentService {
         return convertToDto(persistComment);
     }
 
+    @Transactional
     public CommentResponseDto update(final CommentRequestDto commentRequestDto, final Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
         comment.update(commentRequestDto.getComment());
