@@ -7,9 +7,8 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.service.AccountService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
@@ -20,11 +19,11 @@ import static techcourse.myblog.controller.AccountController.ACCOUNT_URL;
 @Controller
 @RequestMapping(ACCOUNT_URL)
 public class AccountController {
-    private UserRepository userRepository;
+    private final AccountService accountService;
     public static final String ACCOUNT_URL = "/accounts";
 
-    public AccountController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
     @GetMapping("signup")
@@ -41,13 +40,12 @@ public class AccountController {
         }
 
         User user = userDto.toUser();
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (accountService.isExistsByEmail(user.getEmail())) {
             errors.rejectValue("email", "0", "이메일 중복입니다.");
             return "signup";
         }
 
-        userRepository.save(user);
-
+        accountService.save(user);
         return "redirect:/";
     }
 
@@ -55,20 +53,20 @@ public class AccountController {
     public String deleteUser(HttpSession session, User user) {
         log.debug(">>> deleteUser: request : {}", session);
         session.removeAttribute("user");
-        userRepository.delete(user);
+        accountService.delete(user);
         return "redirect:/";
     }
 
     @GetMapping("users")
     public String showUserList(Model model) {
-        List<User> users = userRepository.findAll();
+        List<User> users = accountService.findAllUsers();
         model.addAttribute("users", users);
         return "user-list";
     }
 
     @GetMapping("profile/{id}")
     public String showProfilePage(@PathVariable Long id, Model model) {
-        User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
+        User user = accountService.findById(id);
         model.addAttribute("user", user);
 
         return "mypage";
@@ -85,7 +83,7 @@ public class AccountController {
         if (errors.hasErrors()) {
             return "mypage-edit";
         }
-        userRepository.save(userDto.toUser());
+        accountService.save(userDto.toUser());
         session.setAttribute("user", userDto.toUser());
 
         return "redirect:/accounts/profile/" + userDto.getId();

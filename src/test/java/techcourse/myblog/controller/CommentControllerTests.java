@@ -42,7 +42,7 @@ public class CommentControllerTests extends MyblogApplicationTests {
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         session = new MockHttpSession();
-        user = new UserDto(USER_ID, USER_NAME, USER_PASSWORD, USER_EMAIL).toUser();
+        user = new UserDto(DEFAULT_USER_ID, DEFAULT_USER_NAME, DEFAULT_USER_PASSWORD, DEFAULT_USER_EMAIL).toUser();
         article = new ArticleDto(ARTICLE_ID, ARTICLE_TITLE, ARTICLE_CONTENTS, ARTICLE_COVER_URL).toArticle(user);
         session.setAttribute("user", user);
         comment = new Comment(COMMENT_CONTENTS, user, article);
@@ -87,9 +87,7 @@ public class CommentControllerTests extends MyblogApplicationTests {
 
     @Test
     void comment삭제() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(delete(COMMENT_URL).session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("articleId", String.valueOf(ARTICLE_ID))
-                .param("contents", COMMENT_CONTENTS))
+        MvcResult mvcResult = mockMvc.perform(delete(COMMENT_URL + "/" + COMMENT_ID).session(session))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andReturn();

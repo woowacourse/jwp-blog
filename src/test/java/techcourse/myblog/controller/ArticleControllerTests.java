@@ -39,7 +39,7 @@ public class ArticleControllerTests extends MyblogApplicationTests {
 
     @BeforeEach
     void setUp() {
-        cookie = loginControllerTest.getLoginCookie(USER_EMAIL, USER_PASSWORD);
+        cookie = loginControllerTest.getLoginCookie(DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD);
     }
 
     @Test

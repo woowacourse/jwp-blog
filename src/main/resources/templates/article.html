@@ -64,12 +64,9 @@
                     <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
                 </div>
                 <div class="comment">
-                    <form action="/comment/" th:method="delete">
                     <ul class="list-unstyled list-info">
                         <li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
-                            <input type="hidden" name="id" th:value="${comment.id}"/>
-                            <input type="hidden" name="contents" th:value="${comment.contents}"/>
-                            <input type="hidden" name="articleId" th:value="${article.id}"/>
+                        <form th:action="${'/comment/' + comment.id}" th:method="delete">
                             <img class="thumb-img img-circle"
                             src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                             <div class="info">
@@ -84,9 +81,9 @@
                                     보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄
                                     수 있는 계기가 되었다.</p>
                             </div>
+                        </form>
                         </li>
                     </ul>
-                    </form>
                     <form action="/comment" method="post">
                     <div class="add-comment">
                         <input id="comment-contents" name="contents" type="hidden">

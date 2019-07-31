@@ -1,26 +1,28 @@
 package techcourse.myblog.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.service.IndexService;
 
 import java.util.List;
 
 @Slf4j
 @Controller
 public class IndexController {
-    private ArticleRepository articleRepository;
+    private final IndexService indexService;
 
-    public IndexController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public IndexController(IndexService indexService) {
+        this.indexService = indexService;
     }
 
     @GetMapping("/")
     public String showArticlesPage(Model model) {
-        List<Article> articles = articleRepository.findAll();
+        List<Article> articles = indexService.findAllArticles();
         model.addAttribute("articles", articles);
         return "index";
     }
