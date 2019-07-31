@@ -36,4 +36,8 @@ public class User {
         this.email = user.email;
         this.password = user.password;
     }
+
+    public boolean isAuthorOf(Article savedArticle) {
+        return this.equals(savedArticle.getAuthor());
+    }
 }

@@ -105,7 +105,7 @@ public class ArticleController {
                 .orElseThrow(NotFoundArticleException::new);
 
         User user = (User) session.getAttribute("user");
-        if (!user.equals(savedArticle.getAuthor())) {
+        if (!user.isAuthorOf(savedArticle)) {
             throw new UnauthenticatedUserException("삭제 권한이 없습니다.");
         }
 
