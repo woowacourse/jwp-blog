@@ -45,9 +45,10 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String create(ArticleDto articleDto, HttpSession httpSession) {
-        articleDto.setAuthor((User) httpSession.getAttribute("user"));
         log.debug("articleDto : {}", articleDto);
-        return "redirect:/articles/" + articleService.save(articleDto).getId();
+        User user = (User) httpSession.getAttribute("user");
+        Article article = articleService.save(articleDto, user);
+        return "redirect:/articles/" + article.getId();
     }
 
     @PutMapping("/articles/{articleId}")

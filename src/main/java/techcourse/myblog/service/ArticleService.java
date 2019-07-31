@@ -2,6 +2,7 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.web.dto.ArticleDto;
 
@@ -25,8 +26,8 @@ public class ArticleService {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    public Article save(ArticleDto articleDto) {
-        return articleRepository.save(articleDto.create());
+    public Article save(ArticleDto articleDto, User user) {
+        return articleRepository.save(articleDto.create(user));
     }
 
     public Article update(Long articleId, ArticleDto articleDto) {

@@ -9,7 +9,6 @@ public class ArticleDto {
     private String title;
     private String coverUrl;
     private String contents;
-    private User author;
 
     public ArticleDto(String title, String coverUrl, String contents) {
         this.title = title;
@@ -41,15 +40,7 @@ public class ArticleDto {
         this.contents = contents;
     }
 
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public Article create() {
+    public Article create(User author) {
         return new Article(title, coverUrl, contents, author);
     }
 
