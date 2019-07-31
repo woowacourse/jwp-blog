@@ -19,12 +19,12 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    // @Column(nullable = false)
+//     @Column(nullable = false)
     private User author;
 
     @ManyToOne
     @JoinColumn(name = "article_id")
-    //@Column(nullable = false)
+//    @Column(nullable = false)
     private Article article;
 
     @CreationTimestamp
@@ -71,9 +71,9 @@ public class Comment {
     }
 
     public void changeContents(CommentRequest commentRequest, User author) {
-        if (isSameAuthor(author)) {
-            this.contents = commentRequest.getContents();
+        if (!isSameAuthor(author)) {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+        this.contents = commentRequest.getContents();
     }
 }
