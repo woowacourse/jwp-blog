@@ -11,10 +11,11 @@ import java.util.Objects;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "writer", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
-    User writer;
+    private User writer;
+    @Column(nullable = false)
     String contents;
     @CreationTimestamp
     private LocalDateTime createdTimeAt;
@@ -39,21 +40,8 @@ public class Comment {
         return writer;
     }
 
-    public void setWriter(User writer) {
-        this.writer = writer;
-    }
-
     public String getContents() {
         return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
-    public Comment update(CommentDto commentDto) {
-        this.contents = commentDto.getContents();
-        return this;
     }
 
     public Long getArticleId() {
@@ -62,6 +50,11 @@ public class Comment {
 
     public LocalDateTime getCreatedTimeAt() {
         return createdTimeAt;
+    }
+
+    public Comment update(CommentDto commentDto) {
+        this.contents = commentDto.getContents();
+        return this;
     }
 
     @Override
