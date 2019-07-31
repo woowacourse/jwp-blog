@@ -15,8 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
-import java.util.List;
-
 @Controller
 public class ArticleController {
     private static final String LOGGED_IN_USER = "loggedInUser";

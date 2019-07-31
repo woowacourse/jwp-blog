@@ -29,6 +29,7 @@ public class CommentService {
         return commentRepository.findById(id).orElseThrow(NotFoundCommentException::new);
     }
 
+    @Transactional
     public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
         Article article = articleService.findById(articleId);
         return commentRepository.findAllByArticle(article).stream()
@@ -53,6 +54,7 @@ public class CommentService {
         return comment;
     }
 
+    @Transactional
     public void delete(Long userId, Long commentId) {
         Comment comment = findById(commentId);
         if (comment.matchAuthorId(userId)) {

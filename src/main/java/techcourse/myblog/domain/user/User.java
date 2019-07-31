@@ -29,7 +29,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = MAX_NAME_LENGTH)
     @Length(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH)
     @javax.validation.constraints.Pattern(regexp = NAME_REGEX)
     private String name;
@@ -49,7 +49,7 @@ public class User {
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
-    private User() {
+    protected User() {
     }
 
     public User(String name, String email, String password) {

@@ -15,13 +15,14 @@ public class Article {
     @Embedded
     private ArticleVo articleVo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_article_to_user"))
     private User author;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
-    private Article() {
+    protected Article() {
     }
 
     public Article(User author, ArticleVo articleVo) {
@@ -30,7 +31,7 @@ public class Article {
     }
 
     public void updateArticle(ArticleVo articleVo) {
-        this.articleVo = articleVo;
+        this.articleVo.update(articleVo);
     }
 
     public boolean matchUserId(Long userId) {

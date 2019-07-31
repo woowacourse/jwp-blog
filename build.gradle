@@ -5,10 +5,10 @@ plugins {
 
 apply plugin: 'io.spring.dependency-management'
 
-bootJar {
-	baseName = 'gs-accessing-data-mysql'
-	version =  '0.1.0'
-}
+//bootJar {
+//	baseName = 'gs-accessing-data-mysql'
+//	version =  '0.1.0'
+//}
 
 group = 'techcourse'
 version = '0.0.1-SNAPSHOT'

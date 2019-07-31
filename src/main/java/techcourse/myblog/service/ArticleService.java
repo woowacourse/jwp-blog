@@ -50,6 +50,7 @@ public class ArticleService {
         }
     }
 
+    @Transactional
     public void delete(Long articleId, Long userId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);

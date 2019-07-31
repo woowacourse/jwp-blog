@@ -28,6 +28,12 @@ public class ArticleVo {
         this.contents = contents;
     }
 
+    public void update(ArticleVo articleVo) {
+        this.title = articleVo.title;
+        this.coverUrl = articleVo.coverUrl;
+        this.contents = articleVo.contents;
+    }
+
     public String getTitle() {
         return title;
     }

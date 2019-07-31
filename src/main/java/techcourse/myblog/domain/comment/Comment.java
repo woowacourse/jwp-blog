@@ -16,10 +16,12 @@ public class Comment {
     @Column(nullable = false, length = COMMENT_LENGTH)
     private String comment;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_comment_to_user"))
     private User author;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "FK_comment_to_article"))
     private Article article;
 
     private Comment() {

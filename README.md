@@ -20,10 +20,7 @@
 
 4. 기타
     - 테스트시에만 DB가 초기화 되도록 설정하는 방법 찾아보기(UserControllerTest) - profile
-    - 테스트 코드 중복 제거(UserControllerTests)
     - logging
-    - logout 관련 테스트 작성
-    - validation domin에서 체크(@Pattern)
     
 ### Done
 0. 페어와 코드 동기화
@@ -65,14 +62,32 @@
     - 회원 탈퇴
         - MyPage > profile 하단 > 탈퇴 버튼을 추가
         - DELETE 메소드를 이용하여 탈퇴 요청
+        
+4. 게시글 및 댓글 기능 구현
+    - 게시글 작성 시 작성자 정보 부여하기
+    
+    - 작성자만 게시글 수정/삭제 가능하게 하기
+    
+    - 댓글 작성 시 작성자와 게시글 정보가 같이 저장
+    
+    - 댓글 생성/조회/수정/삭제조회 기능 구현
+    
 
-## 댓글 관련 기능 구현
-0. 페어와 코드 동기화
-
-1. 게시글 작성 시 작성자 정보 부여하기
-
-2. 작성자만 게시글 수정/삭제 가능하게 하기
-
-3. 댓글 작성 시 작성자와 게시글 정보가 같이 저장
-
-4. 댓글 생성/조회/수정/삭제조회 기능 구현
+### 피드백 
+    - build.gradle 패키지명?
+    
+    - articleVo 분리?
+                
+    - ArticleService.class update()에서 메시지 전달
+    
+    - CommentService.class update() 메시지 전달로 수정
+    
+    - HttpServletRequest -> HttpSession으로 수정
+    
+    - ArticleController.class showEditPage() 수정 (if문 getter안쓰고 구현)
+    
+    - 중복된 isLoggedInUserMyPage 하나로 통하   
+    
+    - UserController.class id set() 제거
+        
+    - 로그아웃 invalidate로 설정?
