@@ -168,6 +168,7 @@ public class ArticleControllerTests {
     void showArticleEditingPage() {
         webTestClient.get()
                 .uri("/articles/1/edit")
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk()
