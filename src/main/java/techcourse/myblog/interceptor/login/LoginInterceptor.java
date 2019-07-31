@@ -20,10 +20,11 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+        String uri = request.getRequestURI();
+        log.debug("interceptor uri : {} ", uri);
 
-        Matcher matcher = PATTERN.matcher(request.getRequestURI());
+        Matcher matcher = PATTERN.matcher(uri);
         if (matcher.find() && request.getMethod().equals("GET")) {
-            log.info("uri : {} ", request.getRequestURI());
             return true;
         }
 
