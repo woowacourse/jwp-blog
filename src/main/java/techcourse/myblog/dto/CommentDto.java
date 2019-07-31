@@ -1,6 +1,8 @@
 package techcourse.myblog.dto;
 
+import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.user.User;
 
 public class CommentDto {
     private String contents;
@@ -13,7 +15,7 @@ public class CommentDto {
         return contents;
     }
 
-    public Comment toEntity() {
-        return new Comment(contents);
+    public Comment toEntity(Article article, User author) {
+        return new Comment(contents, article, author);
     }
 }

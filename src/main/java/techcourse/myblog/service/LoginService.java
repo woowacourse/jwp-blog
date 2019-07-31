@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.domain.user.UserException;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.repository.UserRepository;
 
 @Service
@@ -20,12 +20,12 @@ public class LoginService {
     }
 
     @Transactional(readOnly = true)
-    public UserDto loginByEmailAndPwd(UserDto userDto) {
-        User user = userRepository.findByEmail(UserEmail.of(userDto.getEmail()))
+    public User loginByEmailAndPwd(LoginDto loginDto) {
+        User user = userRepository.findByEmail(UserEmail.of(loginDto.getEmail()))
                 .orElseThrow(() -> new UserException(NOT_EXIST_USER));
-        if (!user.isMatchPassword(userDto)) {
+        if (!user.isMatchPassword(loginDto.getPassword())) {
             throw new UserException(NOT_MATCH_PASSWORD);
         }
-        return new UserDto(user);
+        return user;
     }
 }

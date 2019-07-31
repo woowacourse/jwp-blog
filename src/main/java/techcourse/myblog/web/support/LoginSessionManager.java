@@ -1,6 +1,7 @@
 package techcourse.myblog.web.support;
 
 import org.springframework.stereotype.Component;
+import techcourse.myblog.domain.user.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -14,16 +15,14 @@ public class LoginSessionManager {
         this.httpServletRequest = httpServletRequest;
     }
 
-    public void setLoginSession(String name, String email) {
+    public void setLoginSession(User user) {
         HttpSession session = httpServletRequest.getSession();
-        session.setAttribute("userName", name);
-        session.setAttribute("userEmail", email);
+        session.setAttribute("user", user);
     }
 
     public void clearSession() {
         HttpSession session = httpServletRequest.getSession();
-        session.removeAttribute("userName");
-        session.removeAttribute("userEmail");
+        session.removeAttribute("user");
     }
 
 }

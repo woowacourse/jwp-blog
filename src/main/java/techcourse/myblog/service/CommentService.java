@@ -10,6 +10,7 @@ import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.repository.CommentRepository;
 
 @Service
+@Transactional
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -22,17 +23,13 @@ public class CommentService {
         this.articleService = articleService;
     }
 
-    @Transactional
     public Comment addComment(Long articleId, String email, CommentDto commentDto) {
         Article article = articleService.findArticle(articleId);
         User author = userService.getUserByEmail(email);
-        Comment comment = commentDto.toEntity();
-        comment.setAuthor(author);
-        comment.setArticle(article);
+        Comment comment = commentDto.toEntity(article, author);
         return commentRepository.save(comment);
     }
 
-    @Transactional
     public void deleteComment(long commentId, String email) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentException::new);
         if (!comment.isAuthor(email)) {
@@ -41,12 +38,11 @@ public class CommentService {
         commentRepository.deleteById(commentId);
     }
 
-    @Transactional
-    public Comment updateComment(long commentId, String email, CommentDto commentDto) {
-        Comment comment = commentRepository.getOne(commentId);
+    public void updateComment(long commentId, String email, CommentDto commentDto) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(CommentException::new);
         if (!comment.isAuthor(email)) {
             throw new CommentException("FBI WARNING");
         }
-        return comment.updateContent(commentDto.getContents());
+        comment.updateContents(commentDto.getContents(), userService.getUserByEmail(email));
     }
 }

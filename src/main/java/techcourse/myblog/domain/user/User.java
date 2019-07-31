@@ -2,7 +2,6 @@ package techcourse.myblog.domain.user;
 
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
-import techcourse.myblog.dto.UserDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ public class User {
     }
 
     public String getPassword() {
-        return password.getPassword();
+        return this.password.getPassword();
     }
 
     public String getEmail() {
@@ -60,16 +59,16 @@ public class User {
         this.email = UserEmail.of(email);
     }
 
-    public boolean isMatchPassword(UserDto dto) {
-        return isMatchPassword(dto.getPassword());
-    }
-
     public boolean isMatchPassword(String password) {
         return this.password.equals(UserPassword.of(password));
     }
 
     public boolean isMatchEmail(String email) {
         return this.email.equals(UserEmail.of(email));
+    }
+
+    public boolean isMatchEmail(User user) {
+        return this.email.equals(user.email);
     }
 
     @Override

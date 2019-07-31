@@ -40,8 +40,8 @@ class CommentServiceTest {
         articleRepository.deleteAll();
         userRepository.deleteAll();
         userRepository.flush();
-        article = articleRepository.save(new Article("a", "b", "c"));
         user = userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
+        article = articleRepository.save(new Article("a", "b", "c", user));
     }
 
     @Test
@@ -66,7 +66,7 @@ class CommentServiceTest {
         article.addComment(comment);
         article = articleRepository.findById(article.getId()).get();
         comment = article.getComments().get(0);
-        comment.updateContent("updated");
+        comment.updateContents("updated", user);
         assertThat(commentRepository.findById(comment.getId()).get().getContents()).isEqualTo("updated");
     }
 

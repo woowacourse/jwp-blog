@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
 class UserServiceTest {
@@ -19,6 +21,8 @@ class UserServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    private User user = new User("andole", "A!1bcdefg", "andole@gmail.com");
 
     @BeforeEach
     @Transactional
@@ -35,8 +39,8 @@ class UserServiceTest {
 
     @Test
     void 회원정보_수정_테스트() {
-        userService.updateUser("andole@gmail.com", new UserDto("test", "A!1bcdefg", "test@gmail.com"));
-        assertThat(userService.findAll().get(0).getEmail()).isEqualTo("test@gmail.com");
+        userService.updateUser(user, new UserDto("test", "A!1bcdefg", "test@gmail.com"));
+        assertDoesNotThrow(() -> userRepository.findByEmail(UserEmail.of("test@gmail.com")).orElseThrow(IllegalAccessError::new));
     }
 
     @Test

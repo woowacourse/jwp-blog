@@ -5,6 +5,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -36,8 +37,10 @@ public class Comment {
     protected Comment() {
     }
 
-    public Comment(String contents) {
+    public Comment(String contents, Article article, User author) {
         this.contents = contents;
+        this.article = article;
+        this.author = author;
     }
 
     public Long getId() {
@@ -60,24 +63,27 @@ public class Comment {
         return author;
     }
 
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
     public boolean isAuthor(String authorEmail) {
         return this.author.isMatchEmail(authorEmail);
+    }
+
+    public boolean isAuthor(User author) {
+        return this.author.isMatchEmail(author);
     }
 
     public Article getArticle() {
         return article;
     }
 
-    public void setArticle(Article article) {
-        this.article = article;
-    }
-
-    public Comment updateContent(String contents) {
+    public Comment updateContents(String contents, User author) {
+        if (!isAuthor(author)) {
+            throw new UserException();
+        }
         this.contents = contents;
         return this;
+    }
+
+    public Comment updateContents(Comment comment, User author) {
+        return updateContents(comment.contents, author);
     }
 }

@@ -14,8 +14,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (request.getSession().getAttribute("userName") == null) {
-            log.debug("Session.userName is null {}", request.getSession());
+        if (request.getSession().getAttribute("user") == null) {
+            log.debug("Session.user is null {}", request.getSession());
             return sendRedirect(response);
         }
         return true;

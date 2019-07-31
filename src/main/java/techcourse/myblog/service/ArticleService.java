@@ -6,12 +6,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleException;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserException;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class ArticleService {
     private static final String NOT_EXIST_ARTICLE = "해당 아티클이 없습니다.";
     private final ArticleRepository articleRepository;
@@ -36,21 +39,23 @@ public class ArticleService {
         return articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(NOT_EXIST_ARTICLE));
     }
 
-    @Transactional
     public Long save(Article article) {
         Article newArticle = articleRepository.save(article);
         return newArticle.getId();
     }
 
-    @Transactional
-    public Article update(long articleId, ArticleDto articleDto) {
+    public Article update(long articleId, ArticleDto articleDto, User author) {
         Article originArticle = findArticle(articleId);
-        originArticle.update(articleDto.toEntity());
+        originArticle.update(articleDto.toEntity(author));
         return originArticle;
     }
 
-    @Transactional
-    public void delete(long articleId) {
-        articleRepository.deleteById(articleId);
+    public void delete(long articleId, User author) {
+        Article article = findArticle(articleId);
+        if (article.isAuthor(author)) {
+            articleRepository.deleteById(articleId);
+            return;
+        }
+        throw new UserException();
     }
 }

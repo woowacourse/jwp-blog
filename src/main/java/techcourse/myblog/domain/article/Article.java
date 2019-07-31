@@ -1,7 +1,5 @@
 package techcourse.myblog.domain.article;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 
@@ -13,17 +11,17 @@ import java.util.Objects;
 @Entity
 public class Article {
     private static final String DEFAULT_URL = "/images/default/bg.jpg";
-    private static final Logger log = LoggerFactory.getLogger(Article.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
     @Lob
     private String contents;
-    
+
     private String coverUrl;
 
     @ManyToOne
@@ -33,10 +31,11 @@ public class Article {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    public Article(String title, String contents, String coverUrl) {
+    public Article(String title, String contents, String coverUrl, User author) {
         this.title = title;
         this.contents = contents;
         this.coverUrl = getDefaultUrl(coverUrl);
+        this.author = author;
     }
 
     protected Article() {
@@ -48,6 +47,24 @@ public class Article {
             return DEFAULT_URL;
         }
         return coverUrl;
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
+
+    public void update(Article modifiedArticle) {
+        this.title = modifiedArticle.title;
+        this.contents = modifiedArticle.contents;
+        this.coverUrl = modifiedArticle.coverUrl;
+    }
+
+    public boolean isAuthor(User author) {
+        return this.author.isMatchEmail(author);
+    }
+
+    public boolean matchId(long id) {
+        return this.id == id;
     }
 
     public String getTitle() {
@@ -66,32 +83,12 @@ public class Article {
         return id;
     }
 
-    public void update(Article modifiedArticle) {
-        log.debug("article Ready to Save {}", modifiedArticle.getId());
-        this.title = modifiedArticle.title;
-        this.contents = modifiedArticle.contents;
-        this.coverUrl = modifiedArticle.coverUrl;
-        log.debug("article Save done {}", this.id);
-    }
-
-    public boolean matchId(long id) {
-        return this.id == id;
-    }
-
     public List<Comment> getComments() {
-        return this.comments;
+        return new ArrayList<>(this.comments);
     }
 
     public User getAuthor() {
         return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public void addComment(Comment comment) {
-        comments.add(comment);
     }
 
     @Override

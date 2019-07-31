@@ -9,6 +9,7 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
+import techcourse.myblog.web.support.UserSessionInfo;
 
 @Controller
 @RequestMapping("/articles")
@@ -37,19 +38,22 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String saveArticle(ArticleDto dto) {
-        return "redirect:/articles/" + articleService.save(dto.toEntity());
+    public String saveArticle(ArticleDto dto, UserSessionInfo userSessionInfo) {
+        return "redirect:/articles/" + articleService.save(dto.toEntity(userSessionInfo.toUser()));
     }
 
     @PutMapping("/{articleId}")
-    public String getModifiedArticle(@PathVariable long articleId, ArticleDto dto, Model model) {
-        setArticleModel(model, articleService.update(articleId, dto));
+    public String getModifiedArticle(@PathVariable long articleId,
+                                     UserSessionInfo userSessionInfo,
+                                     ArticleDto dto,
+                                     Model model) {
+        setArticleModel(model, articleService.update(articleId, dto, userSessionInfo.toUser()));
         return "article";
     }
 
     @DeleteMapping("/{articleId}")
-    public String deleteArticle(@PathVariable long articleId) {
-        articleService.delete(articleId);
+    public String deleteArticle(@PathVariable long articleId, UserSessionInfo userSessionInfo) {
+        articleService.delete(articleId, userSessionInfo.toUser());
         return "redirect:/";
     }
 

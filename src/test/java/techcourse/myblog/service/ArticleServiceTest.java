@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
 
@@ -21,13 +23,18 @@ class ArticleServiceTest {
     @Autowired
     private ArticleRepository articleRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private Article article;
+    private User author;
 
     @BeforeEach
     @Transactional
     void setUp() {
-        articleRepository.deleteAll();
-        article = new Article("t1", "c1", "c1");
+        userRepository.deleteAll();
+        author = userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
+        article = new Article("t1", "c1", "c1", author);
     }
 
     @Test
@@ -39,7 +46,7 @@ class ArticleServiceTest {
     @Test
     void updateTest() {
         long id = articleService.save(article);
-        Article editArticle = new Article("edit", "edit", "edit");
+        Article editArticle = new Article("edit", "edit", "edit", author);
         article.update(editArticle);
         articleService.save(article);
         assertThat(articleService.findArticle(id).getTitle()).isEqualTo(editArticle.getTitle());
@@ -55,7 +62,7 @@ class ArticleServiceTest {
     @Test
     void deleteTest() {
         long id = articleService.save(article);
-        articleService.delete(id);
+        articleService.delete(id, author);
         List<Article> articles = articleService.findAll();
         assertThat(articles.size()).isEqualTo(0);
     }

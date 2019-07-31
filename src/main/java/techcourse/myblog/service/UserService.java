@@ -8,10 +8,10 @@ import techcourse.myblog.domain.user.UserException;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -20,23 +20,19 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    @Transactional
-    public UserDto addUser(UserDto userDto) {
-        User user = userRepository.save(userDto.toEntity());
-        return new UserDto(user);
+    public void addUser(UserDto userDto) {
+        userRepository.save(userDto.toEntity());
     }
 
     @Transactional(readOnly = true)
     public List<User> findAll() {
-        List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(users::add);
-        return users;
+        return userRepository.findAll();
     }
 
-    @Transactional
-    public void updateUser(String userEmail, UserDto userDto) {
-        User user = userRepository.findByEmail(UserEmail.of(userEmail)).orElseThrow(UserException::new);
+    public User updateUser(User user, UserDto userDto) {
         user.updateNameAndEmail(userDto.getName(), userDto.getEmail());
+        userRepository.saveAndFlush(user);
+        return user;
     }
 
     @Transactional(readOnly = true)
@@ -44,7 +40,6 @@ public class UserService {
         return userRepository.findByEmail(UserEmail.of(userEmail)).orElseThrow(UserException::new);
     }
 
-    @Transactional
     public void deleteUser(String userEmail) {
         userRepository.delete(getUserByEmail(userEmail));
     }
