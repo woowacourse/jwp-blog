@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.support.exception.LoginFailedException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,8 +21,9 @@ public class UserReadService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> findByEmailAndPassword(UserDto user) {
-        return userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword());
+    public User findByEmailAndPassword(UserDto user) {
+        return userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword())
+                .orElseThrow(LoginFailedException::new);
     }
 
     public List<User> findAll() {
