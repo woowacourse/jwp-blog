@@ -28,7 +28,7 @@ public class User {
     private String email;
 
     @NotBlank
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     private String password;
 
     private User() {
