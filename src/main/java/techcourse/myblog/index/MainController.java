@@ -25,7 +25,7 @@ public class MainController {
     private final ArticleService articleService;
 
     @GetMapping("/")
-    public String main(@PageableDefault(size = 5, sort = "regDate", direction = Sort.Direction.ASC) Pageable pageable,
+    public String main(@PageableDefault(size = 5, sort = "regDate", direction = Sort.Direction.DESC) Pageable pageable,
                        Model model) {
 
         log.debug("page : {}, pageSize : {}, sort : {}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());

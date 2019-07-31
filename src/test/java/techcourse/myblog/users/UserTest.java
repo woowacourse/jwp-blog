@@ -56,6 +56,6 @@ class UserTest {
 
     @Test
     void authenticate_패스워드_불일치() {
-        assertThat(user.authenticate(password+"good")).isFalse();
+        assertThat(user.authenticate(password + "good")).isFalse();
     }
 }

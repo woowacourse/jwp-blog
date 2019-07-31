@@ -2,13 +2,11 @@ package techcourse.myblog.articles.comments;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import techcourse.myblog.exception.AuthException;
 import techcourse.myblog.users.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
 
 class CommentTest {
     User user;

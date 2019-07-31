@@ -28,6 +28,7 @@ public class ArticleTest {
                 .coverUrl("coverUrl")
                 .build();
     }
+
     @Test
     void isWrittenBy_본인() {
         assertThat(article.isWrittenBy(user)).isTrue();

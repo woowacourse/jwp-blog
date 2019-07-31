@@ -15,25 +15,21 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
 
+    public Long save(final Long userId, final ArticleDto.Request articleDto) {
+        User author = findUserById(userId);
+        Article article = articleDto.toArticle(author);
 
-    public Article save(final Long userId, final Article article) {
-        User user = findUserById(userId);
-
-        article.setAuthor(user);
-
-        return articleRepository.save(article);
+        return articleRepository.save(article).getId();
     }
 
-    public Article edit(final Long userId, final Article editedArticle) {
+    public Long edit(final Long userId, final ArticleDto.Request articleDto) {
         User user = findUserById(userId);
-
-        Article article = findById(editedArticle.getId());
+        Article article = findById(articleDto.getId());
 
         article.isWrittenBy(user);
+        article.update(articleDto.toArticle());
 
-        article.update(editedArticle);
-
-        return article;
+        return article.getId();
     }
 
     public void deleteById(Long userId, Long articleId) {
@@ -41,7 +37,6 @@ public class ArticleService {
         Article article = findById(articleId);
 
         article.isWrittenBy(user);
-
         articleRepository.deleteById(articleId);
     }
 
@@ -51,20 +46,28 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public Article findById(Long id) {
-        return articleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("없는 글입니다." + id));
+    public ArticleDto.Response getOne(Long id) {
+        final Article article = findById(id);
+
+        ArticleDto.Response articleDto = ArticleDto.Response.createBy(article);
+        articleDto.setComments(article.getComments());
+        return articleDto;
     }
 
     @Transactional(readOnly = true)
-    public Article findById(final Long userId, final Long articleId) {
+    public ArticleDto.Response getOne(final Long userId, final Long articleId) {
         User user = findUserById(userId);
-
         Article article = findById(articleId);
 
         article.isWrittenBy(user);
+        ArticleDto.Response articleDto = ArticleDto.Response.createBy(article);
+        articleDto.setComments(article.getComments());
+        return articleDto;
+    }
 
-        return article;
+    private Article findById(Long id) {
+        return articleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("없는 글입니다." + id));
     }
 
     private User findUserById(final Long userId) {

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import techcourse.myblog.articles.Article;
+import techcourse.myblog.articles.ArticleDto;
 import techcourse.myblog.articles.ArticleService;
 import techcourse.myblog.users.UserDto;
 import techcourse.myblog.users.UserService;
@@ -38,13 +38,13 @@ class CommentServiceTest {
 
         userId = userService.save(userDto);
 
-        Article article = Article.builder()
+        ArticleDto.Request articleDto = ArticleDto.Request.builder()
                 .title("title")
                 .coverUrl("coverUrl")
                 .contents("contents")
                 .build();
 
-        articleId = articleService.save(userId, article).getId();
+        articleId = articleService.save(userId, articleDto);
 
         CommentDto.Create commentDto = new CommentDto.Create();
         commentDto.setArticleId(articleId);
