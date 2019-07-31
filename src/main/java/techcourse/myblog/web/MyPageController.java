@@ -6,18 +6,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.web.util.LoginChecker;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
 public class MyPageController {
-	private static final String LOGGED_IN_USER = "loggedInUser";
-
 	private UserService userService;
+	private LoginChecker loginChecker;
 
-	public MyPageController(UserService userService) {
+	public MyPageController(UserService userService, LoginChecker loginChecker) {
 		this.userService = userService;
+		this.loginChecker = loginChecker;
 	}
 
 	@GetMapping("/mypage/{id}")
@@ -33,15 +33,10 @@ public class MyPageController {
 		if (errorMessage != null) {
 			model.addAttribute("errorMessage", errorMessage);
 		}
-		if (isLoggedInUserMyPage(session, id)) {
+		if (loginChecker.isLoggedInSameId(session, id)) {
 			model.addAttribute("user", userService.findUserPublicInfoById(id));
 			return "mypage-edit";
 		}
 		return "redirect:/mypage/" + id;
-	}
-
-	private boolean isLoggedInUserMyPage(HttpSession session, Long id) {
-		UserPublicInfoDto loggedInUser = (UserPublicInfoDto) session.getAttribute(LOGGED_IN_USER);
-		return (loggedInUser != null) && (id.equals(loggedInUser.getId()));
 	}
 }

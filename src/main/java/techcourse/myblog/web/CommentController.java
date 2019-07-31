@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.CommentRequestDto;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
-import techcourse.myblog.web.exception.NotLoggedInException;
+import techcourse.myblog.web.util.LoginChecker;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,36 +16,30 @@ public class CommentController {
 	private static final String LOGGED_IN_USER = "loggedInUser";
 
 	private CommentService commentService;
+	private LoginChecker loginChecker;
 
-	public CommentController(CommentService commentService) {
+	public CommentController(CommentService commentService, LoginChecker loginChecker) {
 		this.commentService = commentService;
+		this.loginChecker = loginChecker;
 	}
 
 	@PostMapping("/comment")
 	public String createComment(CommentRequestDto commentRequestDto, HttpSession session) {
-		commentService.save(getLoggedInUser(session), commentRequestDto);
+		commentService.save(loginChecker.getLoggedInUser(session), commentRequestDto);
 		return "redirect:/articles/" + commentRequestDto.getArticleId();
 	}
 
 	@PutMapping("/articles/{articleId}/comment/{commentId}")
 	public String updateComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
 	                            CommentRequestDto commentRequestDto, HttpSession session) {
-		commentService.update(getLoggedInUser(session), commentId, commentRequestDto);
+		commentService.update(loginChecker.getLoggedInUser(session), commentId, commentRequestDto);
 		return "redirect:/articles/" + articleId;
 	}
 
 	@DeleteMapping("/articles/{articleId}/comment/{commentId}")
 	public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
 	                            HttpSession session) {
-		commentService.delete(getLoggedInUser(session), commentId);
+		commentService.delete(loginChecker.getLoggedInUser(session), commentId);
 		return "redirect:/articles/" + articleId;
-	}
-
-	private UserPublicInfoDto getLoggedInUser(HttpSession session) {
-		UserPublicInfoDto user = (UserPublicInfoDto) session.getAttribute(LOGGED_IN_USER);
-		if (user == null) {
-			throw new NotLoggedInException();
-		}
-		return user;
 	}
 }

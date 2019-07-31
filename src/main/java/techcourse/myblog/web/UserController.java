@@ -6,22 +6,23 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.web.util.LoginChecker;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
-	private static final String LOGGED_IN_USER = "loggedInUser";
-
 	private UserService userService;
+	private LoginChecker loginChecker;
 
-	public UserController(UserService userService) {
+	public UserController(UserService userService, LoginChecker loginChecker) {
 		this.userService = userService;
+		this.loginChecker = loginChecker;
 	}
 
 	@GetMapping("/users/sign-up")
 	public String showRegisterPage(HttpSession session) {
-		if (session.getAttribute(LOGGED_IN_USER) != null) {
+		if (loginChecker.isLoggedIn(session)) {
 			return "redirect:/";
 		}
 		return "sign-up";
@@ -41,24 +42,19 @@ public class UserController {
 
 	@PutMapping("/users/{id}")
 	public String editUserName(@PathVariable Long id, UserPublicInfoDto userPublicInfoDto, HttpSession session) {
-		if (isLoggedInUser(session, id)) {
+		if (loginChecker.isLoggedInSameId(session, id)) {
 			userService.update(userPublicInfoDto);
-			session.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
+			session.setAttribute(LoginChecker.LOGGED_IN_USER, userPublicInfoDto);
 		}
 		return "redirect:/mypage/" + id;
 	}
 
 	@DeleteMapping("/users/{id}")
 	public String deleteUser(@PathVariable Long id, HttpSession session) {
-		if (isLoggedInUser(session, id)) {
+		if (loginChecker.isLoggedInSameId(session, id)) {
 			userService.delete(id);
-			session.invalidate();
+			session.removeAttribute(LoginChecker.LOGGED_IN_USER);
 		}
 		return "redirect:/";
-	}
-
-	private boolean isLoggedInUser(HttpSession httpSession, Long id) {
-		UserPublicInfoDto loggedInUser = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
-		return (loggedInUser != null) && loggedInUser.getId().equals(id);
 	}
 }

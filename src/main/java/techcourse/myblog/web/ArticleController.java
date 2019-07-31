@@ -10,23 +10,24 @@ import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.exception.UserAuthorizationException;
-import techcourse.myblog.web.exception.NotLoggedInException;
+import techcourse.myblog.web.util.LoginChecker;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
 public class ArticleController {
-	private static final String LOGGED_IN_USER = "loggedInUser";
-
 	private ArticleService articleService;
 	private UserService userService;
 	private CommentService commentService;
+	private LoginChecker loginChecker;
 
-	public ArticleController(ArticleService articleService, UserService userService, CommentService commentService) {
+	public ArticleController(ArticleService articleService, UserService userService, CommentService commentService
+			, LoginChecker loginChecker) {
 		this.articleService = articleService;
 		this.userService = userService;
 		this.commentService = commentService;
+		this.loginChecker = loginChecker;
 	}
 
 	@GetMapping("/articles")
@@ -37,7 +38,7 @@ public class ArticleController {
 
 	@GetMapping("/articles/new")
 	public String showCreatePage(HttpSession session) {
-		getLoggedInUser(session);
+		loginChecker.getLoggedInUser(session);
 		return "article-edit";
 	}
 
@@ -57,7 +58,7 @@ public class ArticleController {
 	@GetMapping("/articles/{id}/edit")
 	public String showEditPage(@PathVariable("id") Long articleId, Model model, HttpSession session) {
 		try {
-			UserPublicInfoDto userPublicInfoDto = getLoggedInUser(session);
+			UserPublicInfoDto userPublicInfoDto = loginChecker.getLoggedInUser(session);
 			ArticleDto articleDto = articleService.authorize(userPublicInfoDto, articleId);
 			model.addAttribute("article", articleDto);
 			return "article-edit";
@@ -68,27 +69,20 @@ public class ArticleController {
 
 	@PostMapping("/articles")
 	public String createArticle(ArticleDto articleDto, HttpSession session) {
-		ArticleDto savedArticleDto = articleService.save(getLoggedInUser(session).getId(), articleDto);
+		Long articleId = loginChecker.getLoggedInUser(session).getId();
+		ArticleDto savedArticleDto = articleService.save(articleId, articleDto);
 		return "redirect:/articles/" + savedArticleDto.getId();
 	}
 
 	@PutMapping("/articles/{articleId}")
 	public String editArticle(@PathVariable("articleId") long articleId, ArticleDto articleDto, HttpSession session) {
-		articleService.update(articleId, getLoggedInUser(session), articleDto);
+		articleService.update(articleId, loginChecker.getLoggedInUser(session), articleDto);
 		return "redirect:/articles/" + articleId;
 	}
 
 	@DeleteMapping("/articles/{id}")
 	public String deleteArticle(@PathVariable("id") long id, HttpSession session) {
-		articleService.delete(id, getLoggedInUser(session).getId());
+		articleService.delete(id, loginChecker.getLoggedInUser(session).getId());
 		return "redirect:/";
-	}
-
-	private UserPublicInfoDto getLoggedInUser(HttpSession session) {
-		UserPublicInfoDto user = (UserPublicInfoDto) session.getAttribute(LOGGED_IN_USER);
-		if (user == null) {
-			throw new NotLoggedInException();
-		}
-		return user;
 	}
 }
