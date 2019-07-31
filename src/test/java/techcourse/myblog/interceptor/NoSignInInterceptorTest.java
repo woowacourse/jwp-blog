@@ -91,7 +91,7 @@ class NoSignInInterceptorTest extends MyblogApplicationTests {
 
     @Test
     void comment삭제() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(delete("/comment").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        MvcResult mvcResult = mockMvc.perform(delete("/comment/" + COMMENT_ID).contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("articleId", String.valueOf(ARTICLE_ID))
                 .param("contents", COMMENT_CONTENTS))
                 .andDo(print())
