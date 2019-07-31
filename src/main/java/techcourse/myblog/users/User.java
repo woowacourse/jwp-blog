@@ -1,19 +1,15 @@
 package techcourse.myblog.users;
 
 import lombok.*;
+import techcourse.myblog.articles.BaseEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @Table(uniqueConstraints = @UniqueConstraint(name = "email", columnNames = {"email"}))
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseEntity {
 
     @Column(nullable = false, length = 50)
     private String email;
