@@ -43,7 +43,7 @@ public class CommentService {
                 .findById(commentId)
                 .orElseThrow(() -> {
                     log.debug(String.valueOf(commentId));
-                    throw new NotFoundCommentException("존재하지 않는 댓글");
+                    return new NotFoundCommentException("존재하지 않는 댓글");
                 });
     }
 
@@ -60,7 +60,7 @@ public class CommentService {
                 .findById(articleId)
                 .orElseThrow(() -> {
                     log.debug(String.valueOf(articleId));
-                    throw new RuntimeException("존재하지 않는 게시글");
+                    return new RuntimeException("존재하지 않는 게시글");
                 });
     }
 

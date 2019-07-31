@@ -35,12 +35,16 @@ public class ArticleService {
         return findById(id);
     }
 
+    public Iterable<Article> findAll() {
+        return articleRepository.findAll();
+    }
+
     private Article findById(long id) {
         return articleRepository
                 .findById(id)
                 .orElseThrow(() -> {
                     log.debug(String.valueOf(id));
-                    throw new UnFoundArticleException("해당 게시글이 존재하지 않습니다.");
+                    return new UnFoundArticleException("해당 게시글이 존재하지 않습니다.");
                 });
     }
 
@@ -64,4 +68,5 @@ public class ArticleService {
                 .forEach(commentRepository::delete);
         articleRepository.delete(article);
     }
+
 }
