@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 public class UserDto {
-    @NotBlank(message = UserPattern.NO_INPUT_MESSAGE)
+    @NotBlank(message = UserPattern.NO_INPUT_MESSAGE, groups = {UserInfo.class})
     @Pattern(regexp = UserPattern.NAME,
             message = UserPattern.NAME_CONSTRAINT_MESSAGE,
             groups={UserInfo.class})
