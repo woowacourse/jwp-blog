@@ -16,12 +16,15 @@ public class Article {
     private Long id;
 
     @NonNull
+    @Column(length = 100)
     private String title;
 
     @NonNull
+    @Column(length = 1000)
     private String contents;
 
     @NonNull
+    @Column(length = 100)
     private String coverUrl;
 
     @ManyToOne

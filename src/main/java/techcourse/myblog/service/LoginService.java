@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
-import techcourse.myblog.exception.UserNotExistException;
+import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.dto.UserDTO;
 
@@ -20,6 +20,10 @@ public class LoginService {
     public User getLoginUser(UserDTO userDTO) {
         User user = findByEmail(userDTO.getEmail());
 
+        if (user == null) {
+            throw new NotFoundUserException();
+        }
+
         if (!user.matchPassword(userDTO.getPassword())) {
             throw new LoginFailException("아이디와 비밀번호가 일치하지 않습니다.");
         }
@@ -31,7 +35,7 @@ public class LoginService {
         return userRepository
                 .findByEmail(email)
                 .orElseThrow(() ->
-                        new UserNotExistException("해당 아이디를 가진 유저는 존재하지 않습니다.")
+                        new NotFoundUserException()
                 );
     }
 }

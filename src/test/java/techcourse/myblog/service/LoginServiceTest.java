@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
-import techcourse.myblog.exception.UserNotExistException;
+import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.service.dto.UserDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,7 +48,7 @@ public class LoginServiceTest {
     void 로그인_아이디_찾기_실패_테스트() {
         UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_2, TEST_PASSWORD_1);
 
-        assertThrows(UserNotExistException.class, () -> {
+        assertThrows(NotFoundUserException.class, () -> {
             loginService.getLoginUser(userDTO);
         });
     }

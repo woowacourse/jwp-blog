@@ -17,6 +17,7 @@ public class Comment {
     private Long id;
 
     @NonNull
+    @Column
     private String contents;
 
     @ManyToOne

@@ -9,7 +9,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
-import techcourse.myblog.exception.UserNotExistException;
+import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.dto.UserDTO;
 
@@ -35,7 +35,7 @@ public class LoginController {
             User user = loginService.getLoginUser(userDTO);
             session.setAttribute("user", user);
             return new RedirectView("/");
-        } catch (UserNotExistException | LoginFailException e) {
+        } catch (NotFoundUserException | LoginFailException e) {
             redirectAttributes.addAttribute("loginError", e.getMessage());
             return new RedirectView("/login");
         }
