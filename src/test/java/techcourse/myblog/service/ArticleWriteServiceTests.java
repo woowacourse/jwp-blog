@@ -13,6 +13,7 @@ class ArticleWriteServiceTests extends ArticleCommonServiceTests {
     @Test
     void update_test() {
         Long articleId = Long.valueOf(1);
+        given(articleRepository.findByIdAndAuthor(articleId, author)).willReturn(Optional.of(article));
         given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
 
         ArticleDto articleDto = new ArticleDto("title2", "url2", "contents2");

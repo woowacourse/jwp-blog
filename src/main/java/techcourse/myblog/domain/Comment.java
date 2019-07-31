@@ -32,6 +32,7 @@ public class Comment {
     @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
+
     @CreationTimestamp
     private LocalDateTime createTimeAt;
     @UpdateTimestamp
@@ -52,14 +53,25 @@ public class Comment {
 
     public void update(Comment comment) {
         if (comment == null) {
-            throw new InvalidCommentException("댓글은 비어있을 수 없습니다.");
+            throw new CommentUpdateFailedException("댓글은 비어있을 수 없습니다.");
         }
 
-        if (comment.article.equals(this.article) && comment.writer.equals(this.writer)) {
-            this.contents = comment.contents;
+        checkAuth(comment);
+        this.contents = comment.contents;
+    }
+
+    private void checkAuth(Comment comment) {
+        if (isArticle(comment.article) && isWriter(comment.writer)) {
             return;
         }
+        throw new CommentUpdateFailedException("댓글을 수정할 수 없습니다.");
+    }
 
-        throw new InvalidCommentException("댓글을 수정할 수 없습니다.");
+    private boolean isArticle(Article article) {
+        return (article != null && this.article.equals(article));
+    }
+
+    private boolean isWriter(User user) {
+        return (user != null && this.writer.equals(user));
     }
 }

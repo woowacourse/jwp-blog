@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.domain.repository.CommentRepository;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.CommentDto;
@@ -19,9 +18,6 @@ import static org.springframework.http.HttpMethod.*;
 class CommentControllerTests extends ControllerTestTemplate {
     @Autowired
     private CommentRepository commentRepository;
-
-    @Autowired
-    private ArticleRepository articleRepository;
 
     private String savedArticleUrl;
     private CommentDto commentDto;
@@ -106,7 +102,6 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     private String getCommentUrl() {
         loginAndRequest(POST, savedArticleUrl + "/comment", parser(commentDto));
-
         Comment comment = commentRepository.findAll().get(0);
 
         return "/articles/" + comment.getArticle().getId() + "/comment/" + comment.getId();

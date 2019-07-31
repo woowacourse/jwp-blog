@@ -4,13 +4,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.domain.CommentUpdateFailedException;
 import techcourse.myblog.domain.InvalidCommentException;
 import techcourse.myblog.service.DuplicatedEmailException;
 import techcourse.myblog.service.MismatchAuthorException;
 import techcourse.myblog.service.NotFoundArticleException;
 
 @ControllerAdvice
-public class UserControllerExceptionHandler {
+public class BlogExceptionHandler {
     @ExceptionHandler(LoginFailedException.class)
     public RedirectView handleLoginFail(LoginFailedException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -37,6 +38,12 @@ public class UserControllerExceptionHandler {
 
     @ExceptionHandler(InvalidCommentException.class)
     public RedirectView handleCommentFail(InvalidCommentException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        return new RedirectView("/");
+    }
+
+    @ExceptionHandler(CommentUpdateFailedException.class)
+    public RedirectView handleUpdateCommentFail(CommentUpdateFailedException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/");
     }

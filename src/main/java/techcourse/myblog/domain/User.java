@@ -69,16 +69,6 @@ public class User {
         return this;
     }
 
-    public void authenticate(User user) {
-        if (user == null) {
-            throw new UserAuthFailedException("사용자 인증 실패");
-        }
-        if (email.equals(user.email) && password.equals(user.password)) {
-            return;
-        }
-        throw new UserAuthFailedException("사용자 인증 실패");
-    }
-
     public Long getId() {
         return id;
     }

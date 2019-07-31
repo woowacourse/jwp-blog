@@ -41,7 +41,7 @@ public class CommentTest {
     @Test
     void 댓글_업데이트_불가1() {
         Comment originalComment = new Comment("원본", author, article);
-        assertThrows(InvalidCommentException.class, () ->
+        assertThrows(CommentUpdateFailedException.class, () ->
                 originalComment.update(null));
     }
 }

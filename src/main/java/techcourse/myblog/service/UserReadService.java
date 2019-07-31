@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserAuthFailedException;
 import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.web.controller.LoginFailedException;
@@ -30,18 +29,8 @@ public class UserReadService {
     }
 
     public User login(UserDto userDto) {
-        try {
-            User user = findByEmail(userDto.getEmail());
-            user.authenticate(userDto.toUser());
-            return user;
-        } catch (UnfoundUserException | UserAuthFailedException e) {
-            throw new LoginFailedException(LOGIN_FAIL_MESSAGE);
-        }
-    }
-
-    private User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UnfoundUserException("존재하지 않는 사용자입니다."));
+        return userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword())
+                .orElseThrow(() -> new LoginFailedException(LOGIN_FAIL_MESSAGE));
     }
 
     public List<User> findAll() {
