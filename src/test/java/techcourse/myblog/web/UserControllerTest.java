@@ -16,7 +16,6 @@ import static techcourse.myblog.presentation.UserController.EMAIL_DUPLICATION_ER
 import static techcourse.myblog.presentation.UserController.LOGIN_ERROR_MSG;
 
 @AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest {
     private WebTestClient webTestClient;

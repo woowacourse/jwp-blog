@@ -17,7 +17,6 @@ import static techcourse.myblog.web.UserControllerTest.testEmail;
 import static techcourse.myblog.web.UserControllerTest.testPassword;
 
 @AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
     private WebTestClient webTestClient;

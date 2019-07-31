@@ -95,10 +95,10 @@ public class UserController {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             return "mypage-edit";
         }
-        userService.update(userRequestDto.getEmail(), userRequestDto);
-        request.getSession().setAttribute(LOGGED_IN_USER_SESSION_KEY, userRequestDto.toUser());
+        User updatedUser = userService.update(userRequestDto.getEmail(), userRequestDto);
+        request.getSession().setAttribute(LOGGED_IN_USER_SESSION_KEY, updatedUser);
 
-        return "redirect:/accounts/profile/" + userRequestDto.getId();
+        return "redirect:/accounts/profile/" + updatedUser.getId();
     }
 
     @GetMapping("/users")

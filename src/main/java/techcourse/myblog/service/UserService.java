@@ -19,9 +19,11 @@ public class UserService {
     }
 
     @Transactional
-    public void update(String email, UserRequestDto userRequestDto) {
+    public User update(String email, UserRequestDto userRequestDto) {
         User user = userRepository.findByEmail(email).orElseThrow(ArticleNotFoundException::new);
         user.update(userRequestDto);
+
+        return user;
     }
 
     public User authenticate(UserRequestDto userRequestDto) {
