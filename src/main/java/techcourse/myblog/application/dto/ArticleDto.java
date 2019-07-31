@@ -1,7 +1,11 @@
 package techcourse.myblog.application.dto;
 
+import lombok.Getter;
+import lombok.Setter;
 import techcourse.myblog.domain.Article;
 
+@Getter
+@Setter
 public class ArticleDto {
     private long id;
     private String title;
@@ -21,37 +25,5 @@ public class ArticleDto {
                 article.getCoverUrl(),
                 article.getContents()
                 );
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
     }
 }
