@@ -1,50 +1,48 @@
 package techcourse.myblog.domain;
 
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import techcourse.myblog.exception.NotMatchAuthenticationException;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Getter
-@Setter
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
-public class Comment {
+public class Comment extends EntityDates {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Lob
     private String content;
-    @Column(name = "CREATED_AT")
-    private LocalDateTime createdAt;
     @ManyToOne
+    @JoinColumn(name = "USER_ID")
     private User user;
     @ManyToOne
+    @JoinColumn(name = "ARTICLE_ID", foreignKey = @ForeignKey(name = "FK_ARTICLE_TO_COMMENT"))
     private Article article;
 
-    public void initialize(final User user, final Article article) {
+    @Builder
+    public Comment(final String content, final User user, final Article article) {
+        this.content = content;
         this.user = user;
         this.article = article;
-        createdAt = LocalDateTime.now();
     }
 
-    public void update(final String content) {
+    public Comment update(final String content, final User user) {
+        authorizeFor(user);
         this.content = content;
+        return this;
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final Comment comment = (Comment) o;
-        return Objects.equals(id, comment.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public void authorizeFor(User user) {
+        if (!this.user.equals(user)) {
+            throw new NotMatchAuthenticationException("권한이 없습니다.");
+        }
     }
 }
