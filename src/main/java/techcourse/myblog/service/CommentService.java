@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class CommentService {
     private final CommentRepository commentRepository;
 
@@ -18,14 +19,12 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    @Transactional
     public Comment update(long commentId, CommentRequestDto commentRequestDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
         comment.update(commentRequestDto);
         return comment;
     }
 
-    @Transactional
     public void deleteByArticle(Article article) {
         commentRepository.findByArticleOrderByCreatedAt(article)
                 .stream()

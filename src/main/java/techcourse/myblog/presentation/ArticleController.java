@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
@@ -41,11 +42,12 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String addNewArticle(ArticleRequestDto articleRequestDto, @SessionUser User loggedInUser) {
+    public RedirectView addNewArticle(ArticleRequestDto articleRequestDto, @SessionUser User loggedInUser) {
         Article newArticle = articleRequestDto.toArticle();
         newArticle.setAuthor(loggedInUser);
         articleRepository.save(newArticle);
-        return "redirect:/articles/" + newArticle.getId();
+
+        return new RedirectView("/articles/" + newArticle.getId());
     }
 
     @GetMapping("/")
@@ -75,23 +77,26 @@ public class ArticleController {
     }
 
     @PutMapping("/articles")
-    public String updateArticleById(ArticleRequestDto articleRequestDto) {
+    public RedirectView updateArticleById(ArticleRequestDto articleRequestDto) {
         articleService.update(articleRequestDto);
-        return "redirect:/articles/" + articleRequestDto.getId();
+
+        return new RedirectView("/articles/" + articleRequestDto.getId());
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticleById(@PathVariable long articleId) {
+    public RedirectView deleteArticleById(@PathVariable long articleId) {
         commentService.deleteByArticle(articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new));
         articleRepository.deleteById(articleId);
-        return "redirect:/";
+
+        return new RedirectView("/");
     }
 
     @PostMapping("/articles/{articleId}/comments")
-    public String addNewComment(@PathVariable long articleId, CommentRequestDto commentRequestDto, @SessionUser User loggedInUser) {
+    public RedirectView addNewComment(@PathVariable long articleId, CommentRequestDto commentRequestDto, @SessionUser User loggedInUser) {
         Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new);
         Comment newComment = commentRequestDto.toComment(loggedInUser, article);
         commentRepository.save(newComment);
-        return "redirect:/articles/" + articleId;
+
+        return new RedirectView("/articles/" + articleId);
     }
 }

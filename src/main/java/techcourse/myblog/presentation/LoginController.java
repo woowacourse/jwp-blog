@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.dto.UserRequestDto;
 
@@ -26,20 +27,20 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String processLogin(UserRequestDto userRequestDto, HttpServletRequest request) {
+    public RedirectView processLogin(UserRequestDto userRequestDto, HttpServletRequest request) {
         log.info("");
 
         loginService.login(request.getSession(), userRequestDto);
 
-        return "redirect:" + request.getHeader("Referer");
+        return new RedirectView("/" + request.getHeader("Referrer"));
     }
 
     @GetMapping("/logout")
-    public String processLogout(HttpServletRequest request) {
+    public RedirectView processLogout(HttpServletRequest request) {
         log.info("");
 
         loginService.logout(request.getSession());
 
-        return "redirect:/";
+        return new RedirectView("/");
     }
 }

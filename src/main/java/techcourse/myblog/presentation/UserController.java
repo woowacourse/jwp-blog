@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.persistence.UserRepository;
 import techcourse.myblog.service.LoginService;
@@ -89,10 +90,11 @@ public class UserController {
     }
 
     @DeleteMapping("/accounts/delete")
-    public String processDelete(HttpSession httpSession) {
+    public RedirectView processDelete(HttpSession httpSession) {
         User user = (User) httpSession.getAttribute(LoginService.LOGGED_IN_USER_SESSION_KEY);
         userRepository.deleteById(user.getId());
         httpSession.removeAttribute(LoginService.LOGGED_IN_USER_SESSION_KEY);
-        return "redirect:/";
+        
+        return new RedirectView("/");
     }
 }
