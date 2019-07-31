@@ -11,6 +11,7 @@ import techcourse.myblog.service.exception.SignUpException;
 import techcourse.myblog.service.exception.UserDeleteException;
 import techcourse.myblog.service.exception.UserUpdateException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static techcourse.myblog.domain.exception.UserArgumentException.EMAIL_DUPLICATION_MESSAGE;
@@ -41,7 +42,7 @@ public class UserService {
         try {
             validate(userDto);
             return userRepository.save(userDto.toEntity());
-        } catch (Exception e) {
+        } catch (UserArgumentException e) {
             throw new SignUpException(e.getMessage());
         }
     }
@@ -63,13 +64,12 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void update(UserPublicInfoDto userPublicInfoDto) {
         try {
-            User user = userRepository.findByEmail(userPublicInfoDto.getEmail())
-                    .orElseThrow(NotFoundUserException::new);
+            User user = findById(userPublicInfoDto.getId());
             user.updateName(userPublicInfoDto.getName());
-            userRepository.save(user);
-        } catch (Exception e) {
+        } catch (NotFoundUserException e) {
             throw new UserUpdateException(e.getMessage());
         }
     }
@@ -77,7 +77,7 @@ public class UserService {
     public void delete(Long id) {
         try {
             userRepository.deleteById(id);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             throw new UserDeleteException(e.getMessage());
         }
     }

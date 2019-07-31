@@ -5,7 +5,9 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.exception.NotFoundArticleException;
+import techcourse.myblog.service.exception.UserAuthorizationException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -21,13 +23,7 @@ public class ArticleService {
         this.userService = userService;
     }
 
-    public List<ArticleDto> findAll() {
-        return articleRepository.findAll().stream()
-                .map(this::toArticleDto)
-                .collect(Collectors.toList());
-    }
-
-    public Article findById(Long id) {
+    Article findById(Long id) {
         return articleRepository.findById(id)
                 .orElseThrow(NotFoundArticleException::new);
     }
@@ -36,27 +32,39 @@ public class ArticleService {
         return toArticleDto(findById(id));
     }
 
+    public List<ArticleDto> findAll() {
+        return articleRepository.findAll().stream()
+                .map(this::toArticleDto)
+                .collect(Collectors.toList());
+    }
+
     public ArticleDto save(Long userId, ArticleDto articleDto) {
         User author = userService.findById(userId);
         return toArticleDto(articleRepository.save(articleDto.toEntity(author)));
     }
 
     @Transactional
-    public void update(Long articleId, Long userId, ArticleDto articleDto) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(NotFoundArticleException::new);
-        if (article.matchUserId(userId)) {
+    public void update(long articleId, UserPublicInfoDto loggedInUser, ArticleDto articleDto) {
+        Article article = findById(articleId);
+        if (article.matchUserId(loggedInUser.getId())) {
             article.updateArticle(articleDto.toVo());
         }
     }
 
     @Transactional
     public void delete(Long articleId, Long userId) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(NotFoundArticleException::new);
+        Article article = findById(articleId);
         if (article.matchUserId(userId)) {
             articleRepository.deleteById(articleId);
         }
+    }
+
+    public ArticleDto authorize(UserPublicInfoDto userPublicInfoDto, Long articleId) {
+        final Article article = findById(articleId);
+        if (article.matchUserId(userPublicInfoDto.getId())) {
+            return toArticleDto(article);
+        }
+        throw new UserAuthorizationException();
     }
 
     private ArticleDto toArticleDto(Article article) {

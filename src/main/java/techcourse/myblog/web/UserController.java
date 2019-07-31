@@ -7,7 +7,6 @@ import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -21,9 +20,8 @@ public class UserController {
     }
 
     @GetMapping("/users/sign-up")
-    public String showRegisterPage(HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        if (httpSession.getAttribute(LOGGED_IN_USER) != null) {
+    public String showRegisterPage(HttpSession session) {
+        if (session.getAttribute(LOGGED_IN_USER) != null) {
             return "redirect:/";
         }
         return "sign-up";
@@ -42,22 +40,19 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public String editUserName(@PathVariable Long id, UserPublicInfoDto userPublicInfoDto, HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        if (isLoggedInUser(httpSession, id)) {
+    public String editUserName(@PathVariable Long id, UserPublicInfoDto userPublicInfoDto, HttpSession session) {
+        if (isLoggedInUser(session, id)) {
             userService.update(userPublicInfoDto);
-            userPublicInfoDto.setId(id);
-            httpSession.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
+            session.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
         }
         return "redirect:/mypage/" + id;
     }
 
     @DeleteMapping("/users/{id}")
-    public String deleteUser(@PathVariable Long id, HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        if (isLoggedInUser(httpSession, id)) {
+    public String deleteUser(@PathVariable Long id, HttpSession session) {
+        if (isLoggedInUser(session, id)) {
             userService.delete(id);
-            httpSession.removeAttribute(LOGGED_IN_USER);
+            session.invalidate();
         }
         return "redirect:/";
     }

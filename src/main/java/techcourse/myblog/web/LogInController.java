@@ -7,7 +7,6 @@ import techcourse.myblog.service.LogInService;
 import techcourse.myblog.service.dto.LogInInfoDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -21,26 +20,23 @@ public class LogInController {
     }
 
     @GetMapping("/login")
-    public String showLoginPage(HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        if (httpSession.getAttribute(LOGGED_IN_USER) != null) {
+    public String showLoginPage(HttpSession session) {
+        if (session.getAttribute(LOGGED_IN_USER) != null) {
             return "redirect:/";
         }
         return "login";
     }
 
     @PostMapping("/login")
-    public String logIn(LogInInfoDto logInInfoDto, HttpServletRequest httpServletRequest) {
+    public String logIn(LogInInfoDto logInInfoDto, HttpSession session) {
         UserPublicInfoDto userPublicInfoDto = logInService.logIn(logInInfoDto);
-        HttpSession httpSession = httpServletRequest.getSession();
-        httpSession.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
+        session.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
         return "redirect:/";
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        httpSession.removeAttribute(LOGGED_IN_USER);
+    public String logout(HttpSession session) {
+        session.removeAttribute(LOGGED_IN_USER);
         return "redirect:/";
     }
 }

@@ -8,7 +8,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -29,21 +28,20 @@ public class MyPageController {
 
     @GetMapping("/mypage/{id}/edit")
     public String showMyPageEdit(@PathVariable("id") long id, Model model,
-                                 HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
+                                 HttpSession session, RedirectAttributes redirectAttributes) {
         String errorMessage = (String) redirectAttributes.getFlashAttributes().get("errorMessage");
         if (errorMessage != null) {
             model.addAttribute("errorMessage", errorMessage);
         }
-        if (isLoggedInUserMYPage(httpServletRequest, id)) {
+        if (isLoggedInUserMyPage(session, id)) {
             model.addAttribute("user", userService.findUserPublicInfoById(id));
             return "mypage-edit";
         }
         return "redirect:/mypage/" + id;
     }
 
-    private boolean isLoggedInUserMYPage(HttpServletRequest httpServletRequest, Long id) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        UserPublicInfoDto loggedInUser = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
+    private boolean isLoggedInUserMyPage(HttpSession session, Long id) {
+        UserPublicInfoDto loggedInUser = (UserPublicInfoDto) session.getAttribute(LOGGED_IN_USER);
         return (loggedInUser != null) && (id.equals(loggedInUser.getId()));
     }
 }

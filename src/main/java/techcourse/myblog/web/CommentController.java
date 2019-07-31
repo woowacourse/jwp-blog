@@ -10,7 +10,6 @@ import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.web.exception.NotLoggedInException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -24,31 +23,30 @@ public class CommentController {
     }
 
     @PostMapping("/comment")
-    public String createComment(CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
-        Long userId = getLoggedInUser(httpServletRequest).getId();
+    public String createComment(CommentRequestDto commentRequestDto, HttpSession session) {
+        Long userId = getLoggedInUser(session).getId();
         commentService.save(userId, commentRequestDto);
         return "redirect:/articles/" + commentRequestDto.getArticleId();
     }
 
     @PutMapping("/articles/{articleId}/comment/{commentId}")
     public String updateComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
-                                CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
-        Long userId = getLoggedInUser(httpServletRequest).getId();
+                                CommentRequestDto commentRequestDto, HttpSession session) {
+        Long userId = getLoggedInUser(session).getId();
         commentService.update(userId, commentId, commentRequestDto);
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}/comment/{commentId}")
     public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
-                                HttpServletRequest httpServletRequest) {
-        Long userId = getLoggedInUser(httpServletRequest).getId();
+                                HttpSession session) {
+        Long userId = getLoggedInUser(session).getId();
         commentService.delete(userId, commentId);
         return "redirect:/articles/" + articleId;
     }
 
-    private UserPublicInfoDto getLoggedInUser(HttpServletRequest httpServletRequest) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        UserPublicInfoDto user = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
+    private UserPublicInfoDto getLoggedInUser(HttpSession session) {
+        UserPublicInfoDto user = (UserPublicInfoDto) session.getAttribute(LOGGED_IN_USER);
         if (user == null) {
             throw new NotLoggedInException();
         }

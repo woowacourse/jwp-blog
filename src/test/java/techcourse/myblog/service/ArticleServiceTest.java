@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.exception.NotFoundCommentException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +25,9 @@ public class ArticleServiceTest {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    UserService userService;
+
     private Long articleId;
 
     @BeforeEach
@@ -37,8 +41,9 @@ public class ArticleServiceTest {
     public void Article_userId와_수정하려는_User의_Id가_다르면_수정_실패() {
         ArticleDto updateArticleDto =
                 new ArticleDto(articleId, BASE_USER_ID, "title1", "coverUrl1", "contents1");
+        UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoById(MISMATCH_USER_ID);
 
-        articleService.update(articleId, MISMATCH_USER_ID, updateArticleDto);
+        articleService.update(articleId, userPublicInfoDto, updateArticleDto);
         ArticleDto updateFailArticle = articleService.findArticleDtoById(articleId);
 
         assertThat(updateFailArticle.getTitle()).isEqualTo("title");

@@ -8,7 +8,6 @@ import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.exception.*;
 import techcourse.myblog.web.exception.NotLoggedInException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @ControllerAdvice
@@ -27,10 +26,9 @@ public class ControllerExceptionAdvice {
 
     @ExceptionHandler(UserUpdateException.class)
     public String handleUpdateUserException(Exception e,
-                                            HttpServletRequest httpServletRequest,
+                                            HttpSession session,
                                             RedirectAttributes redirectAttributes) {
-        HttpSession httpSession = httpServletRequest.getSession();
-        UserPublicInfoDto user = (UserPublicInfoDto) httpSession.getAttribute("loggedInUser");
+        UserPublicInfoDto user = (UserPublicInfoDto) session.getAttribute("loggedInUser");
         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         return "redirect:/mypage/" + user.getId() + "/edit";
     }
