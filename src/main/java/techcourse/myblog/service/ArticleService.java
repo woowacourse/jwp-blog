@@ -43,14 +43,23 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article update(long articleId, ArticleDto articleDto) {
+    public Article update(long articleId, ArticleDto articleDto, String sessionEmail) {
         Article originArticle = findArticle(articleId);
+        validate(originArticle.getAuthor().getEmail(), sessionEmail);
         originArticle.update(articleDto.toEntity());
         return originArticle;
     }
 
     @Transactional
-    public void delete(long articleId) {
-        articleRepository.deleteById(articleId);
+    public void delete(long articleId, String sessionEmail) {
+        Article originArticle = findArticle(articleId);
+        validate(originArticle.getAuthor().getEmail(), sessionEmail);
+        articleRepository.delete(originArticle);
+    }
+
+    private void validate(String email, String sessionEmail) {
+        if (!email.equals(sessionEmail)) {
+            throw new ArticleException("다른 사용자의 게시글은 수정 할 수 없습니다.");
+        }
     }
 }
