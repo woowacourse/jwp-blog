@@ -46,7 +46,9 @@ public class CommentService {
         Comment comment = findCommentById(commentId);
         User author = userRepository.findUserByEmail(userResponse.getEmail()).orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
 
-        checkSameAuthor(comment, author);
+        if (!comment.isSameAuthor(author)) {
+            throw new NotSameAuthorException("해당 작성자만 댓글을 삭제할 수 있습니다.");
+        }
 
         commentRepository.deleteById(commentId);
     }
@@ -54,16 +56,14 @@ public class CommentService {
     @Transactional
     public void updateComment(Long commentId, UserResponse userResponse, CommentRequest commentRequest) {
         Comment comment = findCommentById(commentId);
-        User author = userRepository.findUserByEmail(userResponse.getEmail()).orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
+        User author = userRepository.findUserByEmail(userResponse.getEmail())
+                .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
 
-        checkSameAuthor(comment, author);
-
-        comment.changeContents(commentRequest.getContents());
-    }
-
-    private void checkSameAuthor(Comment comment, User author) {
-        if (!comment.isSameAuthor(author)) {
-            throw new NotSameAuthorException("해당 댓글의 작성자가 아닙니다.");
+        try {
+            comment.changeContents(commentRequest, author);
+        } catch (IllegalArgumentException e) {
+            throw new NotSameAuthorException("해당 작성자만 댓글을 수정할 수 있습니다.");
         }
     }
+
 }

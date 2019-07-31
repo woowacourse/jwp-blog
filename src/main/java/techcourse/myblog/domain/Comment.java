@@ -2,6 +2,7 @@ package techcourse.myblog.domain;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import techcourse.myblog.application.dto.CommentRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -69,7 +70,10 @@ public class Comment {
         return this.author.equals(author);
     }
 
-    public void changeContents(String contents) {
-        this.contents = contents;
+    public void changeContents(CommentRequest commentRequest, User author) {
+        if (isSameAuthor(author)) {
+            this.contents = commentRequest.getContents();
+        }
+        throw new IllegalArgumentException();
     }
 }
