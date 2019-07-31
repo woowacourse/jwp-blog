@@ -56,4 +56,8 @@ public class Comment {
     public String getAuthorName() {
         return author.getName();
     }
+
+    public Long getArticleId() {
+        return article.getId();
+    }
 }

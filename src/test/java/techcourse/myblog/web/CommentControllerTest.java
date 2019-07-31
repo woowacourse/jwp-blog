@@ -59,7 +59,7 @@ class CommentControllerTest {
         String updateComment = "update comment";
 
         webTestClient.put()
-                .uri("/articles/" + SAMPLE_ARTICLE_ID + "/comment/" + SAMPLE_COMMENT_ID)
+                .uri("/comment/" + SAMPLE_COMMENT_ID)
                 .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                 .body(BodyInserters.fromFormData("comment", updateComment)
                         .with("articleId", SAMPLE_ARTICLE_ID.toString()))
@@ -82,7 +82,7 @@ class CommentControllerTest {
         String deleteComment = "delete comment";
 
         webTestClient.delete()
-                .uri("/articles/" + SAMPLE_ARTICLE_ID + "/comment/" + SAMPLE_DELETE_COMMENT_ID)
+                .uri("/comment/" + SAMPLE_DELETE_COMMENT_ID)
                 .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                 .exchange()
                 .expectStatus().isFound()

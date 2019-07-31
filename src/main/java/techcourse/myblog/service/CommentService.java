@@ -37,6 +37,11 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
+    public Long findArticleId(long commentId) {
+        Comment comment = findById(commentId);
+        return comment.getArticleId();
+    }
+
     public Comment save(Long userId, CommentRequestDto commentRequestDto) {
         User user = userService.findById(userId);
         Article article = articleService.findById(commentRequestDto.getArticleId());
