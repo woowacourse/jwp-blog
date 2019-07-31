@@ -13,4 +13,10 @@ public class ArticleTest {
         origin.update(updated);
         assertThat(origin).isEqualTo(updated);
     }
+
+    @Test
+    void 기본_Url_테스트() {
+        Article article = new Article("title", "contents", "");
+        assertThat(article.getCoverUrl()).isEqualTo("/images/default/bg.jpg");
+    }
 }
