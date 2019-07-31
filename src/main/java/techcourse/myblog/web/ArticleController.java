@@ -53,7 +53,7 @@ public class ArticleController {
     public String showUpdateArticle(@PathVariable Long articleId, Model model, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         Article article = articleService.findArticle(articleId);
-        article.checkCorrespondingAuthor(user);
+        articleService.checkAvailableUpdateUser(article, user);
         model.addAttribute("article", article);
         return "article-edit";
     }

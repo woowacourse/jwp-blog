@@ -46,6 +46,7 @@ public class Article {
     }
 
     public void update(Article article) {
+        checkCorrespondingAuthor(article.getAuthor());
         this.title = article.title;
         this.contents = article.contents;
         this.coverUrl = article.coverUrl;

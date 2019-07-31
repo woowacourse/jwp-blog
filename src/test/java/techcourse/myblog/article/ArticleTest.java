@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 import techcourse.myblog.exception.InvalidAuthorException;
 import techcourse.myblog.user.User;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ArticleTest {
     private static final User user = User.builder()
@@ -29,5 +28,21 @@ public class ArticleTest {
     @Test
     void 아티클을_다른사람이_변경시도() {
         assertThrows(InvalidAuthorException.class, () -> article.checkCorrespondingAuthor(new User()));
+    }
+
+    @Test
+    void 자신의_아티클_수정() {
+        Article article2 = Article.builder()
+                .title("update title")
+                .coverUrl("update coverUrl")
+                .contents("update contents")
+                .author(user)
+                .build();
+
+        article.update(article2);
+        
+        assertEquals(article2.getTitle(), "update title");
+        assertEquals(article2.getCoverUrl(), "update coverUrl");
+        assertEquals(article2.getContents(), "update contents");
     }
 }

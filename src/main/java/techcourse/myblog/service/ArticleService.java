@@ -33,7 +33,6 @@ public class ArticleService {
     @Transactional
     public Article updateArticle(Long articleId, Article updatedArticle) {
         Article article = findArticle(articleId);
-        article.checkCorrespondingAuthor(updatedArticle.getAuthor());
         article.update(updatedArticle);
 
         return article;
@@ -53,5 +52,9 @@ public class ArticleService {
     public void addComment(Long articleId, Comment comment) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new);
         article.addComment(comment);
+    }
+
+    public void checkAvailableUpdateUser(Article article, User user) {
+        article.checkCorrespondingAuthor(user);
     }
 }
