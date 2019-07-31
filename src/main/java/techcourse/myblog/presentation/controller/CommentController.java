@@ -31,6 +31,7 @@ public class CommentController {
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
     public ModelAndView deleteComment(@PathVariable Long commentId, @PathVariable Long articleId) {
+        //todo: login된 유저와  comment를 쓴 유저가 같은지 확인
         commentService.delete(commentId);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/articles/"+articleId));
