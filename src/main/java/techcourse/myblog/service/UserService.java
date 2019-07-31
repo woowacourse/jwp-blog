@@ -33,18 +33,18 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(String userEmail, UserDto userDto) {
-        User user = userRepository.findByEmail(Email.of(userEmail)).orElseThrow(UserException::new);
+    public void updateUser(Email email, UserDto userDto) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserException::new);
         user.updateNameAndEmail(userDto.getName(), userDto.getEmail());
     }
 
     @Transactional(readOnly = true)
-    public User getUserByEmail(String userEmail) {
-        return userRepository.findByEmail(Email.of(userEmail)).orElseThrow(UserException::new);
+    public User getUserByEmail(Email email) {
+        return userRepository.findByEmail(email).orElseThrow(UserException::new);
     }
 
     @Transactional
-    public void deleteUser(String userEmail) {
-        userRepository.delete(getUserByEmail(userEmail));
+    public void deleteUser(Email email) {
+        userRepository.delete(getUserByEmail(email));
     }
 }

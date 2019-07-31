@@ -24,7 +24,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment addComment(Long articleId, String email, CommentDto commentDto) {
+    public Comment addComment(Long articleId, Email email, CommentDto commentDto) {
         Article article = articleService.findArticle(articleId);
         User author = userService.getUserByEmail(email);
         Comment comment = commentDto.toEntity(author, article);
@@ -41,9 +41,9 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment updateComment(long commentId, String email, CommentDto commentDto) {
+    public Comment updateComment(long commentId, Email email, CommentDto commentDto) {
         Comment comment = commentRepository.getOne(commentId);
-        if (!comment.isAuthor(email)) {
+        if (!comment.isAuthor(email.getEmail())) {
             throw new CommentException("FBI WARNING");
         }
         return comment.updateContent(commentDto.getContents());

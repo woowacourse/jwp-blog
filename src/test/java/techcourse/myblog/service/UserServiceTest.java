@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.domain.user.Email;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
@@ -35,13 +36,13 @@ class UserServiceTest {
 
     @Test
     void 회원정보_수정_테스트() {
-        userService.updateUser("andole@gmail.com", new UserDto("test", "A!1bcdefg", "test@gmail.com"));
+        userService.updateUser(Email.of("andole@gmail.com"), new UserDto("test", "A!1bcdefg", "test@gmail.com"));
         assertThat(userService.findAll().get(0).getEmail()).isEqualTo("test@gmail.com");
     }
 
     @Test
     void 회원삭제_테스트() {
-        userService.deleteUser("andole@gmail.com");
+        userService.deleteUser(Email.of("andole@gmail.com"));
         assertThat(userService.findAll().size()).isEqualTo(0);
     }
 }

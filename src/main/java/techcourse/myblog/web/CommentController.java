@@ -7,23 +7,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.user.Email;
 import techcourse.myblog.dto.CommentDto;
-import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.support.UserSessionInfo;
 
 @Controller
 public class CommentController {
     private final CommentService commentService;
-    private final ArticleService articleService;
 
-    public CommentController(CommentService commentService, ArticleService articleService) {
+    public CommentController(CommentService commentService) {
         this.commentService = commentService;
-        this.articleService = articleService;
     }
 
     @PostMapping("/articles/{articleId}/comment")
     public String addComment(@PathVariable long articleId, UserSessionInfo userSessionInfo, CommentDto commentDto) {
-        commentService.addComment(articleId, userSessionInfo.getEmail(), commentDto);
+        commentService.addComment(articleId, Email.of(userSessionInfo.getEmail()), commentDto);
         return "redirect:/articles/" + articleId;
     }
 
@@ -35,7 +32,7 @@ public class CommentController {
 
     @PutMapping("/articles/{articleId}/comment/{commentId}")
     public String updateComment(@PathVariable long articleId, @PathVariable long commentId, UserSessionInfo userSessionInfo, CommentDto commentDto) {
-        commentService.updateComment(commentId, userSessionInfo.getEmail(), commentDto);
+        commentService.updateComment(commentId, Email.of(userSessionInfo.getEmail()), commentDto);
         return "redirect:/articles/" + articleId;
     }
 }

@@ -47,14 +47,14 @@ class CommentServiceTest {
 
     @Test
     void 코맨트_추가_테스트() {
-        Comment comment = commentService.addComment(article.getId(), "andole@gmail.com", new CommentDto("asd"));
+        Comment comment = commentService.addComment(article.getId(), Email.of("andole@gmail.com"), new CommentDto("asd"));
         assertThat(comment.getAuthor().getName()).isEqualTo("andole");
         assertThat(comment.getArticle().getTitle()).isEqualTo("a");
     }
 
     @Test
     void 코멘트_삭제_테스트() {
-        Comment comment = commentService.addComment(article.getId(), "andole@gmail.com", new CommentDto("comment"));
+        Comment comment = commentService.addComment(article.getId(), Email.of("andole@gmail.com"), new CommentDto("comment"));
         commentService.deleteComment(comment.getId(), Email.of("andole@gmail.com"));
         assertThatThrownBy(() -> commentRepository.findById(comment.getId()).orElseThrow(CommentException::new))
                 .isInstanceOf(CommentException.class);
@@ -63,7 +63,7 @@ class CommentServiceTest {
     @Test
     @Transactional
     void 코멘트_수정_테스트() {
-        Comment comment = commentService.addComment(article.getId(), "andole@gmail.com", new CommentDto("abc"));
+        Comment comment = commentService.addComment(article.getId(), Email.of("andole@gmail.com"), new CommentDto("abc"));
         article.addComment(comment);
         article = articleRepository.findById(article.getId()).get();
         comment = article.getComments().get(0);

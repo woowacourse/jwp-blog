@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import techcourse.myblog.domain.user.Email;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.web.support.LoginSessionManager;
@@ -48,7 +49,7 @@ public class UserController {
 
     @PutMapping("/users")
     public String update(UserDto userDto, UserSessionInfo userSessionInfo, HttpServletRequest request) {
-        userService.updateUser(userSessionInfo.getEmail(), userDto);
+        userService.updateUser(Email.of(userSessionInfo.getEmail()), userDto);
         LoginSessionManager loginSessionManager = new LoginSessionManager(request);
         loginSessionManager.setLoginSession(userDto.getName(), userDto.getEmail());
         return "redirect:/mypage";
@@ -56,7 +57,7 @@ public class UserController {
 
     @DeleteMapping("/users")
     public String delete(UserSessionInfo userSessionInfo, HttpServletRequest request) {
-        userService.deleteUser(userSessionInfo.getEmail());
+        userService.deleteUser(Email.of(userSessionInfo.getEmail()));
         LoginSessionManager loginSessionManager = new LoginSessionManager(request);
         loginSessionManager.clearSession();
         return "redirect:/";

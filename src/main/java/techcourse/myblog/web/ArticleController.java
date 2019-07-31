@@ -9,7 +9,6 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.Email;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.support.UserSessionInfo;
 
 @Controller
@@ -19,11 +18,8 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-    private final CommentService commentService;
-
-    public ArticleController(ArticleService articleService, CommentService commentService) {
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
-        this.commentService = commentService;
     }
 
     @GetMapping("/{articleId}")
@@ -45,13 +41,13 @@ public class ArticleController {
 
     @PutMapping("/{articleId}")
     public String getModifiedArticle(@PathVariable long articleId, ArticleDto dto, Model model, UserSessionInfo userSessionInfo) {
-        setArticleModel(model, articleService.update(articleId, dto, userSessionInfo.getEmail()));
+        setArticleModel(model, articleService.update(articleId, dto, Email.of(userSessionInfo.getEmail())));
         return "article";
     }
 
     @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable long articleId, UserSessionInfo userSessionInfo) {
-        articleService.delete(articleId, userSessionInfo.getEmail());
+        articleService.delete(articleId, Email.of(userSessionInfo.getEmail()));
         return "redirect:/";
     }
 

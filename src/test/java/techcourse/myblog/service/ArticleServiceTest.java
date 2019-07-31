@@ -64,7 +64,7 @@ class ArticleServiceTest {
     @Test
     void deleteTest() {
         long id = articleService.save(article, email);
-        articleService.delete(id, "andole@gmail.com");
+        articleService.delete(id, Email.of("andole@gmail.com"));
         List<Article> articles = articleService.findAll();
         assertThat(articles.size()).isEqualTo(0);
     }

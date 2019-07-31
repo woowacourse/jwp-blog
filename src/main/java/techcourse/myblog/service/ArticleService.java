@@ -43,28 +43,24 @@ public class ArticleService {
     @Transactional
     public Long save(Article article, Email email) {
         Article newArticle = articleRepository.save(article);
-        User user = userService.getUserByEmail(email.getEmail());
+        User user = userService.getUserByEmail(email);
         newArticle.setAuthor(user);
         return newArticle.getId();
     }
 
     @Transactional
-    public Article update(long articleId, ArticleDto articleDto, String sessionEmail) {
+    public Article update(long articleId, ArticleDto articleDto, Email email) {
         Article originArticle = findArticle(articleId);
-        validate(originArticle.getAuthor().getEmail(), sessionEmail);
+        validate(originArticle.getAuthor().getEmail(), email.getEmail());
         originArticle.update(articleDto.toEntity());
         return originArticle;
     }
 
     @Transactional
-    public void delete(long articleId, String sessionEmail) {
+    public void delete(long articleId, Email email) {
         Article originArticle = findArticle(articleId);
-        validate(originArticle.getAuthor().getEmail(), sessionEmail);
-
-        System.out.println(originArticle.getAuthor());
+        validate(originArticle.getAuthor().getEmail(), email.getEmail());
         articleRepository.deleteById(articleId);
-//        Article temp = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-//        System.out.println(temp);
     }
 
     private void validate(String email, String sessionEmail) {
