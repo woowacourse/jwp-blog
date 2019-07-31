@@ -16,11 +16,9 @@ import techcourse.myblog.web.LoginUser;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.groups.Default;
-import java.util.Optional;
 
 @Controller
 public class UserController {
-    public static final String LOGIN_FAIL_MESSAGE = "이메일이나 비밀번호가 올바르지 않습니다";
     private final UserReadService userReadService;
     private final UserWriteService userWriteService;
 
@@ -56,14 +54,9 @@ public class UserController {
     @PostMapping("/login")
     public RedirectView login(HttpSession session,
                               @ModelAttribute("/login") @Validated(Default.class) UserDto userDto) {
-        Optional<User> loginUser = userReadService.findByEmailAndPassword(userDto);
-
-        if (loginUser.isPresent()) {
-            session.setAttribute("user", loginUser.get());
-            return new RedirectView("/");
-        }
-
-        throw new LoginFailedException(LOGIN_FAIL_MESSAGE);
+        User loginUser = userReadService.login(userDto);
+        session.setAttribute("user", loginUser);
+        return new RedirectView("/");
     }
 
     @GetMapping("/logout")

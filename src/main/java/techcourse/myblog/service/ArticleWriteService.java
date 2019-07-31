@@ -28,6 +28,6 @@ public class ArticleWriteService {
     }
 
     public void update(Long articleId, ArticleDto articleDto) {
-        articleReadService.findByIdAndAuthor(articleId, articleDto.getAuthor()).update(articleDto.toArticle());
+        articleReadService.findById(articleId).update(articleDto.toArticle());
     }
 }

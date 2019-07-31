@@ -2,6 +2,7 @@ package techcourse.myblog.domain;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import techcourse.myblog.service.MismatchAuthorException;
 
 import javax.persistence.*;
 
@@ -36,11 +37,18 @@ public class Article {
     }
 
     public Article update(Article article) {
+        checkAuth(article.getAuthor());
         title = article.getTitle();
         coverUrl = article.getCoverUrl();
         contents = article.getContents();
 
         return this;
+    }
+
+    public void checkAuth(User user) {
+        if (user == null || !user.equals(author)) {
+            throw new MismatchAuthorException("작성자만 접근할 수 있습니다.");
+        }
     }
 
     public Long getId() {
