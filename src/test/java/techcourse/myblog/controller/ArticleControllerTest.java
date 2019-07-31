@@ -156,7 +156,7 @@ public class ArticleControllerTest {
 
     @AfterEach
     void tearDown() {
-        Utils.delete(webTestClient, articleUrl);
+        Utils.deleteArticle(webTestClient, articleUrl);
         Utils.deleteUser(webTestClient, cookie);
     }
 }

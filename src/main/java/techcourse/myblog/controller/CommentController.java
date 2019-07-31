@@ -44,6 +44,18 @@ public class CommentController {
         return "comment-edit";
     }
 
+    @DeleteMapping("/{commentId}")
+    private String deleteComment(@PathVariable Long commentId) {
+        log.error("asdfid, {}", commentId);
+        Comment comment = commentService.findById(commentId);
+        log.error("asdfid1, {}", commentId);
+        Long articleId = comment.getArticle().getId();
+        log.error("asdfid2, {}", commentId);
+        commentService.delete(commentId);
+
+        return "redirect:/articles/" + articleId;
+    }
+
     @PutMapping("/{commentId}")
     public String updateComment(@PathVariable Long commentId, CommentDto commentDto, @ModelAttribute User user) {
         checkOwner(commentId, user);
@@ -56,4 +68,5 @@ public class CommentController {
             throw new MisMatchAuthorException("댓글을 작성한 유저만 수정할 수 있습니다.");
         }
     }
+
 }

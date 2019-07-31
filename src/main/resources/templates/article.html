@@ -14,14 +14,14 @@
         <div class="cover-img overlay-dark bg" th:if="${article.coverUrl != null && !article.coverUrl.isEmpty()}"
              th:style="'background:url(' + @{${article.coverUrl}} + ');'">
             <div class="padding-30">
-                <h1 class="text-center cover-title" th:text="${article.title}">목적의식 있는 연습을 통한 효과적인 학습</h1>
+                <h1 class="text-center cover-title" th:text="${article.title}">title</h1>
             </div>
         </div>
         <div class="cover-img overlay-dark bg"
              style="background-image: url('/images/pages/index/study.jpg')"
              th:unless="${article.coverUrl != null && !article.coverUrl.isEmpty()}">
             <div class="padding-30">
-                <h1 class="text-center cover-title" th:text="${article.title}">목적의식 있는 연습을 통한 효과적인 학습</h1>
+                <h1 class="text-center cover-title" th:text="${article.title}">title</h1>
             </div>
         </div>
     </div>
@@ -37,7 +37,8 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
                 <div class="profile-container row mrg-top-30 mrg-btm-30">
                     <div class="col-md-2 col-sm-4">
-                        <img class="width-80px border-radius-round" src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
+                        <img class="width-80px border-radius-round"
+                             src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                     </div>
                     <div class="col-md-10 col-sm-7">
                         <span class="font-size-16 text-bold pdd-btm-5" th:text="${article.user.userName}">Brown</span>
@@ -70,16 +71,23 @@
                 <div class="comment">
                     <ul class="list-unstyled list-info">
                         <li th:each="comment: ${comments}" class="comment-item border bottom mrg-btm-30">
-                            <img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+                            <img class="thumb-img img-circle"
+                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                             <div class="info">
                                 <span th:text="${comment.author.userName}" name="author" class="text-bold inline-block">Jun</span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span>6 min ago</span>
-                                    <span>    </span>
-                                    <span><a th:href="@{'/comments/' + ${comment.id} + '/edit'}" onclick="commentEditForm">수정</a></span>
-                                    <span> / </span>
-                                    <span><a href="#" onclick="deleteComment">삭제</a></span>
+                                    <form id="editForm" th:action="@{'/comments/' + ${comment.id} + '/edit'}"
+                                          method="get">
+                                        <a href="javascript:{}"
+                                           onclick="document.getElementById('editForm').submit(); return false;">수정</a>
+                                    </form>
+                                    <form id="deleteForm" th:action="@{'/comments/' + ${comment.id}}" method="post">
+                                            <input type="hidden" name="_method" value="delete">
+                                        <a href="javascript:{}"
+                                           onclick="document.getElementById('deleteForm').submit(); return false;">삭제</a>
+                                    </form>
                                 </span>
                                 <p th:text="${comment.contents}" name="contents" class="width-80">contents</p>
                             </div>
@@ -93,7 +101,7 @@
                         </div>
                         <input id="commentContents" name="contents" type="hidden"/>
                         <div class="mrg-top-20 text-right">
-                            <button type="submit" class="btn btn-tumblr" onclick="postComment()">댓글 작성</button>
+                            <button type="submit" class="btn btn-tumblr">댓글 작성</button>
                         </div>
                     </form>
                 </div>
@@ -127,16 +135,6 @@
         },
         height: '200px'
     });
-
-    const postComment = function () {
-        console.log(document.getElementById("commentContents"))
-    };
-
-    const commentEditForm = function () {
-    };
-
-    const deleteComment = function () {
-    };
 
 </script>
 </body>

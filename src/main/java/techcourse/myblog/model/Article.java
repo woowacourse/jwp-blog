@@ -39,7 +39,7 @@ public class Article {
     @OneToMany(mappedBy = "article")
     private List<Comment> comments = new ArrayList<>();
 
-    public void addComments(Comment comment) {
+    public void addComment(Comment comment) {
         this.comments.add(comment);
         if (comment.getArticle() != this) {
             comment.setArticle(this);
@@ -47,8 +47,11 @@ public class Article {
     }
 
     public List<Comment> getComments() {
-        System.out.println(comments.isEmpty());
         return comments;
+    }
+
+    public void deleteComment(Comment comment) {
+        this.comments.remove(comment);
     }
 
     public Article update(Article article) {
@@ -59,6 +62,4 @@ public class Article {
 
         return this;
     }
-
-
 }

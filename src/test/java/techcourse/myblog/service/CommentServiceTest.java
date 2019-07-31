@@ -74,4 +74,17 @@ class CommentServiceTest {
 
         assertThat(updatedComment.getContents()).isEqualTo(COMMENTS_CONTENTS_2);
     }
+
+    @Test
+    @DisplayName("comment를 삭제한다.")
+    void delete() {
+        Comment comment = new Comment(USER, ARTICLE, COMMENTS_CONTENTS);
+        ARTICLE.addComment(comment);
+        given(commentRepository.findById(TEST_COMMENT_ID))
+                .willReturn(Optional.of(comment));
+
+        commentService.delete(TEST_COMMENT_ID);
+        verify(commentRepository, atLeast(1)).deleteById(TEST_COMMENT_ID);
+        assertThat(ARTICLE.getComments()).doesNotContain(comment);
+    }
 }
