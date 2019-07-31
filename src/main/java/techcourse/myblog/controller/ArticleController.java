@@ -38,14 +38,14 @@ public class ArticleController {
 
     @GetMapping("/{articleId}/edit")
     public String articleEditForm(@PathVariable Long articleId, Model model, @ModelAttribute User user) {
-        checkOwner(articleId, user);
+        articleService.checkOwner(articleId, user);
         model.addAttribute("article", articleService.findById(articleId));
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable Long articleId, ArticleDto articleDto, @ModelAttribute User user) {
-        checkOwner(articleId, user);
+        articleService.checkOwner(articleId, user);
         articleDto.setId(articleId);
         articleService.update(articleDto, user);
         return "redirect:/articles/" + articleId;
@@ -53,15 +53,9 @@ public class ArticleController {
 
     @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable Long articleId, @ModelAttribute User user) {
-        checkOwner(articleId, user);
+        articleService.checkOwner(articleId, user);
         articleService.delete(articleId);
         return "redirect:/";
-    }
-
-    private void checkOwner(Long articleId, User user) {
-        if (!articleService.isOwnerOf(articleId, user)) {
-            throw new MisMatchAuthorException("게시글을 작성한 유저만 수정할 수 있습니다.");
-        }
     }
 }
 

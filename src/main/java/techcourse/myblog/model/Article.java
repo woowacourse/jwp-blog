@@ -3,6 +3,7 @@ package techcourse.myblog.model;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import techcourse.myblog.exception.MisMatchAuthorException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -71,5 +72,11 @@ public class Article {
         this.user = article.user;
 
         return this;
+    }
+
+    public void checkOwner(User user) {
+        if (!this.user.equals(user)) {
+            throw new MisMatchAuthorException("게시글을 작성한 유저만 수정할 수 있습니다.");
+        }
     }
 }

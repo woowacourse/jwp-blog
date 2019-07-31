@@ -49,8 +49,8 @@ public class ArticleService {
         return foundArticle.getComments();
     }
 
-    public boolean isOwnerOf(Long articleId, User user) {
+    public void checkOwner(Long articleId, User user) {
         Article foundArticle = findById(articleId);
-        return foundArticle.getUser().equals(user);
+        foundArticle.checkOwner(user);
     }
 }
