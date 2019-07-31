@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.userinfo.UserEmail;
+import techcourse.myblog.domain.userinfo.UserPassword;
 import techcourse.myblog.dto.UserLoginRequestDto;
 import techcourse.myblog.service.LoginService;
 
@@ -31,7 +33,10 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(UserLoginRequestDto userLoginRequestDto, HttpSession httpSession) {
-        loginService.checkLogin(userLoginRequestDto.getEmail(), userLoginRequestDto.getPassword());
+        UserEmail userEmail = new UserEmail(userLoginRequestDto.getEmail());
+        UserPassword userPassword = new UserPassword(userLoginRequestDto.getPassword());
+
+        loginService.checkLogin(userEmail, userPassword);
         log.info("login post request params={}", userLoginRequestDto);
 
         User user = loginService.findByEmail(userLoginRequestDto.getEmail());

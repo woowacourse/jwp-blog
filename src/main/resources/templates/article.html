@@ -71,7 +71,7 @@
 								<input id="comment-update" type="hidden" name="_method" value="put"/>
 								<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
 								<div class="info">
-									<span th:text="${comment.user.name}" class="text-bold inline-block"></span>
+									<span th:text="${comment.user.name.name}" class="text-bold inline-block"></span>
 									<span class="sub-title inline-block pull-right">
 										<a th:if="${comment.user.equals(session.user)}" onclick="showCommentInput(event)">
 											<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
@@ -162,13 +162,13 @@
 
     function deleteComment(event) {
         event.preventDefault()
-		    
-		    const thisElement = event.target;
+
+        const thisElement = event.target;
 
         thisElement.setAttribute("value", "delete");
         let formElement = thisElement.parentNode.parentNode.parentNode.parentNode;
         formElement.querySelector('input').setAttribute("value", "delete");
-        
+
         formElement.submit();
     }
 </script>

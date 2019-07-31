@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.userinfo.UserPassword;
 import techcourse.myblog.dto.UserEditRequestDto;
 import techcourse.myblog.dto.UserSaveRequestDto;
 import techcourse.myblog.service.UserService;
@@ -57,12 +58,16 @@ public class UserController {
     public String showMyPageEdit(String password, Model model, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute(USER);
 
-        if (!user.matchPassword(password)) {
+        if (mismatchPassword(password, user)) {
             model.addAttribute("errorMessage", ERROR_MISMATCH_PASSWORD_MESSAGE);
             return "mypage-confirm";
         }
 
         return "mypage-edit";
+    }
+
+    private boolean mismatchPassword(String password, User user) {
+        return !user.matchPassword(new UserPassword(password));
     }
 
     @PutMapping("/mypage")

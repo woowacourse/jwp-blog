@@ -35,7 +35,7 @@
 								</div>
 								<div class="col-md-6">
 									<input type="text" name="name" class="form-control" th:if="${session.user}"
-									       th:value="${session.user.name}">
+									       th:value="${session.user.name.name}">
 								</div>
 							</div>
 							<hr>
@@ -44,7 +44,7 @@
 									<p class="mrg-top-10 text-dark"><b>Email</b></p>
 								</div>
 								<div class="col-md-6">
-									<p class="mrg-top-10" th:if="${session.user}" th:text="${session.user.email}">
+									<p class="mrg-top-10" th:if="${session.user}" th:text="${session.user.email.email}">
 										gracefulBrown@woowahan.com</p>
 								</div>
 							</div>

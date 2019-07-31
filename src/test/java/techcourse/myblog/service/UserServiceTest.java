@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.userinfo.UserName;
 import techcourse.myblog.dto.UserEditRequestDto;
 import techcourse.myblog.exception.UserNotFoundException;
 
@@ -72,9 +73,11 @@ class UserServiceTest {
         Long id = user.getId();
 
         userService.update(id, userEditRequestDto);
-        User updatedUser = userService.findById(id);
 
-        assertThat(updatedUser.getName()).isEqualTo(userEditRequestDto.getName());
+        User updatedUser = userService.findById(id);
+        UserName updatedUserName = updatedUser.getName();
+
+        assertThat(updatedUserName.getName()).isEqualTo(userEditRequestDto.getName());
     }
 
     @Test

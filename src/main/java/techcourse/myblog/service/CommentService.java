@@ -8,7 +8,6 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentSaveRequestDto;
 import techcourse.myblog.exception.CommentNotFoundException;
-import techcourse.myblog.exception.IllegalArticleUpdateRequestException;
 import techcourse.myblog.exception.IllegalCommentUpdateRequestException;
 import techcourse.myblog.repository.CommentRepository;
 
