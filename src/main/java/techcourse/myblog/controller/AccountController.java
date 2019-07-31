@@ -10,6 +10,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -51,11 +52,9 @@ public class AccountController {
     }
 
     @DeleteMapping("user")
-    public String deleteUser(HttpServletRequest request) {
-        log.debug(">>> deleteUser: request : {}", request);
-        log.debug(">>> deleteUser: requestMethod : {}", request.getMethod());
-        User user = (User) request.getSession().getAttribute("user");
-        request.getSession().removeAttribute("user");
+    public String deleteUser(HttpSession session, User user) {
+        log.debug(">>> deleteUser: request : {}", session);
+        session.removeAttribute("user");
         userRepository.delete(user);
         return "redirect:/";
     }
@@ -82,12 +81,12 @@ public class AccountController {
     }
 
     @PutMapping("profile/edit")
-    public String processUpdateProfile(HttpServletRequest request, @Valid UserDto userDto, Errors errors) {
+    public String processUpdateProfile(@Valid UserDto userDto, Errors errors, HttpSession session) {
         if (errors.hasErrors()) {
             return "mypage-edit";
         }
         userRepository.save(userDto.toUser());
-        request.getSession().setAttribute("user", userDto.toUser());
+        session.setAttribute("user", userDto.toUser());
 
         return "redirect:/accounts/profile/" + userDto.getId();
     }

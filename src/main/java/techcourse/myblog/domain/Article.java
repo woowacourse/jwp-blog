@@ -33,4 +33,8 @@ public class Article {
         this.coverUrl = coverUrl;
         this.author = author;
     }
+
+    public boolean isNotMatchAuthor(User target) {
+        return author.getId() != target.getId();
+    }
 }

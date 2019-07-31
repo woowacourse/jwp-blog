@@ -10,6 +10,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Slf4j
@@ -27,7 +28,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String processLogin(UserDto userDto, HttpServletRequest request, Model model) {
+    public String processLogin(UserDto userDto, HttpSession session, Model model) {
         String errorMessage = "아이디나 비밀번호가 잘못되었습니다.";
         Optional<User> user = userRepository.findByEmail(userDto.getEmail());
         if (!user.isPresent() || !userDto.getPassword().equals(user.get().getPassword())) {
@@ -35,16 +36,16 @@ public class LoginController {
             return "login";
         }
 
-        request.getSession().setAttribute("user", user.get());
+        session.setAttribute("user", user.get());
         return "redirect:/";
 
     }
 
     @GetMapping("/logout")
-    public String processLogout(HttpServletRequest request) {
-        log.debug(">>> session : {}", request.getSession().getAttribute("user"));
+    public String processLogout(HttpSession session) {
+        log.debug(">>> session : {}", session.getAttribute("user"));
 
-        request.getSession().removeAttribute("user");
+        session.removeAttribute("user");
         return "redirect:/";
     }
 }
