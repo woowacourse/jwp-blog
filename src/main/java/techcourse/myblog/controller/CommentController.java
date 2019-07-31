@@ -38,8 +38,7 @@ public class CommentController {
                         new NotFoundCommentException("존재하지 않는 댓글입니다."));
 
         Article article = articleRepository.findById(articleId)
-                .orElseThrow(() ->
-                        new NotFoundArticleException("존재하지 않는 게시글입니다."));
+                .orElseThrow(NotFoundArticleException::new);
 
         model.addAttribute("article", article);
         model.addAttribute("editCommentId", commentId);
@@ -63,9 +62,8 @@ public class CommentController {
         Comment comment = commentDTO.toDomain();
         comment.setAuthor(user);
 
-        Article article = articleRepository.findById(articleId).orElseThrow(() ->
-                new NotFoundArticleException("게시글을 찾을 수 없습니다.")
-        );
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(NotFoundArticleException::new);
 
         comment.setArticle(article);
         article.add(comment);
@@ -80,8 +78,7 @@ public class CommentController {
                                @PathVariable long commentId,
                                HttpSession httpSession) {
         Article article = articleRepository.findById(articleId)
-                .orElseThrow(() ->
-                        new NotFoundArticleException("article is not found"));
+                .orElseThrow(NotFoundArticleException::new);
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
                 new NotFoundCommentException("해당 덧글이 존재하지 않습니다."));

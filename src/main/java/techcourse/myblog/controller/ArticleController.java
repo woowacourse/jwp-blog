@@ -27,8 +27,9 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     public String show(@PathVariable("articleId") Long articleId, HttpSession session, Model model) {
-        Article article = articleRepository.findById(articleId).orElseThrow(() ->
-                new NotFoundArticleException("게시물이 없습니다"));
+        Article article = articleRepository
+                .findById(articleId)
+                .orElseThrow(NotFoundArticleException::new);
 
         model.addAttribute("article", article);
         model.addAttribute("comments", article.getComments());
@@ -69,13 +70,9 @@ public class ArticleController {
     public Object updateForm(@PathVariable("articleId") Long articleId, HttpSession session, Model model) {
         Article savedArticle = articleRepository
                 .findById(articleId)
-                .orElseThrow(() ->
-                        new NotFoundArticleException("게시글이 존재하지 않습니다."));
+                .orElseThrow(NotFoundArticleException::new);
 
-        User user = (User) session.getAttribute("user");
-        if (!user.equals(savedArticle.getAuthor())) {
-            throw new UnauthenticatedUserException("수정 권한이 없습니다.");
-        }
+        checkAuthor(session, savedArticle);
 
         model.addAttribute("article", savedArticle);
         model.addAttribute("articleId", articleId);
@@ -84,19 +81,29 @@ public class ArticleController {
 
     @Transactional
     @PutMapping("/{articleId}")
-    public String update(@PathVariable("articleId") Long articleId, ArticleDTO articleDTO) {
-        Article article = articleRepository.findById(articleId).get();
-        article.update(articleDTO.toDomain());
+    public String update(@PathVariable("articleId") Long articleId, HttpSession session, ArticleDTO articleDTO) {
+        Article savedArticle = articleRepository
+                .findById(articleId)
+                .orElseThrow(NotFoundArticleException::new);
+
+        checkAuthor(session, savedArticle);
+        savedArticle.update(articleDTO.toDomain());
 
         return "redirect:/articles/" + articleId;
+    }
+
+    private void checkAuthor(HttpSession session, Article savedArticle) {
+        User user = (User) session.getAttribute("user");
+        if (!user.equals(savedArticle.getAuthor())) {
+            throw new UnauthenticatedUserException("수정 권한이 없습니다.");
+        }
     }
 
     @DeleteMapping("/{articleId}")
     public String delete(@PathVariable("articleId") Long articleId, HttpSession session) {
         Article savedArticle = articleRepository
                 .findById(articleId)
-                .orElseThrow(() ->
-                        new NotFoundArticleException("게시글이 존재하지 않습니다."));
+                .orElseThrow(NotFoundArticleException::new);
 
         User user = (User) session.getAttribute("user");
         if (!user.equals(savedArticle.getAuthor())) {
