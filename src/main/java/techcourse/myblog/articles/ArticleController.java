@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.articles.comments.Comment;
-import techcourse.myblog.articles.comments.CommentService;
 import techcourse.myblog.users.UserSession;
 
 import java.util.List;

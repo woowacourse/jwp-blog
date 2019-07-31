@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import techcourse.myblog.articles.comments.Comment;
+import techcourse.myblog.exception.AuthException;
 import techcourse.myblog.users.User;
 
 import javax.persistence.*;
@@ -47,10 +48,11 @@ public class Article {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    private Article(final String title, final String contents, final String coverUrl) {
+    public Article(final String title, final String contents, final String coverUrl, final User author) {
         this.title = title;
         this.contents = contents;
         this.coverUrl = coverUrl;
+        this.author = author;
     }
 
     void update(Article other) {
@@ -60,8 +62,11 @@ public class Article {
         this.contents = other.contents;
     }
 
-    boolean isWrittenBy(final User user) {
-        return this.author.equals(user);
+    boolean isWrittenBy(final User other) {
+        if (this.author.equals(other)) {
+            return true;
+        }
+        throw new AuthException("작성자가 아닙니다.");
     }
 }
 

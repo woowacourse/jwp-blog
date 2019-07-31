@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.articles.Article;
+import techcourse.myblog.exception.AuthException;
 import techcourse.myblog.users.User;
 
 import javax.persistence.*;
@@ -49,6 +50,9 @@ public class Comment {
     }
 
     public boolean isWrittenBy(final User other) {
-        return this.user.equals(other);
+        if (this.user.equals(other)) {
+            return true;
+        }
+        throw new AuthException("작성자가 아닙니다.");
     }
 }

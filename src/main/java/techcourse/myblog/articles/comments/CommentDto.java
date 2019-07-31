@@ -6,6 +6,8 @@ import lombok.Setter;
 import techcourse.myblog.articles.Article;
 import techcourse.myblog.users.User;
 
+import java.time.LocalDateTime;
+
 public class CommentDto {
 
     @Getter
@@ -36,6 +38,24 @@ public class CommentDto {
             return Comment.builder()
                     .contents(contents)
                     .build();
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class Response {
+        private Long id;
+        private String contents;
+        private LocalDateTime modifiedDate;
+
+        Response(Comment comment) {
+            this.id = comment.getId();
+            this.contents = comment.getContents();
+            this.modifiedDate = comment.getModifiedDate();
+        }
+
+        public static Response createByComment(Comment comment) {
+            return new Response(comment);
         }
     }
 }
