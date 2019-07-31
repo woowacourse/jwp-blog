@@ -7,15 +7,15 @@ import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.web.support.LoginSessionManager;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class LoginController {
 
     private final LoginService loginService;
-    private final LoginSessionManager loginSessionManager;
 
-    public LoginController(LoginService loginService, LoginSessionManager loginSessionManager) {
+    public LoginController(LoginService loginService) {
         this.loginService = loginService;
-        this.loginSessionManager = loginSessionManager;
     }
 
     @GetMapping("/login")
@@ -24,13 +24,15 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-    public String logout() {
+    public String logout(HttpServletRequest request) {
+        LoginSessionManager loginSessionManager = new LoginSessionManager(request);
         loginSessionManager.clearSession();
         return "redirect:/";
     }
 
     @PostMapping("/login")
-    public String login(UserDto userDto) {
+    public String login(UserDto userDto, HttpServletRequest request) {
+        LoginSessionManager loginSessionManager = new LoginSessionManager(request);
         UserDto resultDto = loginService.login(userDto);
         loginSessionManager.setLoginSession(resultDto.getName(), resultDto.getEmail());
         return "redirect:/";

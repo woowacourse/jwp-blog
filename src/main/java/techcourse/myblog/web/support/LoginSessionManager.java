@@ -1,11 +1,8 @@
 package techcourse.myblog.web.support;
 
-import org.springframework.stereotype.Component;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-@Component
 public class LoginSessionManager {
 
     private final HttpServletRequest httpServletRequest;

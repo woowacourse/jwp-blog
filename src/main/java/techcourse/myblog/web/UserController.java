@@ -12,16 +12,16 @@ import techcourse.myblog.service.UserService;
 import techcourse.myblog.web.support.LoginSessionManager;
 import techcourse.myblog.web.support.UserSessionInfo;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class UserController {
 
     private final UserService userService;
-    private final LoginSessionManager loginSessionManager;
 
     @Autowired
-    public UserController(UserService userService, LoginSessionManager loginSessionManager) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.loginSessionManager = loginSessionManager;
     }
 
     @GetMapping("/users")
@@ -47,15 +47,17 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public String update(UserDto userDto, UserSessionInfo userSessionInfo) {
+    public String update(UserDto userDto, UserSessionInfo userSessionInfo, HttpServletRequest request) {
         userService.updateUser(userSessionInfo.getEmail(), userDto);
+        LoginSessionManager loginSessionManager = new LoginSessionManager(request);
         loginSessionManager.setLoginSession(userDto.getName(), userDto.getEmail());
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/users")
-    public String delete(UserSessionInfo userSessionInfo) {
+    public String delete(UserSessionInfo userSessionInfo, HttpServletRequest request) {
         userService.deleteUser(userSessionInfo.getEmail());
+        LoginSessionManager loginSessionManager = new LoginSessionManager(request);
         loginSessionManager.clearSession();
         return "redirect:/";
     }
