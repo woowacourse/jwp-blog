@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserEditParams;
-import techcourse.myblog.dto.UserSaveParams;
+import techcourse.myblog.dto.UserEditRequestDto;
+import techcourse.myblog.dto.UserSaveRequestDto;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -27,9 +27,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/users")
-    public String signUp(UserSaveParams userSaveParams, RedirectAttributes redirectAttributes) {
-        log.info("sign up post request params={}", userSaveParams);
-        userService.save(userSaveParams.toEntity());
+    public String signUp(UserSaveRequestDto userSaveRequestDto, RedirectAttributes redirectAttributes) {
+        log.info("sign up post request params={}", userSaveRequestDto);
+        userService.save(userSaveRequestDto.toEntity());
         redirectAttributes.addFlashAttribute("successMessage", SUCCESS_SIGN_UP_MESSAGE);
         return "redirect:/login";
     }
@@ -65,11 +65,11 @@ public class UserController {
     }
 
     @PutMapping("/mypage/edit")
-    public String editMyPage(UserEditParams userEditParams, HttpSession httpSession) {
-        log.info("edit mypage put request params={}", userEditParams);
+    public String editMyPage(UserEditRequestDto userEditRequestDto, HttpSession httpSession) {
+        log.info("edit mypage put request params={}", userEditRequestDto);
         User lastUser = (User) httpSession.getAttribute(USER);
         Long id = lastUser.getId();
-        User user = userService.update(id, userEditParams);
+        User user = userService.update(id, userEditRequestDto);
         httpSession.setAttribute(USER, user);
 
         return "redirect:/mypage";

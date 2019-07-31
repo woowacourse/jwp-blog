@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.ArticleSaveParams;
+import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
@@ -36,11 +36,11 @@ public class ArticleService {
     }
 
     @Transactional
-    public void update(ArticleSaveParams articleSaveParams, long id) {
-        log.debug("update article params={}", articleSaveParams);
+    public void update(ArticleSaveRequestDto articleSaveRequestDto, long id) {
+        log.debug("update article params={}", articleSaveRequestDto);
 
         Article article = findById(id);
-        article.update(articleSaveParams);
+        article.update(articleSaveRequestDto);
     }
 
     public void deleteById(long id) {

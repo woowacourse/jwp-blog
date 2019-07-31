@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.dto.UserSaveParams;
+import techcourse.myblog.dto.UserSaveRequestDto;
 import techcourse.myblog.testutil.LoginTestUtil;
 
 @ExtendWith(SpringExtension.class)
@@ -84,9 +84,9 @@ class ArticleControllerTests {
 
     @Test
     void editArticle_다른_User가_수정_요청할_경우() {
-        UserSaveParams userSaveParams = new UserSaveParams("테스트", "test1234@test.com", "password1!");
-        LoginTestUtil.signUp(webTestClient, userSaveParams);
-        String jSessionIdByAnotherUser = LoginTestUtil.getJSessionId(webTestClient, userSaveParams);
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("테스트", "test1234@test.com", "password1!");
+        LoginTestUtil.signUp(webTestClient, userSaveRequestDto);
+        String jSessionIdByAnotherUser = LoginTestUtil.getJSessionId(webTestClient, userSaveRequestDto);
 
         webTestClient.get().uri(location + "/edit")
                 .cookie("JSESSIONID", jSessionIdByAnotherUser)

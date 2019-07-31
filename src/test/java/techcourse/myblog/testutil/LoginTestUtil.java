@@ -2,34 +2,34 @@ package techcourse.myblog.testutil;
 
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.dto.UserSaveParams;
+import techcourse.myblog.dto.UserSaveRequestDto;
 
 public class LoginTestUtil {
 
-    private static UserSaveParams userSaveParams = new UserSaveParams("이름", "test@test.com", "password1!");
+    private static UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("이름", "test@test.com", "password1!");
 
     public static void signUp(WebTestClient webTestClient) {
-        signUp(webTestClient, userSaveParams);
+        signUp(webTestClient, userSaveRequestDto);
     }
 
-    public static void signUp(WebTestClient webTestClient, UserSaveParams userSaveParams) {
+    public static void signUp(WebTestClient webTestClient, UserSaveRequestDto userSaveRequestDto) {
         webTestClient.post().uri("/users")
                 .body(BodyInserters
-                        .fromFormData("name", userSaveParams.getName())
-                        .with("email", userSaveParams.getEmail())
-                        .with("password", userSaveParams.getPassword()))
+                        .fromFormData("name", userSaveRequestDto.getName())
+                        .with("email", userSaveRequestDto.getEmail())
+                        .with("password", userSaveRequestDto.getPassword()))
                 .exchange();
     }
 
     public static String getJSessionId(WebTestClient webTestClient) {
-        return getJSessionId(webTestClient, userSaveParams);
+        return getJSessionId(webTestClient, userSaveRequestDto);
     }
 
-    public static String getJSessionId(WebTestClient webTestClient, UserSaveParams userSaveParams) {
+    public static String getJSessionId(WebTestClient webTestClient, UserSaveRequestDto userSaveRequestDto) {
         return webTestClient.post().uri("/login")
                 .body(BodyInserters
-                        .fromFormData("email", userSaveParams.getEmail())
-                        .with("password", userSaveParams.getPassword()))
+                        .fromFormData("email", userSaveRequestDto.getEmail())
+                        .with("password", userSaveRequestDto.getPassword()))
                 .exchange()
                 .returnResult(String.class)
                 .getResponseCookies()
@@ -43,7 +43,7 @@ public class LoginTestUtil {
                 .exchange();
     }
 
-    public static UserSaveParams getUserSaveParams() {
-        return userSaveParams;
+    public static UserSaveRequestDto getUserSaveRequestDto() {
+        return userSaveRequestDto;
     }
 }

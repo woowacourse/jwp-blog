@@ -2,7 +2,7 @@ package techcourse.myblog.domain;
 
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
-import techcourse.myblog.dto.ArticleSaveParams;
+import techcourse.myblog.dto.ArticleSaveRequestDto;
 
 import javax.persistence.*;
 
@@ -39,10 +39,10 @@ public class Article {
         return StringUtils.isNotBlank(coverUrl);
     }
 
-    public void update(ArticleSaveParams articleSaveParams) {
-        this.title = articleSaveParams.getTitle();
-        this.coverUrl = articleSaveParams.getCoverUrl();
-        this.contents = articleSaveParams.getContents();
+    public void update(ArticleSaveRequestDto articleSaveRequestDto) {
+        this.title = articleSaveRequestDto.getTitle();
+        this.coverUrl = articleSaveRequestDto.getCoverUrl();
+        this.contents = articleSaveRequestDto.getContents();
     }
 
     public void setAuthor(User user) {

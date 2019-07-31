@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.ArticleSaveParams;
+import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 
@@ -31,9 +31,9 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String saveArticle(ArticleSaveParams articleSaveParams, HttpSession httpSession) {
-        log.info("save article post request params={}", articleSaveParams);
-        Article article = articleService.save(articleSaveParams.toEntity(), (User) httpSession.getAttribute(USER));
+    public String saveArticle(ArticleSaveRequestDto articleSaveRequestDto, HttpSession httpSession) {
+        log.info("save article post request params={}", articleSaveRequestDto);
+        Article article = articleService.save(articleSaveRequestDto.toEntity(), (User) httpSession.getAttribute(USER));
         Long id = article.getId();
         return "redirect:/articles/" + id;
     }
@@ -62,9 +62,9 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public String saveEditedArticle(@PathVariable long id, ArticleSaveParams articleSaveParams) {
-        log.info("save edited article post request params={}", articleSaveParams);
-        articleService.update(articleSaveParams, id);
+    public String saveEditedArticle(@PathVariable long id, ArticleSaveRequestDto articleSaveRequestDto) {
+        log.info("save edited article post request params={}", articleSaveRequestDto);
+        articleService.update(articleSaveRequestDto, id);
         return "redirect:/articles/" + id;
     }
 

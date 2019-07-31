@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class UserLoginParams {
+public class UserLoginRequestDto {
     private String email;
     private String password;
 }

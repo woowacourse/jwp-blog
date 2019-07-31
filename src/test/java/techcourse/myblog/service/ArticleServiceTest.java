@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.ArticleSaveParams;
+import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,18 +72,18 @@ class ArticleServiceTest {
 
     @Test
     void update() {
-        ArticleSaveParams articleSaveParams = new ArticleSaveParams();
-        articleSaveParams.setTitle("newTitle");
-        articleSaveParams.setCoverUrl("newCoverUrl");
-        articleSaveParams.setContents("newContents");
+        ArticleSaveRequestDto articleSaveRequestDto = new ArticleSaveRequestDto();
+        articleSaveRequestDto.setTitle("newTitle");
+        articleSaveRequestDto.setCoverUrl("newCoverUrl");
+        articleSaveRequestDto.setContents("newContents");
         Long id = article.getId();
 
-        articleService.update(articleSaveParams, id);
+        articleService.update(articleSaveRequestDto, id);
 
         Article updatedArticle = articleService.findById(id);
-        assertThat(updatedArticle.getTitle()).isEqualTo(articleSaveParams.getTitle());
-        assertThat(updatedArticle.getCoverUrl()).isEqualTo(articleSaveParams.getCoverUrl());
-        assertThat(updatedArticle.getContents()).isEqualTo(articleSaveParams.getContents());
+        assertThat(updatedArticle.getTitle()).isEqualTo(articleSaveRequestDto.getTitle());
+        assertThat(updatedArticle.getCoverUrl()).isEqualTo(articleSaveRequestDto.getCoverUrl());
+        assertThat(updatedArticle.getContents()).isEqualTo(articleSaveRequestDto.getContents());
     }
 
     @Test

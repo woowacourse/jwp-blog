@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserEditParams;
+import techcourse.myblog.dto.UserEditRequestDto;
 import techcourse.myblog.exception.UserDuplicateException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.repository.UserRepository;
@@ -37,11 +37,11 @@ public class UserService {
     }
 
     @Transactional
-    public User update(Long id, UserEditParams userEditParams) {
-        log.debug("update user params={} by id={}", userEditParams, id);
+    public User update(Long id, UserEditRequestDto userEditRequestDto) {
+        log.debug("update user params={} by id={}", userEditRequestDto, id);
 
         User user = findById(id);
-        user.update(userEditParams);
+        user.update(userEditRequestDto);
         return user;
     }
 

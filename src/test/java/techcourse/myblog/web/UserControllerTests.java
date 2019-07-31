@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.dto.UserSaveParams;
+import techcourse.myblog.dto.UserSaveRequestDto;
 import techcourse.myblog.testutil.LoginTestUtil;
 
 @ExtendWith(SpringExtension.class)
@@ -21,7 +21,7 @@ class UserControllerTests {
     private WebTestClient webTestClient;
 
     private String jSessionId;
-    private UserSaveParams signUpParams = new UserSaveParams("이름", "test2@test.com", "password2@");
+    private UserSaveRequestDto signUpParams = new UserSaveRequestDto("이름", "test2@test.com", "password2@");
 
     @BeforeEach
     void setUp() {
@@ -66,11 +66,11 @@ class UserControllerTests {
 
     @Test
     void mypage_edit_페이지_이동() {
-        UserSaveParams userSaveParams = LoginTestUtil.getUserSaveParams();
+        UserSaveRequestDto userSaveRequestDto = LoginTestUtil.getUserSaveRequestDto();
 
         webTestClient.post().uri("/mypage/edit")
                 .body(BodyInserters
-                        .fromFormData("password", userSaveParams.getPassword()))
+                        .fromFormData("password", userSaveRequestDto.getPassword()))
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isOk();
