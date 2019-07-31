@@ -8,7 +8,6 @@ import techcourse.myblog.presentation.CommentNotFoundException;
 import techcourse.myblog.service.dto.CommentRequestDto;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -28,9 +27,10 @@ public class CommentService {
 
     @Transactional
     public void deleteByArticle(Article article) {
-        commentRepository.findByArticleOrderByCreatedAt(article)
-                .stream()
-                .forEach(comment -> commentRepository.deleteById(comment.getId()));
+        commentRepository.deleteByArticle(article);
+//        commentRepository.findByArticleOrderByCreatedAt(article)
+//                .stream()
+//                .forEach(comment -> commentRepository.deleteById(comment.getId()));
     }
 
     public Comment save(Comment newComment) {

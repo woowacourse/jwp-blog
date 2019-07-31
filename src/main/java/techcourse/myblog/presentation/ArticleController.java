@@ -12,6 +12,7 @@ import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.ArticleRequestDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.service.dto.CommentResponseDtoCollection;
 
 import javax.servlet.http.HttpSession;
 
@@ -62,12 +63,8 @@ public class ArticleController {
     public String showArticleByIdPage(@PathVariable long articleId, Model model) {
         Article article = articleService.findById(articleId);
         model.addAttribute("article", article);
-
-        List<CommentResponseDto> comments = commentService.findByArticle(article)
-                .stream()
-                .map(CommentResponseDto::new)
-                .collect(Collectors.toList());
-        model.addAttribute("comments", comments);
+        model.addAttribute("comments",
+                CommentResponseDtoCollection.of(commentService.findByArticle(article)));
         return "article";
     }
 
