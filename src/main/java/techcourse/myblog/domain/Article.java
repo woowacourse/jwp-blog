@@ -24,10 +24,6 @@ public class Article {
         this.contents = contents;
     }
 
-    public boolean isTitleMath(String title) {
-        return this.title.equals(title);
-    }
-
     public void updateArticle(Article article) {
         this.title = article.title;
         this.coverUrl = article.coverUrl;
