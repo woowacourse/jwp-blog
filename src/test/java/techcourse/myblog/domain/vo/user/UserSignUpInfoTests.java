@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserSignUpInfoTests {
 	@Test
 	void valueOfUser() {
-		UserSignUpInfo userSignUpInfo = new UserSignUpInfo("tiber", "asdfASDF1@", "tiber@naver.com");
+		UserSignUpInfo userSignUpInfo = new UserSignUpInfo("tiber", "tiber@naver.com", "asdfASDF1@");
 		User user = userSignUpInfo.valueOfUser();
 		assertThat(user.getUsername()).isEqualTo(userSignUpInfo.getUsername());
 		assertThat(user.getEmail()).isEqualTo(userSignUpInfo.getEmail());

@@ -1,8 +1,9 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.vo.article;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.vo.article.ArticleContents;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.vo.user.UserSignUpInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,7 +17,7 @@ class ArticleContentsTests {
 	@BeforeEach
 	void setUp() {
 		articleContents = new ArticleContents("title", "contents", "coverUrl");
-		UserSignUpInfo userSignUpInfo = new UserSignUpInfo("tiber", "asdfASDF1@", "tiber@naver.com");
+		UserSignUpInfo userSignUpInfo = new UserSignUpInfo("tiber", "tiber@naver.com", "asdfASDF1@");
 		user = userSignUpInfo.valueOfUser();
 	}
 
