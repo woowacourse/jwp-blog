@@ -2,12 +2,10 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
@@ -15,11 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-@ExtendWith(SpringExtension.class)
 @TestPropertySource("classpath:application_test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserLoginControllerTest {
-    private static final String name = "미스터코";
     private static final String email = "test@test.com";
     private static final String password = "123123123";
 
@@ -34,7 +30,7 @@ public class UserLoginControllerTest {
     @BeforeEach
     void setUp() {
         if (JSSESIONID == null) {
-            JSSESIONID = getJSSESIONID(name, email, password);
+            JSSESIONID = getJSSESIONID();
         }
     }
 
@@ -95,16 +91,8 @@ public class UserLoginControllerTest {
                 .exchange().expectStatus().isOk();
     }
 
-    private String getJSSESIONID(String name, String email, String password) {
+    private String getJSSESIONID() {
         List<String> result = new ArrayList<>();
-
-        webTestClient.post()
-                .uri("/signup")
-                .body(BodyInserters
-                        .fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange();
 
         webTestClient.post()
                 .uri("/login")

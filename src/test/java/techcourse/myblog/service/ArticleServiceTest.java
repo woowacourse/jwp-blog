@@ -85,7 +85,7 @@ class ArticleServiceTest {
                 .isEqualTo(Arrays.asList(articleDto1, articleDto2));
     }
 
-    private  ArticleDto getArticleDto(long id, long categoryId) {
+    private ArticleDto getArticleDto(long id, long categoryId) {
         return ArticleDto.builder()
                 .id(id)
                 .categoryId(categoryId)

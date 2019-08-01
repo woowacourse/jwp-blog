@@ -1,14 +1,11 @@
 package techcourse.myblog.web;
 
 import org.apache.logging.log4j.util.Strings;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.article.ArticleDto;
@@ -20,7 +17,6 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
 @TestPropertySource("classpath:application_test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
@@ -87,12 +83,9 @@ public class ArticleControllerTests {
                 .value("location", s -> {
                     addId.set(Long.parseLong(s.split("/")[4]));
                 });
-    }
 
-    @Test
-    void delete() {
         webTestClient.delete()
-                .uri("/articles/" + 2)
+                .uri("/articles/" + addId.get())
                 .exchange()
                 .expectStatus().isFound();
     }
