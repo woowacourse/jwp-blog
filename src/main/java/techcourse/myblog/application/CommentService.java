@@ -10,6 +10,7 @@ import techcourse.myblog.application.exception.NotSameAuthorException;
 import techcourse.myblog.domain.*;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -44,10 +45,7 @@ public class CommentService {
 
     public void deleteComment(Long commentId, UserResponse userResponse) {
         Comment comment = findCommentById(commentId);
-        User author = userRepository.findById(userResponse.getId())
-                .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
-
-        if (!comment.isSameAuthor(author)) {
+        if (!comment.isSameAuthor(userResponse.getId())) {
             throw new NotSameAuthorException("해당 작성자만 댓글을 삭제할 수 있습니다.");
         }
 
@@ -57,14 +55,10 @@ public class CommentService {
     @Transactional
     public void updateComment(Long commentId, UserResponse userResponse, CommentRequest commentRequest) {
         Comment comment = findCommentById(commentId);
-        User author = userRepository.findById(userResponse.getId())
-                .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
-
         try {
             comment.changeContents(commentRequest, userResponse.getId());
         } catch (IllegalArgumentException e) {
             throw new NotSameAuthorException("해당 작성자만 댓글을 수정할 수 있습니다.");
         }
     }
-
 }
