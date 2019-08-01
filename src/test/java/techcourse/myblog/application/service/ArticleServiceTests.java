@@ -8,7 +8,7 @@ import techcourse.myblog.application.converter.UserConverter;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.UserResponseDto;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
-import techcourse.myblog.application.service.exception.NotMatchAuthorException;
+import techcourse.myblog.application.service.exception.NotMatchArticleAuthorException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.User;
@@ -117,6 +117,6 @@ public class ArticleServiceTests {
 
     @Test
     void 글작성자와_세션이_다를때_비교_테스트() {
-        assertThrows(NotMatchAuthorException.class, () -> articleService.matchAuthor(EXIST_ARTICLE_ID, "zino1@gmail.com"));
+        assertThrows(NotMatchArticleAuthorException.class, () -> articleService.matchAuthor(EXIST_ARTICLE_ID, "zino1@gmail.com"));
     }
 }

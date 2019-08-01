@@ -97,17 +97,17 @@ public class CommentServiceTests {
     @Test
     void Comment_수정_테스트() {
         CommentDto commentDto = new CommentDto(null, CONTENTS + "123");
-        assertDoesNotThrow(() -> commentService.modify(1L, commentDto));
+        assertDoesNotThrow(() -> commentService.modify(1L, commentDto, FIRST_EMAIL));
     }
 
     @Test
     void 존재하지않는_Comment_수정_에러_테스트() {
         CommentDto commentDto = new CommentDto(null, CONTENTS + "123");
-        assertThrows(CommentNotFoundException.class, () -> commentService.modify(3L, commentDto));
+        assertThrows(CommentNotFoundException.class, () -> commentService.modify(3L, commentDto, FIRST_EMAIL));
     }
 
     @Test
     void Comment_삭제_테스트() {
-        assertDoesNotThrow(() -> commentService.delete(1L));
+        assertDoesNotThrow(() -> commentService.delete(1L, FIRST_EMAIL));
     }
 }
