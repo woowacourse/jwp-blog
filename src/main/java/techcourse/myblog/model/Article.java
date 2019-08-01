@@ -8,6 +8,7 @@ import techcourse.myblog.exception.MisMatchAuthorException;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -47,7 +48,7 @@ public class Article {
     @JoinColumn(name = "USER_ID", nullable = false, foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User user;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     public void addComment(Comment comment) {
@@ -58,6 +59,7 @@ public class Article {
     }
 
     public List<Comment> getComments() {
+        comments.sort(Comparator.comparing(Comment::getId));
         return comments;
     }
 
@@ -79,4 +81,6 @@ public class Article {
             throw new MisMatchAuthorException("게시글을 작성한 유저만 수정할 수 있습니다.");
         }
     }
+
+
 }
