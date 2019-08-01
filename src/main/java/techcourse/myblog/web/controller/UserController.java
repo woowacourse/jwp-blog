@@ -7,8 +7,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.service.UserService;
-import techcourse.myblog.dto.MyPageRequestDto;
-import techcourse.myblog.dto.UserRequestDto;
+import techcourse.myblog.dto.MyPageDto;
+import techcourse.myblog.dto.UserDto;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -25,12 +25,12 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String moveSignUpPage(UserRequestDto userRequestDto) {
+    public String moveSignUpPage(UserDto userRequestDto) {
         return "signup";
     }
 
     @PostMapping("/users")
-    public String createUser(@Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
+    public String createUser(@Valid UserDto userRequestDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "signup";
         }
@@ -58,8 +58,8 @@ public class UserController {
     }
 
     @PutMapping("/user/update/{id}")
-    public String updateMyPage(@PathVariable long id, MyPageRequestDto myPageRequestDto, HttpSession httpSession) {
-        User user = userService.updateUserInfo(id, myPageRequestDto);
+    public String updateMyPage(@PathVariable long id, MyPageDto myPageDto, HttpSession httpSession) {
+        User user = userService.updateUserInfo(id, myPageDto);
         httpSession.setAttribute(USER, user);
         return "redirect:/mypage/" + user.getId();
     }

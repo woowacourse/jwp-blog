@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.exception.*;
-import techcourse.myblog.dto.UserRequestDto;
+import techcourse.myblog.dto.UserDto;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,14 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 public class ControllerExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
-    // Todo : signup.html-redirect 도전
     @ExceptionHandler(BindException.class)
     public RedirectView bindException(BindException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("userRequestDto", new UserRequestDto("", "", ""));
+        redirectAttributes.addFlashAttribute("userRequestDto", new UserDto("", "", ""));
         redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRequestDto", e.getBindingResult());
         log.debug("e.getBindingResult : {}", e.getBindingResult());
         log.debug("e.getObjectName: {}", e.getObjectName());
-        //return new RedirectView(e.getObjectName())
         return new RedirectView("/signup");
     }
 

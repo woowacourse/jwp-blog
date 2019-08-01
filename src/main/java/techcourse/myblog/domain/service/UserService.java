@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.exception.DuplicateEmailException;
 import techcourse.myblog.domain.repository.UserRepository;
-import techcourse.myblog.dto.MyPageRequestDto;
+import techcourse.myblog.dto.MyPageDto;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUserInfo(long id, MyPageRequestDto userInfo) {
+    public User updateUserInfo(long id, MyPageDto userInfo) {
         User user = userRepository.findUserById(id);
         user.updateUserInfo(userInfo.getName());
         return user;

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.service.LoginService;
-import techcourse.myblog.dto.LoginRequestDto;
+import techcourse.myblog.dto.LoginDto;
 
 import javax.servlet.http.HttpSession;
 
@@ -27,8 +27,8 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(LoginRequestDto loginRequestDto, HttpSession httpSession) {
-        User user = loginService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+    public String login(LoginDto loginDto, HttpSession httpSession) {
+        User user = loginService.login(loginDto.getEmail(), loginDto.getPassword());
         httpSession.setAttribute(USER, user);
         return "redirect:/";
     }
