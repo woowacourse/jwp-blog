@@ -1,14 +1,37 @@
 package techcourse.myblog.template;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.data.ArticleDataForTest;
 import techcourse.myblog.data.UserDataForTest;
 
+import java.net.URI;
+
 @Slf4j
-public class RequestTemplate extends SignUpTemplate {
+@AutoConfigureWebTestClient
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class RequestTemplate {
+
+    @Autowired
+    public WebTestClient webTestClient;
+
     public WebTestClient.ResponseSpec loggedInGetRequest(String uri) {
+        return webTestClient
+                .get()
+                .uri(uri)
+                .header("Cookie", getCookie())
+                .exchange();
+    }
+
+    public WebTestClient.ResponseSpec loggedInGetRequest(URI uri) {
         return webTestClient
                 .get()
                 .uri(uri)
@@ -84,6 +107,23 @@ public class RequestTemplate extends SignUpTemplate {
                 .post()
                 .uri(uri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+    }
+
+    public String createArticle() {
+        final String[] path = new String[1];
+        loggedInPostRequest("/articles")
+                .body(BodyInserters
+                        .fromFormData("title", ArticleDataForTest.ARTICLE_TITLE)
+                        .with("coverUrl", ArticleDataForTest.ARTICLE_COVER_URL)
+                        .with("contents", ArticleDataForTest.ARTICLE_CONTENTS))
+                .exchange()
+                .expectStatus().isFound()
+                .expectBody()
+                .consumeWith(response -> {
+                    path[0] = response.getResponseHeaders().getLocation().getPath();
+                });
+
+        return path[0];
     }
 
     private String getCookie() {
