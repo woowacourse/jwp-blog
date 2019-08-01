@@ -21,7 +21,8 @@ public class Article {
     @Column(nullable = false)
     private String coverUrl;
 
-    @Column(nullable = false, length = 2000)
+    @Lob
+    @Column(nullable = false)
     private String contents;
 
     @ManyToOne()
@@ -30,7 +31,6 @@ public class Article {
 
     @OneToMany(mappedBy = "article")
     private List<Comment> comments;
-
 
     private Article() {
     }
