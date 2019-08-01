@@ -1,46 +1,37 @@
 package techcourse.myblog.service.user;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import techcourse.myblog.service.dto.user.UserRequestDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.DuplicatedEmailException;
-import techcourse.myblog.exception.EmailNotFoundException;
-
-import java.util.Arrays;
+import techcourse.myblog.exception.UserNotFoundException;
+import techcourse.myblog.service.dto.user.UserRequest;
+import techcourse.myblog.service.dto.user.UserResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
 public class UserServiceTest {
+    private static final Long DEFAULT_USER_ID = 999L;
+
     @Autowired
     private UserService userService;
 
-    private UserResponseDto persistUser;
-    private String email;
-    private String name;
-    private String password;
+    private UserResponse defaultUser;
 
     @BeforeEach
     void setUp() {
-        email = "done@gmail.com";
-        name = "done";
-        password = "12345678";
-        persistUser = userService.save(new UserRequestDto(email, name, password));
-    }
-
-    @AfterEach
-    void tearDown() {
-        userService.delete(persistUser);
+        defaultUser = userService.findById(DEFAULT_USER_ID);
     }
 
     @Test
     void 사용자_생성_확인() {
-        assertThat(persistUser).isEqualTo(new UserResponseDto(email, name));
+        UserResponse persistUser = userService.save(new UserRequest("john@example.com", "john", "p@ssw0rd"));
+        assertThat(persistUser).isEqualTo(new UserResponse(persistUser.getId(), "john@example.com", "john"));
     }
 
     @Test
@@ -52,18 +43,18 @@ public class UserServiceTest {
     @Test
     void 사용자_생성_오류확인_이미_존재하는_사용자일_경우() {
         assertThatExceptionOfType(DuplicatedEmailException.class)
-                .isThrownBy(() -> userService.save(new UserRequestDto(email, name, password)));
+                .isThrownBy(() -> userService.save(new UserRequest(defaultUser.getEmail(), defaultUser.getName(), "p@ssw0rd")));
     }
 
     @Test
     void 사용자_목록_조회_확인() {
-        assertThat(Arrays.asList(persistUser)).isEqualTo(userService.findAll());
+        assertThat(userService.findAll()).hasSize(2);
     }
 
     @Test
     void 사용자_정보_수정_확인() {
-        UserResponseDto updateUser = userService.update(email, "dowon");
-        assertThat(updateUser).isEqualTo(new UserResponseDto(email, "dowon"));
+        UserResponse updateUser = userService.update(defaultUser.getEmail(), "dowon");
+        assertThat(updateUser).isEqualTo(new UserResponse(updateUser.getId(), defaultUser.getEmail(), "dowon"));
     }
 
     @Test
@@ -75,25 +66,25 @@ public class UserServiceTest {
     @Test
     void 사용자_정보_수정_오류확인_이름이_null인_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> userService.update(email, null));
+                .isThrownBy(() -> userService.update(defaultUser.getEmail(), null));
     }
 
     @Test
     void 사용자_정보_수정_오류확인_사용자가_없을_경우() {
-        assertThatExceptionOfType(EmailNotFoundException.class)
+        assertThatExceptionOfType(UserNotFoundException.class)
                 .isThrownBy(() -> userService.update("done@naver.com", "dowon"));
     }
 
     @Test
     void 사용자_정보_삭제_확인() {
-        UserResponseDto userToDelete = userService.save(new UserRequestDto("done@naver.com", "done", "12345678"));
+        UserResponse userToDelete = userService.save(new UserRequest("done@naver.com", "done", "12345678"));
         userService.delete(userToDelete);
         assertThat(userService.findAll()).doesNotContain(userToDelete);
     }
 
     @Test
     void 사용자_정보_삭제_오류확인_사용자가_없을_경우() {
-        assertThatExceptionOfType(EmailNotFoundException.class)
-                .isThrownBy(() -> userService.delete(new UserResponseDto("done@naver.com", "done")));
+        assertThatExceptionOfType(UserNotFoundException.class)
+                .isThrownBy(() -> userService.delete(new UserResponse(defaultUser.getId() - 1, "done@naver.com", "done")));
     }
 }

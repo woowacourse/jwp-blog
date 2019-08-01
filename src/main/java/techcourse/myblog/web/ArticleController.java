@@ -6,18 +6,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.service.dto.article.ArticleDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
 import techcourse.myblog.service.article.ArticleService;
+import techcourse.myblog.service.dto.article.ArticleRequest;
+import techcourse.myblog.service.dto.user.UserResponse;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Objects;
 
 import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
 
 @ControllerAdvice
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
     final private ArticleService articleService;
 
@@ -26,55 +25,48 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @GetMapping("/")
-    public String showMain(Model model, final HttpSession session) {
-        List<ArticleDto> articleDtos = articleService.findAll();
-        model.addAttribute("articleDtos", articleDtos);
-        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        if (!Objects.isNull(user)) {
-            model.addAttribute("user", user);
-        }
-        return "index";
+    @PostMapping("")
+    public String createArticle(final ArticleRequest articleDTO, final HttpSession session) {
+        Long id = articleService.save(articleDTO, ((UserResponse) session.getAttribute(USER_SESSION_KEY)).getId());
+        return "redirect:/articles/" + id;
     }
 
-    @GetMapping("/writing")
-    public String showWritingPage() {
-        return "article-edit";
-    }
-
-    @PostMapping("/articles")
-    public ModelAndView createArticle(final ArticleDto articleDTO) {
-        Long id = articleService.save(articleDTO);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/articles/" + id));
-        return modelAndView;
-    }
-
-    @GetMapping("/articles/{id}")
+    @GetMapping("/{id}")
     public String showArticle(@PathVariable final Long id, Model model) {
         model.addAttribute("articleDTO", articleService.findById(id));
         return "article";
     }
 
-    @PutMapping("/articles/{id}")
-    public ModelAndView updateArticle(@PathVariable final Long id, final ArticleDto articleDTO) {
-        articleService.update(id, articleDTO);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/articles/" + id));
-        return modelAndView;
+    @PutMapping("/{id}")
+    public String updateArticle(@PathVariable final Long id, final ArticleRequest articleDTO, final HttpSession session) {
+        UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
+        if (!user.getId().equals(articleService.findAuthor(id).getId())) {
+            return "redirect:/articles/" + id;
+        }
+        articleService.update(id, articleDTO, user);
+        return "redirect:/articles/" + id;
     }
 
-    @DeleteMapping("/articles/{id}")
-    public ModelAndView deleteArticle(@PathVariable final Long id) {
+    @DeleteMapping("/{id}")
+    public String deleteArticle(@PathVariable final Long id, final HttpSession session) {
+        UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
+        if (!user.getId().equals(articleService.findAuthor(id).getId())) {
+            return "redirect:/articles/" + id;
+        }
         articleService.delete(id);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/"));
-        return modelAndView;
+        return "redirect:/";
     }
 
-    @GetMapping("/articles/{id}/edit")
-    public String showEditPage(@PathVariable final Long id, Model model) {
-        model.addAttribute("articleDTO", articleService.findById(id));
-        return "article-edit";
+    @GetMapping("/{id}/edit")
+    public ModelAndView showEditPage(@PathVariable final Long id, final HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+        UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
+        if (!user.getId().equals(articleService.findAuthor(id).getId())) {
+            modelAndView.setView(new RedirectView("/articles/" + id));
+            return modelAndView;
+        }
+        modelAndView.addObject("articleDTO", articleService.findById(id));
+        modelAndView.setViewName("article-edit");
+        return modelAndView;
     }
 }

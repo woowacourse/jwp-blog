@@ -43,4 +43,14 @@ public class UserTest {
         user.update("dowon");
         assertThat(user).isEqualTo(new User("done@gmail.com", "dowon", "12345678"));
     }
+
+    @Test
+    void 동일회원인지_비교_확인() {
+        assertThat(user.match("done@gmail.com")).isTrue();
+    }
+
+    @Test
+    void 동일회원인지_비교_확인_다른_회원일_경우() {
+        assertThat(user.match("john123@example.com")).isFalse();
+    }
 }
