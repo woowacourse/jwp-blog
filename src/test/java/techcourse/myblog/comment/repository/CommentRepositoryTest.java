@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.comment.domain.Comment;
+import techcourse.myblog.template.StaticVariableTemplate;
 import techcourse.myblog.user.domain.User;
 
 import java.util.Arrays;
@@ -14,21 +15,7 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class CommentRepositoryTest {
-    private static final String AUTHOR_NAME = "아잌아잌";
-    private static final String AUTHOR_EMAIL = "ike@ike.com";
-    private static final String AUTHOR_PASSWORD = "@Password1234";
-
-    private static final String COMMENTER_NAME = "에헴";
-    private static final String COMMENTER_EMAIL = "ehem@ehem.com";
-    private static final String COMMENTER_PASSWORD = "@Password1234";
-
-    private static final String TITLE = "달";
-    private static final String CONTENTS = "\uDF19";
-    private static final String COVER_URL = "";
-
-    private static final String COMMENT = "내가 쓴 글~";
-
+public class CommentRepositoryTest extends StaticVariableTemplate {
     private User author;
     private User commenter;
     private Article article;
@@ -61,6 +48,40 @@ public class CommentRepositoryTest {
 
         // then
         assertThat(commentRepository.findByArticle(persistArticle)).isEqualTo(Arrays.asList(comment));
+    }
+
+    @Test
+    public void 게시글에_대한_댓글이_달리는지_테스트() {
+        // given
+        testEntityManager.persist(author);
+        testEntityManager.persist(commenter);
+        Article persistArticle = testEntityManager.persist(article);
+
+        // when
+        persistArticle.addComments(comment);
+
+        cleanUpTestEntityManager();
+
+        // then
+        assertThat(commentRepository.findByArticle(persistArticle).size()).isEqualTo(1);
+    }
+
+    @Test
+    public void 게시글이_삭제되면_댓글도_함께_삭제되는지_테스트() {
+        // given
+        testEntityManager.persist(author);
+        testEntityManager.persist(commenter);
+        Article persistArticle = testEntityManager.persist(article);
+
+        persistArticle.addComments(comment);
+
+        // when
+        testEntityManager.remove(persistArticle);
+
+        cleanUpTestEntityManager();
+
+        // then
+        assertThat(commentRepository.findAll().size()).isEqualTo(0);
     }
 
     private void cleanUpTestEntityManager() {

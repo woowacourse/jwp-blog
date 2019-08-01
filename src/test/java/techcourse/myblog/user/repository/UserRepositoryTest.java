@@ -1,39 +1,52 @@
 package techcourse.myblog.user.repository;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import techcourse.myblog.article.domain.Article;
+import techcourse.myblog.template.StaticVariableTemplate;
 import techcourse.myblog.user.domain.User;
-import techcourse.myblog.user.exception.SignUpException;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import java.util.Optional;
 
-@SpringBootTest
-class UserRepositoryTest {
+import static org.assertj.core.api.Assertions.assertThat;
+
+@DataJpaTest
+class UserRepositoryTest extends StaticVariableTemplate {
+    private User user;
+    private Article article;
+
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TestEntityManager testEntityManager;
+
     @BeforeEach
     void setUp() {
-        userRepository.save(new User("andole", "A!1bcdef", "andole@gmail.com"));
+        user = new User(AUTHOR_NAME, AUTHOR_PASSWORD, AUTHOR_EMAIL);
+        article = new Article(TITLE, CONTENTS, COVER_URL);
     }
 
     @Test
-    void register_bad_case() {
-        assertThatThrownBy(() -> new User("z", "b", "c")).isInstanceOf(SignUpException.class);
+    public void findById() {
+        // given
+        User persistUser = testEntityManager.persist(user);
+        testEntityManager.persist(article);
+
+        cleanUpTestEntityManager();
+
+        // when
+        Optional<User> actualUser = userRepository.findById(persistUser.getId());
+
+        // then
+        actualUser.ifPresent(a -> assertThat(a).isEqualTo(persistUser));
     }
 
-    @Test
-    void findByNameTest() {
-        assertThat(userRepository.findByEmail("andole@gmail.com")).isNotNull();
-        assertThat(userRepository.findByEmail("andole@gmail.com")).isNotEqualTo(userRepository.findByEmail("aaa"));
-    }
-
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAll();
+    private void cleanUpTestEntityManager() {
+        testEntityManager.flush();
+        testEntityManager.clear();
     }
 }
