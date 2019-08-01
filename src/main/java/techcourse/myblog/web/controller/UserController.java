@@ -44,27 +44,27 @@ public class UserController {
         return "user-list";
     }
 
-    @GetMapping("/mypage/{id}")
+    @GetMapping("/mypages/{id}")
     public String moveMyPage(@PathVariable long id, Model model) {
         model.addAttribute("user", userService.findUserById(id));
         return "mypage";
     }
 
-    @GetMapping("/user/update/{id}")
+    @GetMapping("/users/updates/{id}")
     public String moveMyPageEdit(@PathVariable long id, Model model) {
         User user = userService.findUserById(id);
         model.addAttribute("user", user);
         return "mypage-edit";
     }
 
-    @PutMapping("/user/update/{id}")
+    @PutMapping("/users/update/{id}")
     public String updateMyPage(@PathVariable long id, MyPageDto myPageDto, HttpSession httpSession) {
         User user = userService.updateUserInfo(id, myPageDto);
         httpSession.setAttribute(USER, user);
         return "redirect:/mypage/" + user.getId();
     }
 
-    @DeleteMapping("/user/delete/{id}")
+    @DeleteMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable long id, HttpSession httpSession) {
         httpSession.removeAttribute(USER);
         userService.deleteById(id);

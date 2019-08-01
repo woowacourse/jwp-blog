@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.service.ArticleService;
 import techcourse.myblog.domain.service.CommentService;
@@ -14,7 +13,6 @@ import techcourse.myblog.dto.ArticleDto;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @Controller
