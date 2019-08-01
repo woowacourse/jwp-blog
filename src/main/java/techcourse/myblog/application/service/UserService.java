@@ -8,6 +8,7 @@ import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
 import techcourse.myblog.application.service.exception.NotExistUserIdException;
+import techcourse.myblog.application.service.exception.NotMatchEmailException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
@@ -45,7 +46,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findUserByEmail(String email) {
+    protected User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다."));
     }
@@ -55,18 +56,13 @@ public class UserService {
         String requestPassword = loginDto.getPassword();
         User user = findUserByEmail(loginDto.getEmail());
 
-        if (!user.isSamePassword(requestPassword)) {
-            throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
-        }
+        checkPassword(user, requestPassword);
     }
 
     @Transactional
     public void modify(@Valid UserDto userDto, String email) {
         User user = findUserByEmail(userDto.getEmail());
-
-        if (user.isDifferentEmail(email)) {
-            throw new IllegalArgumentException();
-        }
+        checkEmail(user, email);
 
         user.modify(userConverter.convertFromDto(userDto));
     }
@@ -74,11 +70,20 @@ public class UserService {
     @Transactional
     public void removeById(UserDto userDto, String email) {
         User user = findUserByEmail(userDto.getEmail());
-
-        if (user.isDifferentEmail(email)) {
-            throw new IllegalArgumentException();
-        }
+        checkEmail(user, email);
 
         userRepository.delete(user);
+    }
+
+    private void checkPassword(User user, String password) {
+        if (!user.checkEmail(password)) {
+            throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    private void checkEmail(User user, String email) {
+        if (!user.checkEmail(email)) {
+            throw new NotMatchEmailException("이메일이 일치하지 않습니다.");
+        }
     }
 }

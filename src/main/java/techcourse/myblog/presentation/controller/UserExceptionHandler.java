@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.application.service.exception.DuplicatedIdException;
-import techcourse.myblog.application.service.exception.NotExistCommentException;
-import techcourse.myblog.application.service.exception.NotExistUserIdException;
-import techcourse.myblog.application.service.exception.NotMatchPasswordException;
+import techcourse.myblog.application.service.exception.*;
 
 import java.util.stream.Collectors;
 
@@ -51,7 +48,15 @@ public class UserExceptionHandler {
     }
 
     @ExceptionHandler(NotExistCommentException.class)
-    public RedirectView handleNotMacthCommentUserError(RedirectAttributes redirectAttributes, NotExistCommentException e) {
+    public RedirectView handleNotMatchCommentUserError(RedirectAttributes redirectAttributes, NotExistCommentException e) {
+        RedirectView redirectView = new RedirectView("/");
+        redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
+
+        return redirectView;
+    }
+
+    @ExceptionHandler(NotMatchEmailException.class)
+    public RedirectView handleNotMatchEmailError(RedirectAttributes redirectAttributes, NotMatchEmailException e) {
         RedirectView redirectView = new RedirectView("/");
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
 

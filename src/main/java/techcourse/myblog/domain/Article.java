@@ -15,6 +15,8 @@ public class Article {
 
     private String title;
     private String coverUrl;
+
+    @Lob
     private String contents;
 
     @ManyToOne
@@ -37,10 +39,8 @@ public class Article {
         this.contents = article.contents;
     }
 
-    public void checkAuthor(String email) {
-        if (user.isDifferentEmail(email)) {
-            throw new IllegalArgumentException();
-        }
+    public boolean checkAuthor(String email) {
+        return user.checkEmail(email);
     }
 
     @Override

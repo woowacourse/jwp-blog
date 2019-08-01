@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
+import techcourse.myblog.application.service.exception.NotMatchEmailException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,31 +18,34 @@ import java.util.stream.Collectors;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository) {
+    public ArticleService(ArticleRepository articleRepository, UserService userService) {
         this.articleRepository = articleRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Transactional
     public Long save(ArticleDto articleDto, String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(IllegalArgumentException::new);
+        User user = userService.findUserByEmail(email);
         Article article = new Article(articleDto.getTitle(),
                 articleDto.getCoverUrl(),
                 articleDto.getContents(),
                 user);
+
         return articleRepository.save(article).getId();
     }
 
     @Transactional(readOnly = true)
     public ArticleDto findById(Long articleId) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new NotExistArticleIdException("존재하지 않는 Article 입니다."));
+        return ArticleDto.of(findArticleById(articleId));
+    }
 
-        return ArticleDto.of(article);
+    @Transactional(readOnly = true)
+    public Article findArticleById(Long articleId) {
+        return articleRepository.findById(articleId)
+                .orElseThrow(() -> new NotExistArticleIdException("해당 게시물을 찾을 수 없습니다."));
     }
 
     @Transactional
@@ -52,10 +55,8 @@ public class ArticleService {
 
     @Transactional
     public void modify(Long articleId, ArticleDto articleDto, String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(IllegalArgumentException::new);
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new NotExistArticleIdException(""));
+        User user = userService.findUserByEmail(email);
+        Article article = findArticleById(articleId);
 
         article.modify(new Article(articleDto.getTitle(),
                 articleDto.getCoverUrl(),
@@ -70,17 +71,17 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public void checkAuthor(Long articleId, String email) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(IllegalArgumentException::new);
-        article.checkAuthor(email);
+        Article article = findArticleById(articleId);
+        if (!article.checkAuthor(email)) {
+            throw new NotMatchEmailException("작성자가 다릅니다.");
+        }
     }
 
     @Transactional
     public UserDto findAuthor(long articleId) {
-        User user = articleRepository.findById(articleId)
-                .orElseThrow(IllegalArgumentException::new)
+        User user = findArticleById(articleId)
                 .getUser();
         return new UserDto(user.getEmail(),
                 user.getName(),

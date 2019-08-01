@@ -45,11 +45,11 @@ public class User {
         this.name = user.name;
     }
 
-    public boolean isSamePassword(String password) {
+    public boolean checkPassword(String password) {
         return this.password.equals(password);
     }
 
-    public boolean isDifferentEmail(String email) {
-        return !this.email.equals(email);
+    public boolean checkEmail(String email) {
+        return this.email.equals(email);
     }
 }
