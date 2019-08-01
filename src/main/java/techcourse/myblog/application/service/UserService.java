@@ -28,13 +28,13 @@ public class UserService {
     }
 
     @Transactional
-    public void save(UserDto userDto) {
-        if (userRepository.countUserByEmail(userDto.getEmail()) != 0) {
+    public UserDto save(UserDto userDto) {
+        if (userRepository.existsByEmail(userDto.getEmail())) {
             throw new DuplicatedIdException("이미 사용중인 이메일입니다.");
         }
 
         User user = userConverter.convertFromDto(userDto);
-        userRepository.save(user);
+        return userConverter.convertFromEntity(userRepository.save(user));
     }
 
     @Transactional(readOnly = true)
@@ -75,13 +75,13 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public static void checkPassword(User user, String requestPassword) {
+    private static void checkPassword(User user, String requestPassword) {
         if (!user.isSamePassword(requestPassword)) {
             throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
         }
     }
 
-    public static void checkEmail(User user, String requestEmail) {
+    protected static void checkEmail(User user, String requestEmail) {
         if (!user.isSameEmail(requestEmail)) {
             throw new NotMatchEmailException("이메일이 틀립니다.");
         }

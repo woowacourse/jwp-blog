@@ -64,7 +64,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void findCommentWriter(Long commentId, String email) {
+    public void checkCommentWriter(Long commentId, String email) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
         UserService.checkEmail(comment.getUser(), email);
