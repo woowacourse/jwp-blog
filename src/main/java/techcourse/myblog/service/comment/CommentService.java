@@ -2,6 +2,7 @@ package techcourse.myblog.service.comment;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
@@ -18,6 +19,7 @@ import static techcourse.myblog.service.comment.CommentAssembler.convertToDto;
 import static techcourse.myblog.service.comment.CommentAssembler.convertToEntity;
 
 @Service
+@Transactional
 public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
@@ -50,6 +52,7 @@ public class CommentService {
         commentRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public CommentResponseDto findById(final Long id) {
         return convertToDto(commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new));

@@ -5,6 +5,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 public class ControllerTestUtil {
+    public static final String KEY_JSESSIONID = "JSESSIONID";
 
     public static EntityExchangeResult<byte[]> postLoginSync(WebTestClient webTestClient, String email, String password) {
         return webTestClient.post()
@@ -20,6 +21,15 @@ public class ControllerTestUtil {
         return webTestClient.post()
             .uri("/articles/" + articleId + "/comments")
             .body(BodyInserters.fromFormData("contents", contents))
+            .exchange()
+            .expectBody()
+            .returnResult();
+    }
+
+    public static EntityExchangeResult<byte[]> getSync(WebTestClient webTestClient, String uri, String sid) {
+        return webTestClient.get()
+            .uri(uri)
+            .cookie(KEY_JSESSIONID, sid)
             .exchange()
             .expectBody()
             .returnResult();

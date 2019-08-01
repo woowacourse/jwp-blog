@@ -51,7 +51,10 @@ public class CommentController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/articles/" + articleId));
 
-        commentService.delete(commentId);
+        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        if (commentService.findById(commentId).getAuthorId().equals(user.getId())) {
+            commentService.delete(commentId);
+        }
         return modelAndView;
     }
 }
