@@ -9,12 +9,11 @@ public class ArticleDto {
     private String contents;
     private User author;
 
-    public ArticleDto(Long id, String title, String coverUrl, String contents, User author) {
+    public ArticleDto(Long id, String title, String coverUrl, String contents) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-        this.author = author;
     }
 
     public String getTitle() {

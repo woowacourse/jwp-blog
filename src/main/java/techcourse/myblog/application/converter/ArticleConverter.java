@@ -20,8 +20,7 @@ public class ArticleConverter extends Converter<ArticleDto, Article> {
                     ArticleDto articleDto = new ArticleDto(article.getId()
                             , article.getTitle()
                             , article.getCoverUrl()
-                            , article.getContents()
-                            , article.getAuthor());
+                            , article.getContents()); //getAuthor지움
                     log.info("Article " + article);
                     log.info("ArticleDto Author " + articleDto.getAuthor());
 
