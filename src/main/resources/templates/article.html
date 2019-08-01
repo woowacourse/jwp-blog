@@ -88,7 +88,7 @@
                                     <a class="inline-block sub-title pull-right"
                                        th:href="@{/comments/{commentId}/edit(commentId=${comment.id})}"
                                        th:if="${session.user.id == comment.author.id}">
-                                            <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                                     </a>
                                     <!--                                    </form>-->
                                     <p class="width-80" th:text="${comment.contents}"></p>
