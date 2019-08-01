@@ -10,6 +10,7 @@ import techcourse.myblog.users.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -40,6 +41,10 @@ public class Article extends BaseEntity {
         this.contents = contents;
         this.coverUrl = coverUrl;
         this.author = author;
+    }
+
+    public List<Comment> getComments() {
+        return Collections.unmodifiableList(comments);
     }
 
     void update(Article other) {
