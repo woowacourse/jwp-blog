@@ -12,7 +12,6 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.DuplicatedUserException;
 import techcourse.myblog.exception.NotMatchPasswordException;
 import techcourse.myblog.exception.UnFoundUserException;
-import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 
 @Slf4j
@@ -20,13 +19,14 @@ import techcourse.myblog.repository.UserRepository;
 @Transactional
 public class UserService {
 
+    private static final String CHECK_LOGIN_INFO_ERROR = "로그인 정보를 확인해주세요.";
+    private static final String DUPLICATE_EMAIL_ERROR = "이미 존재하는 email입니다.";
+
     private final UserRepository userRepository;
-    private final ArticleRepository articleRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, ArticleRepository articleRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.articleRepository = articleRepository;
     }
 
     public List<User> findAll() {
@@ -37,7 +37,7 @@ public class UserService {
         try {
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
-            throw new DuplicatedUserException("이미 존재하는 email입니다.");
+            throw new DuplicatedUserException(DUPLICATE_EMAIL_ERROR);
         }
     }
 
@@ -51,7 +51,7 @@ public class UserService {
                 .findByEmail(email)
                 .orElseThrow(() -> {
                     log.debug(email);
-                    return new UnFoundUserException("로그인 정보를 확인해주세요.");
+                    return new UnFoundUserException(CHECK_LOGIN_INFO_ERROR);
                 });
     }
 
@@ -65,7 +65,7 @@ public class UserService {
         if (!loginUser.matchPassword(user)) {
             log.debug(user.toString());
             log.debug(loginUser.toString());
-            throw new NotMatchPasswordException("로그인 정보를 확인해주세요.");
+            throw new NotMatchPasswordException(CHECK_LOGIN_INFO_ERROR);
         }
         return true;
     }

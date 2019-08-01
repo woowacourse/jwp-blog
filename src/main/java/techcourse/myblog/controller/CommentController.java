@@ -65,7 +65,7 @@ public class CommentController {
     public RedirectView delete(@PathVariable long articleId,
                                @PathVariable long commentId,
                                UserSession userSession) {
-        commentService.delete(commentId, userSession.getUser(), articleId);
+        commentService.delete(commentId, userSession.getUser());
         return redirectToArticle(articleId);
     }
 }
