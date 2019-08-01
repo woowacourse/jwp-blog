@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,9 @@ import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.CommentService;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
@@ -24,6 +28,7 @@ class ArticleControllerTest {
     private static final String TEST_LOGIN_ID = "pkch@woowa.com";
     private static final String TEST_LOGIN_PASSWORD = "!234Qwer";
 
+    private List<String> articleParams = Arrays.asList("title", "coverUrl", "contents");
     private String title = "제목";
     private String coverUrl = "https://naver.com";
     private String contents = "내용";
@@ -34,6 +39,15 @@ class ArticleControllerTest {
 
     @MockBean
     private CommentService commentService;
+
+    private BodyInserters.FormInserter<String> mapBy(String... parameters) {
+        BodyInserters.FormInserter<String> body = BodyInserters.fromFormData(Strings.EMPTY, Strings.EMPTY);
+
+        for (int i = 0; i < parameters.length; i++) {
+            body.with(articleParams.get(i), parameters[i]);
+        }
+        return body;
+    }
 
     @BeforeEach
     void setUp() {
@@ -65,11 +79,7 @@ class ArticleControllerTest {
         webTestClient.post().uri(ARTICLE_DEFAULT_URL)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .header("cookie", jSessionId)
-                .body(
-                        BodyInserters.fromFormData("title", title)
-                                .with("coverUrl", coverUrl)
-                                .with("contents", contents)
-                )
+                .body(mapBy(title, coverUrl, contents))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectBody()
@@ -95,20 +105,14 @@ class ArticleControllerTest {
         webTestClient.post().uri(ARTICLE_DEFAULT_URL)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .header("cookie", jSessionId)
-                .body(
-                        BodyInserters.fromFormData("title", title)
-                                .with("coverUrl", coverUrl)
-                                .with("contents", contents)
-                )
+                .body(mapBy(title, coverUrl, contents))
                 .exchange()
                 .expectBody()
                 .consumeWith(res ->
                         webTestClient.put().uri(res.getResponseHeaders().getLocation())
                                 .header("cookie", jSessionId)
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                .body(BodyInserters.fromFormData("title", updateTitle)
-                                        .with("coverUrl", updateImage)
-                                        .with("contents", updateContents))
+                                .body(mapBy(updateTitle, updateImage, updateContents))
                                 .exchange()
                                 .expectStatus().is3xxRedirection()
                                 .expectBody()
