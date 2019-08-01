@@ -19,14 +19,12 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest req = (HttpServletRequest) webRequest.getNativeRequest();
         HttpSession httpSession = req.getSession();
         User user = Optional.ofNullable((User) httpSession.getAttribute("user"))
                 .orElseThrow(LoginFailedException::new);
-        LoginUser loginUser = new LoginUser();
-        loginUser.setUser(user);
-        
-        return loginUser;
+
+        return new LoginUser(user);
     }
 }
