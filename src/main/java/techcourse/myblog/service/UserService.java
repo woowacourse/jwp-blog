@@ -65,19 +65,20 @@ public class UserService {
     }
 
     @Transactional
-    public void update(UserPublicInfoDto userPublicInfoDto) {
+    public void update(UserPublicInfoDto userPublicInfoDto, Long id, Long loggedInUserId) {
         try {
-            User user = userRepository.findByEmail(userPublicInfoDto.getEmail())
-                    .orElseThrow(NotFoundUserException::new);
-            user.updateName(userPublicInfoDto.getName());
+            User user = findById(id);
+            user.updateName(userPublicInfoDto.getName(), loggedInUserId);
         } catch (Exception e) {
             throw new UserUpdateException(e.getMessage());
         }
     }
 
-    public void delete(Long id) {
+    public void delete(Long id, Long loggedInUserId) {
         try {
-            userRepository.deleteById(id);
+            if (id.equals(loggedInUserId)) {
+                userRepository.deleteById(id);
+            }
         } catch (Exception e) {
             throw new UserDeleteException(e.getMessage());
         }

@@ -149,7 +149,7 @@ public class UserServiceTest {
                 "coverUrl", "contents");
 
         ArticleDto article = articleService.save(author.getId(), articleDto);
-        userService.delete(author.getId());
+        userService.delete(author.getId(), author.getId());
 
         assertThatThrownBy(() -> articleService.findArticleDtoById(article.getId()))
                 .isInstanceOf(NotFoundArticleException.class);
@@ -168,7 +168,7 @@ public class UserServiceTest {
         CommentRequestDto commentRequestDto = new CommentRequestDto(article.getId(), "TEST Comment");
         Comment comment = commentService.save(author.getId(), commentRequestDto);
 
-        userService.delete(author.getId());
+        userService.delete(author.getId(), author.getId());
 
         assertThatThrownBy(() -> commentService.findById(comment.getId()))
                 .isInstanceOf(NotFoundCommentException.class);

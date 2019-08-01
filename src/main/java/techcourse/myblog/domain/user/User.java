@@ -117,9 +117,11 @@ public class User {
         return this.id.equals(userId);
     }
 
-    public void updateName(String name) {
-        checkValidName(name);
-        this.name = name;
+    public void updateName(String name, Long userId) {
+        if (this.id.equals(userId)) {
+            checkValidName(name);
+            this.name = name;
+        }
     }
 
     public Long getId() {
