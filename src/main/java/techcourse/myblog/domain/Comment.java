@@ -23,7 +23,7 @@ public class Comment {
         this.contents = contents;
     }
 
-    public void update(Comment updateComment) {
-        this.contents = updateComment.contents;
+    public void update(Comment updatedComment) {
+        this.contents = updatedComment.contents;
     }
 }

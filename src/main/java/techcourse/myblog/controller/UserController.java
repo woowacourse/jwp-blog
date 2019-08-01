@@ -12,7 +12,6 @@ import techcourse.myblog.exception.FailedLoginException;
 import techcourse.myblog.exception.FailedPasswordVerificationException;
 import techcourse.myblog.exception.InvalidUserDataException;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.web.LoginUser;
 
 import javax.servlet.http.HttpSession;
 
@@ -43,14 +42,14 @@ public class UserController {
     @PostMapping("/login")
     public String login(UserDto userDto, HttpSession httpSession) {
         User user = userService.findUserByEmailAndPassword(userDto);
-        httpSession.setAttribute("loginUser", new LoginUser(user.getName(), user.getEmail()));
+        httpSession.setAttribute("user", user);
         return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
-        if (httpSession.getAttribute("loginUser") != null) {
-            httpSession.removeAttribute("loginUser");
+        if (httpSession.getAttribute("user") != null) {
+            httpSession.removeAttribute("user");
         }
         return "redirect:/";
     }
@@ -63,7 +62,7 @@ public class UserController {
 
     @GetMapping("/mypage")
     public String showMypage(Model model, HttpSession httpSession) {
-        String email = ((LoginUser) httpSession.getAttribute("loginUser")).getEmail();
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
         User user = userService.findUserByEmail(email);
         model.addAttribute("user", UserAssembler.writeDto(user));
         return "mypage";
@@ -71,7 +70,7 @@ public class UserController {
 
     @GetMapping("/mypage/edit")
     public String showEditPage(Model model, HttpSession httpSession) {
-        String email = ((LoginUser) httpSession.getAttribute("loginUser")).getEmail();
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
         User user = userService.findUserByEmail(email);
         model.addAttribute("user", UserAssembler.writeDto(user));
         return "mypage-edit";
@@ -80,13 +79,13 @@ public class UserController {
     @PutMapping("/mypage/edit")
     public String updateUser(UserDto userDto, HttpSession httpSession) {
         User updatedUser = userService.update(userDto);
-        httpSession.setAttribute("loginUser", new LoginUser(updatedUser.getName(), updatedUser.getEmail()));
+        httpSession.setAttribute("user", updatedUser);
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/mypage/delete")
     public String deleteUser(HttpSession httpSession) {
-        String email = ((LoginUser) httpSession.getAttribute("loginUser")).getEmail();
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
         userService.deleteByEmail(email);
         return "redirect:/logout";
     }

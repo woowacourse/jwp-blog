@@ -23,7 +23,7 @@ public class ArticleAssembler {
                 .collect(Collectors.toList());
     }
 
-    public static Article writeArticle(ArticleDto articleDto) {
-        return new Article(articleDto.getArticleId(), articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
+    public static Article writeArticle(ArticleDto articleDto, User user) {
+        return new Article(articleDto.getArticleId(), articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents(), user);
     }
 }

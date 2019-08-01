@@ -6,7 +6,7 @@
         <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
             <img class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
                  alt="Brown">
-            <div class="user-info text-white" th:object="${session.loginUser}">
+            <div class="user-info text-white" th:object="${session.user}">
                 <span class="name pdd-right-5" th:text="*{name}"></span>
             </div>
         </a>

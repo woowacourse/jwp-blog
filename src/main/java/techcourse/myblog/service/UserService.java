@@ -48,7 +48,7 @@ public class UserService {
 
     public User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("잘못된 접근입니다."));
+                .orElseThrow(() -> new NoSuchElementException("회원을 찾을 수 없습니다."));
     }
 
     public User findUserByEmailAndPassword(UserDto userDto) {
