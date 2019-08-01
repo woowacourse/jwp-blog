@@ -45,15 +45,18 @@ public class User {
     }
 
     private boolean isNotValidName(String name) {
-        return !Pattern.matches(NAME_PATTERN, name);
+        return (name == null) || !Pattern.matches(NAME_PATTERN, name);
     }
 
     private boolean isNotValidEmail(String email) {
-        return !Pattern.matches(EMAIL_PATTERN, email);
+        return (email == null) || !Pattern.matches(EMAIL_PATTERN, email);
     }
 
     private boolean isNotValidPassword(String password) {
-        return !Pattern.matches(PASSWORD_PATTERN, password);
+        if (password != null) {
+            return !Pattern.matches(PASSWORD_PATTERN, password);
+        }
+        return false;
     }
 
     public boolean authenticate(String email, String password) {

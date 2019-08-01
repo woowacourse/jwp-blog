@@ -4,11 +4,14 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.CommentNotFoundException;
 import techcourse.myblog.exception.NotMatchAuthenticationException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
+import techcourse.myblog.translator.ModelTranslator;
+import techcourse.myblog.translator.UserTranslator;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -19,17 +22,19 @@ public class CommentService {
 
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
+    private final ModelTranslator<User, UserDto> userTranslator;
 
     public CommentService(final ArticleRepository articleRepository, final CommentRepository commentRepository) {
         this.articleRepository = articleRepository;
         this.commentRepository = commentRepository;
+        this.userTranslator = new UserTranslator();
     }
 
 
-    public Comment create(final Long articleId, final User user, final Comment comment) {
+    public Comment create(final Long articleId, final UserDto userDto, final Comment comment) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("해당 게시물이 없습니다."));
 
-        comment.initialize(user, article);
+        comment.initialize(userTranslator.toEntity(new User(), userDto), article);
         return commentRepository.save(comment);
     }
 
@@ -37,13 +42,13 @@ public class CommentService {
         return commentRepository.findAllByArticleId(articleId);
     }
 
-    public void update(final String content, final Long commentId, final User user) {
-        Comment comment = findById(commentId, user);
+    public void update(final String content, final Long commentId, final UserDto userDto) {
+        Comment comment = findById(commentId, userTranslator.toEntity(new User(), userDto));
         comment.update(content);
     }
 
-    public void delete(final Long commentId, final User user) {
-        Comment comment = findById(commentId, user);
+    public void delete(final Long commentId, final UserDto userDto) {
+        Comment comment = findById(commentId, userTranslator.toEntity(new User(), userDto));
         commentRepository.delete(comment);
     }
 

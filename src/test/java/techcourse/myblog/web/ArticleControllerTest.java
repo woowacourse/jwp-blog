@@ -25,7 +25,7 @@ class ArticleControllerTest {
     private static final String TEST_LOGIN_PASSWORD = "!234Qwer";
 
     private String title = "제목";
-    private String coverUrl = "이미지";
+    private String coverUrl = "https://naver.com";
     private String contents = "내용";
     private String jSessionId;
 

@@ -1,10 +1,8 @@
 package techcourse.myblog.domain;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.exception.ArticleInputException;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ArticleTest {
@@ -12,7 +10,7 @@ public class ArticleTest {
     private Long testId = 1L;
     private String testTitle = "Hello World!";
     private String testCoverUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxeXn0MrNFeiv4vBrMSTJWC24F2OZrygOE0h__bEuVXPFANvWB";
-    private String invalidCoverUrl ="hello";
+    private String invalidCoverUrl = "hello";
     private String testContents = "모두들 안녕!";
 
     @Test

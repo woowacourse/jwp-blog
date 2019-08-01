@@ -6,7 +6,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.NotExistUserException;
 import techcourse.myblog.exception.NotMatchAuthenticationException;
@@ -41,7 +40,7 @@ public class AuthController {
             throw new UserLoginInputException("로그인 값이 잘못됐습니다.");
         }
 
-        User user = authService.login(userDto);
+        UserDto user = authService.login(userDto);
         session.setAttribute("user", user);
 
         return new RedirectView("/");

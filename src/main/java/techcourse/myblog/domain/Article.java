@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import techcourse.myblog.exception.ArticleInputException;
 
 import javax.persistence.*;
-import java.net.URL;
 import java.util.regex.Pattern;
 
 @Entity
@@ -44,7 +43,7 @@ public class Article {
     }
 
     private void validateUrl(String coverUrl) {
-        if(!Pattern.matches(URL_FORMAT, coverUrl)) {
+        if (!Pattern.matches(URL_FORMAT, coverUrl)) {
             throw new ArticleInputException("coverUrl이 잘 못 되었습니다.");
         }
     }

@@ -10,6 +10,7 @@ import org.mockito.quality.Strictness;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.NotMatchAuthenticationException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
@@ -44,15 +45,27 @@ public class CommentServiceTest {
         given(commentRepository.save(any(Comment.class))).willReturn(comment);
 
         User user = new User();
-        Comment createdComment = commentService.create(1L, user, comment);
+        UserDto userDto = new UserDto();
+        userDto.setId(1L);
+        userDto.setEmail("van@naver.com");
+        userDto.setName("vab");
+        userDto.setPassword("!234Qwer");
+        Comment createdComment = commentService.create(1L, userDto, comment);
 
-        assertThat(createdComment.getUser()).isEqualTo(user);
+        assertThat(createdComment.getUser().equals("van@naver.com")).isTrue();
         assertThat(createdComment.getArticle()).isEqualTo(article);
     }
 
     @Test
     void 댓글_수정_테스트() {
-        User user = new User();
+        UserDto userDto = new UserDto();
+        User user = User.builder()
+                .id(1L)
+                .name("van")
+                .email("van@naver.com")
+                .password("!234Qwer")
+                .build();
+
         Article article = new Article();
         Comment comment = new Comment();
         comment.initialize(user, article);
@@ -60,7 +73,11 @@ public class CommentServiceTest {
         given(articleRepository.findById(1L)).willReturn(Optional.of(article));
         given(commentRepository.findById(1L)).willReturn(Optional.of(comment));
 
-        commentService.update("hello", 1L, user);
+        userDto.setId(1L);
+        userDto.setEmail("van@naver.com");
+        userDto.setName("van");
+        userDto.setPassword("!234Qwer");
+        commentService.update("hello", 1L, userDto);
 
         assertThat(comment.getContent()).isEqualTo("hello");
     }
@@ -69,14 +86,23 @@ public class CommentServiceTest {
     void 유저_정보가_일치하지_않을때_댓글_수정_예외_테스트() {
         User user = User.builder()
                 .id(1L)
+                .name("van")
+                .email("van@naver.com")
+                .password("!234Qwer")
                 .build();
+        UserDto userDto = new UserDto();
         Article article = new Article();
         Comment comment = new Comment();
         comment.initialize(user, article);
 
+        userDto.setId(2L);
+        userDto.setEmail("aaaaaaa@naver.com");
+        userDto.setName("vab");
+        userDto.setPassword("!234Qwer");
+
         given(articleRepository.findById(1L)).willReturn(Optional.of(article));
         given(commentRepository.findById(1L)).willReturn(Optional.of(comment));
 
-        assertThrows(NotMatchAuthenticationException.class, () -> commentService.update("hello", 1L, new User()));
+        assertThrows(NotMatchAuthenticationException.class, () -> commentService.update("hello", 1L, userDto));
     }
 }

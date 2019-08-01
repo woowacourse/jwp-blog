@@ -57,7 +57,7 @@ public class UserController {
 
     @GetMapping("/{email}")
     public String showMyPage(@PathVariable String email, HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
+        UserDto user = (UserDto) session.getAttribute("user");
 
         User authenticatedUser = userService.getAuthenticatedUser(email, user.getEmail());
         model.addAttribute("user", authenticatedUser);
@@ -67,7 +67,7 @@ public class UserController {
 
     @GetMapping("/{email}/edit")
     public String showMyInfoEdit(@PathVariable String email, HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
+        UserDto user = (UserDto) session.getAttribute("user");
 
         User authenticatedUser = userService.getAuthenticatedUser(email, user.getEmail());
         model.addAttribute("user", authenticatedUser);
@@ -81,7 +81,7 @@ public class UserController {
             throw new UpdateUserInputException("잘못된 입력값입니다.");
         }
 
-        User user = (User) session.getAttribute("user");
+        UserDto user = (UserDto) session.getAttribute("user");
         User updatedUser = userService.update(userDto, email, user.getEmail());
 
         session.setAttribute("username", updatedUser.getName());
@@ -90,7 +90,7 @@ public class UserController {
 
     @DeleteMapping("/{email}")
     public RedirectView exitUser(@PathVariable String email, HttpSession session) {
-        User user = (User) session.getAttribute("user");
+        UserDto user = (UserDto) session.getAttribute("user");
 
         userService.exit(email, user.getEmail());
         session.invalidate();

@@ -127,10 +127,11 @@
             events: {
                 change: function () {
                     document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown());
-                    comments.querySelectorAll("input[name='content']").forEach(content => {
+                    comments.querySelectorAll("input[name='content']").forEach(content = > {
                         console.log(content);
-                        content.setAttribute('value', editor.getMarkdown());
-                    });
+                    content.setAttribute('value', editor.getMarkdown());
+                })
+                    ;
                 }
             },
             height: '200px'

@@ -6,23 +6,28 @@ import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.NotExistUserException;
 import techcourse.myblog.exception.NotMatchAuthenticationException;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.translator.ModelTranslator;
+import techcourse.myblog.translator.UserTranslator;
 
-import java.util.Optional;
+import javax.transaction.Transactional;
 
 @Service
+@Transactional
 public class AuthService {
     private final UserRepository userRepository;
+    private final ModelTranslator<User, UserDto> userTranslator;
 
     public AuthService(final UserRepository userRepository) {
         this.userRepository = userRepository;
+        this.userTranslator = new UserTranslator();
     }
 
-    public User login(UserDto userDto) {
-        Optional<User> maybeUser = userRepository.findByEmail(userDto.getEmail());
-        User user = maybeUser.orElseThrow(() -> new NotExistUserException("해당 이메일로 가입한 유저가 없습니다."));
+    public UserDto login(UserDto userDto) {
+        User user = userRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(() -> new NotExistUserException("해당 이메일로 가입한 유저가 없습니다."));
 
         if (user.authenticate(userDto.getEmail(), userDto.getPassword())) {
-            return user;
+            return userTranslator.toDto(user, new UserDto());
         }
 
         throw new NotMatchAuthenticationException("인증 정보가 일치하지 않습니다.");

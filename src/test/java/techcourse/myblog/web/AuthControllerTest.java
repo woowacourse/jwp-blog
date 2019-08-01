@@ -48,7 +48,7 @@ public class AuthControllerTest {
         UserDto testUserDto = new UserDto();
         testUserDto.setName("pkch");
         testUserDto.setEmail("pkch@woowa.com");
-        testUserDto.setPassword("qwerqwer");
+        testUserDto.setPassword("!234Qwer");
 
         회원_등록(webTestClient, testUserDto);
         로그인(webTestClient, testEmail, testPassword)
