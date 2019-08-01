@@ -12,6 +12,7 @@ import techcourse.myblog.service.ArticleService;
 import javax.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
     private final ArticleService articleService;
 
@@ -19,18 +20,12 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @GetMapping("/")
-    public String showIndex(Model model) {
-        model.addAttribute("articleDtos", articleService.getAllArticles());
-        return "index";
-    }
-
-    @GetMapping("/articles/new")
+    @GetMapping
     public String showWritingForm() {
         return "article-edit";
     }
 
-    @PostMapping("/articles")
+    @PostMapping
     public String writeArticle(ArticleDto articleDto, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         Article article = articleService.save(articleDto, user);
@@ -38,7 +33,7 @@ public class ArticleController {
         return "redirect:/articles/" + articleId;
     }
 
-    @GetMapping("/articles/{articleId}")
+    @GetMapping("/{articleId}")
     public String showArticle(@PathVariable long articleId, Model model) {
         ArticleDto articleDto = articleService.getArticleDtoById(articleId);
         model.addAttribute("articleDto", articleDto);
@@ -46,7 +41,7 @@ public class ArticleController {
         return "article";
     }
 
-    @GetMapping("/articles/{articleId}/edit")
+    @GetMapping("/{articleId}/edit")
     public String showEditForm(@PathVariable long articleId, Model model, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         Article article = articleService.getArticleById(articleId);
@@ -56,28 +51,28 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PutMapping("/articles/{articleId}")
+    @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable long articleId, ArticleDto articleDto, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         articleService.update(articleDto, user);
         return "redirect:/articles/" + articleId;
     }
 
-    @DeleteMapping("/articles/{articleId}")
+    @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable long articleId, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         articleService.deleteById(articleId, user);
         return "redirect:/";
     }
 
-    @PostMapping("/articles/{articleId}/comment/new")
+    @PostMapping("/{articleId}/comment/new")
     public String createComment(@PathVariable long articleId, CommentDto commentDto, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         articleService.saveComment(articleId, commentDto, user);
         return "redirect:/articles/" + articleId;
     }
 
-    @PutMapping("/articles/{articleId}/comment/{commentId}")
+    @PutMapping("/{articleId}/comment/{commentId}")
     public String updateComment(@PathVariable long articleId, @PathVariable long commentId,
                                 CommentDto commentDto, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
@@ -85,7 +80,7 @@ public class ArticleController {
         return "redirect:/articles/" + articleId;
     }
 
-    @DeleteMapping("/articles/{articleId}/comment/{commentId}")
+    @DeleteMapping("/{articleId}/comment/{commentId}")
     public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         articleService.deleteComment(commentId, user);
