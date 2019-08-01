@@ -96,7 +96,7 @@ class ArticleControllerTest {
 
         @Test
         void 게시글_생성() {
-            webTestClient.post().uri("/articles/write")
+            webTestClient.post().uri("/articles")
                     .header("cookie", cookie)
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .body(fromFormData("title", TITLE_2)
@@ -187,7 +187,7 @@ class ArticleControllerTest {
     class without_login {
         @Test
         void 게시글_생성() {
-            String uri = "/articles/write";
+            String uri = "/articles";
 
             webTestClient.post().uri(uri)
                     .header("referer", uri)
