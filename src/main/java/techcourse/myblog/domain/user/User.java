@@ -1,11 +1,16 @@
 package techcourse.myblog.domain.user;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import techcourse.myblog.exception.NameToUpdateNotFoundException;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +24,14 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    @Column(name = "last_modified_date", updatable = true)
+    private LocalDateTime lastModifiedDate;
 
     private User() {
     }
