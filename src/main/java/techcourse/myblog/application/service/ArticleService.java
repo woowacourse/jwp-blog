@@ -12,6 +12,7 @@ import techcourse.myblog.domain.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class ArticleService {
 
@@ -24,7 +25,6 @@ public class ArticleService {
         this.userService = userService;
     }
 
-    @Transactional
     public Long save(ArticleDto articleDto, String email) {
         User user = userService.findUserByEmail(email);
         Article article = new Article(articleDto.getTitle(),
@@ -46,12 +46,10 @@ public class ArticleService {
                 .orElseThrow(() -> new NotExistArticleIdException("해당 게시물을 찾을 수 없습니다."));
     }
 
-    @Transactional
     public void removeById(Long articleId) {
         articleRepository.deleteById(articleId);
     }
 
-    @Transactional
     public void modify(Long articleId, ArticleDto articleDto, String email) {
         User user = userService.findUserByEmail(email);
         Article article = findArticleById(articleId);
@@ -76,8 +74,7 @@ public class ArticleService {
             throw new NotMatchEmailException("작성자가 다릅니다.");
         }
     }
-
-    @Transactional
+    
     public UserDto findAuthor(long articleId) {
         User user = findArticleById(articleId).getUser();
 
