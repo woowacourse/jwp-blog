@@ -26,35 +26,29 @@ public class CommentController {
     }
 
     @PostMapping("/articles/{articleId}/comments")
-    public ModelAndView addComment(@PathVariable Long articleId, CommentRequestDto commentRequestDto, HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String addComment(@PathVariable Long articleId, CommentRequestDto commentRequestDto, HttpSession session) {
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
         commentService.save(commentRequestDto, user.getId(), articleId);
-        modelAndView.setView(new RedirectView("/articles/" + articleId));
-        return modelAndView;
+        return "redirect:/articles/" + articleId;
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
-    public ModelAndView updateComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession session, CommentRequestDto commentRequestDto) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession session, CommentRequestDto commentRequestDto) {
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        modelAndView.setView(new RedirectView("/articles/" + articleId));
-
-        if (user.getId().equals(commentService.findById(commentId).getAuthorId())) {
+        if (user.matchId(commentService.findById(commentId).getAuthorId())) {
             commentService.update(commentRequestDto, commentId);
         }
-        return modelAndView;
+        return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
-    public ModelAndView deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession session) {
+    public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/articles/" + articleId));
 
         UserResponseDto user = (UserResponseDto) session.getAttribute("user");
-        if (commentService.findById(commentId).getAuthorId().equals(user.getId())) {
+        if (user.matchId(commentService.findById(commentId).getAuthorId())) {
             commentService.delete(commentId);
         }
-        return modelAndView;
+        return "redirect:/articles/" + articleId;
     }
 }

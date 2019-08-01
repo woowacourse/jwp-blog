@@ -31,10 +31,8 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public ModelAndView showSignUp() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("signup");
-        return modelAndView;
+    public String showSignUp() {
+        return "signup";
     }
 
     @GetMapping("/users")
@@ -45,58 +43,45 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ModelAndView registerUsers(@Valid final UserRequestDto userRequestDto, final BindingResult bindingResult) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String registerUsers(@Valid final UserRequestDto userRequestDto, final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("/signup");
-            return modelAndView;
+            return "signup";
         }
         userService.save(userRequestDto);
-        modelAndView.setView(new RedirectView("/login"));
-        return modelAndView;
+        return "redirect:/login";
     }
 
     @GetMapping("/mypage")
-    public ModelAndView showMyPage(final HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("mypage");
+    public String showMyPage(final HttpSession session, Model model) {
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        modelAndView.addObject("user", user);
-        return modelAndView;
+        model.addAttribute("user", user);
+        return "mypage";
     }
 
     @DeleteMapping("/mypage")
-    public ModelAndView deleteUser(final HttpSession session) {
+    public String deleteUser(final HttpSession session) {
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
         userService.delete(user);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/logout"));
-        return modelAndView;
+        return "redirect:/logout";
     }
 
     @GetMapping("/logout")
-    public ModelAndView logOut(final HttpServletRequest request) {
+    public String logOut(final HttpServletRequest request) {
         request.getSession().removeAttribute(USER_SESSION_KEY);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/"));
-        return modelAndView;
+        return "redirect:/";
     }
 
     @GetMapping("/mypage/mypage-edit")
-    public ModelAndView showMyPageEdit(final HttpSession session) {
+    public String showMyPageEdit(final HttpSession session, Model model) {
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("user", user);
-        modelAndView.setViewName("mypage-edit");
-        return modelAndView;
+        model.addAttribute("user", user);
+        return "mypage-edit";
     }
 
     @PutMapping("/mypage/mypage-edit")
-    public ModelAndView editMyPage(final HttpSession session, final String name) {
+    public String editMyPage(final HttpSession session, final String name) {
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
         session.setAttribute(USER_SESSION_KEY, userService.update(user.getEmail(), name));
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/mypage"));
-        return modelAndView;
+        return "redirect:/mypage";
     }
 }

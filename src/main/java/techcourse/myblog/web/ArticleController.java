@@ -44,11 +44,9 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public ModelAndView createArticle(final ArticleRequestDto articleDTO, final HttpSession session) {
+    public String createArticle(final ArticleRequestDto articleDTO, final HttpSession session) {
         Long id = articleService.save(articleDTO, ((UserResponseDto) session.getAttribute(USER_SESSION_KEY)).getId());
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/articles/" + id));
-        return modelAndView;
+        return "redirect:/articles/" + id;
     }
 
     @GetMapping("/articles/{id}")
@@ -58,41 +56,31 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{id}")
-    public ModelAndView updateArticle(@PathVariable final Long id, final ArticleRequestDto articleDTO, final HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String updateArticle(@PathVariable final Long id, final ArticleRequestDto articleDTO, final HttpSession session) {
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        if (!user.getId().equals(articleService.findAuthor(id).getId())) {
-            modelAndView.setView(new RedirectView("/articles/" + id));
-            return modelAndView;
+        if (user.matchId(articleService.findAuthor(id).getId())) {
+            articleService.update(id, articleDTO);
         }
-        articleService.update(id, articleDTO);
-        modelAndView.setView(new RedirectView("/articles/" + id));
-        return modelAndView;
+        return "redirect:/articles/" + id;
     }
 
     @DeleteMapping("/articles/{id}")
-    public ModelAndView deleteArticle(@PathVariable final Long id, final HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String deleteArticle(@PathVariable final Long id, final HttpSession session) {
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        if (!user.getId().equals(articleService.findAuthor(id).getId())) {
-            modelAndView.setView(new RedirectView("/articles/" + id));
-            return modelAndView;
+        if (user.matchId(articleService.findAuthor(id).getId())) {
+            articleService.delete(id);
+            return "redirect:/";
         }
-        articleService.delete(id);
-        modelAndView.setView(new RedirectView("/"));
-        return modelAndView;
+        return "redirect:/articles/" + id;
     }
 
     @GetMapping("/articles/{id}/edit")
-    public ModelAndView showEditPage(@PathVariable final Long id, final HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String showEditPage(@PathVariable final Long id, final HttpSession session, Model model) {
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        if (!user.getId().equals(articleService.findAuthor(id).getId())) {
-            modelAndView.setView(new RedirectView("/articles/" + id));
-            return modelAndView;
+        if (!user.matchId(articleService.findAuthor(id).getId())) {
+            return "redirect:/articles/" + id;
         }
-        modelAndView.addObject("articleDTO", articleService.findById(id));
-        modelAndView.setViewName("article-edit");
-        return modelAndView;
+        model.addAttribute("articleDTO", articleService.findById(id));
+        return "article-edit";
     }
 }

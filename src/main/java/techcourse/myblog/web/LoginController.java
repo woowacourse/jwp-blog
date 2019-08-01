@@ -23,20 +23,16 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public ModelAndView showLogin() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login");
-        return modelAndView;
+    public String showLogin() {
+        return "login";
     }
 
     @PostMapping("/users/login")
-    public ModelAndView processLogin(final HttpSession session, final String email, final String password) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String processLogin(final HttpSession session, final String email, final String password) {
         UserResponseDto userResponseDto = loginservice.findByEmailAndPassword(email, password);
         UserResponseDto retrieveUser = loginservice.findByEmail(userResponseDto.getEmail());
 
         session.setAttribute(USER_SESSION_KEY, retrieveUser);
-        modelAndView.setView(new RedirectView("/"));
-        return modelAndView;
+        return "redirect:/";
     }
 }
