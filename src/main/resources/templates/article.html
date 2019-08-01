@@ -83,7 +83,7 @@
                                           class="text-bold inline-block">name</span>
                                     <span class="sub-title inline-block pull-right">
                                         <i class="ti-timer pdd-right-5"></i>
-                                        <span th:text="${comment.time}">6 min ago</span>
+                                        <span th:text="${comment.updatedDate}">6 min ago</span>
                                     </span>
                                     <form th:action="${#strings.concat('/articles/', article.id, '/comments/', comment.id)}" th:method="put">
                                         <p class="width-80" th:id="'contents-' + ${index.index}" th:text="${comment.contents}"></p>
@@ -92,6 +92,7 @@
                                 </span>
 
                                 <div th:if="${session.user.id} == ${comment.author.id}" class="btn-group btn-group-horizontal">
+                                    <button class="float-right pointer btn btn-icon" type="submit" th:onclick="|editBtnClickHandler('${index.index}')|">
                                     <button class="float-right pointer btn btn-icon" type="submit" th:onclick="|editBtnClickHandler('${index.index}')|">
                                         <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                                     </button>

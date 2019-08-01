@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String moveSignUpPage(UserDto userRequestDto) {
+    public String moveSignUpPage(UserDto userDto) {
         return "signup";
     }
 
