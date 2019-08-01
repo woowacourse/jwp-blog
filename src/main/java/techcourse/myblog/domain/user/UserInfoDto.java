@@ -71,4 +71,15 @@ public class UserInfoDto implements UserDto {
                 .email(snsGithubEmail)
                 .user(user).build();
     }
+
+    @Override
+    public String toString() {
+        return "UserInfoDto{" +
+                "userId=" + userId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", snsFacebookEmail='" + snsFacebookEmail + '\'' +
+                ", snsGithubEmail='" + snsGithubEmail + '\'' +
+                '}';
+    }
 }

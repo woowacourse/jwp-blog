@@ -19,4 +19,12 @@ public class LoginDto implements UserDto {
                 .password(password)
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return "LoginDto{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

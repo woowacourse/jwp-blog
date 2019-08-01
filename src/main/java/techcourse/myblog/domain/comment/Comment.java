@@ -3,6 +3,8 @@ package techcourse.myblog.domain.comment;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import techcourse.myblog.domain.BaseTimeEntity;
@@ -27,6 +29,7 @@ public class Comment extends BaseTimeEntity {
     private User author;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     private Article article;
 

@@ -17,7 +17,16 @@ public class SignUpDto implements UserDto {
     public User toEntity() {
         return User.builder()
                 .name(name)
-                .password(email)
-                .email(password).build();
+                .password(password)
+                .email(email).build();
+    }
+
+    @Override
+    public String toString() {
+        return "SignUpDto{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
