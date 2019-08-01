@@ -36,7 +36,7 @@ public class Comment {
     private User author;
 
     @NonNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ARTICLE_ID", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     private Article article;
 
