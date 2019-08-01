@@ -1,16 +1,14 @@
 package techcourse.myblog.presentation.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.CommentService;
 
 import javax.servlet.http.HttpSession;
 
+@RequestMapping("/articles")
 @Controller
 public class CommentController {
 
@@ -20,7 +18,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/articles/{articleId}")
+    @PostMapping("/{articleId}")
     public RedirectView create(HttpSession httpSession, CommentDto commentDto, @PathVariable Long articleId) {
         String email = (String) httpSession.getAttribute("email");
 
@@ -28,7 +26,7 @@ public class CommentController {
         return new RedirectView("/articles/" + articleId);
     }
 
-    @DeleteMapping("/articles/{articleId}/{commentId}")
+    @DeleteMapping("/{articleId}/{commentId}")
     public RedirectView delete(HttpSession httpSession, @PathVariable Long articleId, @PathVariable Long commentId) {
         String email = (String) httpSession.getAttribute("email");
 
@@ -37,7 +35,7 @@ public class CommentController {
         return new RedirectView("/articles/" + articleId);
     }
 
-    @PutMapping("/articles/{articleId}/comment-edit/{commentId}")
+    @PutMapping("/{articleId}/comment-edit/{commentId}")
     public RedirectView update(HttpSession httpSession, CommentDto commentDto, @PathVariable Long articleId, @PathVariable Long commentId) {
         String email = (String) httpSession.getAttribute("email");
 

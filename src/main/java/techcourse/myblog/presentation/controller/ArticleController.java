@@ -14,6 +14,7 @@ import techcourse.myblog.application.service.UserService;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+@RequestMapping("/articles")
 @Controller
 public class ArticleController {
     private final ArticleService articleService;
@@ -27,7 +28,7 @@ public class ArticleController {
         this.userService = userService;
     }
 
-    @PostMapping("/articles")
+    @PostMapping("")
     public RedirectView createArticles(HttpSession httpSession, ArticleDto article) {
         String email = (String) httpSession.getAttribute("email");
         Long id = articleService.save(article, email);
@@ -35,9 +36,7 @@ public class ArticleController {
         return new RedirectView("/articles/" + id);
     }
 
-
-    //todo 로그인 <-> 세션 비교 중복 제거
-    @GetMapping("/articles/{articleId}")
+    @GetMapping("/{articleId}")
     public ModelAndView readArticlePageByArticleId(@PathVariable Long articleId) {
         ModelAndView modelAndView = new ModelAndView("/article");
         modelAndView.addObject("article", articleService.findById(articleId));
@@ -48,7 +47,7 @@ public class ArticleController {
         return modelAndView;
     }
 
-    @PutMapping("/articles/{articleId}")
+    @PutMapping("/{articleId}")
     public RedirectView updateArticle(HttpSession httpSession, @PathVariable Long articleId, ArticleDto article) {
         String email = (String) httpSession.getAttribute("email");
         articleService.checkAuthor(articleId, email);
@@ -57,7 +56,7 @@ public class ArticleController {
         return new RedirectView("/articles/" + articleId);
     }
 
-    @DeleteMapping("/articles/{articleId}")
+    @DeleteMapping("/{articleId}")
     public RedirectView deleteArticle(HttpSession httpSession, @PathVariable Long articleId) {
         String email = (String) httpSession.getAttribute("email");
         articleService.checkAuthor(articleId, email);
@@ -66,7 +65,7 @@ public class ArticleController {
         return new RedirectView("/");
     }
 
-    @GetMapping("/articles/{articleId}/edit")
+    @GetMapping("/{articleId}/edit")
     public ModelAndView readArticleEditPage(HttpSession httpSession, @PathVariable Long articleId) {
         String email = (String) httpSession.getAttribute("email");
         articleService.checkAuthor(articleId, email);
