@@ -16,8 +16,8 @@ import techcourse.myblog.web.LoginUser;
 import javax.validation.Valid;
 import java.util.List;
 
-@RequestMapping("/articles")
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
     private final ArticleReadService articleReadService;
     private final ArticleWriteService articleWriteService;

@@ -32,13 +32,13 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     public void 로그아웃_상태_댓글작성_리다이렉트() {
-        String redirectUrl = getRedirectUrl(httpRequest(POST, savedArticleUrl + "/comment", parser(commentDto)));
+        String redirectUrl = getRedirectUrl(httpRequest(POST, savedArticleUrl + "/comments", parser(commentDto)));
         assertThat(redirectUrl.equals("/login"));
     }
 
     @Test
     public void 로그인_상태_댓글작성_성공() {
-        String redirectUrl = getRedirectUrl(loginAndRequest(POST, savedArticleUrl + "/comment", parser(commentDto)));
+        String redirectUrl = getRedirectUrl(loginAndRequest(POST, savedArticleUrl + "/comments", parser(commentDto)));
         String responseBody = getResponseBody(loginAndRequest(GET, redirectUrl));
 
         assertThat(responseBody.contains(commentDto.getContents())).isTrue();
@@ -101,10 +101,10 @@ class CommentControllerTests extends ControllerTestTemplate {
     }
 
     private String getCommentUrl() {
-        loginAndRequest(POST, savedArticleUrl + "/comment", parser(commentDto));
+        loginAndRequest(POST, savedArticleUrl + "/comments", parser(commentDto));
         Comment comment = commentRepository.findAll().get(0);
 
-        return "/articles/" + comment.getArticle().getId() + "/comment/" + comment.getId();
+        return "/articles/" + comment.getArticle().getId() + "/comments/" + comment.getId();
     }
 
     private MultiValueMap<String, String> parser(CommentDto commentDto) {
