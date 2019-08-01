@@ -3,6 +3,8 @@ package techcourse.myblog.domain.article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
+import techcourse.myblog.exception.UserHasNotAuthorityException;
+import techcourse.myblog.exception.UserNotLogInException;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -45,9 +47,15 @@ public class Article {
         this.author = Objects.requireNonNull(author);
     }
 
-    public void update(final Article article) {
+    public void update(final Article article, final String email) {
         if (Objects.isNull(article)) {
             throw new ArticleToUpdateNotFoundException("업데이트 해야할 게시글이 없습니다.");
+        }
+        if (Objects.isNull(email)) {
+            throw new UserNotLogInException();
+        }
+        if (!author.match(email)) {
+            throw new UserHasNotAuthorityException();
         }
         this.title = article.getTitle();
         this.coverUrl = article.getCoverUrl();

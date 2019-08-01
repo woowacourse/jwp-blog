@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.service.dto.article.ArticleRequest;
 import techcourse.myblog.service.dto.article.ArticleResponse;
+import techcourse.myblog.service.dto.user.UserResponse;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,7 +55,7 @@ public class ArticleServiceTest {
     @Test
     void 게시글_수정_확인() {
         ArticleRequest updatedArticleDto = new ArticleRequest("title", "", "contents");
-        articleService.update(DEFAULT_ARTICLE_ID, updatedArticleDto);
+        articleService.update(DEFAULT_ARTICLE_ID, updatedArticleDto, new UserResponse(999L, "john123@example.com", "john"));
         ArticleResponse retrievedArticleDto = articleService.findById(DEFAULT_ARTICLE_ID);
         assertThat(retrievedArticleDto.getId()).isEqualTo(DEFAULT_ARTICLE_ID);
         assertThat(retrievedArticleDto.getTitle()).isEqualTo(updatedArticleDto.getTitle());
@@ -65,7 +66,7 @@ public class ArticleServiceTest {
     @Test
     void 게시글_수정_오류확인_게시글이_null일_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> articleService.update(DEFAULT_ARTICLE_ID, null));
+                .isThrownBy(() -> articleService.update(DEFAULT_ARTICLE_ID, null, new UserResponse(999L, "john123@example.com", "john")));
     }
 
     @Test

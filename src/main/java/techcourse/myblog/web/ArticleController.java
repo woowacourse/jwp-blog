@@ -61,7 +61,7 @@ public class ArticleController {
         if (!user.getId().equals(articleService.findAuthor(id).getId())) {
             return "redirect:/articles/" + id;
         }
-        articleService.update(id, articleDTO);
+        articleService.update(id, articleDTO, user);
         return "redirect:/articles/" + id;
     }
 

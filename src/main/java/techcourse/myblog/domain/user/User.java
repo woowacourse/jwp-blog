@@ -29,6 +29,17 @@ public class User {
         this.password = Objects.requireNonNull(password);
     }
 
+    public void update(final String name) {
+        if (Objects.isNull(name)) {
+            throw new NameToUpdateNotFoundException("수정할 이름이 존재하지 않습니다.");
+        }
+        this.name = name;
+    }
+
+    public boolean match(final String email) {
+        return this.email.equals(email);
+    }
+
     public Long getId() {
         return id;
     }
@@ -43,13 +54,6 @@ public class User {
 
     public String getPassword() {
         return password;
-    }
-
-    public void update(final String name) {
-        if (Objects.isNull(name)) {
-            throw new NameToUpdateNotFoundException("수정할 이름이 존재하지 않습니다.");
-        }
-        this.name = name;
     }
 
     @Override

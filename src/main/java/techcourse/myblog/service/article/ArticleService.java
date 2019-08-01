@@ -61,14 +61,14 @@ public class ArticleService {
     }
 
     @Transactional
-    public void update(final Long id, final ArticleRequest articleDTO) {
+    public void update(final Long id, final ArticleRequest articleDTO, final UserResponse user) {
         Objects.requireNonNull(articleDTO);
         articleRepository.findById(Objects.requireNonNull(id))
                 .ifPresent((retrieveArticle -> retrieveArticle.update(new Article(
                         articleDTO.getTitle(),
                         articleDTO.getCoverUrl(),
                         articleDTO.getContents(),
-                        retrieveArticle.getAuthor()))));
+                        retrieveArticle.getAuthor()), Objects.requireNonNull(user).getEmail())));
     }
 
     public void delete(final Long id) {
