@@ -13,9 +13,9 @@ public class CommentAssembler {
 
     public static CommentResponseDto convertToDto(Comment comment) {
         return new CommentResponseDto(
-                comment.getId(),
-                comment.getContents(),
-                comment.getAuthor().getId(),
-                comment.getAuthor().getName());
+            comment.getId(),
+            comment.getContents(),
+            comment.getAuthor().getId(),
+            comment.getAuthor().getName());
     }
 }

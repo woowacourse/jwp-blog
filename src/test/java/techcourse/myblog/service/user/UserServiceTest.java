@@ -37,13 +37,13 @@ public class UserServiceTest {
     @Test
     void 사용자_생성_오류확인_사용자요청dto가_null인_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> userService.save(null));
+            .isThrownBy(() -> userService.save(null));
     }
 
     @Test
     void 사용자_생성_오류확인_이미_존재하는_사용자일_경우() {
         assertThatExceptionOfType(DuplicatedEmailException.class)
-                .isThrownBy(() -> userService.save(new UserRequestDto(defaultUser.getEmail(), defaultUser.getName(), "p@ssw0rd")));
+            .isThrownBy(() -> userService.save(new UserRequestDto(defaultUser.getEmail(), defaultUser.getName(), "p@ssw0rd")));
     }
 
     @Test
@@ -60,19 +60,19 @@ public class UserServiceTest {
     @Test
     void 사용자_정보_수정_오류확인_이메일이_null인_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> userService.update(null, "dowon"));
+            .isThrownBy(() -> userService.update(null, "dowon"));
     }
 
     @Test
     void 사용자_정보_수정_오류확인_이름이_null인_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> userService.update(defaultUser.getEmail(), null));
+            .isThrownBy(() -> userService.update(defaultUser.getEmail(), null));
     }
 
     @Test
     void 사용자_정보_수정_오류확인_사용자가_없을_경우() {
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> userService.update("done@naver.com", "dowon"));
+            .isThrownBy(() -> userService.update("done@naver.com", "dowon"));
     }
 
     @Test
@@ -85,6 +85,6 @@ public class UserServiceTest {
     @Test
     void 사용자_정보_삭제_오류확인_사용자가_없을_경우() {
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> userService.delete(new UserResponseDto(defaultUser.getId() - 1, "done@naver.com", "done")));
+            .isThrownBy(() -> userService.delete(new UserResponseDto(defaultUser.getId() - 1, "done@naver.com", "done")));
     }
 }

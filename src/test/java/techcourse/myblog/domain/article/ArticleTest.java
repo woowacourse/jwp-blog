@@ -13,19 +13,19 @@ public class ArticleTest {
     @Test
     void 생성자_오류확인_title이_null일_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> new Article(null, "", "content", DEFAULT_AUTHOR));
+            .isThrownBy(() -> new Article(null, "", "content", DEFAULT_AUTHOR));
     }
 
     @Test
     void 생성자_오류확인_coverUrl이_null일_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> new Article("title", null, "content", DEFAULT_AUTHOR));
+            .isThrownBy(() -> new Article("title", null, "content", DEFAULT_AUTHOR));
     }
 
     @Test
     void 생성자_오류확인_contents가_null일_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> new Article("title", "", null, DEFAULT_AUTHOR));
+            .isThrownBy(() -> new Article("title", "", null, DEFAULT_AUTHOR));
     }
 
     @Test
@@ -43,7 +43,7 @@ public class ArticleTest {
     void 게시글_수정_오류확인_인자가_null인_경우() {
         Article article = new Article("title", "", "content", DEFAULT_AUTHOR);
         assertThatExceptionOfType(ArticleToUpdateNotFoundException.class)
-                .isThrownBy(() -> article.update(null))
-                .withMessage("업데이트 해야할 게시글이 없습니다.");
+            .isThrownBy(() -> article.update(null))
+            .withMessage("업데이트 해야할 게시글이 없습니다.");
     }
 }

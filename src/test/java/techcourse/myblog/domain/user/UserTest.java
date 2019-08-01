@@ -17,25 +17,25 @@ public class UserTest {
     @Test
     void 생성자_확인() {
         assertThat(user)
-                .isEqualTo(new User("done@gmail.com", "done", "12345678"));
+            .isEqualTo(new User("done@gmail.com", "done", "12345678"));
     }
 
     @Test
     void 생성자_오류확인_이메일이_null일_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> new User(null, "done", "12345678"));
+            .isThrownBy(() -> new User(null, "done", "12345678"));
     }
 
     @Test
     void 생성자_오류확인_이름이_null일_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> new User("done@gmail.com", null, "12345678"));
+            .isThrownBy(() -> new User("done@gmail.com", null, "12345678"));
     }
 
     @Test
     void 생성자_오류확인_비밀번호가_null일_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> new User("done@gmail.com", "done", null));
+            .isThrownBy(() -> new User("done@gmail.com", "done", null));
     }
 
     @Test

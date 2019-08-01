@@ -12,12 +12,12 @@ public class UserRequestDto {
 
     @NotBlank(message = "이름을 입력해 주세요.")
     @Pattern(regexp = "[^ !@#$%^&*(),.?\\\":{}|<>0-9]{2,10}",
-            message = "이름은 2~10자, 숫자나 특수문자가 포함될 수 없습니다.")
+        message = "이름은 2~10자, 숫자나 특수문자가 포함될 수 없습니다.")
     private String name;
 
     @NotBlank(message = "비밀먼호를 입력해 주세요.")
     @Pattern(regexp = "[a-zA-Z0-9!@#$%^&*(),.?\\\":{}|<>]{8,}",
-            message = "비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요.")
+        message = "비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요.")
     private String password;
 
     public UserRequestDto(final String email, final String name, final String password) {

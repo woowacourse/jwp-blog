@@ -37,8 +37,8 @@ public class ArticleRequestDto {
         if (o == null || getClass() != o.getClass()) return false;
         ArticleRequestDto that = (ArticleRequestDto) o;
         return Objects.equals(title, that.title) &&
-                Objects.equals(coverUrl, that.coverUrl) &&
-                Objects.equals(contents, that.contents);
+            Objects.equals(coverUrl, that.coverUrl) &&
+            Objects.equals(contents, that.contents);
     }
 
     @Override

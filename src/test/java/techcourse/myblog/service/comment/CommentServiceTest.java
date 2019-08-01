@@ -40,6 +40,6 @@ public class CommentServiceTest {
     void 댓글_삭제() {
         commentService.delete(DEFAULT_COMMENT_ID);
         assertThatExceptionOfType(CommentNotFoundException.class)
-                .isThrownBy(() -> commentService.findById(DEFAULT_COMMENT_ID));
+            .isThrownBy(() -> commentService.findById(DEFAULT_COMMENT_ID));
     }
 }

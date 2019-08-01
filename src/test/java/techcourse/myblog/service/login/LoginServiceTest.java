@@ -46,24 +46,24 @@ public class LoginServiceTest {
     @Test
     void 로그인_실패_확인_비밀번호가_틀린_경우() {
         assertThatExceptionOfType(InvalidPasswordException.class)
-                .isThrownBy(() -> loginService.findByEmailAndPassword(email, "wrongPassword"));
+            .isThrownBy(() -> loginService.findByEmailAndPassword(email, "wrongPassword"));
     }
 
     @Test
     void 로그인_실패_확인_이메일이_틀린_경우() {
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> loginService.findByEmailAndPassword("wrong@gmail.com", password));
+            .isThrownBy(() -> loginService.findByEmailAndPassword("wrong@gmail.com", password));
     }
 
     @Test
     void 로그인_오류확인_이메일이_null인_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> loginService.findByEmailAndPassword(null, password));
+            .isThrownBy(() -> loginService.findByEmailAndPassword(null, password));
     }
 
     @Test
     void 로그인_오류확인_비밀번호가_null인_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> loginService.findByEmailAndPassword(email, null));
+            .isThrownBy(() -> loginService.findByEmailAndPassword(email, null));
     }
 }

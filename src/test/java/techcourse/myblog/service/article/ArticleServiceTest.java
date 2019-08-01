@@ -11,7 +11,6 @@ import techcourse.myblog.service.dto.article.ArticleResponseDto;
 import techcourse.myblog.service.dto.user.UserResponseDto;
 import techcourse.myblog.service.user.UserService;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,19 +62,19 @@ public class ArticleServiceTest {
     @Test
     void 게시글_수정_오류확인_게시글이_null일_경우() {
         assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> articleService.update(DEFAULT_ARTICLE_ID, null));
+            .isThrownBy(() -> articleService.update(DEFAULT_ARTICLE_ID, null));
     }
 
     @Test
     void 게시글_삭제_확인() {
         articleService.delete(DEFAULT_ARTICLE_ID);
         assertThatExceptionOfType(ArticleNotFoundException.class)
-                .isThrownBy(() -> articleService.findById(DEFAULT_ARTICLE_ID));
+            .isThrownBy(() -> articleService.findById(DEFAULT_ARTICLE_ID));
     }
 
     @Test
     void 게시글_삭제_오류확인_없는_게시글_삭제요청할_경우() {
         assertThatExceptionOfType(EmptyResultDataAccessException.class)
-                .isThrownBy(() -> articleService.delete(DEFAULT_ARTICLE_ID + 1));
+            .isThrownBy(() -> articleService.delete(DEFAULT_ARTICLE_ID + 1));
     }
 }

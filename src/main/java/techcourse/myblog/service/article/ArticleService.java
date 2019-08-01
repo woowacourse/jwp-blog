@@ -38,27 +38,27 @@ public class ArticleService {
         List<Article> articles = articleRepository.findAll();
 
         return Collections.unmodifiableList(articles.stream()
-                .map(ArticleAssembler::convertToDto)
-                .collect(Collectors.toList()));
+            .map(ArticleAssembler::convertToDto)
+            .collect(Collectors.toList()));
     }
 
     @Transactional(readOnly = true)
     public ArticleResponseDto findById(final Long id) {
         return articleRepository.findById(Objects.requireNonNull(id))
-                .map(ArticleAssembler::convertToDto)
-                .orElseThrow(ArticleNotFoundException::new);
+            .map(ArticleAssembler::convertToDto)
+            .orElseThrow(ArticleNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
     public UserResponseDto findAuthor(final Long id) {
         return UserAssembler.convertToDto(articleRepository.findById(id)
-                .orElseThrow(ArticleNotFoundException::new)
-                .getAuthor());
+            .orElseThrow(ArticleNotFoundException::new)
+            .getAuthor());
     }
 
     public Long save(final ArticleRequestDto articleDTO, final Long authorId) {
         User author = userRepository.findById(authorId)
-                .orElseThrow(UserNotFoundException::new);
+            .orElseThrow(UserNotFoundException::new);
         Article article = convertToEntity(articleDTO, author);
         Article persistArticle = articleRepository.save(article);
         return persistArticle.getId();
@@ -67,11 +67,11 @@ public class ArticleService {
     public void update(final Long id, final ArticleRequestDto articleDTO) {
         Objects.requireNonNull(articleDTO);
         articleRepository.findById(Objects.requireNonNull(id))
-                .ifPresent((retrieveArticle -> retrieveArticle.update(new Article(
-                        articleDTO.getTitle(),
-                        articleDTO.getCoverUrl(),
-                        articleDTO.getContents(),
-                        retrieveArticle.getAuthor()))));
+            .ifPresent((retrieveArticle -> retrieveArticle.update(new Article(
+                articleDTO.getTitle(),
+                articleDTO.getCoverUrl(),
+                articleDTO.getContents(),
+                retrieveArticle.getAuthor()))));
     }
 
     public void delete(final Long id) {

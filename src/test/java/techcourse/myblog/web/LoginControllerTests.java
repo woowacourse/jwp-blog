@@ -27,58 +27,58 @@ public class LoginControllerTests {
         password = "12345678";
 
         webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange();
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("name", name)
+                .with("email", email)
+                .with("password", password))
+            .exchange();
     }
 
     @AfterEach
     void tearDown() {
         webTestClient.delete().uri("/mypage")
-                .exchange();
+            .exchange();
     }
 
     @Test
     void 로그인_화면_이동_확인() {
         webTestClient.get().uri("/login")
-                .exchange()
-                .expectStatus().isOk();
+            .exchange()
+            .expectStatus().isOk();
     }
 
     @Test
     void 로그인_확인() {
         webTestClient.post().uri("/users/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*localhost:[0-9]+/.*");
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", email)
+                .with("password", password))
+            .exchange()
+            .expectStatus().is3xxRedirection()
+            .expectHeader().valueMatches("Location", ".*localhost:[0-9]+/.*");
     }
 
     @Test
     void 로그인_실패_확인_이메일실패() {
         webTestClient.post().uri("/users/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "done@gmail.com")
-                        .with("password", password))
-                .exchange()
-                .expectStatus().isNoContent();
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", "done@gmail.com")
+                .with("password", password))
+            .exchange()
+            .expectStatus().isNoContent();
     }
 
     @Test
     void 로그인_실패_확인_비밀번호_불일치() {
         webTestClient.post().uri("/users/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", email)
-                        .with("password", "wrongPassword"))
-                .exchange()
-                .expectStatus().is4xxClientError();
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", email)
+                .with("password", "wrongPassword"))
+            .exchange()
+            .expectStatus().is4xxClientError();
     }
 }

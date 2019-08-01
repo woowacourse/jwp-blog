@@ -42,15 +42,15 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponseDto findById(Long id) {
         User retrieveUser = userRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
+            .orElseThrow(UserNotFoundException::new);
         return convertToDto(retrieveUser);
     }
 
     @Transactional(readOnly = true)
     public List<UserResponseDto> findAll() {
         return userRepository.findAll().stream()
-                .map(UserAssembler::convertToDto)
-                .collect(collectingAndThen(toList(), Collections::unmodifiableList));
+            .map(UserAssembler::convertToDto)
+            .collect(collectingAndThen(toList(), Collections::unmodifiableList));
     }
 
     public UserResponseDto update(final String email, final String name) {
@@ -62,7 +62,7 @@ public class UserService {
 
     public void delete(final UserResponseDto user) {
         User retrieveUser = userRepository.findById(Objects.requireNonNull(user).getId())
-                .orElseThrow(UserNotFoundException::new);
+            .orElseThrow(UserNotFoundException::new);
         userRepository.delete(retrieveUser);
     }
 }

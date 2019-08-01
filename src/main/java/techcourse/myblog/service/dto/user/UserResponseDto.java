@@ -39,7 +39,7 @@ public class UserResponseDto {
         if (o == null || getClass() != o.getClass()) return false;
         UserResponseDto that = (UserResponseDto) o;
         return Objects.equals(email, that.email) &&
-                Objects.equals(name, that.name);
+            Objects.equals(name, that.name);
     }
 
     @Override

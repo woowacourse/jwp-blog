@@ -21,8 +21,8 @@ public class ArticleAssembler {
         String coverUrl = article.getCoverUrl();
         String contents = article.getContents();
         List<CommentResponseDto> comments = article.getComments().stream()
-                .map(CommentAssembler::convertToDto)
-                .collect(toList());
+            .map(CommentAssembler::convertToDto)
+            .collect(toList());
 
         return new ArticleResponseDto(id, title, coverUrl, contents, comments);
     }

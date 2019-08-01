@@ -9,18 +9,18 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthenticationInterceptor())
-                .addPathPatterns("/logout")
-                .addPathPatterns("/mypage")
-                .addPathPatterns("/mypage/mypage-edit")
-                .addPathPatterns("/writing")
-                .addPathPatterns("/articles")
-                .addPathPatterns("/articles/*/edit")
-                .addPathPatterns("/articles/*/comments")
-                .addPathPatterns("/articles/*/comments/*");
+            .addPathPatterns("/logout")
+            .addPathPatterns("/mypage")
+            .addPathPatterns("/mypage/mypage-edit")
+            .addPathPatterns("/writing")
+            .addPathPatterns("/articles")
+            .addPathPatterns("/articles/*/edit")
+            .addPathPatterns("/articles/*/comments")
+            .addPathPatterns("/articles/*/comments/*");
 
         registry.addInterceptor(new UnAuthenticationInterceptor())
-                .addPathPatterns("/signup")
-                .addPathPatterns("/users")
-                .addPathPatterns("/users/login");
+            .addPathPatterns("/signup")
+            .addPathPatterns("/users")
+            .addPathPatterns("/users/login");
     }
 }
