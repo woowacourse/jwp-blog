@@ -30,7 +30,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-
-### database ###
-src/main/resources/database.properties
