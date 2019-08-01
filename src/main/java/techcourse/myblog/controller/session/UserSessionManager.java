@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import techcourse.myblog.domain.User;
 
 @Component
-public class UserSessionManager extends SessionManager {
+public class UserSessionManager extends SessionManagerImpl {
 
     public UserSessionManager(HttpServletRequest request) {
         super(request);
