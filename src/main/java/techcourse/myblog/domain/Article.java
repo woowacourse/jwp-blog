@@ -18,7 +18,8 @@ public class Article {
     @Column(nullable = false)
     private String coverUrl;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false)
+    @Lob
     private String contents;
 
     @ManyToOne
