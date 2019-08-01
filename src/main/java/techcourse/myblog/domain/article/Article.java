@@ -1,9 +1,12 @@
 package techcourse.myblog.domain.article;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -17,6 +20,12 @@ public class Article {
 
     @ManyToOne
     private User author;
+
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<Comment> comments;

@@ -1,9 +1,12 @@
 package techcourse.myblog.domain.comment;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class Comment {
@@ -16,11 +19,18 @@ public class Comment {
     @Column(nullable = false, length = COMMENT_LENGTH)
     private String comment;
 
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
+
     @ManyToOne
     private User author;
 
     @ManyToOne
     private Article article;
+
 
     private Comment() {
     }
