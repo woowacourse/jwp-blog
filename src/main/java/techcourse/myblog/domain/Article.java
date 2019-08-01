@@ -14,14 +14,12 @@ import javax.persistence.OneToMany;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Entity
-@RequiredArgsConstructor
 @Getter
-@Setter
 @EqualsAndHashCode
 @ToString
 public class Article {
@@ -44,23 +42,48 @@ public class Article {
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    public Article() {
+    }
+
     public Article(String title, String coverUrl, String contents) {
         this.title = title;
         this.contents = contents;
         this.coverUrl = coverUrl;
     }
 
-    public void update(Article article) {
+    public Article(String title, String coverUrl, String contents, User author) {
+        this(title, coverUrl, contents);
+        this.author = author;
+    }
+
+    public Article update(Article article) {
         title = article.getTitle();
         coverUrl = article.getCoverUrl();
         contents = article.getContents();
+        return this;
     }
 
-    public void add(Comment comment) {
-        comments.add(comment);
+    public boolean add(Comment comment) {
+        try {
+            comments.add(comment);
+            return true;
+        } catch (Exception e) {
+            log.debug(e.getMessage());
+            return false;
+        }
     }
 
-    public void remove(Comment comment) {
-        comments.add(comment);
+    public boolean remove(Comment comment) {
+        try {
+            comments.remove(comment);
+            return true;
+        } catch (Exception e) {
+            log.debug(e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean isAuthed(User user) {
+        return this.author.equals(user);
     }
 }

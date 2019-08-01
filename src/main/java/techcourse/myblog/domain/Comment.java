@@ -10,14 +10,12 @@ import javax.validation.constraints.NotBlank;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @EqualsAndHashCode
-@RequiredArgsConstructor
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,16 +26,24 @@ public class Comment {
     private String contents;
 
     @ManyToOne
-    private User user;
+    private User author;
 
     @ManyToOne
     private Article article;
+
+    public Comment() {
+    }
 
     public Comment(final String contents) {
         this.contents = contents;
     }
 
-    public void update(Comment comment) {
-        contents = comment.getContents();
+    public Comment update(String contents) {
+        this.contents = contents;
+        return this;
+    }
+
+    public boolean isAuthed(User user) {
+        return this.author.equals(user);
     }
 }
