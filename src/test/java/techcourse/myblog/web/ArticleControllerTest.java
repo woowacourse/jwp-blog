@@ -15,7 +15,7 @@ import techcourse.myblog.service.CommentService;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static techcourse.myblog.web.ArticleController.ARTICLE_DEFAULT_URL;
-import static techcourse.myblog.web.AuthControllerTest.로그인_세션_ID;
+import static techcourse.myblog.web.AuthControllerTest.getJSessionId;
 import static techcourse.myblog.web.UserControllerTest.회원_등록;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -42,7 +42,7 @@ class ArticleControllerTest {
         testUserDto.setEmail(TEST_LOGIN_ID);
         testUserDto.setPassword(TEST_LOGIN_PASSWORD);
         회원_등록(webTestClient, testUserDto);
-        jSessionId = 로그인_세션_ID(webTestClient, TEST_LOGIN_ID, TEST_LOGIN_PASSWORD);
+        jSessionId = getJSessionId(webTestClient, TEST_LOGIN_ID, TEST_LOGIN_PASSWORD);
     }
 
     @Test

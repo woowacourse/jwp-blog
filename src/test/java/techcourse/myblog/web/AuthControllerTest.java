@@ -20,7 +20,7 @@ public class AuthControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    static WebTestClient.ResponseSpec 로그인(WebTestClient webTestClient, String email, String password) {
+    static WebTestClient.ResponseSpec getLoginResponse(WebTestClient webTestClient, String email, String password) {
         return webTestClient.post().uri(AUTH_DEFAULT_URL + "/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(
@@ -29,8 +29,8 @@ public class AuthControllerTest {
                 ).exchange();
     }
 
-    static String 로그인_세션_ID(WebTestClient webTestClient, String email, String password) {
-        return 로그인(webTestClient, email, password)
+    static String getJSessionId(WebTestClient webTestClient, String email, String password) {
+        return getLoginResponse(webTestClient, email, password)
                 .returnResult(String.class)
                 .getResponseHeaders().getFirst("Set-Cookie");
     }
@@ -51,7 +51,7 @@ public class AuthControllerTest {
         testUserDto.setPassword("!234Qwer");
 
         회원_등록(webTestClient, testUserDto);
-        로그인(webTestClient, testEmail, testPassword)
+        getLoginResponse(webTestClient, testEmail, testPassword)
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(res -> {
@@ -62,7 +62,7 @@ public class AuthControllerTest {
 
     @Test
     void 로그인_비밀번호_오류시_로그인_페이지_이동_테스트() {
-        로그인(webTestClient, testEmail, "qwer1234")
+        getLoginResponse(webTestClient, testEmail, "qwer1234")
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(res -> {
@@ -73,7 +73,7 @@ public class AuthControllerTest {
 
     @Test
     void 로그인_이메일_오류시_로그인_페이지_이동_테스트() {
-        로그인(webTestClient, "park@woowa.com", testPassword)
+        getLoginResponse(webTestClient, "park@woowa.com", testPassword)
                 .expectStatus().isFound()
                 .expectBody()
                 .consumeWith(res -> {
