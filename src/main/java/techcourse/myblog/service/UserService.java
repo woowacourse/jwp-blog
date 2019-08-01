@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.exception.UserArgumentException;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
+import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.exception.NotFoundUserException;
@@ -41,6 +42,11 @@ public class UserService {
 
 	public UserPublicInfoDto findUserPublicInfoById(Long id) {
 		User user = findById(id);
+		return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
+	}
+
+	public UserPublicInfoDto findUserPublicInfoByArticle(ArticleDto article) {
+		User user = findById(article.getUserId());
 		return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
 	}
 

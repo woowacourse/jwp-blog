@@ -47,7 +47,7 @@ public class ArticleController {
 		ArticleDto articleDto = articleService.findArticleDtoById(id);
 		model.addAttribute("article", articleDto);
 
-		UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoById(articleDto.getUserId());
+		UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoByArticle(articleDto);
 		model.addAttribute("articleUser", userPublicInfoDto);
 
 		List<CommentResponseDto> commentResponses = commentService.findCommentsByArticleId(id);
