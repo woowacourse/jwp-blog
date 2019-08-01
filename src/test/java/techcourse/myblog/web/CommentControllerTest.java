@@ -22,12 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestPropertySource("classpath:application_test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CommentControllerTest {
-    private static String title = "TEST";
-    private static String coverUrl = "https://img.com";
-    private static String contents = "testtest";
-    private static String categoryId = "1";
-
-    private static final String name = "name";
     private static final String email = "test@test.com";
     private static final String password = "123123123";
 
@@ -39,7 +33,7 @@ class CommentControllerTest {
     @BeforeEach
     void setUp() {
         if (JSSESIONID == null) {
-            JSSESIONID = getJSSESIONID(name, email, password);
+            JSSESIONID = getJSSESIONID();
         }
     }
 
@@ -89,7 +83,7 @@ class CommentControllerTest {
         return body;
     }
 
-    public String getJSSESIONID(String name, String email, String password) {
+    public String getJSSESIONID() {
         List<String> result = new ArrayList<>();
 
         webTestClient.post()

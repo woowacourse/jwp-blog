@@ -1,5 +1,6 @@
 package techcourse.myblog.domain.user;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,13 @@ public class SignUpDto implements UserDto {
     private String password;
 
     public SignUpDto() {
+    }
+
+    @Builder
+    public SignUpDto(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
     @Override

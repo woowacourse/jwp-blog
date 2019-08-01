@@ -6,8 +6,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleDto;
+import techcourse.myblog.domain.user.SignUpDto;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserDto;
+import techcourse.myblog.domain.user.UserInfoDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,14 +23,14 @@ class CommentRepositoryTest {
 
     @Test
     void save() {
-        UserDto userDto = UserDto.builder().name("test")
+        UserDto userDto = SignUpDto.builder().name("test")
                 .email("test@test.com").password("testtset123").build();
 
         User persistUser = testEntityManager.persist(userDto.toEntity());
         testEntityManager.flush();
         testEntityManager.clear();
 
-        ArticleDto articleDto = ArticleDto.builder().userDto(UserDto.from(persistUser)).build();
+        ArticleDto articleDto = ArticleDto.builder().userDto(UserInfoDto.from(persistUser)).build();
         Article article = articleDto.toEntity();
 
         Article persistArticle = testEntityManager.persist(article);

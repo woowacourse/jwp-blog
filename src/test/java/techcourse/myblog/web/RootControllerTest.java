@@ -24,46 +24,25 @@ import static org.junit.jupiter.api.Assertions.*;
 class RootControllerTest {
     private static final String ARTICLE_DELIMITER
             = "<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tab-centered-1\">";
-    private static String title = "TEST";
-    private static String coverUrl = "https://img.com";
-    private static String contents = "testtest";
-    private static String categoryId = "1";
 
-    private static final String name = "미스터코";
     private static final String email = "test@test.com";
     private static final String password = "123123123";
 
     @Autowired
     private WebTestClient webTestClient;
 
-    private static long articleId;
-
     private String JSSESIONID;
 
     @BeforeEach
     void setUp() {
         if (JSSESIONID == null) {
-            JSSESIONID = getJSSESIONID(name, email, password);
+            JSSESIONID = getJSSESIONID();
         }
-
-        webTestClient.post()
-                .uri("/articles/new")
-                .cookie("JSESSIONID", JSSESIONID)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents)
-                        .with("categoryId", categoryId))
-                .exchange()
-                .expectHeader()
-                .value("location", s -> {
-                    articleId = Long.parseLong(s.split("/")[4]);
-                });
     }
 
     @Test
     public void index() {
-        int count = 1;
+        int count = 3;
 
         webTestClient.get()
                 .uri("/")
@@ -78,7 +57,7 @@ class RootControllerTest {
 
     @Test
     public void indexTestByCategory() {
-        int count = 1;
+        int count = 2;
 
         webTestClient.get()
                 .uri("/1")
@@ -91,25 +70,8 @@ class RootControllerTest {
                 });
     }
 
-    @AfterEach
-    void tearDown() {
-        //delete
-        webTestClient.delete()
-                .uri("/articles/" + articleId)
-                .exchange()
-                .expectStatus().isFound();
-    }
-
-    private String getJSSESIONID(String name, String email, String password) {
+    private String getJSSESIONID() {
         List<String> result = new ArrayList<>();
-
-        webTestClient.post()
-                .uri("/signup")
-                .body(BodyInserters
-                        .fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange();
 
         webTestClient.post()
                 .uri("/login")

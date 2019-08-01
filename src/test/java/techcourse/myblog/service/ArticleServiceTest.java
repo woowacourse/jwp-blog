@@ -8,6 +8,8 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.domain.article.ArticleDto;
 import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.user.UserDto;
+import techcourse.myblog.domain.user.UserInfoDto;
 import techcourse.myblog.domain.user.UserRepository;
 
 import java.util.Arrays;
@@ -29,19 +31,22 @@ class ArticleServiceTest {
 
     private final long articleId = 3;
     private final long categoryId = 1;
+    private final long userId = 1;
     private ArticleDto articleDto;
+    private UserDto userDto;
 
 
     @BeforeEach
     void setUp() {
         articleDto = getArticleDto(articleId, categoryId);
+        userDto = UserInfoDto.builder().id(userId).build();
     }
 
     @Test
     void 게시글_생성() {
         when(articleRepository.save(articleDto.toEntity())).thenReturn(articleDto.toEntity());
         when(userRepository.findById(0l)).thenReturn(Optional.empty());
-        assertThat(articleService.createArticle(articleDto, 0)).isEqualTo(articleId);
+        assertThat(articleService.createArticle(articleDto, userDto)).isEqualTo(articleId);
     }
 
     @Test
@@ -55,7 +60,7 @@ class ArticleServiceTest {
         ArticleDto inArticleDto = getArticleDto(5, categoryId);
 
         when(articleRepository.findById(articleId)).thenReturn(Optional.of(articleDto.toEntity()));
-        assertThat(articleService.updateByArticle(articleId, inArticleDto)).isEqualTo(articleDto);
+        assertThat(articleService.updateByArticle(articleId, inArticleDto, userDto)).isEqualTo(articleDto);
     }
 
     @Test

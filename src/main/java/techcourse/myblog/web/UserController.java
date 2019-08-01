@@ -45,7 +45,6 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(LoginDto loginDto, HttpSession session) {
-        System.out.println(loginDto);
         UserDto findUserDto = userService.findByUserDto(loginDto);
         session.setAttribute(LOGIN_SESSION, findUserDto);
 

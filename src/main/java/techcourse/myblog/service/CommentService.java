@@ -44,7 +44,7 @@ public class CommentService {
     private void checkAuthor(long commentId, UserDto userDto) {
         UserDto findUserDto = userService.findByUserEmail(userDto);
         commentRepository.findById(commentId).ifPresent(comment -> {
-            if (findUserDto.toEntity().checkAuthor(commentId)) {
+            if (!findUserDto.toEntity().checkAuthor(comment.getAuthor().getId())) {
                 throw new IllegalArgumentException("허가되지 않은 사용자입니다.");
             }
         });

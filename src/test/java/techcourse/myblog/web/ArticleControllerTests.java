@@ -29,37 +29,24 @@ public class ArticleControllerTests {
     private static String contents = "testtest";
     private static String categoryId = "1";
 
-    private static final String name = "미스터코";
     private static final String email = "test@test.com";
     private static final String password = "123123123";
 
     @Autowired
     private WebTestClient webTestClient;
 
-    private static long articleId;
-
     private String JSSESIONID;
 
     @BeforeEach
     void setUp() {
         if (JSSESIONID == null) {
-            JSSESIONID = getJSSESIONID(name, email, password);
+            JSSESIONID = getJSSESIONID();
         }
-
-        webTestClient.post()
-                .uri("/articles/new")
-                .cookie("JSESSIONID", JSSESIONID)
-                .body(createFormData(ArticleDto.class, title, coverUrl, contents, categoryId))
-                .exchange()
-                .expectHeader()
-                .value("location", s -> {
-                    articleId = Long.parseLong(s.split("/")[4]);
-                });
     }
 
     @Test
     public void showArticleById() {
-        webTestClient.get().uri("/articles/" + articleId)
+        webTestClient.get().uri("/articles/" + 1)
                 .cookie("JSESSIONID", JSSESIONID)
                 .exchange()
                 .expectStatus().isOk();
@@ -67,7 +54,7 @@ public class ArticleControllerTests {
 
     @Test
     public void updateArticleById() {
-        webTestClient.get().uri("/articles/" + articleId + "/edit")
+        webTestClient.get().uri("/articles/" + 1 + "/edit")
                 .cookie("JSESSIONID", JSSESIONID)
                 .exchange()
                 .expectStatus().isOk()
@@ -100,18 +87,12 @@ public class ArticleControllerTests {
                 .value("location", s -> {
                     addId.set(Long.parseLong(s.split("/")[4]));
                 });
-
-        webTestClient.delete()
-                .uri("/articles/" + addId.get())
-                .exchange()
-                .expectStatus().isFound();
     }
 
-    @AfterEach
-    void tearDown() {
+    @Test
+    void delete() {
         webTestClient.delete()
-                .uri("/articles/" + articleId)
-                .cookie("JSESSIONID", JSSESIONID)
+                .uri("/articles/" + 2)
                 .exchange()
                 .expectStatus().isFound();
     }
@@ -128,16 +109,8 @@ public class ArticleControllerTests {
     }
 
 
-    public String getJSSESIONID(String name, String email, String password) {
+    public String getJSSESIONID() {
         List<String> result = new ArrayList<>();
-
-        webTestClient.post()
-                .uri("/signup")
-                .body(BodyInserters
-                        .fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange();
 
         webTestClient.post()
                 .uri("/login")

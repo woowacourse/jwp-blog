@@ -66,7 +66,7 @@ public class ArticleService {
     private void checkAuthor(long articleId, UserDto userDto) {
         UserDto findUserDto = userService.findByUserEmail(userDto);
         articleRepository.findById(articleId).ifPresent(article -> {
-            if (findUserDto.toEntity().checkAuthor(article.getId())) {
+            if (!findUserDto.toEntity().checkAuthor(article.getAuthor().getId())) {
                 throw new IllegalArgumentException("허가되지 않은 사용자입니다.");
             }
         });

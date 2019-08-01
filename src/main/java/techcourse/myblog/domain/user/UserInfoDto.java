@@ -19,8 +19,8 @@ public class UserInfoDto implements UserDto {
     }
 
     @Builder
-    public UserInfoDto(long userId, String name, String email, String snsFacebookEmail, String snsGithubEmail) {
-        this.userId = userId;
+    public UserInfoDto(long id, String name, String email, String snsFacebookEmail, String snsGithubEmail) {
+        this.userId = id;
         this.name = name;
         this.email = email;
         this.snsFacebookEmail = snsFacebookEmail;
@@ -29,7 +29,7 @@ public class UserInfoDto implements UserDto {
 
     public static UserDto from(User user) {
         return UserInfoDto.builder()
-                .userId(user.getId())
+                .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
                 .build();
@@ -37,7 +37,7 @@ public class UserInfoDto implements UserDto {
 
     public static UserDto fromWithSNS(User user, List<SnsInfo> snsInfos) {
         return UserInfoDto.builder()
-                .userId(user.getId())
+                .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
                 .snsFacebookEmail(getSnsEmail(snsInfos, 0))

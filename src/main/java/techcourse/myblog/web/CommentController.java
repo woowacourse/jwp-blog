@@ -35,7 +35,7 @@ public class CommentController {
     @PutMapping("/comments/{articleId}/{commentId}")
     public String update(CommentDto commentDto, @PathVariable long articleId, @PathVariable long commentId, HttpSession session) {
         commentService.update(commentId, commentDto, getUserInfo(session));
-
+        System.out.println("out");
         return "redirect:/articles/" + articleId;
     }
 
