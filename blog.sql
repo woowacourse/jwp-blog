@@ -11,3 +11,5 @@ grant all on blog_test.* to 'aaaa'; -- Gives all the privileges to the new user 
 
 show tables;
 select * from user;
+select * from article;
+select * from comment;
