@@ -44,6 +44,7 @@ public class ArticleDto {
 
     @Data
     public static class Response {
+        private Long id;
         private String title;
         private String coverUrl;
         private String contents;

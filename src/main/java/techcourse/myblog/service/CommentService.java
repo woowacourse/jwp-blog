@@ -46,7 +46,8 @@ public class CommentService {
         return commentRepository.save(comment).getId();
     }
 
-    //@Transactional 사용하면 엔티티만 변경해도 적용??
+    @Transactional
+    //TODO : @Transactional 사용하면 엔티티만 변경해도 적용??
     public Long update(UserDto.Response userDto, Long commentId, CommentDto.Update commentDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
         checkAuthor(userDto, comment);

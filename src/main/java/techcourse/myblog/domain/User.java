@@ -23,4 +23,6 @@ public class User {
     private String password;
 
     private String name;
+
+    //Update 추가
 }

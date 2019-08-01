@@ -18,7 +18,6 @@ public class ArticleControllerTest extends AbstractTest {
 
     @BeforeEach
     void setUp() {
-
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
@@ -213,7 +212,6 @@ public class ArticleControllerTest extends AbstractTest {
     void 게시물_삭제_요청_테스트() {
         webTestClient.delete()
             .uri("/articles/" + currentArticleId++)
-            .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isFound();
     }

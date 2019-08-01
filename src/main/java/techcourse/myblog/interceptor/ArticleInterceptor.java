@@ -14,6 +14,7 @@ public class ArticleInterceptor extends HandlerInterceptorAdapter {
     @Override
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //TODO : orThrowException 사용
         Optional<UserDto.Response> user = Optional.ofNullable((UserDto.Response) request.getSession().getAttribute("user"));
         if (request.getMethod().equals("GET") && request.getRequestURI().matches("(\\/articles\\/)([0-9]+)$")){
             return true;

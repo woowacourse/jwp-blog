@@ -71,6 +71,7 @@ class ArticleServiceTest extends AbstractTest {
 
         articleId = articleService.save(userDto, modelMapper.map(article, ArticleDto.Create.class));
         articleDto = modelMapper.map(article, ArticleDto.Response.class);
+        articleDto.setId(articleId);
     }
 
     //TODO : ArticleDto Equals가 테스트 코드를 위해 존재..?
@@ -133,8 +134,8 @@ class ArticleServiceTest extends AbstractTest {
 
     @AfterEach
     void tearDown() {
+        userService.deleteById(otherUserDto, otherUserId);
         articleService.deleteById(userDto, articleId);
         userService.deleteById(userDto, userId);
-        userService.deleteById(otherUserDto, otherUserId);
     }
 }

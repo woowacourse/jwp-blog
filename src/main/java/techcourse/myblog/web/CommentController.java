@@ -22,14 +22,14 @@ public class CommentController {
         return "redirect:/articles/"+commentDto.getArticleId();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{commentId}")
     public String update(@PathVariable Long commentId, HttpSession httpSession, CommentDto.Update commentDto){
         UserDto.Response userDto = (UserDto.Response) httpSession.getAttribute("user");
         commentService.update(userDto, commentId, commentDto);
         return "redirect:/articles/"+commentDto.getArticleId();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{commentId}")
     public String delete(@PathVariable Long commentId, HttpSession httpSession, CommentDto.Response commentDto){
         UserDto.Response userDto = (UserDto.Response) httpSession.getAttribute("user");
         commentService.deleteById(userDto, commentId);
