@@ -12,7 +12,7 @@ class UserTest {
     private Long testId = 1L;
     private String testName = "pkch";
     private String testEmail = "pkch@woowa.com";
-    private String testPassword = "qwerqwer";
+    private String testPassword = "!234Qwer";
 
     @BeforeEach
     void setUp() {
@@ -26,7 +26,7 @@ class UserTest {
 
     @Test
     void 인증_이메일과_비밀번호가_일치할_때_테스트() {
-        assertTrue(user.authenticate("pkch@woowa.com", "qwerqwer"));
+        assertTrue(user.authenticate("pkch@woowa.com", testPassword));
     }
 
     @Test
@@ -36,6 +36,6 @@ class UserTest {
 
     @Test
     void 인증_이메일이_다를_때_테스트() {
-        assertFalse(user.authenticate("park@woowa.com", "qwerqwer"));
+        assertFalse(user.authenticate("park@woowa.com", testPassword));
     }
 }
