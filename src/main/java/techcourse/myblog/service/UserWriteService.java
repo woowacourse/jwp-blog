@@ -16,12 +16,12 @@ public class UserWriteService {
         this.userRepository = userRepository;
     }
 
-    public void save(UserDto user) {
+    public void save(User user) {
         verifyDuplicateEmail(user);
-        userRepository.save(user.toUser());
+        userRepository.save(user);
     }
 
-    private void verifyDuplicateEmail(UserDto user) {
+    private void verifyDuplicateEmail(User user) {
         userRepository.findByEmail(user.getEmail())
                 .ifPresent(x -> { throw new DuplicatedEmailException(); });
     }
