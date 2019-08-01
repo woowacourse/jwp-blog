@@ -5,7 +5,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import techcourse.myblog.application.dto.LoginDto;
-import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.application.dto.UserRequestDto;
+import techcourse.myblog.application.dto.UserResponseDto;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
 import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
@@ -24,8 +25,8 @@ public class UserServiceTests {
     private static final String NOT_EXIST_EMAIL = "zino1@naver.com";
     private static final String NAME = "zino";
     private static final String PASSWORD = "zinozino";
-    private static final UserDto EXIST_USER_DTO = new UserDto(EXIST_EMAIL, NAME, PASSWORD);
-    private static final UserDto NOT_EXIST_USER_DTO = new UserDto(NOT_EXIST_EMAIL, NAME, PASSWORD);
+    private static final UserRequestDto EXIST_USER_DTO = new UserRequestDto(EXIST_EMAIL, NAME, PASSWORD);
+    private static final UserRequestDto NOT_EXIST_USER_DTO = new UserRequestDto(NOT_EXIST_EMAIL, NAME, PASSWORD);
 
     private final UserService userService;
 
@@ -61,11 +62,10 @@ public class UserServiceTests {
 
     @Test
     void 저장된_User_조회() {
-        UserDto foundUser = userService.findByEmail(EXIST_EMAIL);
+        UserResponseDto foundUser = userService.findByEmail(EXIST_EMAIL);
 
         assertThat(foundUser.getEmail()).isEqualTo(EXIST_EMAIL);
         assertThat(foundUser.getName()).isEqualTo(NAME);
-        assertThat(foundUser.getPassword()).isEqualTo(PASSWORD);
     }
 
     @Test
@@ -80,17 +80,16 @@ public class UserServiceTests {
 
     @Test
     void 저장된_id_login() {
-        assertDoesNotThrow(() -> userService.login(LoginDto.of(EXIST_USER_DTO)));
+        assertDoesNotThrow(() -> userService.login(new LoginDto(EXIST_EMAIL, PASSWORD)));
     }
 
     @Test
     void 저장되지_않은_id_login() {
-        assertThrows(NotExistUserIdException.class, () -> userService.login(LoginDto.of(NOT_EXIST_USER_DTO)));
+        assertThrows(NotExistUserIdException.class, () -> userService.login(new LoginDto(NOT_EXIST_EMAIL, PASSWORD)));
     }
 
     @Test
     void 비밀번호_불일치_login_예외발생() {
-        UserDto userDto = new UserDto(EXIST_EMAIL, NAME, PASSWORD + "123");
-        assertThrows(NotMatchPasswordException.class, () -> userService.login(LoginDto.of(userDto)));
+        assertThrows(NotMatchPasswordException.class, () -> userService.login(new LoginDto(EXIST_EMAIL, PASSWORD + "123")));
     }
 }

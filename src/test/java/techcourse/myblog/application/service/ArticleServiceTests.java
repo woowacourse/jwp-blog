@@ -4,8 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import techcourse.myblog.application.converter.UserConverter;
 import techcourse.myblog.application.dto.ArticleDto;
-import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.application.dto.UserResponseDto;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
 import techcourse.myblog.application.service.exception.NotMatchAuthorException;
 import techcourse.myblog.domain.Article;
@@ -34,6 +35,7 @@ public class ArticleServiceTests {
     private final User existUser = new User(EXIST_EMAIL, NAME, PASSWORD);
 
     private ArticleService articleService;
+    private UserConverter userConverter = UserConverter.getInstance();
 
     @Mock
     private UserService userService;
@@ -49,16 +51,17 @@ public class ArticleServiceTests {
     }
 
     private void initUserServiceMock() {
-        when(userService.findByEmail(EXIST_EMAIL)).thenReturn(new UserDto(EXIST_EMAIL, NAME, PASSWORD));
+        when(userService.findByEmail(EXIST_EMAIL)).thenReturn(new UserResponseDto(EXIST_ARTICLE_ID, NAME, PASSWORD));
     }
 
     private void initArticleRepositoryMock() {
         Article articleBeforeSave = new Article.ArticleBuilder()
-                .author(existUser)
                 .coverUrl(COVER_URL)
                 .title(TITLE)
                 .contents(CONTENTS).build();
-        Article articleAfterSave = new Article(EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS, existUser);
+        articleBeforeSave.init(existUser);
+        Article articleAfterSave = new Article(EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS);
+        articleAfterSave.init(existUser);
         when(articleRepository.findById(EXIST_ARTICLE_ID)).thenReturn(Optional.of(articleAfterSave));
         when(articleRepository.findById(NOT_EXIST_ARTICLE_ID)).thenReturn(Optional.empty());
         when(articleRepository.save(articleBeforeSave)).thenReturn(articleAfterSave);
@@ -68,13 +71,14 @@ public class ArticleServiceTests {
 
     @Test
     void Article_생성_테스트() {
-        ArticleDto articleDto = new ArticleDto(NOT_EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS, existUser);
+        ArticleDto articleDto = new ArticleDto(NOT_EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS);
+        articleDto.setAuthor(userConverter.convertFromEntity(existUser));
         assertDoesNotThrow(() -> articleService.save(articleDto, EXIST_EMAIL));
     }
 
     @Test
     void 존재하는_Article_조회_테스트() {
-        Article article = articleService.findById(EXIST_ARTICLE_ID);
+        ArticleDto article = articleService.findById(EXIST_ARTICLE_ID);
 
         assertThat(article.getId()).isEqualTo(EXIST_ARTICLE_ID);
         assertThat(article.getTitle()).isEqualTo(TITLE);
@@ -108,11 +112,11 @@ public class ArticleServiceTests {
 
     @Test
     void 글작성자와_세션이_같을때_비교_테스트() {
-        assertDoesNotThrow(() -> articleService.checkAuthor(EXIST_ARTICLE_ID, EXIST_EMAIL));
+        assertDoesNotThrow(() -> articleService.matchAuthor(EXIST_ARTICLE_ID, EXIST_EMAIL));
     }
 
     @Test
     void 글작성자와_세션이_다를때_비교_테스트() {
-        assertThrows(NotMatchAuthorException.class, () -> articleService.checkAuthor(EXIST_ARTICLE_ID, "zino1@gmail.com"));
+        assertThrows(NotMatchAuthorException.class, () -> articleService.matchAuthor(EXIST_ARTICLE_ID, "zino1@gmail.com"));
     }
 }

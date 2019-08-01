@@ -63,7 +63,12 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public List<ArticleDto> findAll() {
-        return articleConverter.createFromEntities(articleRepository.findAll());
+        List<Article> articles = articleRepository.findAll();
+        List<ArticleDto> articleDtos = articleConverter.createFromEntities(articleRepository.findAll());
+        for (int i = 0; i < articleDtos.size(); i++) {
+            articleDtos.get(i).setAuthor(userConverter.convertFromEntity(articles.get(i).getAuthor()));
+        }
+        return articleDtos;
     }
 
     public void matchAuthor(Long articleId, String email) {

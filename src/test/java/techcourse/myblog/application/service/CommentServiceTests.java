@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import techcourse.myblog.application.converter.ArticleConverter;
+import techcourse.myblog.application.converter.UserConverter;
+import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.exception.CommentNotFoundException;
 import techcourse.myblog.domain.Article;
@@ -31,6 +34,8 @@ public class CommentServiceTests {
     private static final String COVER_URL = "cover_url";
 
     private CommentService commentService;
+    private UserConverter userConverter = UserConverter.getInstance();
+    private ArticleConverter articleConverter = ArticleConverter.getInstance();
 
     @Mock
     private CommentRepository commentRepository;
@@ -56,13 +61,17 @@ public class CommentServiceTests {
 
     private void initArticleServiceMock() {
         User user = userService.findUserByEmail(FIRST_EMAIL);
-        when(articleService.findById(EXIST_ARTICLE_ID)).thenReturn(new Article(EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS, user));
+        ArticleDto articleDto = new ArticleDto(EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS);
+        articleDto.setAuthor(userConverter.convertFromEntity(user));
+        when(articleService.findById(EXIST_ARTICLE_ID)).thenReturn(articleDto);
     }
 
     private void initCommentRepository() {
-        Article article = articleService.findById(EXIST_ARTICLE_ID);
-        Comment firstComment = new Comment(CONTENTS, userService.findUserByEmail(FIRST_EMAIL), articleService.findById(EXIST_ARTICLE_ID));
-        Comment secondComment = new Comment(CONTENTS, userService.findUserByEmail(SECOND_EMAIL), articleService.findById(EXIST_ARTICLE_ID));
+        Article article = articleService.findArticleById(EXIST_ARTICLE_ID);
+        Comment firstComment = new Comment(CONTENTS);
+        firstComment.init(userService.findUserByEmail(FIRST_EMAIL), articleService.findArticleById(EXIST_ARTICLE_ID));
+        Comment secondComment = new Comment(CONTENTS);
+        secondComment.init(userService.findUserByEmail(SECOND_EMAIL), articleService.findArticleById(EXIST_ARTICLE_ID));
         when(commentRepository.save(firstComment)).thenReturn(firstComment);
         when(commentRepository.findByArticle(article)).thenReturn(Arrays.asList(firstComment, secondComment));
         Mockito.doNothing().when(commentRepository).deleteById(1L);
@@ -73,29 +82,27 @@ public class CommentServiceTests {
 
     @Test
     void Comment_생성_테스트() {
-        CommentDto commentDto = new CommentDto(null, CONTENTS, null, null);
+        CommentDto commentDto = new CommentDto(null, CONTENTS);
         assertDoesNotThrow(() -> commentService.save(commentDto, EXIST_ARTICLE_ID, FIRST_EMAIL));
     }
 
     @Test
     void Comment_조회_테스트() {
-        List<CommentDto> commentDtos = commentService.findAllCommentsByArticleId(EXIST_ARTICLE_ID, FIRST_EMAIL);
+        List<CommentDto> commentDtos = commentService.findAllCommentsByArticleId(EXIST_ARTICLE_ID);
         assertThat(commentDtos).hasSize(2);
         assertThat(commentDtos.get(0).getAuthor().getEmail()).isEqualTo(FIRST_EMAIL);
-        assertThat(commentDtos.get(0).getMatchAuthor()).isTrue();
         assertThat(commentDtos.get(1).getAuthor().getEmail()).isEqualTo(SECOND_EMAIL);
-        assertThat(commentDtos.get(1).getMatchAuthor()).isFalse();
     }
 
     @Test
     void Comment_수정_테스트() {
-        CommentDto commentDto = new CommentDto(null, CONTENTS + "123", null, null);
+        CommentDto commentDto = new CommentDto(null, CONTENTS + "123");
         assertDoesNotThrow(() -> commentService.modify(1L, commentDto));
     }
 
     @Test
     void 존재하지않는_Comment_수정_에러_테스트() {
-        CommentDto commentDto = new CommentDto(null, CONTENTS + "123", null, null);
+        CommentDto commentDto = new CommentDto(null, CONTENTS + "123");
         assertThrows(CommentNotFoundException.class, () -> commentService.modify(3L, commentDto));
     }
 
