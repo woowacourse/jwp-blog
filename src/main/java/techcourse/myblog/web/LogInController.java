@@ -6,22 +6,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.service.LogInService;
 import techcourse.myblog.service.dto.LogInInfoDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.web.util.LoginChecker;
 
 import javax.servlet.http.HttpSession;
 
 @Controller
 public class LogInController {
-    private static final String LOGGED_IN_USER = "loggedInUser";
-
     private LogInService logInService;
+    private LoginChecker loginChecker;
 
-    public LogInController(LogInService logInService) {
+    public LogInController(LogInService logInService, LoginChecker loginChecker) {
         this.logInService = logInService;
+        this.loginChecker = loginChecker;
     }
 
     @GetMapping("/login")
     public String showLoginPage(HttpSession session) {
-        if (session.getAttribute(LOGGED_IN_USER) != null) {
+        if (loginChecker.isLoggedIn(session)) {
             return "redirect:/";
         }
         return "login";
@@ -30,13 +31,13 @@ public class LogInController {
     @PostMapping("/login")
     public String logIn(LogInInfoDto logInInfoDto, HttpSession session) {
         UserPublicInfoDto userPublicInfoDto = logInService.logIn(logInInfoDto);
-        session.setAttribute(LOGGED_IN_USER, userPublicInfoDto);
+        session.setAttribute(LoginChecker.LOGGED_IN_USER, userPublicInfoDto);
         return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute(LOGGED_IN_USER);
+        session.removeAttribute(LoginChecker.LOGGED_IN_USER);
         return "redirect:/";
     }
 }
