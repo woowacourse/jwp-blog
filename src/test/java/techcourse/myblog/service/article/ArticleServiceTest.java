@@ -34,7 +34,8 @@ public class ArticleServiceTest {
         UserResponseDto retrieveUser = userService.findById(DEFAULT_USER_ID);
         ArticleRequestDto article = new ArticleRequestDto("some title", "", "some contents");
         Long articleId = articleService.save(article, retrieveUser.getId());
-        assertThat(articleService.findById(articleId)).isEqualTo(article);
+        assertThat(articleService.findById(articleId).getTitle()).isEqualTo(article.getTitle());
+        assertThat(articleService.findById(articleId).getContents()).isEqualTo(article.getContents());
     }
 
 
@@ -47,7 +48,7 @@ public class ArticleServiceTest {
     @Test
     void 모든_게시글_조회_확인() {
         List<ArticleResponseDto> articleDtos = articleService.findAll();
-        assertThat(articleDtos).isEqualTo(Arrays.asList(articleService.findById(DEFAULT_ARTICLE_ID)));
+        assertThat(articleDtos).hasSize(1).containsExactly(articleService.findById(DEFAULT_ARTICLE_ID));
     }
 
     @Test
@@ -55,7 +56,8 @@ public class ArticleServiceTest {
         ArticleRequestDto updatedArticleDto = new ArticleRequestDto("title", "", "contents");
         articleService.update(DEFAULT_ARTICLE_ID, updatedArticleDto);
         ArticleResponseDto retrievedArticleDto = articleService.findById(DEFAULT_ARTICLE_ID);
-        assertThat(retrievedArticleDto).isEqualTo(updatedArticleDto);
+        assertThat(retrievedArticleDto.getTitle()).isEqualTo(updatedArticleDto.getTitle());
+        assertThat(retrievedArticleDto.getContents()).isEqualTo(updatedArticleDto.getContents());
     }
 
     @Test

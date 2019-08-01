@@ -9,6 +9,7 @@ import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +36,7 @@ public class Article {
     private User author;
 
     @OneToMany(mappedBy = "article")
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @CreatedDate
     @Column(name = "created_date", updatable = false)

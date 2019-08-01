@@ -120,6 +120,10 @@ public class CommentControllerTests {
             .exchange()
             .expectStatus().is3xxRedirection()
             .expectHeader().valueMatches("Location", ".*/login");
+
+        assertThat(new String(getSync(webTestClient, "/articles/" + DEFAULT_ARTICLE_ID, null)
+            .getResponseBody()))
+            .contains("hello1");
     }
 
     @Test

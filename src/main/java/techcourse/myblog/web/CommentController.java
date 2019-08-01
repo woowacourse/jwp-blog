@@ -43,8 +43,6 @@ public class CommentController {
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
     public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView();
-
         UserResponseDto user = (UserResponseDto) session.getAttribute("user");
         if (user.matchId(commentService.findById(commentId).getAuthorId())) {
             commentService.delete(commentId);
