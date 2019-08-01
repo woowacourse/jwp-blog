@@ -3,7 +3,6 @@ package techcourse.myblog.domain.article;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserDto;
 import techcourse.myblog.domain.user.UserInfoDto;
 

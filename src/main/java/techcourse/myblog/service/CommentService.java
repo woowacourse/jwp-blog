@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.article.ArticleDto;
 import techcourse.myblog.domain.comment.Comment;

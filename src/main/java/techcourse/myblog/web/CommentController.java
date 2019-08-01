@@ -2,7 +2,6 @@ package techcourse.myblog.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +32,6 @@ public class CommentController {
         return "redirect:/articles/" + articleId;
     }
 
-    @Transactional
     @PutMapping("/comments/{articleId}/{commentId}")
     public String update(CommentDto commentDto, @PathVariable long articleId, @PathVariable long commentId, HttpSession session) {
         commentService.update(commentId, commentDto, getUserInfo(session));

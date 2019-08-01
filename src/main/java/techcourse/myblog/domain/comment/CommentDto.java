@@ -3,10 +3,7 @@ package techcourse.myblog.domain.comment;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Configurable;
-import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleDto;
-import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserDto;
 import techcourse.myblog.domain.user.UserInfoDto;
 
@@ -29,6 +26,7 @@ public class CommentDto {
 
     public static CommentDto from(Comment comment) {
         return CommentDto.builder()
+                .id(comment.getId())
                 .contents(comment.getContents())
                 .author(UserInfoDto.from(comment.getAuthor()))
                 .build();

@@ -23,15 +23,15 @@ public class CategoryDto {
 
     public static CategoryDto from(Category category) {
         return CategoryDto.builder()
-                .categoryId(category.getCategoryId())
-                .categoryName(category.getCategoryName())
+                .categoryId(category.getId())
+                .categoryName(category.getName())
                 .build();
     }
 
     public Category toEntity() {
         return Category.builder()
-                .categoryId(this.categoryId)
-                .categoryName(this.categoryName)
+                .id(this.categoryId)
+                .name(this.categoryName)
                 .build();
     }
 

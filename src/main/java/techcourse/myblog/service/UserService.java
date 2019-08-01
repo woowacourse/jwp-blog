@@ -38,8 +38,6 @@ public class UserService {
     }
 
     public UserDto create(UserDto userDto) {
-        System.out.println("aaaa" + userDto);
-        System.out.println("aaaa" + userDto.toEntity());
         try {
             User user = userRepository.save(userDto.toEntity());
             return UserInfoDto.from(user);

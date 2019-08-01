@@ -11,24 +11,24 @@ import java.util.Objects;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long categoryId;
+    private long id;
     @Column(unique = true)
-    private String categoryName;
+    private String name;
 
     public Category() {
     }
 
     @Builder
-    public Category(long categoryId, String categoryName) {
-        this.categoryId = categoryId;
-        this.categoryName = categoryName;
+    public Category(long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     @Override
     public String toString() {
         return "Category{" +
-                "categoryName='" + categoryName + '\'' +
-                ", categoryId=" + categoryId +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 
@@ -37,12 +37,12 @@ public class Category {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return categoryId == category.categoryId &&
-                Objects.equals(categoryName, category.categoryName);
+        return id == category.id &&
+                Objects.equals(name, category.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(categoryId, categoryName);
+        return Objects.hash(id, name);
     }
 }

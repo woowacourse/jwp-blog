@@ -25,8 +25,8 @@ public class ArticleService {
     }
 
     public long createArticle(ArticleDto articleDto, UserDto userDto) {
-        userService.findByUserEmail(userDto);
-        articleDto.setUserDto(userDto);
+        UserDto findUserDto = userService.findByUserEmail(userDto);
+        articleDto.setUserDto(findUserDto);
         Article article = articleRepository.save(articleDto.toEntity());
         return article.getId();
     }

@@ -69,14 +69,14 @@
                 <div class="comment">
                     <ul class="list-unstyled list-info" id="comment-list">
 
-                        <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
+                        <li class="comment-item border bottom mrg-btm-30" th:each="comment:${comments}">
                             <form accept-charset="utf-8" method="post" name="comment-update"
-                                  th:action="@{/comments/{articleId}/{commentId} (articleId = ${article.id}, commentId = ${comment.id})}">
+                                  th:action="@{/comments/{articleId}/{commentId} (articleId=${article.id},commentId=${comment.id})}">
                                 <input name="_method" type="hidden" value="DELETE">
                                 <img class="thumb-img img-circle"
                                      src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                                 <div class="info view">
-                                    <span class="text-bold inline-block" href="" th:text="${comment.author.name}">Jun</span>
+                                    <span class="text-bold inline-block" th:text="${comment.author.name}">Jun</span>
 
                                     <button type="submit"><i class="ti-close"></i></button>
 

@@ -54,6 +54,7 @@ public class UserInfoDto implements UserDto {
     @Override
     public User toEntity() {
         return User.builder()
+                .id(userId)
                 .name(name)
                 .email(email).build();
     }
