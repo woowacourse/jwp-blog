@@ -19,9 +19,9 @@ public class ArticleDto {
     @NotBlank(message = CONTENTS_CONSTRAINT_MESSAGE)
     private String contents;
 
-    public ArticleDto(String title, String url, String contents) {
+    public ArticleDto(String title, String coverUrl, String contents) {
         this.title = title;
-        this.coverUrl = url;
+        this.coverUrl = coverUrl;
         this.contents = contents;
     }
 

@@ -32,9 +32,12 @@ public class CommentService {
     }
 
     public void deleteById(Long id, User user) {
-        Comment comment = findByIdAndWriter(id, user);
-        commentRepository.delete(comment);
+        checkDeleteAuth(id, user);
         commentRepository.deleteById(id);
+    }
+
+    private void checkDeleteAuth(Long id, User user) {
+        findByIdAndWriter(id, user);
     }
 
     public void modify(Long commentId, Comment comment) {
