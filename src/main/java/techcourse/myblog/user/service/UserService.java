@@ -7,7 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.domain.UserRepository;
 import techcourse.myblog.user.domain.vo.Email;
-import techcourse.myblog.user.dto.UserDto;
+import techcourse.myblog.user.dto.UserCreateDto;
+import techcourse.myblog.user.dto.UserLoginDto;
+import techcourse.myblog.user.dto.UserResponseDto;
+import techcourse.myblog.user.dto.UserUpdateDto;
 import techcourse.myblog.user.exception.DuplicatedUserException;
 import techcourse.myblog.user.exception.NotFoundUserException;
 import techcourse.myblog.user.exception.NotMatchPasswordException;
@@ -22,7 +25,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public User save(UserDto.Creation userDto) {
+    public User save(UserCreateDto userDto) {
         User newUser = userDto.toUser();
         if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
             throw new DuplicatedUserException(newUser.getEmail());
@@ -30,19 +33,19 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
-    public List<UserDto.Response> findAll() {
+    public List<UserResponseDto> findAll() {
         List<User> users = (List<User>) userRepository.findAll();
         return users.stream()
-                .map(user -> modelMapper.map(user, UserDto.Response.class))
+                .map(user -> modelMapper.map(user, UserResponseDto.class))
                 .collect(Collectors.toList());
     }
 
-    public UserDto.Response findById(long userId) {
+    public UserResponseDto findById(long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException(userId));
-        return modelMapper.map(user, UserDto.Response.class);
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
-    public UserDto.Response login(UserDto.Login userDto) {
+    public UserResponseDto login(UserLoginDto userDto) {
         User user = userRepository.findByEmail(Email.of(userDto.getEmail()))
                 .orElseThrow(() -> new NotFoundUserException(userDto.getEmail()));
 
@@ -50,13 +53,13 @@ public class UserService {
             throw new NotMatchPasswordException();
         }
 
-        return modelMapper.map(user, UserDto.Response.class);
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
-    public UserDto.Response update(long userId, UserDto.Updation userDto) {
+    public UserResponseDto update(long userId, UserUpdateDto userDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException(userId));
         user.update(userDto.getName());
-        return modelMapper.map(user, UserDto.Response.class);
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
     public void deleteById(long userId) {

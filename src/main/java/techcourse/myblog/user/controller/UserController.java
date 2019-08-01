@@ -7,7 +7,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.argumentresolver.UserSession;
-import techcourse.myblog.user.dto.UserDto;
+import techcourse.myblog.user.dto.UserCreateDto;
+import techcourse.myblog.user.dto.UserResponseDto;
+import techcourse.myblog.user.dto.UserUpdateDto;
 import techcourse.myblog.user.exception.InvalidEditFormException;
 import techcourse.myblog.user.exception.InvalidSignUpFormException;
 import techcourse.myblog.user.service.UserService;
@@ -27,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public RedirectView createUser(@Valid UserDto.Creation userDto, BindingResult bindingResult) {
+    public RedirectView createUser(@Valid UserCreateDto userDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidSignUpFormException(bindingResult.getFieldError().getDefaultMessage());
         }
@@ -37,14 +39,14 @@ public class UserController {
 
     @GetMapping("/users")
     public String readUsers(Model model) {
-        List<UserDto.Response> users = userService.findAll();
+        List<UserResponseDto> users = userService.findAll();
         model.addAttribute("users", users);
         return "user-list";
     }
 
     @GetMapping("/mypage/{userId}")
     public String renderMyPage(@PathVariable long userId, Model model) {
-        UserDto.Response user = userService.findById(userId);
+        UserResponseDto user = userService.findById(userId);
         model.addAttribute("user", user);
         return "mypage";
     }
@@ -60,11 +62,11 @@ public class UserController {
 
     @PutMapping("/users/{userId}")
     public RedirectView updateUser(@PathVariable long userId, HttpSession session,
-                                   @Valid UserDto.Updation userDto, BindingResult result) {
+                                   @Valid UserUpdateDto userDto, BindingResult result) {
         if (result.hasErrors()) {
             throw new InvalidEditFormException(result.getFieldError().getDefaultMessage());
         }
-        UserDto.Response updatedUser = userService.update(userId, userDto);
+        UserResponseDto updatedUser = userService.update(userId, userDto);
         session.setAttribute("user", updatedUser);
         return new RedirectView("/mypage/" + userId);
     }

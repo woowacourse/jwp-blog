@@ -10,7 +10,9 @@ import techcourse.myblog.article.exception.NotFoundArticleException;
 import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.comment.domain.Comment;
 import techcourse.myblog.comment.domain.CommentRepository;
-import techcourse.myblog.comment.dto.CommentDto;
+import techcourse.myblog.comment.dto.CommentCreateDto;
+import techcourse.myblog.comment.dto.CommentResponseDto;
+import techcourse.myblog.comment.dto.CommentUpdateDto;
 import techcourse.myblog.comment.exception.NotFoundCommentException;
 import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.domain.UserRepository;
@@ -28,20 +30,20 @@ public class CommentService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public Comment save(long articleId, long authorId, CommentDto.Creation commentDto) {
+    public Comment save(long articleId, long authorId, CommentCreateDto commentDto) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
         User author = userRepository.findById(authorId).orElseThrow(() -> new NotFoundUserException(authorId));
         return commentRepository.save(commentDto.toComment(author, article));
     }
 
-    public List<CommentDto.Response> findAllByArticleId(long articleId) {
+    public List<CommentResponseDto> findAllByArticleId(long articleId) {
         List<Comment> comments = (List<Comment>) commentRepository.findAllByArticleId(articleId);
         return comments.stream()
-                .map(comment -> modelMapper.map(comment, CommentDto.Response.class))
+                .map(comment -> modelMapper.map(comment, CommentResponseDto.class))
                 .collect(Collectors.toList());
     }
 
-    public void update(long commentId, long authorId, CommentDto.Updation commentDto) {
+    public void update(long commentId, long authorId, CommentUpdateDto commentDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
         if (comment.notMatchAuthorId(authorId)) {
             throw new NotMatchUserException();
@@ -57,8 +59,8 @@ public class CommentService {
         commentRepository.deleteById(commentId);
     }
 
-    public CommentDto.Response findById(long commentId) {
+    public CommentResponseDto findById(long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
-        return modelMapper.map(comment, CommentDto.Response.class);
+        return modelMapper.map(comment, CommentResponseDto.class);
     }
 }

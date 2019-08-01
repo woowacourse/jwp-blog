@@ -6,7 +6,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.user.dto.UserDto;
+import techcourse.myblog.user.dto.UserLoginDto;
+import techcourse.myblog.user.dto.UserResponseDto;
 import techcourse.myblog.user.exception.InvalidLoginFormException;
 import techcourse.myblog.user.service.UserService;
 
@@ -24,11 +25,11 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public RedirectView login(@Valid UserDto.Login userDto, BindingResult result, HttpSession session) {
+    public RedirectView login(@Valid UserLoginDto userDto, BindingResult result, HttpSession session) {
         if (result.hasErrors()) {
             throw new InvalidLoginFormException(result.getFieldError().getDefaultMessage());
         }
-        UserDto.Response user = userService.login(userDto);
+        UserResponseDto user = userService.login(userDto);
         session.setAttribute("user", user);
         return new RedirectView("/");
     }

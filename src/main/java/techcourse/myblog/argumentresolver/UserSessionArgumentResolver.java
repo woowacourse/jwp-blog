@@ -7,7 +7,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import techcourse.myblog.user.dto.UserDto;
+import techcourse.myblog.user.dto.UserResponseDto;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -25,7 +25,7 @@ public class UserSessionArgumentResolver implements HandlerMethodArgumentResolve
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         HttpSession session = request.getSession();
-        UserDto.Response user = (UserDto.Response) session.getAttribute("user");
+        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
         log.info("user session {}", user);
         return new UserSession(user.getId(), user.getEmail(), user.getName());
     }

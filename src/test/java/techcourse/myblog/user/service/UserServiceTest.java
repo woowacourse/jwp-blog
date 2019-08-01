@@ -10,7 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.user.UserDataForTest;
 import techcourse.myblog.user.domain.User;
-import techcourse.myblog.user.dto.UserDto;
+import techcourse.myblog.user.dto.UserCreateDto;
+import techcourse.myblog.user.dto.UserLoginDto;
+import techcourse.myblog.user.dto.UserResponseDto;
+import techcourse.myblog.user.dto.UserUpdateDto;
 import techcourse.myblog.user.exception.DuplicatedUserException;
 import techcourse.myblog.user.exception.NotFoundUserException;
 import techcourse.myblog.user.exception.NotMatchPasswordException;
@@ -42,25 +45,25 @@ class UserServiceTest {
                 .name(UserDataForTest.USER_NAME)
                 .build();
 
-        user = userService.save(modelMapper.map(user, UserDto.Creation.class));
+        user = userService.save(modelMapper.map(user, UserCreateDto.class));
         userId = user.getId();
     }
 
     @Test
     void 회원정보_등록시_예외처리() {
-        UserDto.Creation duplicatedUser = modelMapper.map(user, UserDto.Creation.class);
+        UserCreateDto duplicatedUser = modelMapper.map(user, UserCreateDto.class);
         assertThrows(DuplicatedUserException.class, () -> userService.save(duplicatedUser));
     }
 
     @Test
     void 회원정보_전체_조회_테스트() {
-        List<UserDto.Response> users = userService.findAll();
-        assertThat(users).isEqualTo(Arrays.asList(modelMapper.map(user, UserDto.Response.class)));
+        List<UserResponseDto> users = userService.findAll();
+        assertThat(users).isEqualTo(Arrays.asList(modelMapper.map(user, UserResponseDto.class)));
     }
 
     @Test
     void 회원정보_단건_성공_조회_테스트() {
-        assertThat(userService.findById(userId)).isEqualTo(modelMapper.map(user, UserDto.Response.class));
+        assertThat(userService.findById(userId)).isEqualTo(modelMapper.map(user, UserResponseDto.class));
     }
 
     @Test
@@ -71,13 +74,13 @@ class UserServiceTest {
 
     @Test
     void 로그인_성공_테스트() {
-        UserDto.Login login = modelMapper.map(user, UserDto.Login.class);
+        UserLoginDto login = modelMapper.map(user, UserLoginDto.class);
         assertDoesNotThrow(() -> userService.login(login));
     }
 
     @Test
     void 로그인_시_아이디_불일치_예외처리() {
-        UserDto.Login wrongIdLogin = new UserDto.Login();
+        UserLoginDto wrongIdLogin = new UserLoginDto();
         wrongIdLogin.setEmail("wrong@email.com");
         wrongIdLogin.setPassword(UserDataForTest.USER_PASSWORD);
         assertThrows(NotFoundUserException.class, () -> userService.login(wrongIdLogin));
@@ -85,7 +88,7 @@ class UserServiceTest {
 
     @Test
     void 로그인_시_비밀번호_불일치_예외처리() {
-        UserDto.Login wrongPasswordLogin = new UserDto.Login();
+        UserLoginDto wrongPasswordLogin = new UserLoginDto();
         wrongPasswordLogin.setEmail(UserDataForTest.USER_EMAIL);
         wrongPasswordLogin.setPassword("wrong1234!!");
         assertThrows(NotMatchPasswordException.class, () -> userService.login(wrongPasswordLogin));
@@ -100,8 +103,8 @@ class UserServiceTest {
                 .name("updated")
                 .build();
 
-        UserDto.Response result = userService.update(userId, modelMapper.map(updatedUser, UserDto.Updation.class));
-        assertThat(result).isEqualTo(modelMapper.map(updatedUser, UserDto.Response.class));
+        UserResponseDto result = userService.update(userId, modelMapper.map(updatedUser, UserUpdateDto.class));
+        assertThat(result).isEqualTo(modelMapper.map(updatedUser, UserResponseDto.class));
     }
 
     @AfterEach

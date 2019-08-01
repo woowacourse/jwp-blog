@@ -6,7 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.argumentresolver.UserSession;
-import techcourse.myblog.article.dto.ArticleDto;
+import techcourse.myblog.article.dto.ArticleCreateDto;
+import techcourse.myblog.article.dto.ArticleResponseDto;
+import techcourse.myblog.article.dto.ArticleUpdateDto;
 import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.article.service.ArticleService;
 import techcourse.myblog.comment.service.CommentService;
@@ -30,7 +32,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public RedirectView createArticle(ArticleDto.Creation articleDto, UserSession userSession) {
+    public RedirectView createArticle(ArticleCreateDto articleDto, UserSession userSession) {
         long newArticleId = articleService.save(articleDto, userSession.getId()).getId();
         return new RedirectView("/articles/" + newArticleId);
     }
@@ -44,7 +46,7 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}/edit")
     public String renderUpdatePage(@PathVariable long articleId, Model model, UserSession userSession) {
-        ArticleDto.Response articleResponse = articleService.findById(articleId);
+        ArticleResponseDto articleResponse = articleService.findById(articleId);
         if (!articleResponse.matchAuthorId(userSession.getId())) {
             throw new NotMatchUserException();
         }
@@ -53,7 +55,7 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public RedirectView updateArticle(@PathVariable long articleId, ArticleDto.Updation articleDto, UserSession userSession) {
+    public RedirectView updateArticle(@PathVariable long articleId, ArticleUpdateDto articleDto, UserSession userSession) {
         long updatedArticleId = articleService.update(articleId, articleDto, userSession.getId());
         return new RedirectView("/articles/" + updatedArticleId);
     }
