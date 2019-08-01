@@ -5,7 +5,7 @@ import techcourse.myblog.exception.InvalidAuthorException;
 import javax.persistence.*;
 
 @Entity
-public class Comment {
+public class Comment extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

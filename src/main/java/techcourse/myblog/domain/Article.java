@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Article {
+public class Article extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
