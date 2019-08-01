@@ -16,10 +16,14 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ARTICLE_ID")
     private Long id;
+
     private String title;
+
     private String coverUrl;
+
     @Lob
     private String contents;
+
     @ManyToOne
     @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(name = "FK_ARTICLE_USER"), nullable = false)
     private User author;
