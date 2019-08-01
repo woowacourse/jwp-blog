@@ -8,6 +8,7 @@ import techcourse.myblog.exception.MisMatchAuthorException;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -47,7 +48,7 @@ public class Article {
     @JoinColumn(name = "USER_ID", nullable = false, foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User user;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     public void addComment(Comment comment) {
@@ -58,6 +59,7 @@ public class Article {
     }
 
     public List<Comment> getComments() {
+        comments.sort(Comparator.comparing(Comment::getId));
         return comments;
     }
 
