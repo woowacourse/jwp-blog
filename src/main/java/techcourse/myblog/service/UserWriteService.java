@@ -17,21 +17,21 @@ public class UserWriteService {
         this.userRepository = userRepository;
     }
 
-    public void save(UserDto user) {
+    public void save(User user) {
         verifyDuplicateEmail(user);
-        userRepository.save(user.toUser());
+        userRepository.save(user);
     }
 
-    private void verifyDuplicateEmail(UserDto user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+    private void verifyDuplicateEmail(User user) {
+        userRepository.findByEmail(user.getEmail()).ifPresent(x -> {
             throw new DuplicatedEmailException();
-        }
+        });
     }
 
-    public void update(User user, UserDto userDto) {
-        userRepository.findByEmail(user.getEmail())
+    public void update(User loginUser, UserDto userDto) {
+        userRepository.findByEmail(loginUser.getEmail())
                 .ifPresent(existingUser -> {
-                    user.modifyName(userDto.getName());
+                    loginUser.modifyName(userDto.getName());
                     existingUser.modifyName(userDto.getName());
                 });
     }

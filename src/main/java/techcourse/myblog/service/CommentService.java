@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.CommentRepository;
-import techcourse.myblog.dto.CommentDto;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,21 +22,23 @@ public class CommentService {
         return Collections.unmodifiableList(commentRepository.findByArticleId(articleId));
     }
 
-    public void save(CommentDto commentDto) {
-        commentRepository.save(commentDto.toComment());
+    public Comment findByIdAndWriter(Long commentId, User user) {
+        return commentRepository.findByIdAndWriter(commentId, user)
+                .orElseThrow(MismatchAuthorException::new);
     }
 
-    public void deleteById(Long id) {
+    public void save(Comment comment) {
+        commentRepository.save(comment);
+    }
+
+    public void deleteById(Long id, User user) {
+        Comment comment = findByIdAndWriter(id, user);
+        commentRepository.delete(comment);
         commentRepository.deleteById(id);
     }
 
-    public Comment findByIdAndWriter(Long commentId, User user) {
-        return commentRepository.findByIdAndWriter(commentId, user)
-                .orElseThrow(() -> new MismatchAuthorException());
-    }
-
-    public void modify(Long commentId, CommentDto commentDto) {
+    public void modify(Long commentId, Comment comment) {
         commentRepository.findById(commentId)
-                .ifPresent(comment -> comment.update(commentDto.toComment()));
+                .ifPresent(existComment -> existComment.update(comment));
     }
 }

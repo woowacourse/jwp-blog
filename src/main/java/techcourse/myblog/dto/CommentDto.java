@@ -11,24 +11,12 @@ import javax.validation.constraints.NotBlank;
 public class CommentDto {
     @NotBlank
     private String contents;
-    private User writer;
-    private Article article;
 
-    public CommentDto(String contents, User writer, Article article) {
+    public CommentDto(String contents) {
         this.contents = contents;
-        this.writer = writer;
-        this.article = article;
     }
 
-    public void setWriter(User writer) {
-        this.writer = writer;
-    }
-
-    public void setArticle(Article article) {
-        this.article = article;
-    }
-
-    public Comment toComment() {
-        return new Comment(contents, writer, article);
+    public Comment toComment(User user, Article article) {
+        return new Comment(contents, user, article);
     }
 }

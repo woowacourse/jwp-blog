@@ -27,7 +27,7 @@ class CommentControllerTests extends ControllerTestTemplate {
         super.setup();
         savedArticleUrl = getRedirectUrl(loginAndRequest(POST, "/articles/write",
                 parseArticle(new ArticleDto("title", "url", "content"))));
-        commentDto = new CommentDto("comment", null, null);
+        commentDto = new CommentDto("comment");
     }
 
     @Test
@@ -72,7 +72,7 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그아웃_상태_댓글수정_리다이렉트() {
-        CommentDto commentDto = new CommentDto("new comment", null, null);
+        CommentDto commentDto = new CommentDto("new comment");
         String modifyUrl = getCommentUrl();
         String redirectUrl = getRedirectUrl(httpRequest(PUT, modifyUrl, parser(commentDto)));
 
@@ -81,7 +81,7 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 작성자_로그인_상태_댓글수정_성공() {
-        CommentDto commentDto = new CommentDto("new comment", null, null);
+        CommentDto commentDto = new CommentDto("new comment");
         String modifyUrl = getCommentUrl();
         String redirectUrl = getRedirectUrl(loginAndRequest(PUT, modifyUrl, parser(commentDto)));
         String responseBody = getResponseBody(loginAndRequest(GET, redirectUrl));
@@ -91,7 +91,7 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 작성자가_아닌_사용자_로그인_상태_댓글수정_실패() {
-        CommentDto commentDto = new CommentDto("new comment", null, null);
+        CommentDto commentDto = new CommentDto("new comment");
         UserDto other = new UserDto("ab", "1@1.com", "1234asdf!A");
         userRepository.save(other.toUser());
         String modifyUrl = getCommentUrl();

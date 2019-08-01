@@ -8,7 +8,6 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.CommentRepository;
-import techcourse.myblog.dto.CommentDto;
 
 import java.util.Optional;
 
@@ -35,11 +34,11 @@ public class CommentServiceTests {
     @Test
     void 댓글_수정() {
         Comment comment = new Comment("comment", user, article);
-        CommentDto updateCommentDto = new CommentDto("new comment", user, article);
+        Comment updateComment = new Comment("new comment", user, article);
         given(commentRepository.findById(id)).willReturn(Optional.of(comment));
 
-        assertDoesNotThrow(() -> commentService.modify(id, updateCommentDto));
-        compareComment(commentRepository.findById(id).get(), updateCommentDto.toComment());
+        assertDoesNotThrow(() -> commentService.modify(id, updateComment));
+        compareComment(commentRepository.findById(id).get(), updateComment);
     }
 
     void compareComment(Comment comment1, Comment comment2) {

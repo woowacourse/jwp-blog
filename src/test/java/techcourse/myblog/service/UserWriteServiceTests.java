@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.common.UserCommonServiceTests;
 
@@ -15,9 +16,9 @@ public class UserWriteServiceTests extends UserCommonServiceTests {
     public void save_test() {
         given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
-        assertDoesNotThrow(() -> userWriteService.save(new UserDto("name", "e@mail.com", "Passw0rd!")));
+        assertDoesNotThrow(() -> userWriteService.save(new User("name", "e@mail.com", "Passw0rd!")));
         assertThrows(DuplicatedEmailException.class, () ->
-                userWriteService.save(new UserDto("name", user.getEmail(), "Passw0rd!")));
+                userWriteService.save(new User("name", user.getEmail(), "Passw0rd!")));
     }
 
     @Test

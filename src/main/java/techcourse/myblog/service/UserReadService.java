@@ -21,7 +21,7 @@ public class UserReadService {
 
     public User login(UserDto userDto) {
         return userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword())
-                .orElseThrow(() -> new LoginFailedException());
+                .orElseThrow(LoginFailedException::new);
     }
 
     public List<User> findAll() {

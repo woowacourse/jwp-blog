@@ -38,8 +38,7 @@ public class ArticleController {
 
     @PostMapping("/write")
     public RedirectView createArticle(LoginUser loginUser, @ModelAttribute("/articles/writing") @Valid ArticleDto articleDto) {
-        articleDto.setAuthor(loginUser.getUser());
-        Article savedArticle = articleWriteService.save(articleDto.toArticle());
+        Article savedArticle = articleWriteService.save(articleDto.toArticle(loginUser.getUser()));
         return new RedirectView("/articles/" + savedArticle.getId());
     }
 
@@ -61,8 +60,7 @@ public class ArticleController {
 
     @PutMapping("/{articleId}")
     public RedirectView editArticle(LoginUser loginUser, @PathVariable Long articleId, @ModelAttribute("/") @Valid ArticleDto articleDto) {
-        articleDto.setAuthor(loginUser.getUser());
-        articleWriteService.update(articleId, articleDto);
+        articleWriteService.update(articleId, articleDto.toArticle(loginUser.getUser()));
 
         return new RedirectView("/articles/" + articleId);
     }

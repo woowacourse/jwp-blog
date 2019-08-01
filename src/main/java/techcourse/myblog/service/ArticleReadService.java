@@ -26,11 +26,11 @@ public class ArticleReadService {
 
     public Article findById(Long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new NotFoundArticleException());
+                .orElseThrow(NotFoundArticleException::new);
     }
 
     public Article findByIdAndAuthor(Long articleId, User user) {
         return articleRepository.findByIdAndAuthor(articleId, user)
-                .orElseThrow(() -> new MismatchAuthorException());
+                .orElseThrow(MismatchAuthorException::new);
     }
 }

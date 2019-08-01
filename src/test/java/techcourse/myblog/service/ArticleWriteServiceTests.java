@@ -1,7 +1,7 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.common.ArticleCommonServiceTests;
 
 import java.util.Optional;
@@ -16,11 +16,10 @@ class ArticleWriteServiceTests extends ArticleCommonServiceTests {
         given(articleRepository.findByIdAndAuthor(articleId, author)).willReturn(Optional.of(article));
         given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
 
-        ArticleDto articleDto = new ArticleDto("title2", "url2", "contents2");
-        articleDto.setAuthor(author);
+        Article article = new Article("title2", "url2", "contents2", author);
         assertDoesNotThrow(() ->
-                articleWriteService.update(articleId, articleDto));
+                articleWriteService.update(articleId, article));
 
-        compareArticle(articleRepository.findById(articleId).get(), articleDto.toArticle());
+        compareArticle(articleRepository.findById(articleId).get(), article);
     }
 }

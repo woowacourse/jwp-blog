@@ -19,16 +19,14 @@ public class ArticleDto {
     @NotBlank(message = CONTENTS_CONSTRAINT_MESSAGE)
     private String contents;
 
-    private User author;
-
     public ArticleDto(String title, String url, String contents) {
         this.title = title;
         this.coverUrl = url;
         this.contents = contents;
     }
 
-    public Article toArticle() {
-        return new Article(title, coverUrl, contents, author);
+    public Article toArticle(User user) {
+        return new Article(title, coverUrl, contents, user);
     }
 
     public String getTitle() {
@@ -53,13 +51,5 @@ public class ArticleDto {
 
     public void setContents(String contents) {
         this.contents = contents;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public User getAuthor() {
-        return author;
     }
 }
