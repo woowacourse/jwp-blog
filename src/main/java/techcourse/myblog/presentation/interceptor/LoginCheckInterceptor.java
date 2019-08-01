@@ -20,7 +20,6 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
             flashMapManager.saveOutputFlashMap(flashMap, request, response);
             return false;
         }
-
         return true;
     }
 }

@@ -32,9 +32,15 @@ public class ArticleService {
     @Transactional
     public Long save(ArticleDto articleDto, String email) {
         User user = userService.findUserByEmail(email);
-        articleDto.setAuthor(user);
-
-        return articleRepository.save(articleConverter.convertFromDto(articleDto)).getId();
+        //articleDto.setAuthor(user);
+        //return articleRepository.save(articleConverter.convertFromDto(articleDto)).getId();
+        Article.ArticleBuilder articleBuilder = new Article.ArticleBuilder();
+        Article article = articleBuilder.title(articleDto.getTitle())
+                .coverUrl(articleDto.getCoverUrl())
+                .contents(articleDto.getContents())
+                .author(user)
+                .build();
+        return articleRepository.save(article).getId();
     }
 
     @Transactional(readOnly = true)
