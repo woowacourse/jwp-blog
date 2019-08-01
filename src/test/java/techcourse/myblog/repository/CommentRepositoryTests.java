@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
@@ -38,7 +37,7 @@ class CommentRepositoryTests {
 		article = articleRepository.findById(1L).get();
 
 		CommentDto commentDto = new CommentDto("title");
-		actualComment = commentDto.valueOf(user, article);
+		actualComment = commentDto.valueOf(user);
 		actualComment = testEntityManager.persist(actualComment);
 		testEntityManager.flush();
 		testEntityManager.clear();
@@ -49,11 +48,5 @@ class CommentRepositoryTests {
 		Comment expectComment = commentRepository.findById(actualComment.getId()).get();
 		assertTrue(actualComment.getAuthor().matchUser(expectComment.getAuthor()));
 		assertTrue(actualComment.matchComment(expectComment));
-	}
-
-	@Test
-	void deleteByArticleId() {
-		commentRepository.deleteByArticleId(article.getId());
-		assertThat(commentRepository.findByArticleId(article.getId()).size()).isEqualTo(0);
 	}
 }

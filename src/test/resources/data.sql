@@ -7,8 +7,14 @@ values ('contents', 'www.coverUrl.com', 'title', 1);
 insert into article(contents, cover_url, title, author)
 values ('contents', 'www.coverUrl.com', 'title', 1);
 
-insert into comment(contents, create_date, article, author)
+insert into comment(contents, create_date, article_id, author)
 values ('contents', now(), 1, 1);
 
-insert into comment(contents, create_date, article, author)
+insert into comment(contents, create_date, article_id, author)
 values ('contents', now(), 1, 1);
+
+insert into comment(contents, create_date, article_id, author)
+values ('contents', now(), 2, 1);
+
+insert into comment(contents, create_date, article_id, author)
+values ('contents', now(), 2, 1);
