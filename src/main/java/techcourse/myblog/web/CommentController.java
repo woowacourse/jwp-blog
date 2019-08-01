@@ -2,10 +2,7 @@ package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.application.CommentService;
 import techcourse.myblog.application.dto.CommentRequest;
 import techcourse.myblog.application.dto.UserResponse;
@@ -14,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
+@RequestMapping("/articles/{articleId}")
 public class CommentController {
 
     private final CommentService commentService;
@@ -22,7 +20,8 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/articles/{articleId}/comments")
+    //TODO : path 중복 삭제
+    @PostMapping("/comments")
     public String saveComment(@PathVariable("articleId") Long articleId, @Valid CommentRequest commentRequest,
                               BindingResult bindingResult, HttpSession httpSession) {
         if (!bindingResult.hasErrors()) {
@@ -33,7 +32,7 @@ public class CommentController {
         return "redirect:/articles/" + articleId;
     }
 
-    @DeleteMapping("/articles/{articleId}/comments/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
         commentService.deleteComment(commentId, userResponse);
@@ -41,7 +40,7 @@ public class CommentController {
         return "redirect:/articles/" + articleId;
     }
 
-    @PutMapping("/articles/{articleId}/comments/{commentId}")
+    @PutMapping("/comments/{commentId}")
     public String updateComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, CommentRequest commentRequest, HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
         commentService.updateComment(commentId, userResponse, commentRequest);
