@@ -16,6 +16,7 @@ public class CommentAssembler {
                 comment.getId(),
                 comment.getContents(),
                 comment.getAuthor().getId(),
-                comment.getAuthor().getName());
+                comment.getAuthor().getName(),
+                comment.getCreatedDate());
     }
 }

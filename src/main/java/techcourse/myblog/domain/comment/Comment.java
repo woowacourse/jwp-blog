@@ -1,9 +1,12 @@
 package techcourse.myblog.domain.comment;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -20,6 +23,12 @@ public class Comment {
 
     @ManyToOne
     private Article article;
+
+    @CreationTimestamp
+    private LocalDateTime createdDate;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDate;
 
     public Comment() {
     }
@@ -44,6 +53,14 @@ public class Comment {
 
     public Article getArticle() {
         return article;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public LocalDateTime getUpdateDate() {
+        return updateDate;
     }
 
     public void update(String contents) {

@@ -8,6 +8,8 @@ import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.comment.CommentRequest;
 import techcourse.myblog.service.dto.comment.CommentResponse;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.service.comment.CommentAssembler.convertToDto;
 import static techcourse.myblog.service.comment.CommentAssembler.convertToEntity;
@@ -31,6 +33,6 @@ public class CommentAssemblerTest {
     @Test
     void entity를_dto로_변환하는지_확인() {
         Comment comment = new Comment("comment", user, article);
-        assertThat(convertToDto(comment)).isEqualTo(new CommentResponse(null, "comment", null, "john"));
+        assertThat(convertToDto(comment)).isEqualTo(new CommentResponse(null, "comment", null, "john", LocalDateTime.MIN));
     }
 }
