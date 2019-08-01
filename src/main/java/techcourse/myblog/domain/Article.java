@@ -1,20 +1,40 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.util.Objects;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import techcourse.myblog.service.exception.InvalidAuthorException;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(value = {AuditingEntityListener.class})
 public class Article {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 300)
     private String title;
+
+    @Column(nullable = false, length = 300)
     private String coverUrl;
+
+    @Lob
     private String contents;
 
-    public Article() {
+    @CreatedDate
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    private LocalDateTime modifiedDate;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_article_user"))
+    private User author;
+
+    private Article() {
     }
 
     public Article(String title, String coverUrl, String contents) {
@@ -23,11 +43,11 @@ public class Article {
         this.contents = contents;
     }
 
-    public Article update(String title, String coverUrl, String contents) {
+    public Article(String title, String coverUrl, String contents, User author) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-        return this;
+        this.author = author;
     }
 
     public Long getId() {
@@ -46,19 +66,20 @@ public class Article {
         return contents;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return Objects.equals(id, article.id) &&
-                Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
+    public void updateArticle(Article article, User user) {
+        checkAuthor(user);
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents);
+    public void checkAuthor(User user) {
+        if (!this.author.equals(user)) {
+            throw new InvalidAuthorException("작성자가 일치하지 않습니다.");
+        }
+    }
+
+    public void setAuthor(User user) {
+        this.author = user;
     }
 }
