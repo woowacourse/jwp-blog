@@ -50,7 +50,7 @@ public class UserController {
         return "mypage";
     }
 
-    @GetMapping("/users/updates/{id}")
+    @GetMapping("/users/update/{id}")
     public String moveMyPageEdit(@PathVariable long id, Model model) {
         User user = userService.findUserById(id);
         model.addAttribute("user", user);
