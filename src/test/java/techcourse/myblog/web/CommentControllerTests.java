@@ -20,33 +20,6 @@ public class CommentControllerTests {
     @Autowired
     private WebTestClient webTestClient;
 
-    private String getJSessionId(String email, String password) {
-        EntityExchangeResult<byte[]> loginResult = webTestClient.post().uri("/users/login")
-            .body(BodyInserters
-                .fromFormData("email", email)
-                .with("password", password))
-            .exchange()
-            .expectStatus().is3xxRedirection()
-            .expectHeader().valueMatches("Location", ".*/.*")
-            .expectBody()
-            .returnResult();
-
-        return extractJSessionId(loginResult);
-    }
-
-    private String extractJSessionId(EntityExchangeResult<byte[]> loginResult) {
-        String[] cookies = loginResult.getResponseHeaders().get("Set-Cookie").stream()
-            .filter(it -> it.contains("JSESSIONID"))
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("JSESSIONID가 없습니다."))
-            .split(";");
-        return Stream.of(cookies)
-            .filter(it -> it.contains("JSESSIONID"))
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("JSESSIONID가 없습니다."))
-            .split("=")[1];
-    }
-
     @Test
     void 로그인한_상태로_댓글_작성() {
         // Given
@@ -108,10 +81,12 @@ public class CommentControllerTests {
 
     @Test
     void 댓글작성자가_아닌_회원이_댓글_수정() {
-        String outsiderJSessionId = getJSessionId("john123@example.com", "p@ssW0rd");
+        String sid = postLoginSync(webTestClient, "john123@example.com", "p@ssW0rd")
+            .getResponseCookies()
+            .getFirst(KEY_JSESSIONID).getValue();
 
         webTestClient.put().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments/" + DEFAULT_COMMENT_ID)
-            .cookie("JSESSIONID", outsiderJSessionId)
+            .cookie(KEY_JSESSIONID, sid)
             .body(BodyInserters.fromFormData("contents", "newHello"))
             .exchange()
             .expectStatus().is3xxRedirection()
