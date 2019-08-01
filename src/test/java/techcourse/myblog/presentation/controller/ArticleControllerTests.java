@@ -1,33 +1,32 @@
 package techcourse.myblog.presentation.controller;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTests {
+public class ArticleControllerTests extends ControllerTests {
     private static final String EMAIL = "hard@gmail.com";
     private static final String NAME = "hard";
     private static final String PASSWORD = "qwerasdf";
+    private static final String TITLE = "title";
+    private static final String CONTENTS = "contents";
+    private static final String COVER_URL = "coverUrl";
 
     WebTestClient webTestClient;
-
-    private static Long id = 1L;
-
-    private static String cookie;
 
     @Autowired
     public ArticleControllerTests(WebTestClient webTestClient) {
         this.webTestClient = webTestClient;
-        registerUser();
-        logInAndGetSessionId();
+    }
+
+    @BeforeEach
+    void setUp() {
+        registerUser(NAME, EMAIL, PASSWORD);
     }
 
     @Test
@@ -47,76 +46,43 @@ public class ArticleControllerTests {
     @Test
     void save_test() {
         webTestClient.post().uri("/articles")
-                .header("Cookie", cookie)
-                .body(BodyInserters.fromFormData("title", "title")
-                        .with("coverUrl", "coverUrl")
-                        .with("contents", "contents"))
+                .header("Cookie", logInAndGetSessionId(EMAIL, PASSWORD))
+                .body(BodyInserters.fromFormData("title", TITLE)
+                        .with("coverUrl", COVER_URL)
+                        .with("contents", CONTENTS))
                 .exchange()
-                .expectStatus()
-                .isFound();
-
-        ++id;
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location", "http://localhost:" + portNo + "/articles/" + countArticle());
     }
 
     @Test
     void update_test() {
-        insertArticle();
-
-        webTestClient.put().uri("/articles/" + id)
-                .header("Cookie", cookie)
-                .body(BodyInserters.fromFormData("title", "title")
-                        .with("coverUrl", "coverUrl")
-                        .with("contents", "contents"))
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
+        Long articleId = createArticle(TITLE, COVER_URL, CONTENTS, sessionId);
+        webTestClient.put().uri("/articles/" + articleId)
+                .header("Cookie", sessionId)
+                .body(BodyInserters.fromFormData("title", TITLE + "123")
+                        .with("coverUrl", COVER_URL + "123")
+                        .with("contents", CONTENTS + "123"))
                 .exchange()
-                .expectHeader().valueMatches("location", "(http://localhost:)(.*)(/articles/" + id + ")")
-                .expectStatus()
-                .isFound();
-
-        deleteArticle();
+                .expectHeader().valueMatches("location", "(http://localhost:" + portNo + "/articles/" + articleId + ")(.*)")
+                .expectStatus().isFound();
     }
 
     @Test
     void delete_test() {
-        insertArticle();
-
-        webTestClient.delete().uri("/articles/" + id)
-                .header("Cookie", cookie)
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
+        Long articleId = createArticle(TITLE, COVER_URL, CONTENTS, sessionId);
+        webTestClient.delete().uri("/articles/" + articleId)
+                .header("Cookie", sessionId)
                 .exchange()
-                .expectStatus()
-                .isFound();
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("location", "http://localhost:" + portNo + "/");
     }
 
-    private void deleteArticle() {
-        webTestClient.delete().uri("/articles/" + id)
-                .exchange();
-    }
-
-    private void registerUser() {
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("email", EMAIL)
-                        .with("name", NAME)
-                        .with("password", PASSWORD))
-                .exchange();
-    }
-
-    private void insertArticle() {
-        ++id;
-
-        webTestClient.post().uri("/articles")
-                .header("Cookie", cookie)
-                .body(BodyInserters.fromFormData("title", "title")
-                        .with("coverUrl", "coverUrl")
-                        .with("contents", "contents"))
-                .exchange();
-    }
-
-
-    private void logInAndGetSessionId() {
-        cookie = webTestClient.post()
-                .uri("/login").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("email", EMAIL)
-                        .with("password", PASSWORD))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+    @AfterEach
+    void tearDown() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
+        deleteUser(sessionId);
     }
 }

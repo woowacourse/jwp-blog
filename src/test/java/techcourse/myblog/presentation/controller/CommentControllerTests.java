@@ -11,10 +11,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CommentControllerTests {
+public class CommentControllerTests extends ControllerTests{
 
     private static final Logger log = LoggerFactory.getLogger(CommentControllerTests.class);
 
@@ -29,8 +28,8 @@ public class CommentControllerTests {
 
     @Test
     void new_comment_test() {
-        register();
-        String sessionId = logInAndGetSessionId();
+        registerUser(NAME, EMAIL, PASSWORD);
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
         String articleUri = postArticle(sessionId);
 
         // 댓글 작성
@@ -102,25 +101,7 @@ public class CommentControllerTests {
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectBody().returnResult();
+        countArticle();
         return result.getResponseHeaders().getLocation().getPath();
-    }
-
-    private void register() {
-        webTestClient.post()
-                .uri("/users")
-                .body(fromFormData("name", NAME)
-                        .with("email", EMAIL)
-                        .with("password", PASSWORD))
-                .exchange()
-                .expectStatus().isFound();
-    }
-
-    private String logInAndGetSessionId() {
-        return webTestClient.post()
-                .uri("/login").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("email", EMAIL)
-                        .with("password", PASSWORD))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
     }
 }
