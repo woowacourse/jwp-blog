@@ -16,7 +16,6 @@ import java.util.List;
 public class UserReadService {
     private final UserRepository userRepository;
 
-    @Autowired
     public UserReadService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

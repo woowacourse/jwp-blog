@@ -13,7 +13,6 @@ import techcourse.myblog.support.exception.DuplicatedEmailException;
 public class UserWriteService {
     private final UserRepository userRepository;
 
-    @Autowired
     public UserWriteService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }

@@ -12,7 +12,6 @@ public class ArticleWriteService {
     private final ArticleRepository articleRepository;
     private final ArticleReadService articleReadService;
 
-    @Autowired
     public ArticleWriteService(ArticleRepository articleRepository, ArticleReadService articleReadService) {
         this.articleRepository = articleRepository;
         this.articleReadService = articleReadService;

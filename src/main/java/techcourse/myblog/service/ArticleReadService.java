@@ -17,7 +17,6 @@ import java.util.List;
 public class ArticleReadService {
     private final ArticleRepository articleRepository;
 
-    @Autowired
     public ArticleReadService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
