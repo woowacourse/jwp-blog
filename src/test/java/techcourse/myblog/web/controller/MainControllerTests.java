@@ -24,6 +24,11 @@ public class MainControllerTests {
     private UserRepository userRepository;
 
     private static final String JSESSIONID = "JSESSIONID";
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "password";
+    private static final String TEST_EMAIL = "sean@gmail.com";
+    private static final String TEST_NAME = "sean";
+    private static final String TEST_PASSWORD = "Woowahan123!";
 
     @Test
     void index_페이지_조회() {
@@ -42,7 +47,7 @@ public class MainControllerTests {
 
     @Test
     void 로그인후_게시글_작성_페이지_이동시_성공() {
-        userRepository.save(new User("sean", "sean@gmail.com", "Woowahan123!"));
+        userRepository.save(new User(TEST_NAME, TEST_EMAIL, TEST_PASSWORD));
 
         webTestClient.get().uri("/writing")
                 .cookie(JSESSIONID, getResponseCookie().getValue())
@@ -54,8 +59,8 @@ public class MainControllerTests {
 
     private ResponseCookie getResponseCookie() {
         return webTestClient.post().uri("/login")
-                .body(fromFormData("email", "sean@gmail.com")
-                        .with("password", "Woowahan123!"))
+                .body(fromFormData(EMAIL, TEST_EMAIL)
+                        .with(PASSWORD, TEST_PASSWORD))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .returnResult(ResponseCookie.class).getResponseCookies().getFirst(JSESSIONID);
