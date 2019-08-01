@@ -34,11 +34,6 @@ public class Article {
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"), nullable = false)
     private User author;
 
-    //TODO: article_id 가 null로 들어간다~
-    @OneToMany
-    @JoinColumn(name = "articleId")
-    private List<Comment> comments = new ArrayList<>();
-
     public Article(String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;

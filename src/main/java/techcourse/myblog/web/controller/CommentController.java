@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.service.ArticleService;
 import techcourse.myblog.domain.service.CommentService;
 import techcourse.myblog.dto.CommentDto;
 
@@ -15,10 +17,12 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/articles/{articleId}/comments")
 public class CommentController {
     private final CommentService commentService;
+    private final ArticleService articleService;
 
     @Autowired
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, ArticleService articleService) {
         this.commentService = commentService;
+        this.articleService = articleService;
     }
 
     @PostMapping("")
@@ -44,6 +48,7 @@ public class CommentController {
 
     private Comment convert(CommentDto commentDto, HttpSession httpSession) {
         User author = (User) httpSession.getAttribute("user");
-        return new Comment(commentDto.getContents(), author);
+        Article article = articleService.findById(commentDto.getArticleId());
+        return new Comment(commentDto.getContents(), author, article);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.service.ArticleService;
 import techcourse.myblog.domain.service.CommentService;
@@ -13,6 +14,7 @@ import techcourse.myblog.dto.ArticleDto;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -41,13 +43,14 @@ public class ArticleController {
     public String selectArticle(@PathVariable long articleId, Model model) {
         Article article = articleService.findById(articleId);
         model.addAttribute(ARTICLE, article);
+        model.addAttribute("comments", commentService.findByArticle(article));
         return "article";
     }
 
     @GetMapping("/{articleId}/edit")
     public String moveArticleEditPage(@PathVariable long articleId, Model model, HttpSession httpSession) {
         User loginUser = (User) httpSession.getAttribute(USER);
-        Article article = articleService.findById(articleId, loginUser);
+        Article article = articleService.findById(articleId, loginUser.getId());
         model.addAttribute(ARTICLE, article);
         return "article-edit";
     }
@@ -67,7 +70,7 @@ public class ArticleController {
     @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable long articleId, HttpSession httpSession) {
         User loginUser = (User) httpSession.getAttribute(USER);
-        Article article = articleService.findById(articleId, loginUser);
+        Article article = articleService.findById(articleId, loginUser.getId());
         articleService.deleteById(article.getId());
         return "redirect:/";
     }

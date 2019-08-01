@@ -24,9 +24,14 @@ public class Comment extends AuditLog {
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_comment_to_user"), nullable = false)
     private User author;
 
-    public Comment(String contents, User author) {
+    @ManyToOne
+    @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"), nullable = false)
+    private Article article;
+
+    public Comment(String contents, User author, Article article) {
         this.contents = contents;
         this.author = author;
+        this.article = article;
     }
 
     public void update(String contents, long loginUserId) {
