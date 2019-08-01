@@ -40,7 +40,6 @@ public class Comment {
     @JoinColumn(name = "ARTICLE_ID", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     private Article article;
 
-
     public Comment update(Comment comment) {
         this.author = comment.getAuthor();
         this.contents = comment.getContents();
@@ -51,8 +50,8 @@ public class Comment {
 
     public void updateArticle(Article article) {
         this.article = article;
-        if (!article.getComments().contains(this)) {
-            article.getComments().add(this);
+        if (!article.getSortedComments().contains(this)) {
+            article.getSortedComments().add(this);
         }
     }
 

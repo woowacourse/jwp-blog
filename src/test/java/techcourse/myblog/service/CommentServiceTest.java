@@ -87,6 +87,6 @@ class CommentServiceTest {
 
         commentService.delete(TEST_COMMENT_ID);
         verify(commentRepository, atLeast(1)).deleteById(TEST_COMMENT_ID);
-        assertThat(ARTICLE.getComments()).doesNotContain(comment);
+        assertThat(ARTICLE.getSortedComments()).doesNotContain(comment);
     }
 }
