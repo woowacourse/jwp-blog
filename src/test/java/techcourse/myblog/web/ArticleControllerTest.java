@@ -10,8 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import java.net.URI;
-
 import static io.restassured.RestAssured.delete;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,6 +20,9 @@ public class ArticleControllerTest {
     private static final String SAMPLE_TITLE = "SAMPLE_TITLE";
     private static final String SAMPLE_COVER_URL = "SAMPLE_COVER_URL";
     private static final String SAMPLE_CONTENTS = "SAMPLE_CONTENTS";
+    private static final String NEW_TITLE = "New Title";
+    private static final String NEW_COVER_URL = "New Cover Url";
+    private static final String NEW_CONTENTS = "New Contents";
 
     private String baseUrl;
     private String setUpArticleUrl;
@@ -76,49 +77,34 @@ public class ArticleControllerTest {
 
     @Test
     void createArticleWhenLogin() {
-        String newTitle = "New Title";
-        String newCoverUrl = "New Cover Url";
-        String newContents = "New Contents";
-
         webTestClient.post()
                 .uri("/articles")
                 .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", newTitle)
-                        .with("coverUrl", newCoverUrl)
-                        .with("contents", newContents))
+                        .fromFormData("title", NEW_TITLE)
+                        .with("coverUrl", NEW_COVER_URL)
+                        .with("contents", NEW_CONTENTS))
                 .exchange()
-                .expectStatus().isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get()
-                            .uri(location)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                String body = new String(res.getResponseBody());
-                                assertThat(body.contains(newTitle)).isTrue();
-                                assertThat(body.contains(newCoverUrl)).isTrue();
-                                assertThat(body.contains(newContents)).isTrue();
-                            });
-                });
+                .expectStatus().isFound();
+
+        WebTestClient.ResponseSpec responseSpec = webTestClient.get()
+                .uri(setUpArticleUrl)
+                .exchange()
+                .expectStatus().isOk();
+
+        assertThat(getBody(responseSpec)).contains(NEW_TITLE, NEW_COVER_URL, NEW_CONTENTS);
     }
 
     @Test
     void createArticleWhenLogout() {
-        String newTitle = "New Title";
-        String newCoverUrl = "New Cover Url";
-        String newContents = "New Contents";
-
         webTestClient.post()
                 .uri("/articles")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", newTitle)
-                        .with("coverUrl", newCoverUrl)
-                        .with("contents", newContents))
+                        .fromFormData("title", NEW_TITLE)
+                        .with("coverUrl", NEW_CONTENTS)
+                        .with("contents", NEW_COVER_URL))
                 .exchange()
                 .expectStatus().isFound()
                 .expectHeader().valueMatches("location", ".*/login.*");
@@ -126,32 +112,23 @@ public class ArticleControllerTest {
 
     @Test
     void showArticle() {
-        webTestClient.get()
+        WebTestClient.ResponseSpec responseSpec = webTestClient.get()
                 .uri(setUpArticleUrl)
                 .exchange()
-                .expectBody()
-                .consumeWith(res -> {
-                    String body = new String(res.getResponseBody());
-                    assertThat(body.contains(SAMPLE_TITLE)).isTrue();
-                    assertThat(body.contains(SAMPLE_COVER_URL)).isTrue();
-                    assertThat(body.contains(SAMPLE_CONTENTS)).isTrue();
-                });
+                .expectStatus().isOk();
+
+        assertThat(getBody(responseSpec)).contains(SAMPLE_TITLE, SAMPLE_COVER_URL, SAMPLE_CONTENTS);
     }
 
     @Test
     void showEditPageWhenUserMatch() {
-        webTestClient.get()
+        WebTestClient.ResponseSpec responseSpec = webTestClient.get()
                 .uri(setUpArticleUrl + "/edit")
                 .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(SAMPLE_TITLE)).isTrue();
-                    assertThat(body.contains(SAMPLE_COVER_URL)).isTrue();
-                    assertThat(body.contains(SAMPLE_CONTENTS)).isTrue();
-                });
+                .expectStatus().isOk();
+
+        assertThat(getBody(responseSpec)).contains(SAMPLE_TITLE, SAMPLE_COVER_URL, SAMPLE_CONTENTS);
     }
 
     @Test
@@ -166,18 +143,14 @@ public class ArticleControllerTest {
 
     @Test
     void editArticleWhenUserMatch() {
-        String newTitle = "test";
-        String newCoverUrl = "newCorverUrl";
-        String newContents = "newContents";
-
         webTestClient.put()
                 .uri(setUpArticleUrl)
                 .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", newTitle)
-                        .with("coverUrl", newCoverUrl)
-                        .with("contents", newContents))
+                        .fromFormData("title", NEW_TITLE)
+                        .with("coverUrl", NEW_COVER_URL)
+                        .with("contents", NEW_CONTENTS))
                 .exchange()
                 .expectStatus().is3xxRedirection();
 
@@ -186,23 +159,19 @@ public class ArticleControllerTest {
                 .exchange()
                 .expectStatus().isOk();
 
-        assertThat(getBody(responseSpec)).contains(newTitle, newCoverUrl, newContents);
+        assertThat(getBody(responseSpec)).contains(NEW_TITLE, NEW_COVER_URL, NEW_CONTENTS);
     }
 
     @Test
     void editArticleWhenUserMismatch() {
-        String newTitle = "test";
-        String newCoverUrl = "newCorverUrl";
-        String newContents = "newContents";
-
         webTestClient.put()
                 .uri(setUpArticleUrl)
                 .cookie("JSESSIONID", logInAsMismatchUser(webTestClient))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", newTitle)
-                        .with("coverUrl", newCoverUrl)
-                        .with("contents", newContents))
+                        .fromFormData("title", NEW_TITLE)
+                        .with("coverUrl", NEW_COVER_URL)
+                        .with("contents", NEW_CONTENTS))
                 .exchange()
                 .expectStatus().is5xxServerError();
     }
