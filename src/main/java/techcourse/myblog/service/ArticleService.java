@@ -3,6 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.exception.UserMismatchException;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.ArticleDto;
@@ -15,16 +16,24 @@ import java.util.stream.Collectors;
 @Service
 public class ArticleService {
     private ArticleRepository articleRepository;
+    private CommentRepository commentRepository;
     private UserService userService;
 
-    public ArticleService(ArticleRepository articleRepository, UserService userService) {
+    public ArticleService(ArticleRepository articleRepository, CommentRepository commentRepository, UserService userService) {
         this.articleRepository = articleRepository;
+        this.commentRepository = commentRepository;
         this.userService = userService;
     }
 
     public List<ArticleDto> findAll() {
         return articleRepository.findAll().stream()
                 .map(this::toArticleDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<ArticleDto> findAllWithCommentCount() {
+        return articleRepository.findAll().stream()
+                .map(this::toArticleDtoWithCommentCount)
                 .collect(Collectors.toList());
     }
 
@@ -64,5 +73,12 @@ public class ArticleService {
                 article.getTitle(),
                 article.getCoverUrl(),
                 article.getContents());
+    }
+
+    private ArticleDto toArticleDtoWithCommentCount(Article article) {
+        ArticleDto articleDto = toArticleDto(article);
+        int commentCount = commentRepository.countByArticleId(article.getId());
+        articleDto.setCommentCount(commentCount);
+        return articleDto;
     }
 }

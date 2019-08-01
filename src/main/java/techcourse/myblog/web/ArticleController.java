@@ -31,7 +31,7 @@ public class ArticleController {
 
     @GetMapping("/articles")
     public String showArticles(Model model) {
-        model.addAttribute("articles", articleService.findAll());
+        model.addAttribute("articles", articleService.findAllWithCommentCount());
         return "index";
     }
 

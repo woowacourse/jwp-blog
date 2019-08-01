@@ -10,6 +10,7 @@ public class ArticleDto {
     private String title;
     private String coverUrl;
     private String contents;
+    private int commentCount;
 
     public ArticleDto(Long id, Long userId, String title, String coverUrl, String contents) {
         this.id = id;
@@ -37,6 +38,14 @@ public class ArticleDto {
 
     public String getContents() {
         return contents;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 
     public Article toEntity(User author) {
