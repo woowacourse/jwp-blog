@@ -49,13 +49,20 @@ public class ArticleService {
         return article.update(updatedArticle);
     }
 
-    public void deleteById(long articleId) {
+    public void deleteById(long articleId, User user) {
+        Article article = getArticleById(articleId);
+        article.checkCorrespondingAuthor(user);
         articleRepository.deleteById(articleId);
     }
 
     public List<CommentDto> getAllComments(long articleId) {
         Article article = getArticleById(articleId);
         return CommentAssembler.writeDtos(article.getComments());
+    }
+
+    public Comment getCommentById(long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(NoSuchElementException::new);
     }
 
     public Comment saveComment(long articleId, CommentDto commentDto, User user) {
@@ -67,10 +74,15 @@ public class ArticleService {
 
     @Transactional
     public Comment updateComment(Long commentId, CommentDto commentDto, User user) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(NoSuchElementException::new);
+        Comment comment = getCommentById(commentId);
         comment.checkCorrespondingAuthor(user);
         Comment updatedComment = CommentAssembler.writeComment(commentDto, user);
         return comment.update(updatedComment);
+    }
+
+    public void deleteComment(Long commentId, User user) {
+        Comment comment = getCommentById(commentId);
+        comment.checkCorrespondingAuthor(user);
+        commentRepository.deleteById(commentId);
     }
 }

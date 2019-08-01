@@ -66,9 +66,7 @@ public class ArticleController {
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable long articleId, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
-        Article article = articleService.getArticleById(articleId);
-        article.checkCorrespondingAuthor(user);
-        articleService.deleteById(articleId);
+        articleService.deleteById(articleId, user);
         return "redirect:/";
     }
 
@@ -84,6 +82,13 @@ public class ArticleController {
                                 CommentDto commentDto, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         articleService.updateComment(commentId, commentDto, user);
+        return "redirect:/articles/" + articleId;
+    }
+
+    @DeleteMapping("/articles/{articleId}/comment/{commentId}")
+    public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+        articleService.deleteComment(commentId, user);
         return "redirect:/articles/" + articleId;
     }
 }
