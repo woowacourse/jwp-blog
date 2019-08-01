@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
@@ -23,22 +22,19 @@ public class UserWriteService {
     }
 
     private void verifyDuplicateEmail(UserDto user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new DuplicatedEmailException();
-        }
+        userRepository.findByEmail(user.getEmail())
+                .ifPresent(x -> { throw new DuplicatedEmailException(); });
     }
 
-    public void update(User user, UserDto userDto) {
-        userRepository.findByEmail(user.getEmail())
+    public void update(User loginUser, User user) {
+        userRepository.findByEmail(loginUser.getEmail())
                 .ifPresent(existingUser -> {
-                    user.modifyName(userDto.getName());
-                    existingUser.modifyName(userDto.getName());
+                    loginUser.modifyName(user);
+                    existingUser.modifyName(user);
                 });
     }
 
     public void remove(User user) {
-        if (user != null) {
-            userRepository.delete(user);
-        }
+        userRepository.delete(user);
     }
 }
