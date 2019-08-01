@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import techcourse.myblog.exception.InvalidAuthorException;
+
 import javax.persistence.*;
 
 @Entity
@@ -23,8 +25,15 @@ public class Comment {
         this.author = author;
     }
 
-    public void update(Comment updatedComment) {
+    public Comment update(Comment updatedComment) {
         this.contents = updatedComment.contents;
+        return this;
+    }
+
+    public void checkCorrespondingAuthor(User user) {
+        if (!author.equals(user)) {
+            throw new InvalidAuthorException();
+        }
     }
 
     public long getId() {

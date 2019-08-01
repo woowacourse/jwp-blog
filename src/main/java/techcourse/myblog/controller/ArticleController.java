@@ -78,4 +78,12 @@ public class ArticleController {
         articleService.saveComment(articleId, commentDto, user);
         return "redirect:/articles/" + articleId;
     }
+
+    @PutMapping("/articles/{articleId}/comment/{commentId}")
+    public String updateComment(@PathVariable long articleId, @PathVariable long commentId,
+                                CommentDto commentDto, HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+        articleService.updateComment(commentId, commentDto, user);
+        return "redirect:/articles/" + articleId;
+    }
 }

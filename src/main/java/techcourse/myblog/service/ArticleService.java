@@ -64,4 +64,13 @@ public class ArticleService {
         article.saveComment(comment);
         return commentRepository.save(comment);
     }
+
+    @Transactional
+    public Comment updateComment(Long commentId, CommentDto commentDto, User user) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(NoSuchElementException::new);
+        comment.checkCorrespondingAuthor(user);
+        Comment updatedComment = CommentAssembler.writeComment(commentDto, user);
+        return comment.update(updatedComment);
+    }
 }
