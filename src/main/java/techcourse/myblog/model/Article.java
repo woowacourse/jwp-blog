@@ -7,9 +7,7 @@ import techcourse.myblog.exception.MisMatchAuthorException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @NoArgsConstructor
@@ -59,8 +57,12 @@ public class Article {
     }
 
     public List<Comment> getComments() {
+        return Collections.unmodifiableList(comments);
+    }
+
+    public List<Comment> getSortedComments() {
         comments.sort(Comparator.comparing(Comment::getId));
-        return comments;
+        return Collections.unmodifiableList(comments);
     }
 
     public void deleteComment(Comment comment) {
