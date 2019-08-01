@@ -4,12 +4,13 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 import techcourse.myblog.support.exception.MismatchAuthorException;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -40,6 +41,12 @@ public class Article {
     @JoinColumn(name = FK_FIELD_NAME, foreignKey = @ForeignKey(name = FK_NAME))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
+
+    @CreationTimestamp
+    private LocalDateTime createTimeAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updateTimeAt;
     
     public Article(String title, String coverUrl, String contents, User author) {
         this.title = title;
@@ -50,15 +57,19 @@ public class Article {
 
     public void update(Article article) {
         validateAuthor(article);
-        title = article.getTitle();
-        coverUrl = article.getCoverUrl();
-        contents = article.getContents();
+        title = article.title;
+        coverUrl = article.coverUrl;
+        contents = article.contents;
     }
     
     private void validateAuthor(Article article) {
-        if (article.author.equals(this.author)) {
+        if (matchAuthor(article)) {
             return;
         }
         throw new MismatchAuthorException();
+    }
+
+    private boolean matchAuthor(Article article) {
+        return article.author.equals(this.author);
     }
 }
