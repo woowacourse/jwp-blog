@@ -3,6 +3,8 @@ package techcourse.myblog.domain;
 import techcourse.myblog.exception.InvalidAuthorException;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -22,6 +24,10 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
+
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_article_to_comments"))
+    private List<Comment> comments = new ArrayList<>();
 
     public Article() {
     }
@@ -47,6 +53,10 @@ public class Article {
         }
     }
 
+    public void saveComment(Comment comment) {
+        comments.add(comment);
+    }
+
     public long getArticleId() {
         return id;
     }
@@ -61,6 +71,14 @@ public class Article {
 
     public String getContents() {
         return contents;
+    }
+
+    public List<Comment> getComments() {
+        return java.util.Collections.unmodifiableList(comments);
+    }
+
+    public int getCountOfComment() {
+        return comments.size();
     }
 
     @Override

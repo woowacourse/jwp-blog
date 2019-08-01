@@ -5,6 +5,7 @@ public class ArticleDto {
     private String title;
     private String coverUrl;
     private String contents;
+    private int countOfComment;
 
     public long getArticleId() {
         return articleId;
@@ -36,5 +37,13 @@ public class ArticleDto {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    public int getCountOfComment() {
+        return countOfComment;
+    }
+
+    public void setCountOfComment(int countOfComment) {
+        this.countOfComment = countOfComment;
     }
 }

@@ -23,11 +23,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void save(UserDto userDto) {
+    public User save(UserDto userDto) {
         validateUniqueEmail(userDto);
         validatePasswordConfirm(userDto);
         User user = UserAssembler.writeUser(userDto);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     private void validateUniqueEmail(UserDto userDto) {

@@ -13,6 +13,7 @@ public class ArticleAssembler {
         articleDto.setTitle(article.getTitle());
         articleDto.setCoverUrl(article.getCoverUrl());
         articleDto.setContents(article.getContents());
+        articleDto.setCountOfComment(article.getCountOfComment());
 
         return articleDto;
     }

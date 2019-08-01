@@ -2,11 +2,11 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleAssembler;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.*;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.CommentRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -14,9 +14,11 @@ import java.util.NoSuchElementException;
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
 
-    public ArticleService(ArticleRepository articleRepository) {
+    public ArticleService(ArticleRepository articleRepository, CommentRepository commentRepository) {
         this.articleRepository = articleRepository;
+        this.commentRepository = commentRepository;
     }
 
     public List<ArticleDto> getAllArticles() {
@@ -24,7 +26,7 @@ public class ArticleService {
     }
 
     public ArticleDto getArticleDtoById(long articleId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NoSuchElementException::new);
+        Article article = getArticleById(articleId);
         return ArticleAssembler.writeDto(article);
     }
 
@@ -40,8 +42,7 @@ public class ArticleService {
 
     @Transactional
     public Article update(ArticleDto articleDto, User user) {
-        Article article = articleRepository.findById(articleDto.getArticleId())
-                .orElseThrow(NoSuchElementException::new);
+        Article article = getArticleById(articleDto.getArticleId());
         article.checkCorrespondingAuthor(user);
         Article updatedArticle = new Article(articleDto.getArticleId(), articleDto.getTitle(),
                 articleDto.getCoverUrl(), articleDto.getContents(), user);
@@ -50,5 +51,17 @@ public class ArticleService {
 
     public void deleteById(long articleId) {
         articleRepository.deleteById(articleId);
+    }
+
+    public List<CommentDto> getAllComments(long articleId) {
+        Article article = getArticleById(articleId);
+        return CommentAssembler.writeDtos(article.getComments());
+    }
+
+    public Comment saveComment(long articleId, CommentDto commentDto, User user) {
+        Article article = getArticleById(articleId);
+        Comment comment = CommentAssembler.writeComment(commentDto, user);
+        article.saveComment(comment);
+        return commentRepository.save(comment);
     }
 }

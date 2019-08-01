@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.service.ArticleService;
 
 import javax.servlet.http.HttpSession;
@@ -32,7 +33,8 @@ public class ArticleController {
     @PostMapping("/articles")
     public String writeArticle(ArticleDto articleDto, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
-        long articleId = articleService.save(articleDto, user).getArticleId();
+        Article article = articleService.save(articleDto, user);
+        long articleId = article.getArticleId();
         return "redirect:/articles/" + articleId;
     }
 
@@ -40,6 +42,7 @@ public class ArticleController {
     public String showArticle(@PathVariable long articleId, Model model) {
         ArticleDto articleDto = articleService.getArticleDtoById(articleId);
         model.addAttribute("articleDto", articleDto);
+        model.addAttribute("commentDtos", articleService.getAllComments(articleId));
         return "article";
     }
 
@@ -67,5 +70,12 @@ public class ArticleController {
         article.checkCorrespondingAuthor(user);
         articleService.deleteById(articleId);
         return "redirect:/";
+    }
+
+    @PostMapping("/articles/{articleId}/comment/new")
+    public String createComment(@PathVariable long articleId, CommentDto commentDto, HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+        articleService.saveComment(articleId, commentDto, user);
+        return "redirect:/articles/" + articleId;
     }
 }
