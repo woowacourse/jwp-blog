@@ -1,9 +1,18 @@
 package techcourse.myblog.domain;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import techcourse.myblog.domain.exception.InvalidAccessException;
+
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@NoArgsConstructor
+@EqualsAndHashCode
+@Getter
 @Table(name = "article")
 public class Article {
     @Id
@@ -25,8 +34,10 @@ public class Article {
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"), nullable = false)
     private User author;
 
-    private Article() {
-    }
+    //TODO: article_id 가 null로 들어간다~
+    @OneToMany
+    @JoinColumn(name = "articleId")
+    private List<Comment> comments = new ArrayList<>();
 
     public Article(String title, String coverUrl, String contents) {
         this.title = title;
@@ -34,7 +45,8 @@ public class Article {
         this.contents = contents;
     }
 
-    public void update(Article articleToUpdate) {
+    public void update(Article articleToUpdate, long loginUserID) {
+        isAuthor(loginUserID);
         this.title = articleToUpdate.title;
         this.coverUrl = articleToUpdate.coverUrl;
         this.contents = articleToUpdate.contents;
@@ -44,40 +56,11 @@ public class Article {
         this.author = persistUser;
     }
 
-    public long getId() {
-        return id;
-    }
+    public void isAuthor(long loginUserId) {
+        if (loginUserId == id) {
+            return;
+        }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return id == article.id &&
-                Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents) &&
-                Objects.equals(author, article.author);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents, author);
+        throw new InvalidAccessException("작성자가 아닙니다.");
     }
 }

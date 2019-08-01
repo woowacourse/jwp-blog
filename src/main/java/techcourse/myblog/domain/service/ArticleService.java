@@ -39,26 +39,17 @@ public class ArticleService {
     @Transactional
     public Article findById(long articleId, long loginUserId) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("해당하는 게시글을 찾지 못했습니다."));
-        validate(article.getAuthor().getId(), loginUserId);
+        article.isAuthor(loginUserId);
         return article;
     }
 
     @Transactional
     public Article update(long id, Article articleToUpdate) {
         Article originArticle = articleRepository.findArticleById(id);
-        long authorId = originArticle.getAuthor().getId();
         long loginUserId = articleToUpdate.getAuthor().getId();
-        validate(authorId, loginUserId);
-        originArticle.update(articleToUpdate);
+        originArticle.update(articleToUpdate, loginUserId);
 
         return originArticle;
-    }
-
-    public void validate(long authorId, long loginUserId) {
-        if (authorId == loginUserId) {
-            return;
-        }
-        throw new InvalidAccessException("잘못된 접근입니다.");
     }
 
     @Transactional

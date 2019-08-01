@@ -18,6 +18,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
+    private static final String USER = "user";
     private static final String ARTICLE = "article";
 
     private final ArticleService articleService;
@@ -31,7 +32,7 @@ public class ArticleController {
 
     @PostMapping("")
     public String createArticle(@Valid ArticleDto newArticleDto, HttpSession httpSession) {
-        User author = (User) httpSession.getAttribute("user");
+        User author = (User) httpSession.getAttribute(USER);
         Article article = articleService.save(newArticleDto.toEntity(author));
         return "redirect:/articles/" + article.getId();
     }
@@ -45,15 +46,15 @@ public class ArticleController {
 
     @GetMapping("/{articleId}/edit")
     public String moveArticleEditPage(@PathVariable long articleId, Model model, HttpSession httpSession) {
-        User loginUser = (User) httpSession.getAttribute("user");
-        Article article = articleService.findById(articleId, loginUser.getId());
+        User loginUser = (User) httpSession.getAttribute(USER);
+        Article article = articleService.findById(articleId, loginUser);
         model.addAttribute(ARTICLE, article);
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable long articleId, @Valid ArticleDto updateArticleDto, Model model, HttpSession httpSession) {
-        User author = (User) httpSession.getAttribute("user");
+        User author = (User) httpSession.getAttribute(USER);
         Article updateArticle = articleService.update(articleId, updateArticleDto.toEntity(author));
         model.addAttribute(ARTICLE, updateArticle);
         return "redirect:/articles/" + updateArticle.getId();
@@ -61,10 +62,12 @@ public class ArticleController {
 
     //TODO : comment delete 할때 CASECADE 하면 조금 코멘트도 같이 삭제 된다.
     //TODO: articleId를 delete? article.getId()?
+    //TODO: 중복제거..?
+
     @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable long articleId, HttpSession httpSession) {
-        User loginUser = (User) httpSession.getAttribute("user");
-        Article article = articleService.findById(articleId, loginUser.getId());
+        User loginUser = (User) httpSession.getAttribute(USER);
+        Article article = articleService.findById(articleId, loginUser);
         articleService.deleteById(article.getId());
         return "redirect:/";
     }
