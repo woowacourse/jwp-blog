@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.service.dto.user.UserResponse;
 import techcourse.myblog.service.login.LoginService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
@@ -31,6 +32,12 @@ public class LoginController {
         UserResponse retrieveUser = loginservice.findByEmail(userResponse.getEmail());
 
         session.setAttribute(USER_SESSION_KEY, retrieveUser);
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logOut(final HttpServletRequest request) {
+        request.getSession().removeAttribute(USER_SESSION_KEY);
         return "redirect:/";
     }
 }
