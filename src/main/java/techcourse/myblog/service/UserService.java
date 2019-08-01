@@ -1,5 +1,6 @@
 package techcourse.myblog.service;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.UserDto;
@@ -19,16 +20,14 @@ public class UserService {
     }
 
     public Long save(UserDto userDto) {
-        if (isExistEmail(userDto)) {
+        User newUser = new User(userDto.getUserName(), userDto.getEmail(), userDto.getPassword());
+
+        try {
+            userRepository.save(newUser);
+            return newUser.getId();
+        } catch (DataIntegrityViolationException e) {
             throw new EmailDuplicatedException("이미 사용중인 이메일입니다.");
         }
-        User newUser = new User(userDto.getUserName(), userDto.getEmail(), userDto.getPassword());
-        userRepository.save(newUser);
-        return newUser.getId();
-    }
-
-    private boolean isExistEmail(UserDto userDto) {
-        return userRepository.existsByEmail(userDto.getEmail());
     }
 
     public List<User> getUsers() {

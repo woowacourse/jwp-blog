@@ -19,7 +19,7 @@ public class User {
     @NonNull
     private String userName;
 
-    @Column(name = "EMAIL", nullable = false, length = 50)
+    @Column(name = "EMAIL", nullable = false, length = 50, unique = true)
     @NonNull
     private String email;
 
