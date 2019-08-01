@@ -34,8 +34,8 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public List<Comment> findByArticle(Article article) {
-        return commentRepository.findAllByArticle(article);
+    public List<Comment> findCommentsByArticle(Article article) {
+        return Collections.unmodifiableList(commentRepository.findAllByArticle(article));
     }
 
     public Comment findCommentById(Long commentId) {
