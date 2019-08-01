@@ -10,6 +10,7 @@ import techcourse.myblog.application.converter.CommentConverter;
 import techcourse.myblog.application.converter.UserConverter;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.exception.CommentNotFoundException;
+import techcourse.myblog.application.service.exception.NotMatchCommentAuthorException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.CommentRepository;
@@ -48,6 +49,10 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+    private Comment findCommentById(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("댓글이 존재하지 않습니다"));
+    }
+
     @Transactional(readOnly = true)
     public List<CommentDto> findAllCommentsByArticleId(Long articleId) {
         Article article = articleService.findArticleById(articleId);
@@ -62,13 +67,20 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(long commentId) {
+    public void delete(long commentId, String email) {
+        Comment comment = findCommentById(commentId);
+        if(!comment.getAuthor().compareEmail(email)) {
+            throw new NotMatchCommentAuthorException("댓글의 작성자가 아닙니다!");
+        }
         commentRepository.deleteById(commentId);
     }
 
     @Transactional
-    public void modify(Long commentId, CommentDto commentDto) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("댓글이 존재하지 않습니다"));
+    public void modify(Long commentId, CommentDto commentDto, String email) {
+        Comment comment = findCommentById(commentId);
+        if(!comment.getAuthor().compareEmail(email)) {
+            throw new NotMatchCommentAuthorException("댓글의 작성자가 아닙니다!");
+        }
         comment.changeContent(commentDto);
     }
 }

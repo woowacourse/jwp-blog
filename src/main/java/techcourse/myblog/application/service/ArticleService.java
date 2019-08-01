@@ -7,7 +7,7 @@ import techcourse.myblog.application.converter.ArticleConverter;
 import techcourse.myblog.application.converter.UserConverter;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
-import techcourse.myblog.application.service.exception.NotMatchAuthorException;
+import techcourse.myblog.application.service.exception.NotMatchArticleAuthorException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.User;
@@ -74,7 +74,7 @@ public class ArticleService {
     public void matchAuthor(Long articleId, String email) {
         User author = findArticleById(articleId).getAuthor();
         if (!author.compareEmail(email)) {
-            throw new NotMatchAuthorException("너는 이 글에 작성자가 아니다. 꺼져라!");
+            throw new NotMatchArticleAuthorException("너는 이 글에 작성자가 아니다. 꺼져라!");
         }
     }
 

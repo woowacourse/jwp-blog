@@ -30,16 +30,16 @@ public class CommentController {
     }
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
-    public ModelAndView deleteComment(@PathVariable Long commentId, @PathVariable Long articleId) {
-        commentService.delete(commentId);
+    public ModelAndView deleteComment(@PathVariable Long commentId, @PathVariable Long articleId, HttpSession session) {
+        commentService.delete(commentId, (String) session.getAttribute("email"));
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/articles/" + articleId));
         return modelAndView;
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView updateComment(CommentDto commentDto, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId) {
-        commentService.modify(commentId, commentDto);
+    public RedirectView updateComment(CommentDto commentDto, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, HttpSession session) {
+        commentService.modify(commentId, commentDto, (String) session.getAttribute("email"));
         return new RedirectView("/articles/" + articleId);
     }
 }
