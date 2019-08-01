@@ -1,5 +1,7 @@
 package techcourse.myblog.application.dto;
 
+import techcourse.myblog.domain.User;
+
 public class CommentDto {
     private Long id;
     private String contents;
@@ -10,8 +12,8 @@ public class CommentDto {
         this.contents = contents;
     }
 
-    public Boolean matchAuthor(String sessionEmail) {
-        return getAuthor().matchEmail(sessionEmail);
+    public Boolean matchAuthor(User user) {
+        return getAuthor().match(user);
     }
 
     public Long getId() {

@@ -41,19 +41,17 @@ public class CommentControllerTests {
                         .fromFormData("contents", "444"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectBody().consumeWith(body -> {
-            assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo(articleUri);
-        });
+                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo(articleUri));
 
         // 댓글 조회 (생성 확인)
         webTestClient.get().uri(articleUri)
+                .header("Cookie", sessionId)
                 .exchange()
                 .expectBody().consumeWith(response -> {
             String body = new String(response.getResponseBody());
             assertThat(body.contains("444")).isTrue();
             assertThat(body.contains("445")).isFalse();
         });
-
 
         // 댓글 수정
         webTestClient.put().uri(articleUri + "/comments/" + commentId)
@@ -62,12 +60,11 @@ public class CommentControllerTests {
                         .fromFormData("contents", "445"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectBody().consumeWith(body -> {
-            assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo(articleUri);
-        });
+                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo(articleUri));
 
         // 댓글 조회 (수정 확인)
         webTestClient.get().uri(articleUri)
+                .header("Cookie", sessionId)
                 .exchange()
                 .expectBody().consumeWith(response -> {
             String body = new String(response.getResponseBody());
@@ -80,13 +77,12 @@ public class CommentControllerTests {
                 .header("Cookie", sessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectBody().consumeWith(body -> {
-            assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo(articleUri);
-        });
+                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo(articleUri));
 
 
         // 댓글 조회 (삭제 확인)
         webTestClient.get().uri(articleUri)
+                .header("Cookie", sessionId)
                 .exchange()
                 .expectBody().consumeWith(response -> {
             String body = new String(response.getResponseBody());

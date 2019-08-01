@@ -28,8 +28,8 @@ public class ArticleService {
     }
 
     @Transactional
-    public Long save(ArticleDto articleDto, String email) {
-        User author = userService.findUserByEmail(email);
+    public Long save(ArticleDto articleDto, User user) {
+        User author = userService.findUserById(user.getId());
         Article article = articleConverter.convertFromDto(articleDto);
         article.init(author);
 
@@ -71,14 +71,14 @@ public class ArticleService {
         return articleDtos;
     }
 
-    public void matchAuthor(Long articleId, String email) {
+    public void matchAuthor(Long articleId, User user) {
         User author = findArticleById(articleId).getAuthor();
-        if (!author.compareEmail(email)) {
+        if (!author.equals(user)) {
             throw new NotMatchArticleAuthorException("너는 이 글에 작성자가 아니다. 꺼져라!");
         }
     }
 
-    public boolean matchAuthor(ArticleDto articleDto, String email) {
-        return articleDto.matchEmail(email);
+    public boolean matchAuthor(ArticleDto articleDto, User user) {
+        return articleDto.getAuthor().match(user);
     }
 }

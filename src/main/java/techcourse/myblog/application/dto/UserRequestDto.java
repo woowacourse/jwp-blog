@@ -1,5 +1,7 @@
 package techcourse.myblog.application.dto;
 
+import techcourse.myblog.domain.User;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -13,8 +15,8 @@ public class UserRequestDto extends UserDto {
         this.password = password;
     }
 
-    public boolean compareEmail(String email) {
-        return email.equals(getEmail());
+    public Boolean match(User user) {
+        return super.match(user);
     }
 
     public String getPassword() {

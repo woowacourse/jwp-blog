@@ -55,12 +55,12 @@ public class CommentServiceTests {
     }
 
     private void initUserServiceMock() {
-        when(userService.findUserByEmail(FIRST_EMAIL)).thenReturn(new User(FIRST_EMAIL, NAME, PASSWORD));
-        when(userService.findUserByEmail(SECOND_EMAIL)).thenReturn(new User(SECOND_EMAIL, NAME, PASSWORD));
+        when(userService.findUserById(1L)).thenReturn(new User(1L, FIRST_EMAIL, NAME, PASSWORD));
+        when(userService.findUserById(2L)).thenReturn(new User(2L, SECOND_EMAIL, NAME, PASSWORD));
     }
 
     private void initArticleServiceMock() {
-        User user = userService.findUserByEmail(FIRST_EMAIL);
+        User user = userService.findUserById(1L);
         ArticleDto articleDto = new ArticleDto(EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS);
         articleDto.setAuthor(userConverter.convertFromEntity(user));
         when(articleService.findById(EXIST_ARTICLE_ID)).thenReturn(articleDto);
@@ -69,9 +69,9 @@ public class CommentServiceTests {
     private void initCommentRepository() {
         Article article = articleService.findArticleById(EXIST_ARTICLE_ID);
         Comment firstComment = new Comment(CONTENTS);
-        firstComment.init(userService.findUserByEmail(FIRST_EMAIL), articleService.findArticleById(EXIST_ARTICLE_ID));
+        firstComment.init(userService.findUserById(1L), articleService.findArticleById(EXIST_ARTICLE_ID));
         Comment secondComment = new Comment(CONTENTS);
-        secondComment.init(userService.findUserByEmail(SECOND_EMAIL), articleService.findArticleById(EXIST_ARTICLE_ID));
+        secondComment.init(userService.findUserById(2L), articleService.findArticleById(EXIST_ARTICLE_ID));
         when(commentRepository.save(firstComment)).thenReturn(firstComment);
         when(commentRepository.findByArticle(article)).thenReturn(Arrays.asList(firstComment, secondComment));
         Mockito.doNothing().when(commentRepository).deleteById(1L);
@@ -83,7 +83,7 @@ public class CommentServiceTests {
     @Test
     void Comment_생성_테스트() {
         CommentDto commentDto = new CommentDto(null, CONTENTS);
-        assertDoesNotThrow(() -> commentService.save(commentDto, EXIST_ARTICLE_ID, FIRST_EMAIL));
+        assertDoesNotThrow(() -> commentService.save(commentDto, EXIST_ARTICLE_ID, userService.findUserById(1L)));
     }
 
     @Test
@@ -97,17 +97,17 @@ public class CommentServiceTests {
     @Test
     void Comment_수정_테스트() {
         CommentDto commentDto = new CommentDto(null, CONTENTS + "123");
-        assertDoesNotThrow(() -> commentService.modify(1L, commentDto, FIRST_EMAIL));
+        assertDoesNotThrow(() -> commentService.modify(1L, commentDto, userService.findUserById(1L)));
     }
 
     @Test
     void 존재하지않는_Comment_수정_에러_테스트() {
         CommentDto commentDto = new CommentDto(null, CONTENTS + "123");
-        assertThrows(CommentNotFoundException.class, () -> commentService.modify(3L, commentDto, FIRST_EMAIL));
+        assertThrows(CommentNotFoundException.class, () -> commentService.modify(3L, commentDto, userService.findUserById(1L)));
     }
 
     @Test
     void Comment_삭제_테스트() {
-        assertDoesNotThrow(() -> commentService.delete(1L, FIRST_EMAIL));
+        assertDoesNotThrow(() -> commentService.delete(1L, userService.findUserById(1L)));
     }
 }

@@ -13,7 +13,6 @@ import techcourse.myblog.application.service.exception.NotMatchPasswordException
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -40,34 +39,34 @@ public class UserService {
         return userConverter.createFromEntities(userRepository.findAll());
     }
 
-    User findUserByEmail(String email) {
+    User findUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다."));
+    }
+
+    private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다."));
     }
 
-    @Valid
     @Transactional(readOnly = true)
-    public UserResponseDto findByEmail(String email) {
-        return userConverter.convertFromEntity(findUserByEmail(email));
-    }
-
-    @Transactional(readOnly = true)
-    public void login(LoginDto loginDto) {
+    public User login(LoginDto loginDto) {
         String password = loginDto.getPassword();
         User user = findUserByEmail(loginDto.getEmail());
         if (!user.authenticate(password)) {
             throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
         }
+        return user;
     }
 
     @Transactional
-    public void modify(UserRequestDto userRequestDto) {
-        User user = findUserByEmail(userRequestDto.getEmail());
+    public void modify(UserRequestDto userRequestDto, User userFromSession) {
+        User user = findUserById(userFromSession.getId());
         user.modify(userRequestDto);
     }
 
     @Transactional
-    public void removeByEmail(String email) {
-        userRepository.deleteByEmail(email);
+    public void removeByUser(User user) {
+        userRepository.deleteById(user.getId());
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserRequestDto;
 import techcourse.myblog.application.service.UserService;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.presentation.controller.exception.InvalidUpdateException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,18 +40,17 @@ public class UserController {
 
     @PostMapping("/login")
     public RedirectView login(HttpServletRequest request, @Valid LoginDto loginDto) {
-        userService.login(loginDto);
+        User user = userService.login(loginDto);
         HttpSession httpSession = request.getSession();
         RedirectView redirectView = new RedirectView("/");
-        log.info("Login Session : " + loginDto.getEmail());
-        httpSession.setAttribute("email", loginDto.getEmail());
+        httpSession.setAttribute("user", user);
         httpSession.setMaxInactiveInterval(600);
         return redirectView;
     }
 
     @GetMapping("/logout")
     public RedirectView logout(HttpSession httpSession) {
-        httpSession.removeAttribute("email");
+        httpSession.removeAttribute("user");
 
         return new RedirectView("/");
     }
@@ -58,9 +58,8 @@ public class UserController {
     @GetMapping("/mypage")
     public ModelAndView readMyPage(HttpSession httpSession) {
         ModelAndView modelAndView = new ModelAndView();
-        String email = (String) httpSession.getAttribute("email");
         modelAndView.setViewName("mypage");
-        modelAndView.addObject("user", userService.findByEmail(email));
+        modelAndView.addObject("user", httpSession.getAttribute("user"));
 
         return modelAndView;
     }
@@ -69,19 +68,18 @@ public class UserController {
     public ModelAndView readMyPageEdit(HttpSession httpSession) {
         log.info("edit pages");
         ModelAndView modelAndView = new ModelAndView();
-        String email = (String) httpSession.getAttribute("email");
         modelAndView.setViewName("mypage-edit");
-        modelAndView.addObject("user", userService.findByEmail(email));
+        modelAndView.addObject("user", httpSession.getAttribute("user"));
         return modelAndView;
     }
 
     @PutMapping("/mypage/edit")
     public RedirectView updateUser(HttpSession httpSession, @Valid UserRequestDto user) {
         RedirectView redirectView = new RedirectView();
-        String email = (String) httpSession.getAttribute("email");
+        User userFromSession = (User) httpSession.getAttribute("user");
 
-        if (user.compareEmail(email)) {
-            userService.modify(user);
+        if (user.match(userFromSession)) {
+            userService.modify(user, userFromSession);
 
             redirectView.setUrl("/mypage");
             return redirectView;
@@ -92,11 +90,11 @@ public class UserController {
     @DeleteMapping("/users")
     public RedirectView deleteUser(HttpSession httpSession, UserRequestDto user) {
         RedirectView redirectView = new RedirectView("/");
-        String email = (String) httpSession.getAttribute("email");
+        User userFromSession = (User) httpSession.getAttribute("user");
 
-        if (user.compareEmail(email)) {
-            userService.removeByEmail(email);
-            httpSession.removeAttribute("email");
+        if (user.match(userFromSession)) {
+            userService.removeByUser(userFromSession);
+            httpSession.removeAttribute("user");
         }
 
         return redirectView;

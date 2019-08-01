@@ -39,9 +39,8 @@ public class CommentService {
     }
 
     @Transactional
-    public void save(CommentDto commentDto, Long articleId, String sessionEmail) {
+    public void save(CommentDto commentDto, Long articleId, User user) {
         Article article = articleService.findArticleById(articleId);
-        User user = userService.findUserByEmail(sessionEmail);
 
         Comment comment = commentConverter.convertFromDto(commentDto);
         comment.init(user, article);
@@ -60,25 +59,25 @@ public class CommentService {
         return commentConverter.createFromEntities(comments);
     }
 
-    public List<Boolean> matchAuthor(List<CommentDto> commentDtos, String sessionEmail) {
+    public List<Boolean> matchAuthor(List<CommentDto> commentDtos, User user) {
         return commentDtos.stream()
-                .map(commentDto -> commentDto.matchAuthor(sessionEmail))
+                .map(commentDto -> commentDto.matchAuthor(user))
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public void delete(long commentId, String email) {
+    public void delete(long commentId, User user) {
         Comment comment = findCommentById(commentId);
-        if(!comment.getAuthor().compareEmail(email)) {
+        if(!comment.getAuthor().equals(user)) {
             throw new NotMatchCommentAuthorException("댓글의 작성자가 아닙니다!");
         }
         commentRepository.deleteById(commentId);
     }
 
     @Transactional
-    public void modify(Long commentId, CommentDto commentDto, String email) {
+    public void modify(Long commentId, CommentDto commentDto, User user) {
         Comment comment = findCommentById(commentId);
-        if(!comment.getAuthor().compareEmail(email)) {
+        if(!comment.getAuthor().equals(user)) {
             throw new NotMatchCommentAuthorException("댓글의 작성자가 아닙니다!");
         }
         comment.changeContent(commentDto);

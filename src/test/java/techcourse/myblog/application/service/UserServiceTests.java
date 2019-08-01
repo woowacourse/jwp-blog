@@ -6,7 +6,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserRequestDto;
-import techcourse.myblog.application.dto.UserResponseDto;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
 import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
@@ -29,6 +28,7 @@ public class UserServiceTests {
     private static final UserRequestDto NOT_EXIST_USER_DTO = new UserRequestDto(NOT_EXIST_EMAIL, NAME, PASSWORD);
 
     private final UserService userService;
+    private final User existUser = new User(1L, EXIST_EMAIL, NAME, PASSWORD);
 
     @Mock
     private UserRepository userRepository;
@@ -40,15 +40,13 @@ public class UserServiceTests {
     }
 
     private void initUserRepositoryMock() {
-        User existUser = new User(EXIST_EMAIL, NAME, PASSWORD);
         User notExistUser = new User(NOT_EXIST_EMAIL, NAME, PASSWORD);
-
+        when(userRepository.findById(1L)).thenReturn(Optional.of(existUser));
         when(userRepository.findByEmail(EXIST_EMAIL)).thenReturn(Optional.of(existUser));
         when(userRepository.findByEmail(NOT_EXIST_EMAIL)).thenReturn(Optional.empty());
         when(userRepository.save(notExistUser)).thenReturn(notExistUser);
         Mockito.doNothing().when(userRepository).deleteByEmail(EXIST_EMAIL);
     }
-
 
     @Test
     void 중복되지_않은_User_생성() {
@@ -56,13 +54,13 @@ public class UserServiceTests {
     }
 
     @Test
-    void 중복된_User_생성_예외발생() {
+    void 중복된_User_이메일_생성_예외발생() {
         assertThrows(DuplicatedIdException.class, () -> userService.save(EXIST_USER_DTO));
     }
 
     @Test
     void 저장된_User_조회() {
-        UserResponseDto foundUser = userService.findByEmail(EXIST_EMAIL);
+        User foundUser = userService.findUserById(1L);
 
         assertThat(foundUser.getEmail()).isEqualTo(EXIST_EMAIL);
         assertThat(foundUser.getName()).isEqualTo(NAME);
@@ -70,12 +68,12 @@ public class UserServiceTests {
 
     @Test
     void 저장되지_않은_User_조회_예외발생() {
-        assertThrows(NotExistUserIdException.class, () -> userService.findByEmail(NOT_EXIST_EMAIL));
+        assertThrows(NotExistUserIdException.class, () -> userService.findUserById(2L));
     }
 
     @Test
     void 저장된_User_삭제() {
-        assertDoesNotThrow(() -> userService.removeByEmail(EXIST_EMAIL));
+        assertDoesNotThrow(() -> userService.removeByUser(existUser));
     }
 
     @Test
