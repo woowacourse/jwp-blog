@@ -25,7 +25,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(NotFoundArticleException.class)
     public String handleArticleException(NotFoundArticleException e) {
         log.error(EXCEPTION, e.getMessage());
-        return "/";
+        return "redirect:/";
     }
 
     /**

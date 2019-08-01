@@ -7,14 +7,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.article.domain.Article;
+import techcourse.myblog.article.exception.NotFoundArticleException;
+import techcourse.myblog.article.repository.ArticleRepository;
 import techcourse.myblog.comment.domain.Comment;
-import techcourse.myblog.user.domain.User;
+import techcourse.myblog.comment.repository.CommentRepository;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
-import techcourse.myblog.article.exception.NotFoundArticleException;
+import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.exception.NotFoundUserException;
-import techcourse.myblog.article.repository.ArticleRepository;
-import techcourse.myblog.comment.repository.CommentRepository;
 import techcourse.myblog.user.repository.UserRepository;
 import techcourse.myblog.utils.converter.ArticleConverter;
 import techcourse.myblog.utils.page.PageRequest;
@@ -77,7 +77,15 @@ public class ArticleService {
 
     @Transactional
     public List<Comment> getCommentsByArticleId(Long articleId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException());
+        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
         return commentRepository.findByArticle(article);
+    }
+
+    public void checkAuthentication(Long articleId, UserResponseDto userResponseDto) {
+        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+
+        if (!article.getAuthor().getEmail().equals(userResponseDto.getEmail())) {
+            throw new NotFoundArticleException();
+        }
     }
 }

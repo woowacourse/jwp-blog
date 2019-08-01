@@ -58,6 +58,7 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String modifyArticle(@PathVariable long articleId, ArticleRequestDto articleRequestDto) {
+        articleService.checkAuthentication(articleId, (UserResponseDto) httpSession.getAttribute(USER));
         articleService.update(articleId, articleRequestDto);
 
         return "redirect:/articles/" + articleId;
@@ -65,7 +66,9 @@ public class ArticleController {
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable long articleId) {
+        articleService.checkAuthentication(articleId, (UserResponseDto) httpSession.getAttribute(USER));
         articleService.delete(articleId);
+
         return "redirect:/";
     }
 }

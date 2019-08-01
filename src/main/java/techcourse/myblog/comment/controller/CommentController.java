@@ -37,7 +37,7 @@ public class CommentController {
     @PutMapping("/comment/{articleId}/{commentId}")
     public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, CommentRequestDto commentRequestDto) {
         UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(httpSession, USER);
-        commentService.checkAuthentication(userResponseDto, commentId);
+        commentService.checkAuthentication(commentId, userResponseDto);
         commentService.update(commentId, commentRequestDto);
         return "redirect:/articles/" + articleId;
     }
@@ -45,7 +45,7 @@ public class CommentController {
     @DeleteMapping("/comment/{articleId}/{commentId}")
     public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId) {
         UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(httpSession, USER);
-        commentService.checkAuthentication(userResponseDto, commentId);
+        commentService.checkAuthentication(commentId, userResponseDto);
         commentService.remove(commentId);
         return "redirect:/articles/" + articleId;
     }

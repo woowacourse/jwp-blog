@@ -64,7 +64,7 @@ public class CommentService {
         commentRepository.deleteById(commentId);
     }
 
-    public void checkAuthentication(UserResponseDto userResponseDto, Long commentId) {
+    public void checkAuthentication(Long commentId, UserResponseDto userResponseDto) {
         String userEmail = userResponseDto.getEmail();
         Comment comment = getCommentFindById(commentId);
         String commenterEmail = comment.getCommenter().getEmail();
