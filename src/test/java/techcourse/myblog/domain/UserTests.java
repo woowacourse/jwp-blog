@@ -12,8 +12,7 @@ public class UserTests {
 	@Test
 	void saveWithUserDto() {
 		UserDto userDto = createUserDto();
-		User user = new User();
-		user.saveUser(userDto);
+		User user = new User(userDto);
 
 		assertThat(user.getUsername()).isEqualTo(userDto.getUsername());
 		assertThat(user.getEmail()).isEqualTo(userDto.getEmail());
@@ -49,9 +48,7 @@ public class UserTests {
 
 	private User createUser() {
 		UserDto userDto = createUserDto();
-
-		User user = new User();
-		user.saveUser(userDto);
+		User user = new User(userDto);
 
 		return user;
 	}

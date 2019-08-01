@@ -21,8 +21,7 @@ class ArticleDtoTest {
 		userDto.setPassword("asdfASDF1@");
 		userDto.setEmail("tiber@naver.com");
 
-		user = new User();
-		user.saveUser(userDto);
+		user = new User(userDto);
 	}
 
 	@Test
