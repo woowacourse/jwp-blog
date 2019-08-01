@@ -25,7 +25,7 @@ public class Article {
     @Column(nullable = false)
     private String contents;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
