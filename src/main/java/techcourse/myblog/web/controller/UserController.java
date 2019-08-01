@@ -61,7 +61,7 @@ public class UserController {
     public String updateMyPage(@PathVariable long id, MyPageDto myPageDto, HttpSession httpSession) {
         User user = userService.updateUserInfo(id, myPageDto);
         httpSession.setAttribute(USER, user);
-        return "redirect:/mypage/" + user.getId();
+        return "redirect:/mypages/" + user.getId();
     }
 
     @DeleteMapping("/users/delete/{id}")

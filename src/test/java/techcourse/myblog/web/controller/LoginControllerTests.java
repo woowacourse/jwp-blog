@@ -19,43 +19,52 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LoginControllerTests {
+    private static final String JSESSIONID = "JSESSIONID";
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "password";
+    private static final String TEST_EMAIL = "sean@gmail.com";
+    private static final String TEST_NAME = "sean";
+    private static final String TEST_PASSWORD = "Woowahan123!";
+    private static final String LOGIN_URL = "/login";
+    private static final String LOGOUT_URL = "/logout";
+    private static final String LOCATION = "Location";
+    private static final String URL_PATTERN = ".*/.*";
+
     @Autowired
     private WebTestClient webTestClient;
 
     @Autowired
     private UserRepository userRepository;
 
-    private static final String JSESSIONID = "JSESSIONID";
-
     @BeforeEach
     void setUp() {
-        userRepository.save(new User("sean", "sean@gmail.com", "Woowahan123!"));
+        userRepository.save(new User(TEST_NAME, TEST_EMAIL, TEST_PASSWORD));
     }
 
     @Test
     void 로그인_페이지_이동() {
-        webTestClient.get().uri("/login")
+        webTestClient.get().uri(LOGIN_URL)
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void 로그인_성공() {
-        webTestClient.post().uri("/login")
-                .body(fromFormData("email", "sean@gmail.com")
-                        .with("password", "Woowahan123!"))
+        webTestClient.post().uri(LOGIN_URL)
+                .body(fromFormData(EMAIL, TEST_EMAIL)
+                        .with(PASSWORD, TEST_PASSWORD))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/.*");
+                .expectHeader().valueMatches(LOCATION, URL_PATTERN);
     }
 
     @Test
     void 로그아웃() {
-        webTestClient.get().uri("/logout")
+        webTestClient.get().uri(LOGOUT_URL)
                 .cookie(JSESSIONID, getResponseCookie().getValue())
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/.*");
+                .expectHeader().valueMatches(LOCATION, URL_PATTERN);
     }
 
     @AfterEach
@@ -64,9 +73,9 @@ public class LoginControllerTests {
     }
 
     private ResponseCookie getResponseCookie() {
-        return webTestClient.post().uri("/login")
-                .body(fromFormData("email", "sean@gmail.com")
-                        .with("password", "Woowahan123!"))
+        return webTestClient.post().uri(LOGIN_URL)
+                .body(fromFormData(EMAIL, TEST_EMAIL)
+                        .with(PASSWORD, TEST_PASSWORD))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .returnResult(ResponseCookie.class).getResponseCookies().getFirst(JSESSIONID);
