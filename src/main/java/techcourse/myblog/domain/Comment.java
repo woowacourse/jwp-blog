@@ -68,12 +68,15 @@ public class Comment {
         return updatedTime;
     }
 
-    public boolean isSameAuthor(User author) {
-        return this.author.equals(author);
+    public boolean isSameAuthor(Long authorId) {
+        return this.author.getId().equals(authorId);
     }
 
-    public void changeContents(CommentRequest commentRequest, User author) {
-        if (!isSameAuthor(author)) {
+    // TODO : Entity와 DTO의 연관관계가 생김     ㅜ여기서
+    // CommentRequest에 userId가 있으면 user를 받아줄 필요없이 처리 가능할 수도?
+    // comment에 user가 있으면 직접참조, user_id가 있으면 간접참조
+    public void changeContents(CommentRequest commentRequest, Long authorId) {
+        if (!isSameAuthor(authorId)) {
             throw new IllegalArgumentException();
         }
         this.contents = commentRequest.getContents();

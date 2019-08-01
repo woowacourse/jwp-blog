@@ -61,7 +61,7 @@ public class CommentService {
                 .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
 
         try {
-            comment.changeContents(commentRequest, author);
+            comment.changeContents(commentRequest, userResponse.getId());
         } catch (IllegalArgumentException e) {
             throw new NotSameAuthorException("해당 작성자만 댓글을 수정할 수 있습니다.");
         }
