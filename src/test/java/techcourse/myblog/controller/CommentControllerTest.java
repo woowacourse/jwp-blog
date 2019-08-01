@@ -13,6 +13,7 @@ import java.util.Iterator;
 import techcourse.myblog.controller.test.WebClientGenerator;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.dto.UserDto;
@@ -39,11 +40,13 @@ class CommentControllerTest extends WebClientGenerator {
     private UserRepository userRepository;
 
     private UserDto userDto;
+    private User loginUser;
 
     @BeforeEach
     public void setUp() {
         userDto = new UserDto("루피", "pirates@luff.com", "12345678");
-        responseSpec(POST, "/users", parser(userDto));
+//        responseSpec(POST, "/users", parser(userDto));
+        userRepository.save(userDto.toDomain());
     }
 
     @Test
@@ -61,8 +64,14 @@ class CommentControllerTest extends WebClientGenerator {
     }
 
     private void generateArticle() {
+        loginUser = userRepository
+                .findByEmail(userDto.getEmail())
+                .orElseThrow(() ->
+                        new IllegalArgumentException("존재 하지 않는 유저"));
         ArticleDto articleDto = new ArticleDto("title", "url", "contents");
-        logInResponseSpec(POST, "/articles/write", userDto, parser(articleDto));
+        Article article = articleDto.toDomain(loginUser);
+        articleRepository.save(article);
+//        logInResponseSpec(POST, "/articles/write", userDto, parser(articleDto));
     }
 
     private Article getSavedArticle() {

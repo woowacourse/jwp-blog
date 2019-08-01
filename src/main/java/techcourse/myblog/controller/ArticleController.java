@@ -2,10 +2,10 @@ package techcourse.myblog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,21 +16,19 @@ import javax.validation.Valid;
 
 import techcourse.myblog.controller.argumentresolver.UserSession;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.CommentService;
 
 @RequestMapping("/articles")
 @Controller
 public class ArticleController {
 
     private final ArticleService articleService;
-    private final CommentService commentService;
 
     @Autowired
-    public ArticleController(ArticleService articleService, CommentService commentService) {
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
-        this.commentService = commentService;
     }
 
     @GetMapping("/writing")
@@ -39,15 +37,16 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public RedirectView createArticle(@Valid ArticleDto articleDto, UserSession userSession) {
-        Article article = articleService.save(articleDto.toDomain(userSession.getUser()));
+    public RedirectView createArticle(@Valid @ModelAttribute ArticleDto articleDto, UserSession userSession) {
+        User user = userSession.getUser();
+        Article article = articleService.save(articleDto.toDomain(user));
         return new RedirectView("/articles/" + article.getId());
     }
 
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable long articleId, Model model) {
         model.addAttribute("article", articleService.select(articleId));
-        model.addAttribute("comments", commentService.findAll(articleId));
+        model.addAttribute("comments", articleService.findCommentsByArticleId(articleId)); // articleService.select(articleId).getComments()
         return "article";
     }
 
@@ -58,7 +57,6 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
-    @Transactional
     public RedirectView editArticle(@PathVariable long articleId,
                                     @Valid ArticleDto articleDto,
                                     UserSession userSession) {

@@ -3,23 +3,30 @@ package techcourse.myblog.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.DuplicatedUserException;
 import techcourse.myblog.exception.NotMatchPasswordException;
 import techcourse.myblog.exception.UnFoundUserException;
+import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 
+@Slf4j
 @Service
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ArticleRepository articleRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, ArticleRepository articleRepository) {
         this.userRepository = userRepository;
+        this.articleRepository = articleRepository;
     }
 
     public List<User> findAll() {
@@ -42,7 +49,10 @@ public class UserService {
     private User findByEmail(String email) {
         return userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new UnFoundUserException("로그인 정보를 확인해주세요."));
+                .orElseThrow(() -> {
+                    log.debug(email);
+                    return new UnFoundUserException("로그인 정보를 확인해주세요.");
+                });
     }
 
     public User login(User user) {
@@ -51,15 +61,23 @@ public class UserService {
         return loginUser;
     }
 
-    private void checkPassword(User user, User loginUser) {
+    private boolean checkPassword(User user, User loginUser) {
         if (!loginUser.matchPassword(user)) {
+            log.debug(user.toString());
+            log.debug(loginUser.toString());
             throw new NotMatchPasswordException("로그인 정보를 확인해주세요.");
         }
+        return true;
     }
 
-    public void delete(User user) {
+    public boolean delete(User user) {
         if (user != null) {
+            articleRepository
+                    .findAllByAuthor(user)
+                    .forEach(articleRepository::delete);
             userRepository.delete(user);
+            return true;
         }
+        return false;
     }
 }

@@ -4,8 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.InvalidUserSessionException;
 import techcourse.myblog.exception.UnFoundArticleException;
@@ -38,6 +41,11 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
+    public List<Comment> findCommentsByArticleId(long articleId) {
+        List<Comment> comments = commentRepository.findAllByArticleId(articleId);
+        return comments;
+    }
+
     private Article findById(long id) {
         return articleRepository
                 .findById(id)
@@ -67,5 +75,4 @@ public class ArticleService {
                 .forEach(commentRepository::delete);
         articleRepository.delete(article);
     }
-
 }

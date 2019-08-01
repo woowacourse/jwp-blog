@@ -57,9 +57,9 @@ public class Article {
     }
 
     public Article update(Article article) {
-        title = article.getTitle();
-        coverUrl = article.getCoverUrl();
-        contents = article.getContents();
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
         return this;
     }
 

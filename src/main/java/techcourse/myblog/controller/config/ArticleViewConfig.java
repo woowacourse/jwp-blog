@@ -23,8 +23,8 @@ public class ArticleViewConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(handlerInterceptor)
-                .excludePathPatterns("/articles/writing")
                 .addPathPatterns("/articles/**")
-                .addPathPatterns("/");
+                .addPathPatterns("/")
+                .excludePathPatterns("/articles/writing");
     }
 }
