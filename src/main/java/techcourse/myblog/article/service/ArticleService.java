@@ -45,19 +45,21 @@ public class ArticleService {
     }
 
     public long update(long articleId, ArticleUpdateDto articleDto, long authorId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
-        if (article.notMatchAuthorId(authorId)) {
-            throw new NotMatchUserException();
-        }
+        Article article = checkAuthority(articleId, authorId);
         article.update(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
         return article.getId();
     }
 
     public void deleteById(long articleId, long authorId) {
+        Article article = checkAuthority(articleId, authorId);
+        articleRepository.delete(article);
+    }
+
+    private Article checkAuthority(long articleId, long authorId) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
         if (article.notMatchAuthorId(authorId)) {
             throw new NotMatchUserException();
         }
-        articleRepository.deleteById(articleId);
+        return article;
     }
 }

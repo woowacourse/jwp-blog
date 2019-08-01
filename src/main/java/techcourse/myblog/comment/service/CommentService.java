@@ -36,6 +36,11 @@ public class CommentService {
         return commentRepository.save(commentDto.toComment(author, article));
     }
 
+    public CommentResponseDto findById(long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
+        return modelMapper.map(comment, CommentResponseDto.class);
+    }
+
     public List<CommentResponseDto> findAllByArticleId(long articleId) {
         List<Comment> comments = (List<Comment>) commentRepository.findAllByArticleId(articleId);
         return comments.stream()
@@ -44,23 +49,20 @@ public class CommentService {
     }
 
     public void update(long commentId, long authorId, CommentUpdateDto commentDto) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
-        if (comment.notMatchAuthorId(authorId)) {
-            throw new NotMatchUserException();
-        }
+        Comment comment = checkAuthority(commentId, authorId);
         comment.updateComment(commentDto.getContents());
     }
 
     public void delete(long commentId, long authorId) {
+        Comment comment = checkAuthority(commentId, authorId);
+        commentRepository.delete(comment);
+    }
+
+    private Comment checkAuthority(long commentId, long authorId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
         if (comment.notMatchAuthorId(authorId)) {
             throw new NotMatchUserException();
         }
-        commentRepository.deleteById(commentId);
-    }
-
-    public CommentResponseDto findById(long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
-        return modelMapper.map(comment, CommentResponseDto.class);
+        return comment;
     }
 }
