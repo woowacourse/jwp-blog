@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.vo.article.ArticleVo;
+import techcourse.myblog.domain.vo.article.ArticleContents;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -32,8 +32,8 @@ public class ArticleRepositoryTests {
 	@Test
 	void findById() {
 		User user = userRepository.findById(1L).get();
-		ArticleVo articleVo = new ArticleVo("title", "contents", "www.coverUrl.com");
-		Article actualArticle = articleVo.valueOfArticle(user);
+		ArticleContents articleContents = new ArticleContents("title", "contents", "www.coverUrl.com");
+		Article actualArticle = articleContents.valueOfArticle(user);
 		actualArticle = testEntityManager.persist(actualArticle);
 		Article expectArticle = articleRepository.findById(actualArticle.getId()).get();
 		assertThat(actualArticle.matchArticle(expectArticle));

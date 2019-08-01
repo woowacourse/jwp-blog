@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.persistence.*;
 
-import techcourse.myblog.domain.vo.article.ArticleVo;
+import techcourse.myblog.domain.vo.article.ArticleContents;
 
 @Entity
 public class Article {
@@ -15,7 +15,7 @@ public class Article {
 	@Lob
 	private String contents;
 
-	private String title;
+	private String text;
 	private String coverUrl;
 
 	@ManyToOne
@@ -29,29 +29,29 @@ public class Article {
 	private Article() {
 	}
 
-	public Article(ArticleVo articleVo) {
-		this.title = articleVo.getTitle();
-		this.contents = articleVo.getContents();
-		this.coverUrl = articleVo.getCoverUrl();
+	public Article(ArticleContents articleContents) {
+		this.text = articleContents.getTitle();
+		this.contents = articleContents.getText();
+		this.coverUrl = articleContents.getCoverUrl();
 	}
 
-	public Article(ArticleVo articleVo, User user) {
-		this.title = articleVo.getTitle();
-		this.contents = articleVo.getContents();
-		this.coverUrl = articleVo.getCoverUrl();
+	public Article(ArticleContents articleContents, User user) {
+		this.text = articleContents.getTitle();
+		this.contents = articleContents.getText();
+		this.coverUrl = articleContents.getCoverUrl();
 		this.author = user;
 	}
 
-	public Article(Long id, ArticleVo articleVo, User user) {
+	public Article(Long id, ArticleContents articleContents, User user) {
 		this.id = id;
-		this.title = articleVo.getTitle();
-		this.contents = articleVo.getContents();
-		this.coverUrl = articleVo.getCoverUrl();
+		this.text = articleContents.getTitle();
+		this.contents = articleContents.getText();
+		this.coverUrl = articleContents.getCoverUrl();
 		this.author = user;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getText() {
+		return text;
 	}
 
 	public String getCoverUrl() {
@@ -75,7 +75,7 @@ public class Article {
 	}
 
 	public void update(Article article) {
-		this.title = article.title;
+		this.text = article.text;
 		this.contents = article.contents;
 		this.coverUrl = article.coverUrl;
 	}

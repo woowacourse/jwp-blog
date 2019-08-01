@@ -3,16 +3,16 @@ package techcourse.myblog.domain.vo.article;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 
-public class ArticleVo {
+public class ArticleContents {
 	private String title;
-	private String contents;
+	private String text;
 	private String coverUrl;
 
-	private ArticleVo() {}
+	private ArticleContents() {}
 
-	public ArticleVo(String title, String contents, String coverUrl) {
+	public ArticleContents(String title, String text, String coverUrl) {
 		this.title = title;
-		this.contents = contents;
+		this.text = text;
 		this.coverUrl = coverUrl;
 	}
 
@@ -20,8 +20,8 @@ public class ArticleVo {
 		return title;
 	}
 
-	public String getContents() {
-		return contents;
+	public String getText() {
+		return text;
 	}
 
 	public String getCoverUrl() {

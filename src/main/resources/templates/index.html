@@ -60,8 +60,8 @@
                                             <div class="row">
                                                 <div class="col-md-8 ml-auto">
                                                     <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 th:text="${article.title}" th:value="${article.title}" class="mrg-btm-20 text-bold"></h2>
-                                                        <p th:text="${#strings.length(article.contents) < 100 ? article.contents : #strings.concat(#strings.substring(article.contents, 0, 100), '...')}"></p>
+                                                        <h2 class="mrg-btm-20 text-bold" th:text="${article.text}" th:value="${article.text}"></h2>
+                                                        <p th:text="${#strings.length(article.text) < 100 ? article.text : #strings.concat(#strings.substring(article.text, 0, 100), '...')}"></p>
                                                         <ul class="list-style-none pdd-left-0">
                                                             <li class="inline-block mrg-right-5">
                                                                 <i class="ti-heart text-danger pdd-right-5"></i>

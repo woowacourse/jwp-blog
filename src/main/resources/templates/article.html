@@ -45,7 +45,7 @@
     <div class="about-cover card no-border ">
         <div class="cover-img overlay-dark bg" th:style="'background:url('+${article.coverUrl}+');'">
             <div class="padding-30">
-                <h1 th:text="${article.title}" class="text-center cover-title"></h1>
+                <h1 class="text-center cover-title" th:text="${article.text}"></h1>
             </div>
         </div>
     </div>
@@ -112,12 +112,12 @@
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span>6 min ago</span>
                                 </span>
-                                <label class="width-80 label" th:text="${comment.contents}">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로 살다
+                                <label class="width-80 label" th:text="${comment.text}">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로 살다
                                     보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄
                                     수 있는 계기가 되었다.</label>
                             </div>
                             <div>
-                                <input class="edit" name="contents">
+                                <input class="edit" name="text">
                             </div>
                             </form>
                         </li>
@@ -126,7 +126,7 @@
                     <div class="add-comment">
                         <form method="post" th:action="@{/comments/{articleId}(articleId = ${article.id})}">
                         <div id="editSection"></div>
-                            <input id="comment-contents" name="contents" type="hidden">
+                            <input id="comment-text" name="text" type="hidden">
                             <button class="float-right pointer btn btn-icon" type="submit">작성</button>
                         </form>
                     </div>
@@ -137,7 +137,7 @@
 </div>
 <th:block th:include="common/js"></th:block>
 <script th:inline="javascript">
-    const initValue = [[${article.contents}]];
+    const initValue = [[${article.text}]];
 
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
@@ -152,7 +152,7 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
-                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
+                document.getElementById('comment-text').setAttribute('value', editor.getMarkdown())
             }
         },
         height: '200px'
