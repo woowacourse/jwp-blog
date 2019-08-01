@@ -75,9 +75,7 @@ public class UserService {
 		try {
 			User user = findById(userPublicInfoDto.getId());
 			user.updateName(userPublicInfoDto.getName());
-		} catch (NotFoundUserException e) {
-			throw new UserUpdateException(e.getMessage());
-		} catch (UserArgumentException e) {
+		} catch (NotFoundUserException | UserArgumentException e) {
 			throw new UserUpdateException(e.getMessage());
 		}
 	}
