@@ -1,6 +1,8 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.service.dto.CommentRequestDto;
 
 import javax.persistence.*;
@@ -23,6 +25,7 @@ public class Comment {
     private User commenter;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_ARTICLE"), name = "article")
     private Article article;
 

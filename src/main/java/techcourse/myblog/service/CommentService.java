@@ -25,14 +25,6 @@ public class CommentService {
         return comment;
     }
 
-    @Transactional
-    public void deleteByArticle(Article article) {
-        commentRepository.deleteByArticle(article);
-//        commentRepository.findByArticleOrderByCreatedAt(article)
-//                .stream()
-//                .forEach(comment -> commentRepository.deleteById(comment.getId()));
-    }
-
     public Comment save(Comment newComment) {
         return commentRepository.save(newComment);
     }

@@ -14,13 +14,6 @@ public class ArticleRequestDto {
     private String contents;
     private String coverUrl;
 
-    public ArticleRequestDto(long id, String title, String contents, String coverUrl) {
-        this.id = id;
-        this.title = title;
-        this.contents = contents;
-        this.coverUrl = coverUrl;
-    }
-
     public Article toArticle() {
         return new Article(title, contents, coverUrl);
     }

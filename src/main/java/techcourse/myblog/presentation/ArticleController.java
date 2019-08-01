@@ -11,13 +11,9 @@ import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.ArticleRequestDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
-import techcourse.myblog.service.dto.CommentResponseDto;
 import techcourse.myblog.service.dto.CommentResponseDtoCollection;
 
 import javax.servlet.http.HttpSession;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static techcourse.myblog.service.UserService.LOGGED_IN_USER_SESSION_KEY;
 
