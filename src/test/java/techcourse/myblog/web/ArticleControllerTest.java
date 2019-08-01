@@ -14,6 +14,7 @@ import techcourse.myblog.service.CommentService;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
+import static techcourse.myblog.web.ArticleController.ARTICLE_DEFAULT_URL;
 import static techcourse.myblog.web.AuthControllerTest.로그인_세션_ID;
 import static techcourse.myblog.web.UserControllerTest.회원_등록;
 
@@ -61,7 +62,7 @@ class ArticleControllerTest {
 
     @Test
     void articleCreateReadTest() {
-        webTestClient.post().uri("/articles")
+        webTestClient.post().uri(ARTICLE_DEFAULT_URL)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .header("cookie", jSessionId)
                 .body(
@@ -91,7 +92,7 @@ class ArticleControllerTest {
         String updateImage = "이미지2";
         String updateContents = "내용2";
 
-        webTestClient.post().uri("/articles")
+        webTestClient.post().uri(ARTICLE_DEFAULT_URL)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .header("cookie", jSessionId)
                 .body(
@@ -126,7 +127,7 @@ class ArticleControllerTest {
 
     @Test
     void articleDelete() {
-        webTestClient.post().uri("/articles")
+        webTestClient.post().uri(ARTICLE_DEFAULT_URL)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .header("cookie", jSessionId)
                 .body(
@@ -146,7 +147,7 @@ class ArticleControllerTest {
     void commentCreateTest() {
         given(commentService.create(1L, null, new Comment())).willReturn(new Comment());
 
-        webTestClient.post().uri("/articles/1/comments")
+        webTestClient.post().uri(ARTICLE_DEFAULT_URL + "/1/comments")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .header("cookie", jSessionId)
                 .exchange()
@@ -155,7 +156,7 @@ class ArticleControllerTest {
 
     @Test
     void commentUpdateTest() {
-        webTestClient.put().uri("/articles/1/comments/1")
+        webTestClient.put().uri(ARTICLE_DEFAULT_URL + "/1/comments/1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .header("cookie", jSessionId)
                 .exchange()
@@ -165,7 +166,7 @@ class ArticleControllerTest {
 
     @Test
     void commentDeleteTest() {
-        webTestClient.delete().uri("/articles/1/comments/1")
+        webTestClient.delete().uri(ARTICLE_DEFAULT_URL + "/1/comments/1")
                 .header("cookie", jSessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection()

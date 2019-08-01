@@ -16,9 +16,12 @@ import techcourse.myblog.service.AuthService;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import static techcourse.myblog.web.AuthController.AUTH_DEFAULT_URL;
+
 @Controller
-@RequestMapping("/auth")
+@RequestMapping(AUTH_DEFAULT_URL)
 public class AuthController {
+    public static final String AUTH_DEFAULT_URL = "/auth";
 
     private final AuthService authService;
 

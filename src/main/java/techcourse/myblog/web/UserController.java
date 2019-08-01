@@ -11,13 +11,15 @@ import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.*;
 import techcourse.myblog.service.UserService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import static techcourse.myblog.web.UserController.USER_DEFAULT_URL;
+
 @Controller
-@RequestMapping("/users")
+@RequestMapping(USER_DEFAULT_URL)
 public class UserController {
+    public static final String USER_DEFAULT_URL = "/users";
 
     private final UserService userService;
 
@@ -53,18 +55,24 @@ public class UserController {
         return new RedirectView("/users/signup");
     }
 
-    @GetMapping(path = {"/{email}", "/{email}/edit"})
-    public String showMyPageEdit(@PathVariable String email, HttpServletRequest req, Model model) {
-        HttpSession session = req.getSession();
+    @GetMapping("/{email}")
+    public String showMyPage(@PathVariable String email, HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
 
         User authenticatedUser = userService.getAuthenticatedUser(email, user.getEmail());
         model.addAttribute("user", authenticatedUser);
 
-        if (req.getRequestURI().contains("edit")) {
-            return "mypage-edit";
-        }
         return "mypage";
+    }
+
+    @GetMapping("/{email}/edit")
+    public String showMyInfoEdit(@PathVariable String email, HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+
+        User authenticatedUser = userService.getAuthenticatedUser(email, user.getEmail());
+        model.addAttribute("user", authenticatedUser);
+
+        return "mypage-edit";
     }
 
     @PutMapping("/{email}")

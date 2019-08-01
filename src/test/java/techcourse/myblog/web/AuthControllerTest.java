@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.dto.UserDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.web.AuthController.AUTH_DEFAULT_URL;
 import static techcourse.myblog.web.UserControllerTest.회원_등록;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -20,7 +21,7 @@ public class AuthControllerTest {
     private WebTestClient webTestClient;
 
     static WebTestClient.ResponseSpec 로그인(WebTestClient webTestClient, String email, String password) {
-        return webTestClient.post().uri("/auth/login")
+        return webTestClient.post().uri(AUTH_DEFAULT_URL + "/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(
                         BodyInserters.fromFormData("email", email)
@@ -36,7 +37,7 @@ public class AuthControllerTest {
 
     @Test
     void 로그인_페이지_접근_테스트() {
-        webTestClient.get().uri("/auth/login")
+        webTestClient.get().uri(AUTH_DEFAULT_URL + "/login")
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -66,7 +67,7 @@ public class AuthControllerTest {
                 .expectBody()
                 .consumeWith(res -> {
                     String redirectUri = res.getResponseHeaders().getLocation().getPath();
-                    assertThat(redirectUri).isEqualTo("/auth/login");
+                    assertThat(redirectUri).isEqualTo(AUTH_DEFAULT_URL + "/login");
                 });
     }
 
@@ -77,7 +78,7 @@ public class AuthControllerTest {
                 .expectBody()
                 .consumeWith(res -> {
                     String redirectUri = res.getResponseHeaders().getLocation().getPath();
-                    assertThat(redirectUri).isEqualTo("/auth/login");
+                    assertThat(redirectUri).isEqualTo(AUTH_DEFAULT_URL + "/login");
                 });
     }
 }

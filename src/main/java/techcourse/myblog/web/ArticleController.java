@@ -20,6 +20,7 @@ import javax.validation.Valid;
 
 @Controller
 public class ArticleController {
+    public static final String ARTICLE_DEFAULT_URL = "/articles";
 
     private final ArticleService articleService;
     private final CommentService commentService;
@@ -40,7 +41,7 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PostMapping("/articles")
+    @PostMapping(ARTICLE_DEFAULT_URL)
     public RedirectView createArticle(@Valid ArticleDto articleDto, Errors errors, HttpSession session) {
         if (errors.hasErrors()) {
             throw new ArticleInputException("입력값이 잘못되었습니다.");
@@ -50,10 +51,10 @@ public class ArticleController {
         articleDto.setAuthor(user);
         Article article = articleService.create(articleDto);
 
-        return new RedirectView("/articles/" + article.getId());
+        return new RedirectView(ARTICLE_DEFAULT_URL + "/" + article.getId());
     }
 
-    @GetMapping("/articles/{articleId}")
+    @GetMapping(ARTICLE_DEFAULT_URL + "/{articleId}")
     public String readArticle(@PathVariable Long articleId, Model model) {
         Article article = articleService.findById(articleId);
         model.addAttribute("article", article);
@@ -62,7 +63,7 @@ public class ArticleController {
         return "article";
     }
 
-    @GetMapping("/articles/{articleId}/edit")
+    @GetMapping(ARTICLE_DEFAULT_URL + "/{articleId}/edit")
     public String showArticleEditPage(@PathVariable Long articleId, Model model, HttpSession session) {
         Article article = articleService.findById(articleId, (User) session.getAttribute("user"));
         model.addAttribute("article", article);
@@ -70,14 +71,14 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PutMapping("/articles/{articleId}")
+    @PutMapping(ARTICLE_DEFAULT_URL + "/{articleId}")
     public RedirectView updateArticle(@PathVariable Long articleId, ArticleDto articleDto, HttpSession session) {
         Article updateArticle = articleService.update(articleDto, articleId, (User) session.getAttribute("user"));
 
-        return new RedirectView("/articles/" + updateArticle.getId());
+        return new RedirectView(ARTICLE_DEFAULT_URL + "/" + updateArticle.getId());
     }
 
-    @DeleteMapping("/articles/{articleId}")
+    @DeleteMapping(ARTICLE_DEFAULT_URL + "/{articleId}")
     public RedirectView deleteArticle(@PathVariable Long articleId, HttpSession session) {
         articleService.delete(articleId, (User) session.getAttribute("user"));
         return new RedirectView("/");
@@ -88,21 +89,21 @@ public class ArticleController {
         return new RedirectView("/");
     }
 
-    @PostMapping("/articles/{articleId}/comments")
+    @PostMapping(ARTICLE_DEFAULT_URL + "/{articleId}/comments")
     public RedirectView createComment(@PathVariable final Long articleId, HttpSession session, Comment comment) {
         commentService.create(articleId, (User) session.getAttribute("user"), comment);
-        return new RedirectView("/articles/" + articleId);
+        return new RedirectView(ARTICLE_DEFAULT_URL + "/" + articleId);
     }
 
-    @DeleteMapping("/articles/{articleId}/comments/{commentId}")
+    @DeleteMapping(ARTICLE_DEFAULT_URL + "/{articleId}/comments/{commentId}")
     public RedirectView deleteComment(@PathVariable final Long articleId, HttpSession session, @PathVariable final Long commentId) {
         commentService.delete(commentId, (User) session.getAttribute("user"));
-        return new RedirectView("/articles/" + articleId);
+        return new RedirectView(ARTICLE_DEFAULT_URL + "/" + articleId);
     }
 
-    @PutMapping("/articles/{articleId}/comments/{commentId}")
+    @PutMapping(ARTICLE_DEFAULT_URL + "/{articleId}/comments/{commentId}")
     public RedirectView updateComment(String content, @PathVariable final Long articleId, @PathVariable final Long commentId, HttpSession session) {
         commentService.update(content, commentId, (User) session.getAttribute("user"));
-        return new RedirectView("/articles/" + articleId);
+        return new RedirectView(ARTICLE_DEFAULT_URL + "/" + articleId);
     }
 }
