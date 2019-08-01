@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class ArticleDto {
-    public final static String TITLE_CONSTRAINT_MESSAGE = "제목을 입력해주세요.";
-    public final static String CONTENTS_CONSTRAINT_MESSAGE = "내용을 입력해주세요.";
+    private final static String TITLE_CONSTRAINT_MESSAGE = "제목을 입력해주세요.";
+    private final static String CONTENTS_CONSTRAINT_MESSAGE = "내용을 입력해주세요.";
 
     @NotBlank(message = TITLE_CONSTRAINT_MESSAGE)
     private String title;
