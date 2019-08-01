@@ -32,6 +32,7 @@ public class CommentController {
                                   @PathVariable long commentId,
                                   Model model) {
         Comment comment = commentService.find(commentId);
+
         model.addAttribute("articleId", articleId);
         model.addAttribute("commentId", commentId);
         model.addAttribute("comment", comment);
@@ -51,20 +52,20 @@ public class CommentController {
         return new RedirectView("/articles/" + articleId);
     }
 
-    @DeleteMapping("/{articleId}/comments/{commentId}")
-    public RedirectView delete(@PathVariable long articleId,
-                               @PathVariable long commentId,
-                               UserSession userSession) {
-        commentService.delete(commentId, userSession.getUser(), articleId);
-        return redirectToArticle(articleId);
-    }
-
     @PutMapping("/{articleId}/comments/{commentId}")
     public RedirectView put(@PathVariable long articleId,
                             @PathVariable long commentId,
                             CommentDto commentDto,
                             UserSession userSession) {
         commentService.update(commentId, commentDto, userSession.getUser());
+        return redirectToArticle(articleId);
+    }
+
+    @DeleteMapping("/{articleId}/comments/{commentId}")
+    public RedirectView delete(@PathVariable long articleId,
+                               @PathVariable long commentId,
+                               UserSession userSession) {
+        commentService.delete(commentId, userSession.getUser(), articleId);
         return redirectToArticle(articleId);
     }
 }

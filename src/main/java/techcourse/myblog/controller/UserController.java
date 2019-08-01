@@ -62,8 +62,7 @@ public class UserController {
     @DeleteMapping("/users")
     public RedirectView delete() {
         userService.delete(userSessionManager.getUser());
-        userSessionManager.removeUser();
-        return new RedirectView("/");
+        return logout();
     }
 
     @GetMapping("/login")

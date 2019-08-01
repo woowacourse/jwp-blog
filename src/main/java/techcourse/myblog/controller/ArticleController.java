@@ -16,7 +16,6 @@ import javax.validation.Valid;
 
 import techcourse.myblog.controller.argumentresolver.UserSession;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
 
@@ -37,16 +36,16 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public RedirectView createArticle(@Valid @ModelAttribute ArticleDto articleDto, UserSession userSession) {
-        User user = userSession.getUser();
-        Article article = articleService.save(articleDto.toDomain(user));
+    public RedirectView createArticle(@Valid @ModelAttribute ArticleDto articleDto,
+                                      UserSession userSession) {
+        Article article = articleService.save(articleDto.toDomain(userSession.getUser()));
         return new RedirectView("/articles/" + article.getId());
     }
 
     @GetMapping("/{articleId}")
     public String showArticle(@PathVariable long articleId, Model model) {
         model.addAttribute("article", articleService.select(articleId));
-        model.addAttribute("comments", articleService.findCommentsByArticleId(articleId)); // articleService.select(articleId).getComments()
+        model.addAttribute("comments", articleService.findCommentsByArticleId(articleId));
         return "article";
     }
 
