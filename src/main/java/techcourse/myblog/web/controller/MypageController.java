@@ -2,10 +2,8 @@ package techcourse.myblog.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.service.UserWriteService;
 import techcourse.myblog.service.dto.UserDto;
@@ -37,7 +35,7 @@ public class MypageController {
     @PutMapping
     public RedirectView editUser(LoginUser loginUser,
                                  @ModelAttribute("/mypage/edit") @Validated(UserInfo.class) UserDto userDto) {
-        userWriteService.update(loginUser.getUser(), userDto);
+        userWriteService.update(loginUser.getUser(), userDto.toUser());
         
         return new RedirectView("/mypage");
     }
@@ -47,12 +45,5 @@ public class MypageController {
         userWriteService.remove(loginUser.getUser());
         
         return new RedirectView("/logout");
-    }
-    
-    @ExceptionHandler(BindException.class)
-    public RedirectView handleBindError(BindException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("userDto", new UserDto("", "", ""));
-        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userDto", e.getBindingResult());
-        return new RedirectView(e.getObjectName());
     }
 }

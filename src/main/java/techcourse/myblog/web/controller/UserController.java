@@ -71,11 +71,4 @@ public class UserController {
         session.invalidate();
         return new RedirectView("/");
     }
-    
-    @ExceptionHandler(BindException.class)
-    public RedirectView handleBindError(BindException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("userDto", new UserDto("", "", ""));
-        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userDto", e.getBindingResult());
-        return new RedirectView(e.getObjectName());
-    }
 }
