@@ -4,13 +4,12 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 import techcourse.myblog.support.exception.InvalidCommentException;
 import techcourse.myblog.support.exception.MismatchAuthorException;
 
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -18,6 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @EqualsAndHashCode(of = "id")
+@DynamicUpdate
 public class Comment {
     public static final String USER_FK_FIELD_NAME = "writer";
     public static final String USER_FK_NAME = "fk_comment_to_user";
@@ -71,12 +71,19 @@ public class Comment {
             throw new InvalidCommentException();
         }
     }
-    
+
     private void validateArticleAndAuthor(Comment comment) {
-        if (comment.article.equals(this.article) && comment.writer.equals(this.writer)) {
+        if (matchArticle(comment) && matchAuthor(comment)) {
             return;
         }
-        
         throw new MismatchAuthorException();
+    }
+
+    private boolean matchAuthor(Comment comment) {
+        return comment.writer.equals(this.writer);
+    }
+
+    private boolean matchArticle(Comment comment) {
+        return comment.article.equals(this.article);
     }
 }
