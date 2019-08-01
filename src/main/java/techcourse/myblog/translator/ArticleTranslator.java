@@ -22,6 +22,17 @@ public class ArticleTranslator implements ModelTranslator<Article, ArticleDto> {
                 .build();
     }
 
+    @Override
+    public ArticleDto toDto(Article article, ArticleDto articleDto) {
+        articleDto.setId(article.getId());
+        articleDto.setTitle(article.getTitle());
+        articleDto.setCoverUrl(article.getCoverUrl());
+        articleDto.setContents(article.getContents());
+        articleDto.setAuthor(article.getAuthor());
+
+        return articleDto;
+    }
+
     private <T> T processValue(T domainValue, T dtoValue) {
         return domainValue != null ? domainValue : dtoValue;
     }

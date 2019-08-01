@@ -19,6 +19,15 @@ public class UserTranslator implements ModelTranslator<User, UserDto> {
                 .build();
     }
 
+    @Override
+    public UserDto toDto(User user, UserDto userDto) {
+        userDto.setId(user.getId());
+        userDto.setName(user.getName());
+        userDto.setEmail(user.getEmail());
+
+        return userDto;
+    }
+
     private <T> T processValue(T domainValue, T dtoValue) {
         return domainValue != null ? domainValue : dtoValue;
     }
