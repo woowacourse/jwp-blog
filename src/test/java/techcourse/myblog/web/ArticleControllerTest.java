@@ -15,6 +15,7 @@ import java.net.URI;
 import static io.restassured.RestAssured.delete;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.Utils.TestUtils.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest {
@@ -39,7 +40,7 @@ public class ArticleControllerTest {
                 .param("title", SAMPLE_TITLE)
                 .param("coverUrl", SAMPLE_COVER_URL)
                 .param("contents", SAMPLE_CONTENTS)
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .post(baseUrl + "/articles")
                 .getHeader("Location");
     }
@@ -61,7 +62,7 @@ public class ArticleControllerTest {
     @Test
     void showCreatePageWhenUserLogIn() {
         webTestClient.get().uri("/articles/new")
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -81,7 +82,7 @@ public class ArticleControllerTest {
 
         webTestClient.post()
                 .uri("/articles")
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", newTitle)
@@ -141,7 +142,7 @@ public class ArticleControllerTest {
     void showEditPageWhenUserMatch() {
         webTestClient.get()
                 .uri(setUpArticleUrl + "/edit")
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -157,8 +158,7 @@ public class ArticleControllerTest {
     void showEditPageWhenUserMismatch() {
         webTestClient.get()
                 .uri(setUpArticleUrl + "/edit")
-                .cookie("JSESSIONID",
-                        LogInControllerTest.logInAsMismatchUser(webTestClient))
+                .cookie("JSESSIONID", logInAsMismatchUser(webTestClient))
                 .exchange()
                 .expectStatus().isFound()
                 .expectHeader().valueMatches("location", ".*/articles/[0-9]+.*");
@@ -172,28 +172,21 @@ public class ArticleControllerTest {
 
         webTestClient.put()
                 .uri(setUpArticleUrl)
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", newTitle)
                         .with("coverUrl", newCoverUrl)
                         .with("contents", newContents))
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get()
-                            .uri(location)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                String body = new String(res.getResponseBody());
-                                assertThat(body.contains(newTitle)).isTrue();
-                                assertThat(body.contains(newCoverUrl)).isTrue();
-                                assertThat(body.contains(newContents)).isTrue();
-                            });
-                });
+                .expectStatus().is3xxRedirection();
+
+        WebTestClient.ResponseSpec responseSpec = webTestClient.get()
+                .uri(setUpArticleUrl)
+                .exchange()
+                .expectStatus().isOk();
+
+        assertThat(getBody(responseSpec)).contains(newTitle, newCoverUrl, newContents);
     }
 
     @Test
@@ -204,8 +197,7 @@ public class ArticleControllerTest {
 
         webTestClient.put()
                 .uri(setUpArticleUrl)
-                .cookie("JSESSIONID",
-                        LogInControllerTest.logInAsMismatchUser(webTestClient))
+                .cookie("JSESSIONID", logInAsMismatchUser(webTestClient))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("title", newTitle)
@@ -219,7 +211,7 @@ public class ArticleControllerTest {
     void deleteArticleWithMatchUser() {
         webTestClient.delete()
                 .uri(setUpArticleUrl)
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .exchange()
                 .expectStatus().isFound();
 
@@ -233,7 +225,7 @@ public class ArticleControllerTest {
     void deleteArticleWithMismatchUser() {
         webTestClient.delete()
                 .uri(setUpArticleUrl)
-                .cookie("JSESSIONID", LogInControllerTest.logInAsMismatchUser(webTestClient))
+                .cookie("JSESSIONID", logInAsMismatchUser(webTestClient))
                 .exchange()
                 .expectStatus().is5xxServerError();
     }

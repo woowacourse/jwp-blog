@@ -14,7 +14,7 @@ import techcourse.myblog.service.exception.LogInException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
+import static techcourse.myblog.Utils.TestConstants.VALID_PASSWORD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LogInServiceTest {

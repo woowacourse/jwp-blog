@@ -7,11 +7,10 @@ import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.Utils.TestConstants.BASE_USER_ID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentCountServiceTest {
-    private static final Long BASE_USER_ID = 1L;
-
     @Autowired
     CommentCountService commentCountService;
 

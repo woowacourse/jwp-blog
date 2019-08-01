@@ -11,11 +11,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static techcourse.myblog.Utils.TestConstants.BASE_USER_ID;
+import static techcourse.myblog.Utils.TestConstants.MISMATCH_USER_ID;
 
 public class CommentTests {
-    private static final Long MATCH_USER_ID = 1L;
-    private static final Long MISMATCH_USER_ID = 2L;
-
     private User user;
     private Article article;
 
@@ -24,8 +23,8 @@ public class CommentTests {
         user = mock(User.class);
         article = mock(Article.class);
 
-        when(user.getId()).thenReturn(MATCH_USER_ID);
-        when(user.matchId(MATCH_USER_ID)).thenReturn(true);
+        when(user.getId()).thenReturn(BASE_USER_ID);
+        when(user.matchId(BASE_USER_ID)).thenReturn(true);
         when(user.matchId(MISMATCH_USER_ID)).thenReturn(false);
     }
 
@@ -33,14 +32,14 @@ public class CommentTests {
     void 자신이_작성한_댓글인지_확인() {
         Comment comment = new Comment("comment", user, article);
 
-        assertThat(comment.getAuthorId()).isEqualTo(MATCH_USER_ID);
+        assertThat(comment.getAuthorId()).isEqualTo(BASE_USER_ID);
     }
 
     @Test
     void 자신이_작성한_댓글_수정() {
         Comment comment = new Comment("comment", user, article);
 
-        comment.updateComment("update comment", MATCH_USER_ID);
+        comment.updateComment("update comment", BASE_USER_ID);
 
         assertThat(comment.getComment()).isEqualTo("update comment");
     }

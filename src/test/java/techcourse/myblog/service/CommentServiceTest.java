@@ -15,11 +15,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static techcourse.myblog.Utils.TestConstants.BASE_USER_ID;
+import static techcourse.myblog.Utils.TestConstants.MISMATCH_USER_ID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CommentServiceTest {
-    private static final Long BASE_USER_ID = 1L;
-    private static final Long MISMATCH_USER_ID = 2L;
 
     @Autowired
     private CommentService commentService;

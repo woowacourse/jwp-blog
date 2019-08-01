@@ -11,11 +11,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static techcourse.myblog.Utils.TestConstants.BASE_USER_ID;
+import static techcourse.myblog.Utils.TestConstants.MISMATCH_USER_ID;
 
 public class ArticleTests {
-    private static final Long MATCH_USER_ID = 1L;
-    private static final Long MISMATCH_USER_ID = 2L;
-
     private User user;
     private ArticleVo articleVo;
 
@@ -24,8 +23,8 @@ public class ArticleTests {
         user = mock(User.class);
         articleVo = new ArticleVo("title", "url", "contents");
 
-        when(user.getId()).thenReturn(MATCH_USER_ID);
-        when(user.matchId(MATCH_USER_ID)).thenReturn(true);
+        when(user.getId()).thenReturn(BASE_USER_ID);
+        when(user.matchId(BASE_USER_ID)).thenReturn(true);
         when(user.matchId(MISMATCH_USER_ID)).thenReturn(false);
     }
 
@@ -33,7 +32,7 @@ public class ArticleTests {
     void 자신이_작성한_글인지_확인() {
         Article article = new Article(user, articleVo);
 
-        assertThat(article.getAuthorId()).isEqualTo(MATCH_USER_ID);
+        assertThat(article.getAuthorId()).isEqualTo(BASE_USER_ID);
     }
 
     @Test
@@ -41,7 +40,7 @@ public class ArticleTests {
         ArticleVo newArticleVo = new ArticleVo("new Title", "new CoverUrl", "new Contents");
         Article article = new Article(user, articleVo);
 
-        article.updateArticle(newArticleVo, MATCH_USER_ID);
+        article.updateArticle(newArticleVo, BASE_USER_ID);
 
         assertThat(article.getTitle()).isEqualTo("new Title");
         assertThat(article.getCoverUrl()).isEqualTo("new CoverUrl");

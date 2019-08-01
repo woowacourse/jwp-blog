@@ -7,13 +7,12 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.Utils.TestConstants.*;
+import static techcourse.myblog.Utils.TestUtils.getBody;
+import static techcourse.myblog.Utils.TestUtils.logInAsBaseUser;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CommentControllerTest {
-    private static final Long SAMPLE_ARTICLE_ID = 1L;
-    private static final Long SAMPLE_COMMENT_ID = 1L;
-    private static final Long SAMPLE_DELETE_COMMENT_ID = 2L;
-
     @Autowired
     WebTestClient webTestClient;
 
@@ -21,7 +20,7 @@ class CommentControllerTest {
     void createComment() {
         webTestClient.post()
                 .uri("/comment")
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .body(BodyInserters
                         .fromFormData("comment", "testcomment")
                         .with("articleId", SAMPLE_ARTICLE_ID.toString()))
@@ -36,7 +35,7 @@ class CommentControllerTest {
 
         webTestClient.post()
                 .uri("/comment")
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .body(BodyInserters
                         .fromFormData("comment", testComment)
                         .with("articleId", SAMPLE_ARTICLE_ID.toString()))
@@ -44,14 +43,11 @@ class CommentControllerTest {
                 .expectStatus().isFound()
                 .expectHeader().valueMatches("location", ".*/articles/1.*");
 
-        webTestClient.get().uri("/articles/" + SAMPLE_ARTICLE_ID.toString())
+        WebTestClient.ResponseSpec responseSpec = webTestClient.get().uri("/articles/" + SAMPLE_ARTICLE_ID.toString())
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(testComment)).isTrue();
-                });
+                .expectStatus().isOk();
+
+        assertThat(getBody(responseSpec)).contains(testComment);
     }
 
     @Test
@@ -60,21 +56,18 @@ class CommentControllerTest {
 
         webTestClient.put()
                 .uri("/comment/" + SAMPLE_COMMENT_ID)
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .body(BodyInserters.fromFormData("comment", updateComment)
                         .with("articleId", SAMPLE_ARTICLE_ID.toString()))
                 .exchange()
                 .expectStatus().isFound()
                 .expectHeader().valueMatches("location", ".*/articles/" + SAMPLE_ARTICLE_ID + ".*");
 
-        webTestClient.get().uri("/articles/" + SAMPLE_ARTICLE_ID.toString())
+        WebTestClient.ResponseSpec responseSpec = webTestClient.get().uri("/articles/" + SAMPLE_ARTICLE_ID.toString())
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(updateComment)).isTrue();
-                });
+                .expectStatus().isOk();
+
+        assertThat(getBody(responseSpec)).contains(updateComment);
     }
 
     @Test
@@ -83,18 +76,15 @@ class CommentControllerTest {
 
         webTestClient.delete()
                 .uri("/comment/" + SAMPLE_DELETE_COMMENT_ID)
-                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .exchange()
                 .expectStatus().isFound()
                 .expectHeader().valueMatches("location", ".*/articles/" + SAMPLE_ARTICLE_ID + ".*");
 
-        webTestClient.get().uri("/articles/" + SAMPLE_ARTICLE_ID.toString())
+        WebTestClient.ResponseSpec responseSpec = webTestClient.get().uri("/articles/" + SAMPLE_ARTICLE_ID.toString())
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body).doesNotContain(deleteComment);
-                });
+                .expectStatus().isOk();
+
+        assertThat(getBody(responseSpec)).doesNotContain(deleteComment);
     }
 }

@@ -14,11 +14,10 @@ import techcourse.myblog.service.exception.NotFoundCommentException;
 import techcourse.myblog.service.exception.SignUpException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static techcourse.myblog.Utils.TestConstants.VALID_PASSWORD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserServiceTest {
-    public static final String VALID_PASSWORD = "passWORD1!";
-
     @Autowired
     UserService userService;
 
