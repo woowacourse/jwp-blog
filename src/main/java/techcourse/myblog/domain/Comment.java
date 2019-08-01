@@ -23,6 +23,7 @@ public class Comment {
     @UpdateTimestamp
     private LocalDateTime updateDateTime;
 
+    @Lob
     private String contents;
 
     @ManyToOne
