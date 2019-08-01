@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
+import java.net.URI;
+
 import static io.restassured.RestAssured.delete;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -77,7 +79,7 @@ public class ArticleControllerTest {
 
     @Test
     void createArticleWhenLogin() {
-        webTestClient.post()
+        URI location = webTestClient.post()
                 .uri("/articles")
                 .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -86,10 +88,13 @@ public class ArticleControllerTest {
                         .with("coverUrl", NEW_COVER_URL)
                         .with("contents", NEW_CONTENTS))
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus().isFound()
+                .expectBody()
+                .returnResult()
+                .getUrl();
 
         WebTestClient.ResponseSpec responseSpec = webTestClient.get()
-                .uri(setUpArticleUrl)
+                .uri(location)
                 .exchange()
                 .expectStatus().isOk();
 
