@@ -52,7 +52,9 @@ public class UserServiceTests {
         password = "zinozino";
 
         userDto = new UserDto(email, name, password);
-        loginDto = new LoginDto(email, password);
+        loginDto = new LoginDto();
+        loginDto.setEmail(email);
+        loginDto.setPassword(password);
         user = userConverter.convertFromDto(userDto);
     }
 

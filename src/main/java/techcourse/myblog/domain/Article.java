@@ -35,8 +35,8 @@ public class Article {
         this.contents = article.contents;
     }
 
-    public void checkAuthor(String email) {
-        user.checkEmail(email);
+    public boolean isSameAuthorEmail(String email) {
+        return user.isSameEmail(email);
     }
 
     public Long getId() {

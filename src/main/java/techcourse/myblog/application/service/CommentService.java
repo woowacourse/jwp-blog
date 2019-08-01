@@ -67,6 +67,6 @@ public class CommentService {
     public void findCommentWriter(Long commentId, String email) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
-        comment.getUser().checkEmail(email);
+        UserService.checkEmail(comment.getUser(), email);
     }
 }

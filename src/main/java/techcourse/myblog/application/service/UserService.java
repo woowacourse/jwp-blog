@@ -8,6 +8,8 @@ import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
 import techcourse.myblog.application.service.exception.NotExistUserIdException;
+import techcourse.myblog.application.service.exception.NotMatchEmailException;
+import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
@@ -55,22 +57,33 @@ public class UserService {
         String requestPassword = loginDto.getPassword();
         User user = findUserByEmail(loginDto.getEmail());
 
-        user.checkPassword(requestPassword);
+        checkPassword(user, requestPassword);
     }
 
     @Transactional
     public void modify(@Valid UserDto userDto, String email) {
         User user = findUserByEmail(userDto.getEmail());
-        user.checkEmail(email);
-
+        checkEmail(user, email);
         user.modify(userConverter.convertFromDto(userDto));
     }
 
     @Transactional
     public void removeById(UserDto userDto, String email) {
         User user = findUserByEmail(userDto.getEmail());
-        user.checkEmail(email);
+        checkEmail(user, email);
 
         userRepository.delete(user);
+    }
+
+    public static void checkPassword(User user, String requestPassword) {
+        if (!user.isSamePassword(requestPassword)) {
+            throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    public static void checkEmail(User user, String requestEmail) {
+        if (!user.isSameEmail(requestEmail)) {
+            throw new NotMatchEmailException("이메일이 틀립니다.");
+        }
     }
 }

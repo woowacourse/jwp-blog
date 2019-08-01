@@ -1,8 +1,5 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.application.service.exception.NotMatchEmailException;
-import techcourse.myblog.application.service.exception.NotMatchPasswordException;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -59,16 +56,12 @@ public class User {
         this.name = user.name;
     }
 
-    public void checkPassword(String password) {
-        if (!this.password.equals(password)) {
-            throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
-        }
+    public boolean isSamePassword(String password) {
+        return this.password.equals(password);
     }
 
-    public void checkEmail(String email) {
-        if (!this.email.equals(email)) {
-            throw new NotMatchEmailException("이메일이 틀립니다.");
-        }
+    public boolean isSameEmail(String email) {
+        return this.email.equals(email);
     }
 
     @Override
@@ -83,5 +76,4 @@ public class User {
     public int hashCode() {
         return Objects.hash(email);
     }
-
 }

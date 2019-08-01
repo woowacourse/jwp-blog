@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
+import techcourse.myblog.application.service.exception.NotMatchEmailException;
 import techcourse.myblog.domain.*;
 
 import java.util.List;
@@ -68,10 +69,12 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public void checkAuthor(Long articleId, String email) {
         Article article = findArticleById(articleId);
-        article.checkAuthor(email);
+        if (!article.isSameAuthorEmail(email)) {
+            throw new NotMatchEmailException("작성자가 다릅니다.");
+        }
     }
 
     @Transactional
