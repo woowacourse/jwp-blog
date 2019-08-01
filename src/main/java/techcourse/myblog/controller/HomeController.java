@@ -1,5 +1,8 @@
 package techcourse.myblog.controller;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +19,9 @@ public class HomeController {
     }
 
     @GetMapping
-    public String home(Model model) {
-        model.addAttribute("articles", articleService.getAllArticles());
+    public String home(Model model,
+                       @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, size = 2) Pageable pageable) {
+        model.addAttribute("articles", articleService.getAllArticles(pageable));
         return "index";
     }
 

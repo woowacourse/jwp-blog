@@ -72,6 +72,16 @@
                                         </div>
                                     </div>
                                 </a>
+                                <nav>
+                                    <ul class="pagination justify-content-center">
+                                        <li th:if="${!articles.first}" class="page-item">
+                                            <a class="page-link" th:href="@{'?page=' + ${articles.number - 1}}">&larr; Newer Posts </a>
+                                        </li>
+                                        <li th:if="${!articles.last}" class="page-item">
+                                            <a class="page-link" th:href="@{'?page=' + ${articles.number + 1}}">Older Posts &rarr;</a>
+                                        </li>
+                                    </ul>
+                                </nav>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="tab-centered-2" role="tabpanel">

@@ -1,5 +1,7 @@
 package techcourse.myblog.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.ArticleDto;
@@ -29,8 +31,8 @@ public class ArticleService {
         return articleRepository.findById(id).orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
     }
 
-    public List<Article> getAllArticles() {
-        return articleRepository.findAll();
+    public Page<Article> getAllArticles(final Pageable pageable) {
+        return articleRepository.findAll(pageable);
     }
 
     @Transactional
