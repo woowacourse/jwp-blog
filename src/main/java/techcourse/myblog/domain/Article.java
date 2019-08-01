@@ -27,13 +27,6 @@ public class Article {
 	private Article() {
 	}
 
-	//todo: 지우기
-	public Article(String title, String contents, String coverUrl) {
-		this.title = title;
-		this.contents = contents;
-		this.coverUrl = coverUrl;
-	}
-
 	public Article(ArticleVo articleVo) {
 		this.title = articleVo.getTitle();
 		this.contents = articleVo.getContents();
