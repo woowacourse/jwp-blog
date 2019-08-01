@@ -56,7 +56,7 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PostMapping("/write")
+    @PostMapping
     public String create(ArticleDTO articleDTO, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {

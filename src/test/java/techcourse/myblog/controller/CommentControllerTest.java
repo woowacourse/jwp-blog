@@ -78,7 +78,7 @@ class CommentControllerTest {
                 .exchange()
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
 
-        webTestClient.post().uri("/articles/write")
+        webTestClient.post().uri("/articles")
                 .header("cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("title", TITLE_1)
