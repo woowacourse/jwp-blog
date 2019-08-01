@@ -19,6 +19,12 @@ public class BlogControllerAdvice {
         return "login";
     }
 
+    @ExceptionHandler({ArticleNotFoundException.class, CommentNotFoundException.class})
+    public String handleTextNotFoundException(Exception e, Model model) {
+        model.addAttribute("error", e.getMessage());
+        return "error";
+    }
+
     @ExceptionHandler(UserUpdateFailException.class)
     public String handleUpdateException(UserUpdateFailException e, Model model) {
         model.addAttribute("error", e.getMessage());
@@ -30,4 +36,5 @@ public class BlogControllerAdvice {
         model.addAttribute("error", e.getMessage());
         return "error";
     }
+
 }
