@@ -10,12 +10,11 @@ import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.exception.NotFoundArticleException;
 import techcourse.myblog.article.repository.ArticleRepository;
 import techcourse.myblog.comment.domain.Comment;
-import techcourse.myblog.comment.repository.CommentRepository;
+import techcourse.myblog.comment.service.CommentService;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.user.domain.User;
-import techcourse.myblog.user.exception.NotFoundUserException;
-import techcourse.myblog.user.repository.UserRepository;
+import techcourse.myblog.user.service.UserService;
 import techcourse.myblog.utils.converter.ArticleConverter;
 import techcourse.myblog.utils.page.PageRequest;
 
@@ -28,14 +27,14 @@ public class ArticleService {
     private static final int START_PAGE = 1;
     private static final int VIEW_ARTICLE_COUNT = 10;
 
+    private final UserService userService;
+    private final CommentService commentService;
     private final ArticleRepository articleRepository;
-    private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
 
-    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository, CommentRepository commentRepository) {
+    public ArticleService(UserService userService, CommentService commentService, ArticleRepository articleRepository) {
+        this.userService = userService;
+        this.commentService = commentService;
         this.articleRepository = articleRepository;
-        this.userRepository = userRepository;
-        this.commentRepository = commentRepository;
     }
 
     @Transactional(readOnly = true)
@@ -54,24 +53,25 @@ public class ArticleService {
 
     @Transactional
     public Article save(ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
-        User user = userRepository.findByEmail(userResponseDto.getEmail())
-                .orElseThrow(NotFoundUserException::new);
+        User user = userService.getUserByEmail(userResponseDto.getEmail());
         Article article = ArticleConverter.convert(articleRequestDto, user);
         articleRepository.save(article);
         return article;
     }
 
     @Transactional
-    public Article update(long articleId, ArticleRequestDto articleRequestDto) {
+    public Article update(long articleId, ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
         Article originArticle = findArticle(articleId);
-        originArticle.update(ArticleConverter.convert(articleRequestDto, originArticle.getAuthor()));
+        User user = userService.getUserByEmail(userResponseDto.getEmail());
+
+        originArticle.update(ArticleConverter.convert(articleRequestDto, originArticle.getAuthor()), user);
         return originArticle;
     }
 
     @Transactional
     public void delete(long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        commentRepository.deleteAllByArticle(article);
+        commentService.removeAllByArticle(article);
         articleRepository.deleteById(articleId);
     }
 

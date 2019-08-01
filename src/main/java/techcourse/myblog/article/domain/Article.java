@@ -1,5 +1,6 @@
 package techcourse.myblog.article.domain;
 
+import techcourse.myblog.article.exception.ArticleAuthenticationException;
 import techcourse.myblog.comment.domain.Comment;
 import techcourse.myblog.user.domain.User;
 
@@ -79,10 +80,18 @@ public class Article {
         comments.add(comment);
     }
 
-    public void update(Article modifiedArticle) {
+    public void update(Article modifiedArticle, User user) {
+        if (!isAuthor(user)) {
+            throw new ArticleAuthenticationException();
+        }
+
         this.title = modifiedArticle.title;
         this.contents = modifiedArticle.contents;
         this.coverUrl = modifiedArticle.coverUrl;
+    }
+
+    public boolean isAuthor(User user) {
+        return user.equals(author);
     }
 
     @Override

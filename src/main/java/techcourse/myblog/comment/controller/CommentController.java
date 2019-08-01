@@ -15,7 +15,6 @@ import javax.validation.Valid;
 
 import static techcourse.myblog.utils.session.SessionContext.USER;
 
-// TODO URI 패스를 constant로 분리하자~
 @Controller
 public class CommentController {
     private final HttpSession httpSession;
@@ -38,7 +37,7 @@ public class CommentController {
     public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, CommentRequestDto commentRequestDto) {
         UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(httpSession, USER);
         commentService.checkAuthentication(commentId, userResponseDto);
-        commentService.update(commentId, commentRequestDto);
+        commentService.update(commentId, commentRequestDto, userResponseDto);
         return "redirect:/articles/" + articleId;
     }
 

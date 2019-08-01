@@ -2,6 +2,8 @@ package techcourse.myblog.comment.domain;
 
 import org.springframework.data.annotation.CreatedDate;
 import techcourse.myblog.article.domain.Article;
+import techcourse.myblog.comment.exception.CommentAuthenticationException;
+import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.user.domain.User;
 import techcourse.myblog.dto.CommentRequestDto;
 
@@ -57,7 +59,11 @@ public class Comment {
         return article;
     }
 
-    public void update(CommentRequestDto commentRequestDto) {
+    public void update(CommentRequestDto commentRequestDto, User user) {
+        if (!isCommenter(user)) {
+            throw new CommentAuthenticationException();
+        }
+
         this.contents = commentRequestDto.getContents();
     }
 

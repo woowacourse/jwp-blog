@@ -44,18 +44,17 @@ public class UserService {
 
     @Transactional()
     public UserResponseDto updateUser(UserRequestDto userRequestDto, UserResponseDto origin) {
-        User user = getUserByEmail(origin);
+        User user = getUserByEmail(origin.getEmail());
         user.updateNameAndEmail(userRequestDto);
         return UserConverter.convert(user);
     }
 
-    private User getUserByEmail(UserResponseDto userResponseDto) {
-        return userRepository.findByEmail(userResponseDto.getEmail())
-                .orElseThrow(() -> new NotFoundUserException());
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(NotFoundUserException::new);
     }
 
     @Transactional()
     public void deleteUser(UserResponseDto userResponseDto) {
-        userRepository.delete(getUserByEmail(userResponseDto));
+        userRepository.delete(getUserByEmail(userResponseDto.getEmail()));
     }
 }

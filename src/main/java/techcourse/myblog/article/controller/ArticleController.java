@@ -4,10 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.article.domain.Article;
+import techcourse.myblog.article.service.ArticleService;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
-import techcourse.myblog.article.service.ArticleService;
 import techcourse.myblog.utils.model.ModelUtil;
+import techcourse.myblog.utils.session.SessionUtil;
 
 import javax.servlet.http.HttpSession;
 
@@ -51,15 +52,16 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public String saveArticle(ArticleRequestDto articleRequestDto) {
-        UserResponseDto userResponseDto = (UserResponseDto) httpSession.getAttribute(USER);
+        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(httpSession, USER);
         Article article = articleService.save(articleRequestDto, userResponseDto);
         return "redirect:/articles/" + article.getId();
     }
 
     @PutMapping("/articles/{articleId}")
     public String modifyArticle(@PathVariable long articleId, ArticleRequestDto articleRequestDto) {
-        articleService.checkAuthentication(articleId, (UserResponseDto) httpSession.getAttribute(USER));
-        articleService.update(articleId, articleRequestDto);
+        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(httpSession, USER);
+        articleService.checkAuthentication(articleId, userResponseDto);
+        articleService.update(articleId, articleRequestDto, userResponseDto);
 
         return "redirect:/articles/" + articleId;
     }
