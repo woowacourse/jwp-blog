@@ -3,8 +3,8 @@ package techcourse.myblog.service;
 import java.util.List;
 
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleVo;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.request.ArticleDto;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.repository.ArticleRepository;
@@ -22,9 +22,9 @@ public class ArticleService {
 		this.userService = userService;
 	}
 
-	public Long saveArticle(String email, ArticleDto articleDto) {
+	public Long saveArticle(String email, ArticleVo articleVo) {
 		User user = userService.findUser(email);
-		Article article = articleDto.valueOfArticle(user);
+		Article article = articleVo.valueOfArticle(user);
 		return articleRepository.save(article).getId();
 	}
 
@@ -33,10 +33,10 @@ public class ArticleService {
 	}
 
 	@Transactional
-	public void update(Long articleId, String email, ArticleDto articleDto) {
+	public void update(Long articleId, String email, ArticleVo articleVo) {
 		Article article = findById(articleId);
 		confirmAuthorization(email, article.getId());
-		article.update(articleDto.valueOfArticle());
+		article.update(articleVo.valueOfArticle());
 	}
 
 	public void confirmAuthorization(String email, Long articleId) {

@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import javax.persistence.*;
 
-import techcourse.myblog.dto.request.ArticleDto;
-
 @Entity
 public class Article {
 	@Id
@@ -29,24 +27,31 @@ public class Article {
 	private Article() {
 	}
 
+	//todo: 지우기
 	public Article(String title, String contents, String coverUrl) {
 		this.title = title;
 		this.contents = contents;
 		this.coverUrl = coverUrl;
 	}
 
-	public Article(ArticleDto articleDto, User user) {
-		this.title = articleDto.getTitle();
-		this.contents = articleDto.getContents();
-		this.coverUrl = articleDto.getCoverUrl();
+	public Article(ArticleVo articleVo) {
+		this.title = articleVo.getTitle();
+		this.contents = articleVo.getContents();
+		this.coverUrl = articleVo.getCoverUrl();
+	}
+
+	public Article(ArticleVo articleVo, User user) {
+		this.title = articleVo.getTitle();
+		this.contents = articleVo.getContents();
+		this.coverUrl = articleVo.getCoverUrl();
 		this.author = user;
 	}
 
-	public Article(Long id, ArticleDto articleDto, User user) {
+	public Article(Long id, ArticleVo articleVo, User user) {
 		this.id = id;
-		this.title = articleDto.getTitle();
-		this.contents = articleDto.getContents();
-		this.coverUrl = articleDto.getCoverUrl();
+		this.title = articleVo.getTitle();
+		this.contents = articleVo.getContents();
+		this.coverUrl = articleVo.getCoverUrl();
 		this.author = user;
 	}
 
