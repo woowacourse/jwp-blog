@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
 
-@ControllerAdvice()
+@ControllerAdvice
 public class ArticleControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(ArticleControllerAdvice.class);
 
