@@ -18,12 +18,11 @@ public class CommentService {
     }
 
     public void save(CommentDto commentDto) {
-        Comment comment = new Comment(commentDto.getContents(), commentDto.getUser(), commentDto.getArticle());
-        Article article = comment.getArticle();
-
-        commentRepository.save(comment);
+        Article article = commentDto.getArticle();
+        Comment comment = new Comment(commentDto.getContents(), commentDto.getUser(), article);
         article.addComment(comment);
 
+        commentRepository.save(comment);
     }
 
     public Comment findById(Long commentId) {
