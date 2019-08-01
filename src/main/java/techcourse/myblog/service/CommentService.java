@@ -1,7 +1,5 @@
 package techcourse.myblog.service;
 
-import java.util.List;
-
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
@@ -25,19 +23,11 @@ public class CommentService {
 		this.articleService = articleService;
 	}
 
-	@Transactional
-	public void deleteByArticleId(Long articleId) {
-		commentRepository.deleteByArticleId(articleId);
-	}
-
-	public List<Comment> findByArticleId(Long articleId) {
-		return commentRepository.findByArticleId(articleId);
-	}
-
 	public Comment save(String email, Long articleId, CommentDto commentDto) {
 		User user = userService.findUser(email);
 		Article article = articleService.findById(articleId);
-		Comment comment = commentDto.valueOf(user, article);
+		Comment comment = commentDto.valueOf(user);
+		article.addComment(comment);
 		return commentRepository.save(comment);
 	}
 

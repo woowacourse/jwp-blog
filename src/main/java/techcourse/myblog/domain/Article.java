@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import java.util.Collections;
+import java.util.List;
 import javax.persistence.*;
 
 import techcourse.myblog.dto.request.ArticleDto;
@@ -19,6 +21,10 @@ public class Article {
 	@ManyToOne
 	@JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
 	private User author;
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "article_id", foreignKey = @ForeignKey(name  = "fk_article_to_comment"))
+	private List<Comment> comments;
 
 	private Article() {
 	}
@@ -71,6 +77,10 @@ public class Article {
 		return author;
 	}
 
+	public List<Comment> getComments() {
+		return Collections.unmodifiableList(comments);
+	}
+
 	public void update(Article article) {
 		this.title = article.title;
 		this.contents = article.contents;
@@ -79,5 +89,9 @@ public class Article {
 
 	public boolean matchArticle(Article expectedArticle) {
 		return this.id.equals(expectedArticle.id);
+	}
+
+	public void addComment(Comment comment) {
+		comments.add(comment);
 	}
 }

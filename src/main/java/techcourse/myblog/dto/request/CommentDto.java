@@ -1,6 +1,5 @@
 package techcourse.myblog.dto.request;
 
-import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 
@@ -28,8 +27,8 @@ public class CommentDto {
 		this.contents = contents;
 	}
 
-	public Comment valueOf(User user, Article article) {
-		return new Comment(user, article, contents);
+	public Comment valueOf(User user) {
+		return new Comment(user, contents);
 	}
 
 	public Comment valueOf() {

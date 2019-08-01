@@ -26,10 +26,6 @@ public class Comment {
 	@JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
 	private User author;
 
-	@ManyToOne
-	@JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
-	private Article article;
-
 	private Comment() {
 	}
 
@@ -37,9 +33,8 @@ public class Comment {
 		this.contents = contents;
 	}
 
-	public Comment(User user, Article article, String contents) {
+	public Comment(User user, String contents) {
 		this.author = user;
-		this.article = article;
 		this.contents = contents;
 	}
 
@@ -57,10 +52,6 @@ public class Comment {
 
 	public User getAuthor() {
 		return author;
-	}
-
-	public Article getArticle() {
-		return article;
 	}
 
 	public void update(Comment comment) {

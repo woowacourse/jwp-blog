@@ -48,7 +48,6 @@ public class ArticleController {
 	@GetMapping("/articles/{articleId}")
 	public String getArticle(@PathVariable Long articleId, Model model) {
 		model.addAttribute("article", articleService.findById(articleId));
-		model.addAttribute("comments", commentService.findByArticleId(articleId));
 		return "article";
 	}
 
@@ -64,7 +63,6 @@ public class ArticleController {
 	public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
 		String email = httpSession.getAttribute("email").toString();
 		articleService.confirmAuthorization(email, articleId);
-		commentService.deleteByArticleId(articleId);
 		articleService.delete(articleId);
 		return "redirect:/";
 	}
