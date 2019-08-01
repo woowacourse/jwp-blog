@@ -19,10 +19,12 @@ public class Article {
     @Column(nullable = false, length = 100)
     private String title;
 
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, columnDefinition = "CLOB")
     private String coverUrl;
 
-    @Column(nullable = false, length = 2000)
+    @Lob
+    @Column(nullable = false, columnDefinition = "CLOB")
     private String contents;
 
     @ManyToOne
