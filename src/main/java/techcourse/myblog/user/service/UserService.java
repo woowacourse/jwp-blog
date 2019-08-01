@@ -28,12 +28,13 @@ public class UserService {
         this.modelMapper = modelMapper;
     }
 
-    public void save(UserCreateDto userCreateDto) {
+    public UserResponseDto save(UserCreateDto userCreateDto) {
         User newUser = userCreateDto.toUser();
         if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
             throw new DuplicatedUserException();
         }
-        userRepository.save(newUser);
+        User savedUser = userRepository.save(newUser);
+        return modelMapper.map(savedUser, UserResponseDto.class);
     }
 
     public List<UserResponseDto> findAll() {
