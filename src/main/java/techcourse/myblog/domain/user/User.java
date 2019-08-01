@@ -20,7 +20,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    public User() {
+    private User() {
     }
 
     public User(final String email, final String name, final String password) {

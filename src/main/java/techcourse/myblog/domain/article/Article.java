@@ -32,7 +32,7 @@ public class Article {
     private List<Comment> comments;
 
 
-    public Article() {
+    private Article() {
     }
 
     public Article(final String title, final String coverUrl, final String contents, User author) {

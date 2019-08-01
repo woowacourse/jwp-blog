@@ -17,7 +17,7 @@ public class Comment {
     @ManyToOne
     private Article article;
 
-    public Comment() {
+    private Comment() {
     }
 
     public Comment(String contents, User author, Article article) {
