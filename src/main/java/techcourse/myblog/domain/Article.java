@@ -35,13 +35,6 @@ public class Article {
 		this.coverUrl = coverUrl;
 	}
 
-	public Article(Long id, String title, String contents, String coverUrl) {
-		this.id = id;
-		this.title = title;
-		this.contents = contents;
-		this.coverUrl = coverUrl;
-	}
-
 	public Article(ArticleDto articleDto, User user) {
 		this.title = articleDto.getTitle();
 		this.contents = articleDto.getContents();
