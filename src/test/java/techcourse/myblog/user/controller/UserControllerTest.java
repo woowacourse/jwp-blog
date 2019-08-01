@@ -1,20 +1,11 @@
 package techcourse.myblog.user.controller;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.data.UserDataForTest;
 import techcourse.myblog.template.RequestTemplate;
-import techcourse.myblog.user.domain.User;
-import techcourse.myblog.user.domain.UserRepository;
-import techcourse.myblog.user.domain.vo.Email;
 
 public class UserControllerTest extends RequestTemplate {
-    private User user;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Test
     void 가입_페이지_이동() {
@@ -26,9 +17,9 @@ public class UserControllerTest extends RequestTemplate {
     @Test
     void 가입_성공() {
         loggedOutPostRequest("/users")
-                .body(BodyInserters.fromFormData("email", UserDataForTest.USER_EMAIL)
-                        .with("password", UserDataForTest.USER_PASSWORD)
-                        .with("name", UserDataForTest.USER_NAME))
+                .body(BodyInserters.fromFormData("email", UserDataForTest.NEW_USER_EMAIL)
+                        .with("password", UserDataForTest.NEW_USER_PASSWORD)
+                        .with("name", UserDataForTest.NEW_USER_NAME))
                 .exchange()
                 .expectStatus()
                 .isFound();
@@ -76,27 +67,21 @@ public class UserControllerTest extends RequestTemplate {
 
     @Test
     void 마이페이지_이동() {
-        signUp();
-        user = userRepository.findByEmail(Email.of(UserDataForTest.USER_EMAIL)).get();
-        loggedInGetRequest("/mypage/" + user.getId())
+        loggedInGetRequest("/mypage/1")
                 .expectStatus()
                 .isOk();
     }
 
     @Test
     void 정보수정_페이지_이동() {
-        signUp();
-        user = userRepository.findByEmail(Email.of(UserDataForTest.USER_EMAIL)).get();
-        loggedInGetRequest("/mypage/" + user.getId() + "/edit")
+        loggedInGetRequest("/mypage/1/edit")
                 .expectStatus()
                 .isOk();
     }
 
     @Test
     void 유저정보_업데이트() {
-        signUp();
-        user = userRepository.findByEmail(Email.of(UserDataForTest.USER_EMAIL)).get();
-        loggedInPutRequest("/users/" + user.getId())
+        loggedInPutRequest("/users/1")
                 .body(BodyInserters.fromFormData("name", "UpdateName"))
                 .exchange()
                 .expectStatus()
@@ -105,15 +90,8 @@ public class UserControllerTest extends RequestTemplate {
 
     @Test
     void 유저삭제() {
-        signUp();
-        user = userRepository.findByEmail(Email.of(UserDataForTest.USER_EMAIL)).get();
-        loggedInDeleteRequest("/users/" + user.getId())
+        loggedInDeleteRequest("/users/2", UserDataForTest.USER_EMAIL_TWO, UserDataForTest.USER_PASSWORD)
                 .expectStatus()
                 .isFound();
-    }
-
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAll();
     }
 }

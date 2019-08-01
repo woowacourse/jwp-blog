@@ -15,7 +15,6 @@ public class LoginControllerTest extends RequestTemplate {
 
     @Test
     void 로그인_성공() {
-        signUp();
         loggedOutPostRequest("/login")
                 .body(BodyInserters.fromFormData("email", UserDataForTest.USER_EMAIL)
                         .with("password", UserDataForTest.USER_PASSWORD))
@@ -26,7 +25,6 @@ public class LoginControllerTest extends RequestTemplate {
 
     @Test
     void 로그인_실패() {
-        signUp();
         loggedOutPostRequest("/login")
                 .body(BodyInserters.fromFormData("email", "test@test.com")
                         .with("password", UserDataForTest.USER_PASSWORD))
@@ -37,7 +35,6 @@ public class LoginControllerTest extends RequestTemplate {
 
     @Test
     void 로그아웃() {
-        signUp();
         loggedInGetRequest("/logout")
                 .expectStatus()
                 .isFound();
