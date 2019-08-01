@@ -3,7 +3,6 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
-import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.exception.UserMismatchException;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.ArticleDto;
@@ -16,12 +15,12 @@ import java.util.stream.Collectors;
 @Service
 public class ArticleService {
     private ArticleRepository articleRepository;
-    private CommentRepository commentRepository;
+    private CommentCountService commentCountService;
     private UserService userService;
 
-    public ArticleService(ArticleRepository articleRepository, CommentRepository commentRepository, UserService userService) {
+    public ArticleService(ArticleRepository articleRepository, CommentCountService commentCountService, UserService userService) {
         this.articleRepository = articleRepository;
-        this.commentRepository = commentRepository;
+        this.commentCountService = commentCountService;
         this.userService = userService;
     }
 
@@ -77,7 +76,7 @@ public class ArticleService {
 
     private ArticleDto toArticleDtoWithCommentCount(Article article) {
         ArticleDto articleDto = toArticleDto(article);
-        int commentCount = commentRepository.countByArticleId(article.getId());
+        int commentCount = commentCountService.countByArticleId(article.getId());
         articleDto.setCommentCount(commentCount);
         return articleDto;
     }
