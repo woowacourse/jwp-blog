@@ -24,7 +24,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/signup")
+    @GetMapping("/users/new")
     public String showSignup() {
         return "signup";
     }
