@@ -16,50 +16,46 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(DuplicatedIdException.class)
     public RedirectView handleDuplicatedIdError(RedirectAttributes redirectAttributes, DuplicatedIdException e) {
-        RedirectView redirectView = new RedirectView("/signup");
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
-        return redirectView;
+
+        return new RedirectView("/signup");
     }
 
     @ExceptionHandler(NotExistUserIdException.class)
     public RedirectView handleNotExistIdError(RedirectAttributes redirectAttributes, NotExistUserIdException e) {
-        RedirectView redirectView = new RedirectView("/login");
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
-        return redirectView;
+
+        return new RedirectView("/login");
     }
 
     @ExceptionHandler(NotMatchPasswordException.class)
     public RedirectView handleNotMatchPasswordError(RedirectAttributes redirectAttributes, NotMatchPasswordException e) {
-        RedirectView redirectView = new RedirectView("/login");
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
-        return redirectView;
+
+        return new RedirectView("/login");
     }
 
     @ExceptionHandler(BindException.class)
     public RedirectView handleBindError(RedirectAttributes redirectAttributes, BindException e) {
-        RedirectView redirectView = new RedirectView("signup");
-
         String errorMessages = e.getFieldErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining("\n"));
 
         redirectAttributes.addFlashAttribute("errormessage", errorMessages);
-        return redirectView;
+        return new RedirectView("signup");
     }
 
     @ExceptionHandler(NotExistCommentException.class)
     public RedirectView handleNotMatchCommentUserError(RedirectAttributes redirectAttributes, NotExistCommentException e) {
-        RedirectView redirectView = new RedirectView("/");
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
 
-        return redirectView;
+        return  new RedirectView("/");
     }
 
     @ExceptionHandler(NotMatchEmailException.class)
     public RedirectView handleNotMatchEmailError(RedirectAttributes redirectAttributes, NotMatchEmailException e) {
-        RedirectView redirectView = new RedirectView("/");
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
 
-        return redirectView;
+        return new RedirectView("/");
     }
 }

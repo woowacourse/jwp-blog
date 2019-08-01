@@ -52,10 +52,9 @@ public class ArticleController {
     public RedirectView updateArticle(HttpSession httpSession, @PathVariable Long articleId, ArticleDto article) {
         String email = (String) httpSession.getAttribute("email");
         articleService.checkAuthor(articleId, email);
-
-        RedirectView redirectView = new RedirectView("/articles/" + articleId);
         articleService.modify(articleId, article, email);
-        return redirectView;
+
+        return new RedirectView("/articles/" + articleId);
     }
 
     @DeleteMapping("/articles/{articleId}")
@@ -63,9 +62,8 @@ public class ArticleController {
         String email = (String) httpSession.getAttribute("email");
         articleService.checkAuthor(articleId, email);
 
-        RedirectView redirectView = new RedirectView("/");
         articleService.removeById(articleId);
-        return redirectView;
+        return new RedirectView("/");
     }
 
     @GetMapping("/articles/{articleId}/edit")
@@ -76,6 +74,7 @@ public class ArticleController {
         ModelAndView modelAndView = new ModelAndView("/article-edit");
         modelAndView.addObject("article", articleService.findById(articleId));
         modelAndView.addObject("method", "put");
+
         return modelAndView;
     }
 }
