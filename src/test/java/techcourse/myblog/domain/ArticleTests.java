@@ -7,8 +7,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ArticleTests {
 	@Test
 	void update() {
-		Article article = new Article("title", "contents", "www.coverUrl.com");
-		Article modifiedArticle = new Article("changedTitle", "changedContents", "www.changedCoverUrl.com");
+		ArticleVo articleVo = new ArticleVo("title", "contents", "www.coverUrl.com");
+		Article article = articleVo.valueOfArticle();
+		Article modifiedArticle = articleVo.valueOfArticle();
 		article.update(modifiedArticle);
 		assertThat(article.getTitle()).isEqualTo(modifiedArticle.getTitle());
 		assertThat(article.getContents()).isEqualTo(modifiedArticle.getContents());

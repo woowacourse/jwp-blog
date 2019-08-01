@@ -1,21 +1,20 @@
-package techcourse.myblog.dto.request;
+package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.request.UserDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ArticleDtoTest {
+class ArticleVoTests {
 	private User user;
-	private ArticleDto articleDto;
+	private ArticleVo articleVo;
 	private Article actualArticle;
 	private Article expectedArticle;
 
 	@BeforeEach
 	void setUp() {
-		articleDto = new ArticleDto("title", "contents", "coverUrl");
+		articleVo = new ArticleVo("title", "contents", "coverUrl");
 		UserDto userDto = new UserDto();
 		userDto.setUsername("tiber");
 		userDto.setPassword("asdfASDF1@");
@@ -26,19 +25,26 @@ class ArticleDtoTest {
 
 	@Test
 	void valueOfArticle() {
-		actualArticle = articleDto.valueOfArticle(user);
-		expectedArticle = new Article(articleDto, user);
+		actualArticle = articleVo.valueOfArticle();
+		expectedArticle = new Article(articleVo);
+		confirmArticleFieldValue();
+	}
 
-		assertThat(actualArticle.getTitle()).isEqualTo(expectedArticle.getTitle());
-		assertThat(actualArticle.getContents()).isEqualTo(expectedArticle.getContents());
-		assertThat(actualArticle.getCoverUrl()).isEqualTo(expectedArticle.getCoverUrl());
+	@Test
+	void valueOfArticleWithUser() {
+		actualArticle = articleVo.valueOfArticle(user);
+		expectedArticle = new Article(articleVo, user);
+		confirmArticleFieldValue();
 	}
 
 	@Test
 	void valueOfArticleWithArticleId() {
-		actualArticle = articleDto.valueOfArticle(1L, user);
-		expectedArticle = new Article(1L, articleDto, user);
+		actualArticle = articleVo.valueOfArticle(1L, user);
+		expectedArticle = new Article(1L, articleVo, user);
+		confirmArticleFieldValue();
+	}
 
+	private void confirmArticleFieldValue() {
 		assertThat(actualArticle.getTitle()).isEqualTo(expectedArticle.getTitle());
 		assertThat(actualArticle.getContents()).isEqualTo(expectedArticle.getContents());
 		assertThat(actualArticle.getCoverUrl()).isEqualTo(expectedArticle.getCoverUrl());
