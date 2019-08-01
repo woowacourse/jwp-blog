@@ -2,6 +2,7 @@ package techcourse.myblog.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,12 +37,10 @@ public class ControllerExceptionHandler {
      * @return 다시 로그인
      */
     @ExceptionHandler(LoginException.class)
-    public ModelAndView handleLoginException(LoginException e) {
+    public String handleLoginException(LoginException e, Model model) {
         log.error(EXCEPTION, e.getMessage());
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("error", e.getMessage());
-        mav.setViewName("login");
-        return mav;
+        model.addAttribute("error", e.getMessage());
+        return "redirect:/login";
     }
 
     /**
@@ -52,12 +51,10 @@ public class ControllerExceptionHandler {
      * @return 다시 회원가입 페이지로
      */
     @ExceptionHandler(SignUpException.class)
-    public ModelAndView handleSignUpException(SignUpException e) {
+    public String handleSignUpException(SignUpException e, Model model) {
         log.error(EXCEPTION, e.getMessage());
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("error", e.getMessage());
-        mav.setViewName("signup");
-        return mav;
+        model.addAttribute("error", e.getMessage());
+        return "redirect:/signup";
     }
 
     /**

@@ -18,10 +18,6 @@ public class SignUpTemplate {
 
     @Autowired
     public WebTestClient webTestClient;
-    @Autowired
-    public UserRepository userRepository;
-    @Autowired
-    public ArticleRepository articleRepository;
 
     public void registeredWebTestClient() {
         webTestClient.post()

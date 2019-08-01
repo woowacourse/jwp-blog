@@ -2,7 +2,6 @@ package techcourse.myblog.article.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.dto.ArticleRequestDto;
@@ -18,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ArticleRepositoryTest {
     private final ArticleRepository articleRepository;
 
-    @Autowired
     public ArticleRepositoryTest(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
     }
