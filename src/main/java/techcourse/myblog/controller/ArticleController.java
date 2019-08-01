@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.exception.InvalidAuthorException;
 import techcourse.myblog.service.ArticleService;
 
 import javax.servlet.http.HttpSession;
@@ -67,11 +66,6 @@ public class ArticleController {
         Article article = articleService.getArticleById(articleId);
         article.checkCorrespondingAuthor(user);
         articleService.deleteById(articleId);
-        return "redirect:/";
-    }
-
-    @ExceptionHandler(InvalidAuthorException.class)
-    public String handleInvalidAuthorException(InvalidAuthorException e) {
         return "redirect:/";
     }
 }

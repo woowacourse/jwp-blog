@@ -1,16 +1,14 @@
 package techcourse.myblog.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.DuplicateEmailException;
-import techcourse.myblog.exception.FailedLoginException;
-import techcourse.myblog.exception.FailedPasswordVerificationException;
-import techcourse.myblog.exception.InvalidUserDataException;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -88,33 +86,5 @@ public class UserController {
         String email = ((User) httpSession.getAttribute("user")).getEmail();
         userService.deleteByEmail(email);
         return "redirect:/logout";
-    }
-
-    @ExceptionHandler(InvalidUserDataException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleInvalidUserDataException(InvalidUserDataException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "signup";
-    }
-
-    @ExceptionHandler(DuplicateEmailException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleDuplicateEmailException(DuplicateEmailException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "signup";
-    }
-
-    @ExceptionHandler(FailedLoginException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleFailedLoginException(FailedLoginException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "login";
-    }
-
-    @ExceptionHandler(FailedPasswordVerificationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleFailedPasswordVerificationException(FailedPasswordVerificationException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "signup";
     }
 }
