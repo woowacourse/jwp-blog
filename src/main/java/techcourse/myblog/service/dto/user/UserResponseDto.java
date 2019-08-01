@@ -29,6 +29,10 @@ public class UserResponseDto {
         return name;
     }
 
+    public boolean matchId(Long id) {
+        return this.id.equals(id);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
