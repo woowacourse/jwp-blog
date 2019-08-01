@@ -1,5 +1,6 @@
 package techcourse.myblog.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -13,20 +14,24 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 
-import lombok.RequiredArgsConstructor;
 import techcourse.myblog.controller.argumentresolver.UserSession;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 
 @RequestMapping("/articles")
 @Controller
-@RequiredArgsConstructor
 public class ArticleController {
 
     private final ArticleService articleService;
     private final CommentService commentService;
+
+    @Autowired
+    public ArticleController(ArticleService articleService, CommentService commentService) {
+        this.articleService = articleService;
+        this.commentService = commentService;
+    }
 
     @GetMapping("/writing")
     public String createArticleForm() {
@@ -35,7 +40,7 @@ public class ArticleController {
 
     @PostMapping("/write")
     public RedirectView createArticle(@Valid ArticleDto articleDto, UserSession userSession) {
-        Article article = articleService.save(articleDto.toDomain(), userSession.getUser());
+        Article article = articleService.save(articleDto.toDomain(userSession.getUser()));
         return new RedirectView("/articles/" + article.getId());
     }
 

@@ -1,5 +1,6 @@
 package techcourse.myblog.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -14,20 +15,24 @@ import java.util.List;
 
 import javax.validation.groups.Default;
 
-import lombok.AllArgsConstructor;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.service.UserService;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.dto.UserInfo;
 import techcourse.myblog.controller.argumentresolver.UserSession;
 import techcourse.myblog.controller.session.UserSessionManager;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserInfo;
+import techcourse.myblog.service.UserService;
 
 @Controller
-@AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final UserSessionManager userSessionManager;
+
+    @Autowired
+    public UserController(UserService userService, UserSessionManager userSessionManager) {
+        this.userService = userService;
+        this.userSessionManager = userSessionManager;
+    }
 
     @GetMapping("/signup")
     public String createSignupForm(Model model) {
