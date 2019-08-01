@@ -61,6 +61,10 @@ public class Comment {
         this.contents = commentRequestDto.getContents();
     }
 
+    public boolean isCommenter(User user) {
+        return commenter.equals(user);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

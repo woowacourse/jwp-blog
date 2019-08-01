@@ -1,9 +1,14 @@
 package techcourse.myblog.article.domain;
 
+import techcourse.myblog.comment.domain.Comment;
 import techcourse.myblog.user.domain.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 public class Article {
@@ -21,12 +26,16 @@ public class Article {
     @JoinColumn(name = "userId", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
     public Article() {
     }
 
     public Article(String title, String contents, String coverUrl, User author) {
         this(title, contents, coverUrl);
         this.author = author;
+        this.comments = new ArrayList<>();
     }
 
     public Article(String title, String contents, String coverUrl) {
@@ -60,6 +69,14 @@ public class Article {
 
     public User getAuthor() {
         return author;
+    }
+
+    public List<Comment> getComments() {
+        return Collections.unmodifiableList(comments);
+    }
+
+    public void addComments(Comment comment) {
+        comments.add(comment);
     }
 
     public void update(Article modifiedArticle) {

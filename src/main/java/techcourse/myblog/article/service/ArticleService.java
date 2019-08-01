@@ -49,13 +49,13 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public Article findArticle(long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new NotFoundArticleException());
+                .orElseThrow(NotFoundArticleException::new);
     }
 
     @Transactional
     public Article save(ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
         User user = userRepository.findByEmail(userResponseDto.getEmail())
-                .orElseThrow(() -> new NotFoundUserException());
+                .orElseThrow(NotFoundUserException::new);
         Article article = ArticleConverter.convert(articleRequestDto, user);
         articleRepository.save(article);
         return article;
@@ -78,7 +78,7 @@ public class ArticleService {
     @Transactional
     public List<Comment> getCommentsByArticleId(Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        return commentRepository.findByArticle(article);
+        return article.getComments();
     }
 
     public void checkAuthentication(Long articleId, UserResponseDto userResponseDto) {

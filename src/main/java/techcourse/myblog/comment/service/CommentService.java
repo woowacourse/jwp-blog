@@ -28,35 +28,34 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment addComment(CommentRequestDto commentRequestDto, UserResponseDto userResponseDto, Long articleId) {
+    public void addComment(CommentRequestDto commentRequestDto, UserResponseDto userResponseDto, Long articleId) {
         String contents = commentRequestDto.getContents();
         User commenter = findUserByEmail(userResponseDto.getEmail());
         Article article = findArticleByArticleId(articleId);
 
-        Comment comment = commentRepository.save(new Comment(contents, commenter, article));
-
-        return comment;
+        article.addComments(new Comment(contents, commenter, article));
     }
 
     private Article findArticleByArticleId(Long articleId) {
-        return articleRepository.findById(articleId)
-                .orElseThrow(() -> new NotFoundArticleException());
+        return articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
     }
 
     private User findUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundUserException());
+        return userRepository.findByEmail(email).orElseThrow(NotFoundUserException::new);
     }
 
     @Transactional
     public void update(Long commentId, CommentRequestDto commentRequestDto) {
-        Comment comment = getCommentFindById(commentId);
+        Comment comment = getCommentById(commentId);
         comment.update(commentRequestDto);
     }
 
-    private Comment getCommentFindById(Long commentId) {
-        return commentRepository.findById(commentId)
-                .orElseThrow(() -> new NotFoundCommentException());
+    private Comment getCommentById(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+    }
+
+    private User getUserById(String email) {
+        return userRepository.findByEmail(email).orElseThrow(NotFoundCommentException::new);
     }
 
     @Transactional
@@ -65,11 +64,10 @@ public class CommentService {
     }
 
     public void checkAuthentication(Long commentId, UserResponseDto userResponseDto) {
-        String userEmail = userResponseDto.getEmail();
-        Comment comment = getCommentFindById(commentId);
-        String commenterEmail = comment.getCommenter().getEmail();
+        Comment comment = getCommentById(commentId);
+        User user = getUserById(userResponseDto.getEmail());
 
-        if (!userEmail.equals(commenterEmail)) {
+        if (!comment.isCommenter(user)) {
             throw new CommentAuthenticationException();
         }
     }
