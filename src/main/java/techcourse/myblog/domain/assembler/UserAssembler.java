@@ -1,5 +1,6 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.assembler;
 
+import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 
 import java.util.List;

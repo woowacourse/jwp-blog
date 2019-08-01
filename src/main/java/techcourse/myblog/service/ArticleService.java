@@ -3,6 +3,8 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.*;
+import techcourse.myblog.domain.assembler.ArticleAssembler;
+import techcourse.myblog.domain.assembler.CommentAssembler;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.repository.ArticleRepository;

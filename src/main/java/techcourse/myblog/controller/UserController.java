@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserAssembler;
+import techcourse.myblog.domain.assembler.UserAssembler;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
 
