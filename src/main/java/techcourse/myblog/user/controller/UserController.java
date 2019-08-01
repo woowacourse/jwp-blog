@@ -53,7 +53,7 @@ public class UserController {
 
     @GetMapping("/mypage/{userId}/edit")
     public String renderEditMyPage(@PathVariable long userId, UserSession session, Model model) {
-        if (session.getId() !=  userId) {
+        if (session.getId() != userId) {
             return "redirect:/";
         }
         model.addAttribute("user", userService.findById(userId));
