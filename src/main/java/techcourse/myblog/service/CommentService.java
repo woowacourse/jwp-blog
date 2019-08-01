@@ -47,10 +47,9 @@ public class CommentService {
                 });
     }
 
-    public Comment save(Comment comment, User user, Long articleId) {
+    public Comment save(CommentDto commentDto, User user, long articleId) {
         Article article = findArticleById(articleId);
-        comment.setUser(user);
-        comment.setArticle(article);
+        Comment comment = commentDto.toDomain(user, article);
         article.add(comment);
         return commentRepository.save(comment);
     }
@@ -73,7 +72,7 @@ public class CommentService {
     }
 
     private void checkAuthorizedUser(User user, Comment comment) {
-        if (!user.equals(comment.getUser())) {
+        if (!comment.isAuthorized(user)) {
             throw new IllegalRequestException("권한이 없는 사용자 입니다.");
         }
     }
@@ -81,6 +80,6 @@ public class CommentService {
     public void update(long commentId, CommentDto commentDto, User user) {
         Comment comment = findCommentById(commentId);
         checkAuthorizedUser(user, comment);
-        comment.update(commentDto.toDomain());
+        comment.update(commentDto.getContents());
     }
 }

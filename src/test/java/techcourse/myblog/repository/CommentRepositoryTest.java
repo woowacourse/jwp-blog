@@ -37,13 +37,12 @@ class CommentRepositoryTest {
         User user = new User("권민철", "test@test.com", "12345678");
         persistUser = testEntityManager.persist(user);
 
-        Article article = new Article("제목", "coverUrl", "내용");
-        article.setAuthor(persistUser);
+        Article article = new Article("제목", "coverUrl", "내용", persistUser);
 
         persistArticle = testEntityManager.persist(article);
 
         Comment comment = new Comment("댓글내용");
-        comment.setUser(persistUser);
+        comment.setAuthor(persistUser);
         comment.setArticle(persistArticle);
 
         persistComment = testEntityManager.persist(comment);
@@ -60,7 +59,7 @@ class CommentRepositoryTest {
                 .orElseThrow(() ->
                         new IllegalArgumentException("존재하지 않음"));
 
-        assertEquals(savedComment.getUser(), persistUser);
+        assertEquals(savedComment.getAuthor(), persistUser);
     }
 
     @Test
@@ -72,7 +71,7 @@ class CommentRepositoryTest {
                 .orElseThrow(() ->
                         new IllegalArgumentException("없음"));
 
-        assertNotEquals(savedComment.getUser(), unrelatedUser);
+        assertNotEquals(savedComment.getAuthor(), unrelatedUser);
     }
 
     @Test
@@ -97,7 +96,7 @@ class CommentRepositoryTest {
 
     private void addCommentAt(Article article, int i) {
         Comment comment = new Comment("댓글내용++추가등록" + i + "번째");
-        comment.setUser(persistUser);
+        comment.setAuthor(persistUser);
         comment.setArticle(article);
         testEntityManager.persist(comment);
     }

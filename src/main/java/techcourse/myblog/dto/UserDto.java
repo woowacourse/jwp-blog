@@ -4,8 +4,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import lombok.Getter;
 import techcourse.myblog.domain.User;
 
+@Getter
 public class UserDto implements DtoUtils<User> {
     @NotBlank(message = "이름을 입력해주세요",
             groups={UserInfo.class})
@@ -27,18 +29,6 @@ public class UserDto implements DtoUtils<User> {
         this.name = name;
         this.email = email;
         this.password = password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     @Override

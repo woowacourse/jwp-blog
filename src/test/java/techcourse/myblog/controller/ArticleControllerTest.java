@@ -1,6 +1,7 @@
 package techcourse.myblog.controller;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,8 +47,7 @@ public class ArticleControllerTest extends WebClientGenerator {
                 .findByEmail("pirates@luff.com")
                 .orElseThrow(() -> new IllegalArgumentException("dd"));
 
-        Article article = articleDto.toDomain();
-        article.setAuthor(user);
+        Article article = articleDto.toDomain(user);
         saved = articleRepository.save(article);
     }
 
@@ -112,8 +112,7 @@ public class ArticleControllerTest extends WebClientGenerator {
 
     @Test
     void 게시글_수정() {
-        Article inputArticleForm = articleDto.toDomain();
-        inputArticleForm.setAuthor(user);
+        Article inputArticleForm = articleDto.toDomain(user);
         Article article = articleRepository.save(inputArticleForm);
         ArticleDto editedArticle = new ArticleDto("new title", "new url", "new contents");
 
@@ -126,8 +125,7 @@ public class ArticleControllerTest extends WebClientGenerator {
 
     @Test
     void 게시글_삭제() {
-        Article inputArticleForm = articleDto.toDomain();
-        inputArticleForm.setAuthor(user);
+        Article inputArticleForm = articleDto.toDomain(user);
         Article article = articleRepository.save(inputArticleForm);
 
         logInResponseSpec(DELETE, "/articles/" + article.getId(), userDto)
@@ -135,7 +133,7 @@ public class ArticleControllerTest extends WebClientGenerator {
                 .isFound();
     }
 
-    @Test
+    @AfterEach
     void tearDown() {
         articleRepository.deleteAll();
         userRepository.deleteAll();

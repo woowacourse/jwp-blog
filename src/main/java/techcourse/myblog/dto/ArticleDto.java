@@ -3,8 +3,11 @@ package techcourse.myblog.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import lombok.Getter;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 
+@Getter
 public class ArticleDto implements DtoUtils<Article> {
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;
@@ -21,32 +24,12 @@ public class ArticleDto implements DtoUtils<Article> {
         this.contents = contents;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
     @Override
     public Article toDomain() {
         return new Article(title, coverUrl, contents);
+    }
+
+    public Article toDomain(User author) {
+        return new Article(title, coverUrl, contents, author);
     }
 }

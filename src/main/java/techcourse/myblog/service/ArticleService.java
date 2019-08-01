@@ -26,8 +26,7 @@ public class ArticleService {
         this.commentRepository = commentRepository;
     }
 
-    public Article save(Article article, User user) {
-        article.setAuthor(user);
+    public Article save(Article article) {
         return articleRepository.save(article);
     }
 
@@ -55,7 +54,7 @@ public class ArticleService {
     }
 
     private void checkAuthorizedUser(User user, Article article) {
-        if (user == null || !user.equals(article.getAuthor())) {
+        if (user == null || !article.isAuthorized(user)) {
             throw new InvalidUserSessionException("권한이 없습니다.");
         }
     }

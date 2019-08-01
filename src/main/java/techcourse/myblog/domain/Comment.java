@@ -38,12 +38,18 @@ public class Comment {
         this.contents = contents;
     }
 
+    public Comment(String contents, User author, Article article) {
+        this.contents = contents;
+        this.author = author;
+        this.article = article;
+    }
+
     public Comment update(String contents) {
         this.contents = contents;
         return this;
     }
 
-    public boolean isAuthed(User user) {
+    public boolean isAuthorized(User user) {
         return this.author.equals(user);
     }
 }

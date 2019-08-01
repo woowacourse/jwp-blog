@@ -25,8 +25,7 @@ public class ArticleRepositoryTests {
         User user = new User("권민철", "test@test.com", "12345678");
         User persistUser = testEntityManager.persist(user);
 
-        Article article = new Article("제목", "coverUrl", "내용");
-        article.setAuthor(persistUser);
+        Article article = new Article("제목", "coverUrl", "내용", persistUser);
         testEntityManager.persist(article);
 
         testEntityManager.flush();

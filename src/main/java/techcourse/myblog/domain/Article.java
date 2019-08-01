@@ -83,7 +83,7 @@ public class Article {
         }
     }
 
-    public boolean isAuthed(User user) {
+    public boolean isAuthorized(User user) {
         return this.author.equals(user);
     }
 }
