@@ -36,6 +36,7 @@ public class Article extends Date {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_article_to_comments"))
+    @OrderBy("id ASC")
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
