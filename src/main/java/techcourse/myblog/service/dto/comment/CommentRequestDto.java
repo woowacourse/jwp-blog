@@ -1,13 +1,13 @@
 package techcourse.myblog.service.dto.comment;
 
 public class CommentRequestDto {
-    private String comment;
+    private String contents;
 
-    public CommentRequestDto(String comment) {
-        this.comment = comment;
+    public CommentRequestDto(String contents) {
+        this.contents = contents;
     }
 
-    public String getComment() {
-        return comment;
+    public String getContents() {
+        return contents;
     }
 }

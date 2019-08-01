@@ -35,7 +35,7 @@ public class Article {
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     @CreatedDate

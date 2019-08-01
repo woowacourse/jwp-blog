@@ -26,7 +26,7 @@ public class CommentServiceTest {
     void 댓글_작성() {
         CommentRequestDto commentDto = new CommentRequestDto("comment");
         CommentResponseDto persistComment = commentService.save(commentDto, DEFAULT_USER_ID, DEFAULT_ARTICLE_ID);
-        assertThat(persistComment.getContent()).isEqualTo(commentDto.getComment());
+        assertThat(persistComment.getContent()).isEqualTo(commentDto.getContents());
     }
 
     @Test

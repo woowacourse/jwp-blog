@@ -8,7 +8,7 @@ import techcourse.myblog.service.dto.comment.CommentResponseDto;
 
 public class CommentAssembler {
     public static Comment convertToEntity(CommentRequestDto commentRequestDto, User user, Article article) {
-        return new Comment(commentRequestDto.getComment(), user, article);
+        return new Comment(commentRequestDto.getContents(), user, article);
     }
 
     public static CommentResponseDto convertToDto(Comment comment) {

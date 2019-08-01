@@ -19,7 +19,7 @@ public class Comment {
     private String contents;
     @ManyToOne
     private User author;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Article article;
 
     @CreatedDate

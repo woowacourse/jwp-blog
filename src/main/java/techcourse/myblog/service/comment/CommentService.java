@@ -45,7 +45,7 @@ public class CommentService {
     public CommentResponseDto update(final CommentRequestDto commentRequestDto, final Long commentId) {
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(CommentNotFoundException::new);
-        comment.update(commentRequestDto.getComment());
+        comment.update(commentRequestDto.getContents());
         return convertToDto(comment);
     }
 

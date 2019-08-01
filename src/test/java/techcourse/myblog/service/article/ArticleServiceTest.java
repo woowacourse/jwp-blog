@@ -67,9 +67,12 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_삭제_확인() {
-        articleService.delete(DEFAULT_ARTICLE_ID);
+        UserResponseDto retrieveUser = userService.findById(DEFAULT_USER_ID);
+        ArticleRequestDto article = new ArticleRequestDto("some title", "", "some contents");
+        Long articleId = articleService.save(article, retrieveUser.getId());
+        articleService.delete(articleId);
         assertThatExceptionOfType(ArticleNotFoundException.class)
-            .isThrownBy(() -> articleService.findById(DEFAULT_ARTICLE_ID));
+            .isThrownBy(() -> articleService.findById(articleId));
     }
 
     @Test

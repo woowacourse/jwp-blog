@@ -94,12 +94,16 @@ public class CommentControllerTests {
         String sid = postLoginSync(webTestClient, "paul123@example.com", "p@ssW0rd")
             .getResponseCookies().getFirst(KEY_JSESSIONID).getValue();
 
-        webTestClient.put().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments/" + DEFAULT_COMMENT_ID)
+        webTestClient.put().uri("/articles/" + DEFAULT_ARTICLE_ID + "/comments/" + 1000)
             .cookie(KEY_JSESSIONID, sid)
             .body(BodyInserters.fromFormData("contents", "newHello"))
             .exchange()
             .expectStatus().is3xxRedirection()
             .expectHeader().valueMatches("Location", ".*/articles/\\d*");
+
+        assertThat(new String(getSync(webTestClient, "/articles/" + DEFAULT_ARTICLE_ID, sid)
+            .getResponseBody()))
+            .contains("newHello");
     }
 
     @Test
@@ -161,7 +165,7 @@ public class CommentControllerTests {
             .expectHeader().valueMatches("Location", ".*/articles/\\d*");
 
         // Then
-        assertThat(new String(getSync(webTestClient, "/articles/" + DEFAULT_ARTICLE_ID, null)
+        assertThat(new String(getSync(webTestClient, "/articles/" + DEFAULT_ARTICLE_ID, sid)
             .getResponseBody()))
             .contains("hello1");
     }
