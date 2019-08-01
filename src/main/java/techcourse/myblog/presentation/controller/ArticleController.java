@@ -1,7 +1,5 @@
 package techcourse.myblog.presentation.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +15,6 @@ import java.util.List;
 
 @Controller
 public class ArticleController {
-    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
-
     private final ArticleService articleService;
     private final CommentService commentService;
 
@@ -72,12 +68,4 @@ public class ArticleController {
         articleService.removeById(articleId);
         return redirectView;
     }
-
-//    @DeleteMapping("/articles/{articleId}")
-//    public RedirectView deleteArticle(@PathVariable Long articleId) {
-//        RedirectView redirectView = new RedirectView("/");
-//        commentService.removeByArticle(articleId);
-//        articleService.removeById(articleId);
-//        return redirectView;
-//    }
 }

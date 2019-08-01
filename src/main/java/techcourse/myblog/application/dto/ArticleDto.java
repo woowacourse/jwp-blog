@@ -14,6 +14,14 @@ public class ArticleDto {
         this.contents = contents;
     }
 
+    public boolean matchEmail(String email) {
+        return author.matchEmail(email);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -26,8 +34,8 @@ public class ArticleDto {
         return contents;
     }
 
-    public Long getId() {
-        return id;
+    public UserResponseDto getAuthor() {
+        return author;
     }
 
     public void setId(Long id) {
@@ -46,15 +54,7 @@ public class ArticleDto {
         this.contents = contents;
     }
 
-    public UserResponseDto getAuthor() {
-        return author;
-    }
-
     public void setAuthor(UserResponseDto author) {
         this.author = author;
-    }
-
-    public boolean matchEmail(String email) {
-        return author.matchEmail(email);
     }
 }

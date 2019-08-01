@@ -10,27 +10,27 @@ public class CommentDto {
         this.contents = contents;
     }
 
-    public String getContents() {
-        return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
+    public Boolean matchAuthor(String sessionEmail) {
+        return getAuthor().matchEmail(sessionEmail);
     }
 
     public Long getId() {
         return id;
     }
 
+    public String getContents() {
+        return contents;
+    }
+
     public UserResponseDto getAuthor() {
         return author;
     }
 
-    public void setAuthor(UserResponseDto user) {
-        this.author = user;
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 
-    public Boolean matchAuthor(String sessionEmail) {
-        return getAuthor().matchEmail(sessionEmail);
+    public void setAuthor(UserResponseDto user) {
+        this.author = user;
     }
 }

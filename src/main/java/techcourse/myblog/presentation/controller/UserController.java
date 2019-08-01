@@ -37,13 +37,6 @@ public class UserController {
         return redirectView;
     }
 
-    @GetMapping("/users")
-    public ModelAndView readUsers() {
-        ModelAndView modelAndView = new ModelAndView("user-list");
-        modelAndView.addObject("users", userService.findAll());
-        return modelAndView;
-    }
-
     @PostMapping("/login")
     public RedirectView login(HttpServletRequest request, @Valid LoginDto loginDto) {
         userService.login(loginDto);

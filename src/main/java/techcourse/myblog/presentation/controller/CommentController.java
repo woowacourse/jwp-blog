@@ -33,13 +33,13 @@ public class CommentController {
     public ModelAndView deleteComment(@PathVariable Long commentId, @PathVariable Long articleId) {
         commentService.delete(commentId);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/articles/"+articleId));
+        modelAndView.setView(new RedirectView("/articles/" + articleId));
         return modelAndView;
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
     public RedirectView updateComment(CommentDto commentDto, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId) {
         commentService.modify(commentId, commentDto);
-        return new RedirectView("/articles/"+articleId);
+        return new RedirectView("/articles/" + articleId);
     }
 }
