@@ -72,7 +72,6 @@ public class ArticleController {
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticleById(@PathVariable long articleId) {
-        commentService.deleteByArticle(articleService.findById(articleId));
         articleService.deleteById(articleId);
         return "redirect:/";
     }
