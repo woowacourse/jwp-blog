@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.service.dto.user.UserRequest;
 import techcourse.myblog.service.dto.user.UserResponse;
 import techcourse.myblog.service.user.UserService;
@@ -31,10 +30,8 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public ModelAndView showSignUp() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("signup");
-        return modelAndView;
+    public String showSignUp() {
+        return "signup";
     }
 
     @GetMapping("/users")
@@ -45,15 +42,12 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ModelAndView registerUsers(@Valid final UserRequest userRequest, final BindingResult bindingResult) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String registerUsers(@Valid final UserRequest userRequest, final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("/signup");
-            return modelAndView;
+            return "signup";
         }
         userService.save(userRequest);
-        modelAndView.setView(new RedirectView("/login"));
-        return modelAndView;
+        return "redirect:/login";
     }
 
     @GetMapping("/mypage")
@@ -66,20 +60,16 @@ public class UserController {
     }
 
     @DeleteMapping("/mypage")
-    public ModelAndView deleteUser(final HttpSession session) {
+    public String deleteUser(final HttpSession session) {
         UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
         userService.delete(user);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/logout"));
-        return modelAndView;
+        return "redirect:/logout";
     }
 
     @GetMapping("/logout")
-    public ModelAndView logOut(final HttpServletRequest request) {
+    public String logOut(final HttpServletRequest request) {
         request.getSession().removeAttribute(USER_SESSION_KEY);
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/"));
-        return modelAndView;
+        return "redirect:/";
     }
 
     @GetMapping("/mypage/mypage-edit")
@@ -92,11 +82,9 @@ public class UserController {
     }
 
     @PutMapping("/mypage/mypage-edit")
-    public ModelAndView editMyPage(final HttpSession session, final String name) {
+    public String editMyPage(final HttpSession session, final String name) {
         UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
         session.setAttribute(USER_SESSION_KEY, userService.update(user.getEmail(), name));
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/mypage"));
-        return modelAndView;
+        return "redirect:/mypage";
     }
 }
