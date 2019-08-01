@@ -28,12 +28,11 @@ public class User extends Auditable {
     public User() {
     }
 
-    public User(long userId, String name, String email, String password) {
+    public User(String name, String email, String password) {
         validateName(name);
         validateEmail(email);
         validatePassword(password);
 
-        this.userId = userId;
         this.name = name;
         this.email = email;
         this.password = password;

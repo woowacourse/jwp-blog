@@ -33,8 +33,7 @@ public class Article extends Auditable {
     public Article() {
     }
 
-    public Article(long id, String title, String coverUrl, String contents, User author) {
-        this.id = id;
+    public Article(String title, String coverUrl, String contents, User author) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;

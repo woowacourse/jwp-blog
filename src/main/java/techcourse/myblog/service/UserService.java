@@ -67,7 +67,7 @@ public class UserService {
 
     @Transactional
     public User update(UserDto userDto) {
-        User updatedUser = new User(userDto.getUserId(), userDto.getName(), userDto.getEmail(), userDto.getPassword());
+        User updatedUser = new User(userDto.getName(), userDto.getEmail(), userDto.getPassword());
         User user = userRepository.findUserByEmail(updatedUser.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
         return user.update(updatedUser);

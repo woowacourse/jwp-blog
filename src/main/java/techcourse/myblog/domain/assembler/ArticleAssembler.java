@@ -27,6 +27,6 @@ public class ArticleAssembler {
     }
 
     public static Article writeArticle(ArticleDto articleDto, User user) {
-        return new Article(articleDto.getArticleId(), articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents(), user);
+        return new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents(), user);
     }
 }

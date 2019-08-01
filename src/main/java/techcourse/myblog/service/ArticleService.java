@@ -46,8 +46,7 @@ public class ArticleService {
     public Article update(ArticleDto articleDto, User user) {
         Article article = getArticleById(articleDto.getArticleId());
         article.checkCorrespondingAuthor(user);
-        Article updatedArticle = new Article(articleDto.getArticleId(), articleDto.getTitle(),
-                articleDto.getCoverUrl(), articleDto.getContents(), user);
+        Article updatedArticle = new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents(), user);
         return article.update(updatedArticle);
     }
 
