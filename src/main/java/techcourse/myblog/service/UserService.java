@@ -72,9 +72,6 @@ public class UserService {
 
     public boolean delete(User user) {
         if (user != null) {
-            articleRepository
-                    .findAllByAuthor(user)
-                    .forEach(articleRepository::delete);
             userRepository.delete(user);
             return true;
         }
