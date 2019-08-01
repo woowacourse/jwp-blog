@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import static techcourse.myblog.service.article.ArticleAssembler.convertToEntity;
 
 @Service
+@Transactional
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
@@ -32,6 +33,7 @@ public class ArticleService {
         this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<ArticleResponseDto> findAll() {
         List<Article> articles = articleRepository.findAll();
 
@@ -40,12 +42,14 @@ public class ArticleService {
                 .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     public ArticleResponseDto findById(final Long id) {
         return articleRepository.findById(Objects.requireNonNull(id))
                 .map(ArticleAssembler::convertToDto)
                 .orElseThrow(ArticleNotFoundException::new);
     }
 
+    @Transactional(readOnly = true)
     public UserResponseDto findAuthor(final Long id) {
         return UserAssembler.convertToDto(articleRepository.findById(id)
                 .orElseThrow(ArticleNotFoundException::new)
@@ -60,7 +64,6 @@ public class ArticleService {
         return persistArticle.getId();
     }
 
-    @Transactional
     public void update(final Long id, final ArticleRequestDto articleDTO) {
         Objects.requireNonNull(articleDTO);
         articleRepository.findById(Objects.requireNonNull(id))

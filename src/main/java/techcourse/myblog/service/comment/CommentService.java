@@ -33,28 +33,31 @@ public class CommentService {
     }
 
     public CommentResponseDto save(final CommentRequestDto commentRequestDto, final Long userId, final Long articleId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new);
+        User user = userRepository.findById(userId)
+            .orElseThrow(UserNotFoundException::new);
+        Article article = articleRepository.findById(articleId)
+            .orElseThrow(ArticleNotFoundException::new);
         Comment comment = convertToEntity(commentRequestDto, user, article);
         Comment persistComment = commentRepository.save(comment);
         return convertToDto(persistComment);
     }
 
     public CommentResponseDto update(final CommentRequestDto commentRequestDto, final Long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(CommentNotFoundException::new);
         comment.update(commentRequestDto.getComment());
         return convertToDto(comment);
     }
 
     public void delete(final Long id) {
         commentRepository.findById(id)
-                .orElseThrow(CommentNotFoundException::new);
+            .orElseThrow(CommentNotFoundException::new);
         commentRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
     public CommentResponseDto findById(final Long id) {
         return convertToDto(commentRepository.findById(id)
-                .orElseThrow(CommentNotFoundException::new));
+            .orElseThrow(CommentNotFoundException::new));
     }
 }
