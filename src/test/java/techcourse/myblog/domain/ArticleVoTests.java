@@ -2,7 +2,8 @@ package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.dto.request.UserDto;
+import techcourse.myblog.domain.vo.article.ArticleVo;
+import techcourse.myblog.domain.vo.user.UserSignUpInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,12 +16,8 @@ class ArticleVoTests {
 	@BeforeEach
 	void setUp() {
 		articleVo = new ArticleVo("title", "contents", "coverUrl");
-		UserDto userDto = new UserDto();
-		userDto.setUsername("tiber");
-		userDto.setPassword("asdfASDF1@");
-		userDto.setEmail("tiber@naver.com");
-
-		user = new User(userDto);
+		UserSignUpInfo userSignUpInfo = new UserSignUpInfo("tiber", "asdfASDF1@", "tiber@naver.com");
+		user = userSignUpInfo.valueOfUser();
 	}
 
 	@Test

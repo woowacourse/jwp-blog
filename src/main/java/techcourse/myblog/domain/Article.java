@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import javax.persistence.*;
 
+import techcourse.myblog.domain.vo.article.ArticleVo;
+
 @Entity
 public class Article {
 	@Id

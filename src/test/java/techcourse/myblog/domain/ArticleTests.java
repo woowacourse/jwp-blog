@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.domain.vo.article.ArticleVo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

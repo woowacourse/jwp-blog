@@ -2,7 +2,7 @@ package techcourse.myblog.web;
 
 import javax.servlet.http.HttpSession;
 
-import techcourse.myblog.domain.ArticleVo;
+import techcourse.myblog.domain.vo.article.ArticleVo;
 import techcourse.myblog.service.ArticleService;
 
 import org.springframework.stereotype.Controller;

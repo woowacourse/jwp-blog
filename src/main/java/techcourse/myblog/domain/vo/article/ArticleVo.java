@@ -1,4 +1,7 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.vo.article;
+
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 
 public class ArticleVo {
 	private String title;

@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleVo;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.vo.article.ArticleVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
