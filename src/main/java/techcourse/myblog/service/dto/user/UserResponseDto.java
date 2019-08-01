@@ -8,7 +8,6 @@ public class UserResponseDto {
     private String name;
 
     public UserResponseDto(final Long id, final String email, final String name) {
-        Objects.requireNonNull(id);
         Objects.requireNonNull(email);
         Objects.requireNonNull(name);
 

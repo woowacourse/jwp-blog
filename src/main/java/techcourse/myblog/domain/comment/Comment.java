@@ -4,6 +4,7 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Comment {
@@ -44,5 +45,18 @@ public class Comment {
 
     public void update(String contents) {
         this.contents = contents;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(id, comment.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
