@@ -48,13 +48,6 @@ public class Comment {
         return this;
     }
 
-    public void updateArticle(Article article) {
-        this.article = article;
-        if (!article.getSortedComments().contains(this)) {
-            article.getSortedComments().add(this);
-        }
-    }
-
     public void checkOwner(User user) {
         if (!this.author.equals(user)) {
             throw new MisMatchAuthorException("댓글을 작성한 유저만 수정할 수 있습니다.");

@@ -52,7 +52,12 @@ public class Article {
     public void addComment(Comment comment) {
         this.comments.add(comment);
         if (comment.getArticle() != this) {
-            comment.updateArticle(this);
+            Comment commentWithArticleUpdated = new Comment(
+                    comment.getContents(),
+                    comment.getAuthor(),
+                    this
+            );
+            comment.update(commentWithArticleUpdated);
         }
     }
 
