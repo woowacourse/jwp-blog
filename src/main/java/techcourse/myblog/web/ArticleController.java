@@ -69,7 +69,8 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleDto articleDto, HttpSession httpSession, Model model) {
+    public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleDto articleDto,
+                              HttpSession httpSession, Model model) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
 
         articleService.editArticle(articleDto, articleId, userResponse);
@@ -80,8 +81,8 @@ public class ArticleController {
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable("articleId") long articleId, HttpSession httpSession) {
-        UserResponse userResponse = (UserResponse)httpSession.getAttribute("user");
-        
+        UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
+
         articleService.deleteById(articleId, userResponse);
 
         return "redirect:/";

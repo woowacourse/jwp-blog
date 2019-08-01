@@ -20,15 +20,18 @@ public class CommentService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
 
-    public CommentService(CommentRepository commentRepository, ArticleRepository articleRepository, UserRepository userRepository) {
+    public CommentService(CommentRepository commentRepository, ArticleRepository articleRepository,
+                          UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.articleRepository = articleRepository;
         this.userRepository = userRepository;
     }
 
     public void save(CommentRequest commentRequest, Long articleId, Long userId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NoArticleException("게시글이 존재하지 않습니다."));
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new NoArticleException("게시글이 존재하지 않습니다."));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
 
         Comment comment = new Comment(commentRequest.getContents(), user, article);
 
@@ -40,7 +43,8 @@ public class CommentService {
     }
 
     public Comment findCommentById(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("존재하지 않는 댓글입니다."));
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException("존재하지 않는 댓글입니다."));
     }
 
     public void deleteComment(Long commentId, UserResponse userResponse) {

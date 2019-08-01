@@ -2,14 +2,14 @@ package techcourse.myblog.application;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserRequest;
 import techcourse.myblog.application.dto.UserResponse;
 import techcourse.myblog.application.exception.EditException;
 import techcourse.myblog.application.exception.LoginException;
 import techcourse.myblog.application.exception.NoUserException;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.support.encrytor.EncryptHelper;
 
 import javax.transaction.Transactional;
@@ -68,7 +68,8 @@ public class UserService {
 
     @Transactional
     public UserResponse editUserName(Long userId, String name) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoUserException("존재하지 않는 회원입니다!"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoUserException("존재하지 않는 회원입니다!"));
         changeName(name, user);
         return modelMapper.map(user, UserResponse.class);
     }

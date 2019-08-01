@@ -84,7 +84,8 @@ public class UserController {
     }
 
     @PutMapping("/users/{userId}")
-    public String editUser(@PathVariable("userId") Long userId, @Valid UserEditRequest userEditRequest, BindingResult bindingResult, HttpServletRequest request) {
+    public String editUser(@PathVariable("userId") Long userId, @Valid UserEditRequest userEditRequest,
+                           BindingResult bindingResult, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             return "mypage-edit";
         }
