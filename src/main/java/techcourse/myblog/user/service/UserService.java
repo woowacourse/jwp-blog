@@ -63,6 +63,10 @@ public class UserService {
     }
 
     public void deleteById(long userId) {
-        userRepository.deleteById(userId);
+        try {
+            userRepository.deleteById(userId);
+        } catch (Exception e) {
+            throw new NotFoundUserException(userId);
+        }
     }
 }
