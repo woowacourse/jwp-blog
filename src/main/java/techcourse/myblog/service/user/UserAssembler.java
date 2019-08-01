@@ -1,26 +1,27 @@
 package techcourse.myblog.service.user;
 
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.dto.user.UserRequestDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.dto.user.UserRequest;
+import techcourse.myblog.service.dto.user.UserResponse;
 
 import java.util.Objects;
 
 public class UserAssembler {
-    public static UserResponseDto convertToDto(final User user) {
+    public static UserResponse convertToDto(final User user) {
         Objects.requireNonNull(user);
 
+        Long id = user.getId();
         String email = user.getEmail();
         String name = user.getName();
-        return new UserResponseDto(email, name);
+        return new UserResponse(id, email, name);
     }
 
-    public static User convertToEntity(final UserRequestDto userRequestDto) {
-        Objects.requireNonNull(userRequestDto);
+    public static User convertToEntity(final UserRequest userRequest) {
+        Objects.requireNonNull(userRequest);
 
-        String email = userRequestDto.getEmail();
-        String name = userRequestDto.getName();
-        String password = userRequestDto.getPassword();
+        String email = userRequest.getEmail();
+        String name = userRequest.getName();
+        String password = userRequest.getPassword();
         return new User(email, name, password);
     }
 }

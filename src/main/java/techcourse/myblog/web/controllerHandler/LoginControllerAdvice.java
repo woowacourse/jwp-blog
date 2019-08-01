@@ -6,14 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import techcourse.myblog.exception.EmailNotFoundException;
 import techcourse.myblog.exception.InvalidPasswordException;
+import techcourse.myblog.exception.UserNotFoundException;
 
 @ControllerAdvice
 public class LoginControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(LoginControllerAdvice.class);
 
-    @ExceptionHandler(EmailNotFoundException.class)
+    @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public String emailNotFound() {
         log.debug("이메일이 없습니다.");

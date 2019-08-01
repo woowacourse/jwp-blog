@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.Objects;
 
-public class UserRequestDto {
+public class UserRequest {
     @NotBlank(message = "이메일을 작성해 주세요.")
     @Email(message = "이메일 형식을 지켜주세요.")
     private String email;
@@ -20,7 +20,7 @@ public class UserRequestDto {
             message = "비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요.")
     private String password;
 
-    public UserRequestDto(final String email, final String name, final String password) {
+    public UserRequest(final String email, final String name, final String password) {
         Objects.requireNonNull(email);
         Objects.requireNonNull(name);
         Objects.requireNonNull(password);

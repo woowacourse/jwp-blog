@@ -14,7 +14,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String name;
 
     @Column(nullable = false)
@@ -29,6 +29,21 @@ public class User {
         this.password = Objects.requireNonNull(password);
     }
 
+    public void update(final String name) {
+        if (Objects.isNull(name)) {
+            throw new NameToUpdateNotFoundException("수정할 이름이 존재하지 않습니다.");
+        }
+        this.name = name;
+    }
+
+    public boolean match(final String email) {
+        return this.email.equals(email);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -41,26 +56,16 @@ public class User {
         return password;
     }
 
-    public void update(final String name) {
-        if (Objects.isNull(name)) {
-            throw new NameToUpdateNotFoundException("수정할 이름이 존재하지 않습니다.");
-        }
-        this.name = name;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(password, user.password);
+        return Objects.equals(id, user.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, name, password);
+        return Objects.hash(id);
     }
 }

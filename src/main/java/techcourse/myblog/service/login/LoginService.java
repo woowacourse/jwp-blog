@@ -3,10 +3,10 @@ package techcourse.myblog.service.login;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.presentation.UserRepository;
-import techcourse.myblog.service.dto.user.UserResponseDto;
-import techcourse.myblog.exception.EmailNotFoundException;
 import techcourse.myblog.exception.InvalidPasswordException;
+import techcourse.myblog.exception.UserNotFoundException;
+import techcourse.myblog.presentation.UserRepository;
+import techcourse.myblog.service.dto.user.UserResponse;
 
 import java.util.Objects;
 
@@ -21,9 +21,9 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
-    public UserResponseDto findByEmailAndPassword(final String email, final String password) {
+    public UserResponse findByEmailAndPassword(final String email, final String password) {
         User retrieveUser = userRepository.findByEmail(Objects.requireNonNull(email))
-                .orElseThrow(EmailNotFoundException::new);
+                .orElseThrow(UserNotFoundException::new);
         validatePassword(Objects.requireNonNull(password), retrieveUser);
         return convertToDto(retrieveUser);
     }
@@ -32,5 +32,9 @@ public class LoginService {
         if (!user.getPassword().equals(password)) {
             throw new InvalidPasswordException("틀린 비밀번호입니다.");
         }
+    }
+
+    public UserResponse findByEmail(String email) {
+        return convertToDto(userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new));
     }
 }

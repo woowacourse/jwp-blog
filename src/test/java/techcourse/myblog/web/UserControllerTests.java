@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,24 +28,13 @@ public class UserControllerTests {
 
     @BeforeEach
     void setUp() {
-        name = "done";
-        email = "done@woowa.com";
-        password = "12345678";
-        jSessionId = getJSessionId(name, email, password);
+        name = "john";
+        email = "john123@example.com";
+        password = "p@ssW0rd";
+        jSessionId = getJSessionId(email, password);
     }
 
-    private String getJSessionId(String userName, String email, String password) {
-        webTestClient.post().uri("/users")
-                .body(BodyInserters
-                        .fromFormData("name", userName)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/.*")
-                .expectBody()
-                .returnResult();
-
+    private String getJSessionId(String email, String password) {
         EntityExchangeResult<byte[]> loginResult = webTestClient.post().uri("/users/login")
                 .body(BodyInserters
                         .fromFormData("email", email)
@@ -73,15 +61,6 @@ public class UserControllerTests {
                 .split("=")[1];
     }
 
-    @AfterEach
-    void tearDown() {
-        webTestClient.delete().uri("/mypage")
-                .cookie("JSESSIONID", jSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/logout");
-    }
-
     @Test
     void 회원가입_화면_이동_확인() {
         webTestClient.get().uri("/signup")
@@ -104,16 +83,28 @@ public class UserControllerTests {
 
     @Test
     void 회원등록_확인() {
-        String newJSessionId = getJSessionId("done", "newEmail@gmail.com", "12345678");
+        webTestClient.post().uri("/users")
+                .body(BodyInserters
+                        .fromFormData("name", "done")
+                        .with("email", "newEmail@gmail.com")
+                        .with("password", "12345678"))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("Location", ".*/.*")
+                .expectBody()
+                .returnResult();
+
+        String newJSessionId = getJSessionId("newEmail@gmail.com", "12345678");
 
         webTestClient.delete().uri("/mypage")
                 .cookie("JSESSIONID", newJSessionId)
-                .exchange();
+                .exchange()
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
     void 로그아웃_확인() {
-        String newJSessionId = getJSessionId("done", "newEmail@woowa.com", "12345678");
+        String newJSessionId = getJSessionId(email, password);
 
         webTestClient.get().uri("/logout")
                 .cookie("JSESSIONID", newJSessionId)
@@ -142,7 +133,18 @@ public class UserControllerTests {
 
     @Test
     void 회원탈퇴_확인() {
-        String newJSessionId = getJSessionId("done", "newEmail@woowa.com", "12345678");
+        webTestClient.post().uri("/users")
+                .body(BodyInserters
+                        .fromFormData("name", "done")
+                        .with("email", "newEmail@gmail.com")
+                        .with("password", "12345678"))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("Location", ".*/.*")
+                .expectBody()
+                .returnResult();
+
+        String newJSessionId = getJSessionId("newEmail@gmail.com", "12345678");
 
         webTestClient.delete().uri("/mypage")
                 .cookie("JSESSIONID", newJSessionId)
