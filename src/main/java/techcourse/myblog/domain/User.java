@@ -20,7 +20,13 @@ public class User {
 	private String githubUrl;
 	private String facebookUrl;
 
-	public User() {
+	private User() {
+	}
+
+	public User(UserDto userDto) {
+		this.username = userDto.getUsername();
+		this.password = userDto.getPassword();
+		this.email = userDto.getEmail();
 	}
 
 	public void saveUser(UserDto userDto) {
@@ -61,10 +67,6 @@ public class User {
 
 	public Long getId() {
 		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public boolean matchUser(User user) {

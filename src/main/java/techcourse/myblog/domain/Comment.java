@@ -30,7 +30,7 @@ public class Comment {
 	@JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
 	private Article article;
 
-	public Comment() {
+	private Comment() {
 	}
 
 	public Comment(String contents) {

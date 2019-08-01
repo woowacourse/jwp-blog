@@ -24,7 +24,7 @@ public class UserService {
 		if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
 			throw new AlreadyExistEmailException();
 		}
-		User user = new User();
+		User user = userDto.valueOfUser();
 		user.saveUser(userDto);
 		userRepository.save(user);
 	}

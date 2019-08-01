@@ -20,7 +20,7 @@ public class Article {
 	@JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
 	private User author;
 
-	public Article() {
+	private Article() {
 	}
 
 	public Article(String title, String contents, String coverUrl) {
@@ -65,10 +65,6 @@ public class Article {
 
 	public Long getId() {
 		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public User getAuthor() {

@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
+import techcourse.myblog.domain.User;
 
 public class UserDto {
 	public static final String BLANK_NAME = "이름을 입력해주세요.";
@@ -47,12 +48,7 @@ public class UserDto {
 		this.email = email;
 	}
 
-	@Override
-	public String toString() {
-		return "UserDto{" +
-				"username='" + username + '\'' +
-				", password='" + password + '\'' +
-				", email='" + email + '\'' +
-				'}';
+	public User valueOfUser() {
+		return new User(this);
 	}
 }
