@@ -20,7 +20,7 @@ public class SnsInfo {
     private long snsCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_sns_to_user"))
     private User user;
 
     public SnsInfo() {
@@ -33,7 +33,7 @@ public class SnsInfo {
         this.snsCode = snsCode;
     }
 
-    public void updateSnsInfo(String snsFacebookEmail) {
-        this.email = snsFacebookEmail;
+    public void updateSnsInfo(SnsInfo snsInfo) {
+        this.email = snsInfo.getEmail();
     }
 }

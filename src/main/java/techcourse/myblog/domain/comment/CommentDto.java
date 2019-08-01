@@ -8,6 +8,7 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleDto;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserDto;
+import techcourse.myblog.domain.user.UserInfoDto;
 
 @Getter
 @Setter
@@ -29,7 +30,7 @@ public class CommentDto {
     public static CommentDto from(Comment comment) {
         return CommentDto.builder()
                 .contents(comment.getContents())
-                .author(UserDto.from(comment.getAuthor()))
+                .author(UserInfoDto.from(comment.getAuthor()))
                 .build();
     }
 

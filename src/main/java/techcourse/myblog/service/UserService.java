@@ -2,9 +2,7 @@ package techcourse.myblog.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserDto;
-import techcourse.myblog.domain.user.UserRepository;
+import techcourse.myblog.domain.user.*;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -23,22 +21,26 @@ public class UserService {
         this.snsInfoService = snsInfoService;
     }
 
-    public UserDto findUser(UserDto userDto) {
-        Optional<User> maybeUser = userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
-        return maybeUser.map(UserDto::from)
-                .orElseThrow(() -> new IllegalArgumentException("아이디, 비밀번호 확인!"));
+    public UserDto findByUserDto(UserDto userDto) {
+        Optional<User> maybeUser = userRepository.findByEmailAndPassword(userDto.toEntity().getEmail(), userDto.toEntity().getPassword());
+        if (maybeUser.isPresent()) {
+            List<SnsInfo> snsInfos = snsInfoService.findByUserId(maybeUser.get().getId());
+            return UserInfoDto.fromWithSNS(maybeUser.get(), snsInfos);
+        }
+
+        throw new IllegalArgumentException("아이디, 비밀번호 확인!");
     }
 
-    public UserDto findByUserId(long userId) {
-        Optional<User> maybeUser = userRepository.findById(userId);
-        return maybeUser.map(UserDto::from)
+    public UserDto findByUserEmail(UserDto userDto) {
+        Optional<User> maybeUser = userRepository.findByEmail(userDto.toEntity().getEmail());
+        return maybeUser.map(UserInfoDto::from)
                 .orElseThrow(() -> new IllegalArgumentException("없는 유저!"));
     }
 
     public UserDto create(UserDto userDto) {
         try {
             User user = userRepository.save(userDto.toEntity());
-            return UserDto.from(user);
+            return UserInfoDto.from(user);
         } catch (Exception e) {
             throw new IllegalArgumentException("회원 가입 오류!");
         }
@@ -46,37 +48,24 @@ public class UserService {
 
     public List<UserDto> readAll() {
         List<UserDto> users = new ArrayList<>();
-        userRepository.findAll().forEach(user -> users.add(UserDto.from(user)));
+        userRepository.findAll().forEach(user -> users.add(UserInfoDto.from(user)));
 
         return users;
     }
 
-    public UserDto readWithoutPasswordById(long id) {
-        Optional<User> maybeUser = userRepository.findById(id);
-        return maybeUser.map(UserDto::fromWithoutPassword)
-                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
-    }
-
     @Transactional
-    public UserDto updateUser(long id, UserDto userDto) {
-        Optional<User> maybeFindUser = userRepository.findById(id);
+    public UserDto update(UserDto userDto, UserInfoDto userInfoDto) {
+        Optional<User> maybeFindUser = userRepository.findById(userDto.toEntity().getId());
         if (maybeFindUser.isPresent()) {
-            updateInfo(userDto, maybeFindUser.get());
-
-            Optional<User> user = userRepository.findById(id);
-            return UserDto.fromWithoutPassword(user.get());
+            maybeFindUser.get().updateInfo(userInfoDto.toEntity());
+            snsInfoService.update(userInfoDto, maybeFindUser.get());
+            return findByUserDto(userInfoDto);
         }
         throw new IllegalArgumentException("업데이트 할 수 없습니다.");
     }
 
-    private void updateInfo(UserDto userDto, User user) {
-        user.updateInfo(userDto.toEntity());
-
-        snsInfoService.updateSnsInfo(1, userDto.getSnsGithubEmail(), user);
-        snsInfoService.updateSnsInfo(0, userDto.getSnsFacebookEmail(), user);
-    }
-
-    public void deleteById(long id) {
+    public void deleteById(UserDto userDto) {
+        long id = userDto.toEntity().getId();
         snsInfoService.deleteByUserId(id);
         userRepository.deleteById(id);
     }

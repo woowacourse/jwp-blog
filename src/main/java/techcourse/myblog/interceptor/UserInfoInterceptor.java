@@ -19,16 +19,15 @@ public class UserInfoInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         HttpSession session = request.getSession();
-        Object userId = session.getAttribute("userId");
+        Object userDto = session.getAttribute("userId");
 
         if (modelAndView != null) {
             modelAndView.getModel().remove("userInfo");
         }
 
-        if (userId != null && modelAndView != null) {
-            UserDto userDto = userService.readWithoutPasswordById((long) userId);
-
-            modelAndView.getModel().put("userInfo", userDto);
+        if (userDto != null && modelAndView != null) {
+            UserDto findUserDto = userService.findByUserEmail((UserDto) userDto);
+            modelAndView.getModel().put("userInfo", findUserDto);
         }
     }
 }

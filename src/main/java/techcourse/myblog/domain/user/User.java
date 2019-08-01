@@ -6,10 +6,7 @@ import lombok.Getter;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Entity
 @Getter
@@ -25,9 +22,6 @@ public class User {
     @Pattern(regexp = "^[A-Za-zㄱ-ㅎ|ㅏ-ㅣ|가-힣]{2,10}$")
     private String name;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<SnsInfo> snsInfos;
-
     public User() {
     }
 
@@ -39,40 +33,12 @@ public class User {
         this.password = password;
     }
 
-    public void addSns(String snsEmail, Long snsCode) {
-        if (snsInfos == null) {
-            snsInfos = new ArrayList();
-        }
-        snsInfos.add(SnsInfo.builder()
-                .snsCode(snsCode)
-                .email(snsEmail)
-                .user(this).build());
-    }
-
-    public String getSnsEmailBySnsCode(long snsCode) {
-        Optional<SnsInfo> maybeSnsInfo = getSnsInfo(snsCode);
-
-        if (maybeSnsInfo.isPresent()) {
-            return maybeSnsInfo.get().getEmail();
-        }
-        return null;
-    }
-
-    public Optional<SnsInfo> getSnsInfo(long snsCode) {
-        if (snsInfos == null) {
-            return Optional.empty();
-        }
-        return snsInfos.stream()
-                .filter(snsInfo -> snsCode == snsInfo.getSnsCode())
-                .findFirst();
-    }
-
     public void updateInfo(User user) {
         this.name = user.getName();
     }
 
-    public void deleteSnsInfo(SnsInfo snsInfo) {
-        snsInfos.remove(snsInfo);
+    public boolean checkAuthor(long checkingId) {
+        return id == checkingId;
     }
 
     @Override
@@ -82,7 +48,6 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
-                ", snsInfos=" + snsInfos +
                 '}';
     }
 
@@ -94,12 +59,11 @@ public class User {
         return id == user.id &&
                 Objects.equals(email, user.email) &&
                 Objects.equals(password, user.password) &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(snsInfos, user.snsInfos);
+                Objects.equals(name, user.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, name, snsInfos);
+        return Objects.hash(id, email, password, name);
     }
 }

@@ -17,17 +17,15 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     private final UserService userService;
-    private final CommentService commentService;
 
     @Autowired
-    public ArticleService(ArticleRepository articleRepository, UserService userService, CommentService commentService) {
+    public ArticleService(ArticleRepository articleRepository, UserService userService) {
         this.articleRepository = articleRepository;
         this.userService = userService;
-        this.commentService = commentService;
     }
 
-    public long createArticle(ArticleDto articleDto, long userId) {
-        UserDto userDto = userService.findByUserId(userId);
+    public long createArticle(ArticleDto articleDto, UserDto userDto) {
+        userService.findByUserEmail(userDto);
         articleDto.setUserDto(userDto);
         Article article = articleRepository.save(articleDto.toEntity());
         return article.getId();
@@ -40,9 +38,9 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleDto updateByArticle(long articleId, ArticleDto articleDto, long userId) {
-        checkAuthor(articleId, userId);
+    public ArticleDto updateByArticle(long articleId, ArticleDto articleDto, UserDto userDto) {
         Optional<Article> maybeArticle = articleRepository.findById(articleId);
+        checkAuthor(articleId, userDto);
         if (maybeArticle.isPresent()) {
             maybeArticle.get().update(articleDto.toEntity());
 
@@ -52,9 +50,8 @@ public class ArticleService {
     }
 
     @Transactional
-    public void deleteById(long articleId, long userId) {
-        checkAuthor(articleId, userId);
-        commentService.deleteByArticleId(articleId);
+    public void deleteById(long articleId, UserDto userDto) {
+        checkAuthor(articleId, userDto);
         articleRepository.deleteById(articleId);
     }
 
@@ -66,9 +63,10 @@ public class ArticleService {
         return new ArticleDtos(articleRepository.findByCategoryId(categoryId)).getArticleDtos();
     }
 
-    private void checkAuthor(long articleId, long userId) {
+    private void checkAuthor(long articleId, UserDto userDto) {
+        UserDto findUserDto = userService.findByUserEmail(userDto);
         articleRepository.findById(articleId).ifPresent(article -> {
-            if (article.getId() != userId) {
+            if (findUserDto.toEntity().checkAuthor(article.getId())) {
                 throw new IllegalArgumentException("허가되지 않은 사용자입니다.");
             }
         });

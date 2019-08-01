@@ -29,7 +29,6 @@ public class RootController {
 
     @GetMapping("/")
     public String index(Model model) {
-        log.debug("index");
         List<ArticleDto> articles = articleService.readAll();
         List<CategoryDto> categories = categoryService.readAll();
 

@@ -46,7 +46,7 @@ class UserServiceTest {
     @Test
     void 유저_조회() {
         when(userRepository.findByEmailAndPassword(email, password)).thenReturn(Optional.of(userDto.toEntity()));
-        assertThat(userService.findUser(userDto)).isEqualTo(userDto);
+        assertThat(userService.findByUserDto(userDto)).isEqualTo(userDto);
     }
 
     @Test
@@ -74,7 +74,7 @@ class UserServiceTest {
     void 유저_업데이트() {
         when(userRepository.findById(userId)).thenReturn(Optional.of(userDto.toEntity()));
         doNothing().when(snsInfoRepository).deleteById(userId);
-        userService.updateUser(userId, userDto);
+        userService.update(userId, userDto);
         verify(userRepository, times(2)).findById(userId);
     }
 

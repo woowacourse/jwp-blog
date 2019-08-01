@@ -17,11 +17,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     private final ArticleService articleService;
+    private final UserService userService;
 
-    @Autowired
-    public CommentService(CommentRepository commentRepository, ArticleService articleService) {
+    public CommentService(CommentRepository commentRepository, ArticleService articleService, UserService userService) {
         this.commentRepository = commentRepository;
         this.articleService = articleService;
+        this.userService = userService;
     }
 
     public void create(long articleId, CommentDto commentDto, UserDto userDto) {
@@ -30,20 +31,21 @@ public class CommentService {
     }
 
     @Transactional
-    public void update(long commentId, CommentDto commentDto, long userId) {
-        checkAuthor(commentId, userId);
+    public void update(long commentId, CommentDto commentDto, UserDto userDto) {
+        checkAuthor(commentId, userDto);
         Comment comment = commentRepository.findById(commentId).get();
         comment.update(commentDto.toEntity());
     }
 
-    public void delete(long commentId, long userId) {
-        checkAuthor(commentId, userId);
+    public void delete(long commentId, UserDto userDto) {
+        checkAuthor(commentId, userDto);
         commentRepository.deleteById(commentId);
     }
 
-    private void checkAuthor(long commentId, long userId) {
+    private void checkAuthor(long commentId, UserDto userDto) {
+        UserDto findUserDto = userService.findByUserEmail(userDto);
         commentRepository.findById(commentId).ifPresent(comment -> {
-            if (comment.getAuthor().getId() != userId) {
+            if (findUserDto.toEntity().checkAuthor(commentId)) {
                 throw new IllegalArgumentException("허가되지 않은 사용자입니다.");
             }
         });

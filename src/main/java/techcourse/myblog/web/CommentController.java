@@ -27,7 +27,7 @@ public class CommentController {
 
     @PostMapping("/comments/{articleId}")
     public String save(CommentDto commentDto, @PathVariable long articleId, HttpSession session) {
-        UserDto userDto = userService.findByUserId(getUserId(session));
+        UserDto userDto = userService.findByUserEmail(getUserInfo(session));
         commentService.create(articleId, commentDto, userDto);
 
         return "redirect:/articles/" + articleId;
@@ -36,19 +36,19 @@ public class CommentController {
     @Transactional
     @PutMapping("/comments/{articleId}/{commentId}")
     public String update(CommentDto commentDto, @PathVariable long articleId, @PathVariable long commentId, HttpSession session) {
-        commentService.update(commentId, commentDto, getUserId(session));
+        commentService.update(commentId, commentDto, getUserInfo(session));
 
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/comments/{articleId}/{commentId}")
     public String delete(@PathVariable long articleId, @PathVariable long commentId, HttpSession session) {
-        commentService.delete(commentId, getUserId(session));
+        commentService.delete(commentId, getUserInfo(session));
 
         return "redirect:/articles/" + articleId;
     }
 
-    private long getUserId(HttpSession session) {
-        return (long) session.getAttribute("userId");
+    private UserDto getUserInfo(HttpSession session) {
+        return (UserDto) session.getAttribute(UserController.LOGIN_SESSION);
     }
 }
