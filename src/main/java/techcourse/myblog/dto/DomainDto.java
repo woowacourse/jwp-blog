@@ -1,5 +1,5 @@
 package techcourse.myblog.dto;
 
-public interface DtoUtils<T> {
+public interface DomainDto<T> {
     T toDomain();
 }

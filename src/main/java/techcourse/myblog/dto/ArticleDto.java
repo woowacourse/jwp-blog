@@ -8,7 +8,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 
 @Getter
-public class ArticleDto implements DtoUtils<Article> {
+public class ArticleDto implements DomainDto<Article> {
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;
 
@@ -18,9 +18,9 @@ public class ArticleDto implements DtoUtils<Article> {
     @NotBlank(message = "내용을 입력해주세요.")
     private String contents;
 
-    public ArticleDto(String title, String url, String contents) {
+    public ArticleDto(String title, String coverUrl, String contents) {
         this.title = title;
-        this.coverUrl = url;
+        this.coverUrl = coverUrl;
         this.contents = contents;
     }
 

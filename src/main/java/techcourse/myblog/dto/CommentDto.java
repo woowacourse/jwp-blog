@@ -8,7 +8,7 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 
 @Getter
-public class CommentDto implements DtoUtils<Comment> {
+public class CommentDto implements DomainDto<Comment> {
     @NotBlank(message = "내용을 입력해주세요.")
     private String contents;
 

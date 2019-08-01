@@ -8,7 +8,7 @@ import lombok.Getter;
 import techcourse.myblog.domain.User;
 
 @Getter
-public class UserDto implements DtoUtils<User> {
+public class UserDto implements DomainDto<User> {
     @NotBlank(message = "이름을 입력해주세요",
             groups={UserInfo.class})
     @Pattern(regexp = "[^ \\-!@#$%^&*(),.?\":{}|<>0-9]{2,10}",
