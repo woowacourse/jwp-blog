@@ -4,6 +4,7 @@ public class CommentDto {
     private long id;
     private String contents;
     private String author;
+    private String createdDate;
 
     public long getId() {
         return id;
@@ -27,5 +28,13 @@ public class CommentDto {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 }

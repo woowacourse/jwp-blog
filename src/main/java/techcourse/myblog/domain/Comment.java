@@ -48,4 +48,8 @@ public class Comment extends Auditable {
     public String getAuthor() {
         return author.getName();
     }
+
+    public String getCreatedDate() {
+        return createdDate.toString();
+    }
 }

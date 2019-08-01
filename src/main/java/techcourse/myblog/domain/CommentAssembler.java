@@ -12,6 +12,7 @@ public class CommentAssembler {
         commentDto.setId(comment.getId());
         commentDto.setContents(comment.getContents());
         commentDto.setAuthor(comment.getAuthor());
+        commentDto.setCreatedDate(comment.getCreatedDate());
 
         return commentDto;
     }

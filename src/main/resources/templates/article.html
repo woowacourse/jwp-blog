@@ -78,7 +78,7 @@
                                 <span class="text-bold inline-block" th:text="${commentDto.author}"></span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
+                                    <span th:text="${commentDto.createdDate}">6 min ago</span>
                                 </span>
                                 <p class="width-80" th:text="${commentDto.contents}"></p>
                                 <div th:id="comment+${commentDto.id}" style="display: none;">

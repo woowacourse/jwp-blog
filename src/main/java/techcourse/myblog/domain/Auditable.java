@@ -14,9 +14,9 @@ import java.util.Date;
 public class Auditable<U> {
     @CreatedDate
     @Column(name = "created_date")
-    private Date createdDate;
+    Date createdDate;
 
     @LastModifiedDate
     @Column(name = "last_modified_date")
-    private Date lastModifiedDate;
+    Date lastModifiedDate;
 }
