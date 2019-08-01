@@ -20,11 +20,14 @@ import static techcourse.myblog.util.SessionKeys.USER;
 
 @Slf4j
 @Controller
-@RequiredArgsConstructor
 public class UserController {
     private static final String SUCCESS_SIGN_UP_MESSAGE = "회원 가입이 완료되었습니다!";
     private static final String ERROR_MISMATCH_PASSWORD_MESSAGE = "비밀번호가 일치하지 않습니다!";
     private final UserService userService;
+
+    public UserController(final UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/users")
     public String signUp(UserSaveRequestDto userSaveRequestDto, RedirectAttributes redirectAttributes) {

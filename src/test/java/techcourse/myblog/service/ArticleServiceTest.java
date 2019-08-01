@@ -34,11 +34,8 @@ class ArticleServiceTest {
                 .build();
         userService.save(author);
 
-        article = articleService.save(Article.builder()
-                .title("title")
-                .coverUrl("coverUrl")
-                .contents("contents")
-                .build(), author);
+        ArticleSaveRequestDto articleSaveRequestDto = new ArticleSaveRequestDto("title", "coverUrl", "contents");
+        article = articleService.save(articleSaveRequestDto, author);
     }
 
     @Test
@@ -55,7 +52,9 @@ class ArticleServiceTest {
                 .coverUrl("newCoverUrl")
                 .contents("newContents")
                 .build();
-        Article savedArticle = articleService.save(newArticle, author);
+
+        ArticleSaveRequestDto articleSaveRequestDto = new ArticleSaveRequestDto("newTitle", "newCoverUrl", "newContents");
+        Article savedArticle = articleService.save(articleSaveRequestDto, author);
 
         assertThat(savedArticle.getTitle()).isEqualTo(newArticle.getTitle());
         assertThat(savedArticle.getCoverUrl()).isEqualTo(newArticle.getCoverUrl());
@@ -72,10 +71,7 @@ class ArticleServiceTest {
 
     @Test
     void update() {
-        ArticleSaveRequestDto articleSaveRequestDto = new ArticleSaveRequestDto();
-        articleSaveRequestDto.setTitle("newTitle");
-        articleSaveRequestDto.setCoverUrl("newCoverUrl");
-        articleSaveRequestDto.setContents("newContents");
+        ArticleSaveRequestDto articleSaveRequestDto = new ArticleSaveRequestDto("newTitle", "newCoverUrl", "newContents");
         Long id = article.getId();
 
         articleService.update(articleSaveRequestDto, id);
@@ -88,12 +84,9 @@ class ArticleServiceTest {
 
     @Test
     void deleteById() {
-        Article newArticle = Article.builder()
-                .title("newTitle")
-                .coverUrl("newCoverUrl")
-                .contents("newContents")
-                .build();
-        Article savedArticle = articleService.save(newArticle, author);
+        ArticleSaveRequestDto articleSaveRequestDto = new ArticleSaveRequestDto("newTitle", "newCoverUrl", "newContents");
+
+        Article savedArticle = articleService.save(articleSaveRequestDto, author);
         Long id = savedArticle.getId();
 
         articleService.deleteById(id);

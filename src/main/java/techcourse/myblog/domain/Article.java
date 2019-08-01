@@ -2,7 +2,6 @@ package techcourse.myblog.domain;
 
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
-import techcourse.myblog.dto.ArticleSaveRequestDto;
 
 import javax.persistence.*;
 
@@ -45,7 +44,7 @@ public class Article {
         this.contents = article.contents;
     }
 
-    public void setAuthor(User user) {
-        this.author = user;
+    public boolean isAuthor(User user) {
+        return author.equals(user);
     }
 }

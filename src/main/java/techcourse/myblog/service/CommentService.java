@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
@@ -15,10 +14,14 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
     private final ArticleService articleService;
+
+    public CommentService(final CommentRepository commentRepository, final ArticleService articleService) {
+        this.commentRepository = commentRepository;
+        this.articleService = articleService;
+    }
 
     public Comment save(CommentSaveRequestDto commentSaveRequestDto, User user) {
         Long articleId = commentSaveRequestDto.getArticleId();
@@ -47,12 +50,14 @@ public class CommentService {
         return comment.getArticle().getId();
     }
 
-    private Comment findById(Long id) {
+    public Comment findById(Long id) {
         return commentRepository.findById(id)
                 .orElseThrow(CommentNotFoundException::new);
     }
 
-    public void deleteById(Long id) {
+    @Transactional
+    public boolean deleteById(Long id) {
         commentRepository.deleteById(id);
+        return !commentRepository.findById(id).isPresent();
     }
 }

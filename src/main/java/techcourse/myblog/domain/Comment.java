@@ -33,11 +33,11 @@ public class Comment {
         this.article = article;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public void update(String editedContents) {
         this.contents = editedContents;
+    }
+
+    public boolean isAuthor(User author) {
+        return user.equals(author);
     }
 }

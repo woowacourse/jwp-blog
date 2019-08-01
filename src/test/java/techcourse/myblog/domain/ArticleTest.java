@@ -38,7 +38,7 @@ class ArticleTest {
         articleSaveRequestDto.setCoverUrl("newCoverUrl");
         articleSaveRequestDto.setContents("newContents");
 
-        article.update(articleSaveRequestDto);
+        article.update(articleSaveRequestDto.toArticle());
 
         assertThat(article.getTitle()).isEqualTo("newTitle");
         assertThat(article.getCoverUrl()).isEqualTo("newCoverUrl");

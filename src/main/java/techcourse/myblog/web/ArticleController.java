@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +19,14 @@ import static techcourse.myblog.util.SessionKeys.USER;
 @Slf4j
 @Controller
 @RequestMapping("/articles")
-@RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
     private final CommentService commentService;
+
+    public ArticleController(final ArticleService articleService, final CommentService commentService) {
+        this.articleService = articleService;
+        this.commentService = commentService;
+    }
 
     @GetMapping("/writing")
     public String writeArticleForm() {
@@ -33,7 +36,7 @@ public class ArticleController {
     @PostMapping
     public String saveArticle(ArticleSaveRequestDto articleSaveRequestDto, HttpSession httpSession) {
         log.info("save article post request params={}", articleSaveRequestDto);
-        Article article = articleService.save(articleSaveRequestDto.toEntity(), (User) httpSession.getAttribute(USER));
+        Article article = articleService.save(articleSaveRequestDto, (User) httpSession.getAttribute(USER));
         Long id = article.getId();
         return "redirect:/articles/" + id;
     }
@@ -51,10 +54,8 @@ public class ArticleController {
     @GetMapping("/{id}/edit")
     public String editArticle(@PathVariable long id, Model model, HttpSession httpSession) {
         Article article = articleService.findById(id);
-        User user = (User) httpSession.getAttribute(USER);
-        User author = article.getAuthor();
 
-        if (!user.equals(author)) {
+        if (!isUserEqualsAuthor(id, httpSession)) {
             return "redirect:/articles/" + id;
         }
         model.addAttribute("article", article);
@@ -62,17 +63,31 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public String saveEditedArticle(@PathVariable long id, ArticleSaveRequestDto articleSaveRequestDto) {
+    public String saveEditedArticle(@PathVariable long id, ArticleSaveRequestDto articleSaveRequestDto, HttpSession httpSession) {
         log.info("save edited article post request params={}", articleSaveRequestDto);
-        articleService.update(articleSaveRequestDto, id);
+
+        if (isUserEqualsAuthor(id, httpSession)) {
+            articleService.update(articleSaveRequestDto, id);
+        }
         return "redirect:/articles/" + id;
     }
 
     @DeleteMapping("/{id}")
     public String deleteArticle(@PathVariable long id, HttpSession httpSession) {
         log.info("delete article delete request id={}", id);
-//        if(httpSession.getAttribute(USER)==articleService.)
-        articleService.deleteById(id);
+
+        if (!isUserEqualsAuthor(id, httpSession)) {
+            return "redirect:/";
+        }
+        if(!articleService.deleteById(id)) {
+            return "redirect:/";
+        }
         return "redirect:/";
+    }
+
+    private boolean isUserEqualsAuthor(long id, HttpSession httpSession) {
+        Article article = articleService.findById(id);
+        User user = (User) httpSession.getAttribute(USER);
+        return article.isAuthor(user);
     }
 }

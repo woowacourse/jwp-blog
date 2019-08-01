@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
@@ -13,10 +12,13 @@ import javax.transaction.Transactional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class UserService {
     private static final String ERROR_DUPLICATE_EMAIL_MESSAGE = "이미 가입된 이메일 주소입니다!";
     private final UserRepository userRepository;
+
+    public UserService(final UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public User save(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {

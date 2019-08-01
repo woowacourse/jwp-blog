@@ -1,6 +1,5 @@
 package techcourse.myblog.web;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +14,12 @@ import static techcourse.myblog.util.SessionKeys.USER;
 
 @Slf4j
 @Controller
-@RequiredArgsConstructor
 public class LoginController {
     private final LoginService loginService;
+
+    public LoginController(final LoginService loginService) {
+        this.loginService = loginService;
+    }
 
     @GetMapping("/login")
     public String showLoginPage() {
