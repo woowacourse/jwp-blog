@@ -10,7 +10,6 @@ import techcourse.myblog.web.controller.LoginFailedException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,10 +21,6 @@ public class UserReadService {
     @Autowired
     public UserReadService(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    public Optional<User> findByEmailAndPassword(UserDto user) {
-        return userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword());
     }
 
     public User login(UserDto userDto) {

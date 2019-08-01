@@ -3,12 +3,13 @@ package techcourse.myblog.service;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.common.UserCommonServiceTests;
+import techcourse.myblog.web.controller.LoginFailedException;
 
 import java.util.Arrays;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 public class UserReadServiceTests extends UserCommonServiceTests {
@@ -17,8 +18,9 @@ public class UserReadServiceTests extends UserCommonServiceTests {
         given(userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword()))
                 .willReturn(Optional.of(user));
 
-        assertTrue(userReadService.findByEmailAndPassword(new UserDto("", user.getEmail(), "Passw0rd!")).isPresent());
-        assertFalse(userReadService.findByEmailAndPassword(new UserDto("", "e@mail.com", "Passw0rd!")).isPresent());
+        assertDoesNotThrow(() -> userReadService.login(new UserDto("", user.getEmail(), "Passw0rd!")));
+        assertThrows(LoginFailedException.class, () ->
+                userReadService.login(new UserDto("", "e@mail.com", "Passw0rd!")));
     }
 
     @Test
