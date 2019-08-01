@@ -2,31 +2,18 @@ package techcourse.myblog.application.converter;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class Converter<T, U> {
-    private final Function<T, U> fromDto;
-    private final Function<U, T> fromEntity;
+public interface Converter<T, S, U> {
+    U convertFromDto(final T dto);
 
-    Converter(final Function<T, U> fromDto, final Function<U, T> fromEntity) {
-        this.fromDto = fromDto;
-        this.fromEntity = fromEntity;
-    }
+    S convertFromEntity(final U entity);
 
-    public final U convertFromDto(final T dto) {
-        return fromDto.apply(dto);
-    }
-
-    public final T convertFromEntity(final U entity) {
-        return fromEntity.apply(entity);
-    }
-
-    public final List<U> createFromDtos(final Collection<T> dtos) {
+    default List<U> createFromDtos(final Collection<T> dtos) {
         return dtos.stream().map(this::convertFromDto).collect(Collectors.toList());
     }
 
-    public final List<T> createFromEntities(final Collection<U> entities) {
+    default List<S> createFromEntities(final Collection<U> entities) {
         return entities.stream().map(this::convertFromEntity).collect(Collectors.toList());
     }
 }

@@ -17,9 +17,7 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession(false);
-        log.info(session == null ? "session is null" : "email is null");
         if(session == null || session.getAttribute("email") == null){
-            log.info("Interceptor Session : " + session.getAttribute("email"));
             response.sendRedirect("/login");
             FlashMap flashMap = new FlashMap();
             flashMap.put("errormessage", "로그인이 필요합니다.");
@@ -27,7 +25,6 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
             flashMapManager.saveOutputFlashMap(flashMap, request, response);
             return false;
         }
-        log.info("Session is not null");
 
         return true;
     }

@@ -1,5 +1,7 @@
 package techcourse.myblog.presentation.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -9,14 +11,14 @@ import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.ArticleService;
 import techcourse.myblog.application.service.CommentService;
-import techcourse.myblog.domain.User;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
 public class ArticleController {
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
+
     private final ArticleService articleService;
     private final CommentService commentService;
 
@@ -37,16 +39,20 @@ public class ArticleController {
     @GetMapping("/articles/{articleId}")
     public ModelAndView readArticlePageByArticleId(@PathVariable Long articleId, HttpSession httpSession) {
         ModelAndView modelAndView = new ModelAndView("/article");
-        modelAndView.addObject("article", articleService.findById(articleId));
+        ArticleDto article = articleService.findById(articleId);
         String sessionEmail = (String) httpSession.getAttribute("email");
-        List<CommentDto> check = commentService.findAllCommentsByArticleId(articleId, sessionEmail);
-        modelAndView.addObject("comments", commentService.findAllCommentsByArticleId(articleId, sessionEmail));
+        modelAndView.addObject("article", article);
+        modelAndView.addObject("isAuthor", articleService.matchAuthor(article, sessionEmail));
+        List<CommentDto> comments = commentService.findAllCommentsByArticleId(articleId);
+        List<Boolean> checkAuthor = commentService.matchAuthor(comments, sessionEmail);
+        modelAndView.addObject("comments", comments);
+        modelAndView.addObject("checkCommentsAuthor", checkAuthor);
         return modelAndView;
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public ModelAndView readArticleEditPage(@PathVariable Long articleId, HttpSession httpSession) {
-        articleService.checkAuthor(articleId, (String)httpSession.getAttribute("email"));
+        articleService.matchAuthor(articleId, (String) httpSession.getAttribute("email"));
         ModelAndView modelAndView = new ModelAndView("/article-edit");
         modelAndView.addObject("article", articleService.findById(articleId));
         modelAndView.addObject("method", "put");

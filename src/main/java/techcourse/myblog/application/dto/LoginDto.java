@@ -18,10 +18,6 @@ public class LoginDto {
         this.password = password;
     }
 
-    public static LoginDto of(UserDto userDto) {
-        return new LoginDto(userDto.getEmail(), userDto.getPassword());
-    }
-
     public String getEmail() {
         return email;
     }

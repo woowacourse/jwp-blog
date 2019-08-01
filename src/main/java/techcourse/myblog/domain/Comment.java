@@ -26,10 +26,17 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(String contents, User author, Article article) {
+    public Comment(String contents) {
         this.contents = contents;
+    }
+
+    public void init(User author, Article article) {
         this.author = author;
         this.article = article;
+    }
+
+    public void changeContent(CommentDto commentDto) {
+        contents = commentDto.getContents();
     }
 
     public long getId() {
@@ -51,9 +58,5 @@ public class Comment {
     @Override
     public String toString() {
         return "Comment{" + contents + "}";
-    }
-
-    public void changeContent(CommentDto commentDto) {
-        contents = commentDto.getContents();
     }
 }

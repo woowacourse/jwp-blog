@@ -2,6 +2,7 @@ package techcourse.myblog.domain;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import techcourse.myblog.application.dto.ArticleDto;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -28,7 +29,6 @@ public class Article {
         private String title;
         private String coverUrl;
         private String contents;
-        private User author;
 
         public ArticleBuilder title(String title) {
             this.title = title;
@@ -45,11 +45,6 @@ public class Article {
             return this;
         }
 
-        public ArticleBuilder author(User author) {
-            this.author = author;
-            return this;
-        }
-
         public Article build() {
             return new Article(this);
         }
@@ -59,18 +54,20 @@ public class Article {
         this.title = articleBuilder.title;
         this.coverUrl = articleBuilder.coverUrl;
         this.contents = articleBuilder.contents;
-        this.author = articleBuilder.author;
     }
 
-    public Article(Long id, String title, String coverUrl, String contents, User author) {
+    public Article(Long id, String title, String coverUrl, String contents) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+    }
+
+    public void init(User author) {
         this.author = author;
     }
 
-    public void modify(Article article) {
+    public void modify(ArticleDto article) {
         this.title = article.getTitle();
         this.coverUrl = article.getCoverUrl();
         this.contents = article.getContents();

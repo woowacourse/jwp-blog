@@ -16,6 +16,7 @@ import techcourse.myblog.domain.CommentRepository;
 import techcourse.myblog.domain.User;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -38,24 +39,29 @@ public class CommentService {
 
     @Transactional
     public void save(CommentDto commentDto, Long articleId, String sessionEmail) {
-        Article article = articleService.findById(articleId);
+        Article article = articleService.findArticleById(articleId);
         User user = userService.findUserByEmail(sessionEmail);
-        commentDto.setArticle(article);
-        commentDto.setAuthor(user);
 
-        commentRepository.save(commentConverter.convertFromDto(commentDto));
+        Comment comment = commentConverter.convertFromDto(commentDto);
+        comment.init(user, article);
+
+        commentRepository.save(comment);
     }
 
-    public List<CommentDto> findAllCommentsByArticleId(Long articleId, String sessionEmail) {
-        Article article = articleService.findById(articleId);
+    @Transactional(readOnly = true)
+    public List<CommentDto> findAllCommentsByArticleId(Long articleId) {
+        Article article = articleService.findArticleById(articleId);
         List<Comment> comments = commentRepository.findByArticle(article);
-        List<CommentDto> commentDtos = commentConverter.createFromEntities(comments);
-        for (CommentDto commentDto : commentDtos) {
-            commentDto.matchAuthor(sessionEmail);
-        }
-        return commentDtos;
+        return commentConverter.createFromEntities(comments);
     }
 
+    public List<Boolean> matchAuthor(List<CommentDto> commentDtos, String sessionEmail) {
+        return commentDtos.stream()
+                .map(commentDto -> commentDto.matchAuthor(sessionEmail))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public void delete(long commentId) {
         commentRepository.deleteById(commentId);
     }

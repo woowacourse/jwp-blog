@@ -1,11 +1,10 @@
 package techcourse.myblog.application.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.converter.ArticleConverter;
+import techcourse.myblog.application.converter.UserConverter;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
 import techcourse.myblog.application.service.exception.NotMatchAuthorException;
@@ -17,9 +16,8 @@ import java.util.List;
 
 @Service
 public class ArticleService {
-    private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
-
     private final ArticleConverter articleConverter = ArticleConverter.getInstance();
+    private final UserConverter userConverter = UserConverter.getInstance();
     private final ArticleRepository articleRepository;
     private final UserService userService;
 
@@ -31,16 +29,24 @@ public class ArticleService {
 
     @Transactional
     public Long save(ArticleDto articleDto, String email) {
-        User user = userService.findUserByEmail(email);
-        articleDto.setAuthor(user);
+        User author = userService.findUserByEmail(email);
+        Article article = articleConverter.convertFromDto(articleDto);
+        article.init(author);
 
-        return articleRepository.save(articleConverter.convertFromDto(articleDto)).getId();
+        return articleRepository.save(article).getId();
+    }
+
+    Article findArticleById(Long articleId) {
+        return articleRepository.findById(articleId)
+                .orElseThrow(() -> new NotExistArticleIdException("존재하지 않는 Article 입니다."));
     }
 
     @Transactional(readOnly = true)
-    public Article findById(Long articleId) {
-        return articleRepository.findById(articleId)
-                .orElseThrow(() -> new NotExistArticleIdException("존재하지 않는 Article 입니다."));
+    public ArticleDto findById(Long articleId) {
+        Article article = findArticleById(articleId);
+        ArticleDto articleDto = articleConverter.convertFromEntity(article);
+        articleDto.setAuthor(userConverter.convertFromEntity(article.getAuthor()));
+        return articleDto;
     }
 
     @Transactional
@@ -52,8 +58,7 @@ public class ArticleService {
     public void modify(Long articleId, ArticleDto articleDto) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new NotExistArticleIdException(""));
-
-        article.modify(articleConverter.convertFromDto(articleDto));
+        article.modify(articleDto);
     }
 
     @Transactional(readOnly = true)
@@ -61,13 +66,14 @@ public class ArticleService {
         return articleConverter.createFromEntities(articleRepository.findAll());
     }
 
-    public void checkAuthor(Long articleId, String email) {
-        log.info("article " + findById(articleId));
-        User author = findById(articleId).getAuthor();
-        log.info("author: " + author);
-        log.info("email: " + email);
-        if(!author.compareEmail(email)) {
+    public void matchAuthor(Long articleId, String email) {
+        User author = findArticleById(articleId).getAuthor();
+        if (!author.compareEmail(email)) {
             throw new NotMatchAuthorException("너는 이 글에 작성자가 아니다. 꺼져라!");
         }
+    }
+
+    public boolean matchAuthor(ArticleDto articleDto, String email) {
+        return articleDto.matchEmail(email);
     }
 }

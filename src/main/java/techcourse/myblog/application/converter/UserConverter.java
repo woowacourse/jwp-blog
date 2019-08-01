@@ -1,21 +1,25 @@
 package techcourse.myblog.application.converter;
 
-import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.application.dto.UserRequestDto;
+import techcourse.myblog.application.dto.UserResponseDto;
 import techcourse.myblog.domain.User;
 
-public class UserConverter extends Converter<UserDto, User> {
+public class UserConverter implements Converter<UserRequestDto, UserResponseDto, User> {
     private static UserConverter converter = new UserConverter();
-
-    private UserConverter() {
-        super(userDto -> new User(userDto.getEmail(), userDto.getName(), userDto.getPassword())
-                , user -> {
-                    UserDto userDto = new UserDto(user.getEmail(), user.getName(), user.getPassword());
-                    userDto.setId(user.getId());
-                    return userDto;
-                });
-    }
 
     public static UserConverter getInstance() {
         return converter;
+    }
+
+    @Override
+    public User convertFromDto(UserRequestDto dto) {
+        return new User(dto.getEmail()
+                , dto.getName()
+                , dto.getPassword());
+    }
+
+    @Override
+    public UserResponseDto convertFromEntity(User entity) {
+        return new UserResponseDto(entity.getId(), entity.getEmail(), entity.getName());
     }
 }

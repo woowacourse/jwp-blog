@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import techcourse.myblog.application.dto.UserRequestDto;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -34,7 +36,7 @@ public class User {
         this.password = password;
     }
 
-    public void modify(User user) {
+    public void modify(UserRequestDto user) {
         this.name = user.getName();
         this.password = user.getPassword();
     }

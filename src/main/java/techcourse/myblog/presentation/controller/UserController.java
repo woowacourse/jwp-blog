@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.LoginDto;
-import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.application.dto.UserRequestDto;
 import techcourse.myblog.application.service.UserService;
 import techcourse.myblog.presentation.controller.exception.InvalidUpdateException;
 
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public RedirectView createUser(@Valid UserDto user) {
+    public RedirectView createUser(@Valid UserRequestDto user) {
         RedirectView redirectView = new RedirectView("/login");
         userService.save(user);
         return redirectView;
@@ -83,7 +83,7 @@ public class UserController {
     }
 
     @PutMapping("/mypage/edit")
-    public RedirectView updateUser(HttpSession httpSession, @Valid UserDto user) {
+    public RedirectView updateUser(HttpSession httpSession, @Valid UserRequestDto user) {
         RedirectView redirectView = new RedirectView();
         String email = (String) httpSession.getAttribute("email");
 
@@ -97,7 +97,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public RedirectView deleteUser(HttpSession httpSession, UserDto user) {
+    public RedirectView deleteUser(HttpSession httpSession, UserRequestDto user) {
         RedirectView redirectView = new RedirectView("/");
         String email = (String) httpSession.getAttribute("email");
 
