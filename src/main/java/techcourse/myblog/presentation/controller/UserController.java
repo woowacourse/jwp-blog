@@ -57,7 +57,6 @@ public class UserController {
     public ModelAndView readMyPage(HttpSession httpSession) {
         ModelAndView modelAndView = new ModelAndView();
         String email = (String) httpSession.getAttribute("email");
-        System.out.println(email);
         modelAndView.setViewName("mypage");
         modelAndView.addObject("user", userService.findByEmail(email));
 
