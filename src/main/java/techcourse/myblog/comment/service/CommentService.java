@@ -48,12 +48,13 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    public void update(long commentId, long authorId, CommentUpdateDto commentUpdateDto) {
+    public CommentResponseDto update(long commentId, long authorId, CommentUpdateDto commentUpdateDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundCommentException(commentId));
         if (comment.notMatchAuthorId(authorId)) {
             throw new NotMatchUserException(authorId);
         }
         comment.updateComment(commentUpdateDto.getContents());
+        return modelMapper.map(comment, CommentResponseDto.class);
     }
 
     public boolean deleteById(long commentId, long authorId) {
