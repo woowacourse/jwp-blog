@@ -5,9 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.exception.NotExistCommentException;
-import techcourse.myblog.application.service.exception.NotExistUserIdException;
-import techcourse.myblog.application.service.exception.NotMatchPasswordException;
-import techcourse.myblog.domain.*;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.CommentRepository;
+import techcourse.myblog.domain.User;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,23 +16,30 @@ import java.util.stream.Collectors;
 @Service
 public class CommentService {
     private CommentRepository commentRepository;
-    private UserRepository userRepository;
-    private ArticleRepository articleRepository;
+    private UserService userService;
+    private ArticleService articleService;
 
     @Autowired
-    public CommentService(CommentRepository commentRepository, UserRepository userRepository, ArticleRepository articleRepository) {
+    public CommentService(CommentRepository commentRepository, UserService userService, ArticleService articleService) {
         this.commentRepository = commentRepository;
-        this.userRepository = userRepository;
-        this.articleRepository = articleRepository;
+        this.userService = userService;
+        this.articleService = articleService;
+    }
+
+    private static CommentDto convertComment(Comment comment) {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setId(comment.getId());
+        commentDto.setUserName(comment.getUser().getName());
+        commentDto.setContents(comment.getContents());
+        commentDto.setCreateDateTime(comment.getCreateDateTime());
+        commentDto.setUpdateDateTime(comment.getUpdateDateTime());
+        return commentDto;
     }
 
     @Transactional
     public long save(CommentDto commentDto, String userEmail, long articleId) {
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new NotExistUserIdException("해당 유저가 존재하지 않습니다."));
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new NotMatchPasswordException("해당 게시글이 존재하지 않습니다."));
-
+        User user = userService.findUserByEmail(userEmail);
+        Article article = articleService.findArticleById(articleId);
         Comment comment = new Comment(commentDto.getContents(), user, article);
         return commentRepository.save(comment).getId();
     }
@@ -40,22 +48,13 @@ public class CommentService {
     public List<CommentDto> findAllByArticleId(Long articleId) {
         List<Comment> comments = commentRepository.findAllByArticleId(articleId);
         return comments.stream()
-                .map(comment -> {
-                    CommentDto commentDto = new CommentDto();
-                    commentDto.setId(comment.getId());
-                    commentDto.setUserName(comment.getUser().getName());
-                    commentDto.setContents(comment.getContents());
-                    commentDto.setLocalDate(comment.getLocalDate());
-                    commentDto.setLocalTime(comment.getLocalTime());
-                    return commentDto;
-                }).collect(Collectors.toList());
+                .map(CommentService::convertComment).collect(Collectors.toList());
     }
 
     @Transactional
     public void update(long commentId, CommentDto commentDto) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
-
         comment.modify(commentDto.getContents());
     }
 
@@ -68,7 +67,6 @@ public class CommentService {
     public void findCommentWriter(Long commentId, String email) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
-
         comment.getUser().checkEmail(email);
     }
 }

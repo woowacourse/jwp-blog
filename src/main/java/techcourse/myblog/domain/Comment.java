@@ -1,18 +1,28 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@EqualsAndHashCode(of = "id")
+@Getter
 @Entity
 public class Comment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private LocalDate localDate;
-    private LocalTime localTime;
+
+    @CreationTimestamp
+    private LocalDateTime createDateTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updateDateTime;
+
+    @Lob
     private String contents;
 
     @ManyToOne
@@ -21,12 +31,10 @@ public class Comment {
     @ManyToOne
     private Article article;
 
-    public Comment() {
+    protected Comment() {
     }
 
     public Comment(String contents, User user, Article article) {
-        localDate = LocalDate.now();
-        localTime = LocalTime.now();
         this.contents = contents;
         this.user = user;
         this.article = article;
@@ -34,42 +42,5 @@ public class Comment {
 
     public void modify(String contents) {
         this.contents = contents;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public LocalDate getLocalDate() {
-        return localDate;
-    }
-
-    public LocalTime getLocalTime() {
-        return localTime;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Article getArticle() {
-        return article;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return id == comment.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }
