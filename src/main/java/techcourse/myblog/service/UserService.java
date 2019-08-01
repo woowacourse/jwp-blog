@@ -11,6 +11,7 @@ import techcourse.myblog.service.exception.SignUpException;
 import techcourse.myblog.service.exception.UserDeleteException;
 import techcourse.myblog.service.exception.UserUpdateException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static techcourse.myblog.domain.exception.UserArgumentException.EMAIL_DUPLICATION_MESSAGE;
@@ -63,12 +64,12 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void update(UserPublicInfoDto userPublicInfoDto) {
         try {
             User user = userRepository.findByEmail(userPublicInfoDto.getEmail())
                     .orElseThrow(NotFoundUserException::new);
             user.updateName(userPublicInfoDto.getName());
-            userRepository.save(user);
         } catch (Exception e) {
             throw new UserUpdateException(e.getMessage());
         }
