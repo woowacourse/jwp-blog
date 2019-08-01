@@ -3,8 +3,8 @@ package techcourse.myblog.service;
 import java.util.List;
 
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.request.UserDto;
-import techcourse.myblog.dto.request.UserEditProfileDto;
+import techcourse.myblog.domain.vo.user.UserChangeableInfo;
+import techcourse.myblog.domain.vo.user.UserSignUpInfo;
 import techcourse.myblog.exception.AlreadyExistEmailException;
 import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.exception.NotMatchPasswordException;
@@ -20,12 +20,12 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public void signUp(UserDto userDto) {
-		if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+	public void signUp(UserSignUpInfo userSignUpInfo) {
+		if (userRepository.findByEmail(userSignUpInfo.getEmail()).isPresent()) {
 			throw new AlreadyExistEmailException();
 		}
-		User user = userDto.valueOfUser();
-		user.saveUser(userDto);
+		User user = userSignUpInfo.valueOfUser();
+		user.saveUser(userSignUpInfo);
 		userRepository.save(user);
 	}
 
@@ -46,9 +46,9 @@ public class UserService {
 		userRepository.delete(user);
 	}
 
-	public User editUser(String email, UserEditProfileDto userEditProfileDto) {
+	public User editUser(String email, UserChangeableInfo userChangeableInfo) {
 		User user = findUser(email);
-		user.editUser(userEditProfileDto);
+		user.editUser(userChangeableInfo);
 		userRepository.save(user);
 		return user;
 	}

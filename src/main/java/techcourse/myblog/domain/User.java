@@ -5,8 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import techcourse.myblog.dto.request.UserDto;
-import techcourse.myblog.dto.request.UserEditProfileDto;
+import techcourse.myblog.domain.vo.user.UserBasicInfo;
+import techcourse.myblog.domain.vo.user.UserChangeableInfo;
+import techcourse.myblog.domain.vo.user.UserSignUpInfo;
 
 @Entity
 public class User {
@@ -23,22 +24,27 @@ public class User {
 	private User() {
 	}
 
-	public User(UserDto userDto) {
-		this.username = userDto.getUsername();
-		this.password = userDto.getPassword();
-		this.email = userDto.getEmail();
+	public User(UserSignUpInfo userSignUpInfo) {
+		this.username = userSignUpInfo.getUsername();
+		this.password = userSignUpInfo.getPassword();
+		this.email = userSignUpInfo.getEmail();
 	}
 
-	public void saveUser(UserDto userDto) {
-		this.username = userDto.getUsername();
-		this.password = userDto.getPassword();
-		this.email = userDto.getEmail();
+	public User(UserBasicInfo userBasicInfo) {
+		this.username = userBasicInfo.getUsername();
+		this.email = userBasicInfo.getEmail();
 	}
 
-	public void editUser(UserEditProfileDto userEditProfileDto) {
-		this.username = userEditProfileDto.getUsername();
-		this.githubUrl = userEditProfileDto.getGithubUrl();
-		this.facebookUrl = userEditProfileDto.getFaceBookUrl();
+	public void saveUser(UserSignUpInfo userSignUpInfo) {
+		this.username = userSignUpInfo.getUsername();
+		this.password = userSignUpInfo.getPassword();
+		this.email = userSignUpInfo.getEmail();
+	}
+
+	public void editUser(UserChangeableInfo userChangeableInfo) {
+		this.username = userChangeableInfo.getUsername();
+		this.githubUrl = userChangeableInfo.getGithubUrl();
+		this.facebookUrl = userChangeableInfo.getFaceBookUrl();
 	}
 
 	public boolean matchPassword(String password) {

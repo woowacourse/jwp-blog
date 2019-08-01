@@ -1,4 +1,4 @@
-package techcourse.myblog.dto.request;
+package techcourse.myblog.domain.vo.user;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -7,7 +7,7 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import techcourse.myblog.domain.User;
 
-public class UserDto {
+public class UserBasicInfo {
 	public static final String BLANK_NAME = "이름을 입력해주세요.";
 	public static final String NOT_VALID_EMAIL = "올바른 이메일 주소를 입력해주세요.";
 
@@ -16,36 +16,21 @@ public class UserDto {
 	@Pattern(regexp = "^[a-zA-Z가-힣]+$")
 	private String username;
 
-	@Length(min = 8)
-	@Pattern(regexp = "^(?=.*[\\p{Ll}])(?=.*[\\p{Lu}])(?=.*[\\p{N}])(?=.*[\\p{S}\\p{P}])[\\p{Ll}\\p{Lu}\\p{N}\\p{S}\\p{P}]+$")
-	private String password;
-
 	@NotBlank(message = NOT_VALID_EMAIL)
 	@Email(message = NOT_VALID_EMAIL)
 	private String email;
+
+	public UserBasicInfo(String username, String email) {
+		this.username = username;
+		this.email = email;
+	}
 
 	public String getUsername() {
 		return username;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public String getEmail() {
 		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public User valueOfUser() {

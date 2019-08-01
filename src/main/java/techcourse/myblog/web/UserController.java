@@ -4,9 +4,8 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.request.UserDto;
-import techcourse.myblog.dto.request.UserEditProfileDto;
+import techcourse.myblog.domain.vo.user.UserChangeableInfo;
+import techcourse.myblog.domain.vo.user.UserSignUpInfo;
 import techcourse.myblog.service.UserService;
 
 import org.springframework.stereotype.Controller;
@@ -32,13 +31,11 @@ public class UserController {
 	}
 
 	@PostMapping("/users")
-	public String signUp(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
-		if (bindingResult.hasErrors()) {
-			List<FieldError> errors = bindingResult.getFieldErrors();
-			model.addAttribute("error", errors.get(0).getField() + "입력 오류 입니다.");
+	public String signUp(@Valid UserSignUpInfo userSignUpInfo, BindingResult bindingResult, Model model) {
+		if (confirmBindingErrors(bindingResult, model)) {
 			return "/signup";
 		}
-		userService.signUp(userDto);
+		userService.signUp(userSignUpInfo);
 		return "redirect:/login";
 	}
 
@@ -67,15 +64,12 @@ public class UserController {
 		return "mypage-edit";
 	}
 
-	private boolean getUserInformation(HttpSession httpSession, Model model) {
-		User user = userService.findUser((String) httpSession.getAttribute("email"));
-		model.addAttribute("user", user);
-		return false;
-	}
-
 	@PutMapping("/edit")
-	public String editUser(@Valid UserEditProfileDto userEditProfileDto, HttpSession httpSession) {
-		userService.editUser((String) httpSession.getAttribute("email"), userEditProfileDto);
+	public String editUser(@Valid UserChangeableInfo userChangeableInfo, BindingResult bindingResult, HttpSession httpSession, Model model) {
+		if (confirmBindingErrors(bindingResult, model)) {
+			return "index";
+		}
+		userService.editUser((String) httpSession.getAttribute("email"), userChangeableInfo);
 		return "redirect:/mypage";
 	}
 
@@ -91,5 +85,14 @@ public class UserController {
 		model.addAttribute("result", "회원 탈퇴가 완료되었습니다.");
 		httpSession.invalidate();
 		return "leave-user";
+	}
+
+	private boolean confirmBindingErrors(BindingResult bindingResult, Model model) {
+		if (bindingResult.hasErrors()) {
+			List<FieldError> errors = bindingResult.getFieldErrors();
+			model.addAttribute("error", errors.get(0).getField() + "입력 오류 입니다.");
+			return true;
+		}
+		return false;
 	}
 }

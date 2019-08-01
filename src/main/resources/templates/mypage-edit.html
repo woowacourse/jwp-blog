@@ -74,7 +74,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10" name="email" th:text="${user.email}"></p>
+                                <input accept-charset="utf-8" class="form-control" name="email" readonly th:value="${user.email}"/>
                             </div>
                         </div>
                         <hr>
@@ -137,5 +137,16 @@
     </div>
 </div>
 <th:block th:include="common/js"></th:block>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    var result = /*[[${error}]]*/ '';
+    if(result != null) {
+        alert(error);
+        location.href = "/mypage/edit";
+    }
+
+    /*]]>*/
+</script>
 </body>
 </html>

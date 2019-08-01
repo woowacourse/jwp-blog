@@ -3,8 +3,8 @@ package techcourse.myblog.service;
 import java.util.List;
 
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleVo;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.vo.article.ArticleVo;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.repository.ArticleRepository;
