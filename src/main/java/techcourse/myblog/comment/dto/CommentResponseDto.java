@@ -10,7 +10,7 @@ import techcourse.myblog.user.domain.User;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "id")
 public class CommentResponseDto {
     private long id;
     private String contents;
