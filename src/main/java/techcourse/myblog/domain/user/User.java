@@ -3,15 +3,12 @@ package techcourse.myblog.domain.user;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
-import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.exception.UserArgumentException;
 import techcourse.myblog.domain.exception.UserMismatchException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import static techcourse.myblog.domain.exception.UserArgumentException.*;
@@ -52,12 +49,6 @@ public class User {
 
     @UpdateTimestamp
     private LocalDateTime updateDateTime;
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-    private List<Article> articles;
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-    private List<Comment> comments;
 
     private User() {
     }

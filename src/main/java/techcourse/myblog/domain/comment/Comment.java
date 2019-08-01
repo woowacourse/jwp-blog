@@ -1,6 +1,8 @@
 package techcourse.myblog.domain.comment;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.exception.UserMismatchException;
@@ -27,11 +29,12 @@ public class Comment {
     private LocalDateTime updateDateTime;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
-
 
     private Comment() {
     }
