@@ -8,7 +8,6 @@ import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.exception.DuplicatedIdException;
 import techcourse.myblog.application.service.exception.NotExistUserIdException;
-import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
@@ -56,18 +55,13 @@ public class UserService {
         String requestPassword = loginDto.getPassword();
         User user = findUserByEmail(loginDto.getEmail());
 
-        if (!user.isSamePassword(requestPassword)) {
-            throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
-        }
+        user.checkPassword(requestPassword);
     }
 
     @Transactional
     public void modify(@Valid UserDto userDto, String email) {
         User user = findUserByEmail(userDto.getEmail());
-
-        if (user.isDifferentEmail(email)) {
-            throw new IllegalArgumentException();
-        }
+        user.checkEmail(email);
 
         user.modify(userConverter.convertFromDto(userDto));
     }
@@ -75,10 +69,7 @@ public class UserService {
     @Transactional
     public void removeById(UserDto userDto, String email) {
         User user = findUserByEmail(userDto.getEmail());
-
-        if (user.isDifferentEmail(email)) {
-            throw new IllegalArgumentException();
-        }
+        user.checkEmail(email);
 
         userRepository.delete(user);
     }

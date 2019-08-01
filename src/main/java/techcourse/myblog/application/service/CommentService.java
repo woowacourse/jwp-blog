@@ -69,8 +69,6 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
 
-        if (comment.getUser().isDifferentEmail(email)) {
-            throw new NotExistCommentException("수정 권한이 없습니다.");
-        }
+        comment.getUser().checkEmail(email);
     }
 }

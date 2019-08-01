@@ -34,9 +34,7 @@ public class Article {
     }
 
     public void checkAuthor(String email) {
-        if (user.isDifferentEmail(email)) {
-            throw new IllegalArgumentException();
-        }
+        user.checkEmail(email);
     }
 
     public Long getId() {
