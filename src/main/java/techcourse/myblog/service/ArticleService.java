@@ -34,6 +34,7 @@ public class ArticleService {
         Article article = articleTranslator.toEntity(new Article(), articleDto);
         return articleRepository.save(article);
     }
+
     @Transactional(readOnly = true)
     public List<Article> findAll() {
         return articleRepository.findAll();

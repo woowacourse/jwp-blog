@@ -3,12 +3,12 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.NotExistUserException;
-import techcourse.myblog.exception.NotMatchAuthenticationException;
 import techcourse.myblog.exception.UserLoginInputException;
 import techcourse.myblog.service.AuthService;
 
@@ -29,8 +29,7 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String showLoginForm(@ModelAttribute String errorMessage, Model model) {
-        model.addAttribute("errorMessage", errorMessage);
+    public String showLoginForm(Model model) {
         return "login";
     }
 
@@ -44,13 +43,6 @@ public class AuthController {
         session.setAttribute("user", user);
 
         return new RedirectView("/");
-    }
-
-    @ExceptionHandler({UserLoginInputException.class, NotMatchAuthenticationException.class, NotExistUserException.class})
-    public RedirectView loginException(RedirectAttributes redirectAttributes, Exception exception) {
-        redirectAttributes.addFlashAttribute("errorMessage", exception.getMessage());
-
-        return new RedirectView("/auth/login");
     }
 
     @GetMapping("/logout")

@@ -10,8 +10,6 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.ArticleInputException;
-import techcourse.myblog.exception.ArticleNotFoundException;
-import techcourse.myblog.exception.NotMatchAuthenticationException;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 
@@ -80,11 +78,6 @@ public class ArticleController {
     @DeleteMapping(ARTICLE_DEFAULT_URL + "/{articleId}")
     public RedirectView deleteArticle(@PathVariable Long articleId, HttpSession session) {
         articleService.delete(articleId, (UserDto) session.getAttribute("user"));
-        return new RedirectView("/");
-    }
-
-    @ExceptionHandler({NotMatchAuthenticationException.class, ArticleNotFoundException.class, ArticleInputException.class})
-    public RedirectView articleException(Exception exception) {
         return new RedirectView("/");
     }
 
