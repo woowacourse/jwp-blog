@@ -2,6 +2,7 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.exception.UserArgumentException;
+import techcourse.myblog.domain.exception.UserMismatchException;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
 import techcourse.myblog.service.dto.UserDto;
@@ -76,9 +77,10 @@ public class UserService {
 
     public void delete(Long id, Long loggedInUserId) {
         try {
-            if (id.equals(loggedInUserId)) {
-                userRepository.deleteById(id);
+            if (!id.equals(loggedInUserId)) {
+                throw new UserMismatchException();
             }
+            userRepository.deleteById(id);
         } catch (Exception e) {
             throw new UserDeleteException(e.getMessage());
         }

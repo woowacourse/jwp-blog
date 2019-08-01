@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.CommentRepository;
+import techcourse.myblog.domain.exception.UserMismatchException;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
@@ -58,9 +59,10 @@ public class CommentService {
 
     public void delete(Long userId, Long commentId) {
         Comment comment = findById(commentId);
-        if (comment.matchAuthorId(userId)) {
-            commentRepository.deleteById(commentId);
+        if (!comment.matchAuthorId(userId)) {
+            throw new UserMismatchException();
         }
+        commentRepository.deleteById(commentId);
     }
 
     private CommentResponseDto toCommentResponseDto(Long commentId, Long authorId, String userName, String comment) {

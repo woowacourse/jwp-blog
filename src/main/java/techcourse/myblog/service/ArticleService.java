@@ -3,6 +3,7 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.exception.UserMismatchException;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.exception.NotFoundArticleException;
@@ -51,9 +52,10 @@ public class ArticleService {
     public void delete(Long articleId, Long userId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
-        if (article.matchUserId(userId)) {
-            articleRepository.deleteById(articleId);
+        if (!article.matchUserId(userId)) {
+            throw new UserMismatchException();
         }
+        articleRepository.deleteById(articleId);
     }
 
     private ArticleDto toArticleDto(Article article) {

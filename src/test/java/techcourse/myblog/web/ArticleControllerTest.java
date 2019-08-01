@@ -212,8 +212,7 @@ public class ArticleControllerTest {
                         .with("coverUrl", newCoverUrl)
                         .with("contents", newContents))
                 .exchange()
-                .expectStatus().isFound()
-                .expectHeader().valueMatches("location", ".*/articles/[0-9]+.*");
+                .expectStatus().is5xxServerError();
     }
 
     @Test
@@ -236,12 +235,7 @@ public class ArticleControllerTest {
                 .uri(setUpArticleUrl)
                 .cookie("JSESSIONID", LogInControllerTest.logInAsMismatchUser(webTestClient))
                 .exchange()
-                .expectStatus().isFound();
-
-        webTestClient.get()
-                .uri(setUpArticleUrl)
-                .exchange()
-                .expectStatus().isOk();
+                .expectStatus().is5xxServerError();
     }
 
     @AfterEach

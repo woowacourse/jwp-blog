@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Length;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.exception.UserArgumentException;
+import techcourse.myblog.domain.exception.UserMismatchException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -118,10 +119,11 @@ public class User {
     }
 
     public void updateName(String name, Long userId) {
-        if (this.id.equals(userId)) {
-            checkValidName(name);
-            this.name = name;
+        if (!this.id.equals(userId)) {
+            throw new UserMismatchException();
         }
+        checkValidName(name);
+        this.name = name;
     }
 
     public Long getId() {

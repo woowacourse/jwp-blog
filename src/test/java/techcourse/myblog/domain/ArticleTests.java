@@ -4,9 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleVo;
+import techcourse.myblog.domain.exception.UserMismatchException;
 import techcourse.myblog.domain.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -51,11 +53,8 @@ public class ArticleTests {
         ArticleVo newArticleVo = new ArticleVo("new Title", "new CoverUrl", "new Contents");
         Article article = new Article(user, articleVo);
 
-        article.updateArticle(newArticleVo, MISMATCH_USER_ID);
-
-        assertThat(article.getTitle()).isEqualTo("title");
-        assertThat(article.getCoverUrl()).isEqualTo("url");
-        assertThat(article.getContents()).isEqualTo("contents");
+        assertThatThrownBy(() -> article.updateArticle(newArticleVo, MISMATCH_USER_ID))
+                .isInstanceOf(UserMismatchException.class);
     }
 
 }

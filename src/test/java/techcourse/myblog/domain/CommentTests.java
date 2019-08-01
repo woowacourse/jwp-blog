@@ -4,9 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.exception.UserMismatchException;
 import techcourse.myblog.domain.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,8 +49,7 @@ public class CommentTests {
     void 자신이_작성한_댓글이_아니면_수정되지_않는다() {
         Comment comment = new Comment("comment", user, article);
 
-        comment.updateComment("update comment", MISMATCH_USER_ID);
-
-        assertThat(comment.getComment()).isEqualTo("comment");
+        assertThatThrownBy(() -> comment.updateComment("update comment", MISMATCH_USER_ID))
+                .isInstanceOf(UserMismatchException.class);
     }
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.exception.UserMismatchException;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
@@ -13,6 +14,7 @@ import techcourse.myblog.service.dto.CommentResponseDto;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CommentServiceTest {
@@ -79,9 +81,9 @@ class CommentServiceTest {
         CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
         Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
         CommentRequestDto updateRequestDto = new CommentRequestDto(articleId, "UPDATE Comment");
-        Comment updateComment = commentService.update(MISMATCH_USER_ID, comment.getId(), updateRequestDto);
 
-        assertThat(updateComment.getComment()).isEqualTo("TEST Comment");
+        assertThatThrownBy(() -> commentService.update(MISMATCH_USER_ID, comment.getId(), updateRequestDto))
+                .isInstanceOf(UserMismatchException.class);
     }
 
     @Test
@@ -90,7 +92,7 @@ class CommentServiceTest {
         CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
         Comment comment = commentService.save(BASE_USER_ID, commentRequestDto);
 
-        commentService.delete(MISMATCH_USER_ID, comment.getId());
-        assertThat(commentService.findCommentsByArticleId(articleId).size()).isEqualTo(1);
+        assertThatThrownBy(() -> commentService.delete(MISMATCH_USER_ID, comment.getId()))
+                .isInstanceOf(UserMismatchException.class);
     }
 }

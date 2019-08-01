@@ -3,6 +3,7 @@ package techcourse.myblog.domain.comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.exception.UserMismatchException;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
@@ -46,9 +47,10 @@ public class Comment {
     }
 
     public void updateComment(String comment, Long userId) {
-        if (author.matchId(userId)) {
-            this.comment = comment;
+        if (!author.matchId(userId)) {
+            throw new UserMismatchException();
         }
+        this.comment = comment;
     }
 
     public Long getId() {
