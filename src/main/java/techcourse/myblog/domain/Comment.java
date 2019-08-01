@@ -5,25 +5,34 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@EntityListeners(value = { AuditingEntityListener.class })
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Lob
     private String content;
+
+    @CreatedDate
     @Column(name = "CREATED_AT")
-    private LocalDateTime createdAt;
+    private Date createdAt;
+
     @ManyToOne
     private User user;
+
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
@@ -31,7 +40,6 @@ public class Comment {
     public void initialize(final User user, final Article article) {
         this.user = user;
         this.article = article;
-        createdAt = LocalDateTime.now();
     }
 
     public void update(final String content) {
