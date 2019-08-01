@@ -1,8 +1,11 @@
 package techcourse.myblog.domain;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -21,6 +24,11 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @CreationTimestamp
+    private LocalDateTime createTimeAt;
+    @UpdateTimestamp
+    private LocalDateTime updateTimeAt;
 
     @Transient
     private static final String namePattern = "^[^ \\-!@#$%^&*(),.?\\\":{}|<>0-9]{2,10}$";

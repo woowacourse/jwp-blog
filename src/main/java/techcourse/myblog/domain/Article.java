@@ -1,10 +1,13 @@
 package techcourse.myblog.domain;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.service.MismatchAuthorException;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 public class Article {
@@ -26,6 +29,11 @@ public class Article {
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
+
+    @CreationTimestamp
+    private LocalDateTime createTimeAt;
+    @UpdateTimestamp
+    private LocalDateTime updateTimeAt;
 
     private Article() {
     }
