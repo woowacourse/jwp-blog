@@ -7,7 +7,6 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -31,20 +30,5 @@ public class UserDto {
     }
 
     public UserDto() {
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserDto userDto = (UserDto) o;
-        return Objects.equals(email, userDto.email) &&
-                Objects.equals(name, userDto.name) &&
-                Objects.equals(password, userDto.password);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(email, name, password);
     }
 }
