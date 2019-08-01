@@ -3,6 +3,8 @@ package techcourse.myblog.comment.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.user.domain.User;
 
@@ -24,6 +26,7 @@ public class Comment {
     private User author;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
     @Builder
