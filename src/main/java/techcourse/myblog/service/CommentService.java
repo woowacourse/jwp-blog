@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
@@ -13,7 +14,6 @@ import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.translator.ModelTranslator;
 import techcourse.myblog.translator.UserTranslator;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -38,6 +38,7 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
+    @Transactional(readOnly = true)
     public List<Comment> findAllByArticleId(Long articleId) {
         return commentRepository.findAllByArticleId(articleId);
     }
@@ -52,7 +53,8 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    private Comment findById(final Long commentId, final User user) {
+    @Transactional(readOnly = true)
+    public Comment findById(final Long commentId, final User user) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("해당 댓글을 찾을 수 없습니다"));
         if (!comment.getUser().equals(user)) {
             throw new NotMatchAuthenticationException("권한이 없습니다.");

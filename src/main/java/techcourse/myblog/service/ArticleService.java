@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleDto;
@@ -12,7 +13,6 @@ import techcourse.myblog.translator.ArticleTranslator;
 import techcourse.myblog.translator.ModelTranslator;
 import techcourse.myblog.translator.UserTranslator;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -29,21 +29,17 @@ public class ArticleService {
         this.userTranslator = new UserTranslator();
     }
 
-    public Article create(final ArticleDto articleDto) {
-        Article article = articleTranslator.toEntity(new Article(), articleDto);
-        return articleRepository.save(article);
-    }
-
     public Article create(final ArticleDto articleDto, final UserDto userDto) {
         articleDto.setAuthor(userTranslator.toEntity(new User(), userDto));
         Article article = articleTranslator.toEntity(new Article(), articleDto);
         return articleRepository.save(article);
     }
-
+    @Transactional(readOnly = true)
     public List<Article> findAll() {
         return articleRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Article findById(final Long articleId) {
         return articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("존재하지 않는 게시글 입니다."));
     }

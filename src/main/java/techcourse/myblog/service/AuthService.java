@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.NotExistUserException;
@@ -8,8 +9,6 @@ import techcourse.myblog.exception.NotMatchAuthenticationException;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.translator.ModelTranslator;
 import techcourse.myblog.translator.UserTranslator;
-
-import javax.transaction.Transactional;
 
 @Service
 @Transactional
@@ -22,6 +21,7 @@ public class AuthService {
         this.userTranslator = new UserTranslator();
     }
 
+    @Transactional(readOnly = true)
     public UserDto login(UserDto userDto) {
         User user = userRepository.findByEmail(userDto.getEmail())
                 .orElseThrow(() -> new NotExistUserException("해당 이메일로 가입한 유저가 없습니다."));

@@ -59,8 +59,8 @@ public class UserController {
     public String showMyPage(@PathVariable String email, HttpSession session, Model model) {
         UserDto user = (UserDto) session.getAttribute("user");
 
-        User authenticatedUser = userService.getAuthenticatedUser(email, user.getEmail());
-        model.addAttribute("user", authenticatedUser);
+        UserDto userInfo = userService.getUserInfo(email, user.getEmail());
+        model.addAttribute("user", userInfo);
 
         return "mypage";
     }
@@ -69,8 +69,8 @@ public class UserController {
     public String showMyInfoEdit(@PathVariable String email, HttpSession session, Model model) {
         UserDto user = (UserDto) session.getAttribute("user");
 
-        User authenticatedUser = userService.getAuthenticatedUser(email, user.getEmail());
-        model.addAttribute("user", authenticatedUser);
+        UserDto userInfo = userService.getUserInfo(email, user.getEmail());
+        model.addAttribute("user", userInfo);
 
         return "mypage-edit";
     }
@@ -82,7 +82,7 @@ public class UserController {
         }
 
         UserDto user = (UserDto) session.getAttribute("user");
-        User updatedUser = userService.update(userDto, email, user.getEmail());
+        UserDto updatedUser = userService.update(userDto, email, user.getEmail());
 
         session.setAttribute("username", updatedUser.getName());
         return new RedirectView("/users/" + email);
