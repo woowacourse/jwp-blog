@@ -16,59 +16,59 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
-	private CommentRepository commentRepository;
-	private UserService userService;
-	private ArticleService articleService;
+    private CommentRepository commentRepository;
+    private UserService userService;
+    private ArticleService articleService;
 
-	public CommentService(CommentRepository commentRepository, UserService userService, ArticleService articleService) {
-		this.commentRepository = commentRepository;
-		this.userService = userService;
-		this.articleService = articleService;
-	}
+    public CommentService(CommentRepository commentRepository, UserService userService, ArticleService articleService) {
+        this.commentRepository = commentRepository;
+        this.userService = userService;
+        this.articleService = articleService;
+    }
 
-	public Comment findById(Long id) {
-		return commentRepository.findById(id)
-				.orElseThrow(NotFoundCommentException::new);
-	}
+    public Comment findById(Long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(NotFoundCommentException::new);
+    }
 
-	@Transactional
-	public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
-		Article article = articleService.findById(articleId);
-		return commentRepository.findAllByArticle(article)
-				.stream()
-				.map(comment -> toCommentResponseDto(comment.getId(), comment.getAuthorId(),
-						comment.getAuthorName(), comment.getComment()))
-				.collect(Collectors.toList());
-	}
+    @Transactional
+    public List<CommentResponseDto> findCommentsByArticleId(long articleId) {
+        Article article = articleService.findById(articleId);
+        return commentRepository.findAllByArticle(article)
+                .stream()
+                .map(comment -> toCommentResponseDto(comment.getId(), comment.getAuthorId(),
+                        comment.getAuthorName(), comment.getComment()))
+                .collect(Collectors.toList());
+    }
 
-	public Comment save(UserPublicInfoDto userPublicInfo, CommentRequestDto commentRequestDto) {
-		User user = userService.findByUserPublicInfo(userPublicInfo);
-		Article article = articleService.findById(commentRequestDto.getArticleId());
-		Comment comment = commentRequestDto.toEntity(user, article);
-		return commentRepository.save(comment);
-	}
+    public Comment save(UserPublicInfoDto userPublicInfo, CommentRequestDto commentRequestDto) {
+        User user = userService.findByUserPublicInfo(userPublicInfo);
+        Article article = articleService.findById(commentRequestDto.getArticleId());
+        Comment comment = commentRequestDto.toEntity(user, article);
+        return commentRepository.save(comment);
+    }
 
-	@Transactional
-	public void update(UserPublicInfoDto userPublicInfo, Long commentId, CommentRequestDto commentRequestDto) {
-		Comment comment = findById(commentId);
-		if (matchUserId(userPublicInfo, comment)) {
-			comment.updateComment(commentRequestDto.getComment());
-		}
-	}
+    @Transactional
+    public void update(UserPublicInfoDto userPublicInfo, Long commentId, CommentRequestDto commentRequestDto) {
+        Comment comment = findById(commentId);
+        if (matchUserId(userPublicInfo, comment)) {
+            comment.updateComment(commentRequestDto.getComment());
+        }
+    }
 
-	@Transactional
-	public void delete(UserPublicInfoDto userPublicInfo, Long commentId) {
-		Comment comment = findById(commentId);
-		if (matchUserId(userPublicInfo, comment)) {
-			commentRepository.deleteById(commentId);
-		}
-	}
+    @Transactional
+    public void delete(UserPublicInfoDto userPublicInfo, Long commentId) {
+        Comment comment = findById(commentId);
+        if (matchUserId(userPublicInfo, comment)) {
+            commentRepository.deleteById(commentId);
+        }
+    }
 
-	private boolean matchUserId(UserPublicInfoDto userPublicInfo, Comment comment) {
-		return comment.matchAuthorId(userPublicInfo.getId());
-	}
+    private boolean matchUserId(UserPublicInfoDto userPublicInfo, Comment comment) {
+        return comment.matchAuthorId(userPublicInfo.getId());
+    }
 
-	private CommentResponseDto toCommentResponseDto(Long commentId, Long authorId, String userName, String comment) {
-		return new CommentResponseDto(commentId, authorId, userName, comment);
-	}
+    private CommentResponseDto toCommentResponseDto(Long commentId, Long authorId, String userName, String comment) {
+        return new CommentResponseDto(commentId, authorId, userName, comment);
+    }
 }

@@ -7,15 +7,15 @@ import techcourse.myblog.service.ArticleService;
 
 @Controller
 public class IndexController {
-	private ArticleService articleService;
+    private ArticleService articleService;
 
-	public IndexController(ArticleService articleService) {
-		this.articleService = articleService;
-	}
+    public IndexController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
 
-	@GetMapping("/")
-	public String index(Model model) {
-		model.addAttribute("articles", articleService.findAll());
-		return "index";
-	}
+    @GetMapping("/")
+    public String index(Model model) {
+        model.addAttribute("articles", articleService.findAll());
+        return "index";
+    }
 }

@@ -6,5 +6,5 @@ import techcourse.myblog.domain.article.Article;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-	List<Comment> findAllByArticle(Article article);
+    List<Comment> findAllByArticle(Article article);
 }
