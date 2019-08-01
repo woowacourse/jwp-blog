@@ -26,9 +26,8 @@ public class UserController {
 
     @PostMapping("/users")
     public RedirectView createUser(@Valid UserDto user) {
-        RedirectView redirectView = new RedirectView("/login");
         userService.save(user);
-        return redirectView;
+        return new RedirectView("/login");
     }
 
     @GetMapping("/users")
@@ -42,10 +41,9 @@ public class UserController {
     public RedirectView login(HttpSession httpSession, LoginDto loginDto) {
         userService.login(loginDto);
 
-        RedirectView redirectView = new RedirectView("/");
         httpSession.setAttribute("email", loginDto.getEmail());
         httpSession.setMaxInactiveInterval(600);
-        return redirectView;
+        return new RedirectView("/");
     }
 
     @GetMapping("/logout")
@@ -77,23 +75,20 @@ public class UserController {
 
     @PutMapping("/mypage/edit")
     public RedirectView updateUser(HttpSession httpSession, @Valid UserDto user) {
-        RedirectView redirectView = new RedirectView();
         String email = (String) httpSession.getAttribute("email");
 
         userService.modify(user, email);
 
-        redirectView.setUrl("/mypage");
-        return redirectView;
+        return new RedirectView("/mypage");
     }
 
     @DeleteMapping("/users")
     public RedirectView deleteUser(HttpSession httpSession, @Valid UserDto user) {
-        RedirectView redirectView = new RedirectView("/");
         String email = (String) httpSession.getAttribute("email");
 
         userService.removeById(user, email);
         httpSession.invalidate();
 
-        return redirectView;
+        return new RedirectView("/");
     }
 }
