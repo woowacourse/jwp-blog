@@ -10,6 +10,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Lob
     @Column(nullable = false)
     private String contents;
 

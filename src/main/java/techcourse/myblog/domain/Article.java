@@ -13,12 +13,13 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 50)
     private String title;
 
     @Column(length = 100)
     private String coverUrl;
 
+    @Lob
     private String contents;
 
     @ManyToOne
