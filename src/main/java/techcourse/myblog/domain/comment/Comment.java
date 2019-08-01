@@ -8,13 +8,15 @@ import java.util.Objects;
 
 @Entity
 public class Comment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String contents;
+
     @ManyToOne
     private User author;
+
     @ManyToOne
     private Article article;
 

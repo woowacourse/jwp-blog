@@ -1,9 +1,9 @@
 package techcourse.myblog.service.dto.comment;
 
-public class CommentRequestDto {
+public class CommentRequest {
     private String comment;
 
-    public CommentRequestDto(String comment) {
+    public CommentRequest(String comment) {
         this.comment = comment;
     }
 

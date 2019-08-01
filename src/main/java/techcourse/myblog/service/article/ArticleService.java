@@ -9,9 +9,9 @@ import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.presentation.ArticleRepository;
 import techcourse.myblog.presentation.UserRepository;
-import techcourse.myblog.service.dto.article.ArticleRequestDto;
-import techcourse.myblog.service.dto.article.ArticleResponseDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.dto.article.ArticleRequest;
+import techcourse.myblog.service.dto.article.ArticleResponse;
+import techcourse.myblog.service.dto.user.UserResponse;
 import techcourse.myblog.service.user.UserAssembler;
 
 import java.util.Collections;
@@ -32,7 +32,7 @@ public class ArticleService {
         this.userRepository = userRepository;
     }
 
-    public List<ArticleResponseDto> findAll() {
+    public List<ArticleResponse> findAll() {
         List<Article> articles = articleRepository.findAll();
 
         return Collections.unmodifiableList(articles.stream()
@@ -40,19 +40,19 @@ public class ArticleService {
                 .collect(Collectors.toList()));
     }
 
-    public ArticleResponseDto findById(final Long id) {
+    public ArticleResponse findById(final Long id) {
         return articleRepository.findById(Objects.requireNonNull(id))
                 .map(ArticleAssembler::convertToDto)
                 .orElseThrow(ArticleNotFoundException::new);
     }
 
-    public UserResponseDto findAuthor(final Long id) {
+    public UserResponse findAuthor(final Long id) {
         return UserAssembler.convertToDto(articleRepository.findById(id)
                 .orElseThrow(ArticleNotFoundException::new)
                 .getAuthor());
     }
 
-    public Long save(final ArticleRequestDto articleDTO, final Long authorId) {
+    public Long save(final ArticleRequest articleDTO, final Long authorId) {
         User author = userRepository.findById(authorId)
                 .orElseThrow(UserNotFoundException::new);
         Article article = convertToEntity(articleDTO, author);
@@ -61,7 +61,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public void update(final Long id, final ArticleRequestDto articleDTO) {
+    public void update(final Long id, final ArticleRequest articleDTO) {
         Objects.requireNonNull(articleDTO);
         articleRepository.findById(Objects.requireNonNull(id))
                 .ifPresent((retrieveArticle -> retrieveArticle.update(new Article(

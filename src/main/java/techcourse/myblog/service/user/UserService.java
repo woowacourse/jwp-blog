@@ -6,8 +6,8 @@ import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.DuplicatedEmailException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.presentation.UserRepository;
-import techcourse.myblog.service.dto.user.UserRequestDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.dto.user.UserRequest;
+import techcourse.myblog.service.dto.user.UserResponse;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,8 +28,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserResponseDto save(final UserRequestDto userRequestDto) {
-        User user = convertToEntity(Objects.requireNonNull(userRequestDto));
+    public UserResponse save(final UserRequest userRequest) {
+        User user = convertToEntity(Objects.requireNonNull(userRequest));
         String email = user.getEmail();
         if (userRepository.findByEmail(email).isPresent()) {
             throw new DuplicatedEmailException("이메일이 중복됩니다.");
@@ -37,25 +37,25 @@ public class UserService {
         return convertToDto(userRepository.save(user));
     }
 
-    public UserResponseDto findById(Long id) {
+    public UserResponse findById(Long id) {
         User retrieveUser = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
         return convertToDto(retrieveUser);
     }
 
-    public List<UserResponseDto> findAll() {
+    public List<UserResponse> findAll() {
         return userRepository.findAll().stream()
                 .map(UserAssembler::convertToDto)
                 .collect(collectingAndThen(toList(), Collections::unmodifiableList));
     }
 
-    public UserResponseDto update(final String email, final String name) {
+    public UserResponse update(final String email, final String name) {
         User retrieveUser = userRepository.findByEmail(Objects.requireNonNull(email)).orElseThrow(UserNotFoundException::new);
         retrieveUser.update(Objects.requireNonNull(name));
         return convertToDto(retrieveUser);
     }
 
-    public void delete(final UserResponseDto user) {
+    public void delete(final UserResponse user) {
         User retrieveUser = userRepository.findById(Objects.requireNonNull(user).getId())
                 .orElseThrow(UserNotFoundException::new);
         userRepository.delete(retrieveUser);

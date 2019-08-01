@@ -6,8 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.ArticleNotFoundException;
-import techcourse.myblog.service.dto.article.ArticleRequestDto;
-import techcourse.myblog.service.dto.article.ArticleResponseDto;
+import techcourse.myblog.service.dto.article.ArticleRequest;
+import techcourse.myblog.service.dto.article.ArticleResponse;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,10 +28,10 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_생성_확인() {
-        ArticleRequestDto article = new ArticleRequestDto("some title", "", "some contents");
+        ArticleRequest article = new ArticleRequest("some title", "", "some contents");
         Long articleId = articleService.save(article, DEFAULT_USER_ID);
         assertThat(articleService.findById(articleId))
-                .isEqualTo(new ArticleResponseDto(
+                .isEqualTo(new ArticleResponse(
                         DEFAULT_ARTICLE_ID + AUTO_INCREMENT_ID,
                         "some title",
                         "",
@@ -41,21 +41,21 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_조회_확인() {
-        ArticleResponseDto retrieveArticleDto = articleService.findById(DEFAULT_ARTICLE_ID);
+        ArticleResponse retrieveArticleDto = articleService.findById(DEFAULT_ARTICLE_ID);
         assertThat(retrieveArticleDto).isEqualTo(articleService.findById(DEFAULT_ARTICLE_ID));
     }
 
     @Test
     void 모든_게시글_조회_확인() {
-        List<ArticleResponseDto> articleDtos = articleService.findAll();
+        List<ArticleResponse> articleDtos = articleService.findAll();
         assertThat(articleDtos).isEqualTo(Arrays.asList(articleService.findById(DEFAULT_ARTICLE_ID)));
     }
 
     @Test
     void 게시글_수정_확인() {
-        ArticleRequestDto updatedArticleDto = new ArticleRequestDto("title", "", "contents");
+        ArticleRequest updatedArticleDto = new ArticleRequest("title", "", "contents");
         articleService.update(DEFAULT_ARTICLE_ID, updatedArticleDto);
-        ArticleResponseDto retrievedArticleDto = articleService.findById(DEFAULT_ARTICLE_ID);
+        ArticleResponse retrievedArticleDto = articleService.findById(DEFAULT_ARTICLE_ID);
         assertThat(retrievedArticleDto.getId()).isEqualTo(DEFAULT_ARTICLE_ID);
         assertThat(retrievedArticleDto.getTitle()).isEqualTo(updatedArticleDto.getTitle());
         assertThat(retrievedArticleDto.getCoverUrl()).isEqualTo(updatedArticleDto.getCoverUrl());

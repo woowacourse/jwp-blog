@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.CommentNotFoundException;
-import techcourse.myblog.service.dto.comment.CommentRequestDto;
-import techcourse.myblog.service.dto.comment.CommentResponseDto;
+import techcourse.myblog.service.dto.comment.CommentRequest;
+import techcourse.myblog.service.dto.comment.CommentResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -25,16 +25,16 @@ public class CommentServiceTest {
 
     @Test
     void 댓글_작성() {
-        CommentRequestDto commentDto = new CommentRequestDto("comment");
-        CommentResponseDto persistComment = commentService.save(commentDto, DEFAULT_USER_ID, DEFAULT_ARTICLE_ID);
-        assertThat(persistComment).isEqualTo(new CommentResponseDto(DEFAULT_COMMENT_ID + AUTO_INCREMENT_ID, "comment", DEFAULT_USER_ID, "john"));
+        CommentRequest commentDto = new CommentRequest("comment");
+        CommentResponse persistComment = commentService.save(commentDto, DEFAULT_USER_ID, DEFAULT_ARTICLE_ID);
+        assertThat(persistComment).isEqualTo(new CommentResponse(DEFAULT_COMMENT_ID + AUTO_INCREMENT_ID, "comment", DEFAULT_USER_ID, "john"));
     }
 
     @Test
     void 댓글_수정() {
-        CommentRequestDto commentDto = new CommentRequestDto("new Hello");
-        CommentResponseDto updateComment = commentService.update(commentDto, DEFAULT_COMMENT_ID);
-        assertThat(updateComment).isEqualTo(new CommentResponseDto(DEFAULT_COMMENT_ID, "new Hello", 1000L, "paul"));
+        CommentRequest commentDto = new CommentRequest("new Hello");
+        CommentResponse updateComment = commentService.update(commentDto, DEFAULT_COMMENT_ID);
+        assertThat(updateComment).isEqualTo(new CommentResponse(DEFAULT_COMMENT_ID, "new Hello", 1000L, "paul"));
     }
 
     @Test

@@ -3,7 +3,7 @@ package techcourse.myblog.service.dto.article;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-public class ArticleRequestDto {
+public class ArticleRequest {
     @NotNull
     private String title;
 
@@ -13,7 +13,7 @@ public class ArticleRequestDto {
     @NotNull
     private String contents;
 
-    public ArticleRequestDto(@NotNull String title, @NotNull String coverUrl, @NotNull String contents) {
+    public ArticleRequest(@NotNull String title, @NotNull String coverUrl, @NotNull String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
@@ -35,7 +35,7 @@ public class ArticleRequestDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ArticleRequestDto that = (ArticleRequestDto) o;
+        ArticleRequest that = (ArticleRequest) o;
         return Objects.equals(title, that.title) &&
                 Objects.equals(coverUrl, that.coverUrl) &&
                 Objects.equals(contents, that.contents);

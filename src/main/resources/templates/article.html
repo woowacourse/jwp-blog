@@ -123,7 +123,7 @@
                             </div>
                             <button class="btn-update-comment">수정</button>
                             <form th:action="@{'/articles/' + ${articleDTO.id} + '/comments/' + ${comment.id}}"
-                                  th:method="'put'" class="d-none" name="commentRequestDto">
+                                  th:method="'put'" class="d-none" name="commentRequest">
                                 <textarea name="comment" rows="5"></textarea>
                                 <button type="submit">수정하기</button>
                             </form>
@@ -132,7 +132,7 @@
                     </ul>
                     <div class="add-comment">
                         <form th:action="@{'/articles/' + ${articleDTO.id} + '/comments'}" method="post"
-                              name="commentRequestDto">
+                              name="commentRequest">
                             <input id="comment-contents" name="comment" type="hidden">
                             <div id="editSection"></div>
                             <button type="submit" class="btn btn-primary">등록하기</button>

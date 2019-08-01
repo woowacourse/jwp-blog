@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.dto.comment.CommentRequestDto;
-import techcourse.myblog.service.dto.comment.CommentResponseDto;
+import techcourse.myblog.service.dto.comment.CommentRequest;
+import techcourse.myblog.service.dto.comment.CommentResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.service.comment.CommentAssembler.convertToDto;
@@ -24,13 +24,13 @@ public class CommentAssemblerTest {
 
     @Test
     void dto를_entity로_변환하는지_확인() {
-        CommentRequestDto commentRequestDto = new CommentRequestDto("comment");
-        assertThat(convertToEntity(commentRequestDto, user, article)).isEqualTo(new Comment("comment", user, article));
+        CommentRequest commentRequest = new CommentRequest("comment");
+        assertThat(convertToEntity(commentRequest, user, article)).isEqualTo(new Comment("comment", user, article));
     }
 
     @Test
     void entity를_dto로_변환하는지_확인() {
         Comment comment = new Comment("comment", user, article);
-        assertThat(convertToDto(comment)).isEqualTo(new CommentResponseDto(null, "comment", null, "john"));
+        assertThat(convertToDto(comment)).isEqualTo(new CommentResponse(null, "comment", null, "john"));
     }
 }

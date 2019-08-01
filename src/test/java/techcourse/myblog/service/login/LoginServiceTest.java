@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.InvalidPasswordException;
 import techcourse.myblog.exception.UserNotFoundException;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.dto.user.UserResponse;
 import techcourse.myblog.service.user.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +24,7 @@ public class LoginServiceTest {
     @Autowired
     private UserService userService;
 
-    private UserResponseDto defaultUser;
+    private UserResponse defaultUser;
     private String email;
     private String name;
     private String password;
@@ -39,8 +39,8 @@ public class LoginServiceTest {
 
     @Test
     void 로그인_성공_확인() {
-        UserResponseDto retrieveUser = loginService.findByEmailAndPassword(email, password);
-        assertThat(retrieveUser).isEqualTo(new UserResponseDto(retrieveUser.getId(), email, name));
+        UserResponse retrieveUser = loginService.findByEmailAndPassword(email, password);
+        assertThat(retrieveUser).isEqualTo(new UserResponse(retrieveUser.getId(), email, name));
     }
 
     @Test

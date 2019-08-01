@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.dto.article.ArticleRequestDto;
-import techcourse.myblog.service.dto.article.ArticleResponseDto;
+import techcourse.myblog.service.dto.article.ArticleRequest;
+import techcourse.myblog.service.dto.article.ArticleResponse;
 
 import java.util.Collections;
 
@@ -16,14 +16,14 @@ import static techcourse.myblog.service.article.ArticleAssembler.convertToEntity
 public class ArticleAssemblerTest {
     private static final User DEFAULT_AUTHOR = new User("user@example.com", "john", "p@ssW0rd");
 
-    private ArticleRequestDto articleRequest;
-    private ArticleResponseDto articleResponse;
+    private ArticleRequest articleRequest;
+    private ArticleResponse articleResponse;
     private Article article;
 
     @BeforeEach
     void setUp() {
-        articleRequest = new ArticleRequestDto("title", "", "contents");
-        articleResponse = new ArticleResponseDto(1L, "title", "", "contents", Collections.emptyList());
+        articleRequest = new ArticleRequest("title", "", "contents");
+        articleResponse = new ArticleResponse(1L, "title", "", "contents", Collections.emptyList());
         article = new Article("title", "", "contents", DEFAULT_AUTHOR);
     }
 

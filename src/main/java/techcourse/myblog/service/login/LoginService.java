@@ -6,7 +6,7 @@ import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.InvalidPasswordException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.presentation.UserRepository;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.dto.user.UserResponse;
 
 import java.util.Objects;
 
@@ -21,7 +21,7 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
-    public UserResponseDto findByEmailAndPassword(final String email, final String password) {
+    public UserResponse findByEmailAndPassword(final String email, final String password) {
         User retrieveUser = userRepository.findByEmail(Objects.requireNonNull(email))
                 .orElseThrow(UserNotFoundException::new);
         validatePassword(Objects.requireNonNull(password), retrieveUser);
@@ -34,7 +34,7 @@ public class LoginService {
         }
     }
 
-    public UserResponseDto findByEmail(String email) {
+    public UserResponse findByEmail(String email) {
         return convertToDto(userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new));
     }
 }

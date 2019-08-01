@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.dto.user.UserResponse;
 import techcourse.myblog.service.login.LoginService;
 
 import javax.servlet.http.HttpSession;
@@ -32,8 +32,8 @@ public class LoginController {
     @PostMapping("/users/login")
     public ModelAndView processLogin(final HttpSession session, final String email, final String password) {
         ModelAndView modelAndView = new ModelAndView();
-        UserResponseDto userResponseDto = loginservice.findByEmailAndPassword(email, password);
-        UserResponseDto retrieveUser = loginservice.findByEmail(userResponseDto.getEmail());
+        UserResponse userResponse = loginservice.findByEmailAndPassword(email, password);
+        UserResponse retrieveUser = loginservice.findByEmail(userResponse.getEmail());
 
         session.setAttribute(USER_SESSION_KEY, retrieveUser);
         modelAndView.setView(new RedirectView("/"));

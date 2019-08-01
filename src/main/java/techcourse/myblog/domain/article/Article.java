@@ -5,6 +5,7 @@ import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,7 +25,7 @@ public class Article {
     @Column(nullable = false, length = 2000)
     private String contents;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
@@ -73,7 +74,10 @@ public class Article {
     }
 
     public List<Comment> getComments() {
-        return comments;
+        if (Objects.isNull(comments)) {
+            return Collections.emptyList();
+        }
+        return Collections.unmodifiableList(comments);
     }
 
     @Override

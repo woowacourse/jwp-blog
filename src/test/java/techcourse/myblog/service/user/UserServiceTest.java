@@ -7,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.DuplicatedEmailException;
 import techcourse.myblog.exception.UserNotFoundException;
-import techcourse.myblog.service.dto.user.UserRequestDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.dto.user.UserRequest;
+import techcourse.myblog.service.dto.user.UserResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -21,7 +21,7 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
-    private UserResponseDto defaultUser;
+    private UserResponse defaultUser;
 
     @BeforeEach
     void setUp() {
@@ -30,8 +30,8 @@ public class UserServiceTest {
 
     @Test
     void 사용자_생성_확인() {
-        UserResponseDto persistUser = userService.save(new UserRequestDto("john@example.com", "john", "p@ssw0rd"));
-        assertThat(persistUser).isEqualTo(new UserResponseDto(persistUser.getId(), "john@example.com", "john"));
+        UserResponse persistUser = userService.save(new UserRequest("john@example.com", "john", "p@ssw0rd"));
+        assertThat(persistUser).isEqualTo(new UserResponse(persistUser.getId(), "john@example.com", "john"));
     }
 
     @Test
@@ -43,7 +43,7 @@ public class UserServiceTest {
     @Test
     void 사용자_생성_오류확인_이미_존재하는_사용자일_경우() {
         assertThatExceptionOfType(DuplicatedEmailException.class)
-                .isThrownBy(() -> userService.save(new UserRequestDto(defaultUser.getEmail(), defaultUser.getName(), "p@ssw0rd")));
+                .isThrownBy(() -> userService.save(new UserRequest(defaultUser.getEmail(), defaultUser.getName(), "p@ssw0rd")));
     }
 
     @Test
@@ -53,8 +53,8 @@ public class UserServiceTest {
 
     @Test
     void 사용자_정보_수정_확인() {
-        UserResponseDto updateUser = userService.update(defaultUser.getEmail(), "dowon");
-        assertThat(updateUser).isEqualTo(new UserResponseDto(updateUser.getId(), defaultUser.getEmail(), "dowon"));
+        UserResponse updateUser = userService.update(defaultUser.getEmail(), "dowon");
+        assertThat(updateUser).isEqualTo(new UserResponse(updateUser.getId(), defaultUser.getEmail(), "dowon"));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class UserServiceTest {
 
     @Test
     void 사용자_정보_삭제_확인() {
-        UserResponseDto userToDelete = userService.save(new UserRequestDto("done@naver.com", "done", "12345678"));
+        UserResponse userToDelete = userService.save(new UserRequest("done@naver.com", "done", "12345678"));
         userService.delete(userToDelete);
         assertThat(userService.findAll()).doesNotContain(userToDelete);
     }
@@ -85,6 +85,6 @@ public class UserServiceTest {
     @Test
     void 사용자_정보_삭제_오류확인_사용자가_없을_경우() {
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> userService.delete(new UserResponseDto(defaultUser.getId() - 1, "done@naver.com", "done")));
+                .isThrownBy(() -> userService.delete(new UserResponse(defaultUser.getId() - 1, "done@naver.com", "done")));
     }
 }
