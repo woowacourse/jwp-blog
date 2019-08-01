@@ -56,7 +56,7 @@ public class Article {
 
     public void checkAuth(User user) {
         if (user == null || !user.equals(author)) {
-            throw new MismatchAuthorException("작성자만 접근할 수 있습니다.");
+            throw new MismatchAuthorException();
         }
     }
 

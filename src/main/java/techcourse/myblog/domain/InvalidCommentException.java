@@ -1,7 +1,9 @@
 package techcourse.myblog.domain;
 
 public class InvalidCommentException extends RuntimeException {
-    public InvalidCommentException(String msg) {
-        super(msg);
+    public static final String INVALID_COMMENT_ERROR_MSG = "댓글은 비어있을 수 없습니다";
+
+    public InvalidCommentException() {
+        super(INVALID_COMMENT_ERROR_MSG);
     }
 }

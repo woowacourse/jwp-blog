@@ -10,8 +10,6 @@ import techcourse.myblog.dto.UserDto;
 @Service
 @Transactional
 public class UserWriteService {
-    public static final String DUPLICATED_USER_MESSAGE = "이미 존재하는 email입니다";
-
     private final UserRepository userRepository;
 
     @Autowired
@@ -26,7 +24,7 @@ public class UserWriteService {
 
     private void verifyDuplicateEmail(UserDto user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new DuplicatedEmailException(DUPLICATED_USER_MESSAGE);
+            throw new DuplicatedEmailException();
         }
     }
 

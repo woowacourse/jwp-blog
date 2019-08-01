@@ -26,11 +26,11 @@ public class ArticleReadService {
 
     public Article findById(Long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new NotFoundArticleException("존재하지 않는 게시글입니다."));
+                .orElseThrow(() -> new NotFoundArticleException());
     }
 
     public Article findByIdAndAuthor(Long articleId, User user) {
         return articleRepository.findByIdAndAuthor(articleId, user)
-                .orElseThrow(() -> new MismatchAuthorException("작성자만 접근할 수 있습니다."));
+                .orElseThrow(() -> new MismatchAuthorException());
     }
 }

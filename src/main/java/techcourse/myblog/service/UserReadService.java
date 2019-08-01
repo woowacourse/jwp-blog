@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
@@ -14,18 +13,15 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class UserReadService {
-    public static final String LOGIN_FAIL_MESSAGE = "이메일이나 비밀번호가 올바르지 않습니다";
-
     private final UserRepository userRepository;
 
-    @Autowired
     public UserReadService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     public User login(UserDto userDto) {
         return userRepository.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword())
-                .orElseThrow(() -> new LoginFailedException(LOGIN_FAIL_MESSAGE));
+                .orElseThrow(() -> new LoginFailedException());
     }
 
     public List<User> findAll() {

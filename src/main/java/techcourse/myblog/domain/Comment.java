@@ -47,13 +47,13 @@ public class Comment {
 
     private void validateContents(String contents) {
         if (contents == null || contents.isEmpty()) {
-            throw new InvalidCommentException("댓글은 비어있을 수 없습니다.");
+            throw new InvalidCommentException();
         }
     }
 
     public void update(Comment comment) {
         if (comment == null) {
-            throw new CommentUpdateFailedException("댓글은 비어있을 수 없습니다.");
+            throw new CommentUpdateFailedException();
         }
 
         checkAuth(comment);
@@ -64,7 +64,7 @@ public class Comment {
         if (isArticle(comment.article) && isWriter(comment.writer)) {
             return;
         }
-        throw new CommentUpdateFailedException("댓글을 수정할 수 없습니다.");
+        throw new CommentUpdateFailedException();
     }
 
     private boolean isArticle(Article article) {
