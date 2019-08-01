@@ -3,7 +3,7 @@ package techcourse.myblog.service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.request.CommentDto;
+import techcourse.myblog.domain.vo.comment.CommentContents;
 import techcourse.myblog.exception.NotFoundCommentException;
 import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.repository.CommentRepository;
@@ -23,20 +23,20 @@ public class CommentService {
 		this.articleService = articleService;
 	}
 
-	public Comment save(String email, Long articleId, CommentDto commentDto) {
+	public Comment save(String email, Long articleId, CommentContents commentContents) {
 		User user = userService.findUser(email);
 		Article article = articleService.findById(articleId);
-		Comment comment = commentDto.valueOf(user);
+		Comment comment = commentContents.valueOf(user);
 		article.addComment(comment);
 		return commentRepository.save(comment);
 	}
 
 	@Transactional
-	public void update(String email, Long articleId, CommentDto commentDto) {
-		Comment comment = findById(commentDto.getId());
+	public void update(String email, Long articleId, Long commentId, CommentContents commentContents) {
+		Comment comment = findById(commentId);
 		existArticle(articleId);
 		confirmAuthorization(email, comment.getAuthor());
-		comment.update(commentDto.valueOf());
+		comment.update(commentContents.valueOf());
 	}
 
 	public Comment findById(Long commentId) {

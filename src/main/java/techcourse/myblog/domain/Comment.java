@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import javax.persistence.*;
 
 import org.hibernate.annotations.DynamicInsert;
+import techcourse.myblog.domain.vo.comment.CommentContents;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,7 +17,7 @@ public class Comment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String contents;
+	private String text;
 
 	@CreatedDate
 	@Column(name = "create_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -29,21 +30,21 @@ public class Comment {
 	private Comment() {
 	}
 
-	public Comment(String contents) {
-		this.contents = contents;
+	public Comment(CommentContents commentContents) {
+		this.text = commentContents.getText();
 	}
 
-	public Comment(User user, String contents) {
+	public Comment(CommentContents commentContents, User user) {
 		this.author = user;
-		this.contents = contents;
+		this.text = commentContents.getText();
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public String getContents() {
-		return contents;
+	public String getText() {
+		return text;
 	}
 
 	public LocalDateTime getCreateDate() {
@@ -55,10 +56,10 @@ public class Comment {
 	}
 
 	public void update(Comment comment) {
-		this.contents = comment.contents;
+		this.text = comment.text;
 	}
 
-	public boolean matchComment(Comment expectComment) {
-		return this.id.equals(expectComment.id);
+	public boolean matchComment(Comment comment) {
+		return this.id.equals(comment.id);
 	}
 }
