@@ -30,4 +30,10 @@ public class BlogControllerAdvice {
         model.addAttribute("error", e.getMessage());
         return "error";
     }
+
+    @ExceptionHandler({ArticleNotFoundException.class, CommentNotFoundException.class})
+    public String handleTextNotFondException(MisMatchAuthorException e, Model model) {
+        model.addAttribute("error", e.getMessage());
+        return "error";
+    }
 }
