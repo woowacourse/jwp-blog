@@ -12,8 +12,8 @@ class ArticleTests {
 		Article article = articleContents.valueOfArticle();
 		Article modifiedArticle = articleContents.valueOfArticle();
 		article.update(modifiedArticle);
+		assertThat(article.getTitle()).isEqualTo(modifiedArticle.getTitle());
 		assertThat(article.getText()).isEqualTo(modifiedArticle.getText());
-		assertThat(article.getContents()).isEqualTo(modifiedArticle.getContents());
 		assertThat(article.getCoverUrl()).isEqualTo(modifiedArticle.getCoverUrl());
 	}
 }

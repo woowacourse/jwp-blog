@@ -13,9 +13,9 @@ public class Article {
 	private Long id;
 
 	@Lob
-	private String contents;
-
 	private String text;
+
+	private String title;
 	private String coverUrl;
 
 	@ManyToOne
@@ -30,36 +30,36 @@ public class Article {
 	}
 
 	public Article(ArticleContents articleContents) {
-		this.text = articleContents.getTitle();
-		this.contents = articleContents.getText();
+		this.title = articleContents.getTitle();
+		this.text = articleContents.getText();
 		this.coverUrl = articleContents.getCoverUrl();
 	}
 
 	public Article(ArticleContents articleContents, User user) {
-		this.text = articleContents.getTitle();
-		this.contents = articleContents.getText();
+		this.title = articleContents.getTitle();
+		this.text = articleContents.getText();
 		this.coverUrl = articleContents.getCoverUrl();
 		this.author = user;
 	}
 
 	public Article(Long id, ArticleContents articleContents, User user) {
 		this.id = id;
-		this.text = articleContents.getTitle();
-		this.contents = articleContents.getText();
+		this.title = articleContents.getTitle();
+		this.text = articleContents.getText();
 		this.coverUrl = articleContents.getCoverUrl();
 		this.author = user;
 	}
 
-	public String getText() {
-		return text;
+	public String getTitle() {
+		return title;
 	}
 
 	public String getCoverUrl() {
 		return coverUrl;
 	}
 
-	public String getContents() {
-		return contents;
+	public String getText() {
+		return text;
 	}
 
 	public Long getId() {
@@ -75,8 +75,8 @@ public class Article {
 	}
 
 	public void update(Article article) {
+		this.title = article.title;
 		this.text = article.text;
-		this.contents = article.contents;
 		this.coverUrl = article.coverUrl;
 	}
 

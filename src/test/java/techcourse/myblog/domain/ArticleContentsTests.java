@@ -42,8 +42,8 @@ class ArticleContentsTests {
 	}
 
 	private void confirmArticleFieldValue() {
+		assertThat(actualArticle.getTitle()).isEqualTo(expectedArticle.getTitle());
 		assertThat(actualArticle.getText()).isEqualTo(expectedArticle.getText());
-		assertThat(actualArticle.getContents()).isEqualTo(expectedArticle.getContents());
 		assertThat(actualArticle.getCoverUrl()).isEqualTo(expectedArticle.getCoverUrl());
 	}
 }
