@@ -1,14 +1,15 @@
 package techcourse.myblog.domain;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @EqualsAndHashCode(of = "id")
+@Getter
 @Entity
 public class Comment {
 
@@ -40,42 +41,5 @@ public class Comment {
 
     public void modify(String contents) {
         this.contents = contents;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public LocalDateTime getCreateDateTime() {
-        return createDateTime;
-    }
-
-    public LocalDateTime getUpdateDateTime() {
-        return updateDateTime;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Article getArticle() {
-        return article;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return id == comment.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }
