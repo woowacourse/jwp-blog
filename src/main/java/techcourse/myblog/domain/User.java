@@ -42,9 +42,9 @@ public class User {
         this.password = password;
     }
     
-    public void modifyName(String name) {
-        validateName(name);
-        this.name = name;
+    public void modifyName(User user) {
+        validateName(user.name);
+        this.name = user.name;
     }
     
     private void validateName(String name) {
