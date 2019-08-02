@@ -1,6 +1,8 @@
 package techcourse.myblog.domain;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.web.dto.CommentDto;
 
 import javax.persistence.*;
@@ -12,14 +14,19 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "writer", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
     private User author;
+
     @Column(nullable = false)
     private String contents;
+
     @CreationTimestamp
     private LocalDateTime createdTimeAt;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_article_to_comment"))
     private Article article;
 
