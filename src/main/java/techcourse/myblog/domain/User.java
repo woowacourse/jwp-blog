@@ -4,9 +4,6 @@ import lombok.*;
 import techcourse.myblog.service.dto.UserRequestDto;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -20,9 +17,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String name;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String password;
     @Column(nullable = false)
     private String email;

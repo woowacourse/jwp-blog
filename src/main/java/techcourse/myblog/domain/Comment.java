@@ -17,18 +17,15 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String comment;
-
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_COMMENTER"), name = "commenter")
     private User commenter;
-
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_ARTICLE"), name = "article")
     private Article article;
-
     private LocalDateTime createdAt;
 
     @Builder
