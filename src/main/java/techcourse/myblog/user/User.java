@@ -1,9 +1,6 @@
 package techcourse.myblog.user;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class User {
@@ -11,67 +8,62 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String username;
-	private String password;
-	private String email;
-	private String githubUrl;
-	private String facebookUrl;
+	@Embedded
+	@AttributeOverride(name = "username", column = @Column(name = "username"))
+	@AttributeOverride(name = "email", column = @Column(name = "email"))
+	@AttributeOverride(name = "password", column = @Column(name = "password"))
+	@AttributeOverride(name = "githubUrl", column = @Column(name = "githubUrl"))
+	@AttributeOverride(name = "facebookUrl", column = @Column(name = "facebookUrl"))
+	private Information information;
 
 	private User() {
 	}
 
-	public User(UserSignUpInfo userSignUpInfo) {
-		this.username = userSignUpInfo.getUsername();
-		this.password = userSignUpInfo.getPassword();
-		this.email = userSignUpInfo.getEmail();
+	public User(final Information information) {
+		this.information = information;
 	}
 
-	public User(UserBasicInfo userBasicInfo) {
-		this.username = userBasicInfo.getUsername();
-		this.email = userBasicInfo.getEmail();
+	public void editUser(Information information) {
+		this.information.update(information);
 	}
 
-	public void saveUser(UserSignUpInfo userSignUpInfo) {
-		this.username = userSignUpInfo.getUsername();
-		this.password = userSignUpInfo.getPassword();
-		this.email = userSignUpInfo.getEmail();
-	}
-
-	public void editUser(UserChangeableInfo userChangeableInfo) {
-		this.username = userChangeableInfo.getUsername();
-		this.githubUrl = userChangeableInfo.getGithubUrl();
-		this.facebookUrl = userChangeableInfo.getFaceBookUrl();
+	public boolean matchUser(User user) {
+		return this.id.equals(user.id);
 	}
 
 	public boolean matchPassword(String password) {
-		return this.password.equals(password);
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public String getGithubUrl() {
-		return githubUrl;
-	}
-
-	public String getFacebookUrl() {
-		return facebookUrl;
+		return this.information.getPassword().equals(password);
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public boolean matchUser(User user) {
-		return this.id.equals(user.id);
+	public String getUsername() {
+		return this.information.getUsername();
+	}
+
+	public String getPassword() {
+		return this.information.getPassword();
+	}
+
+	public String getEmail() {
+		return this.information.getEmail();
+	}
+
+	public String getGithubUrl() {
+		return this.information.getGithubUrl();
+	}
+
+	public String getFacebookUrl() {
+		return this.information.getFacebookUrl();
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", information=" + information +
+				'}';
 	}
 }
