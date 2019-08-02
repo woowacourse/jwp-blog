@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -47,7 +48,7 @@ public class UserInfoDto implements UserDto {
     private static String getSnsEmail(List<SnsInfo> snsInfos, int snsCode) {
         return snsInfos.stream()
                 .filter(snsInfo -> snsInfo.getSnsCode() == snsCode)
-                .findFirst().orElse(SnsInfo.builder().email("").build())
+                .findFirst().orElse(SnsInfo.builder().email(null).build())
                 .getEmail();
     }
 
@@ -82,5 +83,22 @@ public class UserInfoDto implements UserDto {
                 ", snsFacebookEmail='" + snsFacebookEmail + '\'' +
                 ", snsGithubEmail='" + snsGithubEmail + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserInfoDto that = (UserInfoDto) o;
+        return userId == that.userId &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(email, that.email) &&
+                Objects.equals(snsFacebookEmail, that.snsFacebookEmail) &&
+                Objects.equals(snsGithubEmail, that.snsGithubEmail);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, name, email, snsFacebookEmail, snsGithubEmail);
     }
 }

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="ko">
 <head>
     <th:block th:include="/fragment/common-head"></th:block>
-    
+
     <link rel="stylesheet" href="/static/css/index.css">
     <link rel="stylesheet" href="/static/css/mypage.css">
 </head>
@@ -24,82 +24,87 @@
             <div class="col-md-7 mx-auto">
                 <div class="card">
                     <form action="" th:method="put" name="user-info">
-                    <div class="card-heading pdd-btm-5 border bottom">
-                        <h4 class="card-title d-inline-block">profile</h4>
-                        <button type="button" onclick="submitDelete();" class="btn btn-info float-right mrg-btm-0 relative bottom-5">탈퇴</button>
-                        <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정</button>
-                    </div>
-                    <div class="card-block">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"><b>Name</b></p>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" name="name" class="form-control" th:value="${userData.name}">
-                            </div>
+                        <div class="card-heading pdd-btm-5 border bottom">
+                            <h4 class="card-title d-inline-block">profile</h4>
+                            <button type="button" onclick="submitDelete();"
+                                    class="btn btn-info float-right mrg-btm-0 relative bottom-5">탈퇴
+                            </button>
+                            <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정
+                            </button>
                         </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"><b>Email</b></p>
-                            </div>
-                            <div class="col-md-6">
-                                <p class="mrg-top-10" th:text="${userData.email}">gracefulBrown@woowahan.com</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"><b>Avatar</b></p>
-                            </div>
-                            <div class="col-md-6">
-                                <div>
-                                    <label for="img-upload" class="pointer">
-                                        <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
-                                             width="117" alt="">
-                                        <span class="btn btn-default display-block no-mrg-btm">Choose file</span>
-                                        <input class="d-none" type="file" name="uploadedimages0" multiple
-                                               id="img-upload">
-                                    </label>
+                        <div class="card-block">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <p class="mrg-top-10 text-dark"><b>Name</b></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" name="name" class="form-control" th:value="${userData.name}">
                                 </div>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <p class="mrg-top-10 text-dark"><b>SNS</b></p>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <p class="mrg-top-10 text-dark"><b>Email</b></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mrg-top-10" th:text="${userData.email}">gracefulBrown@woowahan.com</p>
+                                </div>
                             </div>
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-4">
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <p class="mrg-top-10 text-dark"><b>Avatar</b></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <div>
+                                        <label for="img-upload" class="pointer">
+                                            <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
+                                                 width="117" alt="">
+                                            <span class="btn btn-default display-block no-mrg-btm">Choose file</span>
+                                            <input class="d-none" type="file" name="uploadedimages0" multiple
+                                                   id="img-upload">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <p class="mrg-top-10 text-dark"><b>SNS</b></p>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-4">
                                         <span class="btn-dark border-radius-4 inline-block">
                                             <span class="pdd-horizon-10 lh-2-5 display-block">
                                                 <i class="fa fa-github"></i>
                                             </span>
                                         </span>
-                                        <span class="font-size-14 mrg-left-10 text-dark text-bold">Github</span>
+                                            <span class="font-size-14 mrg-left-10 text-dark text-bold">Github</span>
+                                        </div>
+                                        <div class="col-md-8 text-right">
+                                            <input type="email" name="snsGithubEmail" class="form-control"
+                                                   th:value="${userData.snsGithubEmail}">
+                                        </div>
                                     </div>
-                                    <div class="col-md-8 text-right">
-                                        <input type="email" name="snsGithubEmail" class="form-control" th:value="${userData.snsGithubEmail}">
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-4">
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-4">
                                     <span class="btn-facebook border-radius-4 inline-block">
                                         <span class="pdd-horizon-10 lh-2-5 display-block">
                                             <i class="ti-facebook"></i>
                                         </span>
                                     </span>
-                                        <span class="mrg-left-10 font-size-14 text-dark text-bold">Facebook</span>
-                                    </div>
-                                    <div class="col-md-8 text-right">
-                                        <input type="email" name="snsFacebookEmail" class="form-control" th:value="${userData.snsFacebookEmail}">
+                                            <span class="mrg-left-10 font-size-14 text-dark text-bold">Facebook</span>
+                                        </div>
+                                        <div class="col-md-8 text-right">
+                                            <input type="email" name="snsFacebookEmail" class="form-control"
+                                                   th:value="${userData.snsFacebookEmail}">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </form>
                 </div>
             </div>
@@ -119,9 +124,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
 <script src="/static/js/index.js"></script>
 <script>
-    function submitDelete(){
+    function submitDelete() {
         if (confirm('탈퇴 하시겠습니까?')) {
-            document.querySelector("form[name=user-info] input[name=_method]").setAttribute("value","delete");
+            document.querySelector("form[name=user-info] input[name=_method]").setAttribute("value", "delete");
             document.querySelector("form[name=user-info]").submit();
         }
     }

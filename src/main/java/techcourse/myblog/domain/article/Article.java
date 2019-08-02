@@ -2,7 +2,6 @@ package techcourse.myblog.domain.article;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.validator.constraints.URL;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;

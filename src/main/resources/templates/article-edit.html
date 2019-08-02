@@ -35,13 +35,13 @@
         <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
             <div class="dropdown inline-block">
                 <button class="btn btn-default dropdown-toggle " type="button" data-toggle="dropdown">
-                    <span id="category-name" >카테고리 선택</span>
+                    <span id="category-name">카테고리 선택</span>
                     <input id="category-id" type="hidden" name="categoryId">
                     <i class="ti-angle-down font-size-9"></i>
                 </button>
                 <ul class="dropdown-menu" id="categories">
                     <li class="nav-item" th:each="category : ${categories}">
-                        <a th:data-categoryId = "${category.categoryId}" th:text="${category.categoryName}"></a>
+                        <a th:data-categoryId="${category.categoryId}" th:text="${category.categoryName}"></a>
                     </li>
                 </ul>
             </div>
@@ -124,7 +124,9 @@
     }
 
     const list = document.querySelectorAll("#categories li");
-    list.forEach(category => {category.addEventListener("click", handleClick)});
+    list.forEach(category = > {category.addEventListener("click", handleClick)}
+    )
+    ;
 
     const error = "[[ ${error} ]]";
 

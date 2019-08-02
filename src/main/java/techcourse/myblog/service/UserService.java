@@ -66,7 +66,6 @@ public class UserService {
 
     public void deleteById(UserDto userDto) {
         long id = userDto.toEntity().getId();
-        snsInfoService.deleteByUserId(id);
         userRepository.deleteById(id);
     }
 }

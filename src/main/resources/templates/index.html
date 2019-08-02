@@ -16,7 +16,7 @@
         <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')"></div>
         <div class="welcome-text-container">
             <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5">Welcome 르윈</h1>
+                <h1 id="main-title" class="text-white border bottom font-size-35 padding-5 pointer">Welcome 르윈</h1>
             </div>
         </div>
     </div>
@@ -32,7 +32,8 @@
                         </li>
 
                         <li class="nav-item" th:each="category : ${categories}">
-                            <a th:href="@{/{categoryId}(categoryId=${category.categoryId})}" class="nav-link" role="tab" th:text="${category.categoryName}"></a>
+                            <a th:href="@{/{categoryId}(categoryId=${category.categoryId})}" class="nav-link" role="tab"
+                               th:text="${category.categoryName}"></a>
                         </li>
 
                         <li class="nav-item">
@@ -72,7 +73,7 @@
                 </form>
                 <li th:each="category : ${categories}">
                     <span th:text="${category.categoryName}"></span>
-                    <a th:href="@{/categories/delete/{categoryId}(categoryId=${category.categoryId})}" >삭제</a>
+                    <a th:href="@{/categories/delete/{categoryId}(categoryId=${category.categoryId})}">삭제</a>
                 </li>
             </div>
             <div class="modal-footer no-border">

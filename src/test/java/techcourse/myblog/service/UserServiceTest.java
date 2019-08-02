@@ -18,9 +18,6 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private SnsInfoRepository snsInfoRepository;
-
     @InjectMocks
     private UserService userService;
 
@@ -28,32 +25,35 @@ class UserServiceTest {
     private SnsInfoService snsInfoService;
 
     long userId = 1;
-    String email = "test";
+    String email = "test321@test.com";
     String password = "test";
     String name = "test";
 
     UserDto userDto = SignUpDto.builder().name(name)
             .email(email).password(password).build();
 
+    UserInfoDto userInfoDto = UserInfoDto.builder().id(1).name(name)
+            .email(email).build();
+
     @Test
     void 유저_생성() {
-        when(userRepository.save(userDto.toEntity())).thenReturn(userDto.toEntity());
-        assertThat(userService.create(userDto)).isEqualToComparingFieldByField(userDto);
+        when(userRepository.save(userDto.toEntity())).thenReturn(userInfoDto.toEntity());
+        assertThat(userService.create(userDto)).isEqualToComparingFieldByField(userInfoDto);
     }
 
     @Test
     void 유저_조회() {
-        when(userRepository.findByEmailAndPassword(email, password)).thenReturn(Optional.of(userDto.toEntity()));
-        assertThat(userService.findByUserDto(userDto)).isEqualTo(userDto);
+        when(userRepository.findByEmailAndPassword(email, password)).thenReturn(Optional.of(userInfoDto.toEntity()));
+        assertThat(userService.findByUserDto(userDto)).isEqualToComparingFieldByField(userInfoDto);
     }
 
     @Test
     void 유저_전체_조회() {
-        UserDto userDto1 = SignUpDto.builder().name(name)
-                .email(email).password(password).build();
+        UserDto userDto1 = UserInfoDto.builder().name(name)
+                .email(email).build();
 
-        UserDto userDto2 = SignUpDto.builder().name(name)
-                .email(email).password(password).build();
+        UserDto userDto2 = UserInfoDto.builder().name(name)
+                .email(email).build();
 
         when(userRepository.findAll()).thenReturn(Arrays.asList(userDto1.toEntity(), userDto2.toEntity()));
         assertThat(userService.readAll()).isEqualTo(Arrays.asList(userDto1, userDto2));
@@ -61,21 +61,21 @@ class UserServiceTest {
 
     @Test
     void 유저_업데이트() {
-        UserInfoDto userInfoDto = UserInfoDto.builder().id(2).build();
-        when(userRepository.findById(userId)).thenReturn(Optional.of(userDto.toEntity()));
-        doNothing().when(snsInfoRepository).deleteById(userId);
+        UserInfoDto userInfoDto = UserInfoDto.builder().id(10).name(name)
+                .email(email).build();
+
+        when(userRepository.findById(10L)).thenReturn(Optional.of(userInfoDto.toEntity()));
+        //doNothing().when(snsInfoService).deleteByUserId(userId);
 
         userService.update(userDto, userInfoDto);
-        verify(userRepository, times(2)).findById(userId);
+        verify(userRepository, times(1)).findById(userId);
+        verify(snsInfoService, times(1)).findByUserId(userId);
     }
 
     @Test
     void 유저_삭제() {
-        doNothing().when(snsInfoRepository).deleteById(userId);
-        doNothing().when(snsInfoRepository).deleteById(userId);
-        userService.deleteById(userDto);
+        userService.deleteById(userInfoDto);
         verify(userRepository, times(1)).deleteById(userId);
-        verify(snsInfoService, times(1)).deleteByUserId(userId);
     }
 
 }

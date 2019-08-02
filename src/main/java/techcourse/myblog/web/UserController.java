@@ -80,7 +80,7 @@ public class UserController {
     }
 
     private void addUserInModel(HttpSession session, Model model) {
-        UserDto userDto = userService.findByUserDto(getUserInfo(session));
+        UserDto userDto = userService.findByUserEmail(getUserInfo(session));
         model.addAttribute("userData", userDto);
     }
 

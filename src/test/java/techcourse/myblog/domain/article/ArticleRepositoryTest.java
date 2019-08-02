@@ -29,7 +29,10 @@ class ArticleRepositoryTest {
         testEntityManager.flush();
         testEntityManager.clear();
 
-        ArticleDto articleDto = ArticleDto.builder().userDto(UserInfoDto.from(user)).build();
+        ArticleDto articleDto = ArticleDto.builder()
+                .title("test")
+                .contents("test")
+                .categoryId(1).userDto(UserInfoDto.from(user)).build();
         Article article = articleDto.toEntity();
 
         Article persistArticle = testEntityManager.persist(article);

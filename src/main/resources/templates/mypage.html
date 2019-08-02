@@ -10,7 +10,7 @@
 <div>
     <th:block th:if="${userInfo == null}" th:include="/fragment/header"></th:block>
     <th:block th:unless="${userInfo == null}" th:include="/fragment/login-header"></th:block>
-    
+
     <div class="about-cover card no-border">
         <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/bg.jpg')">
             <div class="display-block height-100">

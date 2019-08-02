@@ -24,7 +24,7 @@ class ArticleServiceTest {
     private ArticleRepository articleRepository;
 
     @Mock
-    private UserRepository userRepository;
+    private UserService userService;
 
     @InjectMocks
     private ArticleService articleService;
@@ -38,14 +38,14 @@ class ArticleServiceTest {
 
     @BeforeEach
     void setUp() {
-        articleDto = getArticleDto(articleId, categoryId);
         userDto = UserInfoDto.builder().id(userId).build();
+        articleDto = getArticleDto(articleId, categoryId);
     }
 
     @Test
     void 게시글_생성() {
         when(articleRepository.save(articleDto.toEntity())).thenReturn(articleDto.toEntity());
-        when(userRepository.findById(0l)).thenReturn(Optional.empty());
+        when(userService.findByUserEmail(userDto)).thenReturn(userDto);
         assertThat(articleService.createArticle(articleDto, userDto)).isEqualTo(articleId);
     }
 
@@ -57,8 +57,8 @@ class ArticleServiceTest {
 
     @Test
     void 게시글_업데이트() {
-        ArticleDto inArticleDto = getArticleDto(5, categoryId);
-
+        ArticleDto inArticleDto = getArticleDto(articleId, categoryId);
+        when(userService.findByUserEmail(userDto)).thenReturn(userDto);
         when(articleRepository.findById(articleId)).thenReturn(Optional.of(articleDto.toEntity()));
         assertThat(articleService.updateByArticle(articleId, inArticleDto, userDto)).isEqualTo(articleDto);
     }
@@ -89,7 +89,7 @@ class ArticleServiceTest {
         return ArticleDto.builder()
                 .id(id)
                 .categoryId(categoryId)
-                .userDto(null)
+                .userDto(userDto)
                 .build();
     }
 

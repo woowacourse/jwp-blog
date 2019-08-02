@@ -24,20 +24,24 @@ class CommentRepositoryTest {
     @Test
     void save() {
         UserDto userDto = SignUpDto.builder().name("test")
-                .email("test@test.com").password("testtset123").build();
+                .email("test123@test.com").password("testtset123").build();
 
         User persistUser = testEntityManager.persist(userDto.toEntity());
         testEntityManager.flush();
         testEntityManager.clear();
 
-        ArticleDto articleDto = ArticleDto.builder().userDto(UserInfoDto.from(persistUser)).build();
+        ArticleDto articleDto = ArticleDto.builder()
+                .title("test")
+                .contents("test")
+                .categoryId(1)
+                .userDto(UserInfoDto.from(persistUser)).build();
         Article article = articleDto.toEntity();
 
         Article persistArticle = testEntityManager.persist(article);
         testEntityManager.flush();
         testEntityManager.clear();
 
-        Comment comment = Comment.builder().author(persistUser).article(persistArticle).build();
+        Comment comment = Comment.builder().contents("test").author(persistUser).article(persistArticle).build();
         Comment persistComment = testEntityManager.persist(comment);
         testEntityManager.flush();
         testEntityManager.clear();
