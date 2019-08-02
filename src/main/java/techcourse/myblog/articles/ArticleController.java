@@ -5,6 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.articles.comments.Comment;
+import techcourse.myblog.users.UserSession;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequestMapping("/articles")
@@ -18,34 +23,45 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String write(Article article) {
-        Article savedArticle = articleService.save(article);
-        return "redirect:/articles/" + savedArticle.getId();
+    public String write(UserSession userSession, ArticleDto.Request articleDto) {
+        Long userId = userSession.getId();
+        Long articleId = articleService.save(userId, articleDto);
+
+        return "redirect:/articles/" + articleId;
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
-        Article article = articleService.findById(id);
-        model.addAttribute(article);
+        final ArticleDto.Response articleDto = articleService.getOne(id);
+        final List<Comment> comments = articleDto.getComments();
+
+        model.addAttribute("article", articleDto);
+        model.addAttribute("comments", comments);
         return "article";
     }
 
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable Long id, Model model) {
-        Article article = articleService.findById(id);
-        model.addAttribute(article);
+    public String editForm(@PathVariable Long id, UserSession userSession, Model model) {
+        Long userId = userSession.getId();
+        ArticleDto.Response articleDto = articleService.getOne(userId, id);
+
+        model.addAttribute("article", articleDto);
         return "article-edit";
     }
 
     @PutMapping("/{id}")
-    public String edit(Article editedArticle) {
-        Article article = articleService.edit(editedArticle);
-        return "redirect:/articles/" + article.getId();
+    public String edit(UserSession userSession, ArticleDto.Request editedArticle) {
+        Long userId = userSession.getId();
+        Long articleId = articleService.edit(userId, editedArticle);
+
+        return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
-        articleService.deleteById(id);
+    public String delete(@PathVariable Long id, UserSession userSession) {
+        Long userId = userSession.getId();
+        articleService.deleteById(userId, id);
+
         return "redirect:/";
     }
 }

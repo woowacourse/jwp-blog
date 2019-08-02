@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 public class UserService {
     static final String EMAIL_DUPLICATE_MESSAGE = "이미 사용중인 이메일입니다.";
     static final String PASSWORD_INVALID_MESSAGE = "비밀번호와 비밀번호 확인이 일치하지 않습니다.";
+    public static final String EMAIL_OR_PASSWORD_NOT_MATCH = "존재하지 않는 이메일 또는 비밀번호가 틀립니다.";
 
     private final UserRepository userRepository;
 
@@ -38,10 +39,12 @@ public class UserService {
     }
 
     public User login(UserDto.Register userDto) {
-        String decodedPassword = User.authenticate(userDto.getPassword());
+        User user = userRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(() -> new ValidUserException(EMAIL_OR_PASSWORD_NOT_MATCH, "password"));
 
-        User user = userRepository.findByEmailAndPassword(userDto.getEmail(), decodedPassword)
-                .orElseThrow(() -> new ValidUserException("존재하지 않는 이메일 또는 비밀번호가 틀립니다.", "password"));
+        if (!user.authenticate(userDto.getPassword())) {
+            throw new ValidUserException(EMAIL_OR_PASSWORD_NOT_MATCH, "password");
+        }
 
         return user;
     }
@@ -55,14 +58,14 @@ public class UserService {
 
     public UserDto.Response findById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Can't find User : " + id));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다. : " + id));
 
         return UserDto.Response.createByUser(user);
     }
 
     public UserDto.Response update(UserDto.Update userDto) {
         User user = userRepository.findById(userDto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Can't find User : " + userDto.getId()));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다. : " + userDto.getId()));
 
         user.update(userDto.toUser());
 

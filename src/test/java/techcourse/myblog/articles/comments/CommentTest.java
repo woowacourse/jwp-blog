@@ -1,4 +1,4 @@
-package techcourse.myblog.articles;
+package techcourse.myblog.articles.comments;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,41 +8,32 @@ import techcourse.myblog.users.User;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ArticleTest {
+class CommentTest {
     User user;
-    Article article;
+    Comment comment;
 
     @BeforeEach
     void setUp() {
         user = User.builder()
                 .id(1L)
+                .email("email@email.com")
                 .password("P@ssw0rd")
-                .email("email@gamil.com")
                 .name("name")
                 .build();
 
-        article = Article.builder()
-                .author(user)
-                .title("title")
+        comment = Comment.builder()
                 .contents("contents")
-                .coverUrl("coverUrl")
+                .user(user)
                 .build();
     }
 
     @Test
     void isWrittenBy_본인() {
-        assertThat(article.isWrittenBy(user.getId())).isTrue();
+        assertThat(comment.isWrittenBy(user.getId())).isTrue();
     }
 
     @Test
     void isWrittenBy_다른_작성자() {
-        User anotherUser = User.builder()
-                .id(2L)
-                .email("email1@email.com")
-                .password("P@ssw0rd")
-                .name("name")
-                .build();
-
-        assertThrows(AuthException.class, () -> article.isWrittenBy(anotherUser.getId()));
+        assertThrows(AuthException.class, () -> comment.isWrittenBy(100L));
     }
 }

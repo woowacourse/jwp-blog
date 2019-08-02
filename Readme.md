@@ -1,13 +1,13 @@
 ## TODO
 
-- 게시글 생성
-- 게시글 조회
-- 게시글 수정
-- 게시글 삭제 
-- HTML 중복제거
-- 정적 파일 수정 시 재시작 하지 않고 변경사항 반영하기
-- class 파일 수정 시 자동으로 재시작 하기
+- 작성자 아닌 경우 예외처리용 ControllerAdvice
+- 작성자 확인 로직 중복 처리
+- 댓글
 
+- Service에 userId 대신에 UserSession을 직접 넘기는게 좋을까? 
+    - userId와 articleId가 헷갈린다.
+    - 하지만 UserSession은 DTO가 아니다.
+    - 좋은 해결책은?
 
 
 # 게시글 생성/조회기능 구현하기

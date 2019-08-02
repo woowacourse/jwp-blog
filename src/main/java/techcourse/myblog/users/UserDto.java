@@ -6,7 +6,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-import static techcourse.myblog.users.User.*;
+import static techcourse.myblog.users.UserValidator.*;
 
 public class UserDto {
 

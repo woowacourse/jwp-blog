@@ -4,6 +4,7 @@
       layout:decorator="layouts/layout">
 
 <th:block layout:fragment="content">
+    <th:block th:include="fragments/app-head"/>
 
     <div>
         <form method="post" th:action="'/users/'+${user.id}">
