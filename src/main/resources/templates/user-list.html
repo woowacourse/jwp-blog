@@ -1,17 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:include="/fragment/common-head"></th:block>
-
-    <link rel="stylesheet" href="../static/css/index.css">
+    <head th:include="fragments/main/main_head :: mainHead"></head>
 </head>
 <body>
 <div>
-    <th:block th:if="${userInfo == null}" th:include="/fragment/header"></th:block>
-    <th:block th:unless="${userInfo == null}" th:include="/fragment/login-header"></th:block>
-
+    <div th:replace="fragments/main/header :: header"></div>
     <div class="about-cover card no-border">
-        <div class="cover-img overlay-dark bg" style="background-image: url('../static/images/pages/index/bg.jpg')">
+        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
             <div class="display-block height-100">
             </div>
         </div>
@@ -25,22 +21,24 @@
                         <h4 class="card-title">User List</h4>
                     </div>
 
-                    <div class="card-body" th:each="user: ${users}">
-                        <ul class="list-unstyled list-info">
-                            <li>
-                                <div class="pdd-vertical-10">
-                                    <img class="thumb-img img-circle"
-                                         src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
-                                    <div class="info">
-                                        <a href=""
-                                           class="title no-pdd-vertical text-semibold inline-block lh-1" th:text="${user.name}">Brown</a>
-                                        <span class="sub-title">
-                                            <span th:text="${user.email}">gracefulBrown@woowahan.com</span>
-                                        </span>
+                    <div th:each="user : ${userList}">
+                        <div class="card-body">
+                            <ul class="list-unstyled list-info">
+                                <li>
+                                    <div class="pdd-vertical-10">
+                                        <img class="thumb-img img-circle"
+                                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
+                                        <div class="info">
+                                            <a th:text="${user.getName()}"  th:href="${'/accounts/profile/' + user.getId()}"
+                                               class="title no-pdd-vertical text-semibold inline-block lh-1">Brown</a>
+                                            <span class="sub-title">
+                                                <span th:text="${user.getEmail()}">gracefulBrown@woowahan.com</span>
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                        </ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -51,7 +49,7 @@
 <footer class="content-footer">
     <div class="footer">
         <div class="copyright">
-            <img class="d-inline-block logo relative right-5" src="../static/images/logo/logo_full_dark.png">
+            <img class="d-inline-block logo relative right-5" src="/images/logo/logo_full_dark.png">
             <p class="pdd-left-5 mrg-top-minus-15px">Copyright © <b class="text-dark">우아한테크코스</b>. All rights reserved.
             </p>
         </div>
@@ -60,16 +58,7 @@
     </div>
 </footer>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"
-        integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
-<script src="../static/js/index.js"></script>
+<div th:include="fragments/main/js :: js"></div>
+<script src="/js/index.js"></script>
 </body>
 </html>

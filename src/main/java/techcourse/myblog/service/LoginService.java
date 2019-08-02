@@ -1,60 +1,32 @@
 package techcourse.myblog.service;
 
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.exception.UserNotFoundException;
+import techcourse.myblog.persistence.UserRepository;
+import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.exception.AuthenticationFailException;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class LoginService {
-    private static final Logger log = LoggerFactory.getLogger(LoginService.class);
-
-    public static final String USER_ID = "userId";
-    private static final long INVALID_ID = -123456789l;
+    public final static String LOGGED_IN_USER_SESSION_KEY = "user";
 
     private UserRepository userRepository;
 
-    public boolean isLoggedIn(HttpSession session) {
-        if (session == null) return false;
-
-        Optional<Long> userId = Optional.ofNullable((Long) session.getAttribute("userId"));
-
-        userId.ifPresent(id -> log.debug("logged in id : {}", id));
-
-        return userId.isPresent();
+    public User authenticate(UserRequestDto userRequestDto) {
+        return userRepository.findByEmail(userRequestDto.getEmail())
+                .filter(user -> user.isMatch(userRequestDto))
+                .orElseThrow(AuthenticationFailException::new);
     }
 
-    public void login(HttpSession session, String email, String password) {
-        log.debug("called..!!");
-
-        User user = userRepository.findByEmailAndPassword(email, password)
-                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저입니다."));
-
-        log.debug("user: {}", user);
-
-        session.setAttribute(USER_ID, user.getId());
+    public void login(HttpSession session, UserRequestDto userRequestDto) {
+        session.setAttribute(LOGGED_IN_USER_SESSION_KEY, authenticate(userRequestDto));
     }
 
     public void logout(HttpSession session) {
-        log.debug("called..!!");
-
-        session.removeAttribute(USER_ID);
-    }
-
-    public boolean isLoggedInUser(HttpSession session, long id) {
-        if (session == null) {
-            return false;
-        }
-
-        long userId = (long) Optional.ofNullable(session.getAttribute(USER_ID)).orElse(INVALID_ID);
-
-        return userId == id;
+        session.removeAttribute(LOGGED_IN_USER_SESSION_KEY);
     }
 }

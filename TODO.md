@@ -1,39 +1,9 @@
-Todo..!!
-- 애러처리
-    -[x] 애러 폼 만들기
-    -[x] 애러 핸들러 부분 만들기 (모든 Exception 에 대해서 처리)
-        - [ ] error 메세지 채워서 error 화면으로 리다이렉트
-            - 그래야.. 이전 페이지 누르면 애러 발생한 페이지로 이동하기에
-            - 에공.. 그냥 ModelAndView 를 사용해보려 했는데. 터진다... 뷰에서 파싱할 때...
-    -[ ] Exception 에서 추출할 정보 확인 (ex. 메소드 이름)
-    -[ ] 구체적인 애러로 구분하기 (http status code 등.. 설정)
-    -[ ] 애러처리 후 원래 화면으로 넘기기? (로그인 같은 경우... 다시 로그인 화면으로 못하나?)
-- 서비스로 분리
-    -[x] 좀더 각 화면에 적합한 dto 사용
-    -[x] 테스트 코드 구현
-- 테스트 코드 보강
-    -[ ] userController 테스트
-        -[x] /users [GET]
-        -[ ] /users [POST]
-            -[ ] 올바르지 않은 유저정보
-                -[ ] 조건에 맞지 않는 이메일
-                -[ ] 조건에 맞지 않는 비밀번호
-                -[ ] 조건에 맞지 않는 이름
-                -[ ] 이미 존재하는 이메일
-            -[x] 유저 추가
-        -[x] /users/{id}/mypage-edit [GET]
-            -[x] 로그인 되어있는 상태로 접근
-            -[x] 로그인 아닌 상태로 접근
-        -[x] /users/{id}/mypage-edit [PUT]
-- 로그인 기능
-    -[x] 로그인 한 유저가 로그인/회원가입 화면에 접근할 경우 메인 화면을 띄운다.
-    -[x] 로그인 성공시 메인화면 + 우측 상단에 올바른 사용자 이름
-    -[ ] 로그인 실패 시 상황에 맞는 실패 메세지 띄우기.
-- 로그아웃 기능
-    -[x] 로그아웃시 메인 화면을 띄운다.
-- UserController 와 LoginController 로 분리
-- 전체 테스트할 때 터지는 부분 확인
-====================================================================        
-궁금한것        
-- 서비스를 구현 했으면 ... controller 에서는 status 나 리다이렉트정도만 테스트해도 될까?        
-        
+TODO..
+- [x] understand this code.... ()
+    - [x] fix bug (when update mypage then can not access edit page)
+        - after updating, session.user has corrupted id
+
+- [ ] implement HandlerMethodArgumentResolver (strategy pattern for specific arguments)
+
+테스트 보강
+- [ ] test for checking is logged in for editing ()

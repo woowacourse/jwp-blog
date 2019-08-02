@@ -1,30 +1,126 @@
-# Spring Boot / 게시글 관련 기능 구현
+# 나만의 블로그 만들기
 
-* 게시글 생성
-    * 게시글 작성 페이지 이동 - get /writing
-    * 게시글 작성 - post /articles
-* 게시글 목록 조회 - get /
-* 게시글 조회 - get /articles/{articleId}
-* 게시글 수정
-    * 게시글 수정 페이지 이동 (article-edit.html) - GET /articles/{articleId}/edit
-    * 게시글 수정 - PUT /articles/{articleId}
-    * 게시글 페이지 이동 (article.html)
-* 게시글 삭제 - DELETE /articles/{articleId} 
-    * 삭제 후 게시글 조회 페이지로 이동
-    
-# Spring Data JPA / 회원 관련 기능 구현
+### TODO LIST
 
-* 회원 가입 페이지 이동 - get /signup
-* 회원 가입 규칙
-    * 이메일 중복 확인
-    * 이름 - 숫자, 특수문자 X
-    * 비밀 번호 확인
-* 회원 등록 - post /users
-* 회원 조회 - get / users
- 
-* 로그인
-    * 로그인 성공 - 메인화면 우측 상단 변경
-    * 로그인 실패 - 실패 메시지
-* 로그인 중이면 로그인, 회원 가입 화면 접근 -> 메인 화면
-* 로그인 유저만 해당 유저 수정페이지 접근 가능  
-* 로그 아웃 - 로그아웃 메인화면 
+(AritlcleRepository를 데이터베이스 이용하도록 변경)
+
+- [x] ~~gradle에 jpa + h2 + mysql 종속성 추가~~
+- [x] ~~properties에 mysql 종속성 추가~~
+- [x] ~~mysql database 생성~~
+- [x] ~~extends CrudRepository 로 변경~~
+- [x] ~~Article 객체 @Entity로 변경~~
+- [x] ~~insert 되는지 확인~~
+- [x] ~~delete 확인~~
+- [x] ~~select 확인~~
+- [x] ~~테스트 코드 성공으로 바꾸기~~
+
+(메인 페이지 로그인 vs 비로그인 상태)
+
+- [x] ~~메인페이지가 비로그인 상태일 경우 GUEST - 로그인 - 회원가입 순으로 버튼 노출~~
+- [x] ~~메인 페이지가 로그인 상태일 경우 이름 - 마이페이지 - 로그아웃 순으로 버튼 노출~~
+
+(회원 등록)
+
+- [x] ~~signup.html로 이동하는 버튼 생성 및 이동~~
+- [x] ~~signup.html에서 POST /users 요청~~
+- [x] ~~User entity~~
+- [x] ~~User repository~~
+- [x] ~~Account Controller 만들기~~
+
+(회원 가입 규칙 - 웹 ( html5 form validation 활용))
+
+- [x] ~~비밀번호 확인 기능 동작~~
+- [x] ~~비밀번호 확인이 안되면 보내기 버튼 안되게~~
+- [x] ~~실패시 화면에서 보여주기~~
+
+(회원 가입 규칙 - 서버)
+
+- [x] ~~같은 email로 중복가입 불가~~
+- [x] ~~errors.rejectValue() 사용해서 해보기~~
+- [x] ~~email 형식에 맞게~~
+- [x] ~~이름 2~10자로 제한~~
+- [x] ~~이름에 숫자 or 특수문자 있으면 안됨~~
+- [x] ~~비밀번호 8자 이상 + 소문자+대문자+숫자+특수문자 조합~~
+- [x] ~~회원 등록 실패시 errorMessage를 model에 담아 보내기~~
+- [x] ~~Error에 field 추가~~
+
+(회원 조회)
+- [x] ~~버튼 추가~~
+- [x] ~~GET /users 요청해 회원목록페이지(user-list.html) 이동~~
+- [x] ~~DB에 있는 전체 회원 정보 노출~~
+
+(로그인 성공 시)
+
+- [x] ~~로그인 버튼 클릭시 login.html로 이동~~
+- [x] ~~로그인 성공 시 메인(/) 화면 노출~~
+- [x] ~~로그인 성공시 메인 우측 상단에 사용자 이름 띄우기~~
+- [x] ~~다시 로그인/회원가입 화면에 접근할 경우 메인(/) 화면 노출~~
+- [x] ~~Security gradle import~~
+- [x] ~~security configure extends 만들기~~
+- [x] ~~UserDetail implements 만들기~~
+- [x] ~~UserDetailService 만들고~~
+
+(로그인 실패시)
+
+- [x] ~~로그인 실패시 errorMesage를 model에 담아 보내기~~
+  - [x] ~~이메일이 없는 경우~~
+  - [x] ~~비밀번호가 틀린 경우~~
+- [x] ~~실패시 alerts으로 보내주기 (부트스트랩 alerts 사용)~~
+
+(로그아웃시)
+
+- [x] ~~메인화면(/) 노출~~
+- [x] ~~메인 우측 상단에 사용자 이름 지우기~~
+
+(회원 수정)
+
+- [x] ~~마이페이지 클릭 시 mypage.html 로 이동 (/accounts/profile/{id})~~
+- [x] ~~해당 id(userId)의 계정의 프로필이 보이게 변경~~
+- [x] ~~본인 프로필계정이 아니면 수정 버튼 노출 안되게 변경~~
+- [x] ~~수정버튼 클릭시 mypage-edit.html로 이동~~
+
+- [x] ~~로그인 한 경우만 mypage-edit.html로 이동(GET /accounts/profile/edit)~~
+- [x] 로그인 안한 상태면 로그인창으로 이동
+- [x] ~~마이페이지(프로필)에서 본인일 경우에만 수정버튼이 나오게~~
+- [ ] 로그인 하면 원래 가려던 페이지로 이동
+- [x] ~~mypage-edit.html에서 PUT으로 수정 요청~~
+- [x] ~~mypage-edit.html에 input태그 변경~~
+- [x] ~~mypage-edit.html에 form태그 추가~~
+
+(회원 탈퇴)
+
+- [x] ~~MyPage > profile 하단 > 탈퇴 버튼을 추가~~
+- [x] ~~DELETE로 탈퇴 요청~~
+
+(추가)
+
+- [ ] 패키지 분리
+- [ ] 컨트롤러 분리
+- [x] ~~AccountController 테스트 코드 중복 제거~~
+- [x] ~~AccountController 테스트 코드 @BeforeEach 사용하지 말고 생성자에서 테스트 유저 추가~~
+- [ ] ArticleController 테스트 코드 중복 제거
+- [ ] ArticleController 테스트 코드 @BeforeEach 사용하지 말고 생성자에서 테스트 유저 추가
+- [x] ~~컨트롤러 Exception Handler 와 404 에러 페이지 추가~~
+- [ ] url /articles를 prefix로 빼기 (/writing -> /articles/writing)
+- [x] ~~html에서 form 중복 제거하기 (article-edit.html)~~
+- [x] ~~html에서 form 중복 제거하기 (header.html)~~
+- [ ] 테스트할 때만 h2 사용하기  
+- [ ] 자기가 쓴 글만 수정할 수 있도록 하기
+
+
+=================================
+
+- ~~게시글 작성 시 작성자가 같이 저장~~
+
+댓글작성 기능 구현
+- ~~커멘트 엔터티 생성~~
+- ~~Add createdAt column into Comment entity~~
+- ~~커맨트 레파지토리 구현~~
+- ~~커맨트 서비스 구현~~
+- ~~Comment Controller~~
+- ~~Add addNewComment controller method in ArticleController~~
+- ~~Show comments related to articles~~
+- ~~Add modifyCommentById controller method in CommentController~~
+- ~~Add deleteCommentById controller method in CommentController~~
+- ~~게시글 삭제시 댓글도 삭제~~
+- 댓글 수정 프론트엔드 작업

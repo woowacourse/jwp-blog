@@ -1,78 +1,43 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Objects;
+import lombok.*;
+import techcourse.myblog.service.dto.ArticleRequestDto;
+
+import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
+@Getter
+@EqualsAndHashCode
+@ToString
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
+    @Column(nullable = false)
     private String title;
-    private String coverUrl;
+    @Column(nullable = false)
     private String contents;
-    private long categoryId;
+    @Column(nullable = false)
+    private String coverUrl;
 
-    public Article() {
-    }
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_AUTHOR"), name = "author")
+    private User author;
 
-    public Article(long id, String title, String coverUrl, String contents, long categoryId) {
-        this.id = id;
+    public Article(String title, String contents, String coverUrl) {
         this.title = title;
-        this.coverUrl = coverUrl;
         this.contents = contents;
-        this.categoryId = categoryId;
+        this.coverUrl = coverUrl;
     }
 
-    public long getId() {
-        return id;
+    public void update(ArticleRequestDto articleRequestDto) {
+        this.title = articleRequestDto.getTitle();
+        this.contents = articleRequestDto.getContents();
+        this.coverUrl = articleRequestDto.getCoverUrl();
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public long getCategoryId() {
-        return categoryId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return id == article.id &&
-                categoryId == article.categoryId &&
-                Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents, categoryId);
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", contents='" + contents + '\'' +
-                ", categoryId=" + categoryId +
-                '}';
+    public void setAuthor(User persistUser) {
+        this.author = persistUser;
     }
 }

@@ -19,11 +19,11 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="techcourse.myblog.error" level="DEBUG">
+    <logger name="techcourse.myblog.presentation" level="DEBUG">
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="techcourse.myblog.interceptor" level="DEBUG">
+    <logger name="techcourse.myblog.persistence" level="DEBUG">
         <appender-ref ref="STDOUT"/>
     </logger>
 
