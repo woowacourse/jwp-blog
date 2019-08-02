@@ -78,9 +78,4 @@ public class Article {
     public boolean isSameAuthor(User author) {
         return this.author.equals(author);
     }
-
-    // todo : 점진적 리팩토링. User or userId 무엇으로 비교하는 게 좋을까.
-    public boolean isSameAuthor2(Long userId) {
-        return author.getId().equals(userId);
-    }
 }

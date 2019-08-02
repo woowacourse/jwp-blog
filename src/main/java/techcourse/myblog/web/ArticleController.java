@@ -62,15 +62,11 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}/edit")
     public String edit(@PathVariable("articleId") long articleId, Model model, HttpSession httpSession) {
-        Article article = articleService.findArticleById(articleId);
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
+        Article article = articleService.findArticleWrittenByUser(articleId, userResponse);
+        model.addAttribute(ARTICLE_INFO, article);
 
-        if (article.isSameAuthor2(userResponse.getId())) {
-            model.addAttribute(ARTICLE_INFO, article);
-            return "article-edit";
-        }
-        
-        return "redirect:/articles/" + articleId;
+        return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
