@@ -13,7 +13,7 @@ class CommentTest {
         Article article = new Article("title", "coverUrl", "반갑다 나는 효오다", user);
         Comment comment = new Comment("빵가워요", user, article);
 
-        comment.modify(contents);
+        comment.modify(contents, user);
 
         assertThat(comment.getContents()).isEqualTo(contents);
     }

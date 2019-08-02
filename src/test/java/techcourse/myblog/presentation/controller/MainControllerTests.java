@@ -18,13 +18,6 @@ public class MainControllerTests {
     }
 
     @Test
-    void writing_GET() {
-        webTestClient.get().uri("/writing")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
     void 로그인_페이지_GET() {
         webTestClient.get().uri("/login")
                 .exchange()
