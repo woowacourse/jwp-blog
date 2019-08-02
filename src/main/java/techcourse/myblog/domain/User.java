@@ -8,7 +8,7 @@ import techcourse.myblog.dto.UserEditRequestDto;
 
 import javax.persistence.*;
 
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @EqualsAndHashCode(of = "id")
 @ToString
