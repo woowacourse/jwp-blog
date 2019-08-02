@@ -14,11 +14,9 @@ import javax.validation.constraints.NotBlank;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @EqualsAndHashCode
 public class Comment {
     @Id
