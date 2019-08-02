@@ -1,28 +1,32 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
-<html layout:decorator="layout/default"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
-
+      layout:decorate="~{layout/layout}"
+      lang="ko">
+<head>
+    <link rel="stylesheet" href="/css/article-edit.css">
+    <th:block th:replace="fragment/article-head :: article-head"></th:block>
+</head>
 <th:block layout:fragment="content">
     <div>
-        <form accept-charset="utf-8" name="article"
-              th:action="${article == null ? '/articles' : '/articles/' + article.id}"
-              th:method="${article == null ? 'post' : 'put'}" th:object="${article}">
+        <th:block th:replace="fragment/header :: header"></th:block>
+
+        <form th:object="${article}" th:action="${article == null ? '/articles' : '/articles/'+ article.id}"
+              name="article" th:method="${article == null ? 'post' : 'put'}" accept-charset="utf-8">
             <div class="about-cover card no-border">
-                <div class="cover-img A]overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
+                <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
                     <div class="height-300px vertical-center pdd-horizon-50">
                         <div class="width-80">
-                            <input autocomplete="off"
+
+                            <input type="text" name="title"
                                    class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
-                                   name="title"
                                    placeholder="제목을 입력해주세요" th:value="${article == null ? '' : article.title}"
-                                   type="text">
-                            <input autocomplete="off"
+                                   autocomplete="off">
+
+                            <input type="text" name="coverUrl"
                                    class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
-                                   name="coverUrl"
                                    placeholder="배경 url을 입력해주세요" th:value="${article == null ? '' : article.coverUrl}"
-                                   type="text">
+                                   autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -33,14 +37,14 @@
                     <div class="col-lg-1 col-md-1"></div>
                     <div class="col-lg-10 col-md-10 col-sm-10">
                         <input id="article-contents" name="contents" type="hidden">
-                        <div id="editSection" th:text="${article == null ? '' : article.contents}"></div>
+                        <div id="editSection"></div>
                     </div>
                     <div class="col-lg-1 col-md-1">
                         <div class="btn-group btn-group-vertical">
-                            <button class="btn btn-default" id="save-btn" type="submit">
+                            <button id="save-btn" type="submit" class="btn btn-default">
                                 <i class="ti-save"></i>
                             </button>
-                            <a class="btn btn-default" href="/">
+                            <a href="/" class="btn btn-default">
                                 <i class="ti-close"></i>
                             </a>
                         </div>
@@ -49,11 +53,12 @@
             </div>
         </form>
     </div>
+</th:block>
 
-    <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+<th:block layout:fragment="custom-js">
     <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-    <script src="/js/index.js"></script>
-    <script type="text/javascript">
+
+    <script type="text/javascript" th:inline="javascript">
         const editor = new tui.Editor({
             el: document.querySelector('#editSection'),
             initialEditType: 'markdown',
@@ -63,8 +68,8 @@
                     document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
                 }
             },
-            initialValue: document.getElementById('editSection').innerHTML,
-            height: 'calc(100vh - 360px)',
+            initialValue: [[ ${article == null ? '' : article.contents}]],
+            height: 'calc(100vh - 360px)'
         });
     </script>
 </th:block>

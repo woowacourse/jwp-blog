@@ -37,7 +37,6 @@ h1, h2, h3, h4, h5, h6 {
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
     font-family: '나눔고딕', 'Nanum Gothic', 'Malgun Gothic', '맑은고딕', 'Apple SD Gothic Neo', Roboto, -apple-system, NanumGothic,
     Dotum, '돋움', sans-serif, system-ui, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial, sans-serif;
-    Dotum, '돋움', sans-serif, system-ui, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial, sans-serif;
 }
 
 h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
@@ -4766,7 +4765,7 @@ button.disabled, button:disabled {
 
 @media only screen and (max-width: 767px) {
     .modal-left .modal-dialog, .modal-right .modal-dialog {
-        width: 260 pxpx
+        width: 260px;
     }
 }
 
@@ -11988,7 +11987,7 @@ button.disabled, button:disabled {
 
 @media only screen and (max-width: 767px) {
     .modal-left .modal-dialog, .modal-right .modal-dialog {
-        width: 260 pxpx
+        width: 260px;
     }
 }
 
