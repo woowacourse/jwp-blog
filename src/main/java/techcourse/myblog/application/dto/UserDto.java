@@ -1,6 +1,7 @@
 package techcourse.myblog.application.dto;
 
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import techcourse.myblog.domain.User;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class UserDto {
     @NotBlank(message = "이메일을 작성해주세요.")
     @Email(message = "메일의 양식을 지켜주세요.")
@@ -29,6 +31,7 @@ public class UserDto {
 
     public static UserDto of(User user) {
         UserDto userDto = new UserDto();
+        System.out.println(user.getName());
         userDto.setName(user.getName());
         userDto.setEmail(user.getEmail());
         userDto.setPassword(user.getPassword());

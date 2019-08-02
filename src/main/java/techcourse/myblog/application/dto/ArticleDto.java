@@ -1,11 +1,13 @@
 package techcourse.myblog.application.dto;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import techcourse.myblog.domain.Article;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class ArticleDto {
     private long id;
     private String title;

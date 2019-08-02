@@ -1,5 +1,6 @@
 package techcourse.myblog.application.dto;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import techcourse.myblog.domain.Comment;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class CommentDto {
     private long id;
     private String contents;

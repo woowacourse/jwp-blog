@@ -1,5 +1,6 @@
 package techcourse.myblog.application.dto;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class LoginDto {
     @NotBlank(message = "이메일을 작성해주세요.")
     @Email(message = "메일의 양식을 지켜주세요.")
