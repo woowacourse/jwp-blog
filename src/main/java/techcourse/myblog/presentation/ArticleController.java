@@ -11,7 +11,6 @@ import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.ArticleRequestDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
-import techcourse.myblog.service.dto.CommentResponseDtoCollection;
 
 import javax.servlet.http.HttpSession;
 
@@ -60,7 +59,7 @@ public class ArticleController {
         Article article = articleService.findById(articleId);
         model.addAttribute("article", article);
         model.addAttribute("comments",
-                CommentResponseDtoCollection.of(commentService.findByArticle(article)));
+                commentService.commentsToDtos(commentService.findByArticle(article)));
         return "article";
     }
 

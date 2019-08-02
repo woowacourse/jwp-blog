@@ -6,9 +6,11 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.persistence.CommentRepository;
 import techcourse.myblog.presentation.CommentNotFoundException;
 import techcourse.myblog.service.dto.CommentRequestDto;
+import techcourse.myblog.service.dto.CommentResponseDto;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -31,5 +33,11 @@ public class CommentService {
 
     public List<Comment> findByArticle(Article article) {
         return commentRepository.findByArticleOrderByCreatedAt(article);
+    }
+
+    public List<CommentResponseDto> commentsToDtos(List<Comment> comments) {
+        return comments.stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList());
     }
 }
