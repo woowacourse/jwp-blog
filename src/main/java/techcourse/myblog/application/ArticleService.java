@@ -51,12 +51,13 @@ public class ArticleService {
         User user = modelMapper.map(userResponse, User.class);
 
         if (!article.isSameAuthor(user)) {
-            throw new NotSameAuthorException("해당 작성자만 글을 수정할 수 있습니다.");
+            throw new NotSameAuthorException("해당 게시물의 작성자가 아닙니다.");
         }
 
         return article;
     }
 
+    // todo edit과 delete 모순 해결. article은 도대체 어디서 생성할 것인가....
     @Transactional
     public void editArticle(ArticleDto articleDto, Long articleId, UserResponse userResponse) {
         Article article = articleRepository.findById(articleId)
