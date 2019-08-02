@@ -56,7 +56,7 @@ class UserControllerTests {
 	void signUpSuccess() {
 		StatusAssertions statusAssertions = requestForSignUp("tiber", "tiber@naver.com", "asdfASDF123@!#$");
 		checkRedirect(statusAssertions, "Location", ".+/login");
-		assertTrue(userRepository.findByEmail("tiber@naver.com").isPresent());
+		assertTrue(userRepository.findByInformation_Email("tiber@naver.com").isPresent());
 	}
 
 	@ParameterizedTest
@@ -64,7 +64,7 @@ class UserControllerTests {
 	@ValueSource(strings = {"t", "abcdefghijk", "tiber1", "tiber!"})
 	void signUpFailureDueToUsernameValue(String name) {
 		requestForSignUp(name, "tiber@naver.com", "asdfASDF1@").isOk();
-		assertFalse(userRepository.findByEmail("tiber@naver.com").isPresent());
+		assertFalse(userRepository.findByInformation_Email("tiber@naver.com").isPresent());
 	}
 
 	@ParameterizedTest
@@ -72,7 +72,7 @@ class UserControllerTests {
 	@ValueSource(strings = {"t", "tibernavercom", "tibernaver.com"})
 	void signUpFailureDueToEmailValue(String email) {
 		requestForSignUp("tiber", email, "asdfASDF1@").isOk();
-		assertFalse(userRepository.findByEmail(email).isPresent());
+		assertFalse(userRepository.findByInformation_Email(email).isPresent());
 	}
 
 	@ParameterizedTest
@@ -81,7 +81,7 @@ class UserControllerTests {
 			"aaa111!@#", "aaaAAA$%^", "AAA111%^&"})
 	void signUpFailureDueToPasswordValue(String password) {
 		requestForSignUp("tiber", "tiber@naver.com", password).isOk();
-		assertFalse(userRepository.findByEmail("tiber@naver.com").isPresent());
+		assertFalse(userRepository.findByInformation_Email("tiber@naver.com").isPresent());
 	}
 
 	private StatusAssertions requestForSignUp(String username, String email, String password) {
