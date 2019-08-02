@@ -1,4 +1,4 @@
-package techcourse.myblog.controller.dto;
+package techcourse.myblog.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,9 +18,6 @@ public class ArticleDto {
     private String coverUrl;
 
     public Article toArticle(User author) {
-        if (id != 0) {
-            return new Article(id, title, contents, coverUrl, author);
-        }
         return new Article(title, contents, coverUrl, author);
     }
 }

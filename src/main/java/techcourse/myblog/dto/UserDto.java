@@ -1,4 +1,4 @@
-package techcourse.myblog.controller.dto;
+package techcourse.myblog.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

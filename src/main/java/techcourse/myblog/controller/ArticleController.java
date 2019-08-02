@@ -1,11 +1,10 @@
 package techcourse.myblog.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.controller.dto.ArticleDto;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.domain.*;
 import techcourse.myblog.service.ArticleService;
 
@@ -60,15 +59,14 @@ public class ArticleController {
     }
 
     @PutMapping("{articleId}")
-    public String updateArticleByIdPage(ArticleDto articleDto, User user) {
-        log.debug(">>> put article ArticleDto : {}, user : {}", articleDto, user);
-        Article preArticle = articleService.findArticleById(articleDto.getId());
-        if (preArticle.isNotMatchAuthor(user)) {
-            return "redirect:/";
-        }
-        Article article = articleService.saveArticle(articleDto.toArticle(user));
+    public String updateArticleByIdPage2(@PathVariable long articleId, ArticleDto articleDto, User user) {
+        log.debug(">>> put article Id : {}, ArticleDto : {}, user : {}", articleId, articleDto, user);
+        articleDto.setId(articleId);
 
-        return "redirect:/articles/" + article.getId();
+        if (articleService.isSuccessUpdate(articleDto, user)) {
+            return "redirect:/articles/" + articleId;
+        }
+        return "redirect:/";
     }
 
     @DeleteMapping("{articleId}")

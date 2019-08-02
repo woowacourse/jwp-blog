@@ -3,10 +3,9 @@ package techcourse.myblog.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.CommentRepository;
+import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.domain.*;
+import techcourse.myblog.dto.ArticleDto;
 
 import java.util.List;
 
@@ -36,5 +35,16 @@ public class ArticleService {
 
     public void deleteArticle(long articleId) {
         articleRepository.deleteById(articleId);
+    }
+
+    @Transactional
+    public boolean isSuccessUpdate(ArticleDto articleDto, User user) {
+        Article preArticle = articleRepository.findById(articleDto.getId()).orElseThrow(RuntimeException::new);
+        if (preArticle.isNotMatchAuthor(user)) {
+            return false;
+        }
+
+        preArticle.update(articleDto);
+        return true;
     }
 }
