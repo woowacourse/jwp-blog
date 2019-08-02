@@ -43,9 +43,9 @@ public class Comment {
     }
 
     public void modify(String contents, User user) {
-        if (this.user.equals(user)) {
-            this.contents = contents;
+        if (!this.user.equals(user)) {
+            throw new NotExistUserIdException("작성자가 아닙니다.");
         }
-        throw new NotExistUserIdException("작성자가 아닙니다.");
+        this.contents = contents;
     }
 }

@@ -39,13 +39,13 @@ public class Article {
     }
 
     public void modify(Article article, User user) {
-        if (this.user.equals(user)) {
-            this.title = article.title;
-            this.coverUrl = article.coverUrl;
-            this.contents = article.contents;
+        if (!this.user.equals(user)) {
+            throw new NotExistUserIdException("작성자가 아닙니다.");
         }
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
 
-        throw new NotExistUserIdException("작성자가 아닙니다.");
     }
 
     public boolean checkAuthor(String email) {

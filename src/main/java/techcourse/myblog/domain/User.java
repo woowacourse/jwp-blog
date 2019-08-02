@@ -41,12 +41,11 @@ public class User {
     }
 
     public void modify(User user) {
-        if (this.equals(user)) {
-            this.password = user.password;
-            this.name = user.name;
+        if (!this.equals(user)) {
+            throw new NotExistUserIdException("해당 유저가 아닙니다.");
         }
-        throw new NotExistUserIdException("해당 유저가 아닙니다.");
-
+        this.password = user.password;
+        this.name = user.name;
     }
 
     public boolean checkPassword(String password) {
