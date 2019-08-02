@@ -1,5 +1,7 @@
 package techcourse.myblog.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class CommentController {
+    private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
     private final CommentService commentService;
     private final ArticleService articleService;
 
@@ -23,28 +26,33 @@ public class CommentController {
     }
 
     @GetMapping("/comment/{commentId}/edit")
-    public String openCommentEdit(@PathVariable Long commentId, Model model) {
+    public String openCommentEdit(@PathVariable Long commentId, Model model, HttpSession httpSession) {
+        commentService.exist(commentId, getLoginUser(httpSession));
         model.addAttribute("comment", commentService.findById(commentId));
         return "comment-edit";
     }
 
     @PostMapping("/articles/{articleId}/comment")
     public String create(@PathVariable Long articleId, CommentDto commentDto, HttpSession httpSession) {
-        User author = (User)httpSession.getAttribute("user");
         Article article = articleService.findById(articleId);
-        commentService.save(commentDto, author, article);
+        commentService.save(commentDto, getLoginUser(httpSession), article);
         return "redirect:/articles/" + articleId;
     }
 
     @PutMapping("/comment/{commentId}")
-    public String updateComment(@PathVariable Long commentId, CommentDto commentDto) {
-        Comment comment = commentService.update(commentId, commentDto);
+    public String updateComment(@PathVariable Long commentId, CommentDto commentDto, HttpSession httpSession) {
+        Comment comment = commentService.update(commentId, commentDto, getLoginUser(httpSession));
+        log.debug("update comment :  {}", comment);
         return "redirect:/articles/" + comment.getArticleId();
     }
 
     @DeleteMapping("/comment/{commentId}")
-    public String updateComment(@PathVariable Long commentId) {
-        Long articleId = commentService.delete(commentId);
+    public String updateComment(@PathVariable Long commentId, HttpSession httpSession) {
+        Long articleId = commentService.delete(commentId, getLoginUser(httpSession));
         return "redirect:/articles/" + articleId;
+    }
+
+    private User getLoginUser(HttpSession httpSession) {
+        return (User) httpSession.getAttribute("user");
     }
 }
