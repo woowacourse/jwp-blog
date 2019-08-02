@@ -41,10 +41,10 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public String editUserName(@PathVariable Long id, UserPublicInfoDto userPublicInfoDto, HttpSession session) {
+    public String editUserName(@PathVariable Long id, UserRequestDto userRequestDto, HttpSession session) {
         if (loginChecker.isLoggedInSameId(session, id)) {
-            userService.update(userPublicInfoDto);
-            session.setAttribute(LoginChecker.LOGGED_IN_USER, userPublicInfoDto);
+            userService.update(id, userRequestDto);
+            session.setAttribute(LoginChecker.LOGGED_IN_USER, userRequestDto);
         }
         return "redirect:/mypage/" + id;
     }

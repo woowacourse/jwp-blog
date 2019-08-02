@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.ArticleDto;
@@ -14,6 +15,7 @@ import techcourse.myblog.service.exception.NotFoundArticleException;
 import techcourse.myblog.service.exception.NotFoundCommentException;
 import techcourse.myblog.service.exception.SignUpException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -175,5 +177,18 @@ public class UserServiceTest {
 
         assertThatThrownBy(() -> commentService.findById(comment.getId()))
                 .isInstanceOf(NotFoundCommentException.class);
+    }
+
+    @Test
+    @DisplayName("유저 이름 변경")
+    void update() {
+        Long userId = 1L;
+        User user = userService.findById(userId);
+        String updateName = "UPDATE";
+        UserRequestDto userRequestDto = new UserRequestDto(updateName, user.getEmail(), null, null);
+        userService.update(userId, userRequestDto);
+        User updateUser = userService.findById(userId);
+
+        assertThat(updateUser.getName()).isEqualTo(updateName);
     }
 }

@@ -77,9 +77,9 @@ public class UserService {
     }
 
     @Transactional
-    public void update(UserPublicInfoDto userPublicInfoDto) {
+    public void update(Long userId, UserRequestDto userPublicInfoDto) {
         try {
-            User user = findById(userPublicInfoDto.getId());
+            User user = findById(userId);
             user.updateName(userPublicInfoDto.getName());
         } catch (NotFoundUserException | UserArgumentException e) {
             throw new UserUpdateException(e.getMessage());
