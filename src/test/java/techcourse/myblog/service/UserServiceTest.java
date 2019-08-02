@@ -1,102 +1,193 @@
 package techcourse.myblog.service;
 
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import techcourse.myblog.domain.User.User;
-import techcourse.myblog.web.dto.UserRequestDto;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.CommentRequestDto;
+import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.service.exception.NotFoundArticleException;
+import techcourse.myblog.service.exception.NotFoundCommentException;
+import techcourse.myblog.service.exception.SignUpException;
 
-import java.util.NoSuchElementException;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserServiceTest {
-    private static final String NAME = "yusi";
-    private static final String EMAIL = "temp@mail.com";
-    private static final String PASSWORD = "123qeaASD!";
+    public static final String VALID_PASSWORD = "passWORD1!";
 
     @Autowired
     UserService userService;
 
-    @BeforeEach
-    public void setUp() {
-        userService.deleteAll();
+    @Autowired
+    ArticleService articleService;
+
+    @Autowired
+    CommentService commentService;
+
+    @Test
+    @DisplayName("이메일이 중복되는 경우에 예외를 던져준다.")
+    public void checkEmailDuplication() {
+        UserRequestDto userRequestDto1 = new UserRequestDto("name", "email@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
+        UserRequestDto userRequestDto2 = new UserRequestDto("name", "email@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
+
+        userService.save(userRequestDto1);
+
+        assertThatThrownBy(() -> userService.save(userRequestDto2))
+                .isInstanceOf(SignUpException.class);
     }
 
     @Test
-    public void 회원_추가() {
-        UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
-        User expected = userService.save(signUpRequestDto);
-        User actual = userService.findById(expected.getId());
+    @DisplayName("이름이 2자 미만인 경우에 예외를 던져준다.")
+    public void underValidNameLength() {
+        UserRequestDto userRequestDto = new UserRequestDto("a", "email1@woowa.com",
+                VALID_PASSWORD, VALID_PASSWORD);
 
-        assertEquals(expected, actual);
+        assertThatThrownBy(() -> userService.save(userRequestDto))
+                .isInstanceOf(SignUpException.class);
     }
 
     @Test
-    public void 회원_조회() {
-        UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
-        User expected = userService.save(signUpRequestDto);
+    @DisplayName("이름이 10자 초과인 경우에 예외를 던져준다.")
+    public void exceedValidNameLength() {
+        UserRequestDto userRequestDto = new UserRequestDto("abcdefghijk", "email2@woowa.com",
+                VALID_PASSWORD, VALID_PASSWORD);
 
-        assertEquals(expected, userService.findById(expected.getId()));
+        assertThatThrownBy(() -> userService.save(userRequestDto))
+                .isInstanceOf(SignUpException.class);
     }
 
     @Test
-    @DisplayName("회원 목록 조회")
-    public void findAll() {
-        String secondName = NAME + "eun";
-        String secondPassword = PASSWORD + "1562";
+    @DisplayName("이름이 숫자를 포함하는 경우에 예외를 던져준다.")
+    public void includeNumberInName() {
+        UserRequestDto userRequestDto = new UserRequestDto("abcde1", "email3@woowa.com",
+                VALID_PASSWORD, VALID_PASSWORD);
 
-        UserRequestDto.SignUpRequestDto userDto1 = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
-        UserRequestDto.SignUpRequestDto userDto2
-                = new UserRequestDto.SignUpRequestDto(secondName, "temp" + EMAIL, secondPassword);
-        User user1 = userService.save(userDto1);
-        User user2 = userService.save(userDto2);
-
-        Iterable<User> actual = userService.findAll();
-        assertThat(actual, Matchers.contains(user1, user2));
+        assertThatThrownBy(() -> userService.save(userRequestDto))
+                .isInstanceOf(SignUpException.class);
     }
 
     @Test
-    public void 해당_회원이_존재하는지_확인() {
-        UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
-        userService.save(signUpRequestDto);
+    @DisplayName("이름이 특수문자를 포함하는 경우에 예외를 던져준다.")
+    public void includeSpecialCharacterInName() {
+        UserRequestDto userRequestDto = new UserRequestDto("abcde!@", "email4@woowa.com",
+                VALID_PASSWORD, VALID_PASSWORD);
 
-        assertTrue(userService.exitsByEmail(signUpRequestDto));
+        assertThatThrownBy(() -> userService.save(userRequestDto))
+                .isInstanceOf(SignUpException.class);
     }
 
     @Test
-    public void 회원_수정() {
-        final String modifyName = NAME + "eun";
-        UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
-        User expected = userService.save(signUpRequestDto);
-        expected.update(new User(modifyName, EMAIL, PASSWORD));
+    @DisplayName("password가 8자 미만인 경우 예외를 던져준다.")
+    public void underValidPasswordLength() {
+        UserRequestDto userRequestDto = new UserRequestDto("abcde", "email5@woowa.com",
+                "passwor", "passwor");
 
-        UserRequestDto.UpdateRequestDto updateRequestDto
-                = new UserRequestDto.UpdateRequestDto(expected.getId(), modifyName, EMAIL);
-        userService.update(updateRequestDto);
-
-        User actual = userService.findById(expected.getId());
-        assertEquals(expected, actual);
+        assertThatThrownBy(() -> userService.save(userRequestDto))
+                .isInstanceOf(SignUpException.class);
     }
 
     @Test
-    public void 회원_탈퇴() {
-        UserRequestDto.SignUpRequestDto signUpRequestDto = new UserRequestDto.SignUpRequestDto(NAME, EMAIL, PASSWORD);
-        User user = userService.save(signUpRequestDto);
+    @DisplayName("password에 소문자가 포함되지 않으면 예외를 던져준다.")
+    public void checkUndercaseInPassword() {
+        UserRequestDto userRequestDto = new UserRequestDto("abcde", "email6@woowa.com",
+                "PASSWORD1!", "PASSWORD1!");
 
-        userService.deleteByEmail(EMAIL);
-
-        assertThrows(NoSuchElementException.class, () -> {
-            userService.findById(user.getId());
-        });
+        assertThatThrownBy(() -> userService.save(userRequestDto))
+                .isInstanceOf(SignUpException.class);
     }
 
+    @Test
+    @DisplayName("password에 대문자가 포함되지 않으면 예외를 던져준다.")
+    public void checkUppercaseInPassword() {
+        UserRequestDto userRequestDto = new UserRequestDto("abcde", "email7@woowa.com",
+                "password1!", "password1!");
+
+        assertThatThrownBy(() -> userService.save(userRequestDto))
+                .isInstanceOf(SignUpException.class);
+    }
+
+    @Test
+    @DisplayName("password에 숫자가 포함되지 않으면 예외를 던져준다.")
+    public void checkNumberInPassword() {
+        UserRequestDto userRequestDto = new UserRequestDto("abcde", "email8@woowa.com",
+                "passWORD!", "passWORD!");
+
+        assertThatThrownBy(() -> userService.save(userRequestDto))
+                .isInstanceOf(SignUpException.class);
+    }
+
+    @Test
+    @DisplayName("password에 특수문자가 포함되지 않으면 예외를 던져준다.")
+    public void checkSpecialCharacterInPassword() {
+        UserRequestDto userRequestDto = new UserRequestDto("abcde", "email9@woowa.com",
+                "passWORD1", "passWORD1");
+
+        assertThatThrownBy(() -> userService.save(userRequestDto))
+                .isInstanceOf(SignUpException.class);
+    }
+
+    @Test
+    @DisplayName("password에 한글이 포함되면 예외를 던져준다.")
+    public void checkPasswordDoesNotContainsKorean() {
+        UserRequestDto userRequestDto = new UserRequestDto("abcde", "email10@woowa.com",
+                "passWORD가1!", "passWORD가1!");
+
+        assertThatThrownBy(() -> userService.save(userRequestDto))
+                .isInstanceOf(SignUpException.class);
+    }
+
+    @Test
+    @DisplayName("User를 삭제했을 때 작성한 Article도 삭제된다")
+    public void deleteUserWithCascadeArticles() {
+        UserRequestDto userRequestDto = new UserRequestDto("delete", "email11@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
+        User author = userService.save(userRequestDto);
+        UserSessionDto userPublicInfoDto = new UserSessionDto(author.getId(), author.getName(), author.getEmail());
+        ArticleDto articleDto = new ArticleDto(null, author.getId(), "title",
+                "coverUrl", "contents");
+
+        ArticleDto article = articleService.save(userPublicInfoDto, articleDto);
+        userService.delete(author.getId());
+
+        assertThatThrownBy(() -> articleService.findArticleDtoById(article.getId()))
+                .isInstanceOf(NotFoundArticleException.class);
+    }
+
+    @Test
+    @DisplayName("User를 삭제했을 때 작성한 Comment도 삭제된다")
+    public void deleteUserWithCascadeComments() {
+        UserRequestDto userRequestDto = new UserRequestDto("delete", "email11@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
+        User author = userService.save(userRequestDto);
+        UserSessionDto userPublicInfoDto = new UserSessionDto(author.getId(), author.getName(), author.getEmail());
+        ArticleDto articleDto = new ArticleDto(null, author.getId(),
+                "title", "coverUrl", "contents");
+        ArticleDto article = articleService.save(userPublicInfoDto, articleDto);
+
+        UserSessionDto userSession = new UserSessionDto(author.getId(), null, null);
+        CommentRequestDto commentRequestDto = new CommentRequestDto(article.getId(), "TEST Comment");
+        Comment comment = commentService.save(userSession, commentRequestDto);
+
+        userService.delete(author.getId());
+
+        assertThatThrownBy(() -> commentService.findById(comment.getId()))
+                .isInstanceOf(NotFoundCommentException.class);
+    }
+
+    @Test
+    @DisplayName("유저 이름 변경")
+    void update() {
+        Long userId = 1L;
+        User user = userService.findById(userId);
+        String updateName = "UPDATE";
+        UserRequestDto userRequestDto = new UserRequestDto(updateName, user.getEmail(), null, null);
+        userService.update(userId, userRequestDto);
+        User updateUser = userService.findById(userId);
+
+        assertThat(updateUser.getName()).isEqualTo(updateName);
+    }
 }

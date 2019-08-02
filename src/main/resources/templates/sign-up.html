@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:replace="fragments/head :: headFragment"></th:block>
+</head>
+<body>
+<div class="app">
+    <div class="header navbar bg-transparent no-border">
+        <div class="header-container pdd-right-15">
+            <ul class="nav-left mrg-left-0">
+                <li>
+                    <a href="/">
+                        <div class="logo logo-dark d-none"
+                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white"
+                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="authentication">
+        <div class="sign-in-2">
+            <div class="container-fluid no-pdd-horizon overlay-dark bg"
+                 style="background-image: url('/images/default/bg.jpg')">
+                <div class="row">
+                    <div class="col-md-10 mr-auto ml-auto">
+                        <div class="row">
+                            <div class="mr-auto ml-auto full-height height-100 d-flex align-items-center">
+                                <div class="vertical-align full-height">
+                                    <div class="table-cell">
+                                        <div class="card min-width-480px">
+                                            <div class="card-body">
+                                                <div class="pdd-horizon-30 pdd-vertical-30">
+                                                    <div class="mrg-btm-30">
+                                                        <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
+                                                            회원가입</h2>
+                                                    </div>
+                                                    <form action="/users" method="post">
+                                                        <div class="form-group">
+                                                            <label class="text-normal text-dark">Username</label>
+                                                            <input required minlength="2" maxlength="8"
+                                                                   pattern="[(가-힣a-zA-Z)]+" type="text" id="name"
+                                                                   name="name" class="form-control">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="text-normal text-dark">Email Address</label>
+                                                            <input required type="email" id="email" name="email"
+                                                                   class="form-control">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="text-normal text-dark">Password</label>
+                                                            <input required minlength="8" type="password" id="password"
+                                                                   name="password" class="form-control"
+                                                                   placeholder="Password">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="text-normal text-dark">Confirm
+                                                                Password</label>
+                                                            <input required minlength="8" type="password"
+                                                                   id="password-confirm" name="passwordConfirm"
+                                                                   class="form-control"
+                                                                   placeholder="Password">
+                                                        </div>
+                                                        <div th:text="${errorMessage}" class="alert alert-danger"
+                                                             role="alert">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <button type="submit"
+                                                                    class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
+                                                                가입하기
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                    <div class="text-dark">
+                                                        <span>이미 회원이신가요?</span>
+                                                        <a href="/login"
+                                                           class="text-info pointer mrg-left-5">로그인</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="fragments/script :: scriptFragment"></th:block>
+<script th:inline="javascript">
+    if ([[${errorMessage}]]) {
+        $('.alert').alert()
+    } else {
+        $('.alert').alert('close')
+    }
+    const nameInput = document.getElementById("name");
+    const passwordInput = document.getElementById("password");
+    const passwordConfirmInput = document.getElementById("password-confirm");
+    nameInput.addEventListener('input', () => {
+        nameInput.setCustomValidity('');
+    nameInput.checkValidity();
+    });
+    nameInput.addEventListener('invalid', () => {
+        if (nameInput.value === '') {
+        nameInput.setCustomValidity('이름을 입력해 주세요.');
+    } else {
+        nameInput.setCustomValidity('이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다.');
+    }
+    });
+    passwordInput.addEventListener('input', () => {
+        const lowerCaseRegex = /[a-z]+/;
+    const upperCaseRegex = /[A-Z]+/;
+    const numberRegex = /[0-9]+/;
+    const specialCharacterRegex = /[`~!@#$%^&*|\\\'\";:\/?+=-_,.<>]/;
+    const koreanRegex = /[ㄱ-ㅎ가-힣]+/;
+    const password = passwordInput.value;
+    if (!lowerCaseRegex.test(password)
+        || !upperCaseRegex.test(password)
+        || !numberRegex.test(password)
+        || !specialCharacterRegex.test(password)
+        || koreanRegex.test(password)) {
+        passwordInput.setCustomValidity('대문자, 소문자, 숫자, 특수문자가 포함되어야 합니다.');
+    } else {
+        passwordInput.setCustomValidity('');
+    }
+    });
+    <!--    submit 할때만 일어나야하는 일   -->
+    passwordConfirmInput.addEventListener('input', () => {
+        if (passwordInput.value !== passwordConfirmInput.value) {
+        passwordConfirmInput.setCustomValidity('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+    } else {
+        passwordConfirmInput.setCustomValidity('');
+    }
+    });
+</script>
+</body>
+</html>
