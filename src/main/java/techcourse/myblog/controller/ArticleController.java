@@ -59,7 +59,7 @@ public class ArticleController {
     }
 
     @PutMapping("{articleId}")
-    public String updateArticleByIdPage2(@PathVariable long articleId, ArticleDto articleDto, User user) {
+    public String updateArticleByIdPage(@PathVariable long articleId, ArticleDto articleDto, User user) {
         log.debug(">>> put article Id : {}, ArticleDto : {}, user : {}", articleId, articleDto, user);
         articleDto.setId(articleId);
 
