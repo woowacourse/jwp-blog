@@ -10,15 +10,19 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(length = 70, nullable = false)
     private String title;
+
     @Column(length = 2083, nullable = false)
     private String coverUrl;
+
     @Lob
     @Column(nullable = false)
     private String contents;
-    @ManyToOne
-    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user", foreignKeyDefinition = "/*FOREIGN KEY in sql that sets ON DELETE SET NULL*/"))
     private User author;
 
     public Article() {
