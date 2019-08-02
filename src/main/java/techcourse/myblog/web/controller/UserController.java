@@ -7,11 +7,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.UserInfo;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserReadService;
 import techcourse.myblog.service.UserWriteService;
+import techcourse.myblog.validation.UserInfo;
 import techcourse.myblog.web.LoginUser;
 
 import javax.servlet.http.HttpSession;
