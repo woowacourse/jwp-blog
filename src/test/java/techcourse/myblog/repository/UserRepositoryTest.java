@@ -11,41 +11,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 class UserRepositoryTest {
-    private static final String TEST_EMAIL_1 = "test1@test.com";
-    private static final String TEST_PASSWORD_1 = "!Q@W3e4r";
-    private static final String TEST_USERNAME_1 = "test1";
-    private static final String TEST_PASSWORD_2 = "%T^Y&U*I";
-    private static final String TEST_USERNAME_2 = "test2";
+    private static final String EMAIL = "test1@test.com";
+    private static final String PASSWORD = "!Q@W3e4r";
+    private static final String USERNAME = "test1";
 
-    UserRepository userRepository;
+    private User user = new User(USERNAME, EMAIL, PASSWORD);
 
     @Autowired
-    public UserRepositoryTest(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
-        User user = new User(TEST_USERNAME_1, TEST_EMAIL_1, TEST_PASSWORD_1);
-        userRepository.save(user);
+        user = userRepository.save(user);
     }
 
     @Test
     void 유저_이메일_정보로_유저_찾기() {
-        assertThat(userRepository.existsByEmail(TEST_EMAIL_1)).isTrue();
-    }
-
-    @Test
-    void 유저_정보_수정() {
-        userRepository.updateUserByEmailAddress(TEST_USERNAME_2, TEST_PASSWORD_2, TEST_EMAIL_1);
-        assertThat(userRepository.findByEmail(TEST_EMAIL_1).getUserName()).isEqualTo(TEST_USERNAME_2);
-        assertThat(userRepository.findByEmail(TEST_EMAIL_1).getPassword()).isEqualTo(TEST_PASSWORD_2);
+        assertThat(userRepository.existsByEmail(EMAIL)).isTrue();
     }
 
     @Test
     void 유저_삭제() {
         userRepository.deleteAll();
-        assertThat(userRepository.existsByEmail(TEST_EMAIL_1)).isFalse();
+        assertThat(userRepository.existsByEmail(EMAIL)).isFalse();
     }
 
     @AfterEach

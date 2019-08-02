@@ -6,12 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.EmailRepetitionException;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserDTO;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -31,14 +31,14 @@ public class UserController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute UserDTO userDTO, RedirectAttributes redirectAttributes) {
+    public RedirectView create(@ModelAttribute UserDTO userDTO, RedirectAttributes redirectAttributes) {
         try {
             userService.save(userDTO);
-            return "redirect:/login";
+            return new RedirectView("/login");
         } catch (EmailRepetitionException e) {
             log.error(e.getMessage());
             redirectAttributes.addAttribute("signUpStatus", e.getMessage());
-            return "redirect:/users/signup";
+            return new RedirectView("/users/signup");
         }
     }
 
@@ -49,10 +49,9 @@ public class UserController {
     }
 
     @DeleteMapping
-    public String delete(HttpServletRequest request) {
-        HttpSession session = request.getSession();
+    public String delete(HttpSession session) {
         User user = (User) session.getAttribute("user");
-        userService.delete(user.getEmail());
+        userService.delete(user);
         session.invalidate();
         return "redirect:/";
     }

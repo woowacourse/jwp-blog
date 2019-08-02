@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
-import techcourse.myblog.exception.UserNotExistException;
-import techcourse.myblog.service.dto.LoginDTO;
+import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.service.dto.UserDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,8 +20,10 @@ public class LoginServiceTest {
     private static final String TEST_PASSWORD_1 = "!Q@W3e4r";
     private static final String TEST_PASSWORD_2 = "!Q@W3e4r5t";
     private static final String TEST_USERNAME = "test1";
+
     private static final UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_1);
 
+    private User user;
     private UserService userService;
     private LoginService loginService;
 
@@ -34,36 +35,35 @@ public class LoginServiceTest {
 
     @BeforeEach
     void setUp() {
-        userService.save(userDTO);
+        user = userService.save(userDTO);
     }
 
     @Test
     void 로그인_성공_테스트() {
-        LoginDTO loginDTO = new LoginDTO(TEST_EMAIL_1, TEST_PASSWORD_1);
-        User user = loginService.getLoginUser(loginDTO);
+        User user = loginService.getLoginUser(userDTO);
         assertThat(user.getEmail()).isEqualTo(TEST_EMAIL_1);
     }
 
     @Test
     void 로그인_아이디_찾기_실패_테스트() {
-        LoginDTO loginDTO = new LoginDTO(TEST_EMAIL_2, TEST_PASSWORD_1);
+        UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_2, TEST_PASSWORD_1);
 
-        assertThrows(UserNotExistException.class, () -> {
-            loginService.getLoginUser(loginDTO);
+        assertThrows(NotFoundUserException.class, () -> {
+            loginService.getLoginUser(userDTO);
         });
     }
 
     @Test
     void 로그인_패스워드_불일치_테스트() {
-        LoginDTO loginDTO = new LoginDTO(TEST_EMAIL_1, TEST_PASSWORD_2);
+        UserDTO userDTO = new UserDTO(TEST_USERNAME, TEST_EMAIL_1, TEST_PASSWORD_2);
 
         assertThrows(LoginFailException.class, () -> {
-            loginService.getLoginUser(loginDTO);
+            loginService.getLoginUser(userDTO);
         });
     }
 
     @AfterEach
     void tearDown() {
-        userService.delete(TEST_EMAIL_1);
+        userService.delete(user);
     }
 }
