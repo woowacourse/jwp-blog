@@ -2,6 +2,7 @@ package techcourse.myblog.domain.article;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.validator.constraints.URL;
 import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
@@ -14,9 +15,16 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false)
     private String title;
+
+    @URL
     private String coverUrl;
+
+    @Column(nullable = false, length = 2000)
     private String contents;
+
+    @Column(nullable = false)
     private long categoryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
