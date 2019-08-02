@@ -7,19 +7,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.exception.DuplicatedUserException;
-import techcourse.myblog.domain.exception.NotMatchPasswordException;
-import techcourse.myblog.domain.exception.UnFoundUserException;
+import techcourse.myblog.exception.DuplicatedUserException;
+import techcourse.myblog.exception.NotMatchPasswordException;
+import techcourse.myblog.exception.UnFoundUserException;
 import techcourse.myblog.repository.UserRepository;
 
+@Slf4j
 @Service
-@RequiredArgsConstructor
+@Transactional
 public class UserService {
 
-    @Autowired
+    private static final String CHECK_LOGIN_INFO_ERROR = "로그인 정보를 확인해주세요.";
+    private static final String DUPLICATE_EMAIL_ERROR = "이미 존재하는 email입니다.";
+
     private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -29,35 +37,44 @@ public class UserService {
         try {
             return userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
-            throw new DuplicatedUserException("이미 존재하는 email입니다.");
+            throw new DuplicatedUserException(DUPLICATE_EMAIL_ERROR);
         }
     }
 
-    @Transactional
     public User update(User originalUser, String newName) {
-        return findBy(originalUser.getEmail())
+        return findByEmail(originalUser.getEmail())
                 .modifyName(newName);
     }
 
-    private User findBy(String email) {
+    private User findByEmail(String email) {
         return userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new UnFoundUserException("로그인 정보를 확인해주세요."));
+                .orElseThrow(() -> {
+                    log.debug(email);
+                    return new UnFoundUserException(CHECK_LOGIN_INFO_ERROR);
+                });
     }
 
     public User login(User user) {
-        User loginUser = findBy(user.getEmail());
-
-        if (!loginUser.matchPassword(user)) {
-            throw new NotMatchPasswordException("로그인 정보를 확인해주세요.");
-        }
-
+        User loginUser = findByEmail(user.getEmail());
+        checkPassword(user, loginUser);
         return loginUser;
     }
 
-    public void delete(User user) {
+    private boolean checkPassword(User user, User loginUser) {
+        if (!loginUser.matchPassword(user)) {
+            log.debug(user.toString());
+            log.debug(loginUser.toString());
+            throw new NotMatchPasswordException(CHECK_LOGIN_INFO_ERROR);
+        }
+        return true;
+    }
+
+    public boolean delete(User user) {
         if (user != null) {
             userRepository.delete(user);
+            return true;
         }
+        return false;
     }
 }

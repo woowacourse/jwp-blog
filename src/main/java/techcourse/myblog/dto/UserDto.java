@@ -4,9 +4,11 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import lombok.Getter;
 import techcourse.myblog.domain.User;
 
-public class UserDto {
+@Getter
+public class UserDto implements DomainDto<User> {
     @NotBlank(message = "이름을 입력해주세요",
             groups={UserInfo.class})
     @Pattern(regexp = "[^ \\-!@#$%^&*(),.?\":{}|<>0-9]{2,10}",
@@ -29,28 +31,8 @@ public class UserDto {
         this.password = password;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public User toUser() {
-        return new User(name, email, password);
-    }
-
     @Override
-    public String toString() {
-        return "UserDto{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+    public User toDomain() {
+        return new User(name, email, password);
     }
 }

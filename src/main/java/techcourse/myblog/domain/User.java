@@ -10,13 +10,11 @@ import javax.validation.constraints.Pattern;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Entity
-@RequiredArgsConstructor
 @Getter
 @EqualsAndHashCode
 @ToString
@@ -39,6 +37,9 @@ public class User {
     @Pattern(regexp = "[a-zA-Z0-9!@#$%^&*(),.?\\\":{}|<>]{8,}",
             message = "비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요.")
     private String password;
+
+    public User() {
+    }
 
     public User(String name, String email, String password) {
         this.name = name;

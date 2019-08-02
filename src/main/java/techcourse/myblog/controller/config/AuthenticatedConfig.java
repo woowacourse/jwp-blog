@@ -1,4 +1,4 @@
-package techcourse.myblog.controller.core;
+package techcourse.myblog.controller.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -7,17 +7,17 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import techcourse.myblog.interceptor.AuthInterceptor;
+import techcourse.myblog.interceptor.AuthenticatedInterceptor;
 
 @Configuration
-public class AuthWebMvcConfig implements WebMvcConfigurer {
+public class AuthenticatedConfig implements WebMvcConfigurer {
 
-    @Qualifier(value = "authInterceptor")
+    @Qualifier(value = "authenticatedInterceptor")
     private HandlerInterceptor handlerInterceptor;
 
     @Autowired
-    public AuthWebMvcConfig(AuthInterceptor authInterceptor) {
-        this.handlerInterceptor = authInterceptor;
+    public AuthenticatedConfig(AuthenticatedInterceptor authenticatedInterceptor) {
+        this.handlerInterceptor = authenticatedInterceptor;
     }
 
     @Override
