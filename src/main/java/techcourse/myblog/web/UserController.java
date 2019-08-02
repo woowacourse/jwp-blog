@@ -69,7 +69,7 @@ public class UserController {
     public String updateUser(UserDto userDto, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         userDto.setEmail(user.getEmail());
-        httpSession.setAttribute("user", userService.update(userDto));
+        httpSession.setAttribute("user", userService.update(userDto, user));
 
         return "redirect:/mypage";
     }
