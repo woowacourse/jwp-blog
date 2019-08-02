@@ -22,7 +22,7 @@ public class LoginUserResolver implements HandlerMethodArgumentResolver {
 								  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 		Object userEmail = webRequest.getAttribute("email", RequestAttributes.SCOPE_SESSION);
 
-		if(userEmail != null) {
+		if (userEmail != null) {
 			Information information = new Information((String) userEmail);
 			return new User(information);
 		}

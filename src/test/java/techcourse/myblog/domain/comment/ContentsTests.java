@@ -20,7 +20,7 @@ class ContentsTests {
 	@Test
 	void valueOfCommentWithUser() {
 		Information info = new UserSignUpInfoDto("tiber", "tiber@naver.com", "asdfASDF1@")
-							.valueOfInfo();
+				.valueOfInfo();
 		User user = new User(info);
 
 		Contents contents = new Contents("contentText");

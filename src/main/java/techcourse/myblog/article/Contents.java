@@ -15,7 +15,8 @@ public class Contents {
 	@Nullable
 	private String coverUrl;
 
-	private Contents() {}
+	private Contents() {
+	}
 
 	public Contents(String title, String text, String coverUrl) {
 		this.title = title;

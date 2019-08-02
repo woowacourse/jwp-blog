@@ -6,7 +6,8 @@ import javax.persistence.Embeddable;
 public class Contents {
 	private String text;
 
-	private Contents() {}
+	private Contents() {
+	}
 
 	public Contents(String text) {
 		this.text = text;

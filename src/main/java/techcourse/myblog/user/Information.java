@@ -31,7 +31,8 @@ public class Information {
 
 	private String faceBookUrl;
 
-	private Information() {}
+	private Information() {
+	}
 
 	public Information(UserSignUpInfoDto userSignUpInfoDto) {
 		this.email = userSignUpInfoDto.getEmail();
