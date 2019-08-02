@@ -1,4 +1,4 @@
-package techcourse.myblog.service.dto;
+package techcourse.myblog.application.dto;
 
 public class UserResponse {
     private Long id;
@@ -6,12 +6,6 @@ public class UserResponse {
     private String email;
 
     private UserResponse() {
-    }
-
-    public UserResponse(Long id, String name, String email) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
     }
 
     public Long getId() {

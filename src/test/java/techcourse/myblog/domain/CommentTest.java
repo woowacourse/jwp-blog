@@ -8,18 +8,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CommentTest {
 
     Article article;
-    User user;
+    User author;
 
     @BeforeEach
     void setUp() {
-        article = new Article("title", "goodPicture.jpg", "contents");
-        user = new User("userName", "woowa@gmail.com", "Password123!");
+        author = new User("userName", "woowa@gmail.com", "Password123!");
+        article = new Article(author, "title", "goodPicture.jpg", "contents");
     }
 
     @Test
     void comment_생성_성공_테스트() {
         String commentContents = "commentContents";
-        Comment actual = new Comment(commentContents, user, article);
+        Comment actual = new Comment(commentContents, author, article);
         assertThat(actual).isNotNull();
     }
 }

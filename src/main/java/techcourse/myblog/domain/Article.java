@@ -1,9 +1,9 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
 
 @Entity
 public class Article {
@@ -11,6 +11,10 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "user", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User author;
     private String title;
     private String coverUrl;
     private String contents;
@@ -18,14 +22,11 @@ public class Article {
     private Article() {
     }
 
-    public Article(String title, String coverUrl, String contents) {
+    public Article(User author, String title, String coverUrl, String contents) {
+        this.author = author;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-    }
-
-    public boolean isTitleMath(String title) {
-        return this.title.equals(title);
     }
 
     public void updateArticle(Article article) {
@@ -40,6 +41,14 @@ public class Article {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public String getTitle() {
@@ -64,5 +73,9 @@ public class Article {
 
     public void setContents(String contents) {
         this.contents = contents;
+    }
+
+    public boolean isSameAuthor(User author) {
+        return this.author.equals(author);
     }
 }

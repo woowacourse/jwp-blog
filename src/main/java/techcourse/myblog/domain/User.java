@@ -1,9 +1,12 @@
 package techcourse.myblog.domain;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,8 +45,8 @@ public class User {
         }
     }
 
-    private void isEmpty(String string) {
-        if (EMPTY.equals(string) || string == null) {
+    private void isEmpty(String name) {
+        if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("아무것도 입력하지 않았습니다.");
         }
     }
@@ -83,5 +86,18 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
