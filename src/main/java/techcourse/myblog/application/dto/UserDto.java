@@ -1,7 +1,10 @@
 package techcourse.myblog.application.dto;
 
+
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import techcourse.myblog.domain.User;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -9,6 +12,7 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class UserDto {
     @NotBlank(message = "이메일을 작성해주세요.")
     @Email(message = "메일의 양식을 지켜주세요.")
@@ -22,12 +26,15 @@ public class UserDto {
     @Pattern(regexp = "^([a-zA-Z0-9!@#$%^&*]{8,})$", message = "8자리 이상의 글자, 숫자, 특수문자를 입력해야합니다.")
     private String password;
 
-    public UserDto(String email, String name, String password) {
-        this.email = email;
-        this.name = name;
-        this.password = password;
+    public UserDto() {
     }
 
-    public UserDto() {
+    public static UserDto of(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setName(user.getName());
+        userDto.setEmail(user.getEmail());
+        userDto.setPassword(user.getPassword());
+
+        return userDto;
     }
 }
