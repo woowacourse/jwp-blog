@@ -23,7 +23,7 @@ import static techcourse.myblog.web.UserControllerTest.testPassword;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
     private WebTestClient webTestClient;
-    private static String testTitle = "testTitle";;
+    private static String testTitle = "testTitle";
     private static String testCoverUrl = "testCoverUrl";
     private static String testContents = "testContents";
     private static String testUniContents = StringEscapeUtils.escapeJava(testContents);
