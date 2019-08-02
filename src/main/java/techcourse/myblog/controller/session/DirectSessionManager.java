@@ -7,11 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Component
-public class SessionManagerImpl implements SessionManager {
+public class DirectSessionManager implements SessionManager {
     private final HttpServletRequest request;
 
     @Autowired
-    public SessionManagerImpl(HttpServletRequest request) {
+    public DirectSessionManager(HttpServletRequest request) {
         this.request = request;
     }
 
