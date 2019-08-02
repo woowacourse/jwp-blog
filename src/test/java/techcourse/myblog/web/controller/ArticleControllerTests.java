@@ -14,9 +14,11 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpMethod.*;
+import static techcourse.myblog.utils.ArticleTestObjects.ARTICLE_DTO;
+import static techcourse.myblog.utils.UserTestObjects.READER_DTO;
 
 public class ArticleControllerTests extends ControllerTestTemplate {
-    private ArticleDto articleDto = new ArticleDto("title", "coverUrl", "contents");
+    private ArticleDto articleDto = ARTICLE_DTO;
     private String savedArticleUrl;
 
     @BeforeEach
@@ -42,10 +44,8 @@ public class ArticleControllerTests extends ControllerTestTemplate {
         String responseBody = getResponseBody((loginAndRequestWriter(GET, redirectUrl)));
 
         ArticleDto escapedArticle = applyEscapeArticle(articleDto);
-
-        assertThat(responseBody).contains(escapedArticle.getTitle());
-        assertThat(responseBody).contains(escapedArticle.getCoverUrl());
-        assertThat(responseBody).contains(escapedArticle.getContents());
+    
+        containData(responseBody, escapedArticle);
     }
 
     @ParameterizedTest(name = "{index}: {0}")
@@ -76,10 +76,8 @@ public class ArticleControllerTests extends ControllerTestTemplate {
     @Test
     void 로그인상태_게시글_페이지_정상_조회() {
         String responseBody = getResponseBody(loginAndRequestWriter(GET, savedArticleUrl));
-
-        assertThat(responseBody).contains(articleDto.getTitle());
-        assertThat(responseBody).contains(articleDto.getCoverUrl());
-        assertThat(responseBody).contains(articleDto.getContents());
+    
+        containData(responseBody, articleDto);
     }
 
     @Test
@@ -121,15 +119,13 @@ public class ArticleControllerTests extends ControllerTestTemplate {
 
         String redirectUrl = getRedirectUrl(loginAndRequestWithDataWriter(PUT, savedArticleUrl, parseArticle(editedArticleDto)));
         String responseBody = getResponseBody(loginAndRequestWriter(GET, redirectUrl));
-
-        assertThat(responseBody).contains(editedArticleDto.getTitle());
-        assertThat(responseBody).contains(editedArticleDto.getCoverUrl());
-        assertThat(responseBody).contains(editedArticleDto.getContents());
+    
+        containData(responseBody, editedArticleDto);
     }
 
     @Test
     void 로그인상태_다른_유저_게시글_수정_요청() {
-        UserDto other = new UserDto("ab", "1@1.com", "1234asdf!A");
+        UserDto other = READER_DTO;
         userRepository.save(other.toUser());
         ArticleDto editedArticleDto = new ArticleDto("new title", "new url", "new contents");
 
@@ -161,12 +157,16 @@ public class ArticleControllerTests extends ControllerTestTemplate {
         String redirectUrl = getRedirectUrl(loginAndRequest(DELETE, savedArticleUrl, other));
         assertEquals(redirectUrl, "/");
 
-        String articlePage = getResponseBody(loginAndRequestWriter(GET, savedArticleUrl));
-        assertThat(articlePage).contains(articleDto.getTitle());
-        assertThat(articlePage).contains(articleDto.getCoverUrl());
-        assertThat(articlePage).contains(articleDto.getContents());
+        String responseBody = getResponseBody(loginAndRequestWriter(GET, savedArticleUrl));
+        containData(responseBody, articleDto);
     }
-
+    
+    private void containData(String responseBody, ArticleDto articleDto) {
+        assertThat(responseBody).contains(articleDto.getTitle());
+        assertThat(responseBody).contains(articleDto.getCoverUrl());
+        assertThat(responseBody).contains(articleDto.getContents());
+    }
+    
     private void checkLoginRedirect(String url) {
         String redirectUrl = getRedirectUrl(httpRequest(GET, url));
         assertEquals(redirectUrl, "/login");

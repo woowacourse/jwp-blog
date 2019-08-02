@@ -2,7 +2,6 @@ package techcourse.myblog.web.controller;
 
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.web.controller.common.ControllerTestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,11 +42,10 @@ public class MypageControllerTests extends ControllerTestTemplate {
     
     @Test
     void 로그아웃상태_정보수정_불가() {
-        UserDto update = new UserDto("newname", savedUserDto.getEmail(), savedUserDto.getPassword());
-        httpRequestWithData(PUT, "/mypage", parseUser(update)).isFound();
+        httpRequestWithData(PUT, "/mypage", parseUser(UPDATE_USER_DTO)).isFound();
         
         User savedUser = userRepository.findByEmail(savedUserDto.getEmail()).get();
-        assertThat(savedUser.getName().equals(update.getName())).isFalse();
+        assertThat(savedUser.getName().equals(UPDATE_USER_DTO.getName())).isFalse();
         assertThat(savedUser.getName().equals(savedUserDto.getName())).isTrue();
     }
     
