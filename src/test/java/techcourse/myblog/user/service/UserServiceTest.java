@@ -53,22 +53,11 @@ class UserServiceTest {
                 .password(USER_PASSWORD)
                 .name(USER_NAME)
                 .build();
-        userCreateDto = new UserCreateDto();
-        userCreateDto.setEmail(USER_EMAIL);
-        userCreateDto.setName(USER_NAME);
-        userCreateDto.setPassword(USER_PASSWORD);
 
-        userResponseDto = new UserResponseDto();
-        userResponseDto.setId(1);
-        userResponseDto.setEmail(USER_EMAIL);
-        userResponseDto.setName(USER_NAME);
-
-        userLoginDto = new UserLoginDto();
-        userLoginDto.setEmail(USER_EMAIL);
-        userLoginDto.setPassword(USER_PASSWORD);
-
-        userUpdateDto = new UserUpdateDto();
-        userUpdateDto.setName(USER_NAME);
+        userCreateDto = modelMapper.map(user, UserCreateDto.class);
+        userResponseDto = modelMapper.map(user, UserResponseDto.class);
+        userLoginDto = modelMapper.map(user, UserLoginDto.class);
+        userUpdateDto = modelMapper.map(user, UserUpdateDto.class);
     }
 
     @Test
