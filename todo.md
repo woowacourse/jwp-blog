@@ -1,6 +1,8 @@
 #TODO
 - commentController와 articleController에서 user 검증하는 로직 중복 제거
+
 - 댓글 수정 시 새로운 에디터 창 띄우는 기능을 프런트에서 구현한다
+- 회원탈퇴한 유저의 게시글에 접근하면 에러가 난다.
 
 
 
