@@ -14,6 +14,7 @@ public class SnsInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Email
     private String email;
     private long snsCode;

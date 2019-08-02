@@ -18,7 +18,6 @@ public class Article {
     @Column(nullable = false)
     private String title;
 
-    @URL
     private String coverUrl;
 
     @Column(nullable = false, length = 2000)
