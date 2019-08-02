@@ -62,16 +62,16 @@ public class CommentControllerTests extends MyblogApplicationTests {
         assertThat(mvcResult.getResponse().getHeader("Location").contains("articles")).isTrue();
     }
 
-    @Test
-    void comment수정페이지_접근() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get(COMMENT_URL + "/1/edit").session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED))
-                .andDo(print())
-                .andExpect(status()
-                        .isOk())
-                .andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
-        assertThat(mvcResult.getResponse().getContentAsString().contains(COMMENT_CONTENTS)).isTrue();
-    }
+//    @Test
+//    void comment수정페이지_접근() throws Exception {
+//        MvcResult mvcResult = mockMvc.perform(get(COMMENT_URL + "/1/edit").session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED))
+//                .andDo(print())
+//                .andExpect(status()
+//                        .isOk())
+//                .andReturn();
+//        System.out.println(mvcResult.getResponse().getContentAsString());
+//        assertThat(mvcResult.getResponse().getContentAsString().contains(COMMENT_CONTENTS)).isTrue();
+//    }
 
 //    @Test
 //    void comment수정() throws Exception {
@@ -86,13 +86,13 @@ public class CommentControllerTests extends MyblogApplicationTests {
 //        assertThat(mvcResult.getResponse().getHeader("Location").contains("articles")).isTrue();
 //    }
 
-    @Test
-    void comment삭제() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(delete(COMMENT_URL + "/" + COMMENT_ID).session(session))
-                .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andReturn();
-        assertThat(mvcResult.getResponse().getHeader("Location").contains("articles")).isTrue();
-    }
+//    @Test
+//    void comment삭제() throws Exception {
+//        MvcResult mvcResult = mockMvc.perform(delete(COMMENT_URL + "/" + COMMENT_ID).session(session))
+//                .andDo(print())
+//                .andExpect(status().is3xxRedirection())
+//                .andReturn();
+//        assertThat(mvcResult.getResponse().getHeader("Location").contains("articles")).isTrue();
+//    }
 
 }

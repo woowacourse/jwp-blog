@@ -18,20 +18,17 @@ public class CommentService {
     }
 
 
-    public Article findArticleByArticleId(long articleId) {
-        return articleRepository.findById(articleId).orElseThrow(RuntimeException::new);
+    @Transactional
+    public Comment find(long id, User user) {
+        Comment comment = findById(id);
+        comment.checkMatchUser(user);
+        return comment;
     }
 
-    public Comment saveComment(Comment comment) {
-        return commentRepository.save(comment);
-    }
-
-    public Comment findCommentById(long id) {
-        return commentRepository.findById(id).orElseThrow(RuntimeException::new);
-    }
-
-    public void deleteComment(Comment comment) {
-        commentRepository.delete(comment);
+    @Transactional
+    public Comment save(CommentDto commentDto, User user) {
+        Article article = findArticleByArticleId(commentDto.getArticleId());
+        return save(commentDto.toComment(user, article));
     }
 
     @Transactional
@@ -46,5 +43,29 @@ public class CommentService {
         }
 
         return true;
+    }
+
+    @Transactional
+    public long deleteAndReturnArticleId(long id, User user) {
+        Comment preComment = commentRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        preComment.checkMatchUser(user);
+        delete(preComment);
+        return preComment.getArticleId();
+    }
+
+    private Comment findById(long id) {
+        return commentRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
+
+    private Article findArticleByArticleId(long articleId) {
+        return articleRepository.findById(articleId).orElseThrow(RuntimeException::new);
+    }
+
+    private Comment save(Comment comment) {
+        return commentRepository.save(comment);
+    }
+
+    private void delete(Comment comment) {
+        commentRepository.delete(comment);
     }
 }

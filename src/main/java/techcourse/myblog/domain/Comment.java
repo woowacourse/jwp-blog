@@ -40,15 +40,19 @@ public class Comment {
         return this;
     }
 
-    private void checkUpdateCondition(CommentDto commentDto, User user) {
-        checkMatchArticleId(commentDto.getArticleId());
-        checkMatchUser(user);
-    }
-
-    private void checkMatchUser(User user) {
+    public void checkMatchUser(User user) {
         if (this.user.isNotMatch(user)) {
             throw new IllegalArgumentException("not match user");
         }
+    }
+
+    public long getArticleId() {
+        return this.article.getId();
+    }
+
+    private void checkUpdateCondition(CommentDto commentDto, User user) {
+        checkMatchArticleId(commentDto.getArticleId());
+        checkMatchUser(user);
     }
 
     private void checkMatchArticleId(long articleId) {
