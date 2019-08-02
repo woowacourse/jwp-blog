@@ -19,6 +19,10 @@ public class LogoutInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
+        if (path.endsWith("/users") && request.getMethod().equals("POST")) {
+            return true;
+        }
+
         if (user == null) {
             response.sendRedirect("/login");
             return false;

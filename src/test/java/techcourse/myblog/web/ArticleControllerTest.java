@@ -102,7 +102,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
 
     @Test
     public void 로그인_전에_댓글_작성을_시도하면_로그인_페이지로_리다이렉트한다() {
-        webTestClient.post().uri("/articles/1/comment/new")
+        webTestClient.post().uri("/articles/1/comment")
                 .body(BodyInserters
                         .fromFormData(CONTENTS, CONTENTS))
                 .exchange()
@@ -113,7 +113,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
     @Test
     public void 로그인_후에_댓글을_작성한다() {
         String jSessionId = extractJSessionId(login(user1));
-        webTestClient.post().uri("/articles/1/comment/new")
+        webTestClient.post().uri("/articles/1/comment")
                 .cookie(JSESSIONID, jSessionId)
                 .body(BodyInserters
                         .fromFormData(CONTENTS, CONTENTS))

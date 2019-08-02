@@ -66,7 +66,7 @@ public class ArticleController {
         return "redirect:/";
     }
 
-    @PostMapping("/{articleId}/comment/new")
+    @PostMapping("/{articleId}/comment")
     public String createComment(@PathVariable long articleId, CommentRequest commentDto, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         articleService.saveComment(articleId, commentDto, user);

@@ -33,7 +33,7 @@ class UserControllerTest extends AbstractControllerTest {
     public void 회원_가입이_잘_되는지_확인한다() {
         UserRequest userDto = new UserRequest("pobi", "pobi@pobi.com", "@Password12", "@Password12");
 
-        webTestClient.post().uri("/users/new")
+        webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("name", userDto.getName())
