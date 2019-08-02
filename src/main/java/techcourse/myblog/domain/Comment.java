@@ -16,6 +16,7 @@ public class Comment {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
     private User author;
 
