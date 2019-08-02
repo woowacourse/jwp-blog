@@ -11,11 +11,12 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.service.dto.ArticleDto.CONTENTS_CONSTRAINT_MESSAGE;
-import static techcourse.myblog.service.dto.ArticleDto.TITLE_CONSTRAINT_MESSAGE;
 
 class ArticleDtoTests {
-    Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private final static String TITLE_CONSTRAINT_MESSAGE = "제목을 입력해주세요.";
+    private final static String CONTENTS_CONSTRAINT_MESSAGE = "내용을 입력해주세요.";
+
+    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @ParameterizedTest(name = "{index}")
     @MethodSource("invalidArticleParameters")

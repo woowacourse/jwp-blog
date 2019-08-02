@@ -4,15 +4,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.support.validation.pattern.UserPattern;
 import techcourse.myblog.web.controller.common.ControllerTestTemplate;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+import static techcourse.myblog.utils.UserTestObjects.READER_DTO;
 
 class UserControllerTests extends ControllerTestTemplate {
     private static final String LOGIN_FAIL_MESSAGE = "이메일이나 비밀번호가 올바르지 않습니다";
@@ -30,8 +33,7 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 회원가입_성공시_리다이렉트() {
-        UserDto userDto = new UserDto(name, email, password);
-        httpRequest(POST, "/users", parseUser(userDto)).isFound();
+        httpRequest(POST, "/users", parseUser(READER_DTO)).isFound();
     }
 
     //todo : 테스트 깨짐
@@ -40,7 +42,6 @@ class UserControllerTests extends ControllerTestTemplate {
     void 회원가입_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
         String redirectUrl = getRedirectUrl(httpRequest(POST, "/users", parseUser(new UserDto(name, email, password))));
         String responseBody = getResponseBody(httpRequest(GET, redirectUrl));
-
         assertThat(responseBody).contains(errorMsg);
     }
 
@@ -83,7 +84,7 @@ class UserControllerTests extends ControllerTestTemplate {
         assertThat(responseBody).contains(errorMsg);
     }
 
-    static Stream<Arguments> invalidLoginParameters() {
+    private static Stream<Arguments> invalidLoginParameters() {
         return Stream.of(
                 Arguments.of(null, "e@mail.com", "p@sswsavedPassw0RD!", LOGIN_FAIL_MESSAGE),
                 Arguments.of(null, "saved@email.com", "edPassw0RD!", LOGIN_FAIL_MESSAGE)

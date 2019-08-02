@@ -23,9 +23,9 @@ import techcourse.myblog.service.dto.UserDto;
 import java.util.Objects;
 
 import static org.springframework.http.HttpMethod.POST;
+import static techcourse.myblog.utils.UserTestObjects.SIGN_UP_USER_DTO;
 
 @ExtendWith(SpringExtension.class)
-@AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ControllerTestTemplate {
     @Autowired
@@ -34,19 +34,12 @@ public class ControllerTestTemplate {
     @Autowired
     protected UserRepository userRepository;
 
-    protected String name;
-    protected String email;
-    protected String password;
     protected UserDto savedUserDto;
-
     protected User savedUser;
 
     @BeforeEach
     protected void setup() {
-        name = "name";
-        email = "email@email.com";
-        password = "passw0RD!";
-        savedUserDto = new UserDto("savedName", "saved@email.com", "savedPassw0RD!");
+        savedUserDto = SIGN_UP_USER_DTO;
         savedUser = userRepository.save(savedUserDto.toUser());
     }
 

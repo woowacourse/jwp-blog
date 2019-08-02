@@ -10,23 +10,21 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static techcourse.myblog.utils.UserTestObjects.*;
 
 public class UserWriteServiceTests extends UserCommonServiceTests {
     @Test
     public void save_test() {
         given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
-        assertDoesNotThrow(() -> userWriteService.save(new UserDto("name", "e@mail.com", "Passw0rd!")));
-        assertThrows(DuplicatedEmailException.class, () ->
-                userWriteService.save(new UserDto("name", user.getEmail(), "Passw0rd!")));
+        assertDoesNotThrow(() -> userWriteService.save(READER_DTO.toUser()));
+        assertThrows(DuplicatedEmailException.class, () -> userWriteService.save(SIGN_UP_USER_DTO.toUser()));
     }
 
     @Test
     public void modify_test() {
         given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
-
-        UserDto userDto = new UserDto("nameee", user.getEmail(), user.getPassword());
-        userWriteService.update(user, userDto);
-        compareUser(userDto.toUser(), userRepository.findByEmail(user.getEmail()).get());
+        userWriteService.update(user, UPDATE_USER_DTO.toUser());
+        compareUser(UPDATE_USER_DTO.toUser(), userRepository.findByEmail(user.getEmail()).get());
     }
 }

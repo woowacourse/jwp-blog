@@ -6,33 +6,33 @@ import techcourse.myblog.support.exception.InvalidCommentException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static techcourse.myblog.utils.ArticleTestObjects.ARTICLE_DTO;
+import static techcourse.myblog.utils.CommentTestObjects.*;
+import static techcourse.myblog.utils.UserTestObjects.AUTHOR_DTO;
 
 public class CommentTest {
-    User author = new User("abc", "eee@main.com", "author123!A@");
-    Article article = new Article("title", "coverURl", "conetnts", author);
+    private User author = AUTHOR_DTO.toUser();
+    private Article article = ARTICLE_DTO.toArticle(author);
 
     @Test
     void 댓글_정상_생성() {
-        assertDoesNotThrow(() ->
-                new Comment("comment", author, article));
+        assertDoesNotThrow(() -> COMMENT_DTO.toComment(author, article));
     }
 
     @Test
     void 댓글_생성_불가1() {
-        assertThrows(InvalidCommentException.class, () ->
-                new Comment("", author, article));
+        assertThrows(InvalidCommentException.class, () -> BLANK_COMMENT_DTO.toComment(author, article));
     }
 
     @Test
     void 댓글_생성_불가2() {
-        assertThrows(InvalidCommentException.class, () ->
-                new Comment(null, author, article));
+        assertThrows(InvalidCommentException.class, () -> NULL_COMMENT_DTO.toComment(author, article));
     }
 
     @Test
     void 댓글_업데이트() {
-        Comment editedComment = new Comment("수정됨", author, article);
-        Comment originalComment = new Comment("원본", author, article);
+        Comment originalComment = COMMENT_DTO.toComment(author, article);
+        Comment editedComment = UPDATE_COMMENT_DTO.toComment(author, article);
 
         originalComment.update(editedComment);
 
@@ -41,8 +41,7 @@ public class CommentTest {
 
     @Test
     void 댓글_업데이트_불가1() {
-        Comment originalComment = new Comment("원본", author, article);
-        assertThrows(InvalidCommentException.class, () ->
-                originalComment.update(null));
+        Comment originalComment = COMMENT_DTO.toComment(author, article);
+        assertThrows(InvalidCommentException.class, () -> originalComment.update(null));
     }
 }

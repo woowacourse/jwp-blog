@@ -15,13 +15,18 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
+import static techcourse.myblog.utils.ArticleTestObjects.ARTICLE_DTO;
+import static techcourse.myblog.utils.CommentTestObjects.COMMENT_DTO;
+import static techcourse.myblog.utils.CommentTestObjects.UPDATE_COMMENT_DTO;
+import static techcourse.myblog.utils.UserTestObjects.AUTHOR_DTO;
+import static techcourse.myblog.utils.UserTestObjects.READER_DTO;
 
-public class CommentServiceTests {
+public class CommentWrtieServiceTests {
     @Mock
     protected CommentRepository commentRepository;
     protected CommentReadService commentReadService;
     protected CommentWriteService commentWriteService;
-    private User user;
+    private User reader;
     private Article article;
     private Long id = 2L;
 
@@ -30,18 +35,19 @@ public class CommentServiceTests {
         MockitoAnnotations.initMocks(this);
         commentReadService = new CommentReadService(commentRepository);
         commentWriteService = new CommentWriteService(commentRepository);
-        user = new User("name", "email@email.com", "Passw0rd!");
-        article = new Article("title", "coverUrl", "contents", user);
+        reader = READER_DTO.toUser();
+        article = ARTICLE_DTO.toArticle(reader);
     }
 
     @Test
     void 댓글_수정() {
-        Comment comment = new Comment("comment", user, article);
-        CommentDto updateCommentDto = new CommentDto("new comment");
+        Comment comment = COMMENT_DTO.toComment(reader, article);
+        CommentDto updateCommentDto = UPDATE_COMMENT_DTO;
+
         given(commentRepository.findById(id)).willReturn(Optional.of(comment));
 
-        assertDoesNotThrow(() -> commentWriteService.modify(id, updateCommentDto.toComment(user, article)));
-        compareComment(commentRepository.findById(id).get(), updateCommentDto.toComment(user, article));
+        assertDoesNotThrow(() -> commentWriteService.modify(id, updateCommentDto.toComment(reader, article)));
+        compareComment(commentRepository.findById(id).get(), updateCommentDto.toComment(reader, article));
     }
 
     void compareComment(Comment comment1, Comment comment2) {

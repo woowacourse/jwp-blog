@@ -8,6 +8,7 @@ import techcourse.myblog.web.controller.common.ControllerTestTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpMethod.*;
+import static techcourse.myblog.utils.UserTestObjects.UPDATE_USER_DTO;
 
 public class MypageControllerTests extends ControllerTestTemplate {
     @Test
@@ -32,11 +33,11 @@ public class MypageControllerTests extends ControllerTestTemplate {
     
     @Test
     void 로그인_상태에서_정보수정_결과_확인() {
-        UserDto update = new UserDto("newname", savedUserDto.getEmail(), savedUserDto.getPassword());
-        loginAndRequest(PUT, "/mypage", parseUser(update)).isFound();
+        loginAndRequest(PUT, "/mypage", parseUser(UPDATE_USER_DTO)).isFound();
         
         User savedUser = userRepository.findByEmail(savedUserDto.getEmail()).get();
-        assertThat(savedUser.getName().equals(update.getName())).isTrue();
+
+        assertThat(savedUser.getName().equals(UPDATE_USER_DTO.getName()x)).isTrue();
         assertThat(savedUser.getName().equals(savedUserDto.getName())).isFalse();
     }
     

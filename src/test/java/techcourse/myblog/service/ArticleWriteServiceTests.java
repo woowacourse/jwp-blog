@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.given;
+import static techcourse.myblog.utils.ArticleTestObjects.UPDATE_ARTICLE_DTO;
 
 class ArticleWriteServiceTests extends ArticleCommonServiceTests {
     @Test
@@ -16,10 +17,8 @@ class ArticleWriteServiceTests extends ArticleCommonServiceTests {
         given(articleRepository.findByIdAndAuthor(articleId, author)).willReturn(Optional.of(article));
         given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
 
-        ArticleDto articleDto = new ArticleDto("title2", "url2", "contents2");
-        assertDoesNotThrow(() ->
-                articleWriteService.update(articleId, articleDto.toArticle(author)));
+        assertDoesNotThrow(() -> articleWriteService.update(articleId, UPDATE_ARTICLE_DTO.toArticle(author)));
 
-        compareArticle(articleRepository.findById(articleId).get(), articleDto.toArticle(author));
+        compareArticle(articleRepository.findById(articleId).get(), UPDATE_ARTICLE_DTO.toArticle(author));
     }
 }

@@ -10,6 +10,8 @@ import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.ArticleWriteService;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.utils.ArticleTestObjects.ARTICLE_DTO;
+import static techcourse.myblog.utils.UserTestObjects.AUTHOR_DTO;
 
 public class ArticleCommonServiceTests {
     @Mock
@@ -17,8 +19,8 @@ public class ArticleCommonServiceTests {
 
     protected ArticleWriteService articleWriteService;
     protected ArticleReadService articleReadService;
-    protected Article article;
 
+    protected Article article;
     protected User author;
 
     @BeforeEach
@@ -26,8 +28,8 @@ public class ArticleCommonServiceTests {
         MockitoAnnotations.initMocks(this);
         articleReadService = new ArticleReadService(articleRepository);
         articleWriteService = new ArticleWriteService(articleRepository, articleReadService);
-        author = new User("author", "author@mail.com", "Auth0r!12");
-        article = new Article("title", "coverUrl", "contents", author);
+        author = AUTHOR_DTO.toUser();
+        article = ARTICLE_DTO.toArticle(author);
     }
 
     protected void compareArticle(Article article1, Article article2) {

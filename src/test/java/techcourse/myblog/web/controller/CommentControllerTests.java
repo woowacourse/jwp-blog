@@ -20,17 +20,13 @@ class CommentControllerTests extends ControllerTestTemplate {
     @Autowired
     private CommentRepository commentRepository;
 
-    @Autowired
-    private ArticleRepository articleRepository;
-
     private String savedArticleUrl;
     private CommentDto commentDto;
 
     @BeforeEach
     public void setup() {
         super.setup();
-        savedArticleUrl = getRedirectUrl(loginAndRequest(POST, "/articles/write",
-                parseArticle(new ArticleDto("title", "url", "content"))));
+        savedArticleUrl = getRedirectUrl(loginAndRequest(POST, "/articles/write", parseArticle(new ArticleDto("title", "url", "content"))));
         commentDto = new CommentDto("comment");
     }
 

@@ -9,6 +9,7 @@ import techcourse.myblog.service.UserReadService;
 import techcourse.myblog.service.UserWriteService;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.utils.UserTestObjects.SIGN_UP_USER_DTO;
 
 public class UserCommonServiceTests {
     @Mock
@@ -23,7 +24,7 @@ public class UserCommonServiceTests {
         MockitoAnnotations.initMocks(this);
         userWriteService = new UserWriteService(userRepository);
         userReadService = new UserReadService(userRepository);
-        user = new User("name", "save@mail.com", "Passw0rd!");
+        user = SIGN_UP_USER_DTO.toUser();
     }
 
     protected void compareUser(User user1, User user2) {

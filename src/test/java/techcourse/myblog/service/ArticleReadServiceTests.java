@@ -15,8 +15,7 @@ class ArticleReadServiceTests extends ArticleCommonServiceTests {
     void findAll_test() {
         given(articleRepository.findAll()).willReturn(Arrays.asList(article));
 
-        articleReadService.findAll().forEach(foundArticle ->
-                compareArticle(foundArticle, article));
+        articleReadService.findAll().forEach(foundArticle -> compareArticle(foundArticle, article));
     }
 
     @Test
