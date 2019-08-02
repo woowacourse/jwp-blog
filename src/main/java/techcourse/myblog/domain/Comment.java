@@ -1,9 +1,8 @@
 package techcourse.myblog.domain;
 
-import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +13,7 @@ import java.util.Optional;
 @Entity
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Comment {
     @Id
     @Column(name = "id")
@@ -25,15 +25,15 @@ public class Comment {
     @UpdateTimestamp
     private LocalDateTime updateTimeAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Article article;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private User author;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false, length = 5000)
     private String contents;
 
     public Comment(Article article, User author, String contents) {

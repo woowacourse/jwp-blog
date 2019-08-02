@@ -11,17 +11,15 @@ import techcourse.myblog.domain.Article;
 
 @Controller
 public class ArticleController {
-    private final UserService userService;
     private final ArticleService articleService;
 
-    public ArticleController(ArticleService articleService, UserService userService) {
-        this.userService = userService;
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
     }
 
     @GetMapping("/")
-    public String index(Model model, LoginUser sessionUser) {
-        model.addAttribute("session", sessionUser.getUser());
+    public String index(Model model, LoginUser loginUser) {
+        model.addAttribute("user", loginUser.getUser());
         model.addAttribute("articles", articleService.loadEveryArticles());
         return "index";
     }
@@ -35,10 +33,10 @@ public class ArticleController {
     public RedirectView write(String title,
                               String coverUrl,
                               String contents,
-                              LoginUser sessionUser
+                              LoginUser loginUser
     ) {
         return new RedirectView("/articles/" + articleService.write(
-                new Article(sessionUser.getUser(), title, coverUrl, contents))
+                new Article(loginUser.getUser(), title, coverUrl, contents))
         );
     }
 
@@ -52,9 +50,9 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String updateForm(@PathVariable long articleId, Model model, LoginUser sessionUser) {
+    public String updateForm(@PathVariable long articleId, Model model, LoginUser loginUser) {
         return articleService.maybeArticle(articleId).map(article -> {
-            if (article.isSameAuthor(sessionUser.getUser())) {
+            if (article.isSameAuthor(loginUser.getUser())) {
                 model.addAttribute("article", article);
                 return "article-edit";
             }
@@ -68,16 +66,16 @@ public class ArticleController {
             String title,
             String coverUrl,
             String contents,
-            LoginUser sessionUser
+            LoginUser loginUser
     ) {
-        return articleService.tryUpdate(articleId, new Article(sessionUser.getUser(), title, coverUrl, contents))
+        return articleService.tryUpdate(articleId, new Article(loginUser.getUser(), title, coverUrl, contents))
                 ? new RedirectView("/articles/" + articleId)
                 : new RedirectView("/");
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public RedirectView delete(@PathVariable long articleId, LoginUser sessionUser) {
-        articleService.tryDelete(articleId, sessionUser.getUser());
+    public RedirectView delete(@PathVariable long articleId, LoginUser loginUser) {
+        articleService.tryDelete(articleId, loginUser.getUser());
         return new RedirectView("/");
     }
 

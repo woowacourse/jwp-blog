@@ -15,11 +15,17 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Repository
+interface _UserRepository extends CrudRepository<_User, Long> {
+    Optional<_User> findById(long id);
+}
+
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DataJpaTest
 class ORMTest {
     @Autowired
     private _UserRepository _userRepository;
+
     @Autowired
     private TestEntityManager testEntityManager;
 
@@ -59,7 +65,8 @@ class _User {
     @OneToMany(mappedBy = "author")
     private List<_Article> articles = new ArrayList<>();
 
-    public _User() {}
+    public _User() {
+    }
 
     public _User(String name) {
         this.name = Optional.ofNullable(name).orElse("name");
@@ -89,7 +96,8 @@ class _Article {
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private _User author;
 
-    public _Article() {}
+    public _Article() {
+    }
 
     public _Article(String title, String content) {
         this.title = Optional.ofNullable(title).orElse("title");
@@ -99,9 +107,4 @@ class _Article {
     public void setAuthor(_User author) {
         this.author = author;
     }
-}
-
-@Repository
-interface _UserRepository extends CrudRepository<_User, Long> {
-    Optional<_User> findById(long id);
 }

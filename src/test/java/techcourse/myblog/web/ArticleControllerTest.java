@@ -48,8 +48,7 @@ class ArticleControllerTest {
     @BeforeEach
     void setUp() {
         session = new MockHttpSession();
-        session.setAttribute("email", TEST_EMAIL);
-        session.setAttribute("name", TEST_NAME);
+        session.setAttribute("user", TEST_USER);
         testUser = userRepository.save(TEST_USER);
     }
 
@@ -104,7 +103,7 @@ class ArticleControllerTest {
         mockMvc.perform(get("/articles/0"))
                 .andDo(print())
                 .andExpect(redirectedUrl("/"));
-        String body = mockMvc.perform(get("/articles/" + written.getId()))
+        String body = mockMvc.perform(get("/articles/" + written.getId()).session(session))
                             .andDo(print())
                             .andExpect(status().isOk())
                             .andReturn()
@@ -148,7 +147,7 @@ class ArticleControllerTest {
                                                     .session(session)
         ).andDo(print())
         .andExpect(status().is3xxRedirection());
-        final String body = mockMvc.perform(get("/articles/" + written.getId()))
+        final String body = mockMvc.perform(get("/articles/" + written.getId()).session(session))
                                     .andDo(print())
                                     .andExpect(status().isOk())
                                     .andReturn()

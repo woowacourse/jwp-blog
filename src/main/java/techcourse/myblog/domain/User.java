@@ -1,9 +1,7 @@
 package techcourse.myblog.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Optional;
@@ -12,6 +10,7 @@ import java.util.regex.Pattern;
 @Entity
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class User {
     private static final Pattern NAME_VALIDATION = Pattern.compile("[a-zA-Z가-힣]+");
     private static final int MIN_NAME_LENGTH = 2;
@@ -39,9 +38,8 @@ public class User {
         this.password = validatePassword(password);
     }
 
-    public User update(String name, String email) {
+    public User update(String name) {
         this.name = validateName(name);
-        this.email = validateEmail(email);
         return this;
     }
 

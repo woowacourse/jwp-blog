@@ -15,9 +15,10 @@
             <div class="row">
                 <div class="col-md-7 mx-auto">
                     <div th:object="${user}" class="card">
-                        <form action="/profile/edit" th:method="put">
+                        <form action="/profile/edit" method="post">
                             <div class="card-heading pdd-btm-5 border bottom">
                                 <h4 class="card-title d-inline-block">profile</h4>
+                                <input type="hidden" name="_method"  value="put">
                                 <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정</button>
                             </div>
                             <div class="card-block">
@@ -35,7 +36,7 @@
                                         <p class="mrg-top-10 text-dark"><b>이메일</b></p>
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="email" class="mrg-top-10" name="email" th:value="*{email}" />
+                                        <p th:text = "*{email}" type="email" class="mrg-top-10" name="email" />
                                     </div>
                                 </div>
                                 <hr>

@@ -1,8 +1,8 @@
 package techcourse.myblog.domain;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Article {
     @Id
     @Column(name = "id")
@@ -49,5 +50,11 @@ public class Article {
 
     public void writeComment(Comment comment) {
         comments.add(comment);
+    }
+
+    public void update(Article article) {
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
     }
 }

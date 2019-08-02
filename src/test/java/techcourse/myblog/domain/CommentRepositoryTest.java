@@ -34,9 +34,9 @@ class CommentRepositoryTest {
     @Test
     public void commentWriteFindByArticleTest() {
         User persistentUser = testEntityManager.persist(TEST_USER);
-        Comment persistentComment = testEntityManager.persist(new Comment(TEST_ARTICLE, persistentUser, "ㅎㅇ"));
-        TEST_ARTICLE.writeComment(persistentComment);
         Article persistentArticle = testEntityManager.persist(TEST_ARTICLE);
+        Comment persistentComment = testEntityManager.persist(new Comment(persistentArticle, persistentUser, "ㅎㅇ"));
+        TEST_ARTICLE.writeComment(persistentComment);
         testEntityManager.flush();
         testEntityManager.clear();
         Article actualArticle = articleRepository.findById(persistentArticle.getId()).get();
@@ -46,7 +46,8 @@ class CommentRepositoryTest {
     @Test
     public void commentWriteFindByCommentTest() {
         User persistentUser = testEntityManager.persist(_TEST_USER);
-        Comment persistentComment = testEntityManager.persist(new Comment(TEST_ARTICLE, persistentUser, "ㅎㅇ"));
+        Article persistentArticle = testEntityManager.persist(TEST_ARTICLE);
+        Comment persistentComment = testEntityManager.persist(new Comment(persistentArticle, persistentUser, "ㅎㅇ"));
         testEntityManager.flush();
         testEntityManager.clear();
         Comment actualComment = commentRepository.findById(persistentComment.getId()).get();

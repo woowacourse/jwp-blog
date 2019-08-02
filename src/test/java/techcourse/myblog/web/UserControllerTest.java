@@ -35,8 +35,7 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         session = new MockHttpSession();
-        session.setAttribute("email", TEST_EMAIL);
-        session.setAttribute("name", TEST_NAME);
+        session.setAttribute("user", TEST_USER);
         userRepository.save(TEST_USER);
     }
 
@@ -61,16 +60,16 @@ class UserControllerTest {
     void loginTest() throws Exception {
         mockMvc.perform(
                 post("/login").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .param("email", TEST_EMAIL)
-                            .param("password", TEST_PASSWORD)
+                        .param("email", TEST_EMAIL)
+                        .param("password", TEST_PASSWORD)
         ).andDo(print())
-        .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl("/"));
         mockMvc.perform(
                 post("/login").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .param("email", "wrongEmail")
-                            .param("password", "wrongPassword")
+                        .param("email", "wrongEmail")
+                        .param("password", "wrongPassword")
         ).andDo(print())
-        .andExpect(redirectedUrl("/login"));
+                .andExpect(redirectedUrl("/login"));
     }
 
     @Test
@@ -104,24 +103,24 @@ class UserControllerTest {
         final String WRONG_PASSWORD = "";
         mockMvc.perform(
                 post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .param("name", NEW_NAME)
-                            .param("email", NEW_EMAIL)
-                            .param("password", NEW_PASSWORD)
+                        .param("name", NEW_NAME)
+                        .param("email", NEW_EMAIL)
+                        .param("password", NEW_PASSWORD)
         ).andDo(print())
-        .andExpect(redirectedUrl("/login"));
+                .andExpect(redirectedUrl("/login"));
         assertThat(userRepository.findByEmail(NEW_EMAIL).isPresent()).isTrue();
         mockMvc.perform(
                 post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .param("name", TEST_NAME)
-                            .param("email", TEST_EMAIL)
-                            .param("password", TEST_PASSWORD)
+                        .param("name", TEST_NAME)
+                        .param("email", TEST_EMAIL)
+                        .param("password", TEST_PASSWORD)
         ).andDo(print())
-        .andExpect(redirectedUrl("/signup"));
+                .andExpect(redirectedUrl("/signup"));
         mockMvc.perform(
                 post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .param("name", WRONG_NAME)
-                            .param("email", WRONG_EMAIL)
-                            .param("password", WRONG_PASSWORD)
+                        .param("name", WRONG_NAME)
+                        .param("email", WRONG_EMAIL)
+                        .param("password", WRONG_PASSWORD)
         ).andDo(print())
                 .andExpect(redirectedUrl("/signup"));
     }
@@ -151,25 +150,12 @@ class UserControllerTest {
         final String newName = "donatsu";
         mockMvc.perform(
                 put("/profile/edit").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                    .param("name", TEST_NAME)
-                                    .param("email", "wrongEmail")
-                                    .session(session)
+                        .session(session)
+                        .param("name", newName)
         ).andDo(print())
-        .andExpect(redirectedUrl("/profile/edit"));
-        mockMvc.perform(
-                put("/profile/edit").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                    .param("name", newName)
-                                    .param("email", TEST_EMAIL)
-                                    .session(session)
-        ).andDo(print())
-        .andExpect(redirectedUrl("/profile"));
+                .andExpect(redirectedUrl("/profile"));
+        System.out.println("abcd" + userRepository.findByEmail(TEST_EMAIL).get().getName());
         assertThat(userRepository.findByEmail(TEST_EMAIL).get().getName().equals(newName)).isTrue();
-        mockMvc.perform(
-                put("/profile/edit").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                    .param("name", TEST_NAME)
-                                    .param("email", TEST_EMAIL)
-        ).andDo(print())
-        .andExpect(redirectedUrl("/login"));
     }
 
     @Test

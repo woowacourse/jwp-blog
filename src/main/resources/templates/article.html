@@ -93,7 +93,7 @@
                                 </div>
                             </li>
                         </ul>
-                        <form th:if="${session.email} != null" th:action="${'/articles/' + article.getId() + '/comment'}" name="comment" method="post">
+                        <form th:if="${session.user.email} != null" th:action="${'/articles/' + article.getId() + '/comment'}" name="comment" method="post">
                             <div class="add-comment">
                                 <input id="comment-contents" name="contents" type="hidden" value="">
                                 <div id="editSection"></div>

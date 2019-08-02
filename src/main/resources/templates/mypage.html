@@ -28,7 +28,7 @@
                                     <p class="mrg-top-10 text-dark"><b>이름</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mrg-top-10" th:text="*{name}"></p>
+                                    <p class="mrg-top-10" th:text="${user.name}"></p>
                                 </div>
                             </div>
                             <hr>
@@ -37,7 +37,7 @@
                                     <p class="mrg-top-10 text-dark"><b>이메일</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p class="mrg-top-10" th:text="*{email}"></p>
+                                    <p class="mrg-top-10" th:text="${user.email}"></p>
                                 </div>
                             </div>
                             <hr>
