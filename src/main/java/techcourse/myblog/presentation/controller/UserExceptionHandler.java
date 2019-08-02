@@ -1,6 +1,5 @@
 package techcourse.myblog.presentation.controller;
 
-
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
