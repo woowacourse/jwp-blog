@@ -20,8 +20,6 @@ public class CustomArgumentResolver implements HandlerMethodArgumentResolver {
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest req = (HttpServletRequest) webRequest.getNativeRequest();
         User user = (User) req.getSession().getAttribute("user");
-        LoginUser loginUser = new LoginUser();
-        loginUser.setUser(user);
-        return loginUser;
+        return new LoginUser(user);
     }
 }

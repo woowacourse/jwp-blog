@@ -46,7 +46,7 @@ class CommentRepositoryTest {
     @Test
     public void commentWriteFindByCommentTest() {
         User persistentUser = testEntityManager.persist(_TEST_USER);
-        Article persistentArticle = testEntityManager.persist(TEST_ARTICLE);
+        Article persistentArticle = testEntityManager.persist(new Article(_TEST_USER, TEST_TITLE, TEST_COVER_URL, TEST_CONTENTS));
         Comment persistentComment = testEntityManager.persist(new Comment(persistentArticle, persistentUser, "ㅎㅇ"));
         testEntityManager.flush();
         testEntityManager.clear();
