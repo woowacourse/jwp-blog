@@ -38,29 +38,31 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String updateForm(@PathVariable Long articleId, Model model) {
+    public String updateForm(@PathVariable Long articleId, Model model, HttpSession httpSession) {
+        articleService.exist(articleId, getLoginUser(httpSession));
         model.addAttribute("article", articleService.findById(articleId));
         return "article-edit";
     }
 
     @PostMapping("/articles")
     public String create(ArticleDto articleDto, HttpSession httpSession) {
-        log.debug("articleDto : {}", articleDto);
-        User user = (User) httpSession.getAttribute("user");
-        Article article = articleService.save(articleDto, user);
+        Article article = articleService.save(articleDto, getLoginUser(httpSession));
         return "redirect:/articles/" + article.getId();
     }
 
     @PutMapping("/articles/{articleId}")
-    public String update(@PathVariable Long articleId, ArticleDto articleDto) {
-        articleService.update(articleId, articleDto);
+    public String update(@PathVariable Long articleId, ArticleDto articleDto, HttpSession httpSession) {
+        articleService.update(articleId, articleDto, getLoginUser(httpSession));
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String delete(@PathVariable Long articleId) {
-        log.debug("articleId : {}", articleId);
-        articleService.delete(articleId);
+    public String delete(@PathVariable Long articleId, HttpSession httpSession) {
+        articleService.delete(articleId, getLoginUser(httpSession));
         return "redirect:/";
+    }
+
+    private User getLoginUser(HttpSession httpSession) {
+        return (User) httpSession.getAttribute("user");
     }
 }
