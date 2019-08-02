@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import techcourse.myblog.application.service.exception.NotExistUserIdException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -40,7 +42,10 @@ public class Comment {
         this.article = article;
     }
 
-    public void modify(String contents) {
+    public void modify(String contents, User user) {
+        if (!this.user.equals(user)) {
+            throw new NotExistUserIdException("작성자가 아닙니다.");
+        }
         this.contents = contents;
     }
 }

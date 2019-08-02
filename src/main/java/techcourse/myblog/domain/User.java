@@ -1,30 +1,35 @@
 package techcourse.myblog.domain;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import techcourse.myblog.application.service.exception.NotExistUserIdException;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.util.Objects;
 
+
+@Getter
 @Entity
+@EqualsAndHashCode(of = "id")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotBlank
     @Email
-    @Column(unique = true, nullable = true)
+    @Column(unique = true)
     private String email;
 
     @NotBlank
     @Pattern(regexp = "^([A-Za-z가-힣]{2,10})$")
-    @Column(nullable = true)
     private String name;
 
     @NotBlank
     @Pattern(regexp = "^([a-zA-Z0-9!@#$%^&*]{8,})$")
-    @Column(nullable = true)
     private String password;
 
     private User() {
@@ -36,45 +41,19 @@ public class User {
         this.password = password;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     public void modify(User user) {
+        if (!this.equals(user)) {
+            throw new NotExistUserIdException("해당 유저가 아닙니다.");
+        }
         this.password = user.password;
         this.name = user.name;
     }
 
-    public boolean isSamePassword(String password) {
+    public boolean checkPassword(String password) {
         return this.password.equals(password);
     }
 
-    public boolean isSameEmail(String email) {
+    public boolean checkEmail(String email) {
         return this.email.equals(email);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return email.equals(user.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(email);
     }
 }
