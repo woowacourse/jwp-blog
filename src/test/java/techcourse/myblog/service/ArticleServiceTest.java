@@ -9,6 +9,7 @@ import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.NotFoundCommentException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,13 +31,15 @@ public class ArticleServiceTest {
 
     private Long articleId;
     private UserPublicInfoDto userPublicInfo;
+    private UserSessionDto userSession;
 
     @BeforeEach
     public void setUp() {
         userPublicInfo = userService.findUserPublicInfoById(BASE_USER_ID);
+        userSession = new UserSessionDto(BASE_USER_ID, null, null);
 
         ArticleDto articleDto = articleService.save(
-                userPublicInfo, new ArticleDto(null, BASE_USER_ID, "title", "coverUrl", "contents"));
+                userSession, new ArticleDto(null, BASE_USER_ID, "title", "coverUrl", "contents"));
         articleId = articleDto.getId();
     }
 
@@ -44,9 +47,9 @@ public class ArticleServiceTest {
     public void Article_userId와_수정하려는_User의_Id가_다르면_수정_실패() {
         ArticleDto updateArticleDto =
                 new ArticleDto(articleId, BASE_USER_ID, "title1", "coverUrl1", "contents1");
-        UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoById(MISMATCH_USER_ID);
+        UserSessionDto userSessionDto = new UserSessionDto(MISMATCH_USER_ID, null, null);
 
-        articleService.update(articleId, userPublicInfoDto, updateArticleDto);
+        articleService.update(articleId, userSessionDto, updateArticleDto);
         ArticleDto updateFailArticle = articleService.findArticleDtoById(articleId);
 
         assertThat(updateFailArticle.getTitle()).isEqualTo("title");
@@ -56,7 +59,8 @@ public class ArticleServiceTest {
 
     @Test
     public void Article_userId와_삭제하려는_User의_Id가_다르면_삭제_실패() {
-        articleService.delete(articleId, MISMATCH_USER_ID);
+        UserSessionDto userSessionDto = new UserSessionDto(MISMATCH_USER_ID, null, null);
+        articleService.delete(articleId, userSessionDto);
         ArticleDto deleteFailArticle = articleService.findArticleDtoById(articleId);
 
         assertThat(deleteFailArticle.getTitle()).isEqualTo("title");
@@ -68,9 +72,11 @@ public class ArticleServiceTest {
     @DisplayName("Article을 삭제했을 때 포함된 Comment도 삭제된다")
     public void deleteArticleWithCascadeComments() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
-        Comment comment = commentService.save(userPublicInfo, commentRequestDto);
+        Comment comment = commentService.save(userSession, commentRequestDto);
 
-        articleService.delete(articleId, BASE_USER_ID);
+        UserSessionDto userSessionDto = new UserSessionDto(BASE_USER_ID, null, null);
+
+        articleService.delete(articleId, userSessionDto);
         assertThatThrownBy(() -> commentService.findById(comment.getId()))
                 .isInstanceOf(NotFoundCommentException.class);
     }

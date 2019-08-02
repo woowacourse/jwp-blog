@@ -9,7 +9,7 @@ import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.NotFoundCommentException;
 
 import java.util.List;
@@ -34,12 +34,12 @@ public class CommentServiceTest {
     private UserService userService;
 
     private Long articleId;
-    private UserPublicInfoDto userPublicInfo;
+    private UserSessionDto baseUserSessionDto;
 
     @BeforeEach
     public void setUp() {
-        userPublicInfo = userService.findUserPublicInfoById(BASE_USER_ID);
-        ArticleDto articleDto = articleService.save(userPublicInfo,
+        baseUserSessionDto = new UserSessionDto(BASE_USER_ID, null, null);
+        ArticleDto articleDto = articleService.save(baseUserSessionDto,
                 new ArticleDto(null, BASE_USER_ID, "title", "url", "contents"));
         articleId = articleDto.getId();
 
@@ -48,7 +48,7 @@ public class CommentServiceTest {
     @Test
     public void saveComment() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, TEST_COMMENT);
-        Comment comment = commentService.save(userPublicInfo, commentRequestDto);
+        Comment comment = commentService.save(baseUserSessionDto, commentRequestDto);
 
         assertThat(comment.getComment()).isEqualTo(commentRequestDto.getComment());
     }
@@ -56,8 +56,8 @@ public class CommentServiceTest {
     @Test
     public void findCommentsByArticleId() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, TEST_COMMENT);
-        Comment comment1 = commentService.save(userPublicInfo, commentRequestDto);
-        Comment comment2 = commentService.save(userPublicInfo, commentRequestDto);
+        Comment comment1 = commentService.save(baseUserSessionDto, commentRequestDto);
+        Comment comment2 = commentService.save(baseUserSessionDto, commentRequestDto);
         List<CommentResponseDto> comments = commentService.findCommentsByArticleId(articleId);
 
         assertThat(comments.size()).isEqualTo(2);
@@ -72,9 +72,8 @@ public class CommentServiceTest {
     public void updateComment() {
         Comment comment = commentService.findById(BASE_USER_ID);
         CommentRequestDto updateRequestDto = new CommentRequestDto(articleId, UPDATE_COMMENT);
-        UserPublicInfoDto userPublicInfo = userService.findUserPublicInfoById(BASE_USER_ID);
 
-        commentService.update(userPublicInfo, comment.getId(), updateRequestDto);
+        commentService.update(baseUserSessionDto, comment.getId(), updateRequestDto);
         Comment updatedComment = commentService.findById(BASE_USER_ID);
         assertThat(updatedComment.getComment()).isEqualTo(UPDATE_COMMENT);
     }
@@ -84,9 +83,9 @@ public class CommentServiceTest {
     public void failUpdatingCommentWhenMismatchUser() {
         Comment comment = commentService.findById(BASE_USER_ID);
         CommentRequestDto updateRequestDto = new CommentRequestDto(articleId, UPDATE_COMMENT);
-        UserPublicInfoDto userPublicInfo = userService.findUserPublicInfoById(MISMATCH_USER_ID);
 
-        commentService.update(userPublicInfo, comment.getId(), updateRequestDto);
+        UserSessionDto mismatchUserSession = new UserSessionDto(MISMATCH_USER_ID, null, null);
+        commentService.update(mismatchUserSession, comment.getId(), updateRequestDto);
         Comment updatedComment = commentService.findById(BASE_USER_ID);
         assertThat(updatedComment.getComment()).isEqualTo(comment.getComment());
     }
@@ -95,10 +94,9 @@ public class CommentServiceTest {
     @DisplayName("정상 삭제 테스트")
     public void deleteComment() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, TEST_COMMENT);
-        Comment deletedComment = commentService.save(userPublicInfo, commentRequestDto);
-        UserPublicInfoDto userPublicInfo = userService.findUserPublicInfoById(BASE_USER_ID);
+        Comment deletedComment = commentService.save(baseUserSessionDto, commentRequestDto);
 
-        commentService.delete(userPublicInfo, deletedComment.getId());
+        commentService.delete(baseUserSessionDto, deletedComment.getId());
         assertThatThrownBy(() -> commentService.findById(deletedComment.getId()))
                 .isInstanceOf(NotFoundCommentException.class);
     }
@@ -107,10 +105,10 @@ public class CommentServiceTest {
     @DisplayName("Comment를 등록한 User가 다를때 삭제 실패")
     public void failDeletingCommentWhenMismatchUser() {
         CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, TEST_COMMENT);
-        Comment deletedComment = commentService.save(userPublicInfo, commentRequestDto);
-        UserPublicInfoDto userPublicInfo = userService.findUserPublicInfoById(MISMATCH_USER_ID);
+        Comment deletedComment = commentService.save(baseUserSessionDto, commentRequestDto);
+        UserSessionDto mismatchUserSessionDto = new UserSessionDto(MISMATCH_USER_ID, null, null);
 
-        commentService.delete(userPublicInfo, deletedComment.getId());
+        commentService.delete(mismatchUserSessionDto, deletedComment.getId());
         assertThat(commentService.findCommentsByArticleId(articleId).size()).isEqualTo(1);
     }
 }

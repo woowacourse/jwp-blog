@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.*;
 import techcourse.myblog.web.exception.NotLoggedInException;
 
@@ -28,7 +29,7 @@ public class ControllerExceptionAdvice {
     public String handleUpdateUserException(Exception e,
                                             HttpSession session,
                                             RedirectAttributes redirectAttributes) {
-        UserPublicInfoDto user = (UserPublicInfoDto) session.getAttribute("loggedInUser");
+        UserSessionDto user = (UserSessionDto) session.getAttribute("loggedInUser");
         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         return "redirect:/mypage/" + user.getId() + "/edit";
     }

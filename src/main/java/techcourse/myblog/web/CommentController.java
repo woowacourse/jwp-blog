@@ -30,6 +30,7 @@ public class CommentController {
     @PutMapping("/articles/{articleId}/comment/{commentId}")
     public String updateComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
                                 CommentRequestDto commentRequestDto, HttpSession session) {
+        // commentId, commentRequestDto
         commentService.update(loginChecker.getLoggedInUser(session), commentId, commentRequestDto);
         return "redirect:/articles/" + articleId;
     }

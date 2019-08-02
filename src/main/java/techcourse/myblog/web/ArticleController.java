@@ -9,6 +9,7 @@ import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.UserAuthorizationException;
 import techcourse.myblog.web.util.LoginChecker;
 
@@ -58,8 +59,8 @@ public class ArticleController {
     @GetMapping("/articles/{id}/edit")
     public String showEditPage(@PathVariable("id") Long articleId, Model model, HttpSession session) {
         try {
-            UserPublicInfoDto userPublicInfoDto = loginChecker.getLoggedInUser(session);
-            ArticleDto articleDto = articleService.authorize(userPublicInfoDto, articleId);
+            UserSessionDto userSession = loginChecker.getLoggedInUser(session);
+            ArticleDto articleDto = articleService.authorize(userSession, articleId);
             model.addAttribute("article", articleDto);
             return "article-edit";
         } catch (UserAuthorizationException e) {
@@ -80,8 +81,8 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{id}")
-    public String deleteArticle(@PathVariable("id") long id, HttpSession session) {
-        articleService.delete(id, loginChecker.getLoggedInUser(session).getId());
+    public String deleteArticle(@PathVariable("id") long articleId, HttpSession session) {
+        articleService.delete(articleId, loginChecker.getLoggedInUser(session));
         return "redirect:/";
     }
 }

@@ -4,13 +4,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.NotFoundArticleException;
 import techcourse.myblog.service.exception.NotFoundCommentException;
 import techcourse.myblog.service.exception.SignUpException;
@@ -148,7 +147,7 @@ public class UserServiceTest {
     public void deleteUserWithCascadeArticles() {
         UserRequestDto userRequestDto = new UserRequestDto("delete", "email11@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
         User author = userService.save(userRequestDto);
-        UserPublicInfoDto userPublicInfoDto = new UserPublicInfoDto(author.getId(), author.getName(), author.getEmail());
+        UserSessionDto userPublicInfoDto = new UserSessionDto(author.getId(), author.getName(), author.getEmail());
         ArticleDto articleDto = new ArticleDto(null, author.getId(), "title",
                 "coverUrl", "contents");
 
@@ -164,14 +163,14 @@ public class UserServiceTest {
     public void deleteUserWithCascadeComments() {
         UserRequestDto userRequestDto = new UserRequestDto("delete", "email11@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
         User author = userService.save(userRequestDto);
-        UserPublicInfoDto userPublicInfoDto = new UserPublicInfoDto(author.getId(), author.getName(), author.getEmail());
+        UserSessionDto userPublicInfoDto = new UserSessionDto(author.getId(), author.getName(), author.getEmail());
         ArticleDto articleDto = new ArticleDto(null, author.getId(),
                 "title", "coverUrl", "contents");
         ArticleDto article = articleService.save(userPublicInfoDto, articleDto);
 
-        UserPublicInfoDto userPublicInfo = userService.findUserPublicInfoById(author.getId());
+        UserSessionDto userSession = new UserSessionDto(author.getId(), null, null);
         CommentRequestDto commentRequestDto = new CommentRequestDto(article.getId(), "TEST Comment");
-        Comment comment = commentService.save(userPublicInfo, commentRequestDto);
+        Comment comment = commentService.save(userSession, commentRequestDto);
 
         userService.delete(author.getId());
 

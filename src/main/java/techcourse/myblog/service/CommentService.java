@@ -7,7 +7,7 @@ import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.NotFoundCommentException;
 
 import javax.transaction.Transactional;
@@ -41,31 +41,31 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    public Comment save(UserPublicInfoDto userPublicInfo, CommentRequestDto commentRequestDto) {
-        User user = userService.findByUserPublicInfo(userPublicInfo);
+    public Comment save(UserSessionDto userSessionDto, CommentRequestDto commentRequestDto) {
+        User user = userService.findByUserSession(userSessionDto);
         Article article = articleService.findById(commentRequestDto.getArticleId());
         Comment comment = commentRequestDto.toEntity(user, article);
         return commentRepository.save(comment);
     }
 
     @Transactional
-    public void update(UserPublicInfoDto userPublicInfo, Long commentId, CommentRequestDto commentRequestDto) {
+    public void update(UserSessionDto userSessionDto, Long commentId, CommentRequestDto commentRequestDto) {
         Comment comment = findById(commentId);
-        if (matchUserId(userPublicInfo, comment)) {
+        if (matchUserId(userSessionDto, comment)) {
             comment.updateComment(commentRequestDto.getComment());
         }
     }
 
     @Transactional
-    public void delete(UserPublicInfoDto userPublicInfo, Long commentId) {
+    public void delete(UserSessionDto userSessionDto, Long commentId) {
         Comment comment = findById(commentId);
-        if (matchUserId(userPublicInfo, comment)) {
+        if (matchUserId(userSessionDto, comment)) {
             commentRepository.deleteById(commentId);
         }
     }
 
-    private boolean matchUserId(UserPublicInfoDto userPublicInfo, Comment comment) {
-        return comment.matchAuthorId(userPublicInfo.getId());
+    private boolean matchUserId(UserSessionDto userSessionDto, Comment comment) {
+        return comment.matchAuthorId(userSessionDto.getId());
     }
 
     private CommentResponseDto toCommentResponseDto(Long commentId, Long authorId, String userName, String comment) {

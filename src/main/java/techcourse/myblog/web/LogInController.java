@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.service.LogInService;
 import techcourse.myblog.service.dto.LogInInfoDto;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.web.util.LoginChecker;
 
 import javax.servlet.http.HttpSession;
@@ -27,11 +27,18 @@ public class LogInController {
         }
         return "login";
     }
+//
+//    @PostMapping("/login")
+//    public String logIn(LogInInfoDto logInInfoDto, HttpSession session) {
+//        UserPublicInfoDto userPublicInfoDto = logInService.logIn(logInInfoDto);
+//        session.setAttribute(LoginChecker.LOGGED_IN_USER, userPublicInfoDto);
+//        return "redirect:/";
+//    }
 
     @PostMapping("/login")
     public String logIn(LogInInfoDto logInInfoDto, HttpSession session) {
-        UserPublicInfoDto userPublicInfoDto = logInService.logIn(logInInfoDto);
-        session.setAttribute(LoginChecker.LOGGED_IN_USER, userPublicInfoDto);
+        UserSessionDto userSession = logInService.logIn1(logInInfoDto);
+        session.setAttribute(LoginChecker.LOGGED_IN_USER, userSession);
         return "redirect:/";
     }
 

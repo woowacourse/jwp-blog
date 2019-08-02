@@ -1,7 +1,7 @@
 package techcourse.myblog.web.util;
 
 import org.springframework.stereotype.Component;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.web.exception.NotLoggedInException;
 
 import javax.servlet.http.HttpSession;
@@ -12,7 +12,7 @@ public class LoginChecker {
     public static final String LOGGED_IN_USER = "loggedInUser";
 
     public boolean isLoggedInSameId(HttpSession session, Long id) {
-        UserPublicInfoDto loggedInUser = getLoggedInUser(session);
+        UserSessionDto loggedInUser = getLoggedInUser(session);
         return loggedInUser.getId().equals(id);
     }
 
@@ -26,8 +26,8 @@ public class LoginChecker {
     }
 
     @NotNull
-    public UserPublicInfoDto getLoggedInUser(HttpSession session) {
-        UserPublicInfoDto user = (UserPublicInfoDto) session.getAttribute(LOGGED_IN_USER);
+    public UserSessionDto getLoggedInUser(HttpSession session) {
+        UserSessionDto user = (UserSessionDto) session.getAttribute(LOGGED_IN_USER);
         if (user == null) {
             throw new NotLoggedInException();
         }

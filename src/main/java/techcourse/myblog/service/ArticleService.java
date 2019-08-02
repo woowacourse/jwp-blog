@@ -5,7 +5,7 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.dto.ArticleDto;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.NotFoundArticleException;
 import techcourse.myblog.service.exception.UserAuthorizationException;
 
@@ -38,30 +38,30 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    public ArticleDto save(UserPublicInfoDto userPublicInfoDto, ArticleDto articleDto) {
-        User author = userService.findById(userPublicInfoDto.getId());
+    public ArticleDto save(UserSessionDto userSession, ArticleDto articleDto) {
+        User author = userService.findById(userSession.getId());
         return toArticleDto(articleRepository.save(articleDto.toEntity(author)));
     }
 
     @Transactional
-    public void update(long articleId, UserPublicInfoDto loggedInUser, ArticleDto articleDto) {
+    public void update(long articleId, UserSessionDto userSession, ArticleDto articleDto) {
         Article article = findById(articleId);
-        if (article.matchUserId(loggedInUser.getId())) {
+        if (article.matchUserId(userSession.getId())) {
             article.updateArticle(articleDto.toEntity());
         }
     }
 
     @Transactional
-    public void delete(Long articleId, Long userId) {
+    public void delete(Long articleId, UserSessionDto userSession) {
         Article article = findById(articleId);
-        if (article.matchUserId(userId)) {
+        if (article.matchUserId(userSession.getId())) {
             articleRepository.deleteById(articleId);
         }
     }
 
-    public ArticleDto authorize(UserPublicInfoDto userPublicInfoDto, Long articleId) {
+    public ArticleDto authorize(UserSessionDto userSession, Long articleId) {
         final Article article = findById(articleId);
-        if (article.matchUserId(userPublicInfoDto.getId())) {
+        if (article.matchUserId(userSession.getId())) {
             return toArticleDto(article);
         }
         throw new UserAuthorizationException();

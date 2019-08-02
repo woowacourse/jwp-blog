@@ -7,6 +7,7 @@ import techcourse.myblog.domain.user.UserRepository;
 import techcourse.myblog.service.dto.ArticleDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
 import techcourse.myblog.service.exception.UserDeleteException;
@@ -34,10 +35,9 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(NotFoundUserException::new);
     }
-
-    User findByUserPublicInfo(UserPublicInfoDto userPublicInfo) {
-        return userRepository.findById(userPublicInfo.getId())
-                .orElseThrow(NotFoundUserException::new);
+    
+    User findByUserSession(UserSessionDto userSessionDto) {
+        return findById(userSessionDto.getId());
     }
 
     public UserPublicInfoDto findUserPublicInfoById(Long id) {
@@ -77,10 +77,10 @@ public class UserService {
     }
 
     @Transactional
-    public void update(Long userId, UserRequestDto userPublicInfoDto) {
+    public void update(Long userId, UserRequestDto userRequestDto) {
         try {
             User user = findById(userId);
-            user.updateName(userPublicInfoDto.getName());
+            user.updateName(userRequestDto.getName());
         } catch (NotFoundUserException | UserArgumentException e) {
             throw new UserUpdateException(e.getMessage());
         }

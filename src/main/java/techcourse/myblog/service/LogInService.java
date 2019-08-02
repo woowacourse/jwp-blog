@@ -5,6 +5,7 @@ import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
 import techcourse.myblog.service.dto.LogInInfoDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.service.exception.LogInException;
 
 import static techcourse.myblog.service.exception.LogInException.NOT_FOUND_USER_MESSAGE;
@@ -24,6 +25,16 @@ public class LogInService {
 
         if (logInUser.matchPassword(logInInfoDto.getPassword())) {
             return new UserPublicInfoDto(logInUser.getId(), logInUser.getName(), logInUser.getEmail());
+        }
+        throw new LogInException(PASSWORD_FAIL_MESSAGE);
+    }
+
+    public UserSessionDto logIn1(LogInInfoDto logInInfoDto) {
+        User logInUser = userRepository.findByEmail(logInInfoDto.getEmail())
+                .orElseThrow(() -> new LogInException(NOT_FOUND_USER_MESSAGE));
+
+        if (logInUser.matchPassword(logInInfoDto.getPassword())) {
+            return new UserSessionDto(logInUser.getId(), logInUser.getName(), logInUser.getEmail());
         }
         throw new LogInException(PASSWORD_FAIL_MESSAGE);
     }

@@ -4,8 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserSessionDto;
 import techcourse.myblog.web.util.LoginChecker;
 
 import javax.servlet.http.HttpSession;
@@ -44,7 +44,9 @@ public class UserController {
     public String editUserName(@PathVariable Long id, UserRequestDto userRequestDto, HttpSession session) {
         if (loginChecker.isLoggedInSameId(session, id)) {
             userService.update(id, userRequestDto);
-            session.setAttribute(LoginChecker.LOGGED_IN_USER, userRequestDto);
+            UserSessionDto userSessionDto = loginChecker.getLoggedInUser(session);
+            userSessionDto.setName(userRequestDto.getName());
+            session.setAttribute(LoginChecker.LOGGED_IN_USER, userSessionDto);
         }
         return "redirect:/mypage/" + id;
     }
