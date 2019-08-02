@@ -7,10 +7,12 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.web.LoginUser;
+import techcourse.myblog.web.controller.LoginFailedException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
-public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.getParameterType() == LoginUser.class;
@@ -20,10 +22,9 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest req = (HttpServletRequest) webRequest.getNativeRequest();
 
-        LoginUser loginUser = new LoginUser();
-        User user = (User) req.getSession().getAttribute("user");
-        loginUser.setUser(user);
+        User user = (User) Optional.ofNullable(req.getSession().getAttribute("user"))
+                .orElseThrow(() -> new LoginFailedException());
 
-        return loginUser;
+        return new LoginUser(user);
     }
 }
