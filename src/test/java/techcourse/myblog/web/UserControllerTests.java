@@ -32,6 +32,22 @@ class UserControllerTests {
     }
 
     @Test
+    void saveUser() {
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("newUserName", "newUserEmail@test.com", "password1!");
+
+        webTestClient.post().uri("/users")
+                .body(BodyInserters
+                        .fromFormData("name", userSaveRequestDto.getName())
+                        .with("email", userSaveRequestDto.getEmail())
+                        .with("password", userSaveRequestDto.getPassword()))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
+
+        LoginTestUtil.deleteUser(webTestClient, userSaveRequestDto);
+    }
+
+    @Test
     void 회원목록_페이지_이동() {
         webTestClient.get().uri("/users")
                 .cookie("JSESSIONID", jSessionId)

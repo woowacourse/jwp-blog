@@ -54,7 +54,20 @@ class CommentControllerTests {
                         .with("articleId", articleId))
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles/.*");
+    }
+
+    @Test
+    void saveComment() {
+        webTestClient.post().uri("/comment/writing")
+                .body(BodyInserters
+                        .fromFormData("comment", "새 댓글")
+                        .with("articleId", articleId))
+                .cookie("JSESSIONID", jSessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles/.*");
     }
 
     @Test

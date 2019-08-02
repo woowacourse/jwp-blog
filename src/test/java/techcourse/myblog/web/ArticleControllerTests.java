@@ -79,6 +79,30 @@ class ArticleControllerTests {
     }
 
     @Test
+    void saveArticle() {
+        WebTestClient.ResponseSpec responseSpec = webTestClient.post().uri("/articles")
+                .body(BodyInserters
+                        .fromFormData("title", "새 제목")
+                        .with("coverUrl", "새 url")
+                        .with("contents", "새 내용"))
+                .cookie("JSESSIONID", jSessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles/.*");
+
+        String[] strings = responseSpec.returnResult(String.class)
+                .getResponseHeaders()
+                .get("Location").get(0)
+                .split("/");
+        String articleId = strings[strings.length - 1];
+
+        webTestClient.delete().uri("/articles/" + articleId)
+                .cookie("JSESSIONID", jSessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection();
+    }
+
+    @Test
     void fetchArticle_없는_글_번호로_조회할_경우() {
         long lastId = getLastArticleId();
 
