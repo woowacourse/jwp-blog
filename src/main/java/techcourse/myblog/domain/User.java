@@ -1,9 +1,9 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
+import techcourse.myblog.dto.UserDto;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -12,6 +12,7 @@ import javax.validation.constraints.Size;
 @Getter
 @ToString
 @EqualsAndHashCode(of = {"id"})
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
     @Id
@@ -36,15 +37,18 @@ public class User {
         this.email = email;
     }
 
-    public User(Long id, String name, String password, String email) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
-        this.email = email;
-    }
-
     public boolean isNotMatch(User target) {
         return id != target.getId();
+    }
+
+    public boolean isNotMatch(UserDto target) {
+        return id != target.getId();
+    }
+
+    public void update(UserDto userDto) {
+        this.name = userDto.getName();
+        this.email = userDto.getEmail();
+        this.password = userDto.getPassword();
     }
 }
 

@@ -21,9 +21,6 @@ public class UserDto {
     private String email;
 
     public User toUser() {
-        if (id != 0) {
-            return new User(id, name, password, email);
-        }
         return new User(name, password, email);
     }
 }

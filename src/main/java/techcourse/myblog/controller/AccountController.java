@@ -79,12 +79,15 @@ public class AccountController {
     }
 
     @PutMapping("profile/edit")
-    public String processUpdateProfile(@Valid UserDto userDto, Errors errors, HttpSession session) {
+    public String processUpdateProfile(@Valid UserDto userDto, Errors errors, User user, HttpSession session) {
         if (errors.hasErrors()) {
             return "mypage-edit";
         }
-        accountService.save(userDto.toUser());
-        session.setAttribute("user", userDto.toUser());
+        if (user.isNotMatch(userDto)) {
+            return "redirect:/";
+        }
+
+        session.setAttribute("user", accountService.update(userDto, user));
 
         return "redirect:/accounts/profile/" + userDto.getId();
     }

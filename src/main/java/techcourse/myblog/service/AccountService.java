@@ -2,8 +2,10 @@ package techcourse.myblog.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.dto.UserDto;
 
 import java.util.List;
 
@@ -34,5 +36,12 @@ public class AccountService {
 
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(RuntimeException::new);
+
+    }
+
+    @Transactional
+    public User update(UserDto userDto, User user) {
+        user.update(userDto);
+        return user;
     }
 }
