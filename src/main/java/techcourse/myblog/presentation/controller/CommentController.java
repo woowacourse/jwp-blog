@@ -10,8 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.CommentService;
-
-import javax.servlet.http.HttpSession;
+import techcourse.myblog.domain.Email;
 
 @Controller
 public class CommentController {
@@ -23,15 +22,15 @@ public class CommentController {
     }
 
     @PostMapping("/articles/{articleId}/comments")
-    public RedirectView addComment(CommentDto commentDto, @PathVariable Long articleId, HttpSession session) {
-        commentService.save(commentDto, articleId, session);
+    public RedirectView addComment(CommentDto commentDto, @PathVariable Long articleId, Email email) {
+        commentService.save(commentDto, articleId, email);
         RedirectView redirectView = new RedirectView("/articles/" + articleId);
         return redirectView;
     }
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
-    public ModelAndView deleteComment(@PathVariable Long commentId, @PathVariable Long articleId, HttpSession session) {
-        commentService.checkAuthor(commentId, (String) session.getAttribute("email"));
+    public ModelAndView deleteComment(@PathVariable Long commentId, @PathVariable Long articleId, Email email) {
+        commentService.checkAuthor(commentId, email.getEmail());
         commentService.delete(commentId);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/articles/"+articleId));
@@ -39,8 +38,8 @@ public class CommentController {
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView updateComment(CommentDto commentDto, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, HttpSession session) {
-        commentService.checkAuthor(commentId, (String) session.getAttribute("email"));
+    public RedirectView updateComment(CommentDto commentDto, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, Email email) {
+        commentService.checkAuthor(commentId, email.getEmail());
         commentService.modify(commentId, commentDto);
         return new RedirectView("/articles/"+articleId);
     }

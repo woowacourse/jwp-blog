@@ -11,7 +11,6 @@ import java.util.Objects;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //todo: Long으로 바꾸기
     private Long id;
     private String contents;
 
@@ -25,7 +24,6 @@ public class Comment {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
-    //todo:public =>private
     private Comment() {
     }
 

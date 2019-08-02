@@ -12,10 +12,7 @@ import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.exception.CommentNotFoundException;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
 import techcourse.myblog.application.service.exception.NotMatchAuthorException;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.CommentRepository;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -40,10 +37,10 @@ public class CommentService {
     }
 
     @Transactional
-    public void save(CommentDto commentDto, Long articleId, HttpSession session) {
+    public void save(CommentDto commentDto, Long articleId, Email email) {
         //Article article = articleConverter.convertFromDto(articleService.findById(articleId));
         Article article = articleService.findById(articleId);
-        User user = userService.findUserByEmail((String) session.getAttribute("email"));
+        User user = userService.findUserByEmail(email.getEmail());
         commentDto.setArticle(article);
         commentDto.setAuthor(user);
 
@@ -66,10 +63,7 @@ public class CommentService {
 
     @Transactional
     public void modify(Long commentId, CommentDto commentDto) {
-        System.out.println("악아가강" + commentDto);
-
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("댓글이 존재하지 않습니다"));
-        System.out.println("악아가강" + comment.getId());
         comment.changeContent(commentDto);
     }
 
