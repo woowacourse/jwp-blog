@@ -1,20 +1,53 @@
 package techcourse.myblog.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import techcourse.myblog.domain.user.User;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
-
-@Getter
-@Setter
 public class UserDto {
-    @Pattern(regexp = "^([a-zA-Z]){2,10}$", message = "올바른 이름을 입력하세요")
     private String name;
-
-    @Email(message = "올바른 이메일을 입력하세요")
+    private String password;
     private String email;
 
-    @Pattern(regexp = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{8,20}$", message = "올바른 비밀번호를 입력하세요")
-    private String password;
+    public UserDto() {
+    }
+
+    public UserDto(String name, String password, String email) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+    }
+
+    public UserDto(User user) {
+        this.name = user.getName();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public User toEntity() {
+        return new User(this.name, this.password, this.email);
+    }
+
 }

@@ -1,71 +1,57 @@
 package techcourse.myblog.web;
 
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleAssembler;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.dto.ArticleWriteDto;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.Email;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.web.support.UserSessionInfo;
 
 @Controller
-@RequestMapping(value = "/articles")
-@RequiredArgsConstructor
+@RequestMapping("/articles")
 public class ArticleController {
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
-    private final ArticleRepository articleRepository;
 
-    @GetMapping("/writing")
-    public String showArticleWritingPage() {
+    private final ArticleService articleService;
+
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
+
+    @GetMapping("/{articleId}")
+    public String getArticle(@PathVariable long articleId, Model model) {
+        setArticleModel(model, articleService.findArticle(articleId));
+        return "article";
+    }
+
+    @GetMapping("/{articleId}/edit")
+    public String getEditArticle(@PathVariable long articleId, Model model) {
+        setArticleModel(model, articleService.findArticle(articleId));
         return "article-edit";
     }
 
     @PostMapping
-    public String writeArticle(ArticleWriteDto articleWriteDto, Model model) {
-        log.debug("Post Data : {}", articleWriteDto);
-        Article article = articleRepository.save(ArticleAssembler.writeArticle(articleWriteDto));
-        model.addAttribute("article", article);
-        return "redirect:/articles/" + article.getId();
-    }
-
-
-    @GetMapping("/edit/{articleId}")
-    public String showArticleEditingPage(@PathVariable int articleId, Model model) {
-        model.addAttribute("article",
-                articleRepository.findById(articleId).orElseThrow(() -> new ArticleException("잘못된 접근입니다.")));
-        return "article-edit";
-    }
-
-    @GetMapping("/{articleId}")
-    public String showArticleById(@PathVariable int articleId, Model model) {
-        model.addAttribute("article",
-                articleRepository.findById(articleId).orElseThrow(() -> new ArticleException("잘못된 접근입니다.")));
-        return "article";
+    public String saveArticle(ArticleDto dto, UserSessionInfo userSessionInfo) {
+        return "redirect:/articles/" + articleService.save(dto.toEntity(), Email.of(userSessionInfo.getEmail()));
     }
 
     @PutMapping("/{articleId}")
-    public String updateArticle(@PathVariable int articleId, ArticleWriteDto articleWriteDto, Model model) {
-        log.debug("Put Data : {}", articleWriteDto);
-        Article article = articleRepository.findById(articleId).orElseThrow(IllegalArgumentException::new);
-        article.update(ArticleAssembler.writeArticle(articleWriteDto));
-        articleRepository.save(article);
-        model.addAttribute("article", article);
+    public String getModifiedArticle(@PathVariable long articleId, ArticleDto dto, Model model, UserSessionInfo userSessionInfo) {
+        setArticleModel(model, articleService.update(articleId, dto, Email.of(userSessionInfo.getEmail())));
         return "article";
     }
 
     @DeleteMapping("/{articleId}")
-    public String deleteArticle(@PathVariable int articleId) {
-        articleRepository.deleteById(articleId);
+    public String deleteArticle(@PathVariable long articleId, UserSessionInfo userSessionInfo) {
+        articleService.delete(articleId, Email.of(userSessionInfo.getEmail()));
         return "redirect:/";
     }
 
-    @ExceptionHandler
-    public String handleArticleException(ArticleException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("message", e.getMessage());
-        return "redirect:/err";
+    private void setArticleModel(Model model, Article article) {
+        model.addAttribute("article", article);
     }
 }
