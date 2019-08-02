@@ -1,8 +1,12 @@
 package techcourse.myblog.controller;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
@@ -26,6 +30,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureWebTestClient
+@WebMvcTest //컨트롤러, 인터셉터 빈을 등록해서 사용한다.
 public class CommentControllerTests extends MyblogApplicationTests {
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -49,7 +55,7 @@ public class CommentControllerTests extends MyblogApplicationTests {
     }
 
     @Test
-    void comment생성_save() throws Exception {
+    void comment_save() throws Exception {
         MvcResult mvcResult = mockMvc.perform(post("/comment").session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("contents", "abc")
                 .param("articleId", "1"))

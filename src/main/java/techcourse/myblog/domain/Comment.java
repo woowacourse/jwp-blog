@@ -3,6 +3,9 @@ package techcourse.myblog.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -17,7 +20,8 @@ public class Comment {
     private String contents;
     @OneToOne
     private User user;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "article_id")
     private Article article;
 
@@ -25,5 +29,10 @@ public class Comment {
         this.contents = contents;
         this.user = user;
         this.article = article;
+    }
+
+
+    public long getArticleId() {
+        return this.article.getId();
     }
 }

@@ -1,31 +1,37 @@
 package techcourse.myblog.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.controller.dto.CommentDto;
-import techcourse.myblog.domain.*;
+import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.service.CommentService;
 
 import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
-@RequiredArgsConstructor
 public class CommentController {
-    private final ArticleRepository articleRepository;
-    private final CommentRepository commentRepository;
+    private final CommentService commentService;
+
+    public CommentController(CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     @PostMapping("/comment")
     public String save(HttpSession session, CommentDto commentDto) {
         log.debug(">>> post commentDto : {}", commentDto);
         User user = (User) session.getAttribute("user");
-        Article article = articleRepository.findById(commentDto.getArticleId()).get();
-        Comment comment = commentDto.toComment(user, article);
-        log.debug(">>> post comment : {}", comment);
-        log.debug(">>> post user : {}", user);
-        commentRepository.save(comment);
+        try {
+            commentService.save(user.getId(), commentDto);
+        }catch (IllegalArgumentException e) {
+            return "redirect:/";
+        }
         return "redirect:/articles/" + commentDto.getArticleId();
     }
 
@@ -33,28 +39,22 @@ public class CommentController {
     public String delete(HttpSession session, CommentDto commentDto) {
         log.debug(">>> delete commentDto : {}", commentDto);
         User user = (User) session.getAttribute("user");
-        Article article = articleRepository.findById(commentDto.getArticleId()).get();
-        Comment comment = commentDto.toComment(user, article);
-        log.debug(">>> delete comment : {}", comment);
-        commentRepository.delete(comment);
+        commentService.delete(user.getId(), commentDto);
         return "redirect:/articles/" + commentDto.getArticleId();
     }
 
     @GetMapping("/comment/{id}/edit")
     public String showEditPage(@PathVariable long id, Model model) {
-        Comment comment = commentRepository.findById(id).get();
-        model.addAttribute("comment", comment);
+        model.addAttribute("comment", commentService.findCommentByIdOrElseThrow(id));
         return "comment-edit";
     }
 
     @PutMapping("/comment")
     public String update(CommentDto commentDto, HttpSession httpSession) {
         log.debug(">>> update commentDto : {}", commentDto);
-        Article article = articleRepository.findById(commentDto.getArticleId()).get();
-        User user = (User) httpSession.getAttribute("user");
-        Comment comment = commentDto.toComment(user, article);
-        commentRepository.save(comment);
-        return "redirect:/articles/" + article.getId();
+        long userId = (long) httpSession.getAttribute("user");
+        Comment comment = commentService.update(userId, commentDto);
+        return "redirect:/articles/" + comment.getArticleId();
     }
 
 }

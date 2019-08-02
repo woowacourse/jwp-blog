@@ -38,3 +38,4 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 }
+

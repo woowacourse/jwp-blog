@@ -1,141 +1,117 @@
 package techcourse.myblog.controller;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.MyblogApplicationTests;
+
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AutoConfigureWebTestClient
 public class LoginControllerTest extends MyblogApplicationTests {
-    private WebTestClient webTestClient;
-
-    @Autowired
-    public LoginControllerTest(WebTestClient webTestClient) {
-        this.webTestClient = webTestClient;
-    }
 
     @Test
-    void 로그인_테스트() {
-        testSuccessLogin(USER_EMAIL, USER_PASSWORD);
-    }
-
-    @Test
+    @DisplayName("로그인 페이지 접근")
     void showLoginPage() {
-        webTestClient.get().uri("/login")
-                .exchange()
-                .expectStatus()
-                .isOk()
-        ;
+        getRequestExpectStatus(HttpMethod.GET, "/login")
+                .isOk();
     }
 
     @Test
-    void showLoginPage_로그인_상태일_경우() {
+    @DisplayName("로그인 잘되는 지 테스트")
+    void Login() {
+        MultiValueMap<String, String> map = getCustomUserDtoMap(USER_NAME,USER_EMAIL,USER_PASSWORD,USER_ID);
+        Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
+            String redirectUrl = response.getResponseHeaders().getLocation().toString();
+            assertThat(redirectUrl.contains("/")).isTrue();
+        };
+        getResponseSpec(HttpMethod.POST,"/login",map).exchange()
+                .expectStatus()
+                .isFound()
+                .expectBody()
+                .consumeWith(entityExchangeResultConsumer);
+    }
+
+    @Test
+    @DisplayName("로그인 상태 일 때 로그인 페이지로 못가게 하기")
+    void donot_excess_loginPage() {
+
         String cookie = getLoginCookie(USER_EMAIL, USER_PASSWORD);
-
-        webTestClient.get().uri("/login").header("Cookie", cookie)
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
-                })
-        ;
-    }
-
-    @Test
-    void 로그인_테스트_실패_아이디_틀림() {
-        String wrongEmail = "aa";
-
-        testFailLogin(USER_PASSWORD, wrongEmail);
-    }
-
-    @Test
-    void 로그인_테스트_실패_비밀번호_틀림() {
-        String wrongPW = "aa";
-
-        testFailLogin(wrongPW, USER_EMAIL);
-    }
-
-    @Test
-    void 로그아웃_성공() {
-        testSuccessLogout();
-    }
-
-    @Test
-    void 로그아웃_실패_로그인_안했을_경우() {
-        testFailLogout();
-    }
-
-    protected String getLoginCookie(String email, String password) {
-        return webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-    }
-
-    private void testSuccessLogin(String email, String password) {
-        webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
-                })
-        ;
-    }
-
-    private void testFailLogin(String wrongPW, String testEmail) {
-        String errorMessgae = "아이디나 비밀번호가 잘못되었습니다.";
-        webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", testEmail)
-                        .with("password", wrongPW))
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(errorMessgae)).isTrue();
+        getRequestWithCookieExpectStatus(HttpMethod.GET, "/login", cookie)
+                .isFound();
+        Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response -> {
+            assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
         });
-        ;
-    }
-
-    private void testSuccessLogout() {
-        String cookie = getLoginCookie(USER_EMAIL, USER_PASSWORD);
-
-        webTestClient.get().uri("/logout").header("Cookie", cookie)
-                .exchange()
-                .expectStatus()
+        getRequestWithCookieExpectStatus(HttpMethod.GET,"/login",cookie)
                 .isFound()
                 .expectBody()
-                .consumeWith(innerResponse -> {
-                    assertThat(innerResponse.getResponseHeaders().getLocation().toString().contains("login")).isFalse();
-                });
+                .consumeWith(entityExchangeResultConsumer);
     }
 
-    private void testFailLogout() {
-        webTestClient.get().uri("/logout")
-                .exchange()
-                .expectStatus()
+    @Test
+    @DisplayName("아이디 불일치로 로그인 실패")
+    void login_fail_mismatch_email() {
+
+        MultiValueMap<String, String> map = getCustomUserDtoMap(USER_NAME,"kangmin789@naver.com",USER_PASSWORD,1);
+        Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
+            String body = response.getResponseBody().toString();
+            assertThat(body.contains(LOGIN_ERROR_MESSAGE));
+        };
+        getResponseSpec(HttpMethod.POST,"/login",map);
+        getRequestExpectStatus(HttpMethod.POST,"/login").isOk()
+                .expectBody()
+                .consumeWith(entityExchangeResultConsumer);
+    }
+
+    @Test
+    @DisplayName("비밀번호 불일치로 로그인 실패")
+    void login_fail_mismatch_password() {
+        MultiValueMap<String, String> map = getCustomUserDtoMap(USER_NAME,USER_EMAIL,"asdASD12!@#",1);
+        Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
+            String body = response.getResponseBody().toString();
+            assertThat(body.contains(LOGIN_ERROR_MESSAGE));
+        };
+        getResponseSpec(HttpMethod.POST,"/login",map);
+        getRequestExpectStatus(HttpMethod.POST,"/login").isOk()
+                .expectBody()
+                .consumeWith(entityExchangeResultConsumer);
+    }
+
+    @Test
+    @DisplayName("로그아웃 성공")
+    void logout_sucess() {
+        String cookie = getLoginCookie(USER_EMAIL,USER_PASSWORD);
+        Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
+            String redirectUrl = response.getResponseHeaders().getLocation().getPath();
+            assertThat(redirectUrl.contains("/")).isTrue();
+        };
+
+        getRequestWithCookieExpectStatus(HttpMethod.GET,"/logout",cookie)
                 .isFound()
                 .expectBody()
-                .consumeWith(response -> {
-                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isTrue();
-                });
+        .consumeWith(entityExchangeResultConsumer);
+    }
+
+    @Test
+    @DisplayName("로그인 안했을 떄 로그아웃 실패")
+    void 로그아웃_실패_로그인_안했을_경우() {
+        Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
+            String redirectUrl = response.getResponseHeaders().getLocation().getPath();
+            assertThat(redirectUrl.contains("/login")).isTrue();
+        };
+
+       getRequestExpectStatus(HttpMethod.GET,"/logout")
+                .isFound()
+                .expectBody()
+                .consumeWith(entityExchangeResultConsumer);
     }
 }

@@ -19,9 +19,6 @@ public class ArticleDto {
     private String coverUrl;
 
     public Article toArticle(User author) {
-        if (id != EMPTY_ID) {
-            return new Article(id, title, contents, coverUrl, author);
-        }
-        return new Article(title, contents, coverUrl, author);
+        return new Article(title,contents,coverUrl,author);
     }
 }

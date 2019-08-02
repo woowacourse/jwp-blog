@@ -1,306 +1,235 @@
 package techcourse.myblog.controller;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpMethod;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import techcourse.myblog.MyblogApplicationTests;
+
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.controller.AccountController.ACCOUNT_URL;
 
 @AutoConfigureWebTestClient
 public class AccountControllerTest extends MyblogApplicationTests {
-    private WebTestClient webTestClient;
-    private LoginControllerTest loginControllerTest;
-
-    @Autowired
-    public AccountControllerTest(WebTestClient webTestClient) {
-        this.webTestClient = webTestClient;
-        this.loginControllerTest = new LoginControllerTest(this.webTestClient);
-    }
 
     @Test
+    @DisplayName("회원가입 페이지 들어갈때 잘 들어가는 지 확인")
     void showSignupPageTest() {
-        webTestClient.get()
-                .uri(ACCOUNT_URL+"/signup")
-                .exchange()
-                .expectStatus()
-                .isOk();
+        getRequestExpectStatus(HttpMethod.GET, ACCOUNT_URL + "/signup").isOk();
     }
 
     @Test
+    @DisplayName("회원가입폼 제출하고 리다이렉트 잘 되는 지 확인")
     void processSignupTest() {
-        testSignupProcess("testName", "asdASD12!@", "test@email.com")
+        MultiValueMap<String, String> map = getCustomUserDtoMap("kangmin", "kangmin789@naver.com", "asdASD12!@", 3);
+        getResponseSpec(HttpMethod.POST, ACCOUNT_URL + "/user", map)
+                .exchange()
                 .expectStatus()
                 .isFound();
     }
 
     @Test
+    @DisplayName("회원가입 할때 name유효성 위반일 때 계속 회원가입할 창에 머물게 하는 지 확인")
     void failSignupTest_Name1Word() {
-        String wrongName = "a";
-        testSignupProcess(wrongName, USER_PASSWORD, USER_EMAIL)
-                .expectStatus()
-                .isOk();
+        MultiValueMap<String, String> map = getCustomUserDtoMap("a", "kangmin789@naver.com", "asdASD12!@", 3);
+        judgeSignupValidation(map);
     }
 
     @Test
+    @DisplayName("회원가입 할때 name 유효성 11글자 위반일 때 계속 회원가입할 창에 머물게 하는 지 확인")
     void failSignupTest_Name11Word() {
-        String wrongName = "abcdefghijk";
-        testSignupProcess(wrongName, USER_PASSWORD, USER_EMAIL)
+        MultiValueMap<String, String> map = getCustomUserDtoMap("aaaaaaaaaaa", "kangmin789@naver.com", "asdASD12!@", 3);
+        judgeSignupValidation(map);
+    }
+
+    private void judgeSignupValidation(MultiValueMap<String, String> map) {
+        getResponseSpec(HttpMethod.POST, ACCOUNT_URL + "/user", map)
+                .exchange()
                 .expectStatus()
                 .isOk();
     }
 
     @Test
+    @DisplayName("회원가입 할때 name 유효성 숫자가 포함되서 위반일 때 계속 회원가입할 창에 머물게 하는 지 확인")
     void failSignupTest_NameNotNumber() {
-        String wrongName = "abcde1a";
-
-        testSignupProcess(wrongName, USER_PASSWORD, USER_EMAIL)
-                .expectStatus()
-                .isOk();
+        MultiValueMap<String, String> map = getCustomUserDtoMap("abcde1a", "kangmin789@naver.com", "asdASD12!@", 3);
+        judgeSignupValidation(map);
     }
 
     @Test
+    @DisplayName("회원가입 할때 name 유효성 특수문자가 포함되서 위반일 때 계속 회원가입할 창에 머물게 하는 지 확인")
     void failSignupTest_NameNotSpecialCharacter() {
-        String wrongName = "abcde*a";
-
-        testSignupProcess(wrongName, USER_PASSWORD, USER_EMAIL)
-                .expectStatus()
-                .isOk();
+        MultiValueMap<String, String> map = getCustomUserDtoMap("abcde*a", "kangmin789@naver.com", "asdASD12!@", 3);
+        judgeSignupValidation(map);
     }
 
     @Test
-    void failSignupTest_email골뱅이_없음() {
-        String wrongEmail = "abcd.d";
-
-        testSignupProcess(USER_NAME, USER_PASSWORD, wrongEmail)
-                .expectStatus()
-                .isOk()
-        ;
+    @DisplayName("회원가입 할때 이메일 골뱅이 없을 때 유효성체크 후 계속 회원가입할 창에 머물게 하는 지 확인")
+    void failSignupTest_Email() {
+        MultiValueMap<String, String> map = getCustomUserDtoMap("abcdea", "abcd.d", "asdASD12!@", 3);
+        judgeSignupValidation(map);
     }
 
     @Test
-    void failSignupTest_email기본문자열() {
-        String wrongEmail = "abcd";
-
-        testSignupProcess(USER_NAME, USER_PASSWORD, wrongEmail)
-                .expectStatus()
-                .isOk()
-        ;
+    @DisplayName("회원가입 할때 이메일 기본문자열일 때 유효성체크 후 계속 회원가입할 창에 머물게 하는 지 확인")
+    void failSignupTest_Basic_Email() {
+        MultiValueMap<String, String> map = getCustomUserDtoMap("abcdea", "abcd", "asdASD12!@", 3);
+        judgeSignupValidation(map);
     }
 
     @Test
-    void failSignupTest_email골뱅이_앞이_없음() {
-        String wrongEmail = "@asdsa";
-
-        testSignupProcess(USER_NAME, USER_PASSWORD, wrongEmail)
-                .expectStatus()
-                .isOk()
-        ;
+    @DisplayName("회원가입 할때 이메일 골뱅이 앞이 없을 때 유효성체크 후 계속 회원가입할 창에 머물게 하는 지 확인")
+    void failSignupTest_NoString_Before_At_Email() {
+        MultiValueMap<String, String> map = getCustomUserDtoMap("abcdea", "@asdsa", "asdASD12!@", 3);
+        judgeSignupValidation(map);
     }
 
     @Test
-    void failSignupTest_email골뱅이_뒤가_없음() {
-        String wrongEmail = "abc2@";
-
-        testSignupProcess(USER_NAME, USER_PASSWORD, wrongEmail)
-                .expectStatus()
-                .isOk()
-        ;
+    @DisplayName("회원가입 할때 이메일 골뱅이 뒤가 없을 때 유효성체크 후 계속 회원가입할 창에 머물게 하는 지 확인")
+    void failSignupTest_NoString_After_At_Email() {
+        MultiValueMap<String, String> map = getCustomUserDtoMap("abcdea", "abc2@", "asdASD12!@", 3);
+        judgeSignupValidation(map);
     }
 
     @Test
-    void failSigupTest_Pw소문자없음() {
-        String wrongPw = "EFGH123!@#";
-        testSignupProcess(USER_NAME, wrongPw, USER_EMAIL)
-                .expectStatus()
-                .isOk();
+    @DisplayName("회원가입 할 때 비밀번호 소문자 없을 때 계속 회원가입할 창에 머물게 하는 지 확인")
+    void failSignupTest_NoSmallLetter_Password() {
+        MultiValueMap<String, String> map = getCustomUserDtoMap("abcdea", "kangmin789@naver.com", "ASDASD12!@", 3);
+        judgeSignupValidation(map);
     }
 
     @Test
-    void failSigupTest_Pw대문자없음() {
-        String wrongPw = "abcd123!@#";
-        testSignupProcess(USER_NAME, wrongPw, USER_EMAIL)
-                .expectStatus()
-                .isOk();
+    @DisplayName("회원가입 할 때 비밀번호 대문자 없을 때 계속 회원가입할 창에 머물게 하는 지 확인")
+    void failSignupTest_NoCapitalLetter_Password() {
+        MultiValueMap<String, String> map = getCustomUserDtoMap("abcdea", "kangmin789@naver.com", "asdasd12!@", 3);
+        judgeSignupValidation(map);
     }
 
     @Test
-    void failSigupTest_Pw숫자없음() {
-        String wrongPw = "abcdEFGH!@#";
-        testSignupProcess(USER_NAME, wrongPw, USER_EMAIL)
-                .expectStatus()
-                .isOk();
+    @DisplayName("회원가입 할 때 비밀번호 숫자 없을 때 계속 회원가입할 창에 머물게 하는 지 확인")
+    void failSignupTest_NoNumberLetter_Password() {
+        MultiValueMap<String, String> map = getCustomUserDtoMap("abcdea", "kangmin789@naver.com", "asdASD!@!@", 3);
+        judgeSignupValidation(map);
     }
 
     @Test
-    void failSigupTest_Pw특수문자없음() {
-        String wrongPw = "abcdEFGH123";
-        testSignupProcess(USER_NAME, wrongPw, USER_EMAIL)
-                .expectStatus()
-                .isOk();
+    @DisplayName("회원가입 할 때 비밀번호 특수문자 없을 때 계속 회원가입할 창에 머물게 하는 지 확인")
+    void failSignupTest_NoUniqueLetter_Password() {
+        MultiValueMap<String, String> map = getCustomUserDtoMap("abcdea", "kangmin789@naver.com", "asdASD1212", 3);
+        judgeSignupValidation(map);
     }
 
     @Test
-    void failSigupTest_Pw7자리() {
-        String wrongPw = "abcFG1!";
-        testSignupProcess(USER_NAME, wrongPw, USER_EMAIL)
-                .expectStatus()
-                .isOk();
+    @DisplayName("회원가입 할 때 비밀번호 7자리 없을 때 계속 회원가입할 창에 머물게 하는 지 확인")
+    void failSignupTest_7Letter_Password() {
+        MultiValueMap<String, String> map = getCustomUserDtoMap("abcdea", "kangmin789@naver.com", "asdASD12!@", 3);
+        judgeSignupValidation(map);
     }
 
     @Test
+    @DisplayName("회원가입 할 때 이메일 중복일 때 계속 회원가입할 창에 머물게 하는 지 확인")
     void signupTest_이메일_중복_확인() {
-        String duplEmail = "name@hi.com";
-        testSignupProcess(USER_NAME, USER_PASSWORD, duplEmail)
-                .expectStatus()
+        MultiValueMap<String, String> map = getCustomUserDtoMap("abcdea", USER_EMAIL, "asdASD12!@", 3);
+        judgeSignupValidation(map);
+    }
+
+    @Test
+    @DisplayName("마이 페이지 접근 확인")
+    void access_Mypage() {
+        WebTestClient.ResponseSpec responseSpec = getRequestExpectStatus(HttpMethod.GET, ACCOUNT_URL + "/profile/" + USER_ID)
+                .isOk();
+        Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(USER_NAME)).isTrue();
+            assertThat(body.contains(USER_EMAIL)).isTrue();
+        };
+        confirmResponseBody(responseSpec, entityExchangeResultConsumer);
+    }
+
+    @Test
+    @DisplayName("마이 페이지 수정페이지 접근 확인")
+    void access_Mypage_Edit() {
+        WebTestClient.ResponseSpec responseSpec = getRequestExpectStatus(HttpMethod.GET, ACCOUNT_URL + "/profile/" + USER_ID)
+                .isOk();
+        Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(USER_NAME)).isTrue();
+            assertThat(body.contains(USER_EMAIL)).isTrue();
+        };
+        confirmResponseBody(responseSpec, entityExchangeResultConsumer);
+    }
+
+    @Test
+    @DisplayName("미 로그인시 수정페이지 접근 리다이렉트")
+    void no_Login_Mypage_Exceess() {
+        WebTestClient.ResponseSpec responseSpec = getRequestExpectStatus(HttpMethod.GET, ACCOUNT_URL + "/profile/edit")
                 .isFound();
 
-        testSignupProcess(USER_NAME, USER_PASSWORD, duplEmail)
-                .expectStatus()
-                .isOk();
-    }
-
-    @Test
-    void signupTest_이메일_중복_확인2() {
-        testSignupProcess(USER_NAME, USER_PASSWORD, USER_EMAIL)
-                .expectStatus()
-                .isOk();
-    }
-
-    @Test
-    void 마이페이지_접근() {
-        webTestClient.get().uri(ACCOUNT_URL+"/profile/" + USER_ID)
-                .exchange()
-                .expectStatus()
-                .isOk().expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(USER_EMAIL)).isTrue();
-            assertThat(body.contains(USER_NAME)).isTrue();
-        });
-    }
-
-    @Test
-    void 본인_마이페이지_수정_페이지_접근() {
-        String cookie = loginControllerTest.getLoginCookie(USER_EMAIL, USER_PASSWORD);
-
-        webTestClient.get().uri(ACCOUNT_URL+"/profile/edit").header("Cookie", cookie)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(USER_NAME)).isTrue();
-                    assertThat(body.contains(USER_EMAIL)).isTrue();
-                });
-    }
-
-    @Test
-    void 미로그인시_본인_마이페이지_수정_페이지_접근() {
-        webTestClient.get().uri(ACCOUNT_URL+"/profile/edit")
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .expectBody()
+        responseSpec.expectBody()
                 .consumeWith(response -> {
                     assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isTrue();
                 });
     }
 
     @Test
-    void 마이페이지_수정_후_저장_성공() {
-        String cookie = loginControllerTest.getLoginCookie(USER_EMAIL, USER_PASSWORD);
+    @DisplayName("로그인후 마이 페이지 수정 후 저장 성공")
+    void mypage_Update() {
+        String cookie = getLoginCookie(USER_EMAIL, USER_PASSWORD);
+        MultiValueMap<String, String> map = getCustomUserDtoMap(USER_NAME + "a", USER_EMAIL, USER_PASSWORD, USER_ID);
+        Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(USER_NAME + "a")).isTrue();
+            assertThat(body.contains(USER_EMAIL)).isTrue();
+        };
 
-        webTestClient.put().uri(ACCOUNT_URL+"/profile/edit").header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("name", USER_NAME + "a")
-                        .with("email", USER_EMAIL)
-                        .with("password", USER_PASSWORD)
-                        .with("id", String.valueOf(USER_ID)))
-                .exchange()
-                .expectStatus()
+        getResponseSpecWithCookieWithBody(HttpMethod.PUT, ACCOUNT_URL + "/profile/edit", cookie, map)
                 .isFound()
                 .expectBody()
                 .consumeWith(response -> {
-                    webTestClient.get().uri(ACCOUNT_URL+"/profile/edit").header("Cookie", cookie)
-                            .exchange()
-                            .expectStatus()
-                            .isOk()
-                            .expectBody()
-                            .consumeWith(innerResponse -> {
-                                String body = new String(innerResponse.getResponseBody());
-                                assertThat(body.contains(USER_NAME + "a")).isTrue();
-                                assertThat(body.contains(USER_EMAIL)).isTrue();
-                            });
+                    WebTestClient.ResponseSpec secondResponseSpec = getRequestWithCookieExpectStatus(HttpMethod.GET, ACCOUNT_URL + "/profile/edit", cookie)
+                            .isOk();
+                    confirmResponseBody(secondResponseSpec, entityExchangeResultConsumer);
 
-                    webTestClient.put().uri(ACCOUNT_URL+"/profile/edit").header("Cookie", cookie)
-                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .body(BodyInserters
-                                    .fromFormData("name", USER_NAME)
-                                    .with("email", USER_EMAIL)
-                                    .with("password", USER_PASSWORD)
-                                    .with("id", String.valueOf(USER_ID)))
-                            .exchange()
-                            .expectStatus()
-                            .isFound();
                 });
+
+        MultiValueMap<String, String> secondMap = getCustomUserDtoMap(USER_NAME, USER_EMAIL, USER_PASSWORD, USER_ID);
+        getResponseSpecWithCookieWithBody(HttpMethod.PUT, ACCOUNT_URL + "/profile/edit", cookie, secondMap).isFound();
     }
 
     @Test
+    @DisplayName("유저 리스트 페이지 확인")
     void showUsersPage() {
-        webTestClient.get().uri(ACCOUNT_URL+"/users")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(USER_NAME)).isTrue();
-                    assertThat(body.contains(USER_EMAIL)).isTrue();
-                })
-        ;
+        WebTestClient.ResponseSpec responseSpec = getRequestExpectStatus(HttpMethod.GET, ACCOUNT_URL + "/users")
+                .isOk();
+        Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(USER_NAME)).isTrue();
+            assertThat(body.contains(USER_EMAIL)).isTrue();
+        };
+        confirmResponseBody(responseSpec, entityExchangeResultConsumer);
     }
 
     @Test
+    @DisplayName("유저 삭제")
     void deleteUser() {
-        String name = "delete";
-        String password = "asdfASDF1234!@#$";
-        String email = "delete@user.com";
-
-        testSignupProcess(name, password, email);
-        String cookie = loginControllerTest.getLoginCookie(email, password);
-        webTestClient.delete().uri(ACCOUNT_URL+"/user").header("Cookie", cookie)
-                .exchange()
-                .expectStatus()
+        String cookie = getLoginCookie(USER_EMAIL, USER_PASSWORD);
+        getRequestWithCookieExpectStatus(HttpMethod.DELETE, ACCOUNT_URL + "/user", cookie)
                 .isFound();
+        Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(USER_EMAIL)).isFalse();
+        };
 
-        webTestClient.get().uri(ACCOUNT_URL+"/users")
-                .exchange()
-                .expectStatus()
+        getRequestExpectStatus(HttpMethod.GET, ACCOUNT_URL + "/users")
                 .isOk()
                 .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(email)).isFalse();
-                })
-        ;
-    }
-
-
-    protected WebTestClient.ResponseSpec testSignupProcess(String name, String password, String email) {
-        return webTestClient.post()
-                .uri(ACCOUNT_URL+"/user")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("name", name)
-                        .with("password", password)
-                        .with("email", email))
-                .exchange()
-                ;
+                .consumeWith(entityExchangeResultConsumer);
     }
 }

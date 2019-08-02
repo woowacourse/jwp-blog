@@ -1,6 +1,8 @@
 package techcourse.myblog.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -8,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.service.AccountService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -20,10 +24,10 @@ import static techcourse.myblog.controller.AccountController.ACCOUNT_URL;
 @RequestMapping(ACCOUNT_URL)
 public class AccountController {
     public static final String ACCOUNT_URL = "/accounts";
-    private UserRepository userRepository;
+    private AccountService accountService;
 
-    public AccountController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
     @GetMapping("signup")
@@ -39,37 +43,33 @@ public class AccountController {
             return "signup";
         }
 
-        User user = userDto.toUser();
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (accountService.isExistUser(userDto)) {
             errors.rejectValue("email", "0", "이메일 중복입니다.");
             return "signup";
         }
 
-        userRepository.save(user);
-
+        accountService.signUp(userDto);
         return "redirect:/";
     }
 
     @DeleteMapping("user")
-    public String deleteUser(HttpServletRequest request) {
-        log.debug(">>> deleteUser: request : {}", request);
-        log.debug(">>> deleteUser: requestMethod : {}", request.getMethod());
-        User user = (User) request.getSession().getAttribute("user");
-        request.getSession().removeAttribute("user");
-        userRepository.delete(user);
+    public String deleteUser(HttpSession httpSession) {
+        User user  = (User) httpSession.getAttribute("user");
+        httpSession.removeAttribute("user");
+        accountService.deleteUser(user.getId());
         return "redirect:/";
     }
 
     @GetMapping("users")
     public String showUserList(Model model) {
-        List<User> users = userRepository.findAll();
+        List<User> users = accountService.getUsers();
         model.addAttribute("users", users);
         return "user-list";
     }
 
     @GetMapping("profile/{id}")
     public String showProfilePage(@PathVariable Long id, Model model) {
-        User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
+        User user = accountService.findUserOrElseThrow(id);
         model.addAttribute("user", user);
 
         return "mypage";
@@ -82,13 +82,13 @@ public class AccountController {
     }
 
     @PutMapping("profile/edit")
-    public String processUpdateProfile(HttpServletRequest request, @Valid UserDto userDto, Errors errors) {
+    public String processUpdateProfile(HttpSession httpSession, @Valid UserDto userDto, Errors errors) {
         if (errors.hasErrors()) {
             return "mypage-edit";
         }
-        userRepository.save(userDto.toUser());
-        request.getSession().setAttribute("user", userDto.toUser());
+        User user = accountService.saveUser(userDto);
+        httpSession.setAttribute("user", user);
 
-        return "redirect:/accounts/profile/" + userDto.getId();
+        return "redirect:/accounts/profile/" + user.getId();
     }
 }

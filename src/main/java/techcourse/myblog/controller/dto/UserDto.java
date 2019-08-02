@@ -1,8 +1,6 @@
 package techcourse.myblog.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import techcourse.myblog.domain.User;
 
 import javax.validation.constraints.Email;
@@ -10,6 +8,8 @@ import javax.validation.constraints.Pattern;
 
 @Data
 @AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
 public class UserDto {
     private long id;

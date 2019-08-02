@@ -5,20 +5,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.service.LoginService;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
 public class LoginController {
-    private final UserRepository userRepository;
+    private static final String ERROR_MESSAGE = "아이디나 비밀번호가 잘못되었습니다.";
+    private LoginService loginService;
 
-    public LoginController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public LoginController(LoginService loginService) {
+        this.loginService = loginService;
     }
 
     @GetMapping("/login")
@@ -27,24 +29,31 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String processLogin(UserDto userDto, HttpServletRequest request, Model model) {
-        String errorMessage = "아이디나 비밀번호가 잘못되었습니다.";
-        Optional<User> user = userRepository.findByEmail(userDto.getEmail());
-        if (!user.isPresent() || !userDto.getPassword().equals(user.get().getPassword())) {
-            model.addAttribute("error", errorMessage);
+    public String processLogin(UserDto userDto, HttpSession httpSession, Model model) {
+        User user;
+        log.debug(">>> prcessLogin userDto : {}", userDto);
+
+        try {
+            loginService.MatchPassword(userDto);
+            user = loginService.findUserIdByUserEmail(userDto.getEmail());
+        } catch (Exception e) {
+            model.addAttribute("error", ERROR_MESSAGE);
             return "login";
         }
 
-        request.getSession().setAttribute("user", user.get());
+        httpSession.setAttribute("user", user);
         return "redirect:/";
-
     }
 
     @GetMapping("/logout")
-    public String processLogout(HttpServletRequest request) {
-        log.debug(">>> session : {}", request.getSession().getAttribute("user"));
+    public String processLogout(HttpSession httpSession) {
+        log.debug(">>> session : {}", httpSession.getAttribute("user"));
+        try {
+            httpSession.removeAttribute("user");
+        } catch (IllegalStateException e) {
+            return "redirect:/login";
+        }
 
-        request.getSession().removeAttribute("user");
         return "redirect:/";
     }
 }

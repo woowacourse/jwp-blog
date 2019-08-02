@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
+import techcourse.myblog.controller.dto.UserDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -8,7 +9,6 @@ import javax.validation.constraints.Size;
 @Entity
 @Getter
 @ToString
-@EqualsAndHashCode(of = {"id"})
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
     @Id
@@ -35,6 +35,13 @@ public class User {
         this.name = name;
         this.password = password;
         this.email = email;
+    }
+
+    public void matchPassword(UserDto userDto) {
+        if(userDto.getPassword().equals(password)) {
+            return;
+        }
+        throw new IllegalArgumentException();
     }
 }
 
