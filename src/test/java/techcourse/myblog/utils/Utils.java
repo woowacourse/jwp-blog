@@ -13,15 +13,6 @@ import static io.restassured.RestAssured.given;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 public class Utils {
-    public static String getResponseBody(byte[] body) {
-        try {
-            return new String(body, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("인코딩 에러");
-        }
-    }
-
     public static void createUser(WebTestClient webTestClient, UserDto userDto) {
         webTestClient.post().uri("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -41,6 +32,21 @@ public class Utils {
                 .getHeader("Location");
     }
 
+    public static String createComment(CommentDto commentDto, String cookie, String baseUrl) {
+        return given()
+                .param("articleId", commentDto.getArticleId())
+                .param("contents", commentDto.getContents())
+                .cookie(cookie)
+                .post(baseUrl + "/comments")
+                .getHeader("Location");
+    }
+
+    public static void deleteUser(WebTestClient webTestClient, String cookie) {
+        webTestClient.delete().uri("/users")
+                .header("Cookie", cookie)
+                .exchange();
+    }
+
     public static void deleteArticle(WebTestClient webTestClient, String articleUrl) {
         webTestClient.delete().uri(articleUrl)
                 .exchange();
@@ -55,19 +61,15 @@ public class Utils {
                 .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
     }
 
-    public static void deleteUser(WebTestClient webTestClient, String cookie) {
-        webTestClient.delete().uri("/users")
-                .header("Cookie", cookie)
-                .exchange();
+    public static String getResponseBody(byte[] body) {
+        try {
+            return new String(body, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("인코딩 에러");
+        }
     }
 
-    public static String createComment(CommentDto commentDto, String cookie, String baseUrl) {
-        return given()
-                .param("articleId", commentDto.getArticleId())
-                .param("contents", commentDto.getContents())
-                .cookie(cookie)
-                .post(baseUrl + "/comments")
-                .getHeader("Location");
     public static String getRedirectedLocationOf(WebTestClient.ResponseSpec responseSpec) {
         return responseSpec.expectHeader()
                 .valueMatches("location", ".*")
