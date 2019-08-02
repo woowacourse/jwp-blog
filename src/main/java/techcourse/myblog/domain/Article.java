@@ -1,5 +1,8 @@
 package techcourse.myblog.domain;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -10,6 +13,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@EqualsAndHashCode(of = "id")
+@ToString
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,35 +64,5 @@ public class Article {
         if (user == null || !user.equals(author)) {
             throw new MismatchAuthorException();
         }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", contents='" + contents + '\'' +
-                '}';
     }
 }
