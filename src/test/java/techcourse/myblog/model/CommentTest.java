@@ -5,13 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.exception.MisMatchAuthorException;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-import javax.transaction.Transaction;
-import javax.transaction.Transactional;
-
 import static org.assertj.core.api.Assertions.*;
 
 class CommentTest {

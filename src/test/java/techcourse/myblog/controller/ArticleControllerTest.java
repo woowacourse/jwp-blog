@@ -16,14 +16,12 @@ import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.utils.Utils;
 
-import java.net.URI;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
+import static techcourse.myblog.utils.BlogBodyContentSpec.assertThatBodyOf;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTest {
+class ArticleControllerTest {
     private static final String USER_NAME = "atest";
     private static final String EMAIL = "atest@test.com";
     private static final String PASSWORD = "apassWord!1";

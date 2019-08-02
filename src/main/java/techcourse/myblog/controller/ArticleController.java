@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.controller.dto.ArticleDto;
-import techcourse.myblog.exception.MisMatchAuthorException;
 import techcourse.myblog.model.User;
 import techcourse.myblog.service.ArticleService;
 
