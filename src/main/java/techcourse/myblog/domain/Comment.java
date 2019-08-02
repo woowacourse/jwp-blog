@@ -50,6 +50,9 @@ public class Comment extends Auditable {
     }
 
     public String getCreatedDate() {
-        return createdDate.toString();
+        if (createdDate != null) {
+            return createdDate.toString();
+        }
+        return "unknown";
     }
 }

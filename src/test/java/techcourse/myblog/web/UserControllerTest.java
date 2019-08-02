@@ -1,38 +1,23 @@
 package techcourse.myblog.web;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.UserRequest;
 
-import java.util.stream.Stream;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserControllerTest {
-    private static final String JSESSIONID = "JSESSIONID";
-    private static final String REGEX_SEMI_COLON = ";";
-    private static final String REGEX_EQUAL = "=";
-
-    private static final long USER_ID = 0L;
-    private static final String NAME = "코니";
-    private static final String PASSWORD = "@Password12";
-
-    private User user;
-
+class UserControllerTest extends AbstractControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
     @Test
     public void 회원_가입_페이지를_확인한다() {
-        webTestClient.get().uri("/signup")
+        webTestClient.get().uri("/users/new")
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -46,141 +31,63 @@ class UserControllerTest {
 
     @Test
     public void 회원_가입이_잘_되는지_확인한다() {
-        user = new User(USER_ID, NAME, "cony@cony.com", PASSWORD);
+        UserRequest userDto = new UserRequest("pobi", "pobi@pobi.com", "@Password12", "@Password12");
 
-        webTestClient.post()
-                .uri("/users/new")
+        webTestClient.post().uri("/users/new")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("name", user.getName())
-                        .with("email", user.getEmail())
-                        .with("password", user.getPassword())
-                        .with("passwordConfirm", user.getPassword()))
-                .exchange()
-                .expectStatus().is3xxRedirection();
-    }
-
-    @Test
-    public void 로그인이_잘_되는지_확인한다() {
-        user = new User(USER_ID, NAME, "bony@cony.com", PASSWORD);
-
-        webTestClient.post()
-                .uri("/users/new")
-                .body(BodyInserters
-                        .fromFormData("name", user.getName())
-                        .with("email", user.getEmail())
-                        .with("password", user.getPassword())
-                        .with("passwordConfirm", user.getPassword()))
-                .exchange()
-                .expectStatus().is3xxRedirection();
-
-        webTestClient.post()
-                .uri("/login")
-                .body(BodyInserters
-                        .fromFormData("email", user.getEmail())
-                        .with("password", user.getPassword()))
-                .exchange()
-                .expectStatus().is3xxRedirection();
-    }
-
-    @Test
-    public void 로그아웃이_잘_되는지_확인한다() {
-        user = new User(USER_ID, NAME, "sony@cony.com", PASSWORD);
-        String jSessionId = getJSessionId(user);
-
-        webTestClient.get()
-                .uri("/logout")
-                .cookie(JSESSIONID, jSessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection();
-    }
-
-    @Test
-    public void 회원_목록_페이지를_확인한다() {
-        user = new User(USER_ID, NAME, "kony@cony.com", PASSWORD);
-        String jSessionId = getJSessionId(user);
-
-        webTestClient.get()
-                .uri("/users")
-                .cookie(JSESSIONID, jSessionId)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(user.getName())).isTrue();
-                    assertThat(body.contains(user.getEmail())).isTrue();
-                });
-    }
-
-    @Test
-    public void 마이페이지를_확인한다() {
-        user = new User(USER_ID, NAME, "pony@cony.com", PASSWORD);
-        String jSessionId = getJSessionId(user);
-
-        webTestClient.get()
-                .uri("/mypage")
-                .cookie(JSESSIONID, jSessionId)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(user.getName())).isTrue();
-                    assertThat(body.contains(user.getEmail())).isTrue();
-                });
-    }
-
-    @Test
-    public void 회원정보_수정이_잘_되는지_확인한다() {
-        user = new User(USER_ID, NAME, "dony@cony.com", PASSWORD);
-        String jSessionId = getJSessionId(user);
-
-        webTestClient.put()
-                .uri("/mypage/edit")
-                .cookie(JSESSIONID, jSessionId)
-                .body(BodyInserters
-                        .fromFormData("name", "new코니")
-                        .with("email", user.getEmail())
-                        .with("password", user.getPassword()))
-                .exchange()
-                .expectStatus().is3xxRedirection();
-    }
-
-    private String getJSessionId(User user) {
-        EntityExchangeResult<byte[]> loginResult = getLoginResult(user);
-
-        String[] cookies = loginResult.getResponseHeaders().get("Set-Cookie").stream()
-                .filter(it -> it.contains(JSESSIONID))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException(JSESSIONID + "가 없습니다."))
-                .split(REGEX_SEMI_COLON);
-
-        return Stream.of(cookies)
-                .filter(it -> it.contains(JSESSIONID))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException(JSESSIONID + "가 없습니다."))
-                .split(REGEX_EQUAL)[1];
-    }
-
-    private EntityExchangeResult<byte[]> getLoginResult(User user) {
-        webTestClient.post()
-                .uri("/users/new")
-                .body(BodyInserters
-                        .fromFormData("name", user.getName())
-                        .with("email", user.getEmail())
-                        .with("password", user.getPassword())
-                        .with("passwordConfirm", user.getPassword()))
-                .exchange()
-                .expectStatus().is3xxRedirection();
-
-        return webTestClient.post()
-                .uri("/login")
-                .body(BodyInserters
-                        .fromFormData("email", user.getEmail())
-                        .with("password", user.getPassword()))
+                        .fromFormData("name", userDto.getName())
+                        .with("email", userDto.getEmail())
+                        .with("password", userDto.getPassword())
+                        .with("passwordConfirm", userDto.getPassword()))
                 .exchange()
                 .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
+    }
+
+    @Test
+    public void 로그인_전에_회원_목록_페이지_접근을_시도하면_로그인_페이지로_리다이렉트한다() {
+        webTestClient.get().uri("/users")
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
+    }
+
+    @Test
+    public void 로그인_후에_회원_목록_페이지에_접근한다() {
+        String jSessionId = extractJSessionId(login(user1));
+        webTestClient.get().uri("/users")
+                .cookie(JSESSIONID, jSessionId)
+                .exchange()
+                .expectStatus().isOk()
                 .expectBody()
-                .returnResult();
+                .consumeWith(res -> {
+                    String body = new String(Objects.requireNonNull(res.getResponseBody()));
+                    assertThat(body.contains(user1.getName())).isTrue();
+                    assertThat(body.contains(user1.getEmail())).isTrue();
+                });
+    }
+
+    @Test
+    public void 로그인_전에_마이페이지_접근을_시도하면_로그인_페이지로_리다이렉트한다() {
+        webTestClient.get().uri("/mypage")
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
+    }
+
+    @Test
+    public void 로그인_후에_마이페이지에_접근한다() {
+        String jSessionId = extractJSessionId(login(user1));
+        webTestClient.get().uri("/mypage")
+                .cookie(JSESSIONID, jSessionId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(res -> {
+                    String body = new String(Objects.requireNonNull(res.getResponseBody()));
+                    assertThat(body.contains(user1.getName())).isTrue();
+                    assertThat(body.contains(user1.getEmail())).isTrue();
+                });
     }
 }
