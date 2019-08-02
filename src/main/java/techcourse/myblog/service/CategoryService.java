@@ -11,11 +11,15 @@ import java.util.List;
 
 @Service
 public class CategoryService {
-    @Autowired
-    private ArticleService articleService;
+    private final CategoryRepository categoryRepository;
+
+    private final ArticleService articleService;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    public CategoryService(CategoryRepository categoryRepository, ArticleService articleService) {
+        this.categoryRepository = categoryRepository;
+        this.articleService = articleService;
+    }
 
     public List<CategoryDto> readAll() {
         List<CategoryDto> categories = new ArrayList<>();

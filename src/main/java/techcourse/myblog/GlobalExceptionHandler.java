@@ -13,8 +13,8 @@ public class GlobalExceptionHandler {
     //@ResponseStatus(HttpStatus.BAD_REQUEST)
     public ModelAndView handleError(Exception exception, HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
         String url = httpServletRequest.getHeader("referer");
-
         ModelAndView modelAndView = new ModelAndView("redirect:/");
+
         if (url != null) {
             modelAndView = new ModelAndView("redirect:" + url);
         }

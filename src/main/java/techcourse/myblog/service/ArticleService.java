@@ -6,18 +6,27 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleDto;
 import techcourse.myblog.domain.article.ArticleDtos;
 import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.user.UserDto;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ArticleService {
-    @Autowired
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
-    public long createArticle(ArticleDto articleDto) {
+    private final UserService userService;
+
+    @Autowired
+    public ArticleService(ArticleRepository articleRepository, UserService userService) {
+        this.articleRepository = articleRepository;
+        this.userService = userService;
+    }
+
+    public long createArticle(ArticleDto articleDto, UserDto userDto) {
+        UserDto findUserDto = userService.findByUserEmail(userDto);
+        articleDto.setUserDto(findUserDto);
         Article article = articleRepository.save(articleDto.toEntity());
         return article.getId();
     }
@@ -29,8 +38,9 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleDto updateByArticle(long articleId, ArticleDto articleDto) {
+    public ArticleDto updateByArticle(long articleId, ArticleDto articleDto, UserDto userDto) {
         Optional<Article> maybeArticle = articleRepository.findById(articleId);
+        checkAuthor(articleId, userDto);
         if (maybeArticle.isPresent()) {
             maybeArticle.get().update(articleDto.toEntity());
 
@@ -39,7 +49,9 @@ public class ArticleService {
         throw new IllegalArgumentException("업데이트 할 수 없습니다.");
     }
 
-    public void deleteById(long articleId) {
+    @Transactional
+    public void deleteById(long articleId, UserDto userDto) {
+        checkAuthor(articleId, userDto);
         articleRepository.deleteById(articleId);
     }
 
@@ -49,5 +61,14 @@ public class ArticleService {
 
     public List<ArticleDto> readByCategoryId(long categoryId) {
         return new ArticleDtos(articleRepository.findByCategoryId(categoryId)).getArticleDtos();
+    }
+
+    private void checkAuthor(long articleId, UserDto userDto) {
+        UserDto findUserDto = userService.findByUserEmail(userDto);
+        articleRepository.findById(articleId).ifPresent(article -> {
+            if (!findUserDto.toEntity().checkAuthor(article.getAuthor().getId())) {
+                throw new IllegalArgumentException("허가되지 않은 사용자입니다.");
+            }
+        });
     }
 }

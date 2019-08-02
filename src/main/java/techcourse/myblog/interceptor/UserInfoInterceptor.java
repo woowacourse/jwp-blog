@@ -6,6 +6,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import techcourse.myblog.domain.user.UserDto;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.web.UserController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,16 +20,15 @@ public class UserInfoInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         HttpSession session = request.getSession();
-        Object userId = session.getAttribute("userId");
+        Object userDto = session.getAttribute(UserController.LOGIN_SESSION);
 
         if (modelAndView != null) {
             modelAndView.getModel().remove("userInfo");
         }
 
-        if (userId != null && modelAndView != null) {
-            UserDto userDto = userService.readWithoutPasswordById((long) userId);
-
-            modelAndView.getModel().put("userInfo", userDto);
+        if (userDto != null && modelAndView != null) {
+            UserDto findUserDto = userService.findByUserEmail((UserDto) userDto);
+            modelAndView.getModel().put("userInfo", findUserDto);
         }
     }
 }

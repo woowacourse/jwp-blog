@@ -2,6 +2,7 @@ package techcourse.myblog.interceptor;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import techcourse.myblog.web.UserController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +15,7 @@ public class LoginUserInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
 
-        Object userId = session.getAttribute("userId");
+        Object userId = session.getAttribute(UserController.LOGIN_SESSION);
         if (userId != null) {
             response.sendRedirect("/");
             return false;

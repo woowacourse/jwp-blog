@@ -1,9 +1,11 @@
-package techcourse.myblog.domain.article;
+package techcourse.myblog.domain.comment;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleDto;
 import techcourse.myblog.domain.user.SignUpDto;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserDto;
@@ -11,36 +13,41 @@ import techcourse.myblog.domain.user.UserInfoDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @DataJpaTest
-class ArticleRepositoryTest {
+class CommentRepositoryTest {
     @Autowired
-    private ArticleRepository articleRepository;
+    private CommentRepository commentRepository;
 
     @Autowired
     private TestEntityManager testEntityManager;
 
     @Test
-    void 작성() {
+    void save() {
         UserDto userDto = SignUpDto.builder().name("test")
-                .email("testtest@test.com").password("testtset123").build();
+                .email("test123@test.com").password("testtset123").build();
 
-        User user = testEntityManager.persist(userDto.toEntity());
+        User persistUser = testEntityManager.persist(userDto.toEntity());
         testEntityManager.flush();
         testEntityManager.clear();
 
         ArticleDto articleDto = ArticleDto.builder()
                 .title("test")
                 .contents("test")
-                .categoryId(1).userDto(UserInfoDto.from(user)).build();
+                .categoryId(1)
+                .userDto(UserInfoDto.from(persistUser)).build();
         Article article = articleDto.toEntity();
 
         Article persistArticle = testEntityManager.persist(article);
         testEntityManager.flush();
         testEntityManager.clear();
 
-        Article repoArticle = articleRepository.findById(persistArticle.getId()).get();
+        Comment comment = Comment.builder().contents("test").author(persistUser).article(persistArticle).build();
+        Comment persistComment = testEntityManager.persist(comment);
+        testEntityManager.flush();
+        testEntityManager.clear();
 
-        assertThat(repoArticle).isEqualTo(article);
+        Comment repoComment = commentRepository.findById(persistComment.getId()).get();
+
+        assertThat(repoComment).isEqualTo(comment);
     }
 }

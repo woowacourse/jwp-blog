@@ -18,15 +18,17 @@ import java.util.List;
 public class RootController {
     private static final Logger log = LoggerFactory.getLogger(RootController.class);
 
-    @Autowired
-    private ArticleService articleService;
+    private final ArticleService articleService;
+    private final CategoryService categoryService;
 
     @Autowired
-    private CategoryService categoryService;
+    public RootController(ArticleService articleService, CategoryService categoryService) {
+        this.articleService = articleService;
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/")
     public String index(Model model) {
-        log.debug("index");
         List<ArticleDto> articles = articleService.readAll();
         List<CategoryDto> categories = categoryService.readAll();
 

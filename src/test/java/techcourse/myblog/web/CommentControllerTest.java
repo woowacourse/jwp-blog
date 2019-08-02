@@ -1,27 +1,27 @@
 package techcourse.myblog.web;
 
+import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.domain.comment.CommentDto;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserLoginControllerTest {
+class CommentControllerTest {
     private static final String email = "test@test.com";
     private static final String password = "123123123";
 
     @Autowired
     private WebTestClient webTestClient;
-
-    @LocalServerPort
-    private int localServerPort;
 
     private String JSSESIONID;
 
@@ -33,63 +33,52 @@ public class UserLoginControllerTest {
     }
 
     @Test
-    public void 회원가입접근() {
-        webTestClient.get()
-                .uri("/signup")
+    void 댓글_쓰기() {
+        webTestClient.post().uri("/comments/1")
+                .cookie("JSESSIONID", JSSESIONID)
+                .body(createFormData(CommentDto.class, "test"))
+                .exchange()
+                .expectHeader()
+                .value("location", s -> {
+                    assertThat(Long.parseLong(s.split("/")[4])).isEqualTo(1);
+                });
+    }
+
+    @Test
+    void 댓글_수정() {
+        webTestClient.put().uri("/comments/1/1")
+                .cookie("JSESSIONID", JSSESIONID)
+                .body(createFormData(CommentDto.class, "test"))
+                .exchange()
+                .expectHeader()
+                .value("location", s -> {
+                    assertThat(Long.parseLong(s.split("/")[4])).isEqualTo(1);
+                });
+    }
+
+    @Test
+    void 댓글_삭제() {
+        webTestClient.delete().uri("/comments/1/2")
                 .cookie("JSESSIONID", JSSESIONID)
                 .exchange()
                 .expectHeader()
-                .valueEquals("location", "http://localhost:" + localServerPort + "/");
+                .value("location", s -> {
+                    assertThat(Long.parseLong(s.split("/")[4])).isEqualTo(1);
+                });
     }
 
-    @Test
-    public void 회원가입() {
-        webTestClient.post()
-                .uri("/signup")
-                .cookie("JSESSIONID", JSSESIONID)
-                .exchange()
-                .expectHeader()
-                .valueEquals("location", "http://localhost:" + localServerPort + "/");
+    public <T> BodyInserters.FormInserter<String> createFormData(Class<T> classType, String... parameters) {
+        BodyInserters.FormInserter<String> body = BodyInserters.fromFormData(Strings.EMPTY, Strings.EMPTY);
+        for (int i = 1; i < classType.getDeclaredFields().length; i++) {
+            if (classType.getDeclaredFields()[i].getName() != "author") {
+                body.with(classType.getDeclaredFields()[i].getName(), parameters[i - 1]);
+            }
+        }
+
+        return body;
     }
 
-    @Test
-    public void 회원로그인접근() {
-        webTestClient.get()
-                .uri("/login")
-                .cookie("JSESSIONID", JSSESIONID)
-                .exchange()
-                .expectHeader()
-                .valueEquals("location", "http://localhost:" + localServerPort + "/");
-    }
-
-    @Test
-    public void 회원로그인() {
-        webTestClient.post()
-                .uri("/login")
-                .cookie("JSESSIONID", JSSESIONID)
-                .exchange()
-                .expectHeader()
-                .valueEquals("location", "http://localhost:" + localServerPort + "/");
-    }
-
-    @Test
-    public void 회원조회페이지_이동() {
-        webTestClient.get()
-                .uri("/users")
-                .cookie("JSESSIONID", JSSESIONID)
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    public void 유저페이지() {
-        webTestClient.get()
-                .uri("/users/mypage")
-                .cookie("JSESSIONID", JSSESIONID)
-                .exchange().expectStatus().isOk();
-    }
-
-    private String getJSSESIONID() {
+    public String getJSSESIONID() {
         List<String> result = new ArrayList<>();
 
         webTestClient.post()
