@@ -1,116 +1,107 @@
 package techcourse.myblog.presentation.controller;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
+import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.application.dto.LoginDto;
+import techcourse.myblog.application.dto.UserDto;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
+import static techcourse.myblog.presentation.controller.ControllerTestUtils.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
     @Autowired
     WebTestClient webTestClient;
 
-//    @Autowired
-//    MockMvc mvc;
-//
-//    @MockBean
-//    UserService userService;
+    @LocalServerPort
+    String port;
 
-    @Autowired
-    UserRepository userRepository;
+    private UserDto userDto;
+    private LoginDto loginDto;
 
     @BeforeEach
     void setUp() {
-        userRepository.save(new User("zino@naver.com", "zino", "zino123!"));
+        userDto = new UserDto();
+        userDto.setName("zino");
+        userDto.setEmail("email2@zino.me");
+        userDto.setPassword("password");
+
+        loginDto = new LoginDto();
+        loginDto.setEmail("email2@zino.me");
+        loginDto.setPassword("password");
     }
 
     @Test
-    void 회원가입_POST() throws Exception {
-        webTestClient.post()
-                .uri("/users")
-                .body(fromFormData("name", "name")
-                        .with("email", "email@zino.me")
-                        .with("password", "password"))
-                .exchange()
-                .expectStatus()
-                .isFound();
-    }
-
-    @Test
-    void 로그인_테스트() {
-        webTestClient.post()
-                .uri("/login")
-                .body(fromFormData("email", "zino@naver.com")
-                        .with("password", "zino123!")
-                        .with("name", "zino"))
-                .exchange()
-                .expectStatus()
-                .isFound();
+    void 회원가입_후_로그인_테스트() {
+        postUser(webTestClient, userDto, postResponseUser -> {
+            webTestClient.post()
+                    .uri("/login")
+                    .body(BodyInserters.fromFormData("email", loginDto.getEmail())
+                            .with("password", loginDto.getPassword()))
+                    .exchange()
+                    .expectStatus().is3xxRedirection()
+                    .expectHeader().valueMatches("Location", "http://localhost:" + port + "/.*");
+        });
     }
 
     @Test
     void 로그아웃_테스트() {
-        webTestClient.get()
-                .uri("/logout")
-                .header("Cookie", setCookie())
-                .exchange()
-                .expectStatus()
-                .isFound();
+        postUser(webTestClient, userDto, postResponseUser -> {
+            loginUser(webTestClient, loginDto, postResponseLogin -> {
+                String sessionId = getSessionId(postResponseLogin);
+                webTestClient.get()
+                        .uri("/logout" + sessionId)
+                        .exchange()
+                        .expectStatus().is3xxRedirection();
+            });
+        });
     }
 
     @Test
     void myPage_조회_테스트() {
-        webTestClient.get()
-                .uri("/mypage")
-                .header("Cookie", setCookie())
-                .exchange()
-                .expectStatus()
-                .isOk();
+        postUser(webTestClient, userDto, postResponseUser -> {
+            loginUser(webTestClient, loginDto, postResponseLogin -> {
+                String sessionId = getSessionId(postResponseLogin);
+                webTestClient.get()
+                        .uri("/mypage" + sessionId)
+                        .exchange()
+                        .expectStatus().isOk();
+            });
+        });
+
     }
 
     @Test
-    void myPage_수정_페이지_테스트() throws Exception {
-        webTestClient.get()
-                .uri("/mypage/edit")
-                .header("Cookie", setCookie())
-                .exchange()
-                .expectStatus()
-                .isOk();
+    void myPage_수정_페이지_테스트() {
+        postUser(webTestClient, userDto, postResponseUser -> {
+            loginUser(webTestClient, loginDto, postResponseLogin -> {
+                String sessionId = getSessionId(postResponseLogin);
+                webTestClient.get()
+                        .uri("/mypage/edit" + sessionId)
+                        .exchange()
+                        .expectStatus().isOk();
+            });
+        });
     }
 
     @Test
     void myPage_수정_테스트() {
-        webTestClient.put()
-                .uri("/mypage/edit")
-                .body(fromFormData("email", "zino@naver.com")
-                        .with("password", "zino123!@#")
-                        .with("name", "zinozino"))
-                .header("Cookie", setCookie())
-                .exchange()
-                .expectStatus()
-                .isFound();
-    }
-
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAll();
-    }
-
-    private String setCookie() {
-        return webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("email", "zino@naver.com")
-                        .with("password", "zino123!"))
-                .exchange()
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .getFirst("Set-Cookie");
+        postUser(webTestClient, userDto, postResponseUser -> {
+            loginUser(webTestClient, loginDto, postResponseLogin -> {
+                String sessionId = getSessionId(postResponseLogin);
+                webTestClient.put()
+                        .uri("/mypage/edit" + sessionId)
+                        .body(fromFormData("email", "zino@naver.com")
+                                .with("password", "zino123!@#")
+                                .with("name", "zinozino"))
+                        .exchange()
+                        .expectStatus().isFound();
+            });
+        });
     }
 }
