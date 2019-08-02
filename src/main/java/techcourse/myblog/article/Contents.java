@@ -1,10 +1,18 @@
 package techcourse.myblog.article;
 
-import techcourse.myblog.user.User;
+import javax.persistence.Embeddable;
+import javax.persistence.Lob;
 
+import org.springframework.lang.Nullable;
+
+@Embeddable
 public class Contents {
-	private String title;
+	@Lob
 	private String text;
+
+	private String title;
+
+	@Nullable
 	private String coverUrl;
 
 	private Contents() {}
@@ -25,17 +33,5 @@ public class Contents {
 
 	public String getCoverUrl() {
 		return coverUrl;
-	}
-
-	public Article valueOfArticle() {
-		return new Article(this);
-	}
-
-	public Article valueOfArticle(User user) {
-		return new Article(this, user);
-	}
-
-	public Article valueOfArticle(long id, User user) {
-		return new Article(id, this, user);
 	}
 }

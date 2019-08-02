@@ -24,7 +24,7 @@ public class ArticleService {
 
 	public Long saveArticle(String email, Contents contents) {
 		User user = userService.findUser(email);
-		Article article = contents.valueOfArticle(user);
+		Article article = new Article(user, contents);
 		return articleRepository.save(article).getId();
 	}
 
@@ -36,7 +36,7 @@ public class ArticleService {
 	public void update(Long articleId, String email, Contents contents) {
 		Article article = findById(articleId);
 		confirmAuthorization(email, article.getId());
-		article.update(contents.valueOfArticle());
+		article.update(contents);
 	}
 
 	public void confirmAuthorization(String email, Long articleId) {

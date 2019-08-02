@@ -13,54 +13,39 @@ public class Article {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Lob
-	private String text;
-
-	private String title;
-	private String coverUrl;
+	@Embedded
+	private Contents contents;
 
 	@ManyToOne
 	@JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
 	private User author;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "article_id", foreignKey = @ForeignKey(name  = "fk_article_to_comment"))
+	@JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_article_to_comment"))
 	private List<Comment> comments;
 
 	private Article() {
 	}
 
 	public Article(Contents contents) {
-		this.title = contents.getTitle();
-		this.text = contents.getText();
-		this.coverUrl = contents.getCoverUrl();
+		this.contents = contents;
 	}
 
-	public Article(Contents contents, User user) {
-		this.title = contents.getTitle();
-		this.text = contents.getText();
-		this.coverUrl = contents.getCoverUrl();
+	public Article(User user, Contents contents) {
 		this.author = user;
-	}
-
-	public Article(Long id, Contents contents, User user) {
-		this.id = id;
-		this.title = contents.getTitle();
-		this.text = contents.getText();
-		this.coverUrl = contents.getCoverUrl();
-		this.author = user;
+		this.contents = contents;
 	}
 
 	public String getTitle() {
-		return title;
+		return this.contents.getTitle();
 	}
 
 	public String getCoverUrl() {
-		return coverUrl;
+		return this.contents.getCoverUrl();
 	}
 
 	public String getText() {
-		return text;
+		return this.contents.getText();
 	}
 
 	public Long getId() {
@@ -74,11 +59,13 @@ public class Article {
 	public List<Comment> getComments() {
 		return Collections.unmodifiableList(comments);
 	}
-	//todo: VO가 아닌 Article 클래스로 받는게 맞을까?
-	public void update(Article article) {
-		this.title = article.title;
-		this.text = article.text;
-		this.coverUrl = article.coverUrl;
+
+	public void update(Contents contents) {
+		this.contents = contents;
+	}
+
+	public Contents getContents() {
+		return contents;
 	}
 
 	public boolean matchArticle(Article expectedArticle) {
