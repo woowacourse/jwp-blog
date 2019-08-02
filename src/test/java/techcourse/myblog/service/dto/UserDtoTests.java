@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.service.dto.UserDto.*;
 
 class UserDtoTests {
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();

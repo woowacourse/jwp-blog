@@ -2,7 +2,6 @@ package techcourse.myblog.service;
 
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.service.common.UserCommonServiceTests;
-import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.support.exception.LoginFailedException;
 
 import java.util.Arrays;

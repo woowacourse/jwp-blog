@@ -18,7 +18,6 @@ import static org.mockito.BDDMockito.given;
 import static techcourse.myblog.utils.ArticleTestObjects.ARTICLE_DTO;
 import static techcourse.myblog.utils.CommentTestObjects.COMMENT_DTO;
 import static techcourse.myblog.utils.CommentTestObjects.UPDATE_COMMENT_DTO;
-import static techcourse.myblog.utils.UserTestObjects.AUTHOR_DTO;
 import static techcourse.myblog.utils.UserTestObjects.READER_DTO;
 
 public class CommentWrtieServiceTests {

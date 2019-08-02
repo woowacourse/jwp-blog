@@ -21,8 +21,8 @@ import techcourse.myblog.service.dto.UserDto;
 
 import java.util.Objects;
 
-import static org.springframework.test.web.reactive.server.WebTestClient.*;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.test.web.reactive.server.WebTestClient.RequestBodySpec;
 import static techcourse.myblog.utils.UserTestObjects.SIGN_UP_USER_DTO;
 
 @ExtendWith(SpringExtension.class)
