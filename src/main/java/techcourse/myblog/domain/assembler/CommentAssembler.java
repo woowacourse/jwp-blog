@@ -2,30 +2,31 @@ package techcourse.myblog.domain.assembler;
 
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.CommentDto;
+import techcourse.myblog.dto.CommentRequest;
+import techcourse.myblog.dto.CommentResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CommentAssembler {
-    public static CommentDto writeDto(Comment comment) {
-        CommentDto commentDto = new CommentDto();
-
-        commentDto.setId(comment.getId());
-        commentDto.setContents(comment.getContents());
-        commentDto.setAuthor(comment.getAuthor());
-        commentDto.setCreatedDate(comment.getCreatedDate());
+    public static CommentResponse writeDto(Comment comment) {
+        CommentResponse commentDto = new CommentResponse(
+                comment.getId(),
+                comment.getContents(),
+                comment.getAuthor(),
+                comment.getCreatedDate()
+        );
 
         return commentDto;
     }
 
-    public static List<CommentDto> writeDtos(List<Comment> comments) {
+    public static List<CommentResponse> writeDtos(List<Comment> comments) {
         return comments.stream()
                 .map(CommentAssembler::writeDto)
                 .collect(Collectors.toList());
     }
 
-    public static Comment writeComment(CommentDto commentDto, User user) {
+    public static Comment writeComment(CommentRequest commentDto, User user) {
         return new Comment(commentDto.getContents(), user);
     }
 }

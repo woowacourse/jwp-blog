@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.assembler.UserAssembler;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserRequest;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/users/new")
-    public String enrollUser(UserDto userDto) {
+    public String enrollUser(UserRequest userDto) {
         userService.save(userDto);
         return "redirect:/login";
     }
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserDto userDto, HttpSession httpSession) {
+    public String login(UserRequest userDto, HttpSession httpSession) {
         User user = userService.findUserByEmailAndPassword(userDto);
         httpSession.setAttribute("user", user);
         return "redirect:/";
@@ -75,7 +75,7 @@ public class UserController {
     }
 
     @PutMapping("/mypage/edit")
-    public String updateUser(UserDto userDto, HttpSession httpSession) {
+    public String updateUser(UserRequest userDto, HttpSession httpSession) {
         User updatedUser = userService.update(userDto);
         httpSession.setAttribute("user", updatedUser);
         return "redirect:/mypage";

@@ -1,30 +1,30 @@
 package techcourse.myblog.domain.assembler;
 
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.dto.UserRequest;
+import techcourse.myblog.dto.UserResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserAssembler {
-    public static UserDto writeDto(User user) {
-        UserDto userDto = new UserDto();
-
-        userDto.setUserId(user.getUserId());
-        userDto.setName(user.getName());
-        userDto.setEmail(user.getEmail());
-        userDto.setPassword(user.getPassword());
+    public static UserResponse writeDto(User user) {
+        UserResponse userDto = new UserResponse(
+                user.getName(),
+                user.getEmail(),
+                user.getPassword()
+        );
 
         return userDto;
     }
 
-    public static List<UserDto> writeDtos(List<User> users) {
+    public static List<UserResponse> writeDtos(List<User> users) {
         return users.stream()
                 .map(UserAssembler::writeDto)
                 .collect(Collectors.toList());
     }
 
-    public static User writeUser(UserDto userDto) {
+    public static User writeUser(UserRequest userDto) {
         return new User(userDto.getName(), userDto.getEmail(), userDto.getPassword());
     }
 }
