@@ -27,4 +27,9 @@ public class UserReadService {
     public List<User> findAll() {
         return Collections.unmodifiableList(userRepository.findAll());
     }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(NotFoundUserException::new);
+    }
 }

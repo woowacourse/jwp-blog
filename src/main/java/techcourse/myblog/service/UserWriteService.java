@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
@@ -11,10 +10,11 @@ import techcourse.myblog.dto.UserDto;
 @Transactional
 public class UserWriteService {
     private final UserRepository userRepository;
+    private final UserReadService userReadService;
 
-    @Autowired
-    public UserWriteService(UserRepository userRepository) {
+    public UserWriteService(UserRepository userRepository, UserReadService userReadService) {
         this.userRepository = userRepository;
+        this.userReadService = userReadService;
     }
 
     public void save(User user) {
@@ -29,11 +29,9 @@ public class UserWriteService {
     }
 
     public void update(User loginUser, UserDto userDto) {
-        userRepository.findByEmail(loginUser.getEmail())
-                .ifPresent(existingUser -> {
-                    loginUser.modifyName(userDto.getName());
-                    existingUser.modifyName(userDto.getName());
-                });
+        User originUser = userReadService.findByEmail(loginUser.getEmail());
+        originUser.modifyName(userDto.getName());
+        loginUser.modifyName(userDto.getName());
     }
 
     public void remove(User user) {
