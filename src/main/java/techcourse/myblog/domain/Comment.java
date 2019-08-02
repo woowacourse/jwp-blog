@@ -45,6 +45,30 @@ public class Comment {
         this.article = article;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setContents(String contents) {
+        this.contents = contents;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public void setUpdatedTime(LocalDateTime updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
     public Long getId() {
         return id;
     }
