@@ -44,7 +44,7 @@ public class Article {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     public Article() {
