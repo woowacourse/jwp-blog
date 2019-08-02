@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.domain.userinfo.UserEmail;
 import techcourse.myblog.domain.userinfo.UserPassword;
 import techcourse.myblog.exception.UserMismatchException;
 import techcourse.myblog.exception.UserNotFoundException;
-import techcourse.myblog.repository.UserRepository;
 
 @Slf4j
 @Service

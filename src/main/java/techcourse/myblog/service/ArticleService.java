@@ -5,12 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.IllegalArticleDeleteRequestException;
 import techcourse.myblog.exception.IllegalArticleUpdateRequestException;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.CommentRepository;
 
 import javax.transaction.Transactional;
 

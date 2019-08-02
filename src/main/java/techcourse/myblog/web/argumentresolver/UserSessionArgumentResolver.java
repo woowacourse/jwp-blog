@@ -1,4 +1,4 @@
-package techcourse.myblog.argumentresolver;
+package techcourse.myblog.web.argumentresolver;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;

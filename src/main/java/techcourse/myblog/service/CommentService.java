@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.repository.CommentRepository;
 import techcourse.myblog.dto.CommentSaveRequestDto;
 import techcourse.myblog.exception.CommentNotFoundException;
 import techcourse.myblog.exception.IllegalCommentUpdateRequestException;
-import techcourse.myblog.repository.CommentRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;

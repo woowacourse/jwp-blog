@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.dto.UserEditRequestDto;
 import techcourse.myblog.exception.UserDuplicateException;
 import techcourse.myblog.exception.UserNotFoundException;
-import techcourse.myblog.repository.UserRepository;
 
 import javax.transaction.Transactional;
 
