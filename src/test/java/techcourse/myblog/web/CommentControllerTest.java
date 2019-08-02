@@ -1,98 +1,91 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-import techcourse.myblog.domain.User;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.BodyInserters;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CommentControllerTest {
+class CommentControllerTest extends ControllerTest {
     @Autowired
-    private WebApplicationContext webApplicationContext;
-
-    private MockMvc mockMvc;
-    private MockHttpSession session;
-    private String name = "aiden";
-    private String email = "aiden@gmail.com";
-    private String password = "12Woowa@";
+    private WebTestClient webTestClient;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        session = new MockHttpSession();
-        session.setAttribute("user", new User(1L, name, email, password));
-    }
-
-    @AfterEach
-    void tearDown() {
-        session.clearAttributes();
-        session = null;
-    }
-
-    private ResultActions signUp() throws Exception {
-        return mockMvc.perform(
-                post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("name", name)
-                        .param("email", email)
-                        .param("password", password)
-        ).andDo(print());
-    }
-
-    private String getArticleId() throws Exception {
-        return mockMvc.perform(
-                post("/articles").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("title", "title...")
-                        .param("coverUrl", "coverUrl...")
-                        .param("contents", "contents...")
-                        .session(session)
-        ).andDo(print())
-                .andReturn().getResponse().getRedirectedUrl().split("/")[2];
-    }
-
-    private ResultActions createComment(String articleId) throws Exception {
-        String url = String.format("/articles/%s/comment", articleId);
-        return mockMvc.perform(
-                post(url).param("contents", "comment...")
-                        .session(session)
-        ).andDo(print());
+        jSessionId = login(webTestClient);
     }
 
     @Test
-    void 코멘트_작성() throws Exception {
-        signUp();
-        createComment(getArticleId())
-                .andExpect(status().is3xxRedirection());
+    void 코멘트_수정_폼_테스트() {
+        String commentId = "19";
+
+        webTestClient.get().uri("/comment/" + commentId + "/edit")
+                .cookie(JSESSIONID, jSessionId)
+                .exchange()
+                .expectStatus().isOk()
+        ;
     }
 
     @Test
-    void 코멘트_수정() throws Exception {
-        signUp();
-        createComment(getArticleId());
-        mockMvc.perform(
-                put("/comment/2").param("contents", "comment...")
-                        .session(session)
-        ).andDo(print())
-                .andExpect(status().is3xxRedirection());
+    void 코멘트_작성() {
+        String articleId = "9";
+
+        webTestClient.post().uri("/articles/" + articleId + "/comment")
+                .cookie(JSESSIONID, jSessionId)
+                .body(BodyInserters
+                        .fromFormData("contents", "test comment contents"))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+        ;
     }
 
     @Test
-    void 코멘트_삭제() throws Exception {
-        signUp();
-        createComment(getArticleId());
-        mockMvc.perform(delete("/comment/1").session(session))
-                .andDo(print())
-                .andExpect(status().is3xxRedirection());
+    void 코멘트_수정() {
+        String commentId = "19";
+
+        webTestClient.put().uri("/comment/" + commentId)
+                .cookie(JSESSIONID, jSessionId)
+                .body(BodyInserters
+                        .fromFormData("contents", "update test comment contents"))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+        ;
+    }
+
+    @Test
+    void 코멘트_수정_권한없음() {
+        String commentId = "19";
+
+        webTestClient.put().uri("/comment/" + commentId)
+                .cookie(JSESSIONID, login(webTestClient, "woowa@woowa.com", "12Woowa@@"))
+                .body(BodyInserters
+                        .fromFormData("contents", "update test comment contents"))
+                .exchange()
+                .expectBody()
+                .returnResult().getStatus().is4xxClientError()
+        ;
+    }
+
+    @Test
+    void 코멘트_삭제() {
+        String commentId = "19";
+
+        webTestClient.delete().uri("/comment/" + commentId)
+                .cookie(JSESSIONID, jSessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+        ;
+    }
+
+    @Test
+    void 코멘트_삭제_권한없음() {
+        String commentId = "19";
+
+        webTestClient.delete().uri("/comment/" + commentId)
+                .cookie(JSESSIONID, login(webTestClient, "woowa@woowa.com", "12Woowa@@"))
+                .exchange()
+                .expectBody()
+                .returnResult().getStatus().is4xxClientError()
+        ;
     }
 }
