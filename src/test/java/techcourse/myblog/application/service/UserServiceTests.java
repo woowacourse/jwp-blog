@@ -24,7 +24,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-public class UserServiceTests {
+class UserServiceTests {
 
     @InjectMocks
     private UserService userService;
@@ -47,29 +47,16 @@ public class UserServiceTests {
         inOrder = inOrder(userRepository);
         UserConverter userConverter = UserConverter.getInstance();
 
+
         email = "zino@naver.com";
         name = "zino";
         password = "zinozino";
+        user = new User(email, name, password);
 
-        userDto = new UserDto(email, name, password);
-        loginDto = new LoginDto(email, password);
-        user = userConverter.convertFromDto(userDto);
-    }
-
-    @Test
-    void 중복되지_않은_User_생성() {
-        userService.save(userDto);
-
-        verify(userRepository, times(1)).save(user);
-    }
-
-    @Test
-    void 중복된_User_생성_예외발생() {
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
-        userRepository.save(user);
-        userRepository.save(user);
-
-        verify(userRepository, times(1)).save(user);
+        userDto = UserDto.of(user);
+        loginDto = new LoginDto();
+        loginDto.setEmail(email);
+        loginDto.setPassword(password);
     }
 
     @Test
@@ -119,6 +106,5 @@ public class UserServiceTests {
         given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
         assertThrows(NotMatchPasswordException.class, () -> userService.login(loginDto));
-
     }
 }

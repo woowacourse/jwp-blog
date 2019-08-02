@@ -8,13 +8,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.application.dto.CommentDto;
-import techcourse.myblog.domain.*;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.CommentRepository;
+import techcourse.myblog.domain.User;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 class CommentServiceTest {
@@ -22,43 +25,58 @@ class CommentServiceTest {
     private CommentService commentService;
 
     @Mock
+    private UserService userService;
+
+    @Mock
+    private ArticleService articleService;
+
+    @Mock
     private CommentRepository CommentRepository;
 
-    @Mock
-    private UserRepository userRepository;
-
-    @Mock
-    private ArticleRepository articleRepository;
 
     private InOrder inOrder;
-
-    User user;
-    Article article;
     Comment comment;
     CommentDto commentDto;
-    String email = "zino@zino.zino";
+    User user;
+    Article article;
 
     @BeforeEach
     void setUp() {
-        inOrder = inOrder(CommentRepository, userRepository, articleRepository);
-
-        commentDto = new CommentDto();
+        inOrder = inOrder(CommentRepository);
+        String contents = "aaaaaa";
         user = new User("zino@zino.zino", "hyo.hyo.hyo", "zhiynooh");
         article = new Article("title", "coverUrl", "반갑다 나는 효오다", user);
-        comment = new Comment("빵가워요", user, article);
+
+        comment = new Comment(contents, user, article);
+        commentDto = CommentDto.of(comment);
     }
-
-
 
     @Test
     void 저장_테스트() {
-        commentDto.setContents("빵가워요");
-        commentDto.setId(comment.getId());
-
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
-        given(articleRepository.findById(article.getId())).willReturn(Optional.of(article));
+        long articleId = 1;
         given(CommentRepository.save(comment)).willReturn(comment);
+        given(userService.findUserByEmail(user.getEmail())).willReturn(user);
+        given(articleService.findArticleById(articleId)).willReturn(article);
 
-        assertThat(commentService.save(commentDto, user.getEmail(), article.getId())).isEqualTo(commentDto.getId());
+        commentService.save(commentDto, user.getEmail(), articleId);
+
+        verify(CommentRepository, times(1)).save(comment);
+    }
+
+    @Test
+    void 업데이트_테스트() {
+        long commentId = 1;
+        given(CommentRepository.findById(commentId)).willReturn(Optional.of(comment));
+        given(userService.findUserByEmail(user.getEmail())).willReturn(user);
+
+        assertDoesNotThrow(() -> commentService.update(commentId, commentDto, user.getEmail()));
+    }
+
+    @Test
+    void 삭제_테스트() {
+        long commentId = 1;
+        given(CommentRepository.findById(commentId)).willReturn(Optional.of(comment));
+
+        assertDoesNotThrow(() -> commentService.delete(commentId, user.getEmail()));
     }
 }
