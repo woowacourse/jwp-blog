@@ -1,10 +1,10 @@
-package techcourse.myblog.service.comment;
+package techcourse.myblog.domain.comment;
 
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.dto.comment.CommentRequestDto;
-import techcourse.myblog.service.dto.comment.CommentResponseDto;
+import techcourse.myblog.service.comment.CommentRequestDto;
+import techcourse.myblog.service.comment.CommentResponseDto;
 
 public class CommentAssembler {
     public static Comment convertToEntity(CommentRequestDto commentRequestDto, User user, Article article) {

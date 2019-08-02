@@ -9,14 +9,12 @@ import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.CommentNotFoundException;
 import techcourse.myblog.exception.UserNotFoundException;
-import techcourse.myblog.presentation.ArticleRepository;
-import techcourse.myblog.presentation.CommentRepository;
-import techcourse.myblog.presentation.UserRepository;
-import techcourse.myblog.service.dto.comment.CommentRequestDto;
-import techcourse.myblog.service.dto.comment.CommentResponseDto;
+import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.CommentRepository;
+import techcourse.myblog.repository.UserRepository;
 
-import static techcourse.myblog.service.comment.CommentAssembler.convertToDto;
-import static techcourse.myblog.service.comment.CommentAssembler.convertToEntity;
+import static techcourse.myblog.domain.comment.CommentAssembler.convertToDto;
+import static techcourse.myblog.domain.comment.CommentAssembler.convertToEntity;
 
 @Service
 @Transactional

@@ -1,8 +1,8 @@
-package techcourse.myblog.service.user;
+package techcourse.myblog.domain.user;
 
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.dto.user.UserRequestDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.user.UserRequestDto;
+import techcourse.myblog.service.user.UserResponseDto;
 
 import java.util.Objects;
 

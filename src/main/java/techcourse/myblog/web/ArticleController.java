@@ -5,9 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.service.article.ArticleService;
-import techcourse.myblog.service.dto.article.ArticleRequestDto;
-import techcourse.myblog.service.dto.article.ArticleResponseDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.article.ArticleRequestDto;
+import techcourse.myblog.service.article.ArticleResponseDto;
+import techcourse.myblog.service.user.UserResponseDto;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;

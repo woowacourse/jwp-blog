@@ -6,12 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.InvalidPasswordException;
 import techcourse.myblog.exception.UserNotFoundException;
-import techcourse.myblog.presentation.UserRepository;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.user.UserResponseDto;
 
 import java.util.Objects;
 
-import static techcourse.myblog.service.user.UserAssembler.convertToDto;
+import static techcourse.myblog.domain.user.UserAssembler.convertToDto;
 
 @Service
 public class LoginService {

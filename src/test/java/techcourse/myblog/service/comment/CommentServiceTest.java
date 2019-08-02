@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.CommentNotFoundException;
-import techcourse.myblog.service.dto.comment.CommentRequestDto;
-import techcourse.myblog.service.dto.comment.CommentResponseDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

@@ -1,4 +1,4 @@
-package techcourse.myblog.service.dto.comment;
+package techcourse.myblog.service.comment;
 
 public class CommentRequestDto {
     private String contents;

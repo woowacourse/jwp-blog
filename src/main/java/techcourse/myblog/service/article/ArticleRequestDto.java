@@ -1,4 +1,4 @@
-package techcourse.myblog.service.dto.article;
+package techcourse.myblog.service.article;
 
 import javax.validation.constraints.NotNull;
 import java.util.Objects;

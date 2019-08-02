@@ -15,10 +15,15 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.web.ControllerTestUtil.KEY_JSESSIONID;
+import static techcourse.myblog.web.ControllerTestUtil.postLoginSync;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
+    private static final String DEFAULT_USER_NAME = "john";
+    private static final String DEFAULT_USER_EMAIL = "john123@example.com";
+    private static final String DEFAULT_USER_PASSWORD = "p@ssW0rd";
     @Autowired
     private WebTestClient webTestClient;
     private String name;
@@ -68,7 +73,7 @@ public class UserControllerTests {
             .expectStatus().isOk();
     }
 
-    @Test
+    //    @Test
     void 회원목록_조회_확인() {
         webTestClient.get().uri("/users")
             .exchange()
@@ -82,7 +87,21 @@ public class UserControllerTests {
     }
 
     @Test
+    void 회원목록_조회_확인2() {
+        webTestClient.get().uri("/users")
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody()
+            .consumeWith(response -> {
+                String body = new String(Objects.requireNonNull(response.getResponseBody()));
+                assertThat(body).contains(DEFAULT_USER_NAME);
+                assertThat(body).contains(DEFAULT_USER_EMAIL);
+            });
+    }
+
+    @Test
     void 회원등록_확인() {
+        // Given
         webTestClient.post().uri("/users")
             .body(BodyInserters
                 .fromFormData("name", "done")
@@ -94,10 +113,13 @@ public class UserControllerTests {
             .expectBody()
             .returnResult();
 
-        String newJSessionId = getJSessionId("newEmail@gmail.com", "12345678");
+        // When
+        String sid = postLoginSync(webTestClient, "newEmail@gamil.com", "12345678")
+            .getResponseCookies().getFirst(KEY_JSESSIONID).getValue();
 
+        // Then
         webTestClient.delete().uri("/mypage")
-            .cookie("JSESSIONID", newJSessionId)
+            .cookie(KEY_JSESSIONID, sid)
             .exchange()
             .expectStatus().is3xxRedirection();
     }
@@ -144,10 +166,11 @@ public class UserControllerTests {
             .expectBody()
             .returnResult();
 
-        String newJSessionId = getJSessionId("newEmail@gmail.com", "12345678");
+        String sid = postLoginSync(webTestClient, "newEamil@gamil.com", "12345678")
+            .getResponseCookies().getFirst(KEY_JSESSIONID).getValue();
 
         webTestClient.delete().uri("/mypage")
-            .cookie("JSESSIONID", newJSessionId)
+            .cookie(KEY_JSESSIONID, sid)
             .exchange()
             .expectStatus().is3xxRedirection()
             .expectHeader().valueMatches("Location", ".*/logout");

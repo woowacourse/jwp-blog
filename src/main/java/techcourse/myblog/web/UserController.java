@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import techcourse.myblog.service.dto.user.UserRequestDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.user.UserRequestDto;
+import techcourse.myblog.service.user.UserResponseDto;
 import techcourse.myblog.service.user.UserService;
 
 import javax.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package techcourse.myblog.service.dto.comment;
+package techcourse.myblog.service.comment;
 
 import java.util.Objects;
 
