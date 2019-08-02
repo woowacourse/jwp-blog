@@ -12,6 +12,9 @@ public class ArticleDto {
     private String coverUrl;
     private String contents;
 
+    public ArticleDto() {
+    }
+
     public ArticleDto(Long id, String title, String coverUrl, String contents) {
         this.id = id;
         this.title = title;

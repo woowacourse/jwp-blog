@@ -13,17 +13,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank
     @Email
-    @Column(unique = true)
+    @Column(unique = true, nullable = true)
     private String email;
 
     @NotBlank
     @Pattern(regexp = "^([A-Za-z가-힣]{2,10})$")
+    @Column(nullable = true)
     private String name;
 
     @NotBlank
     @Pattern(regexp = "^([a-zA-Z0-9!@#$%^&*]{8,})$")
+    @Column(nullable = true)
     private String password;
 
     private User() {
