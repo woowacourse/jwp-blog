@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.exception.ArticleNotFoundException;
-import techcourse.myblog.domain.exception.InvalidAccessException;
 import techcourse.myblog.domain.repository.ArticleRepository;
 
 import java.util.List;
@@ -14,6 +13,8 @@ import static java.util.Collections.unmodifiableList;
 
 @Service
 public class ArticleService {
+    private static final String ARTICLE_ERROR = "해당하는 게시글을 찾지 못했습니다.";
+
     private final ArticleRepository articleRepository;
 
     @Autowired
@@ -33,12 +34,12 @@ public class ArticleService {
 
     @Transactional
     public Article findById(long articleId) {
-        return articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("해당하는 게시글을 찾지 못했습니다."));
+        return articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException(ARTICLE_ERROR));
     }
 
     @Transactional
     public Article findById(long articleId, long loginUserId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("해당하는 게시글을 찾지 못했습니다."));
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException(ARTICLE_ERROR));
         article.isAuthor(loginUserId);
         return article;
     }

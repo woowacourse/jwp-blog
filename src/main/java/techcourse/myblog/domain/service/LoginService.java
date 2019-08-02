@@ -10,6 +10,9 @@ import techcourse.myblog.domain.repository.UserRepository;
 
 @Service
 public class LoginService {
+    private final static String USER_ERROR = "해당 Email의 사용자를 찾을 수 없습니다.";
+    private final static String PASSWORD_ERROR = "비밀번호가 일치하지 않습니다.";
+
     private final UserRepository userRepository;
 
     @Autowired
@@ -20,10 +23,10 @@ public class LoginService {
     @Transactional
     public User login(String email, String password) {
         if (notExistUserEmail(email)) {
-            throw new UserNotFoundException("해당 Email의 사용자를 찾을 수 없습니다.");
+            throw new UserNotFoundException(USER_ERROR);
         }
         if (!matchEmailAndPassword(email, password)) {
-            throw new MisMatchPasswordException("비밀번호가 일치하지 않습니다.");
+            throw new MisMatchPasswordException(PASSWORD_ERROR);
         }
         return userRepository.findUserByEmail(email);
     }

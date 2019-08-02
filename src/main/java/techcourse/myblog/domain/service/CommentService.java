@@ -13,6 +13,8 @@ import java.util.List;
 
 @Service
 public class CommentService {
+    private static final String COMMENT_ERROR = "댓글을 찾지 못했습니다.";
+
     private final CommentRepository commentRepository;
 
     @Autowired
@@ -27,14 +29,14 @@ public class CommentService {
 
     @Transactional
     public void deleteById(long id, long loginUserId) {
-        Comment comment = commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException("댓글을 찾지 못했습니다."));
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(COMMENT_ERROR));
         comment.isAuthor(loginUserId);
         commentRepository.deleteById(id);
     }
 
     @Transactional
     public Comment update(long commentId, User user, String contents) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("댓글을 찾지 못했습니다."));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException(COMMENT_ERROR));
         comment.update(contents, user.getId());
         return comment;
     }

@@ -15,6 +15,7 @@ import javax.persistence.*;
 @Getter
 @Table(name = "article")
 public class Article {
+    private static final String INVALID_ERROR = "작성자가 아닙니다.";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -57,6 +58,6 @@ public class Article {
             return;
         }
 
-        throw new InvalidAccessException("작성자가 아닙니다.");
+        throw new InvalidAccessException(INVALID_ERROR);
     }
 }

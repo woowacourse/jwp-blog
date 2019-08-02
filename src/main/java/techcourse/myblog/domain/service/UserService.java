@@ -14,6 +14,8 @@ import static java.util.Collections.unmodifiableList;
 
 @Service
 public class UserService {
+    private static final String DUPLICATED_ERROR = "중복된 Email 입니다.";
+
     private final UserRepository userRepository;
 
     @Autowired
@@ -31,7 +33,7 @@ public class UserService {
     @Transactional
     public User save(User user) {
         if (userRepository.findUserByEmail(user.getEmail()) != null) {
-            throw new DuplicateEmailException("중복된 Email입니다.");
+            throw new DuplicateEmailException(DUPLICATED_ERROR);
         }
         return userRepository.save(user);
     }

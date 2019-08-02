@@ -40,7 +40,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public RedirectView deleteComment(@PathVariable long commentId, long articleId, HttpSession httpSession) {
+    public RedirectView deleteComment(@PathVariable long commentId, @PathVariable long articleId, HttpSession httpSession) {
         User loginUser = (User) httpSession.getAttribute("user");
         commentService.deleteById(commentId, loginUser.getId());
         return new RedirectView("/articles/" + articleId);

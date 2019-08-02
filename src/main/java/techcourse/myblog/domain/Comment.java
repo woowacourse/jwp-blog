@@ -15,6 +15,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(name = "comment")
 public class Comment extends AuditLog {
+    private static final String INVALID_ERROR = "잘못된 접근 입니다.";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -48,6 +50,6 @@ public class Comment extends AuditLog {
             return;
         }
 
-        throw new InvalidAccessException("잘못된 접근입니다.");
+        throw new InvalidAccessException(INVALID_ERROR);
     }
 }
