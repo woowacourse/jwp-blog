@@ -59,13 +59,15 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public RedirectView updateArticle(@PathVariable long articleId, ArticleUpdateDto articleUpdateDto, UserSession userSession) {
-        long updatedArticleId = articleService.update(articleId, articleUpdateDto, userSession.getId());
-        return new RedirectView("/articles/" + updatedArticleId);
+        ArticleResponseDto updatedArticle = articleService.update(articleId, articleUpdateDto, userSession.getId());
+        return new RedirectView("/articles/" + updatedArticle.getId());
     }
 
     @DeleteMapping("/articles/{articleId}")
     public RedirectView deleteArticle(@PathVariable long articleId, UserSession userSession) {
-        articleService.deleteById(articleId, userSession.getId());
+        if (articleService.deleteById(articleId, userSession.getId())) {
+            throw new NotMatchUserException(userSession.getId());
+        }
         return new RedirectView("/");
     }
 }

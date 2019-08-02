@@ -38,8 +38,9 @@ public class Comment {
         this.article = article;
     }
 
-    public void updateComment(String contents) {
+    public Comment updateComment(String contents) {
         this.contents = contents;
+        return this;
     }
 
     public boolean notMatchAuthorId(long authorId) {

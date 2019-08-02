@@ -61,11 +61,12 @@ public class UserService {
 
     public UserResponseDto update(long userId, UserUpdateDto userUpdateDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException(userId));
-        user.update(userUpdateDto.getName());
-        return modelMapper.map(user, UserResponseDto.class);
+        User updatedUser = user.update(userUpdateDto.getName());
+        return modelMapper.map(updatedUser, UserResponseDto.class);
     }
 
-    public void deleteById(long userId) {
+    public boolean deleteById(long userId) {
         userRepository.deleteById(userId);
+        return true;
     }
 }

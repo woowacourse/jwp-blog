@@ -48,20 +48,22 @@ public class ArticleService {
         return modelMapper.map(article, ArticleResponseDto.class);
     }
 
-    public long update(long articleId, ArticleUpdateDto articleUpdateDto, long authorId) {
+    public ArticleResponseDto update(long articleId, ArticleUpdateDto articleUpdateDto, long authorId) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
         if (article.notMatchAuthorId(authorId)) {
             throw new NotMatchUserException(authorId);
         }
-        article.update(articleUpdateDto.getTitle(), articleUpdateDto.getCoverUrl(), articleUpdateDto.getContents());
-        return article.getId();
+        Article updatedArticle = article.update(articleUpdateDto.getTitle(), articleUpdateDto.getCoverUrl(), articleUpdateDto.getContents());
+
+        return modelMapper.map(updatedArticle, ArticleResponseDto.class);
     }
 
-    public void deleteById(long articleId, long authorId) {
+    public boolean deleteById(long articleId, long authorId) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
         if (article.notMatchAuthorId(authorId)) {
-            throw new NotMatchUserException(authorId);
+            return false;
         }
         articleRepository.deleteById(articleId);
+        return true;
     }
 }

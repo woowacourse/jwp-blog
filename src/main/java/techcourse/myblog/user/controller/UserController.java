@@ -81,7 +81,9 @@ public class UserController {
         if (!session.getEmail().equals(user.getEmail())) {
             return new RedirectView("/");
         }
-        userService.deleteById(userId);
-        return new RedirectView("/logout");
+        if (userService.deleteById(userId)) {
+            return new RedirectView("/logout");
+        }
+        return new RedirectView("/");
     }
 }

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static techcourse.myblog.data.ArticleDataForTest.*;
@@ -133,7 +133,12 @@ class ArticleServiceTest {
     void update() {
         when(articleRepository.findById(article.getId())).thenReturn(Optional.of(article));
 
-        assertThat(articleService.update(article.getId(), articleUpdateDto, author.getId())).isEqualTo(article.getId());
+        ArticleResponseDto result = articleService.update(article.getId(), articleUpdateDto, author.getId());
+        assertThat(result.getId()).isEqualTo(article.getId());
+        assertThat(result.getContents()).isEqualTo(article.getContents());
+        assertThat(result.getCoverUrl()).isEqualTo(article.getCoverUrl());
+        assertThat(result.getTitle()).isEqualTo(article.getTitle());
+        assertThat(result.getAuthor()).isEqualTo(article.getAuthor());
     }
 
     @Test
@@ -147,16 +152,14 @@ class ArticleServiceTest {
     @Test
     void 자기게시물_아닌_deleteById() {
         when(articleRepository.findById(article.getId())).thenReturn(Optional.of(article));
-        doNothing().when(articleRepository).deleteById(article.getId());
 
-        assertThrows(NotMatchUserException.class, () -> articleService.deleteById(article.getId(), 10));
+        assertFalse(articleService.deleteById(article.getId(), 10));
     }
 
     @Test
     void deleteById() {
         when(articleRepository.findById(article.getId())).thenReturn(Optional.of(article));
-        doNothing().when(articleRepository).deleteById(article.getId());
 
-        articleService.deleteById(article.getId(), author.getId());
+        assertTrue(articleService.deleteById(article.getId(), author.getId()));
     }
 }

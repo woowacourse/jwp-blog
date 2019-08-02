@@ -38,10 +38,11 @@ public class Article {
         this.author = author;
     }
 
-    public void update(String title, String coverUrl, String contents) {
+    public Article update(String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        return this;
     }
 
     public boolean notMatchAuthorId(long authorId) {

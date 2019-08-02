@@ -53,8 +53,8 @@ public class CommentService {
         if (comment.notMatchAuthorId(authorId)) {
             throw new NotMatchUserException(authorId);
         }
-        comment.updateComment(commentUpdateDto.getContents());
-        return modelMapper.map(comment, CommentResponseDto.class);
+        Comment updatedComment = comment.updateComment(commentUpdateDto.getContents());
+        return modelMapper.map(updatedComment, CommentResponseDto.class);
     }
 
     public boolean deleteById(long commentId, long authorId) {
