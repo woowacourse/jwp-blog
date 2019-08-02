@@ -11,8 +11,6 @@ import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.exception.NotFoundCommentException;
 
-import java.util.stream.Collectors;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

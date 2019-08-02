@@ -47,7 +47,7 @@ public class ArticleService {
     public void update(long articleId, UserPublicInfoDto loggedInUser, ArticleDto articleDto) {
         Article article = findById(articleId);
         if (article.matchUserId(loggedInUser.getId())) {
-            article.updateArticle(articleDto.toVo());
+            article.updateArticle(articleDto.toEntity());
         }
     }
 

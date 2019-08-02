@@ -8,12 +8,20 @@ import java.util.List;
 
 @Entity
 public class Article {
+    private static final int CONTENTS_LENGTH = 1000;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Embedded
-    private ArticleVo articleVo;
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String coverUrl;
+
+    @Column(nullable = false, length = CONTENTS_LENGTH)
+    private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_article_to_user"))
@@ -25,13 +33,17 @@ public class Article {
     protected Article() {
     }
 
-    public Article(User author, ArticleVo articleVo) {
+    public Article(String title, String coverUrl, String contents, User author) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
         this.author = author;
-        this.articleVo = articleVo;
     }
 
-    public void updateArticle(ArticleVo articleVo) {
-        this.articleVo.update(articleVo);
+    public void updateArticle(Article article) {
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
     }
 
     public boolean matchUserId(Long userId) {
@@ -47,14 +59,14 @@ public class Article {
     }
 
     public String getTitle() {
-        return articleVo.getTitle();
+        return title;
     }
 
     public String getCoverUrl() {
-        return articleVo.getCoverUrl();
+        return coverUrl;
     }
 
     public String getContents() {
-        return articleVo.getContents();
+        return contents;
     }
 }

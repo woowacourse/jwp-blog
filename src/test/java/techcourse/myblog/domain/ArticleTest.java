@@ -3,19 +3,19 @@ package techcourse.myblog.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.article.ArticleVo;
 import techcourse.myblog.domain.user.User;
+import techcourse.myblog.service.dto.ArticleDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ArticleTest {
     private Article article;
+    private User author;
 
     @BeforeEach
     public void setUp() {
-        User author = new User("name", "test@test.test", "passWORD1!");
-        ArticleVo articleVo = new ArticleVo("title", "url", "contents");
-        article = new Article(author, articleVo);
+        author = new User("name", "test@test.test", "passWORD1!");
+        article = new Article("title", "url", "contents", author);
     }
 
     @Test
@@ -23,9 +23,9 @@ public class ArticleTest {
         String newTitle = "new Title";
         String newCoverUrl = "new CoverUrl";
         String newContents = "new Contents";
-        ArticleVo newArticleVo = new ArticleVo(newTitle, newCoverUrl, newContents);
+        ArticleDto updatedArticleDto = new ArticleDto(1L, author.getId(), newTitle, newCoverUrl, newContents);
 
-        article.updateArticle(newArticleVo);
+        article.updateArticle(updatedArticleDto.toEntity());
 
         assertThat(article.getTitle()).isEqualTo(newTitle);
         assertThat(article.getCoverUrl()).isEqualTo(newCoverUrl);
