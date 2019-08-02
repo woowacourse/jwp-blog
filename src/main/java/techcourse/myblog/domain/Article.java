@@ -2,6 +2,8 @@ package techcourse.myblog.domain;
 
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.dto.ArticleSaveRequestDto;
 
 import javax.persistence.*;
@@ -29,6 +31,7 @@ public class Article {
 
     @ManyToOne
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"), nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
     @Builder
