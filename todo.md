@@ -1,8 +1,11 @@
 #TODO
 - commentController와 articleController에서 user 검증하는 로직 중복 제거
-
+    - argument resolver를 사용한다(컨트롤러에서 user를 직접 매개변수로 받음)
+    - article과 comment에게 author를 확인하는 책임을 준다
+    
 - 댓글 수정 시 새로운 에디터 창 띄우는 기능을 프런트에서 구현한다
 - 회원탈퇴한 유저의 게시글에 접근하면 에러가 난다.
+- apache:commons dependency를 제거한다.
 
 
 
@@ -30,7 +33,7 @@
         -  수정은 댓글 작성자만 가능
         -  삭제는 댓글 작성자만 가능
 
--  articleController, userController 메서드 이름 convention 통일
+- articleController, userController 메서드 이름 convention 통일
 - uri convention 통일(refactor articleController)
 - comment controller test 작성
 - auto reloading
