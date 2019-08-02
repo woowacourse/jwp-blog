@@ -8,6 +8,7 @@ import techcourse.myblog.application.dto.CommentRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class Comment {
@@ -77,5 +78,18 @@ public class Comment {
             throw new IllegalArgumentException();
         }
         this.contents = updatedComment.getContents();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(id, comment.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

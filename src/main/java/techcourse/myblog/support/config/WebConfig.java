@@ -13,6 +13,7 @@ import techcourse.myblog.web.interceptor.AuthInterceptor;
 public class WebConfig {
     @Bean
     public WebMvcConfigurer interceptorConfigure() {
+        //TODO 댓글, 게시글 CRUD 시 로그인된 상태 확인 후 로그인하지 않은 상태이면 로그인 화면으로 이동
         return new WebMvcConfigurer() {
             @Override
             public void addInterceptors(InterceptorRegistry registry) {

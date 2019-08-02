@@ -26,4 +26,6 @@ public class AuthInterceptor implements HandlerInterceptor {
         return request.getRequestURI().equals("/users")
                 && request.getMethod().equals("POST");
     }
+
+    //TODO 로그인한 후 Login 경로로 접근 시 index 페이지로 이동
 }
