@@ -1,50 +1,77 @@
 package techcourse.myblog.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.service.exception.NotFoundArticleException;
+import techcourse.myblog.service.exception.UserAuthorizationException;
 
-import java.util.NoSuchElementException;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
+    private ArticleRepository articleRepository;
+    private UserService userService;
 
-    private final ArticleRepository articleRepository;
-
-    @Autowired
-    public ArticleService(final ArticleRepository articleRepository) {
+    public ArticleService(ArticleRepository articleRepository, UserService userService) {
         this.articleRepository = articleRepository;
+        this.userService = userService;
     }
 
-    public Article save(final Article article) {
-        return articleRepository.save(article);
-    }
-
-    @Transactional(readOnly = true)
-    public Article findById(final long id) {
+    Article findById(Long id) {
         return articleRepository.findById(id)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(NotFoundArticleException::new);
+    }
+
+    public ArticleDto findArticleDtoById(Long id) {
+        return toArticleDto(findById(id));
+    }
+
+    public List<ArticleDto> findAll() {
+        return articleRepository.findAll().stream()
+                .map(this::toArticleDto)
+                .collect(Collectors.toList());
+    }
+
+    public ArticleDto save(UserSessionDto userSession, ArticleDto articleDto) {
+        User author = userService.findById(userSession.getId());
+        return toArticleDto(articleRepository.save(articleDto.toEntity(author)));
     }
 
     @Transactional
-    public long update(final long id, final Article articleParam) {
-        Article article = findById(id);
-        article.update(articleParam);
-        return article.getId();
+    public void update(long articleId, UserSessionDto userSession, ArticleDto articleDto) {
+        Article article = findById(articleId);
+        if (article.matchUserId(userSession.getId())) {
+            article.updateArticle(articleDto.toEntity());
+        }
     }
 
-    public void deleteById(final long id) {
-        articleRepository.deleteById(id);
+    @Transactional
+    public void delete(Long articleId, UserSessionDto userSession) {
+        Article article = findById(articleId);
+        if (article.matchUserId(userSession.getId())) {
+            articleRepository.deleteById(articleId);
+        }
     }
 
-    @Transactional(readOnly = true)
-    public Iterable<Article> findAll() {
-        return articleRepository.findAll();
+    public ArticleDto authorize(UserSessionDto userSession, Long articleId) {
+        final Article article = findById(articleId);
+        if (article.matchUserId(userSession.getId())) {
+            return toArticleDto(article);
+        }
+        throw new UserAuthorizationException();
     }
 
-    public void deleteAll() {
-        articleRepository.deleteAll();
+    private ArticleDto toArticleDto(Article article) {
+        return new ArticleDto(article.getId(),
+                article.getAuthorId(),
+                article.getTitle(),
+                article.getCoverUrl(),
+                article.getContents());
     }
 }

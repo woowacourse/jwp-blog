@@ -1,13 +1,18 @@
 package techcourse.myblog.domain.article;
 
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.user.User;
+
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.List;
 
 @Entity
 public class Article {
+    private static final int CONTENTS_LENGTH = 1000;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String title;
@@ -15,37 +20,42 @@ public class Article {
     @Column(nullable = false)
     private String coverUrl;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = CONTENTS_LENGTH)
     private String contents;
 
-    public Article() {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "FK_article_to_user"))
+    private User author;
 
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
+
+    protected Article() {
     }
 
-    public Article(long id, String title, String coverUrl, String contents) {
-        this(title, coverUrl, contents);
-        this.id = id;
-    }
-
-    public Article(String title, String coverUrl, String contents) {
+    public Article(String title, String coverUrl, String contents, User author) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.author = author;
     }
 
-    public boolean isSameId(final long id) {
-        return (this.id == id);
-    }
-
-    public Article update(final Article article) {
+    public void updateArticle(Article article) {
         this.title = article.title;
         this.coverUrl = article.coverUrl;
         this.contents = article.contents;
-        return this;
     }
 
-    public long getId() {
+    public boolean matchUserId(Long userId) {
+        return this.author.matchId(userId);
+    }
+
+    public Long getId() {
         return id;
+    }
+
+    public Long getAuthorId() {
+        return author.getId();
     }
 
     public String getTitle() {
@@ -58,46 +68,5 @@ public class Article {
 
     public String getContents() {
         return contents;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Article)) return false;
-        Article article = (Article) o;
-        return Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(title, coverUrl, contents);
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", contents='" + contents + '\'' +
-                '}';
     }
 }

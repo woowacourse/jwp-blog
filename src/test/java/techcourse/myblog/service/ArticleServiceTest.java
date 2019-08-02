@@ -1,86 +1,83 @@
 package techcourse.myblog.service;
 
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.CommentRequestDto;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.service.exception.NotFoundCommentException;
 
-import java.util.NoSuchElementException;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleServiceTest {
-    private static final String TITLE = "TEST";
-    private static final String COVER_URL = "https://img.com";
-    private static final String CONTENTS = "TEST_CONTENTS";
+    private static final Long BASE_USER_ID = 1L;
+    private static final Long MISMATCH_USER_ID = 2L;
 
     @Autowired
-    private ArticleService articleService;
+    ArticleService articleService;
+
+    @Autowired
+    CommentService commentService;
+
+    @Autowired
+    UserService userService;
+
+    private Long articleId;
+    private UserPublicInfoDto userPublicInfo;
+    private UserSessionDto userSession;
 
     @BeforeEach
     public void setUp() {
-        articleService.deleteAll();
+        userPublicInfo = userService.findUserPublicInfoById(BASE_USER_ID);
+        userSession = new UserSessionDto(BASE_USER_ID, null, null);
+
+        ArticleDto articleDto = articleService.save(
+                userSession, new ArticleDto(null, BASE_USER_ID, "title", "coverUrl", "contents"));
+        articleId = articleDto.getId();
     }
 
     @Test
-    @DisplayName("Article_추가")
-    public void saveTest() {
-        Article expected = new Article(TITLE, COVER_URL, CONTENTS);
-        Article actual = articleService.save(expected);
-        assertEquals(expected, actual);
+    public void Article_userId와_수정하려는_User의_Id가_다르면_수정_실패() {
+        ArticleDto updateArticleDto =
+                new ArticleDto(articleId, BASE_USER_ID, "title1", "coverUrl1", "contents1");
+        UserSessionDto userSessionDto = new UserSessionDto(MISMATCH_USER_ID, null, null);
+
+        articleService.update(articleId, userSessionDto, updateArticleDto);
+        ArticleDto updateFailArticle = articleService.findArticleDtoById(articleId);
+
+        assertThat(updateFailArticle.getTitle()).isEqualTo("title");
+        assertThat(updateFailArticle.getCoverUrl()).isEqualTo("coverUrl");
+        assertThat(updateFailArticle.getContents()).isEqualTo("contents");
     }
 
     @Test
-    @DisplayName("Article_ID_조회")
-    public void findByIdTest() {
-        Article expected = articleService.save(new Article(TITLE, COVER_URL, CONTENTS));
-        Article actual = articleService.findById(expected.getId());
+    public void Article_userId와_삭제하려는_User의_Id가_다르면_삭제_실패() {
+        UserSessionDto userSessionDto = new UserSessionDto(MISMATCH_USER_ID, null, null);
+        articleService.delete(articleId, userSessionDto);
+        ArticleDto deleteFailArticle = articleService.findArticleDtoById(articleId);
 
-        assertEquals(expected, actual);
+        assertThat(deleteFailArticle.getTitle()).isEqualTo("title");
+        assertThat(deleteFailArticle.getCoverUrl()).isEqualTo("coverUrl");
+        assertThat(deleteFailArticle.getContents()).isEqualTo("contents");
     }
 
     @Test
-    public void updateByIdTest() {
-        Article expected = articleService.save(new Article(TITLE, COVER_URL, CONTENTS));
-        expected.setTitle("MODIFY");
-        expected.setContents("CHANGE");
+    @DisplayName("Article을 삭제했을 때 포함된 Comment도 삭제된다")
+    public void deleteArticleWithCascadeComments() {
+        CommentRequestDto commentRequestDto = new CommentRequestDto(articleId, "TEST Comment");
+        Comment comment = commentService.save(userSession, commentRequestDto);
 
-        long actualId = articleService.update(expected.getId(), expected);
-        Article actual = articleService.findById(actualId);
-        assertEquals(expected, actual);
+        UserSessionDto userSessionDto = new UserSessionDto(BASE_USER_ID, null, null);
+
+        articleService.delete(articleId, userSessionDto);
+        assertThatThrownBy(() -> commentService.findById(comment.getId()))
+                .isInstanceOf(NotFoundCommentException.class);
     }
-
-    @Test
-    @DisplayName("")
-    public void deleteByIdTest() {
-        Article article = articleService.save(new Article(TITLE, COVER_URL, CONTENTS));
-        articleService.deleteById(article.getId());
-
-        assertThrows(NoSuchElementException.class, () -> {
-            articleService.findById(article.getId());
-        });
-    }
-
-    @Test
-    @DisplayName("Article_목록_조회")
-    public void findAllTest() {
-        Article article1 = new Article(TITLE, COVER_URL, CONTENTS);
-        Article article2 = new Article(TITLE + 1, COVER_URL + "1", CONTENTS + 1);
-        articleService.save(article1);
-        articleService.save(article2);
-
-        Iterable<Article> actual = articleService.findAll();
-        assertThat(actual, Matchers.contains(article1, article2));
-    }
-
 }

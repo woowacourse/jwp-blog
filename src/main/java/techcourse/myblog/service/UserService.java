@@ -1,69 +1,96 @@
 package techcourse.myblog.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.User.User;
-import techcourse.myblog.domain.User.UserRepository;
-import techcourse.myblog.exception.UserCreationException;
-import techcourse.myblog.exception.UserUpdateException;
-import techcourse.myblog.web.dto.UserRequestDto;
+import techcourse.myblog.domain.exception.UserArgumentException;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserRepository;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.service.dto.UserSessionDto;
+import techcourse.myblog.service.exception.NotFoundUserException;
+import techcourse.myblog.service.exception.SignUpException;
+import techcourse.myblog.service.exception.UserDeleteException;
+import techcourse.myblog.service.exception.UserUpdateException;
 
-import java.util.NoSuchElementException;
+import javax.transaction.Transactional;
+import java.util.List;
+
+import static techcourse.myblog.domain.exception.UserArgumentException.EMAIL_DUPLICATION_MESSAGE;
+import static techcourse.myblog.domain.exception.UserArgumentException.PASSWORD_CONFIRM_FAIL_MESSAGE;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
 
-    @Autowired
-    public UserService(final UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User save(final UserRequestDto.SignUpRequestDto signUpRequestDto) {
-        return userRepository.save(signUpRequestDto.toUser());
-    }
-
-    @Transactional
-    public User update(final UserRequestDto.UpdateRequestDto updateRequestDto) {
-        User user = findByEmail(updateRequestDto.getEmail());
-        try {
-            return user.update(updateRequestDto.getName());
-        } catch (UserCreationException e) {
-            throw new UserUpdateException("형식에 맞는 이름을 입력하세요. (한글, 영어)");
-        }
-    }
-
-    private User findByEmail(final String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(NoSuchElementException::new);
-    }
-
-    @Transactional(readOnly = true)
-    public User findById(final long id) {
-        return userRepository.findById(id)
-                .orElseThrow(NoSuchElementException::new);
-    }
-
-    public boolean exitsByEmail(final UserRequestDto.SignUpRequestDto signUpRequestDto) {
-        try {
-            return userRepository.existsByEmail(signUpRequestDto.getEmail());
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
-
-    public void deleteByEmail(final String email) {
-        User user = findByEmail(email);
-        userRepository.deleteById(user.getId());
-    }
-
-    @Transactional(readOnly = true)
-    public Iterable<User> findAll() {
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    public void deleteAll() {
-        userRepository.deleteAll();
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(NotFoundUserException::new);
+    }
+    
+    User findByUserSession(UserSessionDto userSessionDto) {
+        return findById(userSessionDto.getId());
+    }
+
+    public UserPublicInfoDto findUserPublicInfoById(Long id) {
+        User user = findById(id);
+        return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
+    }
+
+    public UserPublicInfoDto findUserPublicInfoByArticle(ArticleDto article) {
+        User user = findById(article.getUserId());
+        return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
+    }
+
+    public User save(UserRequestDto userRequestDto) {
+        try {
+            validate(userRequestDto);
+            return userRepository.save(userRequestDto.toEntity());
+        } catch (UserArgumentException e) {
+            throw new SignUpException(e.getMessage());
+        }
+    }
+
+    private void validate(UserRequestDto userRequestDto) {
+        checkDuplicatedEmail(userRequestDto.getEmail());
+        checkPasswordConfirm(userRequestDto);
+    }
+
+    private void checkDuplicatedEmail(String email) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new UserArgumentException(EMAIL_DUPLICATION_MESSAGE);
+        }
+    }
+
+    private void checkPasswordConfirm(UserRequestDto userRequestDto) {
+        if (!userRequestDto.confirmPassword()) {
+            throw new UserArgumentException(PASSWORD_CONFIRM_FAIL_MESSAGE);
+        }
+    }
+
+    @Transactional
+    public void update(Long userId, UserRequestDto userRequestDto) {
+        try {
+            User user = findById(userId);
+            user.updateName(userRequestDto.getName());
+        } catch (NotFoundUserException | UserArgumentException e) {
+            throw new UserUpdateException(e.getMessage());
+        }
+    }
+
+    public void delete(Long id) {
+        try {
+            userRepository.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            throw new UserDeleteException(e.getMessage());
+        }
     }
 }
