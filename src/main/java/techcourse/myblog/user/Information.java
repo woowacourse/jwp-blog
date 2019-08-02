@@ -45,6 +45,10 @@ public class Information {
 		this.faceBookUrl = userChangeableInfoDto.getFaceBookUrl();
 	}
 
+	public Information(String email) {
+		this.email = email;
+	}
+
 	public void update(Information information) {
 		this.username = information.username;
 		this.githubUrl = information.githubUrl;

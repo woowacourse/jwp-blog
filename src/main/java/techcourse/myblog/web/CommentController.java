@@ -1,9 +1,9 @@
 package techcourse.myblog.web;
 
-import javax.servlet.http.HttpSession;
-
 import techcourse.myblog.comment.Contents;
+import techcourse.myblog.custom.LoginUser;
 import techcourse.myblog.service.CommentService;
+import techcourse.myblog.user.User;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,23 +20,20 @@ public class CommentController {
 	}
 
 	@PostMapping("/comments/{articleId}")
-	public String save(Contents contents, @PathVariable Long articleId, HttpSession session) {
-		String email = session.getAttribute("email").toString();
-		commentService.save(email, articleId, contents);
+	public String save(@LoginUser User user, Contents contents, @PathVariable Long articleId) {
+		commentService.save(user, articleId, contents);
 		return "redirect:/articles/" + articleId;
 	}
 
 	@PutMapping("/comments/{articleId}/{commentId}")
-	public String update(Contents contents, @PathVariable Long articleId, @PathVariable Long commentId, HttpSession session) {
-		String email = session.getAttribute("email").toString();
-		commentService.update(email, articleId, commentId, contents);
+	public String update(@LoginUser User user, Contents contents, @PathVariable Long articleId, @PathVariable Long commentId) {
+		commentService.update(user, articleId, commentId, contents);
 		return "redirect:/articles/" + articleId;
 	}
 
 	@DeleteMapping("/comments/{articleId}/{commentId}")
-	public String delete(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession session) {
-		String email = session.getAttribute("email").toString();
-		commentService.delete(email, articleId, commentId);
+	public String delete(@LoginUser User user, @PathVariable Long articleId, @PathVariable Long commentId) {
+		commentService.delete(user, articleId, commentId);
 		return "redirect:/articles/" + articleId;
 	}
 }

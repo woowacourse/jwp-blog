@@ -4,9 +4,11 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import techcourse.myblog.custom.LoginUser;
 import techcourse.myblog.dto.request.UserChangeableInfoDto;
 import techcourse.myblog.dto.request.UserSignUpInfoDto;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.user.User;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,25 +53,23 @@ public class UserController {
 	}
 
 	@GetMapping("/mypage")
-	public String mypage(HttpSession httpSession, Model model) {
-		String email = (String) httpSession.getAttribute("email");
-		model.addAttribute(userService.findUser(email));
+	public String mypage(@LoginUser User user, Model model) {
+		model.addAttribute(userService.findUser(user));
 		return "mypage";
 	}
 
 	@GetMapping("/mypage/edit")
-	public String mypageEdit(HttpSession httpSession, Model model) {
-		String email = (String) httpSession.getAttribute("email");
-		model.addAttribute(userService.findUser(email));
+	public String mypageEdit(@LoginUser User user, Model model) {
+		model.addAttribute(userService.findUser(user));
 		return "mypage-edit";
 	}
 
 	@PutMapping("/edit")
-	public String editUser(@Valid UserChangeableInfoDto userChangeableInfoDto, BindingResult bindingResult, HttpSession httpSession, Model model) {
+	public String editUser(@LoginUser User user, @Valid UserChangeableInfoDto userChangeableInfoDto, BindingResult bindingResult, Model model) {
 		if (confirmBindingErrors(bindingResult, model)) {
 			return "index";
 		}
-		userService.editUser((String) httpSession.getAttribute("email"), userChangeableInfoDto);
+		userService.editUser(user, userChangeableInfoDto);
 		return "redirect:/mypage";
 	}
 
@@ -80,8 +80,8 @@ public class UserController {
 
 
 	@DeleteMapping("/leave")
-	public String leaveUser(HttpSession httpSession, Model model, String password) {
-		userService.leaveUser((String) httpSession.getAttribute("email"), password);
+	public String leaveUser(@LoginUser User user, Model model, String password, HttpSession httpSession) {
+		userService.leaveUser(user, password);
 		model.addAttribute("result", "회원 탈퇴가 완료되었습니다.");
 		httpSession.invalidate();
 		return "leave-user";

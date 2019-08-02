@@ -1,9 +1,9 @@
 package techcourse.myblog.web;
 
-import javax.servlet.http.HttpSession;
-
 import techcourse.myblog.article.Contents;
+import techcourse.myblog.custom.LoginUser;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.user.User;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,16 +23,14 @@ public class ArticleController {
 	}
 
 	@PostMapping("/articles")
-	public String saveArticle(Contents contents, HttpSession httpSession) {
-		String email = httpSession.getAttribute("email").toString();
-		Long id = articleService.saveArticle(email, contents);
+	public String saveArticle(@LoginUser User user, Contents contents) {
+		Long id = articleService.saveArticle(user, contents);
 		return "redirect:/articles/" + id;
 	}
 
 	@PutMapping("/articles/{articleId}")
-	public String modifyArticle(@PathVariable Long articleId, Contents contents, HttpSession httpSession) {
-		String email = httpSession.getAttribute("email").toString();
-		articleService.update(articleId, email, contents);
+	public String modifyArticle(@LoginUser User user, @PathVariable Long articleId, Contents contents) {
+		articleService.update(articleId, user, contents);
 		return "redirect:/articles/" + articleId;
 	}
 
@@ -43,18 +41,15 @@ public class ArticleController {
 	}
 
 	@GetMapping("/articles/{articleId}/edit")
-	public String editArticle(@PathVariable Long articleId, Model model, HttpSession httpSession) {
-		String email = httpSession.getAttribute("email").toString();
-		articleService.confirmAuthorization(email, articleId);
+	public String editArticle(@LoginUser User user, @PathVariable Long articleId, Model model) {
+		articleService.confirmAuthorization(user, articleId);
 		model.addAttribute("article", articleService.findById(articleId));
 		return "article-edit";
 	}
 
 	@DeleteMapping("/articles/{articleId}")
-	public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
-		String email = httpSession.getAttribute("email").toString();
-		articleService.confirmAuthorization(email, articleId);
-		articleService.delete(articleId);
+	public String deleteArticle(@LoginUser User user, @PathVariable Long articleId) {
+		articleService.delete(user, articleId);
 		return "redirect:/";
 	}
 }

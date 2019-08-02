@@ -22,8 +22,8 @@ public class ArticleService {
 		this.userService = userService;
 	}
 
-	public Long saveArticle(String email, Contents contents) {
-		User user = userService.findUser(email);
+	public Long saveArticle(User loginUser, Contents contents) {
+		User user = userService.findUser(loginUser);
 		Article article = new Article(user, contents);
 		return articleRepository.save(article).getId();
 	}
@@ -33,15 +33,15 @@ public class ArticleService {
 	}
 
 	@Transactional
-	public void update(Long articleId, String email, Contents contents) {
+	public void update(Long articleId, User loginUser, Contents contents) {
 		Article article = findById(articleId);
-		confirmAuthorization(email, article.getId());
+		confirmAuthorization(loginUser, article.getId());
 		article.update(contents);
 	}
 
-	public void confirmAuthorization(String email, Long articleId) {
+	public void confirmAuthorization(User user, Long articleId) {
 		Article article = findById(articleId);
-		if (!userService.findUser(email).matchUser(article.getAuthor())) {
+		if (!userService.findUser(user).matchUser(article.getAuthor())) {
 			throw new UnauthorizedException();
 		}
 	}
@@ -52,7 +52,8 @@ public class ArticleService {
 	}
 
 	@Transactional
-	public void delete(Long articleId) {
+	public void delete(User loginUser, Long articleId) {
+		confirmAuthorization(loginUser, articleId);
 		articleRepository.deleteById(articleId);
 	}
 }

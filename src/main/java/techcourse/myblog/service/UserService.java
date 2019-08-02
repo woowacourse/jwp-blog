@@ -34,22 +34,22 @@ public class UserService {
 		return userRepository.findAll();
 	}
 
-	public User findUser(String email) {
-		return userRepository.findByInformation_Email(email)
+	public User findUser(User user) {
+		return userRepository.findByInformation_Email(user.getEmail())
 				.orElseThrow(NotFoundUserException::new);
 	}
 
-	public void leaveUser(String email, String password) {
-		User user = findUser(email);
+	public void leaveUser(User loginUser, String password) {
+		User user = findUser(loginUser);
 		if (!user.matchPassword(password)) {
 			throw new NotMatchPasswordException();
 		}
 		userRepository.delete(user);
 	}
 
-	public User editUser(String email, UserChangeableInfoDto userChangeableInfoDto) {
+	public User editUser(User loginUser,  UserChangeableInfoDto userChangeableInfoDto) {
 		Information information = userChangeableInfoDto.valueOfInfo();
-		User user = findUser(email);
+		User user = findUser(loginUser);
 		user.editUser(information);
 		userRepository.save(user);
 		return user;

@@ -23,8 +23,8 @@ public class CommentService {
 		this.articleService = articleService;
 	}
 
-	public Comment save(String email, Long articleId, Contents contents) {
-		User user = userService.findUser(email);
+	public Comment save(User loginUser, Long articleId, Contents contents) {
+		User user = userService.findUser(loginUser);
 		Article article = articleService.findById(articleId);
 		Comment comment = new Comment(user, contents);
 		article.addComment(comment);
@@ -32,10 +32,10 @@ public class CommentService {
 	}
 
 	@Transactional
-	public void update(String email, Long articleId, Long commentId, Contents contents) {
+	public void update(User loginUser, Long articleId, Long commentId, Contents contents) {
 		Comment comment = findById(commentId);
 		existArticle(articleId);
-		confirmAuthorization(email, comment.getAuthor());
+		confirmAuthorization(loginUser, comment.getAuthor());
 		comment.update(contents);
 	}
 
@@ -48,17 +48,17 @@ public class CommentService {
 		articleService.findById(articleId);
 	}
 
-	private void confirmAuthorization(String email, User commentAuthor) {
-		User user = userService.findUser(email);
+	private void confirmAuthorization(User loginUser, User commentAuthor) {
+		User user = userService.findUser(loginUser);
 		if (!user.matchUser(commentAuthor)) {
 			throw new UnauthorizedException();
 		}
 	}
 
 	@Transactional
-	public void delete(String email, Long articleId, Long commentId) {
+	public void delete(User loginUser, Long articleId, Long commentId) {
 		Comment comment = findById(commentId);
-		confirmAuthorization(email, comment.getAuthor());
+		confirmAuthorization(loginUser, comment.getAuthor());
 		existArticle(articleId);
 		commentRepository.deleteById(commentId);
 	}
