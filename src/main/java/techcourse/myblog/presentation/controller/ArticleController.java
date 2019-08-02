@@ -51,8 +51,8 @@ public class ArticleController {
     public RedirectView updateArticle(HttpSession httpSession, @PathVariable Long articleId, ArticleDto article) {
         String email = (String) httpSession.getAttribute("email");
         articleService.checkAuthor(articleId, email);
-
         articleService.modify(articleId, article, email);
+
         return new RedirectView("/articles/" + articleId);
     }
 
@@ -73,6 +73,7 @@ public class ArticleController {
         ModelAndView modelAndView = new ModelAndView("/article-edit");
         modelAndView.addObject("article", articleService.findById(articleId));
         modelAndView.addObject("method", "put");
+
         return modelAndView;
     }
 }

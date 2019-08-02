@@ -27,6 +27,7 @@ public class UserController {
     @PostMapping("/users")
     public RedirectView createUser(@Valid UserDto user) {
         userService.save(user);
+
         return new RedirectView("/login");
     }
 
@@ -40,9 +41,9 @@ public class UserController {
     @PostMapping("/login")
     public RedirectView login(HttpSession httpSession, LoginDto loginDto) {
         userService.login(loginDto);
-
         httpSession.setAttribute("email", loginDto.getEmail());
         httpSession.setMaxInactiveInterval(600);
+
         return new RedirectView("/");
     }
 
@@ -57,6 +58,7 @@ public class UserController {
     public ModelAndView readMyPage(HttpSession httpSession) {
         ModelAndView modelAndView = new ModelAndView();
         String email = (String) httpSession.getAttribute("email");
+
         modelAndView.setViewName("mypage");
         modelAndView.addObject("user", userService.findByEmail(email));
 
@@ -69,22 +71,21 @@ public class UserController {
         String email = (String) httpSession.getAttribute("email");
         modelAndView.setViewName("mypage-edit");
         modelAndView.addObject("user", userService.findByEmail(email));
+
         return modelAndView;
     }
 
     @PutMapping("/mypage/edit")
     public RedirectView updateUser(HttpSession httpSession, @Valid UserDto user) {
         String email = (String) httpSession.getAttribute("email");
-
         userService.modify(user, email);
 
-        return new RedirectView("/mypage");
+        return new RedirectView("/mapage");
     }
 
     @DeleteMapping("/users")
     public RedirectView deleteUser(HttpSession httpSession, @Valid UserDto user) {
         String email = (String) httpSession.getAttribute("email");
-
         userService.removeById(user, email);
         httpSession.invalidate();
 

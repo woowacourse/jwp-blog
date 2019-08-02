@@ -8,8 +8,8 @@ import techcourse.myblog.application.service.CommentService;
 
 import javax.servlet.http.HttpSession;
 
-@Controller
 @RequestMapping("/articles")
+@Controller
 public class CommentController {
 
     private CommentService commentService;
@@ -30,8 +30,7 @@ public class CommentController {
     public RedirectView delete(HttpSession httpSession, @PathVariable Long articleId, @PathVariable Long commentId) {
         String email = (String) httpSession.getAttribute("email");
 
-        commentService.checkCommentWriter(commentId, email);
-        commentService.delete(commentId);
+        commentService.delete(commentId, email);
         return new RedirectView("/articles/" + articleId);
     }
 
@@ -39,8 +38,7 @@ public class CommentController {
     public RedirectView update(HttpSession httpSession, CommentDto commentDto, @PathVariable Long articleId, @PathVariable Long commentId) {
         String email = (String) httpSession.getAttribute("email");
 
-        commentService.checkCommentWriter(commentId, email);
-        commentService.update(commentId, commentDto);
+        commentService.update(commentId, commentDto, email);
         return new RedirectView("/articles/" + articleId);
     }
 }
