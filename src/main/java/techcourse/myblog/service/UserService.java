@@ -36,12 +36,13 @@ public class UserService {
 
     @Transactional
     public User update(UserDto userDto) {
-        User oldUser = userRepository.findByEmail(userDto.getEmail()).orElseThrow(() -> new UserNotFoundException("유저 정보가 없습니다."));
+        User oldUser = userRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("유저 정보가 없습니다."));
         User updatedUser = new User(userDto.getUserName(), userDto.getEmail(), userDto.getPassword());
         return oldUser.update(updatedUser);
     }
 
-    public void delete(Long id) {
-        userRepository.deleteById(id);
+    public void delete(Long userId) {
+        userRepository.deleteById(userId);
     }
 }
