@@ -47,7 +47,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findUserByEmail(String email) {
+    protected User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotExistUserIdException("해당 이메일의 유저가 존재하지 않습니다."));
     }
@@ -64,6 +64,7 @@ public class UserService {
     public void modify(@Valid UserDto userDto, String email) {
         User user = findUserByEmail(userDto.getEmail());
         checkEmail(user, email);
+
         user.modify(userConverter.convertFromDto(userDto));
     }
 
@@ -75,15 +76,15 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    private static void checkPassword(User user, String requestPassword) {
-        if (!user.isSamePassword(requestPassword)) {
+    private void checkPassword(User user, String password) {
+        if (!user.checkPassword(password)) {
             throw new NotMatchPasswordException("비밀번호가 일치하지 않습니다.");
         }
     }
 
-    protected static void checkEmail(User user, String requestEmail) {
-        if (!user.isSameEmail(requestEmail)) {
-            throw new NotMatchEmailException("이메일이 틀립니다.");
+    protected void checkEmail(User user, String email) {
+        if (!user.checkEmail(email)) {
+            throw new NotMatchEmailException("이메일이 일치하지 않습니다.");
         }
     }
 }

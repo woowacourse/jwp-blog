@@ -26,20 +26,11 @@ public class CommentService {
         this.articleService = articleService;
     }
 
-    private static CommentDto convertComment(Comment comment) {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setId(comment.getId());
-        commentDto.setUserName(comment.getUser().getName());
-        commentDto.setContents(comment.getContents());
-        commentDto.setCreateDateTime(comment.getCreateDateTime());
-        commentDto.setUpdateDateTime(comment.getUpdateDateTime());
-        return commentDto;
-    }
-
     @Transactional
     public long save(CommentDto commentDto, String userEmail, long articleId) {
         User user = userService.findUserByEmail(userEmail);
         Article article = articleService.findArticleById(articleId);
+
         Comment comment = new Comment(commentDto.getContents(), user, article);
         return commentRepository.save(comment).getId();
     }
@@ -48,25 +39,28 @@ public class CommentService {
     public List<CommentDto> findAllByArticleId(Long articleId) {
         List<Comment> comments = commentRepository.findAllByArticleId(articleId);
         return comments.stream()
-                .map(CommentService::convertComment).collect(Collectors.toList());
+                .map(CommentDto::of)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public void update(long commentId, CommentDto commentDto) {
+    public void update(long commentId, CommentDto commentDto, String email) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
-        comment.modify(commentDto.getContents());
+
+        userService.checkEmail(comment.getUser(), email);
+
+        User user = userService.findUserByEmail(email);
+
+        comment.modify(commentDto.getContents(), user);
     }
 
     @Transactional
-    public void delete(Long commentId) {
+    public void delete(Long commentId, String email) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
+
+        userService.checkEmail(comment.getUser(), email);
         commentRepository.deleteById(commentId);
-    }
-
-    @Transactional
-    public void checkCommentWriter(Long commentId, String email) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new NotExistCommentException("해당 댓글이 존재하지 않습니다."));
-        UserService.checkEmail(comment.getUser(), email);
     }
 }

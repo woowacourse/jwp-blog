@@ -7,12 +7,13 @@ import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
 import techcourse.myblog.application.service.exception.NotMatchEmailException;
-import techcourse.myblog.domain.*;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.User;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Transactional
 @Service
 public class ArticleService {
 
@@ -25,6 +26,7 @@ public class ArticleService {
         this.userService = userService;
     }
 
+    @Transactional
     public Long save(ArticleDto articleDto, String email) {
         User user = userService.findUserByEmail(email);
         Article article = new Article(articleDto.getTitle(),
@@ -46,18 +48,21 @@ public class ArticleService {
                 .orElseThrow(() -> new NotExistArticleIdException("해당 게시물을 찾을 수 없습니다."));
     }
 
+    @Transactional
     public void removeById(Long articleId) {
         articleRepository.deleteById(articleId);
     }
 
+    @Transactional
     public void modify(Long articleId, ArticleDto articleDto, String email) {
         User user = userService.findUserByEmail(email);
         Article article = findArticleById(articleId);
 
         article.modify(new Article(articleDto.getTitle(),
-                articleDto.getCoverUrl(),
-                articleDto.getContents(),
-                user));
+                        articleDto.getCoverUrl(),
+                        articleDto.getContents(),
+                        user)
+                , user);
     }
 
     @Transactional(readOnly = true)
@@ -70,16 +75,15 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public void checkAuthor(Long articleId, String email) {
         Article article = findArticleById(articleId);
-        if (!article.isSameAuthorEmail(email)) {
+        if (!article.checkAuthor(email)) {
             throw new NotMatchEmailException("작성자가 다릅니다.");
         }
     }
-    
-    public UserDto findAuthor(long articleId) {
-        User user = findArticleById(articleId).getUser();
 
-        return new UserDto(user.getEmail(),
-                user.getName(),
-                user.getPassword());
+    @Transactional
+    public UserDto findAuthor(long articleId) {
+        User user = findArticleById(articleId)
+                .getUser();
+        return UserDto.of(user);
     }
 }
