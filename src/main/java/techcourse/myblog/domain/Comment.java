@@ -12,7 +12,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //todo: Long으로 바꾸기
-    private long id;
+    private Long id;
     private String contents;
 
     @ManyToOne
@@ -35,7 +35,7 @@ public class Comment {
         this.article = article;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
