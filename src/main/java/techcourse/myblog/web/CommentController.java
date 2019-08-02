@@ -8,10 +8,6 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentSaveRequestDto;
 import techcourse.myblog.service.CommentService;
 
-import javax.servlet.http.HttpSession;
-
-import static techcourse.myblog.util.SessionKeys.USER;
-
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -21,16 +17,16 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/writing")
-    public String saveComment(CommentSaveRequestDto commentSaveRequestDto, HttpSession httpSession) {
+    public String saveComment(CommentSaveRequestDto commentSaveRequestDto, User user) {
         log.info("save comment post request params={}", commentSaveRequestDto);
-        commentService.save(commentSaveRequestDto, (User) httpSession.getAttribute(USER));
+        commentService.save(commentSaveRequestDto, user);
 
         return "redirect:/articles/" + commentSaveRequestDto.getArticleId();
     }
 
     @PutMapping("/{id}")
-    public String editComment(@PathVariable Long id, String editedContents, HttpSession httpSession) {
-        commentService.update(id, editedContents, (User) httpSession.getAttribute(USER));
+    public String editComment(@PathVariable Long id, String editedContents, User user) {
+        commentService.update(id, editedContents, user);
         log.info("update comment put request id={}, editedContents={}", id, editedContents);
 
         Long articleId = commentService.findArticleIdById(id);

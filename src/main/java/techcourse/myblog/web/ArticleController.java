@@ -12,10 +12,7 @@ import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
-
-import static techcourse.myblog.util.SessionKeys.USER;
 
 @Slf4j
 @Controller
@@ -31,10 +28,10 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String saveArticle(ArticleSaveRequestDto articleSaveRequestDto, HttpSession httpSession) {
+    public String saveArticle(ArticleSaveRequestDto articleSaveRequestDto, User user) {
         log.info("save article post request params={}", articleSaveRequestDto);
 
-        Article article = articleService.save(articleSaveRequestDto, (User) httpSession.getAttribute(USER));
+        Article article = articleService.save(articleSaveRequestDto, user);
         Long id = article.getId();
         return "redirect:/articles/" + id;
     }
@@ -50,9 +47,8 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editArticle(@PathVariable long id, Model model, HttpSession httpSession) {
+    public String editArticle(@PathVariable long id, Model model, User user) {
         Article article = articleService.findById(id);
-        User user = (User) httpSession.getAttribute(USER);
 
         if (article.isNotAuthor(user)) {
             return "redirect:/articles/" + id;
@@ -62,18 +58,18 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public String saveEditedArticle(@PathVariable long id, ArticleSaveRequestDto articleSaveRequestDto, HttpSession httpSession) {
-        articleService.update(articleSaveRequestDto, id, (User) httpSession.getAttribute(USER));
+    public String saveEditedArticle(@PathVariable long id, ArticleSaveRequestDto articleSaveRequestDto, User user) {
+        articleService.update(articleSaveRequestDto, id, user);
         log.info("save edited article post request params={}", articleSaveRequestDto);
 
         return "redirect:/articles/" + id;
     }
 
     @DeleteMapping("/{id}")
-    public String deleteArticle(@PathVariable long id, HttpSession httpSession) {
+    public String deleteArticle(@PathVariable long id, User user) {
         log.info("delete article delete request id={}", id);
 
-        articleService.deleteById(id, (User) httpSession.getAttribute(USER));
+        articleService.deleteById(id, user);
         return "redirect:/";
     }
 }

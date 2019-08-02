@@ -55,9 +55,7 @@ public class UserController {
     }
 
     @PostMapping("/mypage/edit")
-    public String showMyPageEdit(String password, Model model, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute(USER);
-
+    public String showMyPageEdit(String password, Model model, User user) {
         if (mismatchPassword(password, user)) {
             model.addAttribute("errorMessage", ERROR_MISMATCH_PASSWORD_MESSAGE);
             return "mypage-confirm";
@@ -71,10 +69,9 @@ public class UserController {
     }
 
     @PutMapping("/mypage")
-    public String editMyPage(UserEditRequestDto userEditRequestDto, HttpSession httpSession) {
+    public String editMyPage(UserEditRequestDto userEditRequestDto, User lastUser, HttpSession httpSession) {
         log.info("edit mypage put request params={}", userEditRequestDto);
 
-        User lastUser = (User) httpSession.getAttribute(USER);
         Long id = lastUser.getId();
         User user = userService.update(id, userEditRequestDto);
         httpSession.setAttribute(USER, user);
@@ -83,8 +80,7 @@ public class UserController {
     }
 
     @DeleteMapping("/mypage")
-    public String deleteUser(HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute(USER);
+    public String deleteUser(User user, HttpSession httpSession) {
         Long id = user.getId();
         log.info("delete user delete request id={}", id);
 
