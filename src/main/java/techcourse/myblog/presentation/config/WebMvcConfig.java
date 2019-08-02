@@ -7,6 +7,7 @@ import techcourse.myblog.presentation.interceptor.LoginCheckInterceptor;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+    //todo comment기능 추가
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginCheckInterceptor())

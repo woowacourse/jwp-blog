@@ -66,7 +66,10 @@ public class CommentService {
 
     @Transactional
     public void modify(Long commentId, CommentDto commentDto) {
+        System.out.println("악아가강" + commentDto);
+
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("댓글이 존재하지 않습니다"));
+        System.out.println("악아가강" + comment.getId());
         comment.changeContent(commentDto);
     }
 

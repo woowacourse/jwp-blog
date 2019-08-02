@@ -128,8 +128,99 @@ public class CommentControllerTests {
         String articleUri = result.getResponseHeaders().getLocation().getPath();
         writeComment(articleUri, sessionId);
         //로그아웃
+        webTestClient.get().uri("/logout")
+                .header("Cookie", sessionId)
+                .exchange();
 
+        webTestClient.put().uri(articleUri+"/comments/" + ID)
+                .header("Cookie", sessionId)
+                .body(BodyInserters.fromFormData("contents", "7788"))
+                .exchange()
+                .expectStatus()
+                .is3xxRedirection();
 
+        webTestClient.get().uri(articleUri)
+                .exchange()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains("7788")).isFalse();
+        });
+
+        deleteArticle(articleUri);
+        ID ++;
+    }
+
+    @Test
+    void delete_comment_when_not_logged_in() {
+        //회원가입
+        registerUser();
+        //로그인
+        String sessionId = logInAndGetSessionId();
+        //글작성
+        EntityExchangeResult result = writeArticle(sessionId);
+        //댓글작성
+        String articleUri = result.getResponseHeaders().getLocation().getPath();
+        writeComment(articleUri, sessionId);
+        //로그아웃
+        webTestClient.get().uri("/logout")
+                .header("Cookie", sessionId)
+                .exchange();
+
+        webTestClient.delete().uri(articleUri+"/comments/" + ID)
+                .header("Cookie", sessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection();
+
+        webTestClient.get().uri(articleUri)
+                .exchange()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains("444")).isTrue();
+        });
+
+        deleteArticle(articleUri);
+        ID ++;
+    }
+
+    @Test
+    void update_when_different_person_login() {
+        //회원가입
+        registerUser();
+        //로그인
+        String sessionId = logInAndGetSessionId();
+        //글작성
+        EntityExchangeResult result = writeArticle(sessionId);
+        //댓글작성
+        String articleUri = result.getResponseHeaders().getLocation().getPath();
+        writeComment(articleUri, sessionId);
+
+        sessionId = logInAndGetSessionIdDiff();
+        webTestClient.put().uri(articleUri+"/comments/" + ID)
+                .header("Cookie", sessionId)
+                .body(BodyInserters.fromFormData("contents", "7788"))
+                .exchange()
+                .expectStatus()
+                .is3xxRedirection();
+
+        webTestClient.get().uri(articleUri)
+                .exchange()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains("444")).isTrue();
+            assertThat(body.contains("7788")).isFalse();
+        });
+
+        deleteArticle(articleUri);
+        ID ++;
+    }
+
+    private String logInAndGetSessionIdDiff() {
+        return webTestClient.post()
+                .uri("/login").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("email", "easy@gmail.com")
+                        .with("password", PASSWORD))
+                .exchange()
+                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
     }
 
     private void writeComment(String articleUri, String sessionId) {

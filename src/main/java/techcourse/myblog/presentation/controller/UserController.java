@@ -52,6 +52,7 @@ public class UserController {
     @GetMapping("/logout")
     public RedirectView logout(HttpSession httpSession) {
         httpSession.removeAttribute("email");
+        //httpSession.invalidate();
 
         return new RedirectView("/");
     }
