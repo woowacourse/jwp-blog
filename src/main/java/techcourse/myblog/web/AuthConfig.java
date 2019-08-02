@@ -10,8 +10,7 @@ public class AuthConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthInterceptor())
                 .addPathPatterns("/accounts/profile/edit")
-                .addPathPatterns("/writing")
-                .addPathPatterns("/articles")
+                .addPathPatterns("/articles/writing")
                 .addPathPatterns("/articles/*/edit")
                 .addPathPatterns("/accounts/delete")
                 .addPathPatterns("/articles/*/comments")

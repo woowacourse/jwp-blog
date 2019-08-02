@@ -18,6 +18,7 @@ import static techcourse.myblog.service.UserService.LOGGED_IN_USER_SESSION_KEY;
 
 @Slf4j
 @Controller
+@RequestMapping("/articles")
 public class ArticleController {
     private final ArticleService articleService;
     private final CommentService commentService;
@@ -27,12 +28,12 @@ public class ArticleController {
         this.commentService = commentService;
     }
 
-    @GetMapping("/articles/writing")
+    @GetMapping("/writing")
     public String showArticleWritingPage() {
         return "article-edit";
     }
 
-    @PostMapping("/articles")
+    @PostMapping("")
     public String addNewArticle(ArticleRequestDto articleRequestDto, HttpSession session) {
         User user = (User) session.getAttribute(LOGGED_IN_USER_SESSION_KEY);
         Article newArticle = articleRequestDto.toArticle();
@@ -41,20 +42,20 @@ public class ArticleController {
         return "redirect:/articles/" + persistArticle.getId();
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String showArticlesPage(Model model) {
         model.addAttribute("articles", articleService.findAll());
         return "index";
     }
 
-    @GetMapping("/articles/{articleId}/edit")
+    @GetMapping("/{articleId}/edit")
     public String showArticleEditingPage(@PathVariable long articleId, Model model) {
         model.addAttribute("article",
                 articleService.findById(articleId));
     return "article-edit";
     }
 
-    @GetMapping("/articles/{articleId}")
+    @GetMapping("/{articleId}")
     public String showArticleByIdPage(@PathVariable long articleId, Model model) {
         Article article = articleService.findById(articleId);
         model.addAttribute("article", article);
@@ -63,19 +64,19 @@ public class ArticleController {
         return "article";
     }
 
-    @PutMapping("/articles")
-    public String updateArticleById(ArticleRequestDto articleRequestDto) {
-        articleService.update(articleRequestDto);
-        return "redirect:/articles/" + articleRequestDto.getId();
+    @PutMapping("/{articleId}")
+    public String updateArticleById(@PathVariable long articleId, ArticleRequestDto articleRequestDto) {
+        articleService.update(articleId, articleRequestDto);
+        return "redirect:/articles/" + articleId;
     }
 
-    @DeleteMapping("/articles/{articleId}")
+    @DeleteMapping("/{articleId}")
     public String deleteArticleById(@PathVariable long articleId) {
         articleService.deleteById(articleId);
         return "redirect:/";
     }
 
-    @PostMapping("/articles/{articleId}/comments")
+    @PostMapping("/{articleId}/comments")
     public String addNewComment(@PathVariable long articleId, CommentRequestDto commentRequestDto, HttpSession httpSession) {
         Article article = articleService.findById(articleId);
         User commenter = (User) httpSession.getAttribute(LOGGED_IN_USER_SESSION_KEY);

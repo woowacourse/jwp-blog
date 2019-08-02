@@ -19,8 +19,8 @@ public class ArticleService {
     }
 
     @Transactional
-    public void update(ArticleRequestDto articleRequestDto) {
-        Article article = articleRepository.findById(articleRequestDto.getId()).orElseThrow(ArticleNotFoundException::new);
+    public void update(long articleId, ArticleRequestDto articleRequestDto) {
+        Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new);
         article.update(articleRequestDto);
     }
 

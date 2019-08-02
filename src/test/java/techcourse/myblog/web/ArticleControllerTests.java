@@ -1,5 +1,6 @@
 package techcourse.myblog.web;
 
+import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +13,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.apache.commons.lang3.StringEscapeUtils;
+import techcourse.myblog.domain.ArticleVO;
+import techcourse.myblog.domain.CommentVO;
+import techcourse.myblog.domain.UserVO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.web.UserControllerTest.testEmail;
@@ -39,9 +43,7 @@ public class ArticleControllerTests {
         this.cookie = webTestClient.post()
                 .uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", testEmail)
-                        .with("password", testPassword))
+                .body(mapBy(UserVO.class, "", testPassword, testEmail))
                 .exchange()
                 .expectStatus()
                 .isFound()
@@ -67,7 +69,7 @@ public class ArticleControllerTests {
 
     @Test
     void showArticlesPageTest() {
-        webTestClient.get().uri("/")
+        webTestClient.get().uri("/articles")
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -102,14 +104,10 @@ public class ArticleControllerTests {
         String updatedUniContents = StringEscapeUtils.escapeJava(updatedContents);
 
         webTestClient.put()
-                .uri("/articles")
+                .uri("/articles/1")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", updatedTitle)
-                        .with("id", "1")
-                        .with("coverUrl", updatedCoverUrl)
-                        .with("contents", updatedContents))
+                .body(mapBy(ArticleVO.class, updatedTitle, updatedContents, updatedCoverUrl))
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection()
@@ -130,14 +128,10 @@ public class ArticleControllerTests {
                 });
 
         webTestClient.put()
-                .uri("/articles")
+                .uri("/articles/1")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", testTitle)
-                        .with("id", "1")
-                        .with("coverUrl", testCoverUrl)
-                        .with("contents", testContents))
+                .body(mapBy(ArticleVO.class, testTitle, testContents, testCoverUrl))
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection();
@@ -149,10 +143,7 @@ public class ArticleControllerTests {
                 .uri("/articles")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", testTitle)
-                        .with("coverUrl", testCoverUrl)
-                        .with("contents", testContents))
+                .body(mapBy(ArticleVO.class, testTitle, testContents, testCoverUrl))
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection()
@@ -186,7 +177,7 @@ public class ArticleControllerTests {
     @Test
     void 첫_페이지_방문_시_사용자_이름_GUEST_확인() {
         webTestClient.get()
-                .uri("/")
+                .uri("/articles")
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -223,8 +214,7 @@ public class ArticleControllerTests {
                 .uri("/articles/1/comments")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("comment", "good article"))
+                .body(mapBy(CommentVO.class, "good article"))
                 .exchange()
                 .expectStatus()
                 .isFound();
@@ -289,8 +279,7 @@ public class ArticleControllerTests {
                 .uri("/comments/5")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("comment", "modifiedComment"))
+                .body(mapBy(CommentVO.class, "modifiedComment"))
                 .exchange()
                 .expectStatus()
                 .isFound();
@@ -313,10 +302,7 @@ public class ArticleControllerTests {
                 .uri("/articles")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+                .body(mapBy(ArticleVO.class, title, contents, coverUrl))
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection()
@@ -335,5 +321,14 @@ public class ArticleControllerTests {
                                 assertThat(body.contains(StringEscapeUtils.escapeJava(testContents))).isTrue();
                             });
                 });
+    }
+
+    private <T> BodyInserters.FormInserter<String> mapBy(Class<T> classType, String... parameters) {
+        BodyInserters.FormInserter<String> body = BodyInserters.fromFormData(Strings.EMPTY, Strings.EMPTY);
+
+        for (int i = 0; i < classType.getDeclaredFields().length; i++) {
+            body.with(classType.getDeclaredFields()[i].getName(), parameters[i]);
+        }
+        return body;
     }
 }
