@@ -43,14 +43,14 @@ public class UserController {
     @PostMapping("/accounts/users")
     public String processSignup(@Valid UserRequestDto userRequestDto, Errors errors, HttpServletResponse response) {
         if (errors.hasErrors()) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
             return "signup";
         }
 
         User user = userRequestDto.toUser();
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             errors.rejectValue("email", "0", EMAIL_DUPLICATION_ERROR_MSG);
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
             return "signup";
         }
 
