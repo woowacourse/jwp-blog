@@ -1,6 +1,5 @@
 package techcourse.myblog.article.service;
 
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +18,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+
+    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository, ModelMapper modelMapper) {
+        this.articleRepository = articleRepository;
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
 
     public List<ArticleResponseDto> findAll() {
         List<Article> articles = (List<Article>) articleRepository.findAll();

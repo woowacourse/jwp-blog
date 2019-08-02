@@ -1,6 +1,5 @@
 package techcourse.myblog.article.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +13,15 @@ import techcourse.myblog.article.service.ArticleService;
 import techcourse.myblog.comment.service.CommentService;
 
 @Controller
-@RequiredArgsConstructor
 public class ArticleController {
 
     private final ArticleService articleService;
     private final CommentService commentService;
+
+    public ArticleController(ArticleService articleService, CommentService commentService) {
+        this.articleService = articleService;
+        this.commentService = commentService;
+    }
 
     @GetMapping("/")
     public String index(Model model) {
