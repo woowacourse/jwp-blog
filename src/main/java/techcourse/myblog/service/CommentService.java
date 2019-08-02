@@ -2,10 +2,9 @@ package techcourse.myblog.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.CommentRepository;
+import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.domain.*;
+import techcourse.myblog.dto.CommentDto;
 
 @Slf4j
 @Service
@@ -33,5 +32,19 @@ public class CommentService {
 
     public void deleteComment(Comment comment) {
         commentRepository.delete(comment);
+    }
+
+    @Transactional
+    public boolean isSuccessUpdate(CommentDto commentDto, User user) {
+        Comment preComment = commentRepository.findById(commentDto.getId()).orElseThrow(RuntimeException::new);
+        log.debug(">>> isSuccessUpdate : preComment : {}", preComment);
+
+        try {
+            preComment.update(commentDto, user);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+
+        return true;
     }
 }

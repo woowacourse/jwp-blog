@@ -164,6 +164,23 @@ public class CommentControllerTestWebClientTest extends MyblogApplicationTests {
     }
 
     @Test
+    void comment_update_틀린게시글() {
+        String updateContents = "update";
+        webTestClient.put().uri("/comment").header("Cookie", testCookie)
+                .body(BodyInserters
+                        .fromFormData("contents", updateContents)
+                        .with("articleId", "2")
+                        .with("id", "1"))
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .expectBody()
+                .consumeWith(response -> {
+                    assertThat(response.getResponseHeaders().getLocation().toString().contains("articles")).isFalse();
+                });
+    }
+
+    @Test
     void comment_delete() {
         String deleteContents = "test contents";
 

@@ -3,13 +3,16 @@ package techcourse.myblog.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import techcourse.myblog.dto.CommentDto;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Comment {
@@ -29,5 +32,28 @@ public class Comment {
         this.contents = contents;
         this.user = user;
         this.article = article;
+    }
+
+    public Comment update(CommentDto commentDto, User user) {
+        checkUpdateCondition(commentDto, user);
+        this.contents = commentDto.getContents();
+        return this;
+    }
+
+    private void checkUpdateCondition(CommentDto commentDto, User user) {
+        checkMatchArticleId(commentDto.getArticleId());
+        checkMatchUser(user);
+    }
+
+    private void checkMatchUser(User user) {
+        if (this.user.isNotMatch(user)) {
+            throw new IllegalArgumentException("not match user");
+        }
+    }
+
+    private void checkMatchArticleId(long articleId) {
+        if (this.article.isNotMatch(articleId)) {
+            throw new IllegalArgumentException("not match article id");
+        }
     }
 }

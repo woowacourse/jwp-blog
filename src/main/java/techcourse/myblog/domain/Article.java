@@ -37,4 +37,8 @@ public class Article {
         this.contents = articleDto.getContents();
         this.coverUrl = articleDto.getCoverUrl();
     }
+
+    public boolean isNotMatch(long id) {
+        return !this.id.equals(id);
+    }
 }

@@ -11,8 +11,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import techcourse.myblog.MyblogApplicationTests;
-import techcourse.myblog.controller.dto.ArticleDto;
-import techcourse.myblog.controller.dto.UserDto;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.CommentRepository;
@@ -73,18 +73,18 @@ public class CommentControllerTests extends MyblogApplicationTests {
         assertThat(mvcResult.getResponse().getContentAsString().contains(COMMENT_CONTENTS)).isTrue();
     }
 
-    @Test
-    void comment수정() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(put(COMMENT_URL).session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("articleId", String.valueOf(ARTICLE_ID))
-                .param("contents", "updatedContents")
-                .param("id", String.valueOf(COMMENT_ID)))
-                .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andReturn();
-
-        assertThat(mvcResult.getResponse().getHeader("Location").contains("articles")).isTrue();
-    }
+//    @Test
+//    void comment수정() throws Exception {
+//        MvcResult mvcResult = mockMvc.perform(put(COMMENT_URL).session(session).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+//                .param("articleId", String.valueOf(ARTICLE_ID))
+//                .param("contents", "updatedContents")
+//                .param("id", String.valueOf(COMMENT_ID)))
+//                .andDo(print())
+//                .andExpect(status().is3xxRedirection())
+//                .andReturn();
+//
+//        assertThat(mvcResult.getResponse().getHeader("Location").contains("articles")).isTrue();
+//    }
 
     @Test
     void comment삭제() throws Exception {
