@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.comment.Comment;
-import techcourse.myblog.exception.InvalidAuthorException;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.CommentDto;
@@ -48,9 +47,4 @@ public class CommentController {
         return "redirect:/articles/" + articleId;
     }
 
-    @ExceptionHandler(InvalidAuthorException.class)
-    public String handleInvalidAuthorException(InvalidAuthorException e) {
-        log.error(e.getMessage());
-        return "redirect:/";
-    }
 }

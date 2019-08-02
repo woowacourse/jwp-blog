@@ -62,7 +62,8 @@ public class ArticleControllerTest extends AbstractControllerTest {
     @Test
     void 없는_Article() {
         webTestClient.get().uri("/articles/10").exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/.*");
     }
 
     @Test

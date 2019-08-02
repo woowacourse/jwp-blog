@@ -25,6 +25,11 @@ public class Comment extends Date {
     @Lob
     private String contents;
 
+//    @ManyToOne
+//    @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
+//    @Column(nullable = false)
+//    private Article article;
+
     @Builder
     public Comment(User author, String contents) {
         this.author = author;
