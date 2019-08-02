@@ -22,6 +22,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
+import static techcourse.myblog.utils.BlogBodyContentSpec.assertThatBodyOf;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -35,9 +36,9 @@ class CommentControllerTest {
     private static final String CONTENTS = "Ccontents blabla.";
 
     private static final String COMMENTS_CONTENTS = "Ccomment_contents";
-    private static final String COMMENTS_CONTENTS_2 = "Ccomment_contents2";
-    private static final String COMMENTS_CONTENTS_3 = "Ccomment_contents3";
-    private static final String COMMENTS_CONTENTS_4 = "Ccomment_contents4";
+    private static final String NEW_CONTENTS = "Ccomment_contents2";
+    private static final String UPDATED_CONTENTS = "Ccomment_contents3";
+    private static final String CONTENTS_FOR_DELETE_TEST = "Ccomment_contents4";
 
     @LocalServerPort
     private int serverPort;
@@ -46,12 +47,14 @@ class CommentControllerTest {
     private WebTestClient webTestClient;
 
     private String cookie;
+    private String baseUrl;
     private String articleUrl;
     private String articleId;
+    private CommentDto commentDto;
 
     @BeforeEach
     void setUp() {
-        String baseUrl = "http://localhost:" + serverPort;
+        baseUrl = "http://localhost:" + serverPort;
 
         Utils.createUser(webTestClient, new UserDto(USER_NAME, EMAIL, PASSWORD));
         cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL, PASSWORD));
@@ -64,12 +67,8 @@ class CommentControllerTest {
         articleUrl = Utils.createArticle(articleDto, cookie, baseUrl);
         articleId = getArticleId(articleUrl);
 
-        CommentDto commentDto = new CommentDto();
+        commentDto = new CommentDto();
         commentDto.setArticleId(Long.parseLong(articleId));
-        commentDto.setContents(COMMENTS_CONTENTS);
-        Utils.createComment(commentDto, cookie, baseUrl);
-        commentDto.setContents(COMMENTS_CONTENTS_4);
-        Utils.createComment(commentDto, cookie, baseUrl);
     }
 
     private String getArticleId(String articleUrl) {
@@ -80,90 +79,83 @@ class CommentControllerTest {
     @Test
     @DisplayName("comment를 저장한다.")
     void save() {
-        webTestClient.post().uri("/comments")
+        WebTestClient.ResponseSpec response = webTestClient.post().uri("/comments")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .header("Cookie", cookie)
                 .body(fromFormData("articleId", articleId)
-                        .with("contents", COMMENTS_CONTENTS_2))
+                        .with("contents", NEW_CONTENTS))
                 .exchange()
-                .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get().uri(location)
-                            .header("Cookie", cookie)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = Utils.getResponseBody(redirectResponse.getResponseBody());
-                                assertThat(body).contains(COMMENTS_CONTENTS_2);
-                            });
-                });
+                .expectStatus().is3xxRedirection();
+
+        String redirectLocation = Utils.getRedirectedLocationOf(response);
+        WebTestClient.ResponseSpec redirectedResponse = webTestClient.get().uri(redirectLocation)
+                .header("Cookie", cookie)
+                .exchange();
+
+        assertThatBodyOf(redirectedResponse).contains(NEW_CONTENTS);
     }
 
     @Test
     @DisplayName("comment 수정 페이지로 이동한다.")
     void commentEditForm() {
-        webTestClient.post().uri("/comments")
+        WebTestClient.ResponseSpec response = webTestClient.post().uri("/comments")
                 .header("Cookie", cookie)
                 .body(fromFormData("articleId", articleId)
                         .with("contents", COMMENTS_CONTENTS))
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get().uri(location)
-                            .header("Cookie", cookie)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = Utils.getResponseBody(redirectResponse.getResponseBody());
-                                assertThat(body).contains(COMMENTS_CONTENTS);
-                            });
-                });
+                .expectStatus().is3xxRedirection();
+
+        String redirectLocation = Utils.getRedirectedLocationOf(response);
+        WebTestClient.ResponseSpec redirectedResponse = webTestClient.get().uri(redirectLocation)
+                .header("Cookie", cookie)
+                .exchange();
+
+        assertThatBodyOf(redirectedResponse).contains(COMMENTS_CONTENTS);
     }
 
     @Test
     @DisplayName("comment를 수정한다.")
     void updateComment() {
-        webTestClient.put().uri("/comments/1")
+        commentDto.setContents(COMMENTS_CONTENTS);
+        Utils.createComment(commentDto, cookie, baseUrl);
+
+        WebTestClient.ResponseSpec response = webTestClient.put().uri("/comments/1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .header("Cookie", cookie)
                 .body(fromFormData("articleId", articleId)
-                        .with("contents", COMMENTS_CONTENTS_3))
+                        .with("contents", UPDATED_CONTENTS))
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get().uri(location)
-                            .header("Cookie", cookie)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = Utils.getResponseBody(redirectResponse.getResponseBody());
-                                assertThat(body).contains(COMMENTS_CONTENTS_3);
-                            });
-                });
+                .expectStatus().is3xxRedirection();
+
+        String redirectLocation = Utils.getRedirectedLocationOf(response);
+        WebTestClient.ResponseSpec redirectedResponse = webTestClient.get().uri(redirectLocation)
+                .header("Cookie", cookie)
+                .exchange();
+
+        assertThatBodyOf(redirectedResponse).contains(UPDATED_CONTENTS);
     }
 
     @Test
     @DisplayName("comment를 삭제한다.")
     void deleteComment() {
-        webTestClient.delete().uri("/comments/2")
+        commentDto.setContents(CONTENTS_FOR_DELETE_TEST);
+        Utils.createComment(commentDto, cookie, baseUrl);
+
+        WebTestClient.ResponseSpec response = webTestClient.delete().uri("/comments/1")
                 .header("Cookie", cookie)
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
+                .expectStatus().is3xxRedirection();
+
+        response.expectBody()
+                .consumeWith(redirectedResponse -> {
+                    URI location = redirectedResponse.getResponseHeaders().getLocation();
                     webTestClient.get().uri(location)
                             .header("Cookie", cookie)
                             .exchange()
                             .expectBody()
                             .consumeWith(redirectResponse -> {
                                 String body = Utils.getResponseBody(redirectResponse.getResponseBody());
-                                assertThat(body).doesNotContain(COMMENTS_CONTENTS_2);
+                                assertThat(body).doesNotContain(CONTENTS_FOR_DELETE_TEST);
                             });
                 });
     }

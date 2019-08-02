@@ -20,7 +20,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
     private static final String TEST_EMAIL_1 = "test1@test.com";
     private static final String TEST_EMAIL_2 = "test2@test.com";
     private static final String TEST_PASSWORD_1 = "!Q@W3e4r";
@@ -66,9 +66,10 @@ public class UserServiceTest {
     void 이메일로_중복인지_테스트() {
         userService.save(USER_DTO_1);
         userService.save(USER_DTO_1);
-        verify(userRepository, atLeast(2)).save(USER_1);
 
-        given(userRepository.existsByEmail(TEST_EMAIL_1)).willReturn(true);
+        given(userRepository.save(USER_1)).willThrow(new EmailDuplicatedException("이미 사용중인 이메일입니다."));
+
+        verify(userRepository, atLeast(2)).save(USER_1);
         assertThrows(EmailDuplicatedException.class, () -> userService.save(USER_DTO_1));
     }
 

@@ -13,10 +13,9 @@ import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.utils.Utils;
 
-import java.net.URI;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
+import static techcourse.myblog.utils.BlogBodyContentSpec.assertThatBodyOf;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -29,6 +28,7 @@ class LoginControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
+
     private String cookie;
 
     @BeforeEach
@@ -46,25 +46,21 @@ class LoginControllerTest {
     }
 
     @Test
-    @DisplayName("로그인을 성공하면 메인페이지를 보여준다.")
+    @DisplayName("로그인에 성공하면 메인페이지를 보여준다.")
     void successLogin() {
-        webTestClient.post().uri("/login")
+        WebTestClient.ResponseSpec response = webTestClient.post().uri("/login")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("email", EMAIL)
                         .with("password", PASSWORD))
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get().uri(location)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = Utils.getResponseBody(redirectResponse.getResponseBody());
-                                assertThat(body.contains(USER_NAME)).isTrue();
-                            });
-                });
+                .expectStatus().is3xxRedirection();
+
+        String redirectLocation = Utils.getRedirectedLocationOf(response);
+        WebTestClient.ResponseSpec redirectedResponse = webTestClient.get().uri(redirectLocation)
+                .header("Cookie", cookie)
+                .exchange();
+
+        assertThatBodyOf(redirectedResponse).contains(USER_NAME);
     }
 
     @Test

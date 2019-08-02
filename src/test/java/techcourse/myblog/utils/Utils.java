@@ -68,5 +68,11 @@ public class Utils {
                 .cookie(cookie)
                 .post(baseUrl + "/comments")
                 .getHeader("Location");
+    public static String getRedirectedLocationOf(WebTestClient.ResponseSpec responseSpec) {
+        return responseSpec.expectHeader()
+                .valueMatches("location", ".*")
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .get("Location").get(0);
     }
 }

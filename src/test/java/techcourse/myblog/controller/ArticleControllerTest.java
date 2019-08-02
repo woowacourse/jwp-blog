@@ -30,10 +30,6 @@ class ArticleControllerTest {
     private static final String COVER_URL = "acoverUrl";
     private static final String CONTENTS = "acontents blabla.";
 
-    private static final String TITLE_2 = "atitle2";
-    private static final String COVER_URL_2 = "acoverUrl2";
-    private static final String CONTENTS_2 = "acontents blabla.2";
-
     @LocalServerPort
     private int serverPort;
 
@@ -59,6 +55,7 @@ class ArticleControllerTest {
     }
 
     @Test
+    @DisplayName("index 페이지를 되돌려준다.")
     void index() {
         webTestClient.get().uri("/")
                 .header("Cookie", cookie)
@@ -67,6 +64,7 @@ class ArticleControllerTest {
     }
 
     @Test
+    @DisplayName("article 작성 페이지를 되돌려준다.")
     void articleForm() {
         webTestClient.get().uri("/articles/writing")
                 .header("Cookie", cookie)
@@ -77,28 +75,21 @@ class ArticleControllerTest {
     @Test
     @DisplayName("새로운 article이 생성된다.")
     void createTest() {
-        webTestClient.post().uri("/articles")
+        WebTestClient.ResponseSpec response = webTestClient.post().uri("/articles")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData("title", TITLE)
                         .with("coverUrl", COVER_URL)
                         .with("contents", CONTENTS))
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get().uri(location)
-                            .header("Cookie", cookie)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = Utils.getResponseBody(redirectResponse.getResponseBody());
-                                assertThat(body).contains(TITLE);
-                                assertThat(body).contains(COVER_URL);
-                                assertThat(body).contains(StringEscapeUtils.escapeJava(CONTENTS));
-                            });
-                });
+                .expectStatus().is3xxRedirection();
+
+        String redirectLocation = Utils.getRedirectedLocationOf(response);
+        WebTestClient.ResponseSpec redirectedResponse = webTestClient.get().uri(redirectLocation)
+                .header("Cookie", cookie)
+                .exchange();
+
+        assertThatBodyOf(redirectedResponse).contains(TITLE, COVER_URL, CONTENTS);
     }
 
     @Test
@@ -107,40 +98,32 @@ class ArticleControllerTest {
         webTestClient.get().uri(articleUrl)
                 .header("Cookie", cookie)
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = Utils.getResponseBody(response.getResponseBody());
-                    assertThat(body).contains(TITLE);
-                    assertThat(body).contains(COVER_URL);
-                    assertThat(body).contains(StringEscapeUtils.escapeJava(CONTENTS));
-                });
+                .expectStatus().isOk();
+
+        assertThatBodyOf(response).contains(TITLE, COVER_URL, StringEscapeUtils.escapeJava(CONTENTS));
     }
 
     @Test
     @DisplayName("게시물을 수정한다.")
     void updateArticle() {
-        webTestClient.put().uri(articleUrl)
+        String updatedTitle = "atitle2";
+        String updatedCoverUrl = "acoverUrl2";
+        String updatedContents = "acontents blabla.2";
+
+        WebTestClient.ResponseSpec response = webTestClient.put().uri(articleUrl)
                 .header("Cookie", cookie)
-                .body(fromFormData("title", TITLE_2)
-                        .with("coverUrl", COVER_URL_2)
-                        .with("contents", CONTENTS_2))
+                .body(fromFormData("title", updatedTitle)
+                        .with("coverUrl", updatedCoverUrl)
+                        .with("contents", updatedContents))
                 .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    URI location = response.getResponseHeaders().getLocation();
-                    webTestClient.get().uri(location)
-                            .header("Cookie", cookie)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(redirectResponse -> {
-                                String body = Utils.getResponseBody(redirectResponse.getResponseBody());
-                                assertThat(body).contains(TITLE_2);
-                                assertThat(body).contains(COVER_URL_2);
-                                assertThat(body).contains(CONTENTS_2);
-                            });
-                });
+                .expectStatus().is3xxRedirection();
+
+        String redirectLocation = Utils.getRedirectedLocationOf(response);
+        WebTestClient.ResponseSpec redirectedResponse = webTestClient.get().uri(redirectLocation)
+                .header("Cookie", cookie)
+                .exchange();
+
+        assertThatBodyOf(redirectedResponse).contains(updatedTitle, updatedCoverUrl, updatedContents);
     }
 
     @Test
