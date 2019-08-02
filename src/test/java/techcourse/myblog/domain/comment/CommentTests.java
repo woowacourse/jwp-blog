@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.comment;
 
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.comment.Comment;
@@ -10,10 +10,10 @@ class CommentTests {
 	@Test
 	void update() {
 		Contents actualContents = new Contents("contentText");
-		Comment actualComment = actualContents.valueOf();
+		Comment actualComment = new Comment(actualContents);
 		Contents updateContents = new Contents("updateContentText");
-		Comment updateComment = updateContents.valueOf();
-		actualComment.update(updateComment);
-		assertThat(actualComment.getText()).isEqualTo(updateContents.getText());
+		Comment updateComment = new Comment(updateContents);
+		actualComment.update(updateContents);
+		assertThat(actualComment.getText()).isEqualTo(updateComment.getText());
 	}
 }

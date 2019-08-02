@@ -8,7 +8,6 @@ import techcourse.myblog.user.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -16,9 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CommentRepositoryTests {
 	private User user;
 	private Comment actualComment;
-
-	@Autowired
-	private TestEntityManager testEntityManager;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -31,10 +27,8 @@ class CommentRepositoryTests {
 		user = userRepository.findById(1L).get();
 
 		Contents contents = new Contents("contents");
-		actualComment = contents.valueOf(user);
-		actualComment = testEntityManager.persist(actualComment);
-		testEntityManager.flush();
-		testEntityManager.clear();
+		actualComment = new Comment(contents);
+		actualComment = commentRepository.save(actualComment);
 	}
 
 	@Test

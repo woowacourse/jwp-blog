@@ -1,8 +1,9 @@
-package techcourse.myblog.domain.vo.comment;
+package techcourse.myblog.domain.comment;
 
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.comment.Comment;
 import techcourse.myblog.comment.Contents;
+import techcourse.myblog.user.Information;
 import techcourse.myblog.user.User;
 import techcourse.myblog.user.UserSignUpInfo;
 
@@ -12,17 +13,18 @@ class ContentsTests {
 	@Test
 	void valueOfComment() {
 		Contents contents = new Contents("contentText");
-		Comment comment = contents.valueOf();
+		Comment comment = new Comment(contents);
 		assertThat(contents.getText()).isEqualTo(comment.getText());
 	}
 
 	@Test
 	void valueOfCommentWithUser() {
-		UserSignUpInfo userSignUpInfo = new UserSignUpInfo("tiber", "tiber@naver.com", "asdfASDF1@");
-		User user = userSignUpInfo.valueOfUser();
+		Information info = new UserSignUpInfo("tiber", "tiber@naver.com", "asdfASDF1@")
+							.valueOfInfo();
+		User user = new User(info);
 
 		Contents contents = new Contents("contentText");
-		Comment comment = contents.valueOf(user);
+		Comment comment = new Comment(user, contents);
 		assertThat(contents.getText()).isEqualTo(comment.getText());
 		assertThat(comment.getAuthor().getEmail()).isEqualTo("tiber@naver.com");
 	}
