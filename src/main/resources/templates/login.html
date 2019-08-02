@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html layout:decorator="layout/default"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
-
-
+      layout:decorate="~{layout/layout}"
+      lang="ko">
 <th:block layout:fragment="content">
     <div class="app">
         <div class="header navbar bg-transparent no-border">
@@ -30,10 +29,6 @@
                                 <div class="mx-auto full-height col-md-4">
                                     <div class="vertical-align full-height">
                                         <div class="table-cell padding-20">
-                                            <div th:if="${error}"
-                                                 class="alert alert-warning alert-dismissible fade show" role="alert">
-                                                <strong th:text="${error}"></strong>
-                                            </div>
                                             <div class="card">
                                                 <div class="card-body">
                                                     <div class="pdd-horizon-30 pdd-vertical-30">
@@ -41,16 +36,15 @@
                                                             <h2 class="text-center no-mrg-vertical mrg-btm-15 text-dark">
                                                                 로그인</h2>
                                                         </div>
-                                                        <form method="post" action="/login/check">
+                                                        <form method="post" action="/login">
                                                             <div class="form-group">
-                                                                <input class="form-control" placeholder="Id"
-                                                                       name="email"
-                                                                       type="email">
+                                                                <input name="email" type="email" class="form-control"
+                                                                       placeholder="Id">
                                                             </div>
                                                             <div class="form-group">
-                                                                <input class="form-control" placeholder="Password"
-                                                                       name="password"
-                                                                       type="password">
+                                                                <input name="password" type="password"
+                                                                       class="form-control"
+                                                                       placeholder="Password">
                                                             </div>
                                                             <div class="checkbox font-size-13 text-dark inline-block no-mrg-vertical no-pdd-vertical">
                                                                 <input id="agreement" name="agreement" type="checkbox">
@@ -60,14 +54,13 @@
                                                                 <a href="">Forgot Password?</a>
                                                             </div>
                                                             <div class="mrg-top-20 text-right">
-                                                                <button type="submit" class="btn btn-tumblr">로그인
-                                                                </button>
+                                                                <input type="submit" class="btn btn-tumblr" value="로그인">
                                                             </div>
                                                         </form>
                                                         <div class="text-dark">
                                                             <span>아직 회원이 아니신가요?</span>
-                                                            <a class="text-info pointer mrg-left-5"
-                                                               href="/users/signup">회원가입</a>
+                                                            <a href="/signup"
+                                                               class="text-info pointer mrg-left-5">회원가입</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -82,5 +75,11 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" th:inline="javascript">
+        const errorMessage = [[${errorMessage}]];
+        if (errorMessage !== null) {
+            alert(errorMessage);
+        }
+    </script>
 </th:block>
 </html>

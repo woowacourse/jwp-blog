@@ -46,12 +46,4 @@ public class Comment {
     public boolean notMatchAuthorId(long authorId) {
         return author.getId() != authorId;
     }
-
-    public long getUserId() {
-        return author.getId();
-    }
-
-    public String getUserName() {
-        return author.userName();
-    }
 }

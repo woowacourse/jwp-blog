@@ -1,6 +1,5 @@
 package techcourse.myblog.user.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -22,7 +21,6 @@ public class User {
     private Email email;
 
     @Convert(converter = PasswordConverter.class)
-    @JsonIgnore
     private Password password;
 
     @Convert(converter = NameConverter.class)
@@ -41,9 +39,6 @@ public class User {
         return this;
     }
 
-    public String userName() {
-        return name.getName();
-    }
     public boolean checkPassword(String password) {
         return this.password.isCorrect(password);
     }

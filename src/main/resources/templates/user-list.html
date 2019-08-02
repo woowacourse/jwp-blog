@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html layout:decorator="layout/default"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+      layout:decorate="~{layout/layout}"
+      lang="ko">
 
 <th:block layout:fragment="content">
     <div>
+        <th:block th:replace="fragment/header :: header"></th:block>
+
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
                 <div class="display-block height-100">
@@ -19,20 +22,18 @@
                         <div class="card-heading border bottom">
                             <h4 class="card-title">User List</h4>
                         </div>
-                        <div class="card-body" th:each="user : ${users}">
+                        <div class="card-body" th:if="${users} != null" th:each="user : ${users}" th:object="${user}">
                             <ul class="list-unstyled list-info">
                                 <li>
                                     <div class="pdd-vertical-10">
-                                        <img alt=""
-                                             class="thumb-img img-circle"
-                                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
+                                        <img class="thumb-img img-circle"
+                                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
                                         <div class="info">
-                                            <a class="title no-pdd-vertical text-semibold inline-block lh-1"
-                                               href="/users"
-                                               th:text="${user.userName}"></a>
+                                            <a href="" class="title no-pdd-vertical text-semibold inline-block lh-1"
+                                               th:text="*{name}"></a>
                                             <span class="sub-title">
-                                            <span th:text="${user.email}"></span>
-                                        </span>
+                                                <span th:text="*{email}"></span>
+                                            </span>
                                         </div>
                                     </div>
                                 </li>
@@ -43,6 +44,6 @@
             </div>
         </div>
     </div>
-
+    <th:block th:replace="fragment/footer :: main-footer"></th:block>
 </th:block>
 </html>

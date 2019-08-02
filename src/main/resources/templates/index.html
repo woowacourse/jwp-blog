@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html layout:decorator="layout/default"
+<html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
-
+      layout:decorate="~{layout/layout}"
+      lang="ko">
 <th:block layout:fragment="content">
     <div>
+        <th:block th:replace="fragment/header :: header"></th:block>
         <div class="about-cover card no-border mrg-btm-0">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
             <div class="welcome-text-container">
                 <div class="welcome-txt">
-                    <h1 class="text-white border bottom font-size-35 padding-5">Welcome</h1>
+                    <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
                 </div>
             </div>
         </div>
@@ -21,29 +22,25 @@
                     <div class="tab-info center-tabs">
                         <ul class="nav nav-tabs no-border" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#tab-centered-1" role="tab">All</a>
+                                <a href="#tab-centered-1" class="nav-link active" role="tab" data-toggle="tab">All</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#tab-centered-2" role="tab">Java</a>
+                                <a href="#tab-centered-2" class="nav-link" role="tab" data-toggle="tab">Java</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#tab-centered-3" role="tab">Learning</a>
+                                <a href="#tab-centered-3" class="nav-link" role="tab" data-toggle="tab">Learning</a>
                             </li>
                         </ul>
                         <div class="width-100 fixed left-0 border bottom"></div>
                         <div class="tab-content">
-                            <div class="tab-pane fade in active" id="tab-centered-1" role="tabpanel">
+                            <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
                                 <div class="pdd-horizon-15 pdd-vertical-20" th:each="article : ${articles}">
-                                    <a class="card article-container"
-                                       th:href="'/articles/' + ${article.id}">
+                                    <a th:href="@{/articles/{articleId}(articleId=${article.id})}"
+                                       class="card article-container">
                                         <div class="card-horizon">
                                             <div class="image-container col-md-4">
                                                 <div class="background-holder has-content"
-                                                     style="background-image: url('/images/default/defaultImage.png')"
-                                                     th:if="${article.coverUrl==''}"></div>
-                                                <div class="background-holder has-content"
-                                                     th:style="'background-image: url(' + ${article.coverUrl} + ');'"
-                                                     th:unless="${article.coverUrl==''}"></div>
+                                                     style="background-image: url('/images/pages/index/study.jpg')"></div>
                                             </div>
                                             <div class="container-fluid">
                                                 <div class="row">
@@ -70,12 +67,12 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="tab-centered-2" role="tabpanel">
+                            <div role="tabpanel" class="tab-pane fade" id="tab-centered-2">
                                 <div class="pdd-horizon-15 pdd-vertical-20">
 
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="tab-centered-3" role="tabpanel">
+                            <div role="tabpanel" class="tab-pane fade" id="tab-centered-3">
                                 <div class="pdd-horizon-15 pdd-vertical-20">
                                 </div>
                             </div>
@@ -84,17 +81,18 @@
                 </div>
                 <div class="col-lg-3"></div>
             </div>
-            <form action="/articles/new">
-                <button class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
-                    <i class="ti-plus"></i>
-                </button>
-            </form>
+
+            <a href="/writing"
+               class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
+                <i class="ti-plus"></i>
+            </a>
         </div>
     </div>
-    <script th:inline="javascript" type="text/javascript">
-        const error = [[ ${error}]];
-        if (error) {
-            window.alert(error);
+    <th:block th:replace="fragment/footer :: main-footer"></th:block>
+    <script type="text/javascript" th:inline="javascript">
+        const errorMessage = [[ ${errorMessage}]];
+        if (errorMessage !== null) {
+            alert(errorMessage);
         }
     </script>
 </th:block>

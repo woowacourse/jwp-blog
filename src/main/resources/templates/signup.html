@@ -1,31 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorator="layout/default">
+      layout:decorate="~{layout/layout}"
+      lang="ko">
 
 <th:block layout:fragment="content">
-    <script>
-        function checkPassword() {
-            let password = document.getElementsByName("password")[0].value;
-            let confirm = document.getElementsByName("confirmPassword")[0].value;
-            let area = document.getElementById("confirm-area");
-            if (password !== confirm) {
-                area.innerHTML = "비밀번호가 일치하지 않습니다.";
-                area.style.color = "red";
-                document.getElementById("register-button").setAttribute("disabled", "true");
-            } else {
-                area.innerHTML = "비밀번호가 일치합니다.";
-                area.style.color = "green";
-                document.getElementById("register-button").removeAttribute("disabled");
-            }
-        }
-    </script>
     <div class="app">
         <div class="header navbar bg-transparent no-border">
             <div class="header-container pdd-right-15">
                 <ul class="nav-left mrg-left-0">
                     <li>
-                        <a href="/">
+                        <a href="index.html">
                             <div class="logo logo-dark d-none"
                                  style="background-image: url('/images/logo/logo_full_dark.png')"></div>
                             <div class="logo logo-white"
@@ -35,7 +20,6 @@
                 </ul>
             </div>
         </div>
-
         <div class="authentication">
             <div class="sign-in-2">
                 <div class="container-fluid no-pdd-horizon overlay-dark bg"
@@ -46,10 +30,6 @@
                                 <div class="mr-auto ml-auto full-height height-100 d-flex align-items-center">
                                     <div class="vertical-align full-height">
                                         <div class="table-cell">
-                                            <div th:if="${error}"
-                                                 class="alert alert-warning alert-dismissible fade show" role="alert">
-                                                <strong th:text="${error}"></strong>
-                                            </div>
                                             <div class="card min-width-480px">
                                                 <div class="card-body">
                                                     <div class="pdd-horizon-30 pdd-vertical-30">
@@ -57,11 +37,11 @@
                                                             <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                                 회원가입</h2>
                                                         </div>
-                                                        <form method="post" action="/users/new">
+                                                        <form method="post" action="/users">
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Username</label>
-                                                                <input type="text" name="userName" class="form-control"
-                                                                       required pattern="^[a-zA-Z]{2,10}$">
+                                                                <input type="text" name="name" class="form-control"
+                                                                       required pattern="[A-Za-zㄱ-ㅎㅏ-ㅣ가-힣]{2,10}">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Email
@@ -70,24 +50,20 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Password</label>
-                                                                <input type="password" name="password"
-                                                                       class="form-control"
-                                                                       placeholder="Password" required
-                                                                       pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
+                                                                <input id="password" type="password" name="password"
+                                                                       class="form-control" placeholder="Password"
+                                                                       required
+                                                                       pattern=".*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Confirm
                                                                     Password</label>
-                                                                <input type="password" class="form-control"
-                                                                       placeholder="Password" name="confirmPassword"
-                                                                       required
-                                                                       pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
-                                                                       onchange="checkPassword();">
+                                                                <input id="confirm_password" type="password"
+                                                                       class="form-control"
+                                                                       placeholder="Password">
                                                             </div>
-
-                                                            <label id="confirm-area" class="text-normal"></label>
                                                             <div class="form-group">
-                                                                <button id="register-button" type="submit"
+                                                                <button type="submit"
                                                                         class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
                                                                     가입하기
                                                                 </button>
@@ -108,11 +84,28 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
+    <script type="text/javascript" th:inline="javascript">
+        const errorMessage = [[${errorMessage}]];
+        if (errorMessage !== null) {
+            alert(errorMessage);
+        }
+
+        const password = document.getElementById("password");
+        const confirm_password = document.getElementById("confirm_password");
+
+        function validatePassword() {
+            if (password.value != confirm_password.value) {
+                confirm_password.setCustomValidity("비밀번호가 일치하지 않습니다.");
+            } else {
+                confirm_password.setCustomValidity('');
+            }
+        }
+
+        password.onchange = validatePassword;
+        confirm_password.onkeyup = validatePassword;
+    </script>
 </th:block>
-
-
 </html>
