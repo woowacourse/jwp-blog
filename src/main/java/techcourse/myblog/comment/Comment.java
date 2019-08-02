@@ -17,7 +17,8 @@ public class Comment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String text;
+	@Embedded
+	private Contents contents;
 
 	@CreatedDate
 	@Column(name = "create_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -31,12 +32,17 @@ public class Comment {
 	}
 
 	public Comment(Contents contents) {
-		this.text = contents.getText();
+		this.contents = contents;
 	}
 
 	public Comment(Contents contents, User user) {
 		this.author = user;
-		this.text = contents.getText();
+		this.contents = contents;
+	}
+
+	public Comment(User user, Contents contents) {
+		this.author = user;
+		this.contents = contents;
 	}
 
 	public Long getId() {
@@ -44,7 +50,7 @@ public class Comment {
 	}
 
 	public String getText() {
-		return text;
+		return this.contents.getText();
 	}
 
 	public LocalDateTime getCreateDate() {
@@ -55,8 +61,8 @@ public class Comment {
 		return author;
 	}
 
-	public void update(Comment comment) {
-		this.text = comment.text;
+	public void update(Contents contents) {
+		this.contents = contents;
 	}
 
 	public boolean matchComment(Comment comment) {

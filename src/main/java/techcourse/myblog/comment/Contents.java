@@ -1,9 +1,12 @@
 package techcourse.myblog.comment;
 
-import techcourse.myblog.user.User;
+import javax.persistence.Embeddable;
 
+@Embeddable
 public class Contents {
 	private String text;
+
+	private Contents() {}
 
 	public Contents(String text) {
 		this.text = text;
@@ -11,13 +14,5 @@ public class Contents {
 
 	public String getText() {
 		return text;
-	}
-
-	public Comment valueOf() {
-		return new Comment(this);
-	}
-
-	public Comment valueOf(User user) {
-		return new Comment(this, user);
 	}
 }

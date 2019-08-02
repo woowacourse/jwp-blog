@@ -26,7 +26,7 @@ public class CommentService {
 	public Comment save(String email, Long articleId, Contents contents) {
 		User user = userService.findUser(email);
 		Article article = articleService.findById(articleId);
-		Comment comment = contents.valueOf(user);
+		Comment comment = new Comment(user, contents);
 		article.addComment(comment);
 		return commentRepository.save(comment);
 	}
@@ -36,7 +36,7 @@ public class CommentService {
 		Comment comment = findById(commentId);
 		existArticle(articleId);
 		confirmAuthorization(email, comment.getAuthor());
-		comment.update(contents.valueOf());
+		comment.update(contents);
 	}
 
 	public Comment findById(Long commentId) {
