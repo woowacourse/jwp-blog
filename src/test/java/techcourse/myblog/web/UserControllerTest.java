@@ -1,19 +1,18 @@
 package techcourse.myblog.web;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.service.dto.UserRequestDto.*;
 import static techcourse.myblog.presentation.UserController.EMAIL_DUPLICATION_ERROR_MSG;
 import static techcourse.myblog.presentation.UserController.LOGIN_ERROR_MSG;
+import static techcourse.myblog.service.dto.UserRequestDto.*;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -27,15 +26,16 @@ public class UserControllerTest {
     @Autowired
     public UserControllerTest(WebTestClient webTestClient) {
         this.webTestClient = webTestClient;
-        testSignup(testName, testPassword, testEmail);  // 테스트용 사용자 회원가입. setup과 달리 테스트 시작 전 한번만 수행된다.
+        trySignup(testName, testPassword, testEmail);
     }
 
     @Test
     void 회원가입_페이지_보여주기_테스트() {
-        webTestClient.get()
+        ResponseSpec rs = webTestClient.get()
                 .uri("/accounts/signup")
-                .exchange()
-                .expectStatus()
+                .exchange();
+
+        rs.expectStatus()
                 .isOk();
     }
 
@@ -116,7 +116,7 @@ public class UserControllerTest {
 
     @Test
     void 로그인_성공_테스트() {
-        testLoginSuccess(testEmail, testPassword);
+        LogInTestHelper.makeLoggedInCookie(webTestClient);
     }
 
     @Test
@@ -131,7 +131,8 @@ public class UserControllerTest {
 
     @Test
     void 로그아웃_성공_테스트() {
-        String cookie = testLoginSuccess(testEmail, testPassword);
+        String cookie = LogInTestHelper.makeLoggedInCookie(webTestClient);
+
         testLogoutSuccess(cookie);
     }
 
@@ -142,10 +143,11 @@ public class UserControllerTest {
 
     @Test
     void 프로필_페이지_접근_테스트() {
-        webTestClient.get()
+        ResponseSpec rs = webTestClient.get()
                 .uri("/accounts/profile/" + testId)
-                .exchange()
-                .expectStatus()
+                .exchange();
+
+        rs.expectStatus()
                 .isOk()
                 .expectBody()
                 .consumeWith(response -> {
@@ -157,13 +159,14 @@ public class UserControllerTest {
 
     @Test
     void 프로필_수정_페이지_접근() {
-        String cookie = testLoginSuccess(testEmail, testPassword);
+        String cookie = LogInTestHelper.makeLoggedInCookie(webTestClient);
 
-        webTestClient.get()
+        ResponseSpec rs = webTestClient.get()
                 .uri("/accounts/profile/edit")
                 .header("Cookie", cookie)
-                .exchange()
-                .expectStatus()
+                .exchange();
+
+        rs.expectStatus()
                 .isOk()
                 .expectBody()
                 .consumeWith(response -> {
@@ -175,9 +178,9 @@ public class UserControllerTest {
 
     @Test
     void 마이페이지_수정_후_저장_성공() {
-        String cookie = testLoginSuccess(testEmail, testPassword);
+        String cookie = LogInTestHelper.makeLoggedInCookie(webTestClient);
 
-        webTestClient.put()
+        ResponseSpec updateRs = webTestClient.put()
                 .uri("/accounts/profile/edit")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -186,36 +189,43 @@ public class UserControllerTest {
                         .with("email", testEmail)
                         .with("password", testPassword)
                         .with("id", String.valueOf(testId)))
+                .exchange();
+
+        // 잘 변경을 시도했는지를 검증
+        updateRs.expectStatus()
+                .isFound();
+
+        // 내용이 변경되었는지를 검증
+        ResponseSpec readRs = webTestClient.get()
+                .uri("/accounts/profile/edit")
+                .header("Cookie", cookie)
+                .exchange();
+
+        readRs.expectStatus()
+                .isOk()
+                .expectBody()
+                .consumeWith(innerResponse -> {
+                    String body = new String(innerResponse.getResponseBody());
+                    assertThat(body.contains(testName + "a")).isTrue();
+                    assertThat(body.contains(testEmail)).isTrue();
+                });
+
+
+        // 원상복구하는 코드... ㅠ...
+        // TODO: 각 테스트에 독립적으로 동작할 수 있도록 변경
+        webTestClient.put().uri("/accounts/profile/edit").header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", testName)
+                        .with("email", testEmail)
+                        .with("password", testPassword)
+                        .with("id", String.valueOf(testId)))
                 .exchange()
                 .expectStatus()
-                .isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get().uri("/accounts/profile/edit").header("Cookie", cookie)
-                            .exchange()
-                            .expectStatus()
-                            .isOk()
-                            .expectBody()
-                            .consumeWith(innerResponse -> {
-                                String body = new String(innerResponse.getResponseBody());
-                                assertThat(body.contains(testName + "a")).isTrue();
-                                assertThat(body.contains(testEmail)).isTrue();
-                            });
-
-                    webTestClient.put().uri("/accounts/profile/edit").header("Cookie", cookie)
-                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .body(BodyInserters
-                                    .fromFormData("name", testName)
-                                    .with("email", testEmail)
-                                    .with("password", testPassword)
-                                    .with("id", String.valueOf(testId)))
-                            .exchange()
-                            .expectStatus()
-                            .isFound();
-                });
+                .isFound();
     }
 
-    private WebTestClient.ResponseSpec testSignup(String name, String password, String email) {
+    private ResponseSpec trySignup(String name, String password, String email) {
         return webTestClient.post()
                 .uri("/accounts/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -223,20 +233,21 @@ public class UserControllerTest {
                         .fromFormData("name", name)
                         .with("password", password)
                         .with("email", email))
-                .exchange()
-                ;
+                .exchange();
     }
 
     private void testSignupSuccess(String name, String password, String email) {
-        testSignup(name, password, email)
-                .expectStatus()
+        ResponseSpec rs = trySignup(name, password, email);
+
+        rs.expectStatus()
                 .isFound();  // 회원가입에 성공하면 홈으로 리다이렉션
     }
 
 
     private void testSignupFail(String name, String password, String email, String errorMsg) {
-        testSignup(name, password, email)
-                .expectStatus()
+        ResponseSpec rs = trySignup(name, password, email);
+
+        rs.expectStatus()
                 .is4xxClientError()
                 .expectBody()
                 .consumeWith(response -> {
@@ -245,60 +256,44 @@ public class UserControllerTest {
                 });
     }
 
-    private String testLoginSuccess(String email, String password) {
-        return webTestClient.post()
-                .uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectStatus()
-                .isFound()  // 로그인에 성공하면 리다이렉트
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .getFirst("Set-Cookie");
+    private ResponseSpec tryLogin(String email, String password) {
+        return LogInTestHelper.tryLogin(webTestClient, email, password);
     }
 
     private void testLoginFail(String email, String password) {
-        webTestClient.post()
-                .uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectStatus()
+        ResponseSpec rs = tryLogin(email, password);
+
+        rs.expectStatus()
                 .is4xxClientError()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
                     assertThat(body.contains(LOGIN_ERROR_MSG)).isTrue();
-        });
+                });
     }
 
     private void testLogoutSuccess(String cookie) {
-        webTestClient.get()
+        ResponseSpec rs = webTestClient.get()
                 .uri("/logout")
                 .header("Cookie", cookie)
-                .exchange()
-                .expectStatus()
+                .exchange();
+
+        rs.expectStatus()
                 .isFound()
                 .expectBody()
                 .consumeWith(innerResponse -> {
-                    assertThat(innerResponse.getResponseHeaders().getLocation().toString().contains("login")).isFalse();  // 로그아웃에 성공하면 홈으로 간다.
+                    assertThat(innerResponse.getResponseHeaders()
+                            .getLocation()
+                            .toString()
+                            .contains("login")).isFalse();  // 로그아웃에 성공하면 홈으로 간다.
                 });
     }
 
     private void testLogoutFail() {
-        webTestClient.get()
+        ResponseSpec rs = webTestClient.get()
                 .uri("/logout")
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isTrue(); // 로그아웃에 실패하면 로그인 창으로 간다.
-                });
+                .exchange();
+
+        LogInTestHelper.assertLoginRedirect(rs);
     }
 }
