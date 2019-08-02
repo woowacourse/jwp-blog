@@ -1,5 +1,7 @@
 package techcourse.myblog.domain;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.web.dto.ArticleDto;
 
 import javax.persistence.*;
@@ -22,7 +24,8 @@ public class Article {
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user", foreignKeyDefinition = "/*FOREIGN KEY in sql that sets ON DELETE SET NULL*/"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
     public Article() {
