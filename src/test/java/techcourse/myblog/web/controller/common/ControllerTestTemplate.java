@@ -4,7 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -22,12 +21,16 @@ import techcourse.myblog.service.dto.UserDto;
 
 import java.util.Objects;
 
+import static org.springframework.test.web.reactive.server.WebTestClient.*;
 import static org.springframework.http.HttpMethod.POST;
 import static techcourse.myblog.utils.UserTestObjects.SIGN_UP_USER_DTO;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ControllerTestTemplate {
+    private static final String JSESSIONID = "JSESSIONID";
+    public static final String LOGIN_URL = "/login";
+    
     @Autowired
     protected WebTestClient webTestClient;
 
@@ -47,69 +50,62 @@ public class ControllerTestTemplate {
     protected void tearDown() {
         userRepository.deleteAll();
     }
-
-    protected StatusAssertions httpRequest(RequestHeadersSpec requestHeadersSpec) {
-        return requestHeadersSpec
-                .exchange()
-                .expectStatus();
-    }
-
+    
     protected StatusAssertions httpRequest(HttpMethod method, String uri) {
         return httpRequest(makeRequestSpec(method, uri));
     }
 
-    protected StatusAssertions httpRequest(HttpMethod method, String uri,
-                                           MultiValueMap<String, String> data) {
-        return httpRequest(makeRequestSpec(method, uri, data));
+    protected StatusAssertions httpRequestWithData(HttpMethod method, String uri, MultiValueMap<String, String> data) {
+        return httpRequest(makeRequestSpecWithData(method, uri, data));
+    }
+    
+    protected StatusAssertions loginAndRequest(HttpMethod method, String path, UserDto userDto) {
+        return httpRequest(makeRequestSpecWithData(method, path, null).cookie(JSESSIONID, getLoginSessionId(userDto)));
     }
 
-    protected WebTestClient.RequestBodySpec makeRequestSpec(HttpMethod method, String uri) {
+    protected StatusAssertions loginAndRequestWithData(HttpMethod method, String path, MultiValueMap<String, String> data, UserDto userDto) {
+        return httpRequest(makeRequestSpecWithData(method, path, data).cookie(JSESSIONID, getLoginSessionId(userDto)));
+    }
+    
+    protected StatusAssertions loginAndRequestWriter(HttpMethod method, String path) {
+        return loginAndRequest(method, path, savedUserDto);
+    }
+    
+    protected StatusAssertions loginAndRequestWithDataWriter(HttpMethod method, String path, MultiValueMap<String, String> data) {
+        return loginAndRequestWithData(method, path, data, savedUserDto);
+    }
+    
+    private String getLoginSessionId(UserDto userDto) {
+        return Objects.requireNonNull(httpRequestWithData(POST, LOGIN_URL, parseUser(userDto))
+                .isFound()
+                .returnResult(String.class)
+                .getResponseCookies()
+                .getFirst(JSESSIONID))
+                .getValue();
+    }
+    
+    private StatusAssertions httpRequest(RequestHeadersSpec requestHeadersSpec) {
+        return requestHeadersSpec
+                .exchange()
+                .expectStatus();
+    }
+    
+    private RequestBodySpec makeRequestSpec(HttpMethod method, String uri) {
         return webTestClient.method(method).uri(uri);
     }
-
-    protected RequestHeadersSpec<?> makeRequestSpec(HttpMethod method, String uri,
-                                                    MultiValueMap<String, String> data) {
+    
+    private RequestHeadersSpec<?> makeRequestSpecWithData(HttpMethod method, String uri, MultiValueMap<String, String> data) {
         return makeRequestSpec(method, uri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(data));
     }
 
-    protected StatusAssertions loginAndRequest(HttpMethod method, String path, MultiValueMap<String, String> data, UserDto userDto) {
-        return httpRequest(
-                makeRequestSpec(method, path, data)
-                        .cookie("JSESSIONID", getLoginSessionId(userDto)));
-    }
-
-    protected StatusAssertions loginAndRequest(HttpMethod method, String path, UserDto userDto) {
-        return httpRequest(
-                makeRequestSpec(method, path)
-                        .cookie("JSESSIONID", getLoginSessionId(userDto)));
-    }
-
-
-    protected StatusAssertions loginAndRequest(HttpMethod method, String path, MultiValueMap<String, String> data) {
-        return loginAndRequest(method, path, data, savedUserDto);
-    }
-
-    protected StatusAssertions loginAndRequest(HttpMethod method, String path) {
-        return loginAndRequest(method, path, savedUserDto);
-    }
-
-    private String getLoginSessionId(UserDto userDto) {
-        return Objects.requireNonNull(httpRequest(POST, "/login", parseUser(userDto))
-                .isFound()
-                .returnResult(String.class)
-                .getResponseCookies()
-                .getFirst("JSESSIONID"))
-                .getValue();
-    }
-
     protected String getResponseBody(StatusAssertions statusAssertions) {
-        return new String(statusAssertions
+        return new String(Objects.requireNonNull(statusAssertions
                 .isOk()
                 .expectBody()
                 .returnResult()
-                .getResponseBody());
+                .getResponseBody()));
     }
 
     protected String getRedirectUrl(StatusAssertions statusAssertions) {

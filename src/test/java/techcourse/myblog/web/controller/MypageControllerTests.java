@@ -18,7 +18,7 @@ public class MypageControllerTests extends ControllerTestTemplate {
     
     @Test
     void 로그인_상태에서_회원정보페이지_요청시_성공() {
-        loginAndRequest(GET, "/mypage").isOk();
+        loginAndRequestWriter(GET, "/mypage").isOk();
     }
     
     @Test
@@ -28,23 +28,23 @@ public class MypageControllerTests extends ControllerTestTemplate {
     
     @Test
     void 로그인_상태에서_정보수정페이지_요청시_성공() {
-        loginAndRequest(GET, "/mypage/edit").isOk();
+        loginAndRequestWriter(GET, "/mypage/edit").isOk();
     }
     
     @Test
     void 로그인_상태에서_정보수정_결과_확인() {
-        loginAndRequest(PUT, "/mypage", parseUser(UPDATE_USER_DTO)).isFound();
+        loginAndRequestWithDataWriter(PUT, "/mypage", parseUser(UPDATE_USER_DTO)).isFound();
         
         User savedUser = userRepository.findByEmail(savedUserDto.getEmail()).get();
 
-        assertThat(savedUser.getName().equals(UPDATE_USER_DTO.getName()x)).isTrue();
+        assertThat(savedUser.getName().equals(UPDATE_USER_DTO.getName())).isTrue();
         assertThat(savedUser.getName().equals(savedUserDto.getName())).isFalse();
     }
     
     @Test
     void 로그아웃상태_정보수정_불가() {
         UserDto update = new UserDto("newname", savedUserDto.getEmail(), savedUserDto.getPassword());
-        httpRequest(PUT, "/mypage", parseUser(update)).isFound();
+        httpRequestWithData(PUT, "/mypage", parseUser(update)).isFound();
         
         User savedUser = userRepository.findByEmail(savedUserDto.getEmail()).get();
         assertThat(savedUser.getName().equals(update.getName())).isFalse();
@@ -60,7 +60,7 @@ public class MypageControllerTests extends ControllerTestTemplate {
     
     @Test
     void 로그인상태_자기자신_탈퇴시도_성공() {
-        String redirectUrl = getRedirectUrl(loginAndRequest(DELETE, "/mypage"));
+        String redirectUrl = getRedirectUrl(loginAndRequestWriter(DELETE, "/mypage"));
         assertEquals(redirectUrl, "/logout");
         assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isFalse();
     }

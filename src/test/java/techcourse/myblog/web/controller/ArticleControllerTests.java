@@ -22,12 +22,12 @@ public class ArticleControllerTests extends ControllerTestTemplate {
     @BeforeEach
     protected void setup() {
         super.setup();
-        savedArticleUrl = getRedirectUrl(loginAndRequest(POST, "/articles/write", parseArticle(articleDto)));
+        savedArticleUrl = getRedirectUrl(loginAndRequestWithDataWriter(POST, "/articles/write", parseArticle(articleDto)));
     }
 
     @Test
     void 로그인상태_게시글_작성_페이지_요청() {
-        loginAndRequest(GET, "/articles/writing").isOk();
+        loginAndRequestWriter(GET, "/articles/writing").isOk();
     }
 
     @Test
@@ -38,8 +38,8 @@ public class ArticleControllerTests extends ControllerTestTemplate {
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("articlesStream")
     void 로그인상태_게시글_작성_테스트(ArticleDto articleDto) {
-        String redirectUrl = getRedirectUrl(loginAndRequest(POST, "/articles/write", parseArticle(articleDto)));
-        String responseBody = getResponseBody((loginAndRequest(GET, redirectUrl)));
+        String redirectUrl = getRedirectUrl(loginAndRequestWithDataWriter(POST, "/articles/write", parseArticle(articleDto)));
+        String responseBody = getResponseBody((loginAndRequestWriter(GET, redirectUrl)));
 
         ArticleDto escapedArticle = applyEscapeArticle(articleDto);
 
@@ -51,7 +51,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
     @ParameterizedTest(name = "{index}: {0}")
     @MethodSource("articlesStream")
     void 로그아웃상태_게시글_작성_테스트(ArticleDto articleDto) {
-        String redirectUrl = getRedirectUrl(httpRequest(POST, "/articles/write", parseArticle(articleDto)));
+        String redirectUrl = getRedirectUrl(httpRequestWithData(POST, "/articles/write", parseArticle(articleDto)));
         assertEquals(redirectUrl, "/login");
     }
 
@@ -75,7 +75,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인상태_게시글_페이지_정상_조회() {
-        String responseBody = getResponseBody(loginAndRequest(GET, savedArticleUrl));
+        String responseBody = getResponseBody(loginAndRequestWriter(GET, savedArticleUrl));
 
         assertThat(responseBody).contains(articleDto.getTitle());
         assertThat(responseBody).contains(articleDto.getCoverUrl());
@@ -84,7 +84,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
 
     @Test
     void 존재하지_않는_게시글_조회_에러() {
-        String redirectUrl = getRedirectUrl(loginAndRequest(GET, "/articles/0"));
+        String redirectUrl = getRedirectUrl(loginAndRequestWriter(GET, "/articles/0"));
         assertEquals(redirectUrl, "/");
     }
 
@@ -95,7 +95,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인상태_게시글_수정페이지_이동() {
-        loginAndRequest(GET, savedArticleUrl + "/edit").isOk();
+        loginAndRequestWriter(GET, savedArticleUrl + "/edit").isOk();
     }
 
     @Test
@@ -111,7 +111,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
     void 로그아웃상태_게시글_수정_요청() {
         ArticleDto editedArticleDto = new ArticleDto("new title", "new url", "new contents");
 
-        String redirectUrl = getRedirectUrl(httpRequest(PUT, savedArticleUrl, parseArticle(editedArticleDto)));
+        String redirectUrl = getRedirectUrl(httpRequestWithData(PUT, savedArticleUrl, parseArticle(editedArticleDto)));
         assertEquals(redirectUrl, "/login");
     }
 
@@ -119,8 +119,8 @@ public class ArticleControllerTests extends ControllerTestTemplate {
     void 로그인상태_게시글_수정_요청() {
         ArticleDto editedArticleDto = new ArticleDto("new title", "new url", "new contents");
 
-        String redirectUrl = getRedirectUrl(loginAndRequest(PUT, savedArticleUrl, parseArticle(editedArticleDto)));
-        String responseBody = getResponseBody(loginAndRequest(GET, redirectUrl));
+        String redirectUrl = getRedirectUrl(loginAndRequestWithDataWriter(PUT, savedArticleUrl, parseArticle(editedArticleDto)));
+        String responseBody = getResponseBody(loginAndRequestWriter(GET, redirectUrl));
 
         assertThat(responseBody).contains(editedArticleDto.getTitle());
         assertThat(responseBody).contains(editedArticleDto.getCoverUrl());
@@ -133,7 +133,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
         userRepository.save(other.toUser());
         ArticleDto editedArticleDto = new ArticleDto("new title", "new url", "new contents");
 
-        String redirectUrl = getRedirectUrl(loginAndRequest(PUT, savedArticleUrl, parseArticle(editedArticleDto), other));
+        String redirectUrl = getRedirectUrl(loginAndRequestWithData(PUT, savedArticleUrl, parseArticle(editedArticleDto), other));
 
         assertEquals(redirectUrl, "/");
     }
@@ -146,10 +146,10 @@ public class ArticleControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인상태_게시글_삭제_요청() {
-        String redirectUrl = getRedirectUrl(loginAndRequest(DELETE, savedArticleUrl));
+        String redirectUrl = getRedirectUrl(loginAndRequestWriter(DELETE, savedArticleUrl));
         assertEquals(redirectUrl, "/");
 
-        String redirectRemovedArticleUrl = getRedirectUrl(loginAndRequest(GET, savedArticleUrl));
+        String redirectRemovedArticleUrl = getRedirectUrl(loginAndRequestWriter(GET, savedArticleUrl));
         assertEquals(redirectRemovedArticleUrl, "/");
     }
 
@@ -161,7 +161,7 @@ public class ArticleControllerTests extends ControllerTestTemplate {
         String redirectUrl = getRedirectUrl(loginAndRequest(DELETE, savedArticleUrl, other));
         assertEquals(redirectUrl, "/");
 
-        String articlePage = getResponseBody(loginAndRequest(GET, savedArticleUrl));
+        String articlePage = getResponseBody(loginAndRequestWriter(GET, savedArticleUrl));
         assertThat(articlePage).contains(articleDto.getTitle());
         assertThat(articlePage).contains(articleDto.getCoverUrl());
         assertThat(articlePage).contains(articleDto.getContents());

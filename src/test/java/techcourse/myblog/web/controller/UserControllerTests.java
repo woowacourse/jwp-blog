@@ -4,12 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.support.validation.pattern.UserPattern;
 import techcourse.myblog.web.controller.common.ControllerTestTemplate;
 
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,21 +26,22 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인_상태에서_회원가입_요청시_리다이렉트() {
-        loginAndRequest(GET, "/signup").isFound();
+        loginAndRequestWriter(GET, "/signup").isFound();
     }
 
     @Test
     void 회원가입_성공시_리다이렉트() {
-        httpRequest(POST, "/users", parseUser(READER_DTO)).isFound();
+        httpRequestWithData(POST, "/users", parseUser(READER_DTO)).isFound();
     }
 
     //todo : 테스트 깨짐
     @ParameterizedTest(name = "{index}: {3}")
     @MethodSource("invalidParameters")
     void 회원가입_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
-        String redirectUrl = getRedirectUrl(httpRequest(POST, "/users", parseUser(new UserDto(name, email, password))));
+        String redirectUrl = getRedirectUrl(httpRequestWithData(POST, "/users", parseUser(new UserDto(name, email, password))));
         String responseBody = getResponseBody(httpRequest(GET, redirectUrl));
-        assertThat(responseBody).contains(errorMsg);
+        
+       assertThat(responseBody).contains(errorMsg);
     }
 
     static Stream<Arguments> invalidParameters() {
@@ -66,19 +65,19 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인_상태에서_로그인_페이지_요청시_리다이렉트() {
-        loginAndRequest(GET, "/login").isFound();
+        loginAndRequestWriter(GET, "/login").isFound();
     }
 
     @Test
     void 로그인_성공_시_메인_화면으로_리다이렉트() {
-        httpRequest(POST, "/login", parseUser(savedUserDto)).isFound();
+        httpRequestWithData(POST, "/login", parseUser(savedUserDto)).isFound();
     }
 
     //todo : 테스트 깨짐
     @ParameterizedTest(name = "{index}: {3}")
     @MethodSource("invalidLoginParameters")
     void 로그인_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
-        String redirectUrl = getRedirectUrl(httpRequest(POST, "/login", parseUser(new UserDto(name, email, password))));
+        String redirectUrl = getRedirectUrl(httpRequestWithData(POST, "/login", parseUser(new UserDto(name, email, password))));
         String responseBody = getResponseBody(httpRequest(GET, redirectUrl));
 
         assertThat(responseBody).contains(errorMsg);
@@ -93,6 +92,6 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그아웃_요청() {
-        loginAndRequest(GET, "/logout").isFound();
+        loginAndRequestWriter(GET, "/logout").isFound();
     }
 }
