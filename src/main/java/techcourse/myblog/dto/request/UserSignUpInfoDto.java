@@ -1,12 +1,13 @@
-package techcourse.myblog.user;
+package techcourse.myblog.dto.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
+import techcourse.myblog.user.Information;
 
-public class UserSignUpInfo {
+public class UserSignUpInfoDto {
 	private static final String BLANK_NAME = "이름을 입력해주세요.";
 	private static final String NOT_VALID_EMAIL = "올바른 이메일 주소를 입력해주세요.";
 
@@ -23,7 +24,7 @@ public class UserSignUpInfo {
 	@Pattern(regexp = "^(?=.*[\\p{Ll}])(?=.*[\\p{Lu}])(?=.*[\\p{N}])(?=.*[\\p{S}\\p{P}])[\\p{Ll}\\p{Lu}\\p{N}\\p{S}\\p{P}]+$")
 	private String password;
 
-	public UserSignUpInfo(String username, String email, String password) {
+	public UserSignUpInfoDto(String username, String email, String password) {
 		this.username = username;
 		this.email = email;
 		this.password = password;

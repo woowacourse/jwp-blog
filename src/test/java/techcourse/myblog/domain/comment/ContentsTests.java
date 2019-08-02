@@ -3,9 +3,9 @@ package techcourse.myblog.domain.comment;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.comment.Comment;
 import techcourse.myblog.comment.Contents;
+import techcourse.myblog.dto.request.UserSignUpInfoDto;
 import techcourse.myblog.user.Information;
 import techcourse.myblog.user.User;
-import techcourse.myblog.user.UserSignUpInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,7 +19,7 @@ class ContentsTests {
 
 	@Test
 	void valueOfCommentWithUser() {
-		Information info = new UserSignUpInfo("tiber", "tiber@naver.com", "asdfASDF1@")
+		Information info = new UserSignUpInfoDto("tiber", "tiber@naver.com", "asdfASDF1@")
 							.valueOfInfo();
 		User user = new User(info);
 

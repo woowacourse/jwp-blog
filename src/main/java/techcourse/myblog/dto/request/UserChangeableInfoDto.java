@@ -1,11 +1,12 @@
-package techcourse.myblog.user;
+package techcourse.myblog.dto.request;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
+import techcourse.myblog.user.Information;
 
-public class UserChangeableInfo {
+public class UserChangeableInfoDto {
 	private static final String BLANK_NAME = "이름을 입력해주세요.";
 
 	@Length(min = 2, max = 10)
@@ -16,7 +17,7 @@ public class UserChangeableInfo {
 	private String githubUrl;
 	private String faceBookUrl;
 
-	public UserChangeableInfo(String username, String githubUrl, String faceBookUrl) {
+	public UserChangeableInfoDto(String username, String githubUrl, String faceBookUrl) {
 		this.username = username;
 		this.githubUrl = githubUrl;
 		this.faceBookUrl = faceBookUrl;

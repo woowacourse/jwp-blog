@@ -4,9 +4,9 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import techcourse.myblog.dto.request.UserChangeableInfoDto;
+import techcourse.myblog.dto.request.UserSignUpInfoDto;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.user.UserChangeableInfo;
-import techcourse.myblog.user.UserSignUpInfo;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,11 +31,11 @@ public class UserController {
 	}
 
 	@PostMapping("/users")
-	public String signUp(@Valid UserSignUpInfo userSignUpInfo, BindingResult bindingResult, Model model) {
+	public String signUp(@Valid UserSignUpInfoDto userSignUpInfoDto, BindingResult bindingResult, Model model) {
 		if (confirmBindingErrors(bindingResult, model)) {
 			return "/signup";
 		}
-		userService.signUp(userSignUpInfo);
+		userService.signUp(userSignUpInfoDto);
 		return "redirect:/login";
 	}
 
@@ -65,11 +65,11 @@ public class UserController {
 	}
 
 	@PutMapping("/edit")
-	public String editUser(@Valid UserChangeableInfo userChangeableInfo, BindingResult bindingResult, HttpSession httpSession, Model model) {
+	public String editUser(@Valid UserChangeableInfoDto userChangeableInfoDto, BindingResult bindingResult, HttpSession httpSession, Model model) {
 		if (confirmBindingErrors(bindingResult, model)) {
 			return "index";
 		}
-		userService.editUser((String) httpSession.getAttribute("email"), userChangeableInfo);
+		userService.editUser((String) httpSession.getAttribute("email"), userChangeableInfoDto);
 		return "redirect:/mypage";
 	}
 

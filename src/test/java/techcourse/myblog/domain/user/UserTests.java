@@ -2,10 +2,10 @@ package techcourse.myblog.domain.user;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import techcourse.myblog.dto.request.UserChangeableInfoDto;
+import techcourse.myblog.dto.request.UserSignUpInfoDto;
 import techcourse.myblog.user.Information;
 import techcourse.myblog.user.User;
-import techcourse.myblog.user.UserChangeableInfo;
-import techcourse.myblog.user.UserSignUpInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -16,14 +16,14 @@ public class UserTests {
 
 	@BeforeEach
 	void setUp() {
-		Information actualInfo = new UserSignUpInfo("tiber", "tiber@naver.com", "asdfASDF1@")
+		Information actualInfo = new UserSignUpInfoDto("tiber", "tiber@naver.com", "asdfASDF1@")
 				.valueOfInfo();
 		user = new User(actualInfo);
 	}
 
 	@Test
 	void update() {
-		Information updateInfo = new UserChangeableInfo("jason", "www.github.com/jason", "wwww.facebook.com/jason")
+		Information updateInfo = new UserChangeableInfoDto("jason", "www.github.com/jason", "wwww.facebook.com/jason")
 				.valueOfInfo();
 		user.editUser(updateInfo);
 		assertThat(user.getUsername()).isEqualTo(updateInfo.getUsername());

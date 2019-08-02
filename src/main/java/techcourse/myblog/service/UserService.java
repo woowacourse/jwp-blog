@@ -2,14 +2,14 @@ package techcourse.myblog.service;
 
 import java.util.List;
 
+import techcourse.myblog.dto.request.UserChangeableInfoDto;
+import techcourse.myblog.dto.request.UserSignUpInfoDto;
 import techcourse.myblog.exception.AlreadyExistEmailException;
 import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.exception.NotMatchPasswordException;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.user.Information;
 import techcourse.myblog.user.User;
-import techcourse.myblog.user.UserChangeableInfo;
-import techcourse.myblog.user.UserSignUpInfo;
 
 import org.springframework.stereotype.Service;
 
@@ -21,9 +21,9 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public void signUp(UserSignUpInfo userSignUpInfo) {
-		Information information = userSignUpInfo.valueOfInfo();
-		if (userRepository.findByInformation_Email(userSignUpInfo.getEmail()).isPresent()) {
+	public void signUp(UserSignUpInfoDto userSignUpInfoDto) {
+		Information information = userSignUpInfoDto.valueOfInfo();
+		if (userRepository.findByInformation_Email(userSignUpInfoDto.getEmail()).isPresent()) {
 			throw new AlreadyExistEmailException();
 		}
 		User user = new User(information);
@@ -47,8 +47,8 @@ public class UserService {
 		userRepository.delete(user);
 	}
 
-	public User editUser(String email, UserChangeableInfo userChangeableInfo) {
-		Information information = userChangeableInfo.valueOfInfo();
+	public User editUser(String email, UserChangeableInfoDto userChangeableInfoDto) {
+		Information information = userChangeableInfoDto.valueOfInfo();
 		User user = findUser(email);
 		user.editUser(information);
 		userRepository.save(user);
