@@ -116,8 +116,8 @@
                                     <span href="" class="text-bold inline-block" th:text="${comment.userName}">Jun</span>
                                     <span class="sub-title inline-block pull-right">
                                         <i class="ti-timer pdd-right-5"></i>
-                                        <span th:text="${comment.localDate}"></span>
-                                        <span th:text="${comment.localTime}"></span>
+                                        <span th:text="${comment.createDateTime}"></span>
+                                        <span th:text="${comment.updateDateTime}"></span>
                                     </span>
                                     <!--                                    <form th:action="${'/articles/' + article.id + '/' + comment.id}" method="post" id="delete-form">-->
                                     <!--                                        <input type="hidden" name="_method" value="delete" />-->
