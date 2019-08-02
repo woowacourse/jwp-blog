@@ -14,7 +14,6 @@ import techcourse.myblog.application.service.exception.NotExistArticleIdExceptio
 import techcourse.myblog.application.service.exception.NotMatchAuthorException;
 import techcourse.myblog.domain.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Service
