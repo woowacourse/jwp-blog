@@ -59,9 +59,10 @@ public class ArticleService {
         Article article = findArticleById(articleId);
 
         article.modify(new Article(articleDto.getTitle(),
-                articleDto.getCoverUrl(),
-                articleDto.getContents(),
-                user));
+                        articleDto.getCoverUrl(),
+                        articleDto.getContents(),
+                        user)
+                , user);
     }
 
     @Transactional(readOnly = true)
@@ -83,8 +84,6 @@ public class ArticleService {
     public UserDto findAuthor(long articleId) {
         User user = findArticleById(articleId)
                 .getUser();
-        return new UserDto(user.getEmail(),
-                user.getName(),
-                user.getPassword());
+        return UserDto.of(user);
     }
 }

@@ -2,6 +2,7 @@ package techcourse.myblog.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import techcourse.myblog.application.service.exception.NotExistUserIdException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -39,10 +40,13 @@ public class User {
         this.password = password;
     }
 
-
     public void modify(User user) {
-        this.password = user.password;
-        this.name = user.name;
+        if (this.equals(user)) {
+            this.password = user.password;
+            this.name = user.name;
+        }
+        throw new NotExistUserIdException("해당 유저가 아닙니다.");
+
     }
 
     public boolean checkPassword(String password) {

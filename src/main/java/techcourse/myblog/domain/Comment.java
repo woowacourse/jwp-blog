@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import techcourse.myblog.application.service.exception.NotExistUserIdException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,7 +33,8 @@ public class Comment {
     @ManyToOne
     private Article article;
 
-    protected Comment() {}
+    protected Comment() {
+    }
 
     public Comment(String contents, User user, Article article) {
         this.contents = contents;
@@ -40,7 +42,10 @@ public class Comment {
         this.article = article;
     }
 
-    public void modify(String contents) {
-        this.contents = contents;
+    public void modify(String contents, User user) {
+        if (this.user.equals(user)) {
+            this.contents = contents;
+        }
+        throw new NotExistUserIdException("작성자가 아닙니다.");
     }
 }

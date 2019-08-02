@@ -2,6 +2,7 @@ package techcourse.myblog.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import techcourse.myblog.application.service.exception.NotExistUserIdException;
 
 import javax.persistence.*;
 
@@ -13,10 +14,14 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String coverUrl;
 
     @Lob
+    @Column(nullable = false)
     private String contents;
 
     @ManyToOne
@@ -33,23 +38,17 @@ public class Article {
         this.user = user;
     }
 
-    public void modify(Article article) {
-        this.title = article.title;
-        this.coverUrl = article.coverUrl;
-        this.contents = article.contents;
+    public void modify(Article article, User user) {
+        if (this.user.equals(user)) {
+            this.title = article.title;
+            this.coverUrl = article.coverUrl;
+            this.contents = article.contents;
+        }
+
+        throw new NotExistUserIdException("작성자가 아닙니다.");
     }
 
     public boolean checkAuthor(String email) {
         return user.checkEmail(email);
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", contents='" + contents + '\'' +
-                '}';
     }
 }

@@ -30,8 +30,7 @@ public class CommentController {
     public RedirectView delete(HttpSession httpSession, @PathVariable Long articleId, @PathVariable Long commentId) {
         String email = (String) httpSession.getAttribute("email");
 
-        commentService.findCommentWriter(commentId, email);
-        commentService.delete(commentId);
+        commentService.delete(commentId, email);
         return new RedirectView("/articles/" + articleId);
     }
 
@@ -39,8 +38,7 @@ public class CommentController {
     public RedirectView update(HttpSession httpSession, CommentDto commentDto, @PathVariable Long articleId, @PathVariable Long commentId) {
         String email = (String) httpSession.getAttribute("email");
 
-        commentService.findCommentWriter(commentId, email);
-        commentService.update(commentId, commentDto);
+        commentService.update(commentId, commentDto, email);
         return new RedirectView("/articles/" + articleId);
     }
 }
