@@ -3,10 +3,10 @@ package techcourse.myblog.repository;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.vo.article.ArticleContents;
+import techcourse.myblog.article.Article;
+import techcourse.myblog.article.Contents;
+import techcourse.myblog.comment.Comment;
+import techcourse.myblog.user.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -32,8 +32,8 @@ public class ArticleRepositoryTests {
 	@Test
 	void findById() {
 		User user = userRepository.findById(1L).get();
-		ArticleContents articleContents = new ArticleContents("title", "contents", "www.coverUrl.com");
-		Article actualArticle = articleContents.valueOfArticle(user);
+		Contents contents = new Contents("title", "contents", "www.coverUrl.com");
+		Article actualArticle = contents.valueOfArticle(user);
 		actualArticle = testEntityManager.persist(actualArticle);
 		Article expectArticle = articleRepository.findById(actualArticle.getId()).get();
 		assertThat(actualArticle.matchArticle(expectArticle));

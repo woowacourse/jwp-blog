@@ -1,12 +1,12 @@
 package techcourse.myblog.service;
 
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.vo.comment.CommentContents;
+import techcourse.myblog.article.Article;
+import techcourse.myblog.comment.Comment;
+import techcourse.myblog.comment.Contents;
 import techcourse.myblog.exception.NotFoundCommentException;
 import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.repository.CommentRepository;
+import techcourse.myblog.user.User;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,20 +23,20 @@ public class CommentService {
 		this.articleService = articleService;
 	}
 
-	public Comment save(String email, Long articleId, CommentContents commentContents) {
+	public Comment save(String email, Long articleId, Contents contents) {
 		User user = userService.findUser(email);
 		Article article = articleService.findById(articleId);
-		Comment comment = commentContents.valueOf(user);
+		Comment comment = contents.valueOf(user);
 		article.addComment(comment);
 		return commentRepository.save(comment);
 	}
 
 	@Transactional
-	public void update(String email, Long articleId, Long commentId, CommentContents commentContents) {
+	public void update(String email, Long articleId, Long commentId, Contents contents) {
 		Comment comment = findById(commentId);
 		existArticle(articleId);
 		confirmAuthorization(email, comment.getAuthor());
-		comment.update(commentContents.valueOf());
+		comment.update(contents.valueOf());
 	}
 
 	public Comment findById(Long commentId) {

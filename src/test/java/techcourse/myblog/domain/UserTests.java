@@ -2,7 +2,8 @@ package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.vo.user.UserSignUpInfo;
+import techcourse.myblog.user.User;
+import techcourse.myblog.user.UserSignUpInfo;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

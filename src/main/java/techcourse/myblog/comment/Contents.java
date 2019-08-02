@@ -1,12 +1,11 @@
-package techcourse.myblog.domain.vo.comment;
+package techcourse.myblog.comment;
 
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.user.User;
 
-public class CommentContents {
+public class Contents {
 	private String text;
 
-	public CommentContents(String text) {
+	public Contents(String text) {
 		this.text = text;
 	}
 

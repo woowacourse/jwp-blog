@@ -2,7 +2,7 @@ package techcourse.myblog.web;
 
 import javax.servlet.http.HttpSession;
 
-import techcourse.myblog.domain.vo.article.ArticleContents;
+import techcourse.myblog.article.Contents;
 import techcourse.myblog.service.ArticleService;
 
 import org.springframework.stereotype.Controller;
@@ -23,16 +23,16 @@ public class ArticleController {
 	}
 
 	@PostMapping("/articles")
-	public String saveArticle(ArticleContents articleContents, HttpSession httpSession) {
+	public String saveArticle(Contents contents, HttpSession httpSession) {
 		String email = httpSession.getAttribute("email").toString();
-		Long id = articleService.saveArticle(email, articleContents);
+		Long id = articleService.saveArticle(email, contents);
 		return "redirect:/articles/" + id;
 	}
 
 	@PutMapping("/articles/{articleId}")
-	public String modifyArticle(@PathVariable Long articleId, ArticleContents articleContents, HttpSession httpSession) {
+	public String modifyArticle(@PathVariable Long articleId, Contents contents, HttpSession httpSession) {
 		String email = httpSession.getAttribute("email").toString();
-		articleService.update(articleId, email, articleContents);
+		articleService.update(articleId, email, contents);
 		return "redirect:/articles/" + articleId;
 	}
 

@@ -2,12 +2,12 @@ package techcourse.myblog.service;
 
 import java.util.List;
 
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.vo.article.ArticleContents;
+import techcourse.myblog.article.Article;
+import techcourse.myblog.article.Contents;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.user.User;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +22,9 @@ public class ArticleService {
 		this.userService = userService;
 	}
 
-	public Long saveArticle(String email, ArticleContents articleContents) {
+	public Long saveArticle(String email, Contents contents) {
 		User user = userService.findUser(email);
-		Article article = articleContents.valueOfArticle(user);
+		Article article = contents.valueOfArticle(user);
 		return articleRepository.save(article).getId();
 	}
 
@@ -33,10 +33,10 @@ public class ArticleService {
 	}
 
 	@Transactional
-	public void update(Long articleId, String email, ArticleContents articleContents) {
+	public void update(Long articleId, String email, Contents contents) {
 		Article article = findById(articleId);
 		confirmAuthorization(email, article.getId());
-		article.update(articleContents.valueOfArticle());
+		article.update(contents.valueOfArticle());
 	}
 
 	public void confirmAuthorization(String email, Long articleId) {

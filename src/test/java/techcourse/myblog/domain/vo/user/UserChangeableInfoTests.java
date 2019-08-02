@@ -1,7 +1,9 @@
 package techcourse.myblog.domain.vo.user;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.user.User;
+import techcourse.myblog.user.UserChangeableInfo;
+import techcourse.myblog.user.UserSignUpInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

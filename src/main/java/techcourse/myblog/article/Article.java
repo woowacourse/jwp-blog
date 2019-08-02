@@ -1,10 +1,11 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.article;
 
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.*;
 
-import techcourse.myblog.domain.vo.article.ArticleContents;
+import techcourse.myblog.comment.Comment;
+import techcourse.myblog.user.User;
 
 @Entity
 public class Article {
@@ -29,24 +30,24 @@ public class Article {
 	private Article() {
 	}
 
-	public Article(ArticleContents articleContents) {
-		this.title = articleContents.getTitle();
-		this.text = articleContents.getText();
-		this.coverUrl = articleContents.getCoverUrl();
+	public Article(Contents contents) {
+		this.title = contents.getTitle();
+		this.text = contents.getText();
+		this.coverUrl = contents.getCoverUrl();
 	}
 
-	public Article(ArticleContents articleContents, User user) {
-		this.title = articleContents.getTitle();
-		this.text = articleContents.getText();
-		this.coverUrl = articleContents.getCoverUrl();
+	public Article(Contents contents, User user) {
+		this.title = contents.getTitle();
+		this.text = contents.getText();
+		this.coverUrl = contents.getCoverUrl();
 		this.author = user;
 	}
 
-	public Article(Long id, ArticleContents articleContents, User user) {
+	public Article(Long id, Contents contents, User user) {
 		this.id = id;
-		this.title = articleContents.getTitle();
-		this.text = articleContents.getText();
-		this.coverUrl = articleContents.getCoverUrl();
+		this.title = contents.getTitle();
+		this.text = contents.getText();
+		this.coverUrl = contents.getCoverUrl();
 		this.author = user;
 	}
 
@@ -73,7 +74,7 @@ public class Article {
 	public List<Comment> getComments() {
 		return Collections.unmodifiableList(comments);
 	}
-
+	//todo: VO가 아닌 Article 클래스로 받는게 맞을까?
 	public void update(Article article) {
 		this.title = article.title;
 		this.text = article.text;

@@ -4,9 +4,9 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import techcourse.myblog.domain.vo.user.UserChangeableInfo;
-import techcourse.myblog.domain.vo.user.UserSignUpInfo;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.user.UserChangeableInfo;
+import techcourse.myblog.user.UserSignUpInfo;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

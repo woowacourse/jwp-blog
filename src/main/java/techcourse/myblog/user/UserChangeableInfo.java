@@ -1,4 +1,4 @@
-package techcourse.myblog.domain.vo.user;
+package techcourse.myblog.user;
 
 public class UserChangeableInfo extends UserBasicInfo {
 	private String githubUrl;

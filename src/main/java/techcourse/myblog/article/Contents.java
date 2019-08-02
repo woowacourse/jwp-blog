@@ -1,16 +1,15 @@
-package techcourse.myblog.domain.vo.article;
+package techcourse.myblog.article;
 
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.user.User;
 
-public class ArticleContents {
+public class Contents {
 	private String title;
 	private String text;
 	private String coverUrl;
 
-	private ArticleContents() {}
+	private Contents() {}
 
-	public ArticleContents(String title, String text, String coverUrl) {
+	public Contents(String title, String text, String coverUrl) {
 		this.title = title;
 		this.text = text;
 		this.coverUrl = coverUrl;

@@ -2,13 +2,13 @@ package techcourse.myblog.service;
 
 import java.util.List;
 
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.vo.user.UserChangeableInfo;
-import techcourse.myblog.domain.vo.user.UserSignUpInfo;
 import techcourse.myblog.exception.AlreadyExistEmailException;
 import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.exception.NotMatchPasswordException;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.user.User;
+import techcourse.myblog.user.UserChangeableInfo;
+import techcourse.myblog.user.UserSignUpInfo;
 
 import org.springframework.stereotype.Service;
 

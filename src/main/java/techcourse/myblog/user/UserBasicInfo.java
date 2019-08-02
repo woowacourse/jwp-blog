@@ -1,11 +1,10 @@
-package techcourse.myblog.domain.vo.user;
+package techcourse.myblog.user;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
-import techcourse.myblog.domain.User;
 
 public class UserBasicInfo {
 	public static final String BLANK_NAME = "이름을 입력해주세요.";

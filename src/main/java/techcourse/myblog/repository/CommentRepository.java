@@ -1,6 +1,6 @@
 package techcourse.myblog.repository;
 
-import techcourse.myblog.domain.Comment;
+import techcourse.myblog.comment.Comment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

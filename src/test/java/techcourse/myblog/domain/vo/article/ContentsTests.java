@@ -2,43 +2,44 @@ package techcourse.myblog.domain.vo.article;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.vo.user.UserSignUpInfo;
+import techcourse.myblog.article.Article;
+import techcourse.myblog.article.Contents;
+import techcourse.myblog.user.User;
+import techcourse.myblog.user.UserSignUpInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ArticleContentsTests {
+class ContentsTests {
 	private User user;
-	private ArticleContents articleContents;
+	private Contents contents;
 	private Article actualArticle;
 	private Article expectedArticle;
 
 	@BeforeEach
 	void setUp() {
-		articleContents = new ArticleContents("title", "contents", "coverUrl");
+		contents = new Contents("title", "contents", "coverUrl");
 		UserSignUpInfo userSignUpInfo = new UserSignUpInfo("tiber", "tiber@naver.com", "asdfASDF1@");
 		user = userSignUpInfo.valueOfUser();
 	}
 
 	@Test
 	void valueOfArticle() {
-		actualArticle = articleContents.valueOfArticle();
-		expectedArticle = new Article(articleContents);
+		actualArticle = contents.valueOfArticle();
+		expectedArticle = new Article(contents);
 		confirmArticleFieldValue();
 	}
 
 	@Test
 	void valueOfArticleWithUser() {
-		actualArticle = articleContents.valueOfArticle(user);
-		expectedArticle = new Article(articleContents, user);
+		actualArticle = contents.valueOfArticle(user);
+		expectedArticle = new Article(contents, user);
 		confirmArticleFieldValue();
 	}
 
 	@Test
 	void valueOfArticleWithArticleId() {
-		actualArticle = articleContents.valueOfArticle(1L, user);
-		expectedArticle = new Article(1L, articleContents, user);
+		actualArticle = contents.valueOfArticle(1L, user);
+		expectedArticle = new Article(1L, contents, user);
 		confirmArticleFieldValue();
 	}
 

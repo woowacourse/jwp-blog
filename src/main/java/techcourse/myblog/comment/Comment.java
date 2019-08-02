@@ -1,10 +1,10 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.comment;
 
 import java.time.LocalDateTime;
 import javax.persistence.*;
 
 import org.hibernate.annotations.DynamicInsert;
-import techcourse.myblog.domain.vo.comment.CommentContents;
+import techcourse.myblog.user.User;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -30,13 +30,13 @@ public class Comment {
 	private Comment() {
 	}
 
-	public Comment(CommentContents commentContents) {
-		this.text = commentContents.getText();
+	public Comment(Contents contents) {
+		this.text = contents.getText();
 	}
 
-	public Comment(CommentContents commentContents, User user) {
+	public Comment(Contents contents, User user) {
 		this.author = user;
-		this.text = commentContents.getText();
+		this.text = contents.getText();
 	}
 
 	public Long getId() {

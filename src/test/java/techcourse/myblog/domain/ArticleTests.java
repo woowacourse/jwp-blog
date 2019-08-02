@@ -1,16 +1,17 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.vo.article.ArticleContents;
+import techcourse.myblog.article.Article;
+import techcourse.myblog.article.Contents;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ArticleTests {
 	@Test
 	void update() {
-		ArticleContents articleContents = new ArticleContents("title", "contents", "www.coverUrl.com");
-		Article article = articleContents.valueOfArticle();
-		Article modifiedArticle = articleContents.valueOfArticle();
+		Contents contents = new Contents("title", "contents", "www.coverUrl.com");
+		Article article = contents.valueOfArticle();
+		Article modifiedArticle = contents.valueOfArticle();
 		article.update(modifiedArticle);
 		assertThat(article.getTitle()).isEqualTo(modifiedArticle.getTitle());
 		assertThat(article.getText()).isEqualTo(modifiedArticle.getText());

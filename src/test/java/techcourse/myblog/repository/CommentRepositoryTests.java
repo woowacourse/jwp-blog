@@ -2,9 +2,9 @@ package techcourse.myblog.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.vo.comment.CommentContents;
+import techcourse.myblog.comment.Comment;
+import techcourse.myblog.comment.Contents;
+import techcourse.myblog.user.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -30,8 +30,8 @@ class CommentRepositoryTests {
 	void setUp() {
 		user = userRepository.findById(1L).get();
 
-		CommentContents commentContents = new CommentContents("contents");
-		actualComment = commentContents.valueOf(user);
+		Contents contents = new Contents("contents");
+		actualComment = contents.valueOf(user);
 		actualComment = testEntityManager.persist(actualComment);
 		testEntityManager.flush();
 		testEntityManager.clear();

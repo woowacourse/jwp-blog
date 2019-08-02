@@ -2,7 +2,7 @@ package techcourse.myblog.web;
 
 import javax.servlet.http.HttpSession;
 
-import techcourse.myblog.domain.vo.comment.CommentContents;
+import techcourse.myblog.comment.Contents;
 import techcourse.myblog.service.CommentService;
 
 import org.springframework.stereotype.Controller;
@@ -20,16 +20,16 @@ public class CommentController {
 	}
 
 	@PostMapping("/comments/{articleId}")
-	public String save(CommentContents commentContents, @PathVariable Long articleId, HttpSession session) {
+	public String save(Contents contents, @PathVariable Long articleId, HttpSession session) {
 		String email = session.getAttribute("email").toString();
-		commentService.save(email, articleId, commentContents);
+		commentService.save(email, articleId, contents);
 		return "redirect:/articles/" + articleId;
 	}
 
 	@PutMapping("/comments/{articleId}/{commentId}")
-	public String update(CommentContents commentContents, @PathVariable Long articleId, @PathVariable Long commentId, HttpSession session) {
+	public String update(Contents contents, @PathVariable Long articleId, @PathVariable Long commentId, HttpSession session) {
 		String email = session.getAttribute("email").toString();
-		commentService.update(email, articleId, commentId, commentContents);
+		commentService.update(email, articleId, commentId, contents);
 		return "redirect:/articles/" + articleId;
 	}
 

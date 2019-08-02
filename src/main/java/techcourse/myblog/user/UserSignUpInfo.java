@@ -1,9 +1,8 @@
-package techcourse.myblog.domain.vo.user;
+package techcourse.myblog.user;
 
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
-import techcourse.myblog.domain.User;
 
 public class UserSignUpInfo extends UserBasicInfo {
 	@Length(min = 8)

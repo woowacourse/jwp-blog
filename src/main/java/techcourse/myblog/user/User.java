@@ -1,13 +1,9 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.user;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import techcourse.myblog.domain.vo.user.UserBasicInfo;
-import techcourse.myblog.domain.vo.user.UserChangeableInfo;
-import techcourse.myblog.domain.vo.user.UserSignUpInfo;
 
 @Entity
 public class User {
