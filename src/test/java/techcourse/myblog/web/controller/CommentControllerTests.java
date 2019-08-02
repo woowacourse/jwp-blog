@@ -7,25 +7,43 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.domain.repository.CommentRepository;
 import techcourse.myblog.domain.repository.UserRepository;
 
-import static org.springframework.http.HttpHeaders.LOCATION;
-import static org.springframework.test.web.reactive.server.WebTestClient.RequestBodySpec;
+import java.util.Objects;
+
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentControllerTests {
+    private static final String JSESSIONID = "JSESSIONID";
+    private static final String URI_ARTICLES = "/articles";
+    private static final String SEAN_NAME = "sean";
+    private static final String SEAN_EMAIL = "sean@gmail.com";
+    private static final String POBI_NAME = "pobi";
+    private static final String POBI_EMAIL = "pobi@gmail.com";
+    private static final String DEFAULT_PASSWORD = "Woowahan123!";
+    private static final String TITLE = "title";
+    private static final String CONTENT = "contents";
+    private static final String COVER_URL = "coverUrl";
+    private static final String DEFAULT_URL = "/";
+    private static final String LOGIN_UTL = "/login";
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "password";
+    private static final String UPDATED_COMMENT = "updated_comment";
+    private static final String ARTICLE_PATTERN = ".*articles/";
+
+    private static int SEAN_ARTICLE_ID;
+
     @Autowired
     private WebTestClient webTestClient;
 
@@ -38,59 +56,99 @@ public class CommentControllerTests {
     @Autowired
     private CommentRepository commentRepository;
 
-    private static final String JSESSIONID = "JSESSIONID";
-    private static final String URI_ARTICLES = "/articles";
-
-    private User sean;
-    private User pobi;
-    private Article article;
+    private int commentId = 0;
 
     @BeforeEach
-    void setUp() {
-        sean = new User("sean", "sean@gmail.com", "Woowahan123!");
-        pobi = new User("pobi", "pobi@gmail.com", "Woowahan123!");
-        userRepository.save(sean);
-        userRepository.save(pobi);
+    void 게시글_댓글_작성() {
+        userRepository.save(new User(SEAN_NAME, SEAN_EMAIL, DEFAULT_PASSWORD));
+        userRepository.save(new User(POBI_NAME, POBI_EMAIL, DEFAULT_PASSWORD));
 
-        article = new Article("title", "coverUrl", "contents");
-        article.setAuthor(sean);
-        articleRepository.save(article);
+        webTestClient.post().uri(URI_ARTICLES)
+                .cookie(JSESSIONID, getResponseCookie(SEAN_EMAIL, DEFAULT_PASSWORD).getValue())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData(TITLE, TITLE)
+                        .with(COVER_URL, COVER_URL)
+                        .with(CONTENT, CONTENT))
+                .exchange()
+                .expectStatus().isFound()
+                .expectBody().consumeWith(response -> {
+            String path = Objects.requireNonNull(response.getResponseHeaders().getLocation()).getPath();
+            int index = path.lastIndexOf(DEFAULT_URL);
+            SEAN_ARTICLE_ID = Integer.parseInt(path.substring(index + 1));
+        });
+
+        commentId++;
+        addComments();
     }
 
     @Test
-    void 댓글_작성() {
-        statusWith(HttpMethod.GET, URI_ARTICLES + "/" + article.getId()
-                , sean.getEmail(), sean.getPassword()).exchange()
-                .expectStatus().isOk();
+    void 댓글_수정() {
+        getStatus(POBI_EMAIL, UPDATED_COMMENT)
+                .expectStatus().isFound()
+                .expectHeader().valueMatches(HttpHeaders.LOCATION, ARTICLE_PATTERN + SEAN_ARTICLE_ID);
+    }
 
-        statusWith(HttpMethod.POST, "/articles/" + article.getId() + "/comments"
-                , sean.getEmail(), sean.getPassword())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData("contents", "comment-test")
-                        .with("articleId", String.valueOf(article.getId())))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches(LOCATION, ".*/articles/" + article.getId());
+    @Test
+    void 다른_사람이_댓글_삭제() {
+        String deletePath = "/articles/" + SEAN_ARTICLE_ID + "/comments/" + commentId;
+
+        webTestClient.delete().uri(deletePath)
+                .cookie(JSESSIONID, getResponseCookie(SEAN_EMAIL, DEFAULT_PASSWORD).getValue())
+                .exchange().expectStatus()
+                .is3xxRedirection();
+    }
+
+    @Test
+    void 다른_사람이_댓글_수정() {
+        getStatus(SEAN_EMAIL, UPDATED_COMMENT)
+                .expectStatus().is3xxRedirection();
+    }
+
+    @Test
+    void 댓글_삭제() {
+        String deletePath = "/articles/" + SEAN_ARTICLE_ID + "/comments/" + commentId;
+
+        webTestClient.delete().uri(deletePath)
+                .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
+                .exchange().expectStatus()
+                .isFound()
+                .expectHeader().valueMatches(HttpHeaders.LOCATION, ARTICLE_PATTERN + SEAN_ARTICLE_ID);
+
     }
 
     @AfterEach
-    void tearDown() {
-        userRepository.deleteAll();
-        articleRepository.deleteAll();
+    void setUp() {
         commentRepository.deleteAll();
-    }
-
-    private RequestBodySpec statusWith(HttpMethod httpMethod, String uri, String email, String password) {
-        return webTestClient.method(httpMethod).uri(uri)
-                .cookie(JSESSIONID, getResponseCookie(email, password).getValue());
+        articleRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     private ResponseCookie getResponseCookie(String email, String password) {
-        return webTestClient.post().uri("/login")
-                .body(fromFormData("email", email)
-                        .with("password", password))
+        return webTestClient.post().uri(LOGIN_UTL)
+                .body(fromFormData(EMAIL, email)
+                        .with(PASSWORD, password))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .returnResult(ResponseCookie.class).getResponseCookies().getFirst(JSESSIONID);
+    }
+
+    private void addComments() {
+        webTestClient.post().uri("/articles/" + SEAN_ARTICLE_ID + "/comments")
+                .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData(CONTENT, CONTENT)
+                        .with("articleId", "" + SEAN_ARTICLE_ID))
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader().valueMatches(HttpHeaders.LOCATION, ARTICLE_PATTERN + SEAN_ARTICLE_ID);
+    }
+
+    private WebTestClient.ResponseSpec getStatus(String pobiEmail, String comment) {
+        return webTestClient.put().uri("/articles/" + SEAN_ARTICLE_ID + "/comments/" + commentId)
+                .cookie(JSESSIONID, getResponseCookie(pobiEmail, DEFAULT_PASSWORD).getValue())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData(CONTENT, comment)
+                        .with("articleId", "" + SEAN_ARTICLE_ID))
+                .exchange();
     }
 }
