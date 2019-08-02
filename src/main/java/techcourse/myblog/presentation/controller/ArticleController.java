@@ -28,6 +28,7 @@ public class ArticleController {
 
     @PostMapping("/articles")
     public RedirectView createArticles(ArticleDto article, HttpSession httpSession) {
+        //todo: argument resolver, 공통 메소드
         String email = (String) httpSession.getAttribute("email");
         Long id = articleService.save(article, email);
 

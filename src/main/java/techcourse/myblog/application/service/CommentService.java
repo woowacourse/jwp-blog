@@ -10,6 +10,8 @@ import techcourse.myblog.application.converter.CommentConverter;
 import techcourse.myblog.application.converter.UserConverter;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.exception.CommentNotFoundException;
+import techcourse.myblog.application.service.exception.NotExistArticleIdException;
+import techcourse.myblog.application.service.exception.NotMatchAuthorException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.CommentRepository;
@@ -66,5 +68,13 @@ public class CommentService {
     public void modify(Long commentId, CommentDto commentDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("댓글이 존재하지 않습니다"));
         comment.changeContent(commentDto);
+    }
+
+    public void checkAuthor(Long commentId, String email) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotExistArticleIdException("존재하지 않는 Article 입니다."));
+        User author = comment.getAuthor();
+        if (!author.compareEmail(email)) {
+            throw new NotMatchAuthorException("너는 이 글에 작성자가 아니다. 꺼져라!");
+        }
     }
 }

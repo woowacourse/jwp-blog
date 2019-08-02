@@ -10,6 +10,7 @@ import javax.persistence.*;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //todo: Long으로 바꾸기
     private long id;
     private String contents;
 
@@ -23,7 +24,8 @@ public class Comment {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
-    public Comment() {
+    //todo:public =>private
+    private Comment() {
     }
 
     public Comment(String contents, User author, Article article) {

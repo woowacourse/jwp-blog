@@ -30,8 +30,8 @@ public class CommentController {
     }
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
-    public ModelAndView deleteComment(@PathVariable Long commentId, @PathVariable Long articleId) {
-        //todo: login된 유저와  comment를 쓴 유저가 같은지 확인
+    public ModelAndView deleteComment(@PathVariable Long commentId, @PathVariable Long articleId, HttpSession session) {
+        commentService.checkAuthor(commentId, (String) session.getAttribute("email"));
         commentService.delete(commentId);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setView(new RedirectView("/articles/"+articleId));
@@ -39,7 +39,8 @@ public class CommentController {
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView updateComment(CommentDto commentDto, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId) {
+    public RedirectView updateComment(CommentDto commentDto, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, HttpSession session) {
+        commentService.checkAuthor(commentId, (String) session.getAttribute("email"));
         commentService.modify(commentId, commentDto);
         return new RedirectView("/articles/"+articleId);
     }

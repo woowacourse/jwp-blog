@@ -71,6 +71,7 @@ public class CommentControllerTests {
         writeComment(articleUri, sessionId);
 
         webTestClient.delete().uri(articleUri+"/comments/" + ID)
+                .header("Cookie", sessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection();
 
@@ -98,6 +99,7 @@ public class CommentControllerTests {
         writeComment(articleUri, sessionId);
 
         webTestClient.put().uri(articleUri+"/comments/" + ID)
+                .header("Cookie", sessionId)
                 .body(BodyInserters.fromFormData("contents", "7788"))
                 .exchange()
                 .expectStatus()
@@ -116,7 +118,18 @@ public class CommentControllerTests {
 
     @Test
     void update_comment_test_when_not_logged_in() {
-        //todo: 테스트구현
+        //회원가입
+        registerUser();
+        //로그인
+        String sessionId = logInAndGetSessionId();
+        //글작성
+        EntityExchangeResult result = writeArticle(sessionId);
+        //댓글작성
+        String articleUri = result.getResponseHeaders().getLocation().getPath();
+        writeComment(articleUri, sessionId);
+        //로그아웃
+
+
     }
 
     private void writeComment(String articleUri, String sessionId) {
@@ -168,6 +181,4 @@ public class CommentControllerTests {
         webTestClient.delete().uri(articleUri)
                 .exchange();
     }
-
-
 }
