@@ -85,13 +85,13 @@ public class CommentControllerTests {
         requestSaveComment(commentContents);
 
         // 댓글 수정
-        String updatedContentes = "updated comment contents";
+        String updatedContents = "updated comment contents";
         webTestClient.put()
                 .uri("/articles/1/comments/1")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("contents", updatedContentes))
+                        .fromFormData("contents", updatedContents))
                 .exchange()
                 .expectStatus()
                 .isFound()
