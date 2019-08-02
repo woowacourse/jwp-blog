@@ -29,7 +29,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public String findArticle(@PathVariable Long articleId, Model model) {
+    public String fetchArticle(@PathVariable Long articleId, Model model) {
         model.addAttribute("article", articleService.findById(articleId));
         model.addAttribute("comments", articleService.findAllComment(articleId));
         return "article";

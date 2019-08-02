@@ -94,8 +94,8 @@ class ArticleControllerTest {
 
     @Test
     @DisplayName("게시물을 불러온다.")
-    void findArticle() {
-        webTestClient.get().uri(articleUrl)
+    void fetchArticle() {
+        WebTestClient.ResponseSpec response = webTestClient.get().uri(articleUrl)
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().isOk();
