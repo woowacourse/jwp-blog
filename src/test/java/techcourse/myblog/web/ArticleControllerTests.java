@@ -53,7 +53,7 @@ public class ArticleControllerTests {
     @Test
     void showArticleWritingPageTest() {
         webTestClient.get()
-                .uri("/writing")
+                .uri("/articles/writing")
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()

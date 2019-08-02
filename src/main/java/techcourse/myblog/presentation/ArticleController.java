@@ -27,7 +27,7 @@ public class ArticleController {
         this.commentService = commentService;
     }
 
-    @GetMapping("/writing")
+    @GetMapping("/articles/writing")
     public String showArticleWritingPage() {
         return "article-edit";
     }
