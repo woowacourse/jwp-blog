@@ -1,13 +1,15 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
-import techcourse.myblog.exception.UserNotExistException;
+import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.service.dto.LoginDTO;
+import techcourse.myblog.service.dto.UserDTO;
 
 @Service
+@Transactional
 public class LoginService {
     private final UserRepository userRepository;
 
@@ -15,23 +17,25 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
-    public User getLoginUser(LoginDTO loginDTO) {
-        User findUser = checkUser(loginDTO);
-        if (checkPassword(loginDTO.getPassword(), findUser.getPassword())) {
-            return findUser;
+    public User getLoginUser(UserDTO userDTO) {
+        User user = findByEmail(userDTO.getEmail());
+
+        if (user == null) {
+            throw new NotFoundUserException();
         }
-        throw new LoginFailException("아이디와 비밀번호가 일치하지 않습니다.");
+
+        if (!user.matchPassword(userDTO.getPassword())) {
+            throw new LoginFailException("아이디와 비밀번호가 일치하지 않습니다.");
+        }
+
+        return user;
     }
 
-    private boolean checkPassword(String password, String checkPassword) {
-        return password.equals(checkPassword);
-    }
-
-    private User checkUser(LoginDTO loginDTO) {
-        User findUser = userRepository.findByEmail(loginDTO.getEmail());
-        if (findUser != null) {
-            return findUser;
-        }
-        throw new UserNotExistException("해당 아이디를 가진 유저는 존재하지 않습니다.");
+    private User findByEmail(String email) {
+        return userRepository
+                .findByEmail(email)
+                .orElseThrow(() ->
+                        new NotFoundUserException()
+                );
     }
 }

@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.LoginFailException;
-import techcourse.myblog.exception.UserNotExistException;
+import techcourse.myblog.exception.NotFoundUserException;
 import techcourse.myblog.service.LoginService;
-import techcourse.myblog.service.dto.LoginDTO;
+import techcourse.myblog.service.dto.UserDTO;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -30,15 +30,14 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute LoginDTO loginDTO, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public RedirectView login(@ModelAttribute UserDTO userDTO, HttpSession session, RedirectAttributes redirectAttributes) {
         try {
-            User user = loginService.getLoginUser(loginDTO);
-            HttpSession session = request.getSession();
+            User user = loginService.getLoginUser(userDTO);
             session.setAttribute("user", user);
-            return "redirect:/";
-        } catch (UserNotExistException | LoginFailException e) {
+            return new RedirectView("/");
+        } catch (NotFoundUserException | LoginFailException e) {
             redirectAttributes.addAttribute("loginError", e.getMessage());
-            return "redirect:/login";
+            return new RedirectView("/login");
         }
     }
 }

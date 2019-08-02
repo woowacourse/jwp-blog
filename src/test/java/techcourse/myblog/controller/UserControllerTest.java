@@ -1,8 +1,6 @@
 package techcourse.myblog.controller;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -12,21 +10,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserControllerTest {
     private static final String SIGN_UP_PAGE = "/users/signup";
     private static final String USER_NAME_1 = "test1";
-    private static final String USER_NAME_2 = "test2";
     private static final String EMAIL_1 = "test1@test.com";
     private static final String EMAIL_2 = "test2@test.com";
     private static final String PASSWORD_1 = "123456";
-    private static final String PASSWORD_2 = "12345";
 
-    WebTestClient webTestClient;
+    private WebTestClient webTestClient;
     private String cookie;
 
     @Autowired
     public UserControllerTest(WebTestClient webTestClient) {
         this.webTestClient = webTestClient;
+    }
+
+    @BeforeAll
+    void init() {
+        webTestClient.post().uri("/users")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("userName", USER_NAME_1)
+                        .with("email", EMAIL_2)
+                        .with("password", PASSWORD_1))
+                .exchange();
     }
 
     @BeforeEach
