@@ -60,7 +60,7 @@ public class ControllerTestTemplate {
     }
     
     protected StatusAssertions loginAndRequest(HttpMethod method, String path, UserDto userDto) {
-        return httpRequest(makeRequestSpecWithData(method, path, null).cookie(JSESSIONID, getLoginSessionId(userDto)));
+        return httpRequest(makeRequestSpec(method, path).cookie(JSESSIONID, getLoginSessionId(userDto)));
     }
 
     protected StatusAssertions loginAndRequestWithData(HttpMethod method, String path, MultiValueMap<String, String> data, UserDto userDto) {
