@@ -10,13 +10,15 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 class ArticleTest {
+    private User author;
     private Comment comment;
     private Article article;
 
     @BeforeEach
     void setUp() {
-        comment = new Comment();
+        author = new User();
         article = new Article();
+        comment = new Comment("contents", author, article);
 
         article.addComment(comment);
     }
@@ -24,14 +26,14 @@ class ArticleTest {
     @Test
     @DisplayName("게시글이 가지고 있는 코멘트 리스트에 새로운 코멘트를 더한다.")
     void addComment() {
-        int numberOfCommentsBeforAdded = article.getComments().size();
+        int numberOfCommentsBeforeAdded = article.getComments().size();
         Comment newComment = new Comment();
 
         article.addComment(comment);
 
         List<Comment> comments = article.getComments();
-        assertThat(comments.get(numberOfCommentsBeforAdded) == newComment);
-        assertThat(comments.size()).isEqualTo(numberOfCommentsBeforAdded + 1);
+        assertThat(comments.get(numberOfCommentsBeforeAdded) == newComment);
+        assertThat(comments.size()).isEqualTo(numberOfCommentsBeforeAdded + 1);
     }
 
     @Test
