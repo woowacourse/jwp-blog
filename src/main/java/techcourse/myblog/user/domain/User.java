@@ -1,7 +1,6 @@
 package techcourse.myblog.user.domain;
 
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techcourse.myblog.user.domain.vo.*;
@@ -11,7 +10,6 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @Getter
-@EqualsAndHashCode(of = "id")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
