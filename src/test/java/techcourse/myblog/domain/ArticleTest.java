@@ -1,18 +1,14 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.util.ReflectionTestUtils;
 import techcourse.myblog.dto.ArticleSaveRequestDto;
-import techcourse.myblog.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 class ArticleTest {
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Test
     void isCoverUrl() {
@@ -54,17 +50,19 @@ class ArticleTest {
 
     @Test
     void isAuthor() {
-        User author = userRepository.save(User.builder()
+        User author = User.builder()
                 .name("테스트")
                 .email("articleAuthor@test.com")
                 .password("password1!")
-                .build());
+                .build();
+        ReflectionTestUtils.setField(author, "id", 1L);
 
-        User anotherAuthor = userRepository.save(User.builder()
+        User anotherAuthor = User.builder()
                 .name("테스트")
                 .email("articleAnotherAuthor@test.com")
                 .password("password1!")
-                .build());
+                .build();
+        ReflectionTestUtils.setField(anotherAuthor, "id", 2L);
 
         Article article = Article.builder()
                 .title("title")
