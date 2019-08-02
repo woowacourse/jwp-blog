@@ -54,7 +54,7 @@ public class ArticleController {
         Article article = articleService.findById(id);
         User user = (User) httpSession.getAttribute(USER);
 
-        if (!article.isAuthor(user)) {
+        if (article.isNotAuthor(user)) {
             return "redirect:/articles/" + id;
         }
         model.addAttribute("article", article);
@@ -70,10 +70,10 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteArticle(@PathVariable long id) {
+    public String deleteArticle(@PathVariable long id, HttpSession httpSession) {
         log.info("delete article delete request id={}", id);
 
-        articleService.deleteById(id);
+        articleService.deleteById(id, (User) httpSession.getAttribute(USER));
         return "redirect:/";
     }
 }

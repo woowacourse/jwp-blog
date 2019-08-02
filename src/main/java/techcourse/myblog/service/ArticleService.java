@@ -7,6 +7,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.exception.IllegalArticleDeleteRequestException;
 import techcourse.myblog.exception.IllegalArticleUpdateRequestException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
@@ -48,8 +49,8 @@ public class ArticleService {
     @Transactional
     public void update(ArticleSaveRequestDto articleSaveRequestDto, long id, User user) {
         Article article = findById(id);
-        if (!article.isAuthor(user)) {
-            log.debug("update article request by illegal user id={}, article id={}, articleSaveRequestDto={}"
+        if (article.isNotAuthor(user)) {
+            log.error("update article request by illegal user id={}, article id={}, articleSaveRequestDto={}"
                     , user.getId(), id, articleSaveRequestDto);
             throw new IllegalArticleUpdateRequestException();
         }
@@ -58,14 +59,21 @@ public class ArticleService {
     }
 
     @Transactional
-    public void deleteById(long id) {
-        log.debug("delete article id={}", id);
+    public void deleteById(long id, User user) {
         if (isArticleNotFound(id)) {
+            log.error("delete article request by illegal article id={}", id);
             throw new ArticleNotFoundException(ERROR_ARTICLE_NOT_FOUND_MESSAGE);
+        }
+
+        Article article = findById(id);
+        if (article.isNotAuthor(user)) {
+            log.error("delete article request by illegal user id={}, article id={}", user.getId(), id);
+            throw new IllegalArticleDeleteRequestException();
         }
 
         commentRepository.deleteByArticleId(id);
         articleRepository.deleteById(id);
+        log.debug("delete article id={}", id);
     }
 
     private boolean isArticleNotFound(long id) {

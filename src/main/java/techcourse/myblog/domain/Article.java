@@ -52,4 +52,8 @@ public class Article {
     public boolean isAuthor(User user) {
         return author.equals(user);
     }
+
+    public boolean isNotAuthor(User user) {
+        return !isAuthor(user);
+    }
 }

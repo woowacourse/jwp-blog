@@ -76,7 +76,7 @@ class ArticleServiceTest {
 
     @Test
     void delete() {
-        articleService.deleteById(article.getId());
+        articleService.deleteById(article.getId(), author);
         assertThrows(ArticleNotFoundException.class, () -> articleService.findById(article.getId()));
 
         userService.deleteUser(author.getId());

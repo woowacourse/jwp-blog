@@ -170,6 +170,21 @@ class ArticleControllerTests {
                 .expectStatus().is3xxRedirection();
     }
 
+    @Test
+    void deleteArticle_다른_User가_삭제_요청할_경우() {
+        UserSaveRequestDto userSaveRequestDto
+                = new UserSaveRequestDto("테스트", "deleteArticleByAnotherUser@test.com", "password1!");
+        LoginTestUtil.signUp(webTestClient, userSaveRequestDto);
+        String jSessionIdByAnotherUser = LoginTestUtil.getJSessionId(webTestClient, userSaveRequestDto);
+
+        webTestClient.delete().uri(location)
+                .cookie("JSESSIONID", jSessionIdByAnotherUser)
+                .exchange()
+                .expectStatus().isOk();
+
+        LoginTestUtil.deleteUser(webTestClient, userSaveRequestDto);
+    }
+
     @AfterEach
     void tearDown_delete_article() {
         webTestClient.delete().uri(location)
