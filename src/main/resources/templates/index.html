@@ -102,10 +102,10 @@
 </div>
 <th:block layout:fragment="addScript">
     <script th:if="${articleError != null}" th:inline="javascript">
-        /* <![CDATA[ */
+
         const error = [[ ${articleError}]];
         alert(error)
-        /* ]]> */
+
     </script>
 </th:block>
 </body>
