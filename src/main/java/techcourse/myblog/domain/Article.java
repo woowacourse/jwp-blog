@@ -26,7 +26,7 @@ public class Article extends Auditable {
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_article_to_comments"))
     private List<Comment> comments = new ArrayList<>();
 

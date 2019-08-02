@@ -68,6 +68,7 @@ public class ArticleService {
                 .orElseThrow(NoSuchElementException::new);
     }
 
+    @Transactional
     public Comment saveComment(long articleId, CommentRequest commentDto, User user) {
         Article article = getArticleById(articleId);
         Comment comment = CommentAssembler.writeComment(commentDto, user);
