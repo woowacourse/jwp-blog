@@ -52,8 +52,8 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String selectArticle(@PathVariable("articleId") long articleId, Model model) {
-        Article article = articleService.findById(articleId);
-        List<Comment> comments = commentService.findByArticle(article);
+        Article article = articleService.findArticleById(articleId);
+        List<Comment> comments = commentService.findCommentsByArticle(article);
         model.addAttribute(ARTICLE_INFO, article);
         model.addAttribute(COMMENTS_INFO, comments);
 
@@ -61,11 +61,16 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String edit(@PathVariable("articleId") long articleId, Model model) {
-        Article article = articleService.findById(articleId);
-        model.addAttribute(ARTICLE_INFO, article);
+    public String edit(@PathVariable("articleId") long articleId, Model model, HttpSession httpSession) {
+        Article article = articleService.findArticleById(articleId);
+        UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
 
-        return "article-edit";
+        if (article.isSameAuthor2(userResponse.getId())) {
+            model.addAttribute(ARTICLE_INFO, article);
+            return "article-edit";
+        }
+        
+        return "redirect:/articles/" + articleId;
     }
 
     @PutMapping("/articles/{articleId}")
@@ -80,8 +85,8 @@ public class ArticleController {
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable("articleId") long articleId, HttpSession httpSession) {
-        UserResponse userResponse = (UserResponse)httpSession.getAttribute("user");
-        
+        UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
+
         articleService.deleteById(articleId, userResponse);
 
         return "redirect:/";

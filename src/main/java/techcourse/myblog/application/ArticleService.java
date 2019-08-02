@@ -41,7 +41,7 @@ public class ArticleService {
         return savedArticle.getId();
     }
 
-    public Article findById(Long articleId) {
+    public Article findArticleById(Long articleId) {
         return articleRepository.findById(articleId)
                 .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
     }

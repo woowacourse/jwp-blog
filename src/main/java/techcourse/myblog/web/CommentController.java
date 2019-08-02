@@ -20,7 +20,6 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    //TODO : path 중복 삭제
     @PostMapping("/comments")
     public String saveComment(@PathVariable("articleId") Long articleId, @Valid CommentRequest commentRequest,
                               BindingResult bindingResult, HttpSession httpSession) {

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (request.getRequestURI().equals("/users") && request.getMethod().equals("POST")) {
+        if (accessiblePathWithoutLogin(request)) {
             return true;
         }
 
@@ -20,5 +20,10 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
         return true;
+    }
+
+    private boolean accessiblePathWithoutLogin(HttpServletRequest request) {
+        return request.getRequestURI().equals("/users")
+                && request.getMethod().equals("POST");
     }
 }
