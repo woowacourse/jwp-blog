@@ -36,9 +36,11 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article update(ArticleDto articleDto, User author, Long articleId) {
+    public Article update(ArticleDto articleDto, User user, Long articleId) {
+        checkOwner(articleId, user);
         Article oldArticle = findById(articleId);
-        Article updatedArticle = new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents(), author);
+
+        Article updatedArticle = new Article(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents(), user);
         return oldArticle.update(updatedArticle);
     }
 

@@ -44,8 +44,6 @@ public class ArticleController {
 
     @PutMapping("/{articleId}")
     public String updateArticle(@PathVariable Long articleId, ArticleDto articleDto, @ModelAttribute User user) {
-        articleService.checkOwner(articleId, user);
-
         articleService.update(articleDto, user, articleId);
         return "redirect:/articles/" + articleId;
     }
