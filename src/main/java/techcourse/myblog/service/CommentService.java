@@ -29,6 +29,7 @@ public class CommentService {
     public void deleteById(Long id, User user) {
         if (findById(id).matchWriter(user)) {
             commentRepository.deleteById(id);
+            return;
         }
         throw new MismatchAuthorException();
     }
