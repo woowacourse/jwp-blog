@@ -3,6 +3,7 @@ package techcourse.myblog.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -81,8 +82,7 @@ public class CommentController {
         return new RedirectView("/articles/" + articleId);
     }
 
-
-
+    @Transactional
     @PutMapping("/{commentId}")
     public RedirectView update(@PathVariable long articleId,
                                @PathVariable long commentId,
@@ -94,7 +94,6 @@ public class CommentController {
         comment.validate(user);
 
         comment.update(commentDTO.toDomain(comment.getArticle(), comment.getAuthor()));
-        commentRepository.save(comment);
 
         return new RedirectView("/articles/" + articleId);
     }
