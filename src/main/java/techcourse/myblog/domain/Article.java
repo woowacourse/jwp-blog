@@ -52,7 +52,7 @@ public class Article {
     }
 
     public Article update(Article article) {
-        checkAuth(article.getAuthor());
+        matchAuthor(article.getAuthor());
         title = article.getTitle();
         coverUrl = article.getCoverUrl();
         contents = article.getContents();
@@ -60,7 +60,7 @@ public class Article {
         return this;
     }
 
-    public void checkAuth(User user) {
+    public void matchAuthor(User user) {
         if (user == null || !user.equals(author)) {
             throw new MismatchAuthorException();
         }

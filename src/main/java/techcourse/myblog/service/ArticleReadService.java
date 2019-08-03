@@ -30,7 +30,8 @@ public class ArticleReadService {
     }
 
     public Article findByIdAndAuthor(Long articleId, User user) {
-        return articleRepository.findByIdAndAuthor(articleId, user)
-                .orElseThrow(MismatchAuthorException::new);
+        Article article = findById(articleId);
+        article.matchAuthor(user);
+        return article;
     }
 }
