@@ -1,12 +1,12 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.exception.UserArgumentException;
+import techcourse.myblog.domain.exception.UserMismatchException;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserRepository;
 import techcourse.myblog.service.dto.UserDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.NotFoundUserException;
 import techcourse.myblog.service.exception.SignUpException;
 import techcourse.myblog.service.exception.UserDeleteException;
@@ -21,26 +21,28 @@ import static techcourse.myblog.domain.exception.UserArgumentException.PASSWORD_
 @Service
 public class UserService {
     private UserRepository userRepository;
-    private ArticleRepository articleRepository;
 
-    public UserService(UserRepository userRepository, ArticleRepository articleRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.articleRepository = articleRepository;
     }
 
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    public UserPublicInfoDto findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(NotFoundUserException::new);
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(NotFoundUserException::new);
+    }
+
+    public UserPublicInfoDto findUserPublicInfoById(Long id) {
+        User user = findById(id);
         return new UserPublicInfoDto(user.getId(), user.getName(), user.getEmail());
     }
 
-    public void save(UserDto userDto) {
+    public User save(UserDto userDto) {
         try {
             validate(userDto);
-            userRepository.save(userDto.toEntity());
+            return userRepository.save(userDto.toEntity());
         } catch (Exception e) {
             throw new SignUpException(e.getMessage());
         }
@@ -63,21 +65,21 @@ public class UserService {
         }
     }
 
-    public void update(UserPublicInfoDto userPublicInfoDto) {
+    @Transactional
+    public void update(UserPublicInfoDto userPublicInfoDto, Long id, Long loggedInUserId) {
         try {
-            User user = userRepository.findByEmail(userPublicInfoDto.getEmail())
-                    .orElseThrow(NotFoundUserException::new);
-            user.setName(userPublicInfoDto.getName());
-            userRepository.save(user);
+            User user = findById(id);
+            user.updateName(userPublicInfoDto.getName(), loggedInUserId);
         } catch (Exception e) {
             throw new UserUpdateException(e.getMessage());
         }
     }
 
-    @Transactional
-    public void delete(Long id) {
+    public void delete(Long id, Long loggedInUserId) {
         try {
-            articleRepository.deleteByUserId(id);
+            if (!id.equals(loggedInUserId)) {
+                throw new UserMismatchException();
+            }
             userRepository.deleteById(id);
         } catch (Exception e) {
             throw new UserDeleteException(e.getMessage());

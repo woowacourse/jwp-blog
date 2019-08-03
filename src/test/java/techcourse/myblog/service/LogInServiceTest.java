@@ -6,15 +6,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserRepository;
 import techcourse.myblog.service.dto.LogInInfoDto;
 import techcourse.myblog.service.dto.UserPublicInfoDto;
-import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.exception.LogInException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static techcourse.myblog.service.UserServiceTest.VALID_PASSWORD;
+import static techcourse.myblog.Utils.TestConstants.VALID_PASSWORD;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LogInServiceTest {

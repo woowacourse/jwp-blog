@@ -2,14 +2,12 @@ package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.exception.UserArgumentException;
+import techcourse.myblog.domain.user.User;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static techcourse.myblog.Utils.TestConstants.*;
 
 public class UserTests {
-    private static final String VALID_NAME = "name";
-    private static final String VALID_EMAIL = "email@woowa.com";
-    private static final String VALID_PASSWORD = "passWORD!1";
-
     @Test
     void 이름의_길이가_2자_미만인_경우() {
         assertThatThrownBy(() -> new User("a", VALID_EMAIL, VALID_PASSWORD))

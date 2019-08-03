@@ -70,40 +70,41 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info">2</span>
+                    <span th:text="${#lists.size(comments)}" class="font-size-16 text-info"></span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30">
+                    <ul class="list-unstyled list-info" id="comment-list">
+                        <li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
                             <img class="thumb-img img-circle"
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                             <div class="info">
-                                <span href="" class="text-bold inline-block">Jun</span>
+                                <span th:text="${comment.authorName}" href="" class="text-bold inline-block">Jun</span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span>6 min ago</span>
                             </span>
-                                <p class="width-80">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로 살다
-                                    보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄
-                                    수 있는 계기가 되었다.</p>
+                                <p th:text="${comment.comment}" class="width-80"></p>
                             </div>
+                            <th:block th:if="${comment.authorId == session.loggedInUser?.id}">
+                                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+                                        data-target="#myModal"
+                                        th:onclick="'changeCommentEditAction(' + ${article.id} + ', ' + ${comment.id} + ')'">
+                                    <i class="ti-pencil"></i>
+                                </button>
+                                <button id="delete-btn" class="btn" th:value="${comment.id}">
+                                    <i class="ti-trash"></i>
+                                </button>
+                            </th:block>
                         </li>
-
-                        <li class="comment-item border bottom mrg-btm-30">
-                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4"
-                                 alt="">
-                            <div class="info">
-                                <span href="" class="text-bold inline-block">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
-                                </span>
-                                <p class="width-80">브라운 멋져</p>
-                            </div>
-                        </li>
-
                     </ul>
                     <div class="add-comment">
+                        <form action="/comment" method="post">
+                            <input id="comment-contents" name="comment" type="hidden">
+                            <input id="article-id" name="articleId" type="hidden" th:value="${article?.id}">
+                            <button id="save-btn" type="submit" class="btn btn-default">
+                                <i class="ti-save"></i>
+                            </button>
+                        </form>
                         <div id="editSection"></div>
                     </div>
                 </div>
@@ -112,8 +113,31 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">댓글 수정</h4>
+            </div>
+            <form id="comment-edit-form" action="/articles/1/comment/1" method="post">
+                <input type="hidden" name="_method" value="put"/>
+                <div class="modal-body">
+                    <input id="comment-edit-contents" name="comment" type="hidden">
+                    <div id="commentEditSection"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+                    <button type="submit" class="btn btn-primary">수정</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <th:block th:replace="fragments/script :: scriptFragment"></th:block>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<script src="/js/comment.js"></script>
 <script th:inline="javascript">
     const initValue = [[${article.contents}]]
     const viewer = tui.Editor.factory({
@@ -129,11 +153,30 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
+                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
             }
         },
         height: '200px'
     });
 
+    const editComment = new tui.Editor({
+        el: document.querySelector('#commentEditSection'),
+        initialEditType: 'markdown',
+        previewStyle: 'horizontal',
+        placeholder: '수정할 내용을 입력해 주세요.',
+        events: {
+            change: function () {
+                console.log("cg")
+                document.getElementById('comment-edit-contents').setAttribute('value', editComment.getMarkdown())
+            }
+        },
+        height: '200px'
+    });
+
+    function changeCommentEditAction(articleId, commentId) {
+        const action = "/articles/" + articleId + "/comment/" + commentId
+        document.getElementById('comment-edit-form').setAttribute('action', action)
+    }
 
 </script>
 </html>

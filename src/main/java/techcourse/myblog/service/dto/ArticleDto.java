@@ -1,6 +1,8 @@
 package techcourse.myblog.service.dto;
 
-import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleVo;
+import techcourse.myblog.domain.user.User;
 
 public class ArticleDto {
     private Long id;
@@ -8,6 +10,7 @@ public class ArticleDto {
     private String title;
     private String coverUrl;
     private String contents;
+    private int commentCount;
 
     public ArticleDto(Long id, Long userId, String title, String coverUrl, String contents) {
         this.id = id;
@@ -25,10 +28,6 @@ public class ArticleDto {
         return userId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -41,7 +40,20 @@ public class ArticleDto {
         return contents;
     }
 
-    public Article toEntity() {
-        return new Article(userId, title, coverUrl, contents);
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Article toEntity(User author) {
+        ArticleVo articleVo = this.toVo();
+        return new Article(author, articleVo);
+    }
+
+    public ArticleVo toVo() {
+        return new ArticleVo(title, coverUrl, contents);
     }
 }

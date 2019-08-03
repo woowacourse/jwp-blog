@@ -3,14 +3,17 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.service.dto.ArticleDto;
-import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
 import techcourse.myblog.web.exception.NotLoggedInException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class ArticleController {
@@ -18,15 +21,17 @@ public class ArticleController {
 
     private ArticleService articleService;
     private UserService userService;
+    private CommentService commentService;
 
-    public ArticleController(ArticleService articleService, UserService userService) {
+    public ArticleController(ArticleService articleService, UserService userService, CommentService commentService) {
         this.articleService = articleService;
         this.userService = userService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/articles")
     public String showArticles(Model model) {
-        model.addAttribute("articles", articleService.findAll());
+        model.addAttribute("articles", articleService.findAllWithCommentCount());
         return "index";
     }
 
@@ -38,28 +43,30 @@ public class ArticleController {
 
     @GetMapping("/articles/{id}")
     public String showArticle(@PathVariable("id") Long id, Model model) {
-        ArticleDto articleDto = articleService.findById(id);
+        ArticleDto articleDto = articleService.findArticleDtoById(id);
         model.addAttribute("article", articleDto);
 
-        UserPublicInfoDto userPublicInfoDto = userService.findById(articleDto.getUserId());
+        UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoById(articleDto.getUserId());
         model.addAttribute("articleUser", userPublicInfoDto);
+
+        List<CommentResponseDto> commentResponseDtos = commentService.findCommentsByArticleId(id);
+        model.addAttribute("comments", commentResponseDtos);
         return "article";
     }
 
     @GetMapping("/articles/{id}/edit")
     public String showEditPage(@PathVariable("id") Long id, Model model, HttpServletRequest httpServletRequest) {
-        ArticleDto articleDto = articleService.findById(id);
+        ArticleDto articleDto = articleService.findArticleDtoById(id);
         if (getLoggedInUser(httpServletRequest).getId().equals(articleDto.getUserId())) {
             model.addAttribute("article", articleDto);
             return "article-edit";
         }
-        return "redirect:/login";
+        return "redirect:/articles/" + id;
     }
 
     @PostMapping("/articles")
     public String createArticle(ArticleDto articleDto, HttpServletRequest httpServletRequest) {
-        articleDto.setUserId(getLoggedInUser(httpServletRequest).getId());
-        ArticleDto savedArticleDto = articleService.save(articleDto);
+        ArticleDto savedArticleDto = articleService.save(getLoggedInUser(httpServletRequest).getId(), articleDto);
         return "redirect:/articles/" + savedArticleDto.getId();
     }
 
