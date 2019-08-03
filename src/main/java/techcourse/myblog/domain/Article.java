@@ -1,10 +1,9 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Objects;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
 
 @Entity
 public class Article {
@@ -12,21 +11,25 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false) // target entity의 column 이름이 name
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User author;
     private String title;
     private String coverUrl;
     private String contents;
 
     private Article() {
-
     }
 
-    public Article(String title, String coverUrl, String contents) {
+    public Article(User author, String title, String coverUrl, String contents) {
+        this.author = author;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
 
-    public void modify(Article article) {
+    public void updateArticle(Article article) {
         this.title = article.title;
         this.coverUrl = article.coverUrl;
         this.contents = article.contents;
@@ -36,38 +39,43 @@ public class Article {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getCoverUrl() {
         return coverUrl;
     }
 
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
     public String getContents() {
         return contents;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return id.equals(article.id);
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", contents='" + contents + '\'' +
-                '}';
+    public boolean isSameAuthor(User author) {
+        return this.author.equals(author);
     }
 }

@@ -1,43 +1,19 @@
 package techcourse.myblog.application.dto;
 
-import techcourse.myblog.domain.Article;
+import techcourse.myblog.support.validator.TitleConstraint;
 
 public class ArticleDto {
     private Long id;
+    @TitleConstraint
     private String title;
     private String coverUrl;
     private String contents;
-
-
 
     public ArticleDto(Long id, String title, String coverUrl, String contents) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
-    }
-
-    public ArticleDto() {
-
-    }
-
-    public static ArticleDto of(Article article) {
-        return new ArticleDto(article.getId(),
-                article.getTitle(),
-                article.getCoverUrl(),
-                article.getContents());
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
     }
 
     public Long getId() {
@@ -48,25 +24,27 @@ public class ArticleDto {
         this.id = id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
     }
 
     public void setCoverUrl(String coverUrl) {
         this.coverUrl = coverUrl;
     }
 
-    public void setContents(String contents) {
-        this.contents = contents;
+    public String getContents() {
+        return contents;
     }
 
-    @Override
-    public String toString() {
-        return "ArticleDto{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", contents='" + contents + '\'' +
-                '}';
+    public void setContents(String contents) {
+        this.contents = contents;
     }
 }
