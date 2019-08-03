@@ -58,6 +58,10 @@ public class User {
         return password;
     }
 
+    public boolean matchId(Long id) {
+        return this.id.equals(id);
+    }
+
     public boolean matchPassword(String password) {
         return this.password.equals(password);
     }

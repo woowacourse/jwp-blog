@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.article.ArticleAssembler;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.article.ArticleService;
 import techcourse.myblog.service.article.ArticleRequestDto;
 import techcourse.myblog.service.article.ArticleResponseDto;
@@ -28,13 +29,12 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public String showMain(Model model, final HttpSession session) {
+    public String showMain(Model model) {
         List<ArticleResponseDto> articleDtos = articleService.findAll()
             .stream()
             .map(ArticleAssembler::convertToDto)
             .collect(Collectors.toList());
         model.addAttribute("articleDtos", articleDtos);
-        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
         return "index";
     }
 
@@ -44,8 +44,8 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(final ArticleRequestDto articleDTO, final HttpSession session) {
-        Long id = articleService.save(articleDTO, ((UserResponseDto) session.getAttribute(USER_SESSION_KEY)).getId());
+    public String createArticle(final ArticleRequestDto articleDTO, @SessionAttribute(name = "user", required = false) User user) {
+        Long id = articleService.save(articleDTO, user.getId());
         return "redirect:/articles/" + id;
     }
 
@@ -56,8 +56,8 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{id}")
-    public String updateArticle(@PathVariable final Long id, final ArticleRequestDto articleDTO, final HttpSession session) {
-        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
+    public String updateArticle(@PathVariable final Long id, final ArticleRequestDto articleDTO,
+                                @SessionAttribute(name = "user", required = false) User user) {
         if (user.matchId(articleService.findById(id).getAuthor().getId())) {
             articleService.update(id, articleDTO);
         }
@@ -65,8 +65,8 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{id}")
-    public String deleteArticle(@PathVariable final Long id, final HttpSession session) {
-        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
+    public String deleteArticle(@PathVariable final Long id,
+                                @SessionAttribute(name = "user", required = false) User user) {
         if (user.matchId(articleService.findById(id).getAuthor().getId())) {
             articleService.delete(id);
             return "redirect:/";
@@ -75,8 +75,8 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{id}/edit")
-    public String showEditPage(@PathVariable final Long id, final HttpSession session, Model model) {
-        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
+    public String showEditPage(@PathVariable final Long id, Model model,
+                               @SessionAttribute(name = "user", required = false) User user) {
         if (!user.matchId(articleService.findById(id).getAuthor().getId())) {
             return "redirect:/articles/" + id;
         }

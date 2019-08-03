@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserAssembler;
 import techcourse.myblog.service.user.UserRequestDto;
 import techcourse.myblog.service.user.UserResponseDto;
 import techcourse.myblog.service.user.UserService;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
 
@@ -35,7 +35,8 @@ public class UserController {
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        List<UserResponseDto> userResponseDtos = userService.findAll();
+        List<UserResponseDto> userResponseDtos = userService.findAll().stream().map(UserAssembler::convertToDto)
+            .collect(Collectors.toList());
         model.addAttribute("users", userResponseDtos);
         return "user-list";
     }
@@ -51,8 +52,9 @@ public class UserController {
 
     @DeleteMapping("/users")
     public String deleteUser(final HttpSession session) {
-        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        userService.delete(user);
+        User user = (User) session.getAttribute(USER_SESSION_KEY);
+        userService.delete(user.getId());
+        session.invalidate();
         return "redirect:/";
     }
 
@@ -62,8 +64,8 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public String logOut(final HttpServletRequest request) {
-        request.getSession().removeAttribute(USER_SESSION_KEY);
+    public String logout(HttpSession session) {
+        session.invalidate();
         return "redirect:/";
     }
 
@@ -74,7 +76,7 @@ public class UserController {
 
     @PutMapping("/mypage/mypage-edit")
     public String editMyPage(final HttpSession session, final String name) {
-        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
+        User user = (User) session.getAttribute(USER_SESSION_KEY);
         session.setAttribute(USER_SESSION_KEY, userService.update(user.getEmail(), name));
         return "redirect:/mypage";
     }

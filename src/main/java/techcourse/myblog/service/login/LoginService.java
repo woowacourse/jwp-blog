@@ -23,11 +23,11 @@ public class LoginService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponseDto findByEmailAndPassword(final String email, final String password) {
+    public User findByEmailAndPassword(final String email, final String password) {
         User retrieveUser = userRepository.findByEmail(Objects.requireNonNull(email))
             .orElseThrow(UserNotFoundException::new);
         validatePassword(Objects.requireNonNull(password), retrieveUser);
-        return convertToDto(retrieveUser);
+        return retrieveUser;
     }
 
     private void validatePassword(final String password, final User user) {
@@ -37,8 +37,8 @@ public class LoginService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponseDto findByEmail(String email) {
-        return convertToDto(userRepository.findByEmail(email)
-            .orElseThrow(UserNotFoundException::new));
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+            .orElseThrow(UserNotFoundException::new);
     }
 }

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.exception.CommentNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,15 +24,15 @@ public class CommentServiceTest {
     @Test
     void 댓글_작성() {
         CommentRequestDto commentDto = new CommentRequestDto("comment");
-        CommentResponseDto persistComment = commentService.save(commentDto, DEFAULT_USER_ID, DEFAULT_ARTICLE_ID);
-        assertThat(persistComment.getContent()).isEqualTo(commentDto.getContents());
+        Comment persistComment = commentService.save(commentDto, DEFAULT_USER_ID, DEFAULT_ARTICLE_ID);
+        assertThat(persistComment.getContents()).isEqualTo(commentDto.getContents());
     }
 
     @Test
     void 댓글_수정() {
         CommentRequestDto commentDto = new CommentRequestDto("new Hello");
-        CommentResponseDto updateComment = commentService.update(commentDto, DEFAULT_COMMENT_ID);
-        assertThat(updateComment).isEqualTo(new CommentResponseDto(DEFAULT_COMMENT_ID, "new Hello", 1000L, "paul"));
+        Comment updateComment = commentService.update(commentDto, DEFAULT_COMMENT_ID);
+        assertThat(updateComment.getContents()).isEqualTo("new Hello");
     }
 
     @Test

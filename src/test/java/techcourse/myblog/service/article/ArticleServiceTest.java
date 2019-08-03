@@ -6,8 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.ArticleNotFoundException;
-import techcourse.myblog.service.user.UserResponseDto;
 import techcourse.myblog.service.user.UserService;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_생성_확인() {
-        UserResponseDto retrieveUser = userService.findById(DEFAULT_USER_ID);
+        User retrieveUser = userService.findById(DEFAULT_USER_ID);
         ArticleRequestDto article = new ArticleRequestDto("some title", "", "some contents");
         Long articleId = articleService.save(article, retrieveUser.getId());
         assertThat(articleService.findById(articleId).getTitle()).isEqualTo(article.getTitle());
@@ -66,7 +66,7 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_삭제_확인() {
-        UserResponseDto retrieveUser = userService.findById(DEFAULT_USER_ID);
+        User retrieveUser = userService.findById(DEFAULT_USER_ID);
         ArticleRequestDto article = new ArticleRequestDto("some title", "", "some contents");
         Long articleId = articleService.save(article, retrieveUser.getId());
         articleService.delete(articleId);

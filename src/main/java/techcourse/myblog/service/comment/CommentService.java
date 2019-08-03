@@ -13,7 +13,6 @@ import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
 
-import static techcourse.myblog.domain.comment.CommentAssembler.convertToDto;
 import static techcourse.myblog.domain.comment.CommentAssembler.convertToEntity;
 
 @Service
@@ -30,21 +29,20 @@ public class CommentService {
         this.articleRepository = articleRepository;
     }
 
-    public CommentResponseDto save(final CommentRequestDto commentRequestDto, final Long userId, final Long articleId) {
+    public Comment save(final CommentRequestDto commentRequestDto, final Long userId, final Long articleId) {
         User user = userRepository.findById(userId)
             .orElseThrow(UserNotFoundException::new);
         Article article = articleRepository.findById(articleId)
             .orElseThrow(ArticleNotFoundException::new);
         Comment comment = convertToEntity(commentRequestDto, user, article);
-        Comment persistComment = commentRepository.save(comment);
-        return convertToDto(persistComment);
+        return commentRepository.save(comment);
     }
 
-    public CommentResponseDto update(final CommentRequestDto commentRequestDto, final Long commentId) {
+    public Comment update(final CommentRequestDto commentRequestDto, final Long commentId) {
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(CommentNotFoundException::new);
         comment.update(commentRequestDto.getContents());
-        return convertToDto(comment);
+        return comment;
     }
 
     public void delete(final Long id) {
@@ -54,8 +52,8 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public CommentResponseDto findById(final Long id) {
-        return convertToDto(commentRepository.findById(id)
-            .orElseThrow(CommentNotFoundException::new));
+    public Comment findById(final Long id) {
+        return commentRepository.findById(id)
+            .orElseThrow(CommentNotFoundException::new);
     }
 }

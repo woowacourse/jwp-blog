@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.DuplicatedEmailException;
 import techcourse.myblog.exception.UserNotFoundException;
 
@@ -19,7 +20,7 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
-    private UserResponseDto defaultUser;
+    private User defaultUser;
 
     @BeforeEach
     void setUp() {
@@ -28,8 +29,10 @@ public class UserServiceTest {
 
     @Test
     void 사용자_생성_확인() {
-        UserResponseDto persistUser = userService.save(new UserRequestDto("john@example.com", "john", "p@ssw0rd"));
-        assertThat(persistUser).isEqualTo(new UserResponseDto(persistUser.getId(), "john@example.com", "john"));
+        User persistUser = userService.save(new UserRequestDto("john@example.com", "john", "p@ssW0rd"));
+        assertThat(persistUser.getName()).isEqualTo("john");
+        assertThat(persistUser.getEmail()).isEqualTo("john@example.com");
+        assertThat(persistUser.getPassword()).isEqualTo("p@ssW0rd");
     }
 
     @Test
@@ -51,8 +54,8 @@ public class UserServiceTest {
 
     @Test
     void 사용자_정보_수정_확인() {
-        UserResponseDto updateUser = userService.update(defaultUser.getEmail(), "dowon");
-        assertThat(updateUser).isEqualTo(new UserResponseDto(updateUser.getId(), defaultUser.getEmail(), "dowon"));
+        User updateUser = userService.update(defaultUser.getEmail(), "dowon");
+        assertThat(updateUser.getName()).isEqualTo("dowon");
     }
 
     @Test
@@ -75,14 +78,14 @@ public class UserServiceTest {
 
     @Test
     void 사용자_정보_삭제_확인() {
-        UserResponseDto userToDelete = userService.save(new UserRequestDto("done@naver.com", "done", "12345678"));
-        userService.delete(userToDelete);
+        User userToDelete = userService.save(new UserRequestDto("done@naver.com", "done", "12345678"));
+        userService.delete(userToDelete.getId());
         assertThat(userService.findAll()).doesNotContain(userToDelete);
     }
 
     @Test
     void 사용자_정보_삭제_오류확인_사용자가_없을_경우() {
         assertThatExceptionOfType(UserNotFoundException.class)
-            .isThrownBy(() -> userService.delete(new UserResponseDto(defaultUser.getId() - 1, "done@naver.com", "done")));
+            .isThrownBy(() -> userService.delete(defaultUser.getId() - 1));
     }
 }

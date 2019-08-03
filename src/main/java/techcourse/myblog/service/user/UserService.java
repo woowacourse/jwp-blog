@@ -29,38 +29,36 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserResponseDto save(final UserRequestDto userRequestDto) {
+    public User save(final UserRequestDto userRequestDto) {
         User user = convertToEntity(Objects.requireNonNull(userRequestDto));
         String email = user.getEmail();
         if (userRepository.findByEmail(email).isPresent()) {
             throw new DuplicatedEmailException("이메일이 중복됩니다.");
         }
-        return convertToDto(userRepository.save(user));
+        return userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
-    public UserResponseDto findById(Long id) {
+    public User findById(Long id) {
         User retrieveUser = userRepository.findById(id)
             .orElseThrow(UserNotFoundException::new);
-        return convertToDto(retrieveUser);
+        return retrieveUser;
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponseDto> findAll() {
-        return userRepository.findAll().stream()
-            .map(UserAssembler::convertToDto)
-            .collect(collectingAndThen(toList(), Collections::unmodifiableList));
+    public List<User> findAll() {
+        return Collections.unmodifiableList(userRepository.findAll());
     }
 
-    public UserResponseDto update(final String email, final String name) {
+    public User update(final String email, final String name) {
         User retrieveUser = userRepository.findByEmail(Objects.requireNonNull(email))
             .orElseThrow(UserNotFoundException::new);
         retrieveUser.update(Objects.requireNonNull(name));
-        return convertToDto(retrieveUser);
+        return retrieveUser;
     }
 
-    public void delete(final UserResponseDto user) {
-        User retrieveUser = userRepository.findById(Objects.requireNonNull(user).getId())
+    public void delete(final Long id) {
+        User retrieveUser = userRepository.findById(Objects.requireNonNull(id))
             .orElseThrow(UserNotFoundException::new);
         userRepository.delete(retrieveUser);
     }
