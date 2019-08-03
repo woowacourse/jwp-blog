@@ -19,6 +19,7 @@ public class UserDto {
     private String email;
 
     @NotBlank(message = "비밀번호를 작성해주세요.")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,}$", message = "비밀번호는 8자이상의 소문자, 대문자, 숫자, 특수문자의 조합입니다.")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,}$",
+            message = "비밀번호는 8자이상의 소문자, 대문자, 숫자, 특수문자의 조합입니다.")
     private String password;
 }

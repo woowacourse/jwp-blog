@@ -26,19 +26,23 @@ public class CommentService {
     }
 
     public Comment findById(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
     }
 
     @Transactional
     public Comment update(CommentDto commentDto, Long commentId) {
         Comment oldComment = findById(commentId);
-        Comment updatedComment = new Comment(commentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle());
+        Comment updatedComment = new Comment(
+                commentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle());
         return oldComment.update(updatedComment);
     }
 
     public void delete(Long commentId) {
         Comment comment = findById(commentId);
-        comment.getArticle().deleteComment(comment);
+        Article parentArticle = comment.getArticle();
+
+        parentArticle.deleteComment(comment);
         commentRepository.deleteById(commentId);
     }
 

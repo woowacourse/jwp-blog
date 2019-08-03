@@ -17,14 +17,14 @@ public class GuestInterceptor extends HandlerInterceptorAdapter {
     ) throws Exception {
         HttpSession session = request.getSession();
 
-        if (isLoggedOut(session) && !isSave(request)) {
+        if (isLoggedOut(session) && !isSignUp(request)) {
             response.sendRedirect("/login");
             return false;
         }
         return true;
     }
 
-    private boolean isSave(HttpServletRequest request) {
+    private boolean isSignUp(HttpServletRequest request) {
         return request.getRequestURI().equals("/users")
                 && request.getMethod().equals("POST");
     }
