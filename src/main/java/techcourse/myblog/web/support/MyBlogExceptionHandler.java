@@ -7,10 +7,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.CommentUpdateFailedException;
 import techcourse.myblog.domain.InvalidCommentException;
-import techcourse.myblog.service.LoginFailedException;
-import techcourse.myblog.service.MismatchAuthorException;
-import techcourse.myblog.service.NotFoundArticleException;
-import techcourse.myblog.service.SignUpFailedException;
+import techcourse.myblog.service.*;
 import techcourse.myblog.web.controller.*;
 
 @ControllerAdvice
@@ -84,6 +81,11 @@ public class MyBlogExceptionHandler {
 
     private RedirectView redirectToRootWithErrorMsg(RedirectAttributes redirectAttributes, String errorMsg) {
         redirectAttributes.addFlashAttribute("error", errorMsg);
+        return new RedirectView("/");
+    }
+
+    @ExceptionHandler(NotFoundCommentException.class)
+    public RedirectView handleNotFoundCommentException() {
         return new RedirectView("/");
     }
 }

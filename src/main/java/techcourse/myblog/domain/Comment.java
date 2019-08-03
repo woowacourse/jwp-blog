@@ -63,17 +63,17 @@ public class Comment {
     }
 
     private void checkAuth(Comment comment) {
-        if (isArticle(comment.article) && isWriter(comment.writer)) {
+        if (matchArticle(comment.article) && matchWriter(comment.writer)) {
             return;
         }
         throw new CommentUpdateFailedException();
     }
 
-    private boolean isArticle(Article article) {
+    private boolean matchArticle(Article article) {
         return (article != null && this.article.equals(article));
     }
 
-    private boolean isWriter(User user) {
-        return (user != null && this.writer.equals(user));
+    public boolean matchWriter(User user) {
+        return user != null && writer.equals(user);
     }
 }

@@ -22,26 +22,23 @@ public class CommentService {
         return Collections.unmodifiableList(commentRepository.findByArticleId(articleId));
     }
 
-    public Comment findByIdAndWriter(Long commentId, User user) {
-        return commentRepository.findByIdAndWriter(commentId, user)
-                .orElseThrow(MismatchAuthorException::new);
-    }
-
     public void save(Comment comment) {
         commentRepository.save(comment);
     }
 
     public void deleteById(Long id, User user) {
-        checkDeleteAuth(id, user);
-        commentRepository.deleteById(id);
+        if (findById(id).matchWriter(user)) {
+            commentRepository.deleteById(id);
+        }
+        throw new MismatchAuthorException();
     }
 
-    private void checkDeleteAuth(Long id, User user) {
-        findByIdAndWriter(id, user);
+    public void modify(Long id, Comment comment) {
+        findById(id).update(comment);
     }
 
-    public void modify(Long commentId, Comment comment) {
-        commentRepository.findById(commentId)
-                .ifPresent(existComment -> existComment.update(comment));
+    private Comment findById(Long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(NotFoundCommentException::new);
     }
 }
