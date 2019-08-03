@@ -1,15 +1,29 @@
 package techcourse.myblog.service.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import techcourse.myblog.domain.User;
 
-@AllArgsConstructor
-@Getter
 public class UserDTO implements DomainDTO<User> {
+    public UserDTO(String userName, String email, String password) {
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+    }
+
     private String userName;
     private String email;
     private String password;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 
     @Override
     public User toDomain() {

@@ -1,18 +1,37 @@
 package techcourse.myblog.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 import techcourse.myblog.exception.UnauthenticatedUserException;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
-@NoArgsConstructor
-@RequiredArgsConstructor
 public class Comment {
+    public Comment() {
+    }
+
+    public Comment(String contents, Article article, User author) {
+        this.contents = contents;
+        this.article = article;
+        this.author = author;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getContents() {
+        return contents;
+    }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
     @Id
     @Column(name = "COMMENT_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

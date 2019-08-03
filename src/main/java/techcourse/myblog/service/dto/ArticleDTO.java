@@ -1,14 +1,16 @@
 package techcourse.myblog.service.dto;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 
-@RequiredArgsConstructor
-@Getter
 public class ArticleDTO {
+    public ArticleDTO(String title, String contents, String coverUrl) {
+        this.title = title;
+        this.contents = contents;
+        this.coverUrl = coverUrl;
+    }
+
     @NonNull
     private String title;
 
@@ -17,6 +19,18 @@ public class ArticleDTO {
 
     @NonNull
     private String coverUrl;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContents() {
+        return contents;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
 
     public Article toDomain(User user) {
         return new Article(title, contents, coverUrl, user);
