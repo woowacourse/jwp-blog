@@ -20,7 +20,7 @@ public class UserWriteService {
     }
 
     public void save(User user) {
-        if (userReadService.hasSameEmail(user)) {
+        if (userReadService.isExist(user)) {
             throw new SignUpFailedException(DUPLICATED_USER_MESSAGE);
         }
         userRepository.save(user);

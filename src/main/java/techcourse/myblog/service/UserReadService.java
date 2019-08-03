@@ -32,7 +32,7 @@ public class UserReadService {
                 .orElseThrow(NotFoundUserException::new);
     }
 
-    boolean hasSameEmail(User user) {
+    boolean isExist(User user) {
         return userRepository.existsByEmail(user.getEmail());
     }
 }
