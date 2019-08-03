@@ -23,14 +23,47 @@ public class Comment {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
-    public Comment() {
+    private Comment() {
     }
 
-    public Comment(String contents) {
+    public static class CommentBuilder {
+        private String contents;
+        private User author;
+        private Article article;
+
+        public CommentBuilder contents(String contents) {
+            this.contents = contents;
+            return this;
+        }
+
+        public CommentBuilder author(User author) {
+            this.author = author;
+            return this;
+        }
+
+        public CommentBuilder article(Article article) {
+            this.article = article;
+            return this;
+        }
+
+        public Comment build() {
+            return new Comment(this);
+        }
+    }
+
+    public Comment(CommentBuilder builder) {
+        this.contents = builder.contents;
+        this.author = builder.author;
+        this.article = builder.article;
+    }
+
+    public Comment(String contents, User author, Article article) {
+        this(null, contents, author, article);
+    }
+
+    public Comment(Long id, String contents, User author, Article article) {
+        this.id = id;
         this.contents = contents;
-    }
-
-    public void init(User author, Article article) {
         this.author = author;
         this.article = article;
     }

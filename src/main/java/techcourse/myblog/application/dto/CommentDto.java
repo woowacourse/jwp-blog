@@ -7,9 +7,10 @@ public class CommentDto {
     private String contents;
     private UserResponseDto author;
 
-    public CommentDto(Long id, String contents) {
+    public CommentDto(Long id, String contents, UserResponseDto author) {
         this.id = id;
         this.contents = contents;
+        this.author = author;
     }
 
     public Boolean matchAuthor(User user) {

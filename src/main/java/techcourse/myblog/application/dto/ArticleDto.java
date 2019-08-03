@@ -7,11 +7,12 @@ public class ArticleDto {
     private String contents;
     private UserResponseDto author;
 
-    public ArticleDto(Long id, String title, String coverUrl, String contents) {
+    public ArticleDto(Long id, String title, String coverUrl, String contents, UserResponseDto author) {
         this.id = id;
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.author = author;
     }
 
     public boolean matchEmail(String email) {

@@ -30,10 +30,39 @@ public class User {
     private User() {
     }
 
+    public static class UserBuilder {
+        private String email;
+        private String name;
+        private String password;
+
+        public UserBuilder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public UserBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public UserBuilder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
+    }
+
+    public User(UserBuilder builder) {
+        this.email = builder.email;
+        this.name = builder.name;
+        this.password = builder.password;
+    }
+
     public User(String email, String name, String password) {
-        this.email = email;
-        this.name = name;
-        this.password = password;
+        this(null, email, name, password);
     }
 
     public User(Long id, String email, String name, String password) {

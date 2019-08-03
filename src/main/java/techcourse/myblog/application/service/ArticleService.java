@@ -1,10 +1,11 @@
 package techcourse.myblog.application.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.application.converter.ArticleConverter;
-import techcourse.myblog.application.converter.UserConverter;
+import techcourse.myblog.application.assembler.ArticleAssembler;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
 import techcourse.myblog.application.service.exception.NotMatchArticleAuthorException;
@@ -13,13 +14,16 @@ import techcourse.myblog.domain.ArticleRepository;
 import techcourse.myblog.domain.User;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
-    private final ArticleConverter articleConverter = ArticleConverter.getInstance();
-    private final UserConverter userConverter = UserConverter.getInstance();
+    private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
+
     private final ArticleRepository articleRepository;
     private final UserService userService;
+
+    private final ArticleAssembler articleAssembler = ArticleAssembler.getInstance();
 
     @Autowired
     public ArticleService(ArticleRepository articleRepository, UserService userService) {
@@ -30,9 +34,14 @@ public class ArticleService {
     @Transactional
     public Long save(ArticleDto articleDto, User user) {
         User author = userService.findUserById(user.getId());
-        Article article = articleConverter.convertFromDto(articleDto);
-        article.init(author);
+        Article article = new Article.ArticleBuilder()
+                .contents(articleDto.getContents())
+                .title(articleDto.getTitle())
+                .coverUrl(articleDto.getCoverUrl())
+                .author(author)
+                .build();
 
+        log.info(article.toString());
         return articleRepository.save(article).getId();
     }
 
@@ -44,9 +53,7 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public ArticleDto findById(Long articleId) {
         Article article = findArticleById(articleId);
-        ArticleDto articleDto = articleConverter.convertFromEntity(article);
-        articleDto.setAuthor(userConverter.convertFromEntity(article.getAuthor()));
-        return articleDto;
+        return articleAssembler.convertEntityToDto(article);
     }
 
     @Transactional
@@ -63,12 +70,9 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public List<ArticleDto> findAll() {
-        List<Article> articles = articleRepository.findAll();
-        List<ArticleDto> articleDtos = articleConverter.createFromEntities(articleRepository.findAll());
-        for (int i = 0; i < articleDtos.size(); i++) {
-            articleDtos.get(i).setAuthor(userConverter.convertFromEntity(articles.get(i).getAuthor()));
-        }
-        return articleDtos;
+        return articleRepository.findAll().stream()
+                .map(articleAssembler::convertEntityToDto)
+                .collect(Collectors.toList());
     }
 
     public void matchAuthor(Long articleId, User user) {

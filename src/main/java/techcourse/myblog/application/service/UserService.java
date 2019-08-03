@@ -3,7 +3,7 @@ package techcourse.myblog.application.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.application.converter.UserConverter;
+import techcourse.myblog.application.assembler.UserAssembler;
 import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserRequestDto;
 import techcourse.myblog.application.dto.UserResponseDto;
@@ -14,11 +14,13 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     private UserRepository userRepository;
-    private UserConverter userConverter = UserConverter.getInstance();
+
+    private UserAssembler userAssembler = UserAssembler.getInstance();
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -30,13 +32,19 @@ public class UserService {
         if (userRepository.findByEmail(userRequestDto.getEmail()).isPresent()) {
             throw new DuplicatedIdException("이미 사용중인 이메일입니다.");
         }
-        User user = userConverter.convertFromDto(userRequestDto);
+        User user = new User.UserBuilder()
+                .email(userRequestDto.getEmail())
+                .name(userRequestDto.getName())
+                .password(userRequestDto.getPassword())
+                .build();
         return userRepository.save(user).getEmail();
     }
 
     @Transactional(readOnly = true)
     public List<UserResponseDto> findAll() {
-        return userConverter.createFromEntities(userRepository.findAll());
+        return userRepository.findAll().stream()
+                .map(userAssembler::convertEntityToDto)
+                .collect(Collectors.toList());
     }
 
     User findUserById(Long id) {

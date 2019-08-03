@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import techcourse.myblog.application.converter.UserConverter;
+import techcourse.myblog.application.assembler.UserAssembler;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
 import techcourse.myblog.application.service.exception.NotMatchArticleAuthorException;
@@ -35,7 +35,7 @@ public class ArticleServiceTests {
     private final User secondUser = new User(2L, EXIST_EMAIL + "c", NAME + "c", PASSWORD + "c");
 
     private ArticleService articleService;
-    private UserConverter userConverter = UserConverter.getInstance();
+    private UserAssembler userAssembler = UserAssembler.getInstance();
 
     @Mock
     private UserService userService;
@@ -58,10 +58,10 @@ public class ArticleServiceTests {
         Article articleBeforeSave = new Article.ArticleBuilder()
                 .coverUrl(COVER_URL)
                 .title(TITLE)
-                .contents(CONTENTS).build();
-        articleBeforeSave.init(firstUser);
-        Article articleAfterSave = new Article(EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS);
-        articleAfterSave.init(firstUser);
+                .contents(CONTENTS)
+                .author(firstUser)
+                .build();
+        Article articleAfterSave = new Article(EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS, firstUser);
         when(articleRepository.findById(EXIST_ARTICLE_ID)).thenReturn(Optional.of(articleAfterSave));
         when(articleRepository.findById(NOT_EXIST_ARTICLE_ID)).thenReturn(Optional.empty());
         when(articleRepository.save(articleBeforeSave)).thenReturn(articleAfterSave);
@@ -71,8 +71,11 @@ public class ArticleServiceTests {
 
     @Test
     void Article_생성_테스트() {
-        ArticleDto articleDto = new ArticleDto(NOT_EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS);
-        articleDto.setAuthor(userConverter.convertFromEntity(firstUser));
+        ArticleDto articleDto = new ArticleDto(NOT_EXIST_ARTICLE_ID
+                , TITLE
+                , COVER_URL
+                , CONTENTS
+                , userAssembler.convertEntityToDto(firstUser));
         assertDoesNotThrow(() -> articleService.save(articleDto, firstUser));
     }
 
