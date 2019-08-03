@@ -4,10 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserReadService;
@@ -65,8 +62,9 @@ public class UserController {
         return "mypage-edit";
     }
 
-    @PutMapping("/mypage")
+    @PutMapping("/users/{userId}")
     public RedirectView editUser(SessionUser loginUser,
+                                 @PathVariable Long userId,
                                  @Validated(UserInfo.class) UserDto userDto,
                                  BindingResult bindingResult) throws EditUserBindException {
         if (bindingResult.hasErrors()) {
@@ -77,8 +75,9 @@ public class UserController {
         return new RedirectView("/mypage");
     }
 
-    @DeleteMapping("/mypage")
-    public RedirectView removeUser(SessionUser loginUser) {
+    @DeleteMapping("/users/{userId}")
+    public RedirectView removeUser(SessionUser loginUser, @PathVariable Long userId) {
+
         userWriteService.remove(loginUser.getUser());
         return new RedirectView("/logout");
     }
