@@ -13,24 +13,27 @@ import java.util.regex.Pattern;
 @Entity
 public class User {
     private static final int MAX_NAME_LENGTH = 10;
-    private static final String EMPTY = "";
+    private static final int MIN_PASSWORD_LENGTH = 8;
     private static final Pattern NAME_PATTERN = Pattern.compile("[^ !@#$%^&*(),.?\\\":{}|<>0-9]{2,10}");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}");
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String email;
     private String password;
+    private String email;
 
     private User() {
     }
 
-    public User(String name, String email, String password) {
+    public User(String name, String password, String email) {
         validateName(name);
+        validatePassword(password);
+        validateEmail(email);
         this.name = name;
-        this.email = email;
         this.password = password;
+        this.email = email;
     }
 
     private void validateName(String name) {
@@ -43,6 +46,23 @@ public class User {
         if (!matcher.find()) {
             throw new IllegalArgumentException("이름은 알파벳만 가능합니다.");
         }
+    }
+
+    private void validatePassword(String password) {
+        isEmpty(password);
+
+        if (password.length() <= MIN_PASSWORD_LENGTH) {
+            throw new IllegalArgumentException("비밀번호는 " + MIN_PASSWORD_LENGTH + "자 이상이어야 합니다.");
+        }
+
+        Matcher matcher = PASSWORD_PATTERN.matcher(password);
+        if (!matcher.find()) {
+            throw new IllegalArgumentException("비밀번호는 영어 대/소문자, 숫자, 특수문자를 포함해야 합니다.");
+        }
+    }
+
+    private void validateEmail(String email) {
+        isEmpty(email);
     }
 
     private void isEmpty(String name) {
