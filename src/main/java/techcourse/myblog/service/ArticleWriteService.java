@@ -3,32 +3,28 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.service.dto.ArticleDto;
-
-import java.util.Optional;
+import techcourse.myblog.domain.repository.ArticleRepository;
 
 @Service
+@Transactional
 public class ArticleWriteService {
     private final ArticleRepository articleRepository;
+    private final ArticleReadService articleReadService;
 
-    public ArticleWriteService(final ArticleRepository articleRepository) {
+    public ArticleWriteService(ArticleRepository articleRepository, ArticleReadService articleReadService) {
         this.articleRepository = articleRepository;
+        this.articleReadService = articleReadService;
     }
 
-    @Transactional
-    public Article save(ArticleDto articleDto) {
-        return articleRepository.save(articleDto.toArticle());
+    public Article save(Article article) {
+        return articleRepository.save(article);
     }
 
-    @Transactional
-    public void update(Long id, ArticleDto articleDto) {
-        Optional<Article> articleOptional = articleRepository.findById(id);
-        articleOptional.ifPresent(article -> article.update(articleDto.toArticle()));
+    public void removeById(Long articleId) {
+        articleRepository.deleteById(articleId);
     }
 
-    @Transactional
-    public void deleteById(Long id) {
-        articleRepository.findById(id);
+    public void update(Long articleId, Article article) {
+        articleReadService.findByIdAndAuthor(articleId, article.getAuthor()).update(article);
     }
 }

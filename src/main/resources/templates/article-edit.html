@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <head th:include="fragments/common_meta :: common_meta"></head>
-    <head th:include="fragments/common_css :: common_css"></head>
-    <link rel="stylesheet" href="/css/article-edit.css">
+    <th:block th:include="includes/meta :: common_meta"></th:block>
+    <th:block th:include="includes/css :: common_css"></th:block>
+    <th:block th:include="includes/article_js :: article_js"></th:block>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/css/article-edit.css">
 </head>
 <body>
-    <th:block th:include="fragments/navbar :: navbar"></th:block>
-    <form th:action="${article==null? '/articles':'/articles/'+article.id}" th:method="${article == null ? 'post' : 'put'}"
-          name="article" accept-charset="utf-8">
+<div>
+    <th:block th:include="includes/header :: header"></th:block>
+    <form th:action="${article} ? '/articles/' + ${article.id} : '/articles/write'" name="article" method="post"
+          accept-charset="utf-8">
+        <input th:if="${article!=null}" type="hidden" name="_method" value="put"/>
         <div class="about-cover card no-border">
-            <div class="cover-img A]overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
+            <div class="cover-img overlay-dark bg"
+                 style="background-image: url('/static/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input th:value="${article==null? '': article.title}" type="text" name="title"
+                        <input type="text" name="title" th:value="${article} ? ${article.title} : ''"
                                class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
-                               placeholder="제목을 입력해주세요" autocomplete="off">
-                        <input th:value="${article==null? '': article.coverUrl}" type="text" name="coverUrl"
+                               placeholder="제목을 입력해주세요"
+                               autocomplete="off">
+                        <input type="text" name="coverUrl" th:value="${article} ? ${article.coverUrl} : ''"
                                class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
-                               placeholder="배경 url을 입력해주세요" autocomplete="off">
+                               placeholder="배경 url을 입력해주세요"
+                               autocomplete="off">
+
                     </div>
                 </div>
             </div>
@@ -29,7 +37,7 @@
                 <div class="col-lg-1 col-md-1"></div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input id="article-contents" name="contents" type="hidden">
-                    <div th:text="${article==null?'':article.contents}" id="editSection"></div>
+                    <div id="editSection"></div>
                 </div>
                 <div class="col-lg-1 col-md-1">
                     <div class="btn-group btn-group-vertical">
@@ -45,9 +53,17 @@
         </div>
     </form>
 </div>
-<th:block th:include="fragments/common_script :: common_script"></th:block>
-<script type="text/javascript">
 
+<th:block th:include="includes/js :: common_js"></th:block>
+
+<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    var initValue = ""
+        /*<![CDATA[*/
+        [# th:if= "${article}"]
+    initValue =  /*[[${article.contents}]]*/
+        [/]
+    /*]]>*/
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
@@ -57,8 +73,10 @@
                 document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
             }
         },
-        height: 'calc(100vh - 360px)'
+        height: 'calc(100vh - 360px)',
+        initialValue: initValue
     });
+
 </script>
 </body>
 </html>

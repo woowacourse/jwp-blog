@@ -1,23 +1,39 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.service.common.UserCommonTests;
+import techcourse.myblog.service.common.UserCommonServiceTests;
+import techcourse.myblog.support.exception.LoginFailedException;
 
+import java.util.Arrays;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
+import static techcourse.myblog.utils.UserTestObjects.LOGIN_FAIL_USER_DTO;
+import static techcourse.myblog.utils.UserTestObjects.LOGIN_USER_DTO;
 
-public class UserReadServiceTests extends UserCommonTests {
+public class UserReadServiceTests extends UserCommonServiceTests {
     @Test
-    void 유저_전체_조회() {
-        assertDoesNotThrow(() -> userReadService.findAll());
+    void 이메일_패스워드_일치() {
+        given(userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword())).willReturn(Optional.of(user));
+
+        assertEquals(userReadService.findByEmailAndPassword(LOGIN_USER_DTO), user);
     }
     
     @Test
-    void 유저_이메일_및_비밀번호_일치_확인() {
-        Optional<User> userOptional = userReadService.findByEmailAndPassword(userDto);
-        assertTrue(userOptional.isPresent());
+    void 이메일_패스워드_일치_실패() {
+        given(userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword())).willReturn(Optional.of(user));
+
+        assertThrows(LoginFailedException.class, () -> {
+            userReadService.findByEmailAndPassword(LOGIN_FAIL_USER_DTO);
+        });
+    }
+    
+    @Test
+    void 유저_리스트_성공() {
+        given(userRepository.findAll()).willReturn(Arrays.asList(user));
+
+        userReadService.findAll().forEach(foundUser -> compareUser(user, foundUser));
     }
 }

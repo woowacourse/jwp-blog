@@ -1,31 +1,29 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.service.common.UserCommonTests;
-import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.service.common.UserCommonServiceTests;
+import techcourse.myblog.support.exception.DuplicatedEmailException;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
+import static techcourse.myblog.utils.UserTestObjects.*;
 
-public class UserWriteServiceTests extends UserCommonTests {
-
-    private static final Logger log = LoggerFactory.getLogger(UserWriteServiceTests.class);
-
+public class UserWriteServiceTests extends UserCommonServiceTests {
     @Test
-    void 중복_이메일_체크() {
-        assertThrows(DuplicateEmailException.class, () -> userWriteService.save(userDto));
+    public void save_test() {
+        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+
+        assertDoesNotThrow(() -> userWriteService.save(READER_DTO.toUser()));
+        assertThrows(DuplicatedEmailException.class, () -> userWriteService.save(SIGN_UP_USER_DTO.toUser()));
     }
 
     @Test
-    void 유저_수정_확인() {
-        UserDto updateUserDto = new UserDto("ab", "abcd@abcd", "12345678!Aa");
-        userWriteService.update(user, updateUserDto);
-        Optional<User> optionalUser = userReadService.findById(user.getId());
-
-        assertEquals(updateUserDto.getName(), optionalUser.get().getName());
+    public void modify_test() {
+        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+        userWriteService.update(user, UPDATE_USER_DTO.toUser());
+        compareUser(UPDATE_USER_DTO.toUser(), userRepository.findByEmail(user.getEmail()).get());
     }
 }

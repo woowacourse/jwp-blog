@@ -1,33 +1,38 @@
 package techcourse.myblog.service.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.support.validation.UserGroups.All;
-import techcourse.myblog.support.validation.UserGroups.Edit;
+import techcourse.myblog.support.validation.UserInfo;
+import techcourse.myblog.support.validation.pattern.UserPattern;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
-@AllArgsConstructor
 public class UserDto {
-
-    @Pattern(regexp = "^[a-zA-Z가-힣]{2,10}$",
-            message = "이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다.",
-            groups = {Edit.class, All.class})
+    @NotBlank(message = UserPattern.NO_INPUT_MESSAGE, groups = {UserInfo.class})
+    @Pattern(regexp = UserPattern.NAME,
+            message = UserPattern.NAME_CONSTRAINT_MESSAGE,
+            groups={UserInfo.class})
     private String name;
-
-    @NotBlank
-    @Email
+    
+    @NotBlank(message = UserPattern.NO_INPUT_MESSAGE)
+    @Pattern(regexp = UserPattern.EMAIL,
+            message = UserPattern.EMAIL_CONSTRAINT_MESSAGE)
     private String email;
-
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-            message = "비밀번호는 8자 이상의 소문자, 대문자, 숫자, 특수문자의 조합입니다.")
+    
+    @NotBlank(message = UserPattern.NO_INPUT_MESSAGE)
+    @Pattern(regexp = UserPattern.PASSWORD,
+            message = UserPattern.PASSWORD_CONSTRAINT_MESSAGE)
     private String password;
 
+    public UserDto(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
     public User toUser() {
-        return User.from(name, email, password);
+        return new User(name, email, password);
     }
 }

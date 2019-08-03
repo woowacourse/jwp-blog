@@ -1,47 +1,71 @@
 package techcourse.myblog.domain;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import techcourse.myblog.support.validation.UserGroups;
+import org.hibernate.annotations.DynamicUpdate;
+import techcourse.myblog.support.exception.IllegalUserException;
+import techcourse.myblog.support.validation.pattern.UserPattern;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
+import java.util.regex.Pattern;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id"})
+@DynamicUpdate
 public class User {
-
+    public static final int NAME_LENGTH = 20;
+    public static final int EMAIL_LENGTH = 25;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Pattern(regexp = "^[a-zA-Z가-힣]{2,10}$",
-            message = "이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다.",
-            groups = {UserGroups.Edit.class, UserGroups.All.class})
+
+    @Column(nullable = false, length = NAME_LENGTH)
     private String name;
 
-    @Column(unique = true)
-    @Email
+    @Column(nullable = false, unique = true, length = EMAIL_LENGTH)
     private String email;
 
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-            message = "비밀번호는 8자 이상의 소문자, 대문자, 숫자, 특수문자의 조합입니다.")
+    @Column(nullable = false)
     private String password;
 
-    private User(String name, String email, String password) {
+    public User(String name, String email, String password) {
+        validateName(name);
+        validateEmail(email);
+        validatePassword(password);
         this.name = name;
         this.email = email;
         this.password = password;
     }
-
-    public static User from(String name, String email, String password) {
-        return new User(name, email, password);
+    
+    public void modifyName(User user) {
+        validateName(user.name);
+        this.name = user.name;
+    }
+    
+    private void validateName(String name) {
+        if (isEmpty(name) || !Pattern.matches(UserPattern.NAME, name)) {
+            throw new IllegalUserException(UserPattern.NAME_CONSTRAINT_MESSAGE);
+        }
     }
 
-    public void modify(User user) {
-        this.name = user.name;
+    private void validateEmail(String email) {
+        if (isEmpty(email) || !Pattern.matches(UserPattern.EMAIL, email)) {
+            throw new IllegalUserException(UserPattern.EMAIL_CONSTRAINT_MESSAGE);
+        }
+    }
+
+    private void validatePassword(String password) {
+        if (isEmpty(password) || !Pattern.matches(UserPattern.PASSWORD, password)) {
+            throw new IllegalUserException(UserPattern.PASSWORD_CONSTRAINT_MESSAGE);
+        }
+    }
+
+    private boolean isEmpty(String text) {
+        return (text == null) || ("").equals(text);
     }
 }
