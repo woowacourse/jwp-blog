@@ -32,7 +32,7 @@ public class CommentControllerTest {
     private static final String TEST_EMAIL = "testdonut@woowa.com";
     private static final String TEST_PASSWORD = "qwer1234";
     private static final User TEST_USER = new User(TEST_NAME, TEST_EMAIL, TEST_PASSWORD);
-    private static final User TEST_USER_2 = new User(TEST_NAME, TEST_EMAIL+"a", TEST_PASSWORD);
+    private static final User TEST_USER_2 = new User(TEST_NAME, TEST_EMAIL + "a", TEST_PASSWORD);
     private static final String TEST_TITLE = "Jemok";
     private static final String TEST_COVER_URL = "Baegyung";
     private static final String TEST_CONTENTS = "Naeyong";
@@ -108,6 +108,7 @@ public class CommentControllerTest {
         mockMvc.perform(delete("/articles/" + written.getId() + "/comment/" + comment.getId()).session(session));
         assertThat(commentRepository.findById(comment.getId()).isPresent()).isFalse();
     }
+
     @Test
     void delete_NotSameAuthor_Fail() throws Exception {
         final Article written = articleRepository.save(TEST_ARTICLE);

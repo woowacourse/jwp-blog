@@ -21,14 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureMockMvc
 @Transactional
 class CommentServiceTest {
-    @Autowired
-    ArticleRepository articleRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    CommentRepository commentRepository;
-    @Autowired
-    CommentService commentService;
     private static final String TEST_TITLE = "Jemok";
     private static final String TEST_COVER_URL = "Baegyung";
     private static final String TEST_CONTENTS = "Naeyong";
@@ -37,32 +29,42 @@ class CommentServiceTest {
     private static final String TEST_PASSWORD = "qwer1234";
     private static final User TEST_USER = new User(TEST_NAME, TEST_EMAIL, TEST_PASSWORD);
     private static final Article TEST_ARTICLE = new Article(TEST_USER, TEST_TITLE, TEST_COVER_URL, TEST_CONTENTS);
+    @Autowired
+    ArticleRepository articleRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    CommentRepository commentRepository;
+    @Autowired
+    CommentService commentService;
+
     @BeforeEach
     void setUp() {
         userRepository.save(TEST_USER);
         articleRepository.save(TEST_ARTICLE);
     }
+
     @Test
     void save_success() {
         String contents = "abc";
-        Comment comment = commentService.write(TEST_ARTICLE, TEST_USER,contents);
+        Comment comment = commentService.write(TEST_ARTICLE, TEST_USER, contents);
         assertThat(commentRepository.findById(comment.getId()).get().getContents()).isEqualTo(contents);
     }
 
     @Test
-    void update_success(){
+    void update_success() {
         String contents = "abc";
         String editedContents = "edited";
-        Comment comment = commentService.write(TEST_ARTICLE, TEST_USER,contents);
-        commentService.tryUpdate(comment.getId(),editedContents,TEST_USER);
+        Comment comment = commentService.write(TEST_ARTICLE, TEST_USER, contents);
+        commentService.tryUpdate(comment.getId(), editedContents, TEST_USER);
         assertThat(commentRepository.findById(comment.getId()).get().getContents()).isEqualTo(editedContents);
 
     }
 
     @Test
     void delete_success() {
-        Comment comment = commentService.write(TEST_ARTICLE, TEST_USER,"cde");
-        commentService.tryDelete(comment.getId(),TEST_USER);
+        Comment comment = commentService.write(TEST_ARTICLE, TEST_USER, "cde");
+        commentService.tryDelete(comment.getId(), TEST_USER);
         assertThat(commentRepository.findById(comment.getId()).isPresent()).isEqualTo(false);
     }
 
@@ -70,7 +72,7 @@ class CommentServiceTest {
     void delete_wrongAuthor_fail() {
         User wrongUser = new User("abc", "wrong@wrong.com", TEST_PASSWORD);
         userRepository.save(wrongUser);
-        Comment comment = commentService.write(TEST_ARTICLE, wrongUser,"cde");
-        assertThat(commentRepository.findById(commentService.tryDelete(comment.getId(),TEST_USER)).isPresent()).isEqualTo(true);
+        Comment comment = commentService.write(TEST_ARTICLE, wrongUser, "cde");
+        assertThat(commentRepository.findById(commentService.tryDelete(comment.getId(), TEST_USER)).isPresent()).isEqualTo(true);
     }
 }
