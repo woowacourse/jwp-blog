@@ -52,7 +52,7 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}/edit")
     public ModelAndView readArticleEditPage(@PathVariable Long articleId, HttpSession httpSession) {
-        articleService.matchAuthor(articleId, (User) httpSession.getAttribute("/user"));
+        articleService.matchAuthor(articleId, (User) httpSession.getAttribute("user"));
         ModelAndView modelAndView = new ModelAndView("article-edit");
         modelAndView.addObject("article", articleService.findById(articleId));
         modelAndView.addObject("method", "put");
@@ -60,16 +60,16 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public RedirectView updateArticle(@PathVariable Long articleId, ArticleDto article) {
+    public RedirectView updateArticle(@PathVariable Long articleId, ArticleDto article, HttpSession httpSession) {
         RedirectView redirectView = new RedirectView("/articles/" + articleId);
-        articleService.modify(articleId, article);
+        articleService.modify(articleId, article, (User) httpSession.getAttribute("user"));
         return redirectView;
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public RedirectView deleteArticle(@PathVariable Long articleId) {
+    public RedirectView deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
         RedirectView redirectView = new RedirectView("/");
-        articleService.removeById(articleId);
+        articleService.removeById(articleId, (User) httpSession.getAttribute("user"));
         return redirectView;
     }
 }

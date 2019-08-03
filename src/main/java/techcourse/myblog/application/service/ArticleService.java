@@ -57,15 +57,20 @@ public class ArticleService {
     }
 
     @Transactional
-    public void removeById(Long articleId) {
+    public void removeById(Long articleId, User user) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new NotExistArticleIdException("해당 Id의 글이 존재하지 않습니다."));
+        if (article.isNotAuthor(user)) {
+            throw new NotMatchArticleAuthorException("너는 이 글에 작성자가 아니다. 꺼져라!");
+        }
         articleRepository.deleteById(articleId);
     }
 
     @Transactional
-    public void modify(Long articleId, ArticleDto articleDto) {
+    public void modify(Long articleId, ArticleDto articleDto, User user) {
         Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new NotExistArticleIdException(""));
-        article.modify(articleDto);
+                .orElseThrow(() -> new NotExistArticleIdException("해당 Id의 글이 존재하지 않습니다."));
+        article.modify(articleDto, user);
     }
 
     @Transactional(readOnly = true)

@@ -13,8 +13,10 @@ public class ArticleExceptionHandlers {
     @ExceptionHandler(NotMatchArticleAuthorException.class)
     public RedirectView handleMismatchAuthorError(HttpServletRequest request, RedirectAttributes redirectAttributes, NotMatchArticleAuthorException e) {
         String url = request.getRequestURL().toString();
-        RedirectView redirectView = new RedirectView(url.substring(0, url.length() - 5));
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
-        return redirectView;
+        if (request.getMethod().equals("GET")) {
+            return new RedirectView(url.substring(0, url.length() - 5));
+        }
+        return new RedirectView(url);
     }
 }

@@ -3,6 +3,7 @@ package techcourse.myblog.domain;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.application.dto.ArticleDto;
+import techcourse.myblog.application.service.exception.NotMatchArticleAuthorException;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -75,10 +76,17 @@ public class Article {
         this.author = author;
     }
 
-    public void modify(ArticleDto article) {
+    public void modify(ArticleDto article, User user) {
+        if (isNotAuthor(user)) {
+            throw new NotMatchArticleAuthorException("너는 이 글에 작성자가 아니다. 꺼져라!");
+        }
         this.title = article.getTitle();
         this.coverUrl = article.getCoverUrl();
         this.contents = article.getContents();
+    }
+
+    public boolean isNotAuthor(User user) {
+        return !author.equals(user);
     }
 
     public Long getId() {

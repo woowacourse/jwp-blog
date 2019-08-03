@@ -110,7 +110,7 @@ public class ArticleServiceTests {
 
     @Test
     void Article_삭제_테스트() {
-        assertDoesNotThrow(() -> articleService.removeById(EXIST_ARTICLE_ID));
+        assertDoesNotThrow(() -> articleService.removeById(EXIST_ARTICLE_ID, firstUser));
     }
 
     @Test
