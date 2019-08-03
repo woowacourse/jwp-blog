@@ -8,20 +8,20 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.exception.NotValidUserInfoException;
 import techcourse.myblog.service.dto.UserDto;
-import techcourse.myblog.user.User;
 import techcourse.myblog.user.UserRepository;
 
 import javax.servlet.http.HttpSession;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
+import static techcourse.myblog.user.UserTest.user;
 
 @SpringBootTest
-public class userServiceTest {
+public class UserServiceTest {
 
     @MockBean(name = "userRepository")
     private UserRepository userRepository;
@@ -32,56 +32,51 @@ public class userServiceTest {
     @Autowired
     private UserService userService;
 
-    private UserDto userDto;
+    private UserDto userDto = new UserDto();
 
     @BeforeEach
     void setUp() {
-        userDto = new UserDto();
-        userDto.setEmail("buddy@gmail.com");
-        userDto.setUserName("Buddy");
-        userDto.setPassword("Aa12345!");
-        userDto.setConfirmPassword("Aa12345!");
+        userDto.setUserName(user.getUserName());
+        userDto.setEmail(user.getEmail());
+        userDto.setPassword(user.getPassword());
+        userDto.setConfirmPassword((user.getPassword()));
     }
 
     @Test
     void findAll() {
-        User user = userDto.toEntity();
-        given(userRepository.findAll()).willReturn(Arrays.asList(user));
+        given(userRepository.findAll()).willReturn(Collections.singletonList(user));
 
-        assertThat(userService.findAll()).isEqualTo(Arrays.asList(user));
+        assertThat(userService.findAll()).isEqualTo(Collections.singletonList(user));
     }
 
     @Test
     void 유저생성() {
         given(userRepository.existsByEmail(userDto.getEmail())).willReturn(false);
+
         assertDoesNotThrow(() -> userService.createNewUser(userDto));
     }
 
     @Test
     void 유저생성_실패_이메일_중복() {
-        given(userRepository.existsByEmail(userDto.getEmail())).willReturn(true);
+        given(userRepository.existsByEmail(user.getEmail())).willReturn(true);
 
         assertThrows(NotValidUserInfoException.class, () -> userService.createNewUser(userDto));
     }
 
     @Test
     void 유저_삭제() {
-        User user = userDto.toEntity();
-        String email = user.getEmail();
         given(httpSession.getAttribute("user")).willReturn(user);
-        given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
+        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
-        assertDoesNotThrow(() -> userService.deleteUser(httpSession));
+        assertDoesNotThrow(() -> userService.deleteUser(user.getEmail()));
     }
 
     @Test
     void 유저_삭제_실패() {
-        User user = userDto.toEntity();
-        String email = user.getEmail();
         given(httpSession.getAttribute("user")).willReturn(user);
-        given(userRepository.findByEmail(email)).willReturn(Optional.empty());
+        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.empty());
 
-        assertThrows(NotFoundObjectException.class, () -> userService.deleteUser(httpSession));
+        assertThrows(NotFoundObjectException.class, () -> userService.deleteUser(user.getEmail()));
     }
 
 }

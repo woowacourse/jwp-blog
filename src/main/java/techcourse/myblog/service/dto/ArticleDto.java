@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import techcourse.myblog.article.Article;
+import techcourse.myblog.user.User;
 
 @Getter
 @Setter
@@ -19,11 +20,12 @@ public class ArticleDto {
         this.contents = contents;
     }
 
-    public Article toEntity() {
+    public Article toEntity(User author) {
         return Article.builder()
                 .title(title)
                 .coverUrl(coverUrl)
                 .contents(contents)
+                .author(author)
                 .build();
     }
 }

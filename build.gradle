@@ -17,7 +17,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '1.3.0.RELEASE'
 	implementation('nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect')
-	implementation 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok:1.18.8'
+	annotationProcessor 'org.projectlombok:lombok:1.18.8'
+	
 	compile('org.springframework.boot:spring-boot-devtools')
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'

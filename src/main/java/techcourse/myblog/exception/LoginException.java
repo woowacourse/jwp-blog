@@ -12,8 +12,4 @@ public class LoginException extends RuntimeException {
     public static LoginException notMatchPassword() {
         return new LoginException("패스워드가 일치하지 않습니다.");
     }
-
-    public static LoginException alreadyLogin() {
-        return new LoginException("이미 로그인이 되었습니다.");
-    }
 }

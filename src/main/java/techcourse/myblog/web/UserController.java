@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.exception.NotValidUpdateUserInfoException;
 import techcourse.myblog.exception.NotValidUserInfoException;
@@ -28,16 +29,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/signup")
+    @GetMapping("/new")
     public String showSignUpPage() {
         return "signup";
     }
 
     @PostMapping("/new")
     public String createUser(@Valid UserDto userDto, BindingResult bindingResult) throws NotValidUserInfoException {
-        if (bindingResult.hasErrors()) {
-            throw new NotValidUserInfoException(bindingResult.getFieldError().getDefaultMessage());
-        }
+        checkValidUser(bindingResult);
         userService.createNewUser(userDto);
         return "redirect:/login";
     }
@@ -49,28 +48,32 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String showMyPage(HttpSession httpSession) {
-        userService.checkRequestAboutMypage(httpSession);
+    public String showMyPage() {
         return "mypage";
     }
 
     @GetMapping("/mypage/edit")
-    public String showEditPage(HttpSession httpSession) {
-        userService.checkRequestAboutMypage(httpSession);
+    public String showEditPage() {
         return "mypage-edit";
     }
 
     @PutMapping("/mypage/edit")
     public String editUserInfo(@Valid UserUpdateRequestDto userUpdateRequestDto,
                                BindingResult bindingResult, HttpSession httpSession) {
-        User user = userService.updateUser(bindingResult, httpSession, userUpdateRequestDto);
+        if (bindingResult.hasErrors()) {
+            FieldError fieldError = bindingResult.getFieldError();
+            throw new NotValidUpdateUserInfoException(fieldError.getDefaultMessage());
+        }
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
+        User user = userService.updateUser(email, userUpdateRequestDto);
         httpSession.setAttribute("user", user);
         return "redirect:/users/mypage";
     }
 
     @DeleteMapping("/mypage")
     public String deleteUser(HttpSession httpSession) {
-        userService.deleteUser(httpSession);
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
+        userService.deleteUser(email);
         httpSession.removeAttribute("user");
         return "redirect:/";
     }
@@ -89,6 +92,12 @@ public class UserController {
         log.error(e.getMessage());
         model.addAttribute("error", e.getMessage());
         return "mypage-edit";
+    }
+
+    private void checkValidUser(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new NotValidUserInfoException(bindingResult.getFieldError().getDefaultMessage());
+        }
     }
 
 }

@@ -1,17 +1,21 @@
 package techcourse.myblog.user;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserTest {
-    private User user;
+    public static final User user = User.builder()
+            .userName("heejoo")
+            .email("heejoo@gmail.com")
+            .password("Aa12345!")
+            .build();
 
-    @BeforeEach
-    void setUp() {
-        user = new User("buddy", "buddy@gmail.com", "Aa12345!");
-    }
+    public static final User user2 = User.builder()
+            .userName("cony")
+            .email("cony@gmail.com")
+            .password("Aa12345!")
+            .build();
 
     @Test
     void 로그인_시_패스워드_일치() {
@@ -25,7 +29,9 @@ public class UserTest {
 
     @Test
     void 유저이름_변경() {
-        user.changeUserName("ssosso");
-        assertThat(user.getUserName()).isEqualTo("ssosso");
+        User user3 = new User("buddy2", "buddy@gmail.com", "Aa12345!");
+        user3.changeUserName("ssosso");
+
+        assertThat(user3.getUserName()).isEqualTo("ssosso");
     }
 }
