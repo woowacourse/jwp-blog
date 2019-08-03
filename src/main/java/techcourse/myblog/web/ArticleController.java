@@ -30,9 +30,6 @@ public class ArticleController {
         List<ArticleResponseDto> articleDtos = articleService.findAll();
         model.addAttribute("articleDtos", articleDtos);
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        if (!Objects.isNull(user)) {
-            model.addAttribute("user", user);
-        }
         return "index";
     }
 

@@ -51,8 +51,6 @@ public class UserController {
 
     @GetMapping("/mypage")
     public String showMyPage(final HttpSession session, Model model) {
-        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        model.addAttribute("user", user);
         return "mypage";
     }
 
@@ -71,8 +69,6 @@ public class UserController {
 
     @GetMapping("/mypage/mypage-edit")
     public String showMyPageEdit(final HttpSession session, Model model) {
-        UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        model.addAttribute("user", user);
         return "mypage-edit";
     }
 
