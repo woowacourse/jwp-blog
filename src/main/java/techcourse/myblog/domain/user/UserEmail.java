@@ -15,7 +15,6 @@ public class UserEmail {
 
     }
 
-
     public UserEmail(String email) {
         this.email = validate(email);
     }

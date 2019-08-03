@@ -23,7 +23,7 @@ public class CommentService {
         this.articleService = articleService;
     }
 
-    public Comment addComment(Long articleId, String email, CommentDto commentDto) {
+    public Comment addComment(long articleId, String email, CommentDto commentDto) {
         Article article = articleService.findArticle(articleId);
         User author = userService.getUserByEmail(email);
         Comment comment = commentDto.toEntity(article, author);

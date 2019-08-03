@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.support.UserSessionInfo;
 
 @Controller
@@ -18,11 +17,8 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-    private final CommentService commentService;
-
-    public ArticleController(ArticleService articleService, CommentService commentService) {
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
-        this.commentService = commentService;
     }
 
     @GetMapping("/{articleId}")
