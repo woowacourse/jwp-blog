@@ -28,11 +28,6 @@
                            class="float-right pointer btn btn-default btn-icon btn-rounded no-border-line no-mrg relative bottom-5">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </a>
-                        <form action="/mypage" th:method="delete">
-                            <button type="submit" class="btn btn-icon">
-                                <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
-                            </button>
-                        </form>
                     </div>
                     <div class="card-block">
                         <div class="row">
@@ -98,6 +93,11 @@
                                     </div>
                                 </div>
                                 <hr>
+                                <form action="/mypage" th:method="delete">
+                                    <button type="submit" class="btn btn-info">
+                                        회원 탈퇴
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
