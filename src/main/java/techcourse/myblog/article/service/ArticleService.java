@@ -10,7 +10,6 @@ import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.exception.NotFoundArticleException;
 import techcourse.myblog.article.repository.ArticleRepository;
 import techcourse.myblog.comment.domain.Comment;
-import techcourse.myblog.comment.service.CommentService;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.user.domain.User;
@@ -21,6 +20,7 @@ import techcourse.myblog.utils.page.PageRequest;
 import java.util.List;
 
 @Service
+@Transactional
 public class ArticleService {
     private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
     private static final String ID = "id";
@@ -28,12 +28,10 @@ public class ArticleService {
     private static final int VIEW_ARTICLE_COUNT = 10;
 
     private final UserService userService;
-    private final CommentService commentService;
     private final ArticleRepository articleRepository;
 
-    public ArticleService(UserService userService, CommentService commentService, ArticleRepository articleRepository) {
+    public ArticleService(UserService userService, ArticleRepository articleRepository) {
         this.userService = userService;
-        this.commentService = commentService;
         this.articleRepository = articleRepository;
     }
 
@@ -51,7 +49,6 @@ public class ArticleService {
                 .orElseThrow(NotFoundArticleException::new);
     }
 
-    @Transactional
     public Article save(ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
         User user = userService.getUserByEmail(userResponseDto.getEmail());
         Article article = ArticleConverter.convert(articleRequestDto, user);
@@ -59,7 +56,6 @@ public class ArticleService {
         return article;
     }
 
-    @Transactional
     public Article update(long articleId, ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
         Article originArticle = findArticle(articleId);
         User user = userService.getUserByEmail(userResponseDto.getEmail());
@@ -68,14 +64,10 @@ public class ArticleService {
         return originArticle;
     }
 
-    @Transactional
     public void delete(long articleId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        commentService.removeAllByArticle(article);
         articleRepository.deleteById(articleId);
     }
 
-    @Transactional
     public List<Comment> getCommentsByArticleId(Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
         return article.getComments();

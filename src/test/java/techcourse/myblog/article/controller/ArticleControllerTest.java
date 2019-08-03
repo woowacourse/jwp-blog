@@ -66,7 +66,8 @@ public class ArticleControllerTest extends LoginTemplate {
                         .with("coverUrl", "updatedCoverUrl")
                         .with("contents", "updatedContents"))
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus().isFound()
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/articles/" + articleId + ".*");
     }
 
     @Test

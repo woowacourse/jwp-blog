@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
 
@@ -22,7 +23,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    @Transactional()
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
         checkRegisteredEmail(userRequestDto);
         User user = userRepository.save(UserConverter.convert(userRequestDto));
@@ -42,18 +42,17 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional()
     public UserResponseDto updateUser(UserRequestDto userRequestDto, UserResponseDto origin) {
         User user = getUserByEmail(origin.getEmail());
         user.updateNameAndEmail(userRequestDto);
         return UserConverter.convert(user);
     }
 
+    @Transactional(readOnly = true)
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(NotFoundUserException::new);
     }
 
-    @Transactional()
     public void deleteUser(UserResponseDto userResponseDto) {
         userRepository.delete(getUserByEmail(userResponseDto.getEmail()));
     }

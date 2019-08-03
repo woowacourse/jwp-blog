@@ -3,9 +3,8 @@ package techcourse.myblog.comment.domain;
 import org.springframework.data.annotation.CreatedDate;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.comment.exception.CommentAuthenticationException;
-import techcourse.myblog.dto.UserResponseDto;
-import techcourse.myblog.user.domain.User;
 import techcourse.myblog.dto.CommentRequestDto;
+import techcourse.myblog.user.domain.User;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,12 +18,12 @@ public class Comment {
 
     private String contents;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "commenterId", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
     private User commenter;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "articleId")
+    @JoinColumn(name = "articleId", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     private Article article;
 
     @CreatedDate
@@ -68,7 +67,12 @@ public class Comment {
     }
 
     public boolean isCommenter(User user) {
-        return commenter.equals(user);
+        System.out.println("commenter " + commenter.getId());
+        System.out.println("user " + user.getId());
+        System.out.println("user vs comment object" + user.equals(commenter));
+        System.out.println("user id vs comment id" + user.getId().equals(commenter.getId()));
+        return user.equals(commenter);
+        //return user.getId().equals(id);
     }
 
     @Override

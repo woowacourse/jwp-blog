@@ -14,6 +14,7 @@ import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.service.UserService;
 
 @Service
+@Transactional
 public class CommentService {
     private final UserService userService;
     private final ArticleService articleService;
@@ -25,20 +26,14 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    @Transactional
     public void addComment(CommentRequestDto commentRequestDto, UserResponseDto userResponseDto, Long articleId) {
         String contents = commentRequestDto.getContents();
         User commenter = userService.getUserByEmail(userResponseDto.getEmail());
-        Article article = findArticleByArticleId(articleId);
+        Article article = articleService.findArticle(articleId);
 
         article.addComments(new Comment(contents, commenter, article));
     }
 
-    private Article findArticleByArticleId(Long articleId) {
-        return articleService.findArticle(articleId);
-    }
-
-    @Transactional
     public void update(Long commentId, CommentRequestDto commentRequestDto, UserResponseDto userResponseDto) {
         Comment comment = getCommentById(commentId);
         comment.update(commentRequestDto, userService.getUserByEmail(userResponseDto.getEmail()));
@@ -48,20 +43,15 @@ public class CommentService {
         return commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
     }
 
-    @Transactional
     public void remove(Long commentId) {
-        commentRepository.deleteById(commentId);
-    }
-
-    @Transactional
-    public void removeAllByArticle(Article article) {
-        commentRepository.deleteAllByArticle(article);
+        Comment comment = getCommentById(commentId);
+        commentRepository.delete(comment);
     }
 
     public void checkAuthentication(Long commentId, UserResponseDto userResponseDto) {
         Comment comment = getCommentById(commentId);
         User user = userService.getUserByEmail(userResponseDto.getEmail());
-
+        System.out.println(comment.getCommenter().getEmail());
         if (!comment.isCommenter(user)) {
             throw new CommentAuthenticationException();
         }
