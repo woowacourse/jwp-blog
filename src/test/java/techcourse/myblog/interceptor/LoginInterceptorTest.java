@@ -5,10 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.user.UserDataForTest;
+import techcourse.myblog.util.UserUtilForTest;
+import techcourse.myblog.util.WebTest;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -20,37 +21,21 @@ class LoginInterceptorTest {
 
     @BeforeEach
     void setUp() {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!")
-                        .with("name", "name"))
-                .exchange();
-
-        cookie = webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!"))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+        UserUtilForTest.signUp(webTestClient);
+        cookie = UserUtilForTest.loginAndGetCookie(webTestClient);
     }
 
     @Test
     void 로그인_상태일_시_글쓰기_페이지로_이동하는지_테스트() {
-        webTestClient.get().uri("/writing")
-                .header("Cookie", cookie)
-                .exchange()
+        WebTest.executeGetTest(webTestClient, "/writing", cookie)
                 .expectStatus().isOk();
     }
 
     @Test
     void 로그인_상태가_아닐_시_글쓰기_페이지로_이동하는지_테스트() {
-        webTestClient.get().uri("/writing")
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .expectHeader().valueMatches("location", ".*/login");
+        WebTest.executeGetTest(webTestClient, "/writing", UserDataForTest.EMPTY_COOKIE)
+                .expectStatus().isFound()
+                .expectHeader()
+                .valueMatches("location", ".*/login");
     }
 }

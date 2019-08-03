@@ -36,20 +36,20 @@ public class UserExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handelDuplicatedUserException(DuplicatedUserException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "/signup";
+        return "signup";
     }
 
     @ExceptionHandler(NotFoundUserException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleNotFoundUserException(NotFoundUserException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "/login";
+        return "login";
     }
 
     @ExceptionHandler(NotMatchPasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleNotMatchPasswordException(NotMatchPasswordException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
-        return "/login";
+        return "login";
     }
 }

@@ -1,17 +1,27 @@
 package techcourse.myblog.article.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.article.dto.ArticleDto;
+import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.argumentresolver.UserSession;
+import techcourse.myblog.article.dto.ArticleCreateDto;
+import techcourse.myblog.article.dto.ArticleResponseDto;
+import techcourse.myblog.article.dto.ArticleUpdateDto;
+import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.article.service.ArticleService;
+import techcourse.myblog.comment.service.CommentService;
 
 @Controller
-@RequiredArgsConstructor
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final CommentService commentService;
+
+    public ArticleController(ArticleService articleService, CommentService commentService) {
+        this.articleService = articleService;
+        this.commentService = commentService;
+    }
 
     @GetMapping("/")
     public String index(Model model) {
@@ -25,32 +35,37 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(ArticleDto.Creation articleDto) {
-        long newArticleId = articleService.save(articleDto);
-        return "redirect:/articles/" + newArticleId;
+    public RedirectView createArticle(ArticleCreateDto articleDto, UserSession userSession) {
+        long newArticleId = articleService.save(articleDto, userSession.getId()).getId();
+        return new RedirectView("/articles/" + newArticleId);
     }
 
     @GetMapping("/articles/{articleId}")
     public String readArticle(@PathVariable long articleId, Model model) {
         model.addAttribute("article", articleService.findById(articleId));
+        model.addAttribute("comments", commentService.findAllByArticleId(articleId));
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String renderUpdatePage(@PathVariable long articleId, Model model) {
-        model.addAttribute("article", articleService.findById(articleId));
+    public String renderUpdatePage(@PathVariable long articleId, Model model, UserSession userSession) {
+        ArticleResponseDto articleResponse = articleService.findById(articleId);
+        if (!articleResponse.matchAuthorId(userSession.getId())) {
+            throw new NotMatchUserException();
+        }
+        model.addAttribute("article", articleResponse);
         return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable long articleId, ArticleDto.Updation articleDto) {
-        long updatedArticleId = articleService.update(articleId, articleDto);
-        return "redirect:/articles/" + updatedArticleId;
+    public RedirectView updateArticle(@PathVariable long articleId, ArticleUpdateDto articleDto, UserSession userSession) {
+        long updatedArticleId = articleService.update(articleId, articleDto, userSession.getId()).getId();
+        return new RedirectView("/articles/" + updatedArticleId);
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable long articleId) {
-        articleService.deleteById(articleId);
-        return "redirect:/";
+    public RedirectView deleteArticle(@PathVariable long articleId, UserSession userSession) {
+        articleService.deleteById(articleId, userSession.getId());
+        return new RedirectView("/");
     }
 }

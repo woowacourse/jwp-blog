@@ -1,22 +1,22 @@
 package techcourse.myblog.article.controller;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.util.UserUtilForTest;
+import techcourse.myblog.util.WebTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.article.ArticleDataForTest.*;
+import static techcourse.myblog.user.UserDataForTest.EMPTY_COOKIE;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
-    private static long currentArticleId = 1;
+    private static final long ARTICLE_ID = 1;
+    private static final long ARTICLE_DELETE_ID = 2;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -25,144 +25,86 @@ public class ArticleControllerTests {
 
     @BeforeEach
     void setUp() {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!")
-                        .with("name", "name"))
-                .exchange();
-
-        cookie = webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!"))
-                .exchange()
-                .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
-
-        webTestClient.post()
-                .uri("/articles")
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", "jaemok")
-                        .with("coverUrl", "yuarel")
-                        .with("contents", "naeyong"))
-                .exchange();
+        cookie = UserUtilForTest.loginAndGetCookie(webTestClient);
     }
 
     @Test
     void index() {
-        webTestClient.get().uri("/")
-                .exchange()
+        WebTest.executeGetTest(webTestClient, "/", EMPTY_COOKIE)
                 .expectStatus().isOk();
     }
 
     @Test
     void 게시물_작성_페이지_이동_테스트() {
-        webTestClient.get().uri("/writing")
-                .header("Cookie", cookie)
-                .exchange()
+        WebTest.executeGetTest(webTestClient, "/writing", cookie)
                 .expectStatus().isOk();
     }
 
     @Test
-    void 게시물_작성_요청_후_리다이렉팅_테스트() {
-        webTestClient.post().uri("/articles")
-                .exchange()
-                .expectStatus().is3xxRedirection();
-    }
-
-    @Test
     void 게시물_조회_테스트() {
-        String title = "jaemok";
-        String contents = "naeyong";
 
-        webTestClient.get().uri("/articles/" + currentArticleId)
-                .header("Cookie", cookie)
-                .exchange()
+        WebTest.executeGetTest(webTestClient, "/", cookie)
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    //assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
+                    assertThat(body.contains(ARTICLE_TITLE)).isTrue();
+                    //assertThat(body.contains(ARTICLE_COVER_URL)).isTrue();
+                    assertThat(body.contains(ARTICLE_CONTENTS)).isTrue();
                 });
     }
 
     @Test
     void 게시물_추가_요청_테스트() {
-        String newTitle = "newTitle";
-        String newCoverUrl = "newCoverUrl";
-        String newContents = "newContents";
 
-        webTestClient.post()
-                .uri("/articles")
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", newTitle)
-                        .with("coverUrl", newCoverUrl)
-                        .with("contents", newContents))
-                .exchange()
-                .expectStatus().is3xxRedirection()
+        EntityExchangeResult<byte[]> entityExchangeResult =
+                WebTest.executePostTest(webTestClient, "/articles", cookie,
+                        NEW_ARTICLE_BODY)
+                        .expectStatus().isFound()
+                        .expectBody()
+                        .returnResult();
+
+        String location = String.valueOf(entityExchangeResult.getResponseHeaders().getLocation());
+        WebTest.executeGetTest(webTestClient, location, cookie)
+                .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> {
-                    webTestClient.get().uri(response.getResponseHeaders().getLocation())
-                            .header("Cookie", cookie)
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(res -> {
-                                String body = new String(res.getResponseBody());
-                                assertThat(body.contains(newTitle)).isTrue();
-                                //assertThat(body.contains(updatedCoverUrl)).isTrue();
-                                assertThat(body.contains(newContents)).isTrue();
-                            });
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(NEW_TITLE)).isTrue();
+                    //assertThat(body.contains(NEW_COVER_URL)).isTrue();
+                    assertThat(body.contains(NEW_CONTENTS)).isTrue();
                 });
     }
 
     @Test
     void 게시물_수정_페이지_이동_테스트() {
-        webTestClient.get().uri("/articles/" + currentArticleId + "/edit")
-                .header("Cookie", cookie)
-                .exchange()
+        WebTest.executeGetTest(webTestClient, "/articles/" + ARTICLE_ID + "/edit", cookie)
                 .expectStatus().isOk();
     }
 
     @Test
     void 게시물_수정_요청_테스트() {
-        String updatedTitle = "updatedTitle";
-        String updatedCoverUrl = "updatedCoverUrl";
-        String updatedContents = "updatedContents";
 
-        webTestClient.put().uri("/articles/" + currentArticleId)
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", updatedTitle)
-                        .with("coverUrl", updatedCoverUrl)
-                        .with("contents", updatedContents))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> webTestClient.get().uri(response.getResponseHeaders().getLocation())
-                        .header("Cookie", cookie)
-                        .exchange()
+        EntityExchangeResult<byte[]> entityExchangeResult =
+                WebTest.executePutTest(webTestClient, "/articles/" + ARTICLE_ID, cookie,
+                        UPDATE_BODY_INSERTER)
+                        .expectStatus().isFound()
                         .expectBody()
-                        .consumeWith(res -> {
-                            String body = new String(res.getResponseBody());
-                            assertThat(body.contains(updatedTitle)).isTrue();
-                            //assertThat(body.contains(updatedCoverUrl)).isTrue();
-                            assertThat(body.contains(updatedContents)).isTrue();
-                        }));
+                        .returnResult();
+
+        String location = String.valueOf(entityExchangeResult.getResponseHeaders().getLocation());
+        WebTest.executeGetTest(webTestClient, location, cookie)
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
+                    assertThat(body.contains(UPDATE_TITLE)).isTrue();
+                    //assertThat(body.contains(UPDATE_COVER_URL)).isTrue();
+                    assertThat(body.contains(UPDATE_CONTENTS)).isTrue();
+                });
     }
 
-    @AfterEach
+    @Test
     void 게시물_삭제_요청_테스트() {
-        webTestClient.delete().uri("/articles/" + currentArticleId++)
-                .exchange()
-                .expectStatus().is3xxRedirection();
+        WebTest.executeDeleteTest(webTestClient, "/articles/" + ARTICLE_DELETE_ID, cookie);
     }
 }

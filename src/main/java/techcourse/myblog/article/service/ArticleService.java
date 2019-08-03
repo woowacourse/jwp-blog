@@ -1,48 +1,68 @@
 package techcourse.myblog.article.service;
 
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.domain.ArticleRepository;
-import techcourse.myblog.article.dto.ArticleDto;
+import techcourse.myblog.article.dto.ArticleCreateDto;
+import techcourse.myblog.article.dto.ArticleResponseDto;
+import techcourse.myblog.article.dto.ArticleUpdateDto;
 import techcourse.myblog.article.exception.NotFoundArticleException;
+import techcourse.myblog.article.exception.NotMatchUserException;
+import techcourse.myblog.user.domain.User;
+import techcourse.myblog.user.domain.UserRepository;
+import techcourse.myblog.user.exception.NotFoundUserException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public List<ArticleDto.Response> findAll() {
+    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository, ModelMapper modelMapper) {
+        this.articleRepository = articleRepository;
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
+
+    public List<ArticleResponseDto> findAll() {
         List<Article> articles = (List<Article>) articleRepository.findAll();
         return articles.stream()
-                .map(article -> modelMapper.map(article, ArticleDto.Response.class))
+                .map(article -> modelMapper.map(article, ArticleResponseDto.class))
                 .collect(Collectors.toList());
     }
 
-    public long save(ArticleDto.Creation articleDto) {
-        Article newArticle = articleDto.toArticle();
-        return articleRepository.save(newArticle).getId();
+    public ArticleResponseDto save(ArticleCreateDto articleDto, long authorId) {
+        User author = userRepository.findById(authorId).orElseThrow(() -> new NotFoundUserException(authorId));
+        Article newArticle = articleDto.toArticle(author);
+        return modelMapper.map(articleRepository.save(newArticle), ArticleResponseDto.class);
     }
 
-    public ArticleDto.Response findById(long articleId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        return modelMapper.map(article, ArticleDto.Response.class);
+    public ArticleResponseDto findById(long articleId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
+        return modelMapper.map(article, ArticleResponseDto.class);
     }
 
-    public long update(long articleId, ArticleDto.Updation articleDto) {
-        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        article.update(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
-        return article.getId();
+    public ArticleResponseDto update(long articleId, ArticleUpdateDto articleDto, long authorId) {
+        Article article = checkAuthority(articleId, authorId);
+        return modelMapper.map(article.update(articleDto), ArticleResponseDto.class);
     }
 
-    public void deleteById(long articleId) {
-        articleRepository.deleteById(articleId);
+    public void deleteById(long articleId, long authorId) {
+        Article article = checkAuthority(articleId, authorId);
+        articleRepository.delete(article);
+    }
+
+    private Article checkAuthority(long articleId, long authorId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
+        if (article.notMatchAuthorId(authorId)) {
+            throw new NotMatchUserException();
+        }
+        return article;
     }
 }

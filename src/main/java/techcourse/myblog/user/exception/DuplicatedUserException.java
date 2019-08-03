@@ -1,7 +1,9 @@
 package techcourse.myblog.user.exception;
 
+import techcourse.myblog.user.domain.vo.Email;
+
 public class DuplicatedUserException extends IllegalArgumentException {
-    public DuplicatedUserException() {
-        super("중복된 e-mail입니다.");
+    public DuplicatedUserException(Email email) {
+        super("[ " + email.getEmail() + " ]은 중복된 이메일입니다.");
     }
 }
