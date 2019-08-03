@@ -83,7 +83,7 @@
                                     <span class="text-bold inline-block" href="" th:text="${comment.author.userName}">JUN</span>
 
                                     <span class="sub-title inline-block pull-right">
-                                        <i class="ti-timer pdd-right-5"></i>
+                                        <i class="ti-timer pdd-right-5"></i>p
                                         <span>6 min ago</span>
                                     </span>
 
@@ -95,8 +95,8 @@
                                             <i class="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
                                         </button>
                                     </form>
-                                    <button class="comment-edit-button float-right pointer btn btn-icon">
-                                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                    <button class="comment-edit float-right pointer btn btn-icon">
+                                        <i class="comment-edit ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                                     </button>
                                     <p class="width-80" th:text="${comment.contents}">브라운 멋져</p>
                                 </div>
@@ -170,6 +170,8 @@
         });
     </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+    <script src="/js/comment.js"></script>
     <script th:if="${commentError != null}" th:inline="javascript">
         const error = [[ ${commentError}]];
         alert(error)
