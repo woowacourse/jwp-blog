@@ -12,7 +12,6 @@ import techcourse.myblog.annotation.UserFromSession;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.NotFoundArticleException;
-import techcourse.myblog.exception.UnauthenticatedUserException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.service.dto.ArticleDTO;
 
@@ -64,14 +63,13 @@ public class ArticleController {
     public Object updateForm(@PathVariable Long articleId,
                              @UserFromSession User user,
                              Model model) {
-        Article savedArticle = articleRepository
+        Article article = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
-
-        checkAuthor(user, savedArticle);
+        article.validate(user);
 
         model.addAttribute("user", user);
-        model.addAttribute("article", savedArticle);
+        model.addAttribute("article", article);
         model.addAttribute("articleId", articleId);
         return "article-edit";
     }
@@ -80,29 +78,24 @@ public class ArticleController {
     @PutMapping("/{articleId}")
     public String update(@PathVariable Long articleId, @UserFromSession User user,
                          ArticleDTO articleDTO) {
-        Article savedArticle = articleRepository
+        Article article = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
+        article.validate(user);
 
-        checkAuthor(user, savedArticle);
-        savedArticle.update(articleDTO.toDomain(savedArticle.getAuthor()));
+        article.update(articleDTO.toDomain(article.getAuthor()));
 
         return "redirect:/articles/" + articleId;
     }
 
-    private void checkAuthor(User user, Article savedArticle) {
-        if (!user.equals(savedArticle.getAuthor())) {
-            throw new UnauthenticatedUserException();
-        }
-    }
+
 
     @DeleteMapping("/{articleId}")
     public String delete(@PathVariable Long articleId, @UserFromSession User user) {
-        Article savedArticle = articleRepository
+        Article article = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
-        checkAuthor(user, savedArticle);
-
+        article.validate(user);
 
         articleRepository.deleteById(articleId);
         return "redirect:/";

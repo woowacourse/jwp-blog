@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import techcourse.myblog.exception.UnauthenticatedUserException;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -51,5 +52,11 @@ public class Article {
 
     public void remove(Comment comment) {
         comments.remove(comment);
+    }
+
+    public void validate(User user) {
+        if (author.equals(user) == false) {
+            throw new UnauthenticatedUserException();
+        }
     }
 }
