@@ -21,8 +21,7 @@ public class Article {
     @Column(nullable = false, length = 100)
     private String title;
 
-    @Lob
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false)
     private String coverUrl;
 
     @Lob
