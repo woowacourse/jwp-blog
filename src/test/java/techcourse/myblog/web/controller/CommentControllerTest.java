@@ -102,6 +102,20 @@ public class CommentControllerTest {
     }
 
     @Test
+    @Transactional
+    void update_withOutLogin_fail() throws Exception {
+        final String updatedContents = "내용쓰";
+        final Article written = articleRepository.save(new Article(TEST_USER, TEST_TITLE, TEST_COVER_URL, TEST_CONTENTS));
+        final Comment comment = commentRepository.save(new Comment(written, TEST_USER, "ㅎㅇㅎㅇ"));
+        mockMvc.perform(
+                put("/articles/" + written.getId() + "/comment/" + comment.getId()).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("contents", updatedContents)
+        ).andDo(print())
+                .andExpect(status().is3xxRedirection());
+        assertThat(commentRepository.findById(comment.getId()).get().getContents()).isEqualTo("ㅎㅇㅎㅇ");
+    }
+
+    @Test
     void delete_success() throws Exception {
         final Article written = articleRepository.save(TEST_ARTICLE);
         final Comment comment = commentRepository.save(TEST_COMMENT);
