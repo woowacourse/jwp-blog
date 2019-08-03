@@ -36,10 +36,11 @@ public class CommentService {
         this.modelMapper = modelMapper;
     }
 
-    public Comment save(long articleId, long authorId, CommentCreateDto commentDto) {
+    public CommentResponseDto save(long articleId, long authorId, CommentCreateDto commentDto) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundArticleException(articleId));
         User author = userRepository.findById(authorId).orElseThrow(() -> new NotFoundUserException(authorId));
-        return commentRepository.save(commentDto.toComment(author, article));
+        Comment comment = commentRepository.save(commentDto.toComment(author, article));
+        return modelMapper.map(comment, CommentResponseDto.class);
     }
 
     public CommentResponseDto findById(long commentId) {
@@ -54,9 +55,9 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    public void update(long commentId, long authorId, CommentUpdateDto commentDto) {
+    public CommentResponseDto update(long commentId, long authorId, CommentUpdateDto commentDto) {
         Comment comment = checkAuthority(commentId, authorId);
-        comment.updateComment(commentDto.getContents());
+        return modelMapper.map(comment.updateComment(commentDto.getContents()), CommentResponseDto.class);
     }
 
     public void delete(long commentId, long authorId) {

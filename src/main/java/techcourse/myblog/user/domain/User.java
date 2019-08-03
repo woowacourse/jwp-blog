@@ -1,6 +1,7 @@
 package techcourse.myblog.user.domain;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techcourse.myblog.user.domain.vo.*;
@@ -8,8 +9,9 @@ import techcourse.myblog.user.domain.vo.*;
 import javax.persistence.*;
 
 @Entity
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,11 +34,13 @@ public class User {
         this.name = Name.of(name);
     }
 
-    public void update(String name) {
+    public User update(String name) {
         this.name = this.name.updateName(name);
+        return this;
     }
 
     public boolean checkPassword(String password) {
         return this.password.isCorrect(password);
     }
 }
+

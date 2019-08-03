@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import techcourse.myblog.article.dto.ArticleUpdateDto;
 import techcourse.myblog.user.domain.User;
 
 import javax.persistence.*;
@@ -35,10 +36,12 @@ public class Article {
         this.author = author;
     }
 
-    public void update(String title, String coverUrl, String contents) {
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
+    public Article update(ArticleUpdateDto articleUpdateDto) {
+        this.title = articleUpdateDto.getTitle();
+        this.coverUrl = articleUpdateDto.getCoverUrl();
+        this.contents = articleUpdateDto.getContents();
+
+        return this;
     }
 
     public boolean notMatchAuthorId(long authorId) {

@@ -37,10 +37,10 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    public Article save(ArticleCreateDto articleDto, long authorId) {
+    public ArticleResponseDto save(ArticleCreateDto articleDto, long authorId) {
         User author = userRepository.findById(authorId).orElseThrow(() -> new NotFoundUserException(authorId));
         Article newArticle = articleDto.toArticle(author);
-        return articleRepository.save(newArticle);
+        return modelMapper.map(articleRepository.save(newArticle), ArticleResponseDto.class);
     }
 
     public ArticleResponseDto findById(long articleId) {
@@ -48,10 +48,9 @@ public class ArticleService {
         return modelMapper.map(article, ArticleResponseDto.class);
     }
 
-    public long update(long articleId, ArticleUpdateDto articleDto, long authorId) {
+    public ArticleResponseDto update(long articleId, ArticleUpdateDto articleDto, long authorId) {
         Article article = checkAuthority(articleId, authorId);
-        article.update(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
-        return article.getId();
+        return modelMapper.map(article.update(articleDto), ArticleResponseDto.class);
     }
 
     public void deleteById(long articleId, long authorId) {

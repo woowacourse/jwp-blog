@@ -1,6 +1,7 @@
 package techcourse.myblog.comment.domain;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techcourse.myblog.article.domain.Article;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Comment {
 
     @Id
@@ -27,14 +29,16 @@ public class Comment {
     private Article article;
 
     @Builder
-    private Comment(String contents, User author, Article article) {
+    private Comment(long id, String contents, User author, Article article) {
+        this.id = id;
         this.contents = contents;
         this.author = author;
         this.article = article;
     }
 
-    public void updateComment(String contents) {
+    public Comment updateComment(String contents) {
         this.contents = contents;
+        return this;
     }
 
     public boolean notMatchAuthorId(long authorId) {

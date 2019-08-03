@@ -59,7 +59,7 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public RedirectView updateArticle(@PathVariable long articleId, ArticleUpdateDto articleDto, UserSession userSession) {
-        long updatedArticleId = articleService.update(articleId, articleDto, userSession.getId());
+        long updatedArticleId = articleService.update(articleId, articleDto, userSession.getId()).getId();
         return new RedirectView("/articles/" + updatedArticleId);
     }
 
