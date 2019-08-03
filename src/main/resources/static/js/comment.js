@@ -35,11 +35,14 @@ const COMMENT = (function () {
         const update = function (event) {
             const target = event.target
             const parent = target.closest("li")
+            const form = parent.getElementsByTagName("form")[0]
             if (target.classList.contains("comment-edit") &&
                 (parent.getElementsByClassName("comment-editor").length === 0)) {
-                const url = "url"
-                const editorId = "editSection" + 2
-                const contentsId = "comment-contents" + 2
+                const url = form.action
+                const tokens = form.action.split('/')
+                const commentId = tokens[tokens.length - 1]
+                const editorId = "editSection" + commentId
+                const contentsId = "comment-contents" + commentId
 
                 parent.insertAdjacentHTML("beforeend",
                     compiledCommentEditTemplate({"url": url, "editorId": editorId, "contentsId": contentsId}))
