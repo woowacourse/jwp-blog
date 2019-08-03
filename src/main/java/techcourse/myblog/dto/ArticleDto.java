@@ -1,6 +1,7 @@
 package techcourse.myblog.dto;
 
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -18,10 +19,14 @@ public class ArticleDto {
     @NotBlank(message = CONTENTS_CONSTRAINT_MESSAGE)
     private String contents;
 
-    public ArticleDto(String title, String url, String contents) {
+    public ArticleDto(String title, String coverUrl, String contents) {
         this.title = title;
-        this.coverUrl = url;
+        this.coverUrl = coverUrl;
         this.contents = contents;
+    }
+
+    public Article toArticle(User user) {
+        return new Article(title, coverUrl, contents, user);
     }
 
     public String getTitle() {
@@ -46,10 +51,5 @@ public class ArticleDto {
 
     public void setContents(String contents) {
         this.contents = contents;
-    }
-
-
-    public Article toArticle() {
-        return new Article(title, coverUrl, contents);
     }
 }
