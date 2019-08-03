@@ -35,7 +35,6 @@ public class ArticleService {
         this.userRepository = userRepository;
     }
 
-    @Transactional(readOnly = true)
     public List<Article> findAll() {
         PageRequest pageRequest = new PageRequest(START_PAGE, VIEW_ARTICLE_COUNT, Sort.Direction.DESC, ID);
         Page<Article> page = articleRepository.findAll(pageRequest.of());
@@ -43,7 +42,6 @@ public class ArticleService {
         return page.getContent();
     }
 
-    @Transactional(readOnly = true)
     public Article findArticle(long articleId) {
         return getArticle(articleId);
     }
@@ -68,12 +66,10 @@ public class ArticleService {
         return originArticle;
     }
 
-    @Transactional
     public void delete(long articleId) {
         articleRepository.deleteById(articleId);
     }
 
-    @Transactional(readOnly = true)
     public List<Comment> getComments(long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(ArticleException::new);
         return article.getComments();

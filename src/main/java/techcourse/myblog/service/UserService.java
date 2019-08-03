@@ -37,7 +37,6 @@ public class UserService {
         }
     }
 
-    @Transactional(readOnly = true)
     public List<User> findAll() {
         return userRepository.findAll()
                 .parallelStream()
@@ -52,8 +51,7 @@ public class UserService {
     }
 
     private User getUserByEmail(UserResponseDto userResponseDto) {
-        return userRepository.findByEmail(userResponseDto.getEmail())
-                .orElseThrow(() -> new UserException(NOT_FOUND_EMAIL));
+        return userRepository.findByEmail(userResponseDto.getEmail()).orElseThrow(() -> new UserException(NOT_FOUND_EMAIL));
     }
 
     @Transactional

@@ -43,13 +43,11 @@ public class CommentService {
     }
 
     private Article findArticleByArticleId(Long articleId) {
-        return articleRepository.findById(articleId)
-                .orElseThrow(ArticleException::new);
+        return articleRepository.findById(articleId).orElseThrow(ArticleException::new);
     }
 
     private User findUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(UserException::new);
+        return userRepository.findByEmail(email).orElseThrow(UserException::new);
     }
 
     @Transactional
@@ -59,11 +57,9 @@ public class CommentService {
     }
 
     private Comment getCommentFindById(Long commentId) {
-        return commentRepository.findById(commentId)
-                .orElseThrow(CommentException::new);
+        return commentRepository.findById(commentId).orElseThrow(CommentException::new);
     }
 
-    @Transactional
     public void remove(Long commentId) {
         commentRepository.deleteById(commentId);
     }
