@@ -19,10 +19,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    private String getEmailFromSession(HttpSession session) {
-        return (String) session.getAttribute("email");
-    }
-
     private void clearSession(HttpSession session) {
         session.removeAttribute("user");
     }

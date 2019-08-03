@@ -1,4 +1,5 @@
 package techcourse.myblog.web.controller.controller;
+
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,6 +14,7 @@ public class CommonExceptionAdvice {
         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         return new RedirectView("/login");
     }
+
     @ExceptionHandler(Exception.class)
     public ModelAndView common(Exception e) {
         ModelAndView mv = new ModelAndView();

@@ -32,6 +32,7 @@ public class CommentControllerTest {
     private static final String TEST_EMAIL = "testdonut@woowa.com";
     private static final String TEST_PASSWORD = "qwer1234";
     private static final User TEST_USER = new User(TEST_NAME, TEST_EMAIL, TEST_PASSWORD);
+    private static final User TEST_USER_2 = new User(TEST_NAME, TEST_EMAIL+"a", TEST_PASSWORD);
     private static final String TEST_TITLE = "Jemok";
     private static final String TEST_COVER_URL = "Baegyung";
     private static final String TEST_CONTENTS = "Naeyong";
@@ -51,8 +52,8 @@ public class CommentControllerTest {
     @BeforeEach
     void setUp() {
         session = new MockHttpSession();
-        session.setAttribute("user", TEST_USER);
-        userRepository.save(TEST_USER);
+        session.setAttribute("user", userRepository.save(TEST_USER));
+        userRepository.save(TEST_USER_2);
     }
 
     @AfterEach
@@ -63,7 +64,7 @@ public class CommentControllerTest {
     }
 
     @Test
-    void writeComment() throws Exception {
+    void write_post_success() throws Exception {
         final Article written = articleRepository.save(TEST_ARTICLE);
         mockMvc.perform(
                 post("/articles/" + written.getId() + "/comment").contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -75,8 +76,19 @@ public class CommentControllerTest {
     }
 
     @Test
+    void write_postWithoutLogin_fail() throws Exception {
+        final Article written = articleRepository.save(TEST_ARTICLE);
+        mockMvc.perform(
+                post("/articles/" + written.getId() + "/comment").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("contents", "ㅎㅇ")
+        ).andDo(print())
+                .andExpect(redirectedUrl("/login"));
+        assertThat(commentRepository.count()).isEqualTo(0);
+    }
+
+    @Test
     @Transactional
-    void updateCommentTest() throws Exception {
+    void update_editedData_success() throws Exception {
         final String updatedContents = "내용쓰";
         final Article written = articleRepository.save(new Article(TEST_USER, TEST_TITLE, TEST_COVER_URL, TEST_CONTENTS));
         final Comment comment = commentRepository.save(new Comment(written, TEST_USER, "ㅎㅇㅎㅇ"));
@@ -90,10 +102,18 @@ public class CommentControllerTest {
     }
 
     @Test
-    void deleteCommentTest() throws Exception {
+    void delete_success() throws Exception {
         final Article written = articleRepository.save(TEST_ARTICLE);
         final Comment comment = commentRepository.save(TEST_COMMENT);
         mockMvc.perform(delete("/articles/" + written.getId() + "/comment/" + comment.getId()).session(session));
         assertThat(commentRepository.findById(comment.getId()).isPresent()).isFalse();
+    }
+    @Test
+    void delete_NotSameAuthor_Fail() throws Exception {
+        final Article written = articleRepository.save(TEST_ARTICLE);
+        final Comment comment = commentRepository.save(TEST_COMMENT);
+        session.setAttribute("user", TEST_USER_2);
+        mockMvc.perform(delete("/articles/" + written.getId() + "/comment/" + comment.getId()).session(session));
+        assertThat(commentRepository.findById(comment.getId()).isPresent()).isTrue();
     }
 }

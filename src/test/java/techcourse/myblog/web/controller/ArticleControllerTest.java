@@ -73,7 +73,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    void writeTest() throws Exception {
+    void write_post_success() throws Exception {
         mockMvc.perform(
                 post("/articles").contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("title", TEST_TITLE)
@@ -83,17 +83,22 @@ class ArticleControllerTest {
         ).andDo(print())
                 .andExpect(status().is3xxRedirection());
         assertThat(articleRepository.count() != 0).isTrue();
-        boolean[] isWritten = {false};
-        articleRepository.findAll().forEach(article ->
-                isWritten[0] |= article.getTitle().equals(TEST_TITLE)
-                        & article.getCoverUrl().equals(TEST_COVER_URL)
-                        & article.getContents().equals(TEST_CONTENTS)
-        );
-        assertThat(isWritten[0]).isTrue();
     }
 
     @Test
-    void readTest() throws Exception {
+    void write_postWithoutLogin_fail() throws Exception {
+        mockMvc.perform(
+                post("/articles").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("title", TEST_TITLE)
+                        .param("coverUrl", TEST_COVER_URL)
+                        .param("contents", TEST_CONTENTS)
+        ).andDo(print())
+                .andExpect(status().is3xxRedirection());
+        assertThat(articleRepository.count() != 0).isFalse();
+    }
+
+    @Test
+    void wrtie_postDataConfirm_true() throws Exception {
         final Article written = articleRepository.save(TEST_ARTICLE);
         mockMvc.perform(get("/articles/0"))
                 .andDo(print())
@@ -110,7 +115,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    void updateFormTest() throws Exception {
+    void updateForm_getWithCurrentUserData_true() throws Exception {
         final Article written = articleRepository.save(TEST_ARTICLE);
         mockMvc.perform(get("/articles/0/edit"))
                 .andDo(print())
@@ -127,7 +132,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    void updateTest() throws Exception {
+    void update_putEditedData_true() throws Exception {
         final String updatedTitle = "제목쓰";
         final String updatedCoverUrl = "배경쓰";
         final String updatedContents = "내용쓰";
@@ -152,11 +157,16 @@ class ArticleControllerTest {
     }
 
     @Test
-    void deleteTest() throws Exception {
+    void delete_success() throws Exception {
         final Article written = articleRepository.save(TEST_ARTICLE);
         mockMvc.perform(delete("/articles/" + written.getId()).session(session));
         assertThat(articleRepository.findById(written.getId()).isPresent()).isFalse();
     }
 
-
+    @Test
+    void delete_withOutLogin_fail() throws Exception {
+        final Article written = articleRepository.save(TEST_ARTICLE);
+        mockMvc.perform(delete("/articles/" + written.getId()));
+        assertThat(articleRepository.findById(written.getId()).isPresent()).isTrue();
+    }
 }

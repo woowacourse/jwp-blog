@@ -3,8 +3,8 @@ package techcourse.myblog.application.service;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.repository.CommentRepository;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.repository.CommentRepository;
 
 @Service
 public class CommentService {
@@ -28,11 +28,12 @@ public class CommentService {
         }).orElse(false);
     }
 
-    public void tryDelete(long commentId, User author) {
+    public long tryDelete(long commentId, User author) {
         commentRepository.findById(commentId).ifPresent(comment -> {
             if (comment.isSameAuthor(author)) {
                 commentRepository.deleteById(commentId);
             }
         });
+        return commentId;
     }
 }

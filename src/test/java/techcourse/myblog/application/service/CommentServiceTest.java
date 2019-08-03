@@ -44,9 +44,19 @@ class CommentServiceTest {
     }
     @Test
     void save_success() {
-        String commentContents = "abc";
-        Comment comment = commentService.write(TEST_ARTICLE, TEST_USER,commentContents);
-        assertThat(commentRepository.findById(comment.getId()).get().getContents()).isEqualTo(commentContents);
+        String contents = "abc";
+        Comment comment = commentService.write(TEST_ARTICLE, TEST_USER,contents);
+        assertThat(commentRepository.findById(comment.getId()).get().getContents()).isEqualTo(contents);
+    }
+
+    @Test
+    void update_success(){
+        String contents = "abc";
+        String editedContents = "edited";
+        Comment comment = commentService.write(TEST_ARTICLE, TEST_USER,contents);
+        commentService.tryUpdate(comment.getId(),editedContents,TEST_USER);
+        assertThat(commentRepository.findById(comment.getId()).get().getContents()).isEqualTo(editedContents);
+
     }
 
     @Test
@@ -61,7 +71,6 @@ class CommentServiceTest {
         User wrongUser = new User("abc", "wrong@wrong.com", TEST_PASSWORD);
         userRepository.save(wrongUser);
         Comment comment = commentService.write(TEST_ARTICLE, wrongUser,"cde");
-        commentService.tryDelete(comment.getId(),TEST_USER);
-        assertThat(commentRepository.findById(comment.getId()).isPresent()).isEqualTo(true);
+        assertThat(commentRepository.findById(commentService.tryDelete(comment.getId(),TEST_USER)).isPresent()).isEqualTo(true);
     }
 }

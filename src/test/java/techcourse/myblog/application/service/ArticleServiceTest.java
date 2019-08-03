@@ -37,7 +37,6 @@ class ArticleServiceTest {
     @BeforeEach
     void setUp() {
         userRepository.save(TEST_USER);
-
     }
 
     @Test
@@ -82,7 +81,7 @@ class ArticleServiceTest {
         User wrongUser = new User("abc", "wrong@wrong.com", TEST_PASSWORD);
         userRepository.save(wrongUser);
         Article article = articleService.write(TEST_ARTICLE);
-        articleService.tryDelete(article.getId(), TEST_USER);
+        articleService.tryDelete(article.getId(), wrongUser);
         assertThat(articleRepository.findById(article.getId()).isPresent()).isEqualTo(true);
     }
 }

@@ -29,7 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public WebMvcConfigurer argumentResolverConfigure(){
+    public WebMvcConfigurer argumentResolverConfigure() {
         return new WebMvcConfigurer() {
             @Override
             public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {

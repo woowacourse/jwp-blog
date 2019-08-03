@@ -50,9 +50,9 @@ public class UserService {
         return userRepository.findByEmail(user.getEmail()).map(targetUser -> targetUser.update(editedName)).orElseThrow(IllegalArgumentException::new);
     }
 
-
     @Transactional
-    public void delete(User user) {
+    public long delete(User user) {
         userRepository.deleteByEmail(user.getEmail());
+        return user.getId();
     }
 }
