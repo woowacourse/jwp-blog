@@ -1,4 +1,5 @@
 package techcourse.myblog.application.dto;
+
 import techcourse.myblog.domain.User;
 
 public class LoginUser {
@@ -7,6 +8,7 @@ public class LoginUser {
     public LoginUser(final User user) {
         this.user = user;
     }
+
     public User getUser() {
         return user;
     }

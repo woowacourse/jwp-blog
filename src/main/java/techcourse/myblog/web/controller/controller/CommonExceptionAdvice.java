@@ -1,4 +1,4 @@
-package techcourse.myblog.web.controller;
+package techcourse.myblog.web.controller.controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;

@@ -2,7 +2,6 @@ package techcourse.myblog.application.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.application.exception.LoginFailException;
-import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.UserRepository;
 

@@ -28,7 +28,7 @@ public class CommentService {
         }).orElse(false);
     }
 
-    public void delete(long commentId, User author) {
+    public void tryDelete(long commentId, User author) {
         commentRepository.findById(commentId).ifPresent(comment -> {
             if (comment.isSameAuthor(author)) {
                 commentRepository.deleteById(commentId);

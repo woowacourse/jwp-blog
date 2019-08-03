@@ -1,4 +1,4 @@
-package techcourse.myblog.web.controller;
+package techcourse.myblog.web.controller.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.LoginUser;
 import techcourse.myblog.application.service.ArticleService;
-import techcourse.myblog.application.service.UserService;
 import techcourse.myblog.domain.Article;
 
 @Controller
@@ -36,7 +35,7 @@ public class ArticleController {
                               LoginUser loginUser
     ) {
         return new RedirectView("/articles/" + articleService.write(
-                new Article(loginUser.getUser(), title, coverUrl, contents))
+                new Article(loginUser.getUser(), title, coverUrl, contents)).getId()
         );
     }
 

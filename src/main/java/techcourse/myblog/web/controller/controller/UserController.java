@@ -1,4 +1,4 @@
-package techcourse.myblog.web.controller;
+package techcourse.myblog.web.controller.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

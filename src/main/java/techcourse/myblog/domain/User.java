@@ -1,7 +1,8 @@
 package techcourse.myblog.domain;
 
-import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Optional;
@@ -33,33 +34,33 @@ public class User {
     private String password;
 
     public User(String name, String email, String password) {
-        this.name = validateName(name);
-        this.email = validateEmail(email);
-        this.password = validatePassword(password);
+        this.name = validationName(name);
+        this.email = validationEmail(email);
+        this.password = validationPassword(password);
     }
 
     public User update(String name) {
-        this.name = validateName(name);
+        this.name = validationName(name);
         return this;
     }
 
-    private String validateName(String input) {
+    private String validationName(String input) {
         return Optional.ofNullable(input).filter(x -> (MIN_NAME_LENGTH <= x.length())
-                                                    && (x.length() <= MAX_NAME_LENGTH))
-                                        .filter(x -> NAME_VALIDATION.matcher(x).matches())
-                                        .orElseThrow(IllegalArgumentException::new);
+                && (x.length() <= MAX_NAME_LENGTH))
+                .filter(x -> NAME_VALIDATION.matcher(x).matches())
+                .orElseThrow(IllegalArgumentException::new);
     }
 
-    private String validateEmail(String input) {
+    private String validationEmail(String input) {
         return Optional.ofNullable(input).filter(x -> x.contains("@"))
-                                        .filter(x -> x.substring(x.indexOf("@")).contains("."))
-                                        .orElseThrow(IllegalArgumentException::new);
+                .filter(x -> x.substring(x.indexOf("@")).contains("."))
+                .orElseThrow(IllegalArgumentException::new);
     }
 
-    private String validatePassword(String input) {
+    private String validationPassword(String input) {
         return Optional.ofNullable(input).filter(x -> MIN_PASSWORD_LENGTH <= x.length())
-                                        .filter(x -> PASSWORD_VALIDATION.matcher(x).matches())
-                                        .orElseThrow(IllegalArgumentException::new);
+                .filter(x -> PASSWORD_VALIDATION.matcher(x).matches())
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public boolean authenticate(String password) {

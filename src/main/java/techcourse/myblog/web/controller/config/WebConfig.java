@@ -1,12 +1,11 @@
-package techcourse.myblog.web.config;
+package techcourse.myblog.web.controller.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import techcourse.myblog.web.controller.CustomArgumentResolver;
+import techcourse.myblog.web.controller.controller.CustomArgumentResolver;
 
 import java.util.List;
 
