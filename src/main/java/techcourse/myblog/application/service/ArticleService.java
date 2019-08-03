@@ -1,45 +1,51 @@
 package techcourse.myblog.application.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.error.NotFoundArticleIdException;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.repository.ArticleRepository;
+
+import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
-    public Article save(ArticleDto articleDto) {
-        Article article = Article.builder()
-                .title(articleDto.getTitle())
-                .coverUrl(articleDto.getCoverUrl())
-                .contents(articleDto.getContents())
-                .build();
-        return articleRepository.save(article);
+    public ArticleService(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
     }
 
-    @Transactional(readOnly = true)
-    public Article findById(long id) {
-        return articleRepository.findById(id).orElseThrow(() -> new NotFoundArticleIdException("게시글을 찾을 수 없습니다."));
+    public Optional<Article> maybeArticle(long articleId) {
+        return articleRepository.findById(articleId);
     }
 
-    @Transactional(readOnly = true)
-    public Iterable<Article> findAll() {
+    public Iterable<Article> loadEveryArticles() {
         return articleRepository.findAll();
     }
 
-    public Article update(ArticleDto articleDto, long id) {
-        Article article = articleRepository.findById(id)
-                .orElseThrow(() -> new NotFoundArticleIdException("게시글을 찾을 수 없습니다."));
-        article.update(articleDto);
-        return article;
+    public Article write(Article toWrite) {
+        return articleRepository.save(toWrite);
     }
 
-    public void delete(Long id) {
-        articleRepository.deleteById(id);
+    @Transactional
+    public boolean tryUpdate(long articleId, Article toUpdate) {
+        return articleRepository.findById(articleId).map(original -> {
+            if (original.isSameAuthor(toUpdate)) {
+                original.update(toUpdate);
+                return true;
+            }
+            return false;
+        }).orElse(false);
+    }
+
+    @Transactional
+    public long tryDelete(long articleId, User user) {
+        articleRepository.findById(articleId).ifPresent(article -> {
+            if (article.isSameAuthor(user)) {
+                articleRepository.deleteById(articleId);
+            }
+        });
+        return articleId;
     }
 }
