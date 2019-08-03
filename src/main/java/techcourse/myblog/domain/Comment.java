@@ -3,16 +3,21 @@ package techcourse.myblog.domain;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.domain.vo.CommentContents;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String contents;
+    //private String contents;
+    @Embedded
+    private CommentContents commentContents;
 
     @ManyToOne
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
@@ -27,18 +32,29 @@ public class Comment {
     private Comment() {
     }
 
-    public Comment(String contents, User author, Article article) {
-        this.contents = contents;
+    public Comment(CommentContents commentContents, User author, Article article) {
+//        this.contents = contents;
+        this.commentContents = commentContents;
         this.author = author;
         this.article = article;
+    }
+
+    public static List<CommentDto> toDto(List<Comment> comments) {
+        return comments.stream()
+                .map(comment -> comment.toDto())
+                .collect(Collectors.toList());
+    }
+
+    private CommentDto toDto() {
+        return new CommentDto(id, commentContents.getContents(), author, article);
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getContents() {
-        return contents;
+    public CommentContents getContents() {
+        return commentContents;
     }
 
     public User getAuthor() {
@@ -51,12 +67,18 @@ public class Comment {
 
     @Override
     public String toString() {
-        return "Comment{" + contents + "}";
+        return "Comment{" + commentContents.getContents() + "}";
     }
 
-    public void changeContent(CommentDto commentDto) {
-        contents = commentDto.getContents();
+    public void changeContent(CommentContents commentContents) {
+//        contents = commentDto.getContents();
+        this.commentContents = commentContents;
     }
+
+//    public void changeContent(CommentDto commentDto) {
+////        contents = commentDto.getContents();
+//        commentContents = this.commentContents;
+//    }
 
     @Override
     public boolean equals(Object o) {

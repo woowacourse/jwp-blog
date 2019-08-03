@@ -11,6 +11,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.CommentService;
 import techcourse.myblog.domain.Email;
+import techcourse.myblog.domain.vo.CommentContents;
 
 @Controller
 public class CommentController {
@@ -22,8 +23,8 @@ public class CommentController {
     }
 
     @PostMapping("/articles/{articleId}/comments")
-    public RedirectView addComment(CommentDto commentDto, @PathVariable Long articleId, Email email) {
-        commentService.save(commentDto, articleId, email);
+    public RedirectView addComment(CommentContents contents, @PathVariable Long articleId, Email email) {
+        commentService.save(contents, articleId, email);
         RedirectView redirectView = new RedirectView("/articles/" + articleId);
         return redirectView;
     }
@@ -38,9 +39,9 @@ public class CommentController {
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView updateComment(CommentDto commentDto, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, Email email) {
+    public RedirectView updateComment(CommentContents commentContents, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, Email email) {
         commentService.checkAuthor(commentId, email.getEmail());
-        commentService.modify(commentId, commentDto);
+        commentService.modify(commentId, commentContents);
         return new RedirectView("/articles/"+articleId);
     }
 }
