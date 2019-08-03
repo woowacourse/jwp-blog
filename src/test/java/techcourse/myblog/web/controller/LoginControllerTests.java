@@ -16,13 +16,6 @@ import static org.springframework.http.HttpMethod.POST;
 import static techcourse.myblog.service.LoginFailedException.LOGIN_FAIL_MESSAGE;
 
 class LoginControllerTests extends ControllerTestTemplate {
-    static Stream<Arguments> invalidLoginParameters() {
-        return Stream.of(
-                Arguments.of(null, "e@mail.com", "p@sswsavedPassw0RD!", LOGIN_FAIL_MESSAGE),
-                Arguments.of(null, "saved@email.com", "edPassw0RD!", LOGIN_FAIL_MESSAGE)
-        );
-    }
-
     @Test
     void 로그아웃상태_로그인_페이지_요청() {
         httpRequest(GET, "/login").isOk();
@@ -43,6 +36,13 @@ class LoginControllerTests extends ControllerTestTemplate {
     void 로그인_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
         String loginFailRedirectUrl = getRedirectUrl(httpRequest(POST, "/login", parseUser(new UserDto(name, email, password))));
         assertThat(loginFailRedirectUrl).isEqualTo("/login");
+    }
+
+    static Stream<Arguments> invalidLoginParameters() {
+        return Stream.of(
+                Arguments.of(null, "e@mail.com", "p@sswsavedPassw0RD!", LOGIN_FAIL_MESSAGE),
+                Arguments.of(null, "saved@email.com", "edPassw0RD!", LOGIN_FAIL_MESSAGE)
+        );
     }
 
     @Test

@@ -8,19 +8,21 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import static techcourse.myblog.validation.UserPattern.EMPTY_CONSTRAINT_MESSAGE;
+
 import static techcourse.myblog.validation.UserPattern.EMAIL_CONSTRAINT_MESSAGE;
 import static techcourse.myblog.validation.UserPattern.EMPTY_CONSTRAINT_MESSAGE;
 
 public class UserDto {
     @NotBlank(message = EMPTY_CONSTRAINT_MESSAGE,
-            groups={UserInfo.class})
+            groups = {UserInfo.class})
     @Pattern(regexp = UserPattern.NAME_PATTERN,
             message = UserPattern.NAME_CONSTRAINT_MESSAGE,
-            groups={UserInfo.class})
+            groups = {UserInfo.class})
     private String name;
 
     @NotBlank(message = EMPTY_CONSTRAINT_MESSAGE)
-    @Email(message = EMAIL_CONSTRAINT_MESSAGE)
+    @Email(message = UserPattern.EMAIL_CONSTRAINT_MESSAGE)
     private String email;
 
     @NotBlank(message = EMPTY_CONSTRAINT_MESSAGE)

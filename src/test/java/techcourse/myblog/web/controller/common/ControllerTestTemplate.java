@@ -93,11 +93,11 @@ public class ControllerTestTemplate {
     }
 
     protected String getResponseBody(StatusAssertions statusAssertions) {
-        return new String(statusAssertions
+        return new String(Objects.requireNonNull(statusAssertions
                 .isOk()
                 .expectBody()
                 .returnResult()
-                .getResponseBody());
+                .getResponseBody()));
     }
 
     protected String getRedirectUrl(StatusAssertions statusAssertions) {
