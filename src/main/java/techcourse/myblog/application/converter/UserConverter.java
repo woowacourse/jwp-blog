@@ -15,14 +15,9 @@ public class UserConverter extends Converter<UserDto, User> {
 
     private UserConverter() {
         super(userDto -> new User(
-                        userDto.getEmail(),
-                        userDto.getName(),
-                        userDto.getPassword()),
-                user -> new UserDto(
-                        user.getEmail(),
-                        user.getName(),
-                        user.getPassword()
-                )
-        );
+                userDto.getEmail(),
+                userDto.getName(),
+                userDto.getPassword()),
+                UserDto::of);
     }
 }
