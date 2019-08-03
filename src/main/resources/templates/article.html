@@ -12,6 +12,7 @@
 <body>
 <div>
     <header th:replace="includes/header :: header"></header>
+
     <div class="about-cover card no-border ">
         <div class="cover-img overlay-dark bg" th:style="'background:url(' + @{${articleDTO.coverUrl}} + ');'">
             <div class="padding-30">
@@ -23,14 +24,14 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a th:href="@{/articles/{id}/edit(id=${articleDTO.id})}" class="float-right pointer btn btn-icon">
-                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                </a>
-                <form th:action="'/articles/' + ${articleDTO.id}" th:method="delete">
-                    <button type="submit" class="btn btn-icon">
+                <form th:action="'/articles/' + ${articleDTO.id}" th:method="delete" class="float-right">
+                    <button type="submit" class="btn btn-icon btn-delete-article">
                         <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
                     </button>
                 </form>
+                <a th:href="@{/articles/{id}/edit(id=${articleDTO.id})}" class="float-right pointer btn btn-icon">
+                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                </a>
                 <div id="viewerSection"></div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
@@ -66,9 +67,9 @@
                     <span class="font-size-16 text-info">2</span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info" th:each="comment: ${articleDTO.comments}">
+                    <ul class="list-unstyled list-info">
 
-                        <li class="comment-item border bottom mrg-btm-30">
+                        <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${articleDTO.comments}" th:data-id="${comment.id}">
                             <img class="thumb-img img-circle"
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                             <div class="info">
@@ -76,12 +77,12 @@
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span>6 min ago</span>
+                                    <button class="btn-update-comment"><i class="ti-pencil"></i></button>
                             </span>
                                 <p class="width-80" th:text="${comment.content}">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을
                                     기반으로 미션을 진행하도록 설계했다. 교육자로 살다 보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의
                                     재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄 수 있는 계기가 되었다.</p>
                             </div>
-                            <button class="btn-update-comment">수정</button>
                             <form th:action="@{'/articles/' + ${articleDTO.id} + '/comments/' + ${comment.id}}"
                                   method="post" class="d-none">
                                 <textarea name="contents" rows="5"></textarea>
@@ -94,9 +95,9 @@
                     <div class="add-comment">
                         <form th:action="@{'/articles/' + ${articleDTO.id} + '/comments'}" method="post"
                               name="commentRequestDto">
-                            <input id="comment-contents" name="comment" type="hidden">
+                            <input id="comment-contents" name="contents" type="hidden">
                             <div id="editSection"></div>
-                            <button type="submit" class="btn btn-primary">등록하기</button>
+                            <button type="submit" class="btn btn-primary mt-3">등록하기</button>
                         </form>
                     </div>
                 </div>
@@ -131,16 +132,19 @@
 
     function onUpdateClick(event) {
         console.log(event);
-        event.target.parentNode.querySelector('form').classList.remove('d-none');
-        event.target.parentNode.querySelector('p').classList.add('d-none');
+        const container = event.target.closest('li');
+        container.querySelector('form').classList.remove('d-none');
+        container.querySelector('p').classList.add('d-none');
+        event.target.classList.add('d-none');
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-
         document.querySelector('.comment > ul')
             .addEventListener('click', (event) => {
                 console.log(event);
-                if (event.target.classList.contains('btn-update-comment')) {
+                const target = event.target;
+                if (target.classList.contains('btn-update-comment') ||
+                    target.parentNode.classList.contains('btn-update-comment')) {
                     onUpdateClick(event);
                 }
             });
