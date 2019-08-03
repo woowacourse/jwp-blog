@@ -9,19 +9,16 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthenticationInterceptor())
-            .addPathPatterns("/logout")
-            .addPathPatterns("/mypage")
-            .addPathPatterns("/mypage/mypage-edit")
-            .addPathPatterns("/writing")
-            .addPathPatterns("/articles")
-            .addPathPatterns("/articles/*/edit")
-            .addPathPatterns("/articles/*/comments")
-            .addPathPatterns("/articles/*/comments/*");
-
-        registry.addInterceptor(new UnAuthenticationInterceptor())
-            .addPathPatterns("/signup")
-            .addPathPatterns("/users")
-            .addPathPatterns("/users/login");
+            .addPathPatterns("/**")
+            .excludePathPatterns("/css/**")
+            .excludePathPatterns("/images/**")
+            .excludePathPatterns("/js/**")
+            .excludePathPatterns("/")
+            .excludePathPatterns("/articles/*")
+            .excludePathPatterns("/users/login")
+            .excludePathPatterns("/login")
+            .excludePathPatterns("/users")
+            .excludePathPatterns("/signup");
 
         registry.addInterceptor(new CommonModelInterceptor())
             .addPathPatterns("/**");

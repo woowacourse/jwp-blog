@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.service.user.UserResponseDto;
 import techcourse.myblog.service.user.UserService;
@@ -38,13 +39,13 @@ public class ArticleServiceTest {
 
     @Test
     void 게시글_조회_확인() {
-        ArticleResponseDto retrieveArticleDto = articleService.findById(DEFAULT_ARTICLE_ID);
+        Article retrieveArticleDto = articleService.findById(DEFAULT_ARTICLE_ID);
         assertThat(retrieveArticleDto).isEqualTo(articleService.findById(DEFAULT_ARTICLE_ID));
     }
 
     @Test
     void 모든_게시글_조회_확인() {
-        List<ArticleResponseDto> articleDtos = articleService.findAll();
+        List<Article> articleDtos = articleService.findAll();
         assertThat(articleDtos).hasSize(1).containsExactly(articleService.findById(DEFAULT_ARTICLE_ID));
     }
 
@@ -52,7 +53,7 @@ public class ArticleServiceTest {
     void 게시글_수정_확인() {
         ArticleRequestDto updatedArticleDto = new ArticleRequestDto("title", "", "contents");
         articleService.update(DEFAULT_ARTICLE_ID, updatedArticleDto);
-        ArticleResponseDto retrievedArticleDto = articleService.findById(DEFAULT_ARTICLE_ID);
+        Article retrievedArticleDto = articleService.findById(DEFAULT_ARTICLE_ID);
         assertThat(retrievedArticleDto.getTitle()).isEqualTo(updatedArticleDto.getTitle());
         assertThat(retrievedArticleDto.getContents()).isEqualTo(updatedArticleDto.getContents());
     }

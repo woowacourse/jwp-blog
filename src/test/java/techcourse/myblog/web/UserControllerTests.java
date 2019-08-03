@@ -73,7 +73,7 @@ public class UserControllerTests {
             .expectStatus().isOk();
     }
 
-    //    @Test
+        @Test
     void 회원목록_조회_확인() {
         webTestClient.get().uri("/users")
             .exchange()
@@ -101,23 +101,20 @@ public class UserControllerTests {
 
     @Test
     void 회원등록_확인() {
-        // Given
         webTestClient.post().uri("/users")
             .body(BodyInserters
-                .fromFormData("name", "done")
-                .with("email", "newEmail@gmail.com")
-                .with("password", "12345678"))
+                .fromFormData("name", "james")
+                .with("email", "james123@gmail.com")
+                .with("password", "p@ssW0rd"))
             .exchange()
             .expectStatus().is3xxRedirection()
             .expectHeader().valueMatches("Location", ".*/.*")
             .expectBody()
             .returnResult();
 
-        // When
-        String sid = postLoginSync(webTestClient, "newEmail@gamil.com", "12345678")
+        // Delete
+        String sid = postLoginSync(webTestClient, "james123@gamil.com", "p@ssW0rd")
             .getResponseCookies().getFirst(KEY_JSESSIONID).getValue();
-
-        // Then
         webTestClient.delete().uri("/mypage")
             .cookie(KEY_JSESSIONID, sid)
             .exchange()
@@ -158,22 +155,22 @@ public class UserControllerTests {
         webTestClient.post().uri("/users")
             .body(BodyInserters
                 .fromFormData("name", "done")
-                .with("email", "newEmail@gmail.com")
-                .with("password", "12345678"))
+                .with("email", "user_exit_test@gmail.com")
+                .with("password", "p@ssW0rd"))
             .exchange()
             .expectStatus().is3xxRedirection()
             .expectHeader().valueMatches("Location", ".*/.*")
             .expectBody()
             .returnResult();
 
-        String sid = postLoginSync(webTestClient, "newEamil@gamil.com", "12345678")
+        String sid = postLoginSync(webTestClient, "user_exit_test@gmail.com", "p@ssW0rd")
             .getResponseCookies().getFirst(KEY_JSESSIONID).getValue();
 
-        webTestClient.delete().uri("/mypage")
+        webTestClient.delete().uri("/users")
             .cookie(KEY_JSESSIONID, sid)
             .exchange()
             .expectStatus().is3xxRedirection()
-            .expectHeader().valueMatches("Location", ".*/logout");
+            .expectHeader().valueMatches("Location", ".*/");
     }
 
     @Test

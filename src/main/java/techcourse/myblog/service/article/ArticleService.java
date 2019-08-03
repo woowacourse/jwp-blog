@@ -33,26 +33,14 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ArticleResponseDto> findAll() {
-        List<Article> articles = articleRepository.findAll();
-
-        return Collections.unmodifiableList(articles.stream()
-            .map(ArticleAssembler::convertToDto)
-            .collect(Collectors.toList()));
+    public List<Article> findAll() {
+        return Collections.unmodifiableList(articleRepository.findAll());
     }
 
     @Transactional(readOnly = true)
-    public ArticleResponseDto findById(final Long id) {
+    public Article findById(final Long id) {
         return articleRepository.findById(Objects.requireNonNull(id))
-            .map(ArticleAssembler::convertToDto)
             .orElseThrow(ArticleNotFoundException::new);
-    }
-
-    @Transactional(readOnly = true)
-    public UserResponseDto findAuthor(final Long id) {
-        return UserAssembler.convertToDto(articleRepository.findById(id)
-            .orElseThrow(ArticleNotFoundException::new)
-            .getAuthor());
     }
 
     public Long save(final ArticleRequestDto articleDTO, final Long authorId) {
@@ -63,13 +51,13 @@ public class ArticleService {
         return persistArticle.getId();
     }
 
-    public void update(final Long id, final ArticleRequestDto articleDTO) {
-        Objects.requireNonNull(articleDTO);
+    public void update(final Long id, final ArticleRequestDto articleDto) {
+        Objects.requireNonNull(articleDto);
         articleRepository.findById(Objects.requireNonNull(id))
             .ifPresent((retrieveArticle -> retrieveArticle.update(new Article(
-                articleDTO.getTitle(),
-                articleDTO.getCoverUrl(),
-                articleDTO.getContents(),
+                articleDto.getTitle(),
+                articleDto.getCoverUrl(),
+                articleDto.getContents(),
                 retrieveArticle.getAuthor()))));
     }
 

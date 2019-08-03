@@ -49,16 +49,16 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @GetMapping("/mypage")
-    public String showMyPage(final HttpSession session, Model model) {
-        return "mypage";
-    }
-
-    @DeleteMapping("/mypage")
+    @DeleteMapping("/users")
     public String deleteUser(final HttpSession session) {
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
         userService.delete(user);
-        return "redirect:/logout";
+        return "redirect:/";
+    }
+
+    @GetMapping("/mypage")
+    public String showMyPage() {
+        return "mypage";
     }
 
     @GetMapping("/logout")
@@ -68,7 +68,7 @@ public class UserController {
     }
 
     @GetMapping("/mypage/mypage-edit")
-    public String showMyPageEdit(final HttpSession session, Model model) {
+    public String showMyPageEdit() {
         return "mypage-edit";
     }
 

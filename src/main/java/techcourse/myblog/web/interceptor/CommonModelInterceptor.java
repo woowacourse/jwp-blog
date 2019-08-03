@@ -13,6 +13,8 @@ public class CommonModelInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            @Nullable ModelAndView modelAndView) {
-        modelAndView.addObject("user", request.getSession().getAttribute("user"));
+        if (modelAndView != null) {
+            modelAndView.addObject("user", request.getSession().getAttribute("user"));
+        }
     }
 }

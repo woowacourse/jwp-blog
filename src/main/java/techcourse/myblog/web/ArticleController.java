@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.domain.article.ArticleAssembler;
 import techcourse.myblog.service.article.ArticleService;
 import techcourse.myblog.service.article.ArticleRequestDto;
 import techcourse.myblog.service.article.ArticleResponseDto;
@@ -12,6 +13,7 @@ import techcourse.myblog.service.user.UserResponseDto;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
 
@@ -27,7 +29,10 @@ public class ArticleController {
 
     @GetMapping("/")
     public String showMain(Model model, final HttpSession session) {
-        List<ArticleResponseDto> articleDtos = articleService.findAll();
+        List<ArticleResponseDto> articleDtos = articleService.findAll()
+            .stream()
+            .map(ArticleAssembler::convertToDto)
+            .collect(Collectors.toList());
         model.addAttribute("articleDtos", articleDtos);
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
         return "index";
@@ -53,7 +58,7 @@ public class ArticleController {
     @PutMapping("/articles/{id}")
     public String updateArticle(@PathVariable final Long id, final ArticleRequestDto articleDTO, final HttpSession session) {
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        if (user.matchId(articleService.findAuthor(id).getId())) {
+        if (user.matchId(articleService.findById(id).getAuthor().getId())) {
             articleService.update(id, articleDTO);
         }
         return "redirect:/articles/" + id;
@@ -62,7 +67,7 @@ public class ArticleController {
     @DeleteMapping("/articles/{id}")
     public String deleteArticle(@PathVariable final Long id, final HttpSession session) {
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        if (user.matchId(articleService.findAuthor(id).getId())) {
+        if (user.matchId(articleService.findById(id).getAuthor().getId())) {
             articleService.delete(id);
             return "redirect:/";
         }
@@ -72,7 +77,7 @@ public class ArticleController {
     @GetMapping("/articles/{id}/edit")
     public String showEditPage(@PathVariable final Long id, final HttpSession session, Model model) {
         UserResponseDto user = (UserResponseDto) session.getAttribute(USER_SESSION_KEY);
-        if (!user.matchId(articleService.findAuthor(id).getId())) {
+        if (!user.matchId(articleService.findById(id).getAuthor().getId())) {
             return "redirect:/articles/" + id;
         }
         model.addAttribute("articleDTO", articleService.findById(id));
