@@ -38,14 +38,14 @@ public class Comment {
         this.article = article;
     }
 
-    public static List<CommentDto> toDto(List<Comment> comments) {
+    public static List<CommentDto> toDto(List<Comment> comments, String email) {
         return comments.stream()
-                .map(comment -> comment.toDto())
+                .map(comment -> comment.toDto(email))
                 .collect(Collectors.toList());
     }
 
-    private CommentDto toDto() {
-        return new CommentDto(id, commentContents.getContents(), author, article);
+    private CommentDto toDto(String email) {
+        return new CommentDto(id, commentContents.getContents(), author.getName(), author.compareEmail(email));
     }
 
     public Long getId() {

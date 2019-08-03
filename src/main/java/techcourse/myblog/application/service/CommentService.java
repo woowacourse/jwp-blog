@@ -41,10 +41,7 @@ public class CommentService {
     public List<CommentDto> findAllCommentsByArticleId(Long articleId, String sessionEmail) {
         Article article = articleService.findById(articleId);
         List<Comment> comments = commentRepository.findByArticle(article);
-        List<CommentDto> commentDtos = Comment.toDto(comments);
-        for (CommentDto commentDto : commentDtos) {
-            commentDto.matchAuthor(sessionEmail);
-        }
+        List<CommentDto> commentDtos = Comment.toDto(comments, sessionEmail);
         return commentDtos;
     }
 

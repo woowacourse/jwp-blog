@@ -6,39 +6,18 @@ import techcourse.myblog.domain.User;
 public class CommentDto {
     private Long id;
     private String contents;
-    private User author;
-    private Article article;
+    private String authorName;
     private Boolean matchAuthor;
 
-    public CommentDto(Long id, String contents, User author, Article article) {
+    public CommentDto(Long id, String contents, String authorName, Boolean matchAuthor) {
         this.id = id;
         this.contents = contents;
-        this.article = article;
-        this.author = author;
+        this.authorName = authorName;
+        this.matchAuthor = matchAuthor;
     }
 
     public String getContents() {
         return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public Article getArticle() {
-        return article;
-    }
-
-    public void setArticle(Article article) {
-        this.article = article;
     }
 
     public Long getId() {
@@ -49,7 +28,7 @@ public class CommentDto {
         return matchAuthor;
     }
 
-    public void matchAuthor(String email) {
-        this.matchAuthor = author.compareEmail(email);
+    public String getAuthorName() {
+        return authorName;
     }
 }
