@@ -11,8 +11,8 @@ public class DtoConverter {
         return new User(dto.getName(), dto.getPassword(), dto.getEmail());
     }
 
-    public static Article convert(ArticleRequestDto dto) {
-        return new Article(dto.getTitle(), dto.getContents(), dto.getCoverUrl());
+    public static Article convert(ArticleRequestDto dto, User author) {
+        return new Article(dto.getTitle(), dto.getContents(), dto.getCoverUrl(), author);
     }
 
     public static UserResponseDto convert(User user) {

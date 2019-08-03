@@ -25,10 +25,11 @@ public class Article {
     public Article() {
     }
 
-    public Article(String title, String contents, String coverUrl) {
+    public Article(String title, String contents, String coverUrl, User author) {
         this.title = title;
         this.contents = contents;
         this.coverUrl = getDefaultUrl(coverUrl);
+        this.author = author;
     }
 
     private String getDefaultUrl(String coverUrl) {
@@ -56,10 +57,6 @@ public class Article {
 
     public User getAuthor() {
         return author;
-    }
-
-    public void setAuthor(User persistUser) {
-        this.author = persistUser;
     }
 
     public void update(Article modifiedArticle) {

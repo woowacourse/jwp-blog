@@ -8,6 +8,7 @@ import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.utils.model.ModelUtil;
+import techcourse.myblog.utils.session.SessionUtil;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -61,7 +62,8 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String modifyArticle(@PathVariable long articleId, @Valid ArticleRequestDto articleRequestDto) {
-        articleService.update(articleId, articleRequestDto);
+        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(session, USER);
+        articleService.update(articleId, articleRequestDto, userResponseDto);
 
         return "redirect:/articles/" + articleId;
     }

@@ -57,17 +57,17 @@ public class ArticleService {
 
     @Transactional
     public Article save(ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
-        Article article = DtoConverter.convert(articleRequestDto);
         User user = userRepository.findByEmail(userResponseDto.getEmail()).orElseThrow(UserException::new);
-        article.setAuthor(user);
+        Article article = DtoConverter.convert(articleRequestDto, user);
         articleRepository.save(article);
         return article;
     }
 
     @Transactional
-    public Article update(long articleId, ArticleRequestDto articleRequestDto) {
+    public Article update(long articleId, ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
         Article originArticle = findArticle(articleId);
-        originArticle.update(DtoConverter.convert(articleRequestDto));
+        User author = userRepository.findByEmail(userResponseDto.getEmail()).orElseThrow(UserException::new);
+        originArticle.update(DtoConverter.convert(articleRequestDto, author));
         return originArticle;
     }
 
