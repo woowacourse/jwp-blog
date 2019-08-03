@@ -11,11 +11,17 @@ public class UserDataForTest {
     public static final String USER_PASSWORD = "password1234!";
     public static final String USER_NAME = "name";
 
+    public static final String NEW_USER_EMAIL = "newemail@gmail.com";
+    public static final String NEW_USER_PASSWORD = "password1234!";
+    public static final String NEW_USER_NAME = "newName";
+
+    public static final String UPDATED_USER_NAME = "updated";
+
     public static final BodyInserter<?, ? super ClientHttpRequest> NEW_USER_BODY =
             BodyInserters
-                    .fromFormData("email", UserDataForTest.USER_EMAIL)
-                    .with("password", UserDataForTest.USER_PASSWORD)
-                    .with("name", UserDataForTest.USER_NAME);
+                    .fromFormData("email", UserDataForTest.NEW_USER_EMAIL)
+                    .with("password", UserDataForTest.NEW_USER_PASSWORD)
+                    .with("name", UserDataForTest.NEW_USER_NAME);
 
     public static final BodyInserter<?, ? super ClientHttpRequest> LOGIN_BODY = BodyInserters
             .fromFormData("email", UserDataForTest.USER_EMAIL)

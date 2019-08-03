@@ -1,5 +1,8 @@
 package techcourse.myblog.user.domain.vo;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class Password {
     private static final String PASSWORD_REGEX = ".*(?=^.{8,}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*";
 
