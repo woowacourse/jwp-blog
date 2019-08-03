@@ -2,17 +2,19 @@ package techcourse.myblog.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserReadService;
 import techcourse.myblog.service.UserWriteService;
 import techcourse.myblog.validation.UserInfo;
-import techcourse.myblog.web.LoginUser;
+import techcourse.myblog.web.support.SessionUser;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.groups.Default;
@@ -36,9 +38,13 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public RedirectView createUser(@ModelAttribute("/signup") @Validated({Default.class, UserInfo.class}) UserDto userDto) {
-        userWriteService.save(userDto.toUser());
+    public RedirectView createUser(@Validated({Default.class, UserInfo.class}) UserDto userDto,
+                                   BindingResult bindingResult) throws SignUpBindException {
+        if (bindingResult.hasErrors()) {
+            throw new SignUpBindException(bindingResult);
+        }
 
+        userWriteService.save(userDto.toUser());
         return new RedirectView("/login");
     }
 
@@ -53,7 +59,12 @@ public class UserController {
 
     @PostMapping("/login")
     public RedirectView login(HttpSession session,
-                              @ModelAttribute("/login") @Validated(Default.class) UserDto userDto) {
+                              @Validated(Default.class) UserDto userDto,
+                              BindingResult bindingResult) throws LoginBindException {
+        if (bindingResult.hasErrors()) {
+            throw new LoginBindException(bindingResult);
+        }
+
         User loginUser = userReadService.login(userDto);
         session.setAttribute("user", loginUser);
         return new RedirectView("/");
@@ -85,24 +96,20 @@ public class UserController {
     }
 
     @PutMapping("/mypage")
-    public RedirectView editUser(LoginUser loginUser,
-                                 @ModelAttribute("/mypage/edit") @Validated(UserInfo.class) UserDto userDto) {
-        userWriteService.update(loginUser.getUser(), userDto);
+    public RedirectView editUser(SessionUser loginUser,
+                                 @Validated(UserInfo.class) UserDto userDto,
+                                 BindingResult bindingResult) throws EditUserBindException {
+        if (bindingResult.hasErrors()) {
+            throw new EditUserBindException(bindingResult);
+        }
 
+        userWriteService.update(loginUser.getUser(), userDto);
         return new RedirectView("/mypage");
     }
 
     @DeleteMapping("/mypage")
     public RedirectView removeUser(SessionUser loginUser) {
         userWriteService.remove(loginUser.getUser());
-
         return new RedirectView("/logout");
-    }
-
-    @ExceptionHandler(BindException.class)
-    public RedirectView handleBindError(BindException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("userDto", new UserDto("", "", ""));
-        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userDto", e.getBindingResult());
-        return new RedirectView(e.getObjectName());
     }
 }

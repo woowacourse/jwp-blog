@@ -8,22 +8,23 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import static techcourse.myblog.validation.UserPattern.EMAIL_CONSTRAINT_MESSAGE;
 import static techcourse.myblog.validation.UserPattern.EMPTY_CONSTRAINT_MESSAGE;
 
 public class UserDto {
     @NotBlank(message = EMPTY_CONSTRAINT_MESSAGE,
             groups={UserInfo.class})
-    @Pattern(regexp = "^[^ \\-!@#$%^&*(),.?\\\":{}|<>0-9]{2,10}$",
+    @Pattern(regexp = UserPattern.NAME_PATTERN,
             message = UserPattern.NAME_CONSTRAINT_MESSAGE,
             groups={UserInfo.class})
     private String name;
 
     @NotBlank(message = EMPTY_CONSTRAINT_MESSAGE)
-    @Email(message = UserPattern.EMAIL_CONSTRAINT_MESSAGE)
+    @Email(message = EMAIL_CONSTRAINT_MESSAGE)
     private String email;
 
     @NotBlank(message = EMPTY_CONSTRAINT_MESSAGE)
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}$",
+    @Pattern(regexp = UserPattern.PASSWORD_PATTERN,
             message = UserPattern.PASSWORD_CONSTRAINT_MESSAGE)
     private String password;
 

@@ -2,7 +2,7 @@ package techcourse.myblog.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
@@ -37,7 +37,13 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public RedirectView createArticle(SessionUser loginUser, @ModelAttribute("/articles/writing") @Valid ArticleDto articleDto) {
+    public RedirectView createArticle(SessionUser loginUser,
+                                      @Valid ArticleDto articleDto,
+                                      BindingResult bindingResult) throws CreateArticleBindException {
+        if (bindingResult.hasErrors()) {
+            throw new CreateArticleBindException(bindingResult);
+        }
+
         Article savedArticle = articleWriteService.save(articleDto.toArticle(loginUser.getUser()));
         return new RedirectView("/articles/" + savedArticle.getId());
     }
@@ -70,10 +76,5 @@ public class ArticleController {
         articleReadService.findByIdAndAuthor(articleId, loginUser.getUser());
         articleWriteService.removeById(articleId);
         return new RedirectView("/");
-    }
-
-    @ExceptionHandler(BindException.class)
-    public RedirectView handleBindError(BindException e) {
-        return new RedirectView(e.getObjectName());
     }
 }
