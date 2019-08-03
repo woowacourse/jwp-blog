@@ -6,7 +6,7 @@ import techcourse.myblog.service.dto.AuthenticationDto;
 import techcourse.myblog.user.User;
 import techcourse.myblog.user.UserRepository;
 
-import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 @Service
 public class LoginService {
@@ -20,19 +20,8 @@ public class LoginService {
     public User login(AuthenticationDto authenticationDto) {
         User user = userRepository.findByEmail(authenticationDto.getEmail())
                 .orElseThrow(LoginException::notFoundEmail);
-        checkValidLogin(authenticationDto, user);
-        return user;
-    }
 
-    private void checkValidLogin(AuthenticationDto authenticationDto, User user) {
-        if (!user.matchPassword(authenticationDto.getPassword())) {
-            throw LoginException.notMatchPassword();
-        }
-    }
-
-    public void checkValidLogin(HttpSession httpSession) {
-        if(httpSession.getAttribute("user") != null){
-            throw LoginException.alreadyLogin();
-        }
+        return Optional.of(user).filter(u -> u.matchPassword(authenticationDto.getPassword()))
+                .orElseThrow(LoginException::notFoundEmail);
     }
 }

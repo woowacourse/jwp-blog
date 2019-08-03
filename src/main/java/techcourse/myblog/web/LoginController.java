@@ -27,8 +27,7 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String showLoginPage(HttpSession httpSession) {
-       loginService.checkValidLogin(httpSession);
+    public String showLoginPage() {
         return "login";
     }
 

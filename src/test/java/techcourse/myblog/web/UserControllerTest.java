@@ -1,47 +1,40 @@
 package techcourse.myblog.web;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.user.UserTest.user;
 
-@AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest extends AbstractControllerTest {
-    private String email = "buddy@gmail.com";
-    private String userName = "Buddy";
-    private String password = "Aa12345!";
 
-    @Autowired
-    WebTestClient webTestClient;
+    private static final String email = user.getEmail();
+    private static final String userName = user.getUserName();
+    private static final String password = user.getPassword();
 
     public WebTestClient.ResponseSpec getRequest(String uri) {
-
         return webTestClient.get().uri(uri).exchange();
     }
 
     @Test
     void 회원가입_페이지() {
-        getRequest("/users/signup")
+        getRequest("/users/new")
                 .expectStatus().isOk();
     }
 
     @Test
     void 유저_생성() {
-        getResponseSpec("Brown", "brown@gmail.com", password, password)
+        getResponseSpec(userName, "brown@gmail.com", password, password)
                 .expectStatus().isFound();
     }
 
     @Test
     void 중복_이메일_확인() {
-        create_user(userName, "buddy@buddy.com", password);
-
-        WebTestClient.ResponseSpec responseSpec = getResponseSpec(userName, "buddy@buddy.com", password, password)
+        WebTestClient.ResponseSpec responseSpec = getResponseSpec(userName, email, password, password)
                 .expectStatus().isBadRequest();
 
         checkInvalidUserMessage(responseSpec, "중복된 이메일 입니다.");
@@ -49,8 +42,6 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     void 이메일_형식_확인() {
-        create_user(userName, "buddy@buddy.com", password);
-
         WebTestClient.ResponseSpec responseSpec = getResponseSpec(userName, "buddy", password, password)
                 .expectStatus().isBadRequest();
 
@@ -80,27 +71,38 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void 유점_리스트_확인() {
-        create_user("Martin", "martin@gmail.com", password);
-
+    void 로그인_전_유저_리스트_확인() {
         getRequest("/users")
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
+    }
+
+    @Test
+    void 로그인_후_유저_리스트_확인() {
+        String jSessionId = extractJSessionId(login(user));
+
+        webTestClient.get().uri("/users")
+                .cookie("JSESSIONID", jSessionId)
+                .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBody().consumeWith(res -> {
             String body = new String(res.getResponseBody());
-            assertThat(body.contains("Martin")).isTrue();
-            assertThat(body.contains("martin@gmail.com")).isTrue();
+            assertThat(body.contains("heejoo")).isTrue();
+            assertThat(body.contains("heejoo@gmail.com")).isTrue();
         });
     }
+
     @Test
     void 로그인_전_마이페이지_접근() {
         getRequest("/users/mypage")
-                .expectStatus().isBadRequest();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
     }
 
     @Test
     void 로그인_후_마이페이지_접근() {
-        String jSessionId = getJSessionId("jason", "jason@gmail.com", password);
+        String jSessionId = extractJSessionId(login(user));
 
         webTestClient.get().uri("/users/mypage")
                 .cookie("JSESSIONID", jSessionId)
@@ -111,12 +113,13 @@ public class UserControllerTest extends AbstractControllerTest {
     @Test
     void 로그인_전_회원수정페이지_접근() {
         getRequest("/users/mypage/edit")
-                .expectStatus().isBadRequest();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
     }
 
     @Test
     void 로그인_후_회원수정페이지_접근() {
-        String jSessionId = getJSessionId("pobi", "pobi@gmail.com", password);
+        String jSessionId = extractJSessionId(login(user));
         webTestClient.get().uri("/users/mypage/edit")
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
