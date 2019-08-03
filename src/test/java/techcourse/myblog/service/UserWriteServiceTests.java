@@ -5,28 +5,35 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.common.UserCommonServiceTests;
 
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
 
 public class UserWriteServiceTests extends UserCommonServiceTests {
-    @Test
-    public void save_test() {
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+    UserDto updateUserDto = new UserDto("updateName", user.getEmail(), user.getPassword());
 
-        assertDoesNotThrow(() -> userWriteService.save(new User("name", "e@mail.com", "Passw0rd!")));
-        assertThrows(DuplicatedEmailException.class, () ->
-                userWriteService.save(new User("name", user.getEmail(), "Passw0rd!")));
+    @Test
+    public void save_success_test() {
+        User notJoinedUser = new User("notJoined", "notJoined@mail.com", "Passw0rd!");
+        assertDoesNotThrow(() -> userWriteService.save(notJoinedUser));
     }
 
     @Test
-    public void modify_test() {
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+    public void save_fail_test() {
+        User dupEmailUser = new User("dupEmail", user.getEmail(), "Passw0rd!");
+        assertThrows(SignUpFailedException.class, () -> userWriteService.save(dupEmailUser));
+    }
 
-        UserDto userDto = new UserDto("nameee", user.getEmail(), user.getPassword());
-        userWriteService.update(user, userDto);
-        compareUser(userDto.toUser(), userRepository.findByEmail(user.getEmail()).get());
+    @Test
+    public void modify_sucess_test() {
+        assertDoesNotThrow(() -> userWriteService.update(user, updateUserDto));
+        compareUser(updateUserDto.toUser(), userRepository.findByEmail(user.getEmail()).get());
+    }
+
+    @Test
+    public void modify_fail_test() {
+        User other = new User("other", "other@mail.com", "Passw0rd!");
+
+        assertThrows(NotFoundUserException.class, () ->
+                userWriteService.update(other, updateUserDto));
     }
 }

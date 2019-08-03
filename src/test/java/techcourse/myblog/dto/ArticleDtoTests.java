@@ -17,6 +17,13 @@ import static techcourse.myblog.dto.ArticleDto.TITLE_CONSTRAINT_MESSAGE;
 class ArticleDtoTests {
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
+    static Stream<Arguments> invalidArticleParameters() {
+        return Stream.of(
+                Arguments.of("", "coverUrl", "contents", TITLE_CONSTRAINT_MESSAGE),
+                Arguments.of("title", "coverUrl", "", CONTENTS_CONSTRAINT_MESSAGE)
+        );
+    }
+
     @ParameterizedTest(name = "{index}: {3}")
     @MethodSource("invalidArticleParameters")
     void ArticleDto_생성_검증(String title, String coverUrl, String contents, String msg) {
@@ -24,13 +31,6 @@ class ArticleDtoTests {
         assertThat(constraintViolations)
                 .extracting(ConstraintViolation::getMessage)
                 .containsOnly(msg);
-    }
-
-    static Stream<Arguments> invalidArticleParameters() throws Throwable {
-        return Stream.of(
-                Arguments.of("", "coverUrl", "contents", TITLE_CONSTRAINT_MESSAGE),
-                Arguments.of("title", "coverUrl", "", CONTENTS_CONSTRAINT_MESSAGE)
-        );
     }
 
 }

@@ -8,7 +8,10 @@ import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.service.UserReadService;
 import techcourse.myblog.service.UserWriteService;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 public class UserCommonServiceTests {
     @Mock
@@ -16,14 +19,18 @@ public class UserCommonServiceTests {
 
     protected UserWriteService userWriteService;
     protected UserReadService userReadService;
-    protected User user;
+
+    protected User user = new User("name", "e@mail.com", "Passw0rd!");
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        userWriteService = new UserWriteService(userRepository);
         userReadService = new UserReadService(userRepository);
-        user = new User("name", "save@mail.com", "Passw0rd!");
+        userWriteService = new UserWriteService(userRepository, userReadService);
+        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+        given(userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword()))
+                .willReturn(Optional.of(user));
+        given(userRepository.existsByEmail(user.getEmail())).willReturn(true);
     }
 
     protected void compareUser(User user1, User user2) {

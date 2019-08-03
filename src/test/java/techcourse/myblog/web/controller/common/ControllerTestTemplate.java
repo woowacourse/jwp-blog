@@ -25,37 +25,23 @@ import static org.springframework.http.HttpMethod.POST;
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ControllerTestTemplate {
+    protected static UserDto savedUserDto = new UserDto("savedName", "saved@email.com", "Passw0rd!");
     @Autowired
     protected WebTestClient webTestClient;
-
     @Autowired
     protected UserRepository userRepository;
-
-    protected String name;
-    protected String email;
-    protected String password;
-    protected UserDto savedUserDto;
-
+    protected UserDto otherUserDto = new UserDto("other", "other@mail.com", "Passw0rd!");
     protected User savedUser;
 
     @BeforeEach
     protected void setup() {
-        name = "name";
-        email = "email@email.com";
-        password = "passw0RD!";
-        savedUserDto = new UserDto("savedName", "saved@email.com", "savedPassw0RD!");
+        userRepository.save(otherUserDto.toUser());
         savedUser = userRepository.save(savedUserDto.toUser());
     }
 
     @AfterEach
     protected void tearDown() {
         userRepository.deleteAll();
-    }
-
-    protected StatusAssertions httpRequest(RequestHeadersSpec requestHeadersSpec) {
-        return requestHeadersSpec
-                .exchange()
-                .expectStatus();
     }
 
     protected StatusAssertions httpRequest(HttpMethod method, String uri) {
@@ -67,36 +53,34 @@ public class ControllerTestTemplate {
         return httpRequest(makeRequestSpec(method, uri, data));
     }
 
-    protected WebTestClient.RequestBodySpec makeRequestSpec(HttpMethod method, String uri) {
+    private StatusAssertions httpRequest(RequestHeadersSpec requestHeadersSpec) {
+        return requestHeadersSpec
+                .exchange()
+                .expectStatus();
+    }
+
+    private WebTestClient.RequestBodySpec makeRequestSpec(HttpMethod method, String uri) {
         return webTestClient.method(method).uri(uri);
     }
 
-    protected RequestHeadersSpec<?> makeRequestSpec(HttpMethod method, String uri,
-                                                    MultiValueMap<String, String> data) {
+    private RequestHeadersSpec<?> makeRequestSpec(HttpMethod method, String uri,
+                                                  MultiValueMap<String, String> data) {
         return makeRequestSpec(method, uri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(data));
     }
 
-    protected StatusAssertions loginAndRequest(HttpMethod method, String path, MultiValueMap<String, String> data, UserDto userDto) {
+    protected StatusAssertions loginAndRequest(UserDto loginUserDto, HttpMethod method, String path,
+                                               MultiValueMap<String, String> data) {
         return httpRequest(
                 makeRequestSpec(method, path, data)
-                        .cookie("JSESSIONID", getLoginSessionId(userDto)));
+                        .cookie("JSESSIONID", getLoginSessionId(loginUserDto)));
     }
 
-    protected StatusAssertions loginAndRequest(HttpMethod method, String path, UserDto userDto) {
+    protected StatusAssertions loginAndRequest(UserDto loginUserDto, HttpMethod method, String path) {
         return httpRequest(
                 makeRequestSpec(method, path)
-                        .cookie("JSESSIONID", getLoginSessionId(userDto)));
-    }
-
-
-    protected StatusAssertions loginAndRequest(HttpMethod method, String path, MultiValueMap<String, String> data) {
-        return loginAndRequest(method, path, data, savedUserDto);
-    }
-
-    protected StatusAssertions loginAndRequest(HttpMethod method, String path) {
-        return loginAndRequest(method, path, savedUserDto);
+                        .cookie("JSESSIONID", getLoginSessionId(loginUserDto)));
     }
 
     private String getLoginSessionId(UserDto userDto) {
@@ -132,7 +116,6 @@ public class ControllerTestTemplate {
         multiValueMap.add("password", userDto.getPassword());
         return multiValueMap;
     }
-
 
     protected MultiValueMap<String, String> parseArticle(ArticleDto articleDto) {
         MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();

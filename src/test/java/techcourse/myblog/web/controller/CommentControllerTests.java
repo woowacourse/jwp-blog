@@ -19,92 +19,82 @@ class CommentControllerTests extends ControllerTestTemplate {
     @Autowired
     private CommentRepository commentRepository;
 
+    private UserDto authorDto = savedUserDto;
+
+    private CommentDto commentDto = new CommentDto("comment");
+    private CommentDto updateCommentDto = new CommentDto("new comment");
     private String savedArticleUrl;
-    private CommentDto commentDto;
 
     @BeforeEach
     public void setup() {
         super.setup();
-        savedArticleUrl = getRedirectUrl(loginAndRequest(POST, "/articles/write",
-                parseArticle(new ArticleDto("title", "url", "content"))));
-        commentDto = new CommentDto("comment");
+        ArticleDto articleDto = new ArticleDto("title", "coverUrl", "contents");
+        savedArticleUrl = getRedirectUrl(
+                loginAndRequest(authorDto, POST, "/articles/write", parseArticle(articleDto)));
     }
 
     @Test
     public void 로그아웃_상태_댓글작성_리다이렉트() {
-        String redirectUrl = getRedirectUrl(httpRequest(POST, savedArticleUrl + "/comments", parser(commentDto)));
-        assertThat(redirectUrl.equals("/login"));
+        String logoutWriteCommentRedirectUrl = getRedirectUrl(httpRequest(POST, savedArticleUrl + "/comments", parser(commentDto)));
+        assertThat(logoutWriteCommentRedirectUrl.equals("/login"));
     }
 
     @Test
     public void 로그인_상태_댓글작성_성공() {
-        String redirectUrl = getRedirectUrl(loginAndRequest(POST, savedArticleUrl + "/comments", parser(commentDto)));
-        String responseBody = getResponseBody(loginAndRequest(GET, redirectUrl));
+        String loginWriteCommentRedirectUrl = getRedirectUrl(loginAndRequest(authorDto, POST, savedArticleUrl + "/comments", parser(commentDto)));
+        String responseBody = getResponseBody(loginAndRequest(authorDto, GET, loginWriteCommentRedirectUrl));
 
         assertThat(responseBody.contains(commentDto.getContents())).isTrue();
     }
 
     @Test
     void 로그아웃_상태_댓글삭제_리다이렉트() {
-        String deleteUrl = getCommentUrl();
-        String redirectUrl = getRedirectUrl(httpRequest(DELETE, deleteUrl));
+        String logoutDeleteCommentRedirectUrl = getRedirectUrl(httpRequest(DELETE, getCommentUrl()));
 
-        assertThat(redirectUrl.equals("/login")).isTrue();
+        assertThat(logoutDeleteCommentRedirectUrl.equals("/login")).isTrue();
     }
 
     @Test
     void 작성자_로그인_상태_댓글삭제_성공() {
-        String deleteUrl = getCommentUrl();
-        String redirectUrl = getRedirectUrl(loginAndRequest(DELETE, deleteUrl));
+        String authorDeleteCommentRedirectUrl = getRedirectUrl(loginAndRequest(authorDto, DELETE, getCommentUrl()));
 
-        assertThat(redirectUrl.equals(savedArticleUrl)).isTrue();
+        assertThat(authorDeleteCommentRedirectUrl.equals(savedArticleUrl)).isTrue();
     }
 
     @Test
     void 작성자가_아닌_사용자_로그인_상태_댓글삭제_실패() {
-        UserDto other = new UserDto("ab", "1@1.com", "1234asdf!A");
-        userRepository.save(other.toUser());
-        String deleteUrl = getCommentUrl();
-        String redirectUrl = getRedirectUrl(loginAndRequest(DELETE, deleteUrl, other));
+        String otherUserDeleteCommentRedirectUrl = getRedirectUrl(loginAndRequest(otherUserDto, DELETE, getCommentUrl()));
 
-        assertThat(redirectUrl.equals("/")).isTrue();
+        assertThat(otherUserDeleteCommentRedirectUrl.equals("/")).isTrue();
     }
 
     @Test
     void 로그아웃_상태_댓글수정_리다이렉트() {
-        CommentDto commentDto = new CommentDto("new comment");
-        String modifyUrl = getCommentUrl();
-        String redirectUrl = getRedirectUrl(httpRequest(PUT, modifyUrl, parser(commentDto)));
+        String logoutUpdateCommentRedirectUrl = getRedirectUrl(httpRequest(PUT, getCommentUrl(), parser(updateCommentDto)));
 
-        assertThat(redirectUrl.equals("/login")).isTrue();
+        assertThat(logoutUpdateCommentRedirectUrl.equals("/login")).isTrue();
     }
 
     @Test
     void 작성자_로그인_상태_댓글수정_성공() {
-        CommentDto commentDto = new CommentDto("new comment");
-        String modifyUrl = getCommentUrl();
-        String redirectUrl = getRedirectUrl(loginAndRequest(PUT, modifyUrl, parser(commentDto)));
-        String responseBody = getResponseBody(loginAndRequest(GET, redirectUrl));
+        String authorUpdateCommentRedirectUrl = getRedirectUrl(loginAndRequest(authorDto, PUT, getCommentUrl(), parser(updateCommentDto)));
+        String responseBody = getResponseBody(loginAndRequest(authorDto, GET, authorUpdateCommentRedirectUrl));
 
         assertThat(responseBody.contains(commentDto.getContents())).isTrue();
     }
 
     @Test
     void 작성자가_아닌_사용자_로그인_상태_댓글수정_실패() {
-        CommentDto commentDto = new CommentDto("new comment");
-        UserDto other = new UserDto("ab", "1@1.com", "1234asdf!A");
-        userRepository.save(other.toUser());
-        String modifyUrl = getCommentUrl();
-        String redirectUrl = getRedirectUrl(loginAndRequest(PUT, modifyUrl, parser(commentDto), other));
+        String otherUserUpdateCommentRedirectUrl = getRedirectUrl(loginAndRequest(otherUserDto, PUT, getCommentUrl(), parser(updateCommentDto)));
 
-        assertThat(redirectUrl.equals("/")).isTrue();
+        assertThat(otherUserUpdateCommentRedirectUrl.equals("/")).isTrue();
     }
 
     private String getCommentUrl() {
-        loginAndRequest(POST, savedArticleUrl + "/comments", parser(commentDto));
+        loginAndRequest(authorDto, POST, savedArticleUrl + "/comments", parser(commentDto));
         Comment comment = commentRepository.findAll().get(0);
 
-        return "/articles/" + comment.getArticle().getId() + "/comments/" + comment.getId();
+        return String.format("/articles/%d/comments/%d", comment.getArticle().getId(), comment.getId());
     }
 
     private MultiValueMap<String, String> parser(CommentDto commentDto) {

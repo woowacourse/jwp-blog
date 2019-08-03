@@ -9,7 +9,10 @@ import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.ArticleWriteService;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 public class ArticleCommonServiceTests {
     @Mock
@@ -17,17 +20,17 @@ public class ArticleCommonServiceTests {
 
     protected ArticleWriteService articleWriteService;
     protected ArticleReadService articleReadService;
-    protected Article article;
 
-    protected User author;
+    protected User author = new User("author", "author@mail.com", "Passw0rd!");
+    protected Article article = new Article("title", "coverUrl", "contents", author);
+    protected Long articleId = Long.valueOf(1);
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
         articleReadService = new ArticleReadService(articleRepository);
         articleWriteService = new ArticleWriteService(articleRepository, articleReadService);
-        author = new User("author", "author@mail.com", "Auth0r!12");
-        article = new Article("title", "coverUrl", "contents", author);
+        given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
     }
 
     protected void compareArticle(Article article1, Article article2) {

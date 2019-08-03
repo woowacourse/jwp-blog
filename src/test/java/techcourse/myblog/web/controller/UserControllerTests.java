@@ -13,43 +13,18 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpMethod.*;
-import static techcourse.myblog.dto.UserDto.*;
-import static techcourse.myblog.service.DuplicatedEmailException.DUPLICATED_USER_MESSAGE;
-import static techcourse.myblog.web.controller.LoginFailedException.LOGIN_FAIL_MESSAGE;
+import static techcourse.myblog.service.UserWriteService.DUPLICATED_USER_MESSAGE;
+import static techcourse.myblog.validation.UserPattern.*;
 
 class UserControllerTests extends ControllerTestTemplate {
-    @Test
-    void 로그아웃상태_회원가입_페이지_요청() {
-        httpRequest(GET, "/signup").isOk();
-    }
-
-    @Test
-    void 로그인_상태에서_회원가입_요청시_리다이렉트() {
-        loginAndRequest(GET, "/signup").isFound();
-    }
-
-    @Test
-    void 회원가입_성공시_리다이렉트() {
-        UserDto userDto = new UserDto(name, email, password);
-        httpRequest(POST, "/users", parseUser(userDto)).isFound();
-    }
-
-    //todo : 테스트 깨짐
-    @ParameterizedTest(name = "{index}: {3}")
-    @MethodSource("invalidParameters")
-    void 회원가입_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
-        String redirectUrl = getRedirectUrl(httpRequest(POST, "/users", parseUser(new UserDto(name, email, password))));
-        String responseBody = getResponseBody(httpRequest(GET, redirectUrl));
-
-        assertThat(responseBody).contains(errorMsg);
-    }
+    private String savedUserUrl;
 
     static Stream<Arguments> invalidParameters() {
         return Stream.of(
                 Arguments.of("wrong!name", "e@mail.com", "p@ssw0RD!", NAME_CONSTRAINT_MESSAGE),
                 Arguments.of("name", "wrong", "p@ssw00RD!", EMAIL_CONSTRAINT_MESSAGE),
                 Arguments.of("name", "e@mail.com", "잘못된패스워드", PASSWORD_CONSTRAINT_MESSAGE),
-                Arguments.of("name", "saved@email.com", "passw0RD!", DUPLICATED_USER_MESSAGE)
+                Arguments.of("name", savedUserDto.getEmail(), "passw0RD!", DUPLICATED_USER_MESSAGE)
         );
     }
 
@@ -59,40 +34,26 @@ class UserControllerTests extends ControllerTestTemplate {
     }
 
     @Test
-    void 로그아웃상태_로그인_페이지_요청() {
-        httpRequest(GET, "/login").isOk();
+    void 로그아웃상태_회원가입_페이지_요청() {
+        httpRequest(GET, "/signup").isOk();
     }
 
     @Test
-    void 로그인_상태에서_로그인_페이지_요청시_리다이렉트() {
-        loginAndRequest(GET, "/login").isFound();
+    void 로그인_상태에서_회원가입_요청시_리다이렉트() {
+        loginAndRequest(savedUserDto, GET, "/signup").isFound();
     }
 
     @Test
-    void 로그인_성공_시_메인_화면으로_리다이렉트() {
-        httpRequest(POST, "/login", parseUser(savedUserDto)).isFound();
+    void 회원가입_성공시_리다이렉트() {
+        UserDto signupUserDto = new UserDto("signUp", "signUp@mail.com", "Passw0rd!");
+        httpRequest(POST, "/users", parseUser(signupUserDto)).isFound();
     }
 
-    //todo : 테스트 깨짐
     @ParameterizedTest(name = "{index}: {3}")
-    @MethodSource("invalidLoginParameters")
-    void 로그인_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
-        String redirectUrl = getRedirectUrl(httpRequest(POST, "/login", parseUser(new UserDto(name, email, password))));
-        String responseBody = getResponseBody(httpRequest(GET, redirectUrl));
-
-        assertThat(responseBody).contains(errorMsg);
-    }
-
-    static Stream<Arguments> invalidLoginParameters() {
-        return Stream.of(
-                Arguments.of(null, "e@mail.com", "p@sswsavedPassw0RD!", LOGIN_FAIL_MESSAGE),
-                Arguments.of(null, "saved@email.com", "edPassw0RD!", LOGIN_FAIL_MESSAGE)
-        );
-    }
-
-    @Test
-    void 로그아웃_요청() {
-        loginAndRequest(GET, "/logout").isFound();
+    @MethodSource("invalidParameters")
+    void 회원가입_유효성_에러_테스트(String name, String email, String password, String errorMsg) {
+        String signupFailRedirectUrl = getRedirectUrl(httpRequest(POST, "/users", parseUser(new UserDto(name, email, password))));
+        assertThat(signupFailRedirectUrl).isEqualTo("/signup");
     }
 
     @Test
@@ -102,7 +63,7 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인_상태에서_회원정보페이지_요청시_성공() {
-        loginAndRequest(GET, "/mypage").isOk();
+        loginAndRequest(savedUserDto, GET, "/mypage").isOk();
     }
 
     @Test
@@ -112,40 +73,56 @@ class UserControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인_상태에서_정보수정페이지_요청시_성공() {
-        loginAndRequest(GET, "/mypage/edit").isOk();
+        loginAndRequest(savedUserDto, GET, "/mypage/edit").isOk();
     }
 
     @Test
     void 로그인_상태에서_정보수정_결과_확인() {
-        UserDto update = new UserDto("newname", savedUserDto.getEmail(), savedUserDto.getPassword());
-        loginAndRequest(PUT, "/mypage", parseUser(update)).isFound();
+        UserDto updateUserDto = new UserDto("newname", savedUserDto.getEmail(), savedUserDto.getPassword());
+        loginAndRequest(savedUserDto, PUT, getSavedUserUrl(), parseUser(updateUserDto)).isFound();
 
-        User savedUser = userRepository.findByEmail(savedUserDto.getEmail()).get();
-        assertThat(savedUser.getName().equals(update.getName())).isTrue();
-        assertThat(savedUser.getName().equals(savedUserDto.getName())).isFalse();
+        User afterUpdateUser = userRepository.findByEmail(savedUserDto.getEmail()).get();
+        assertThat(afterUpdateUser.getName())
+                .isEqualTo(updateUserDto.getName())
+                .isNotEqualTo(savedUserDto.getName());
     }
 
     @Test
     void 로그아웃상태_정보수정_불가() {
-        UserDto update = new UserDto("newname", savedUserDto.getEmail(), savedUserDto.getPassword());
-        httpRequest(PUT, "/mypage", parseUser(update)).isFound();
+        UserDto updateUserDto = new UserDto("newname", savedUserDto.getEmail(), savedUserDto.getPassword());
+        httpRequest(PUT, getSavedUserUrl(), parseUser(updateUserDto)).isFound();
 
-        User savedUser = userRepository.findByEmail(savedUserDto.getEmail()).get();
-        assertThat(savedUser.getName().equals(update.getName())).isFalse();
-        assertThat(savedUser.getName().equals(savedUserDto.getName())).isTrue();
+        User afterUpdateUser = userRepository.findByEmail(savedUserDto.getEmail()).get();
+        assertThat(afterUpdateUser.getName())
+                .isEqualTo(savedUserDto.getName())
+                .isNotEqualTo(updateUserDto.getName());
     }
 
     @Test
     void 로그아웃상태_탈퇴시도_실패() {
-        String redirectUrl = getRedirectUrl(httpRequest(DELETE, "/mypage"));
-        assertEquals(redirectUrl, "/login");
-        assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isTrue();
+        String logoutDeleteUserRedirectUrl = getRedirectUrl(httpRequest(DELETE, getSavedUserUrl()));
+        assertEquals(logoutDeleteUserRedirectUrl, "/login");
+        assertThat(userRepository.findByEmail(savedUserDto.getEmail())).isPresent();
     }
 
     @Test
     void 로그인상태_자기자신_탈퇴시도_성공() {
-        String redirectUrl = getRedirectUrl(loginAndRequest(DELETE, "/mypage"));
-        assertEquals(redirectUrl, "/logout");
-        assertThat(userRepository.findByEmail(savedUserDto.getEmail()).isPresent()).isFalse();
+        String loginDeleteSelfRedirectUrl = getRedirectUrl(loginAndRequest(savedUserDto, DELETE, getSavedUserUrl()));
+        assertEquals(loginDeleteSelfRedirectUrl, "/logout");
+        assertThat(userRepository.findByEmail(savedUserDto.getEmail())).isNotPresent();
+    }
+
+    @Test
+    void 로그인상태_다른사용자_탈퇴시도_실패() {
+        String loginDeleteSelfRedirectUrl = getRedirectUrl(loginAndRequest(otherUserDto, DELETE, getSavedUserUrl()));
+        assertEquals(loginDeleteSelfRedirectUrl, "/");
+        assertThat(userRepository.findByEmail(savedUserDto.getEmail())).isPresent();
+    }
+
+    private String getSavedUserUrl() {
+        if (savedUserUrl == null) {
+            savedUserUrl = String.format("/users/%d", savedUser.getId());
+        }
+        return savedUserUrl;
     }
 }

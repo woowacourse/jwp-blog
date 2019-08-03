@@ -5,7 +5,6 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.common.ArticleCommonServiceTests;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 
@@ -21,9 +20,6 @@ class ArticleReadServiceTests extends ArticleCommonServiceTests {
 
     @Test
     void findById_test() {
-        Long articleId = Long.valueOf(1);
-        given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
-
         Article foundArticle = articleReadService.findById(articleId);
         compareArticle(foundArticle, article);
     }

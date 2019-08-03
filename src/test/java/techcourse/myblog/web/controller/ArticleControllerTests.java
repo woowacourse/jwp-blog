@@ -5,8 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.web.controller.common.ControllerTestTemplate;
@@ -18,47 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpMethod.*;
 
 public class ArticleControllerTests extends ControllerTestTemplate {
-    @Autowired
-    private ArticleRepository articleRepository;
-
+    private UserDto authorDto = savedUserDto;
     private ArticleDto articleDto = new ArticleDto("title", "coverUrl", "contents");
+    private ArticleDto editArticleDto = new ArticleDto("new title", "new url", "new contents");
     private String savedArticleUrl;
-
-    @BeforeEach
-    protected void setup() {
-        super.setup();
-        savedArticleUrl = getRedirectUrl(loginAndRequest(POST, "/articles/write", parseArticle(articleDto)));
-    }
-
-    @Test
-    void 로그인상태_게시글_작성_페이지_요청() {
-        loginAndRequest(GET, "/articles/writing").isOk();
-    }
-
-    @Test
-    void 로그아웃상태_게시글_작성_페이지_요청() {
-        checkLoginRedirect("/articles/writing");
-    }
-
-    @ParameterizedTest(name = "{index}: {0}")
-    @MethodSource("articlesStream")
-    void 로그인상태_게시글_작성_테스트(ArticleDto articleDto) {
-        String redirectUrl = getRedirectUrl(loginAndRequest(POST, "/articles/write", parseArticle(articleDto)));
-        String responseBody = getResponseBody((loginAndRequest(GET, redirectUrl)));
-
-        ArticleDto escapedArticle = applyEscapeArticle(articleDto);
-
-        assertThat(responseBody).contains(escapedArticle.getTitle());
-        assertThat(responseBody).contains(escapedArticle.getCoverUrl());
-        assertThat(responseBody).contains(escapedArticle.getContents());
-    }
-
-    @ParameterizedTest(name = "{index}: {0}")
-    @MethodSource("articlesStream")
-    void 로그아웃상태_게시글_작성_테스트(ArticleDto articleDto) {
-        String redirectUrl = getRedirectUrl(httpRequest(POST, "/articles/write", parseArticle(articleDto)));
-        assertEquals(redirectUrl, "/login");
-    }
 
     static Stream<ArticleDto> articlesStream() {
         return Stream.of(
@@ -69,8 +30,47 @@ public class ArticleControllerTests extends ControllerTestTemplate {
         );
     }
 
+    @BeforeEach
+    protected void setup() {
+        super.setup();
+        savedArticleUrl = getRedirectUrl(loginAndRequest(authorDto, POST, "/articles/write", parseArticle(articleDto)));
+    }
+
+    @Test
+    void 로그인상태_게시글_작성_페이지_요청() {
+        loginAndRequest(authorDto, GET, "/articles/writing").isOk();
+    }
+
+    @Test
+    void 로그아웃상태_게시글_작성_페이지_요청_리다이렉트() {
+        checkLoginRedirect("/articles/writing");
+    }
+
+    @ParameterizedTest(name = "{index}: {0}")
+    @MethodSource("articlesStream")
+    void 로그인상태_게시글_작성_테스트(ArticleDto articleDto) {
+        String loginWriteArticleRedirectUrl = getRedirectUrl(
+                loginAndRequest(authorDto, POST, "/articles/write", parseArticle(articleDto)));
+        String articlePage = getResponseBody((loginAndRequest(authorDto, GET, loginWriteArticleRedirectUrl)));
+
+        checkPageContainArticle(applyEscapeArticle(articleDto), articlePage);
+    }
+
+    private void checkPageContainArticle(ArticleDto articleDto, String responseBody) {
+        assertThat(responseBody).contains(articleDto.getTitle());
+        assertThat(responseBody).contains(articleDto.getCoverUrl());
+        assertThat(responseBody).contains(articleDto.getContents());
+    }
+
     private ArticleDto applyEscapeArticle(ArticleDto articleDto) {
         return new ArticleDto(articleDto.getTitle(), articleDto.getCoverUrl(), StringEscapeUtils.escapeJava(articleDto.getContents()));
+    }
+
+    @ParameterizedTest(name = "{index}: {0}")
+    @MethodSource("articlesStream")
+    void 로그아웃상태_게시글_작성_테스트_리다이렉트(ArticleDto articleDto) {
+        String redirectUrl = getRedirectUrl(httpRequest(POST, "/articles/write", parseArticle(articleDto)));
+        assertEquals(redirectUrl, "/login");
     }
 
     @Test
@@ -80,96 +80,76 @@ public class ArticleControllerTests extends ControllerTestTemplate {
 
     @Test
     void 로그인상태_게시글_페이지_정상_조회() {
-        String responseBody = getResponseBody(loginAndRequest(GET, savedArticleUrl));
-
-        assertThat(responseBody).contains(articleDto.getTitle());
-        assertThat(responseBody).contains(articleDto.getCoverUrl());
-        assertThat(responseBody).contains(articleDto.getContents());
+        String articlePage = getResponseBody(loginAndRequest(authorDto, GET, savedArticleUrl));
+        checkPageContainArticle(articleDto, articlePage);
     }
 
     @Test
     void 존재하지_않는_게시글_조회_에러() {
-        String redirectUrl = getRedirectUrl(loginAndRequest(GET, "/articles/0"));
-        assertEquals(redirectUrl, "/");
+        String notExistArticleRedirectUrl = getRedirectUrl(loginAndRequest(authorDto, GET, "/articles/0"));
+        assertEquals(notExistArticleRedirectUrl, "/");
     }
 
     @Test
-    void 로그아웃상태_게시글_수정페이지_이동() {
+    void 로그아웃상태_게시글_수정페이지_요청_리다이렉트() {
         checkLoginRedirect(savedArticleUrl + "/edit");
     }
 
     @Test
-    void 로그인상태_게시글_수정페이지_이동() {
-        loginAndRequest(GET, savedArticleUrl + "/edit").isOk();
+    void 로그인상태_게시글_수정페이지_요청() {
+        loginAndRequest(authorDto, GET, savedArticleUrl + "/edit").isOk();
     }
 
     @Test
     void 로그인상태_다른_유저_게시글_수정페이지_이동() {
-        UserDto other = new UserDto("ab", "1@1.com", "1234asdf!A");
-        userRepository.save(other.toUser());
-        String redirectUrl = getRedirectUrl(loginAndRequest(GET, savedArticleUrl + "/edit", other));
+        String otherEditArticleRedirectUrl = getRedirectUrl(loginAndRequest(otherUserDto, GET, savedArticleUrl + "/edit"));
 
-        assertEquals(redirectUrl, "/");
+        assertEquals(otherEditArticleRedirectUrl, "/");
     }
 
     @Test
-    void 로그아웃상태_게시글_수정_요청() {
-        ArticleDto editedArticleDto = new ArticleDto("new title", "new url", "new contents");
-
-        String redirectUrl = getRedirectUrl(httpRequest(PUT, savedArticleUrl, parseArticle(editedArticleDto)));
-        assertEquals(redirectUrl, "/login");
+    void 로그아웃상태_게시글_수정_요청_리다이렉트() {
+        String logoutEditArticleRedirectUrl = getRedirectUrl(httpRequest(PUT, savedArticleUrl, parseArticle(editArticleDto)));
+        assertEquals(logoutEditArticleRedirectUrl, "/login");
     }
 
     @Test
-    void 로그인상태_게시글_수정_요청() {
-        ArticleDto editedArticleDto = new ArticleDto("new title", "new url", "new contents");
+    void 로그인상태_본인_게시글_수정_요청_성공() {
+        String authorEditArticleRedirectUrl = getRedirectUrl(loginAndRequest(authorDto, PUT, savedArticleUrl, parseArticle(editArticleDto)));
+        String articlePage = getResponseBody(loginAndRequest(authorDto, GET, authorEditArticleRedirectUrl));
 
-        String redirectUrl = getRedirectUrl(loginAndRequest(PUT, savedArticleUrl, parseArticle(editedArticleDto)));
-        String responseBody = getResponseBody(loginAndRequest(GET, redirectUrl));
-
-        assertThat(responseBody).contains(editedArticleDto.getTitle());
-        assertThat(responseBody).contains(editedArticleDto.getCoverUrl());
-        assertThat(responseBody).contains(editedArticleDto.getContents());
+        checkPageContainArticle(editArticleDto, articlePage);
     }
 
     @Test
-    void 로그인상태_다른_유저_게시글_수정_요청() {
-        UserDto other = new UserDto("ab", "1@1.com", "1234asdf!A");
-        userRepository.save(other.toUser());
-        ArticleDto editedArticleDto = new ArticleDto("new title", "new url", "new contents");
+    void 로그인상태_다른_유저_게시글_수정_요청_리다이렉트() {
+        String otherUserEditArticleRedirectUrl = getRedirectUrl(loginAndRequest(otherUserDto, PUT, savedArticleUrl, parseArticle(editArticleDto)));
 
-        String redirectUrl = getRedirectUrl(loginAndRequest(PUT, savedArticleUrl, parseArticle(editedArticleDto), other));
-
-        assertEquals(redirectUrl, "/");
+        assertEquals(otherUserEditArticleRedirectUrl, "/");
     }
 
     @Test
-    void 로그아웃상태_게시글_삭제_요청() {
-        String redirectUrl = getRedirectUrl(httpRequest(DELETE, savedArticleUrl));
-        assertEquals(redirectUrl, "/login");
+    void 로그아웃상태_게시글_삭제_요청_리다이렉트() {
+        String logoutDeleteArticleRedirectUrl = getRedirectUrl(httpRequest(DELETE, savedArticleUrl));
+        assertEquals(logoutDeleteArticleRedirectUrl, "/login");
     }
 
     @Test
-    void 로그인상태_게시글_삭제_요청() {
-        String redirectUrl = getRedirectUrl(loginAndRequest(DELETE, savedArticleUrl));
-        assertEquals(redirectUrl, "/");
+    void 로그인상태_본인_게시글_삭제_성공() {
+        String authorDeleteArticleRedirectUrl = getRedirectUrl(loginAndRequest(authorDto, DELETE, savedArticleUrl));
+        assertEquals(authorDeleteArticleRedirectUrl, "/");
 
-        String redirectRemovedArticleUrl = getRedirectUrl(loginAndRequest(GET, savedArticleUrl));
+        String redirectRemovedArticleUrl = getRedirectUrl(loginAndRequest(authorDto, GET, savedArticleUrl));
         assertEquals(redirectRemovedArticleUrl, "/");
     }
 
     @Test
-    void 로그인상태_다른_유저_게시글_삭제_요청() {
-        UserDto other = new UserDto("ab", "1@1.com", "1234asdf!A");
-        userRepository.save(other.toUser());
+    void 로그인상태_다른_유저_게시글_삭제_불가() {
+        String otherUserDeleteArticleRedirectUrl = getRedirectUrl(loginAndRequest(otherUserDto, DELETE, savedArticleUrl));
+        assertEquals(otherUserDeleteArticleRedirectUrl, "/");
 
-        String redirectUrl = getRedirectUrl(loginAndRequest(DELETE, savedArticleUrl, other));
-        assertEquals(redirectUrl, "/");
-
-        String articlePage = getResponseBody(loginAndRequest(GET, savedArticleUrl));
-        assertThat(articlePage).contains(articleDto.getTitle());
-        assertThat(articlePage).contains(articleDto.getCoverUrl());
-        assertThat(articlePage).contains(articleDto.getContents());
+        String articlePage = getResponseBody(loginAndRequest(otherUserDto, GET, savedArticleUrl));
+        checkPageContainArticle(articleDto, articlePage);
     }
 
     private void checkLoginRedirect(String url) {
