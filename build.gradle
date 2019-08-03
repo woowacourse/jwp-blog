@@ -23,8 +23,6 @@ dependencies {
     }
 	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 	
-	implementation 'org.projectlombok:lombok:1.18.4'
-	
 	runtimeOnly 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	runtimeOnly 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.3.0'
 
