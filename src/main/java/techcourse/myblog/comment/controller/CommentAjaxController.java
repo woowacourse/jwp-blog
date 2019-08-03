@@ -18,7 +18,7 @@ public class CommentAjaxController {
     }
 
     @PostMapping("/ajax/articles/{articleId}/comments")
-    public List<CommentAjaxResponseDto> add(@RequestBody CommentCreateDto commentCreateDto, @PathVariable long articleId, @PathVariable long commentId, UserSession userSession) {
+    public List<CommentAjaxResponseDto> add(@RequestBody CommentCreateDto commentCreateDto, @PathVariable long articleId, UserSession userSession) {
         commentService.save(articleId, userSession.getId(), commentCreateDto);
         return commentService.findAllByArticleIdTwo(articleId);
     }
