@@ -12,9 +12,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.ArticleException;
-import techcourse.myblog.exception.UserException;
 import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.utils.converter.DtoConverter;
 import techcourse.myblog.utils.page.PageRequest;
 
@@ -28,11 +26,11 @@ public class ArticleService {
     private static final int VIEW_ARTICLE_COUNT = 10;
 
     private final ArticleRepository articleRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository) {
+    public ArticleService(ArticleRepository articleRepository, UserService userService) {
         this.articleRepository = articleRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public List<Article> findAll() {
@@ -52,7 +50,7 @@ public class ArticleService {
 
     @Transactional
     public Article save(ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
-        User user = userRepository.findByEmail(userResponseDto.getEmail()).orElseThrow(UserException::new);
+        User user = userService.getUserByEmail(userResponseDto);
         Article article = DtoConverter.convert(articleRequestDto, user);
         articleRepository.save(article);
         return article;
@@ -61,7 +59,7 @@ public class ArticleService {
     @Transactional
     public Article update(long articleId, ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
         Article originArticle = findArticle(articleId);
-        User author = userRepository.findByEmail(userResponseDto.getEmail()).orElseThrow(UserException::new);
+        User author = userService.getUserByEmail(userResponseDto);
         originArticle.update(DtoConverter.convert(articleRequestDto, author));
         return originArticle;
     }

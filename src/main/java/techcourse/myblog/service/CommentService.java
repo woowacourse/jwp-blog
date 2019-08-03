@@ -9,45 +9,35 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
-import techcourse.myblog.exception.ArticleException;
 import techcourse.myblog.exception.CommentAuthenticationException;
 import techcourse.myblog.exception.CommentException;
-import techcourse.myblog.exception.UserException;
-import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
-import techcourse.myblog.repository.UserRepository;
 
 @Service
 public class CommentService {
     private static final Logger log = LoggerFactory.getLogger(CommentService.class);
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
-    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
+    private final UserService userService;
 
-    public CommentService(CommentRepository commentRepository, UserRepository userRepository, ArticleRepository articleRepository) {
+    public CommentService(CommentRepository commentRepository, ArticleService articleService, UserService userService) {
         this.commentRepository = commentRepository;
-        this.userRepository = userRepository;
-        this.articleRepository = articleRepository;
+        this.articleService = articleService;
+        this.userService = userService;
     }
 
     @Transactional
-    public Comment addComment(CommentRequestDto commentRequestDto, UserResponseDto userResponseDto, Long articleId) {
+    public void addComment(CommentRequestDto commentRequestDto, UserResponseDto userResponseDto, Long articleId) {
         String contents = commentRequestDto.getContents();
-        User commenter = findUserByEmail(userResponseDto.getEmail());
+        User commenter = userService.getUserByEmail(userResponseDto);
         Article article = findArticleByArticleId(articleId);
 
         Comment comment = commentRepository.save(new Comment(contents, commenter, article));
         article.addComment(comment);
-
-        return comment;
     }
 
     private Article findArticleByArticleId(Long articleId) {
-        return articleRepository.findById(articleId).orElseThrow(ArticleException::new);
-    }
-
-    private User findUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(UserException::new);
+        return articleService.findArticle(articleId);
     }
 
     @Transactional
