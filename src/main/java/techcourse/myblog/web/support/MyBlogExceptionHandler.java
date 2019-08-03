@@ -7,9 +7,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.CommentUpdateFailedException;
 import techcourse.myblog.domain.InvalidCommentException;
-import techcourse.myblog.service.DuplicatedEmailException;
+import techcourse.myblog.service.LoginFailedException;
 import techcourse.myblog.service.MismatchAuthorException;
 import techcourse.myblog.service.NotFoundArticleException;
+import techcourse.myblog.service.SignUpFailedException;
 import techcourse.myblog.web.controller.*;
 
 @ControllerAdvice
@@ -44,15 +45,16 @@ public class MyBlogExceptionHandler {
         redirectAttributes.addFlashAttribute(String.format("org.springframework.validation.BindingResult.%s", objectName), e.getBindingResult());
     }
 
-    @ExceptionHandler(DuplicatedEmailException.class)
-    public RedirectView handleSignupFail(DuplicatedEmailException e, RedirectAttributes redirectAttributes) {
+    @ExceptionHandler(SignUpFailedException.class)
+    public RedirectView handleSignupFail(SignUpFailedException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/signup");
     }
 
     @ExceptionHandler(LoginFailedException.class)
     public RedirectView handleLoginFail(LoginFailedException e, RedirectAttributes redirectAttributes) {
-        return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
+        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        return new RedirectView("/login");
     }
 
     @ExceptionHandler(MismatchAuthorException.class)

@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.web.controller.LoginFailedException;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,5 +30,9 @@ public class UserReadService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(NotFoundUserException::new);
+    }
+
+    boolean hasSameEmail(User user) {
+        return userRepository.existsByEmail(user.getEmail());
     }
 }

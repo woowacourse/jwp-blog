@@ -9,6 +9,8 @@ import techcourse.myblog.dto.UserDto;
 @Service
 @Transactional
 public class UserWriteService {
+    public static final String DUPLICATED_USER_MESSAGE = "이미 존재하는 email입니다";
+
     private final UserRepository userRepository;
     private final UserReadService userReadService;
 
@@ -18,14 +20,10 @@ public class UserWriteService {
     }
 
     public void save(User user) {
-        verifyDuplicateEmail(user);
+        if (userReadService.hasSameEmail(user)) {
+            throw new SignUpFailedException(DUPLICATED_USER_MESSAGE);
+        }
         userRepository.save(user);
-    }
-
-    private void verifyDuplicateEmail(User user) {
-        userRepository.findByEmail(user.getEmail()).ifPresent(x -> {
-            throw new DuplicatedEmailException();
-        });
     }
 
     public void update(User loginUser, UserDto userDto) {
