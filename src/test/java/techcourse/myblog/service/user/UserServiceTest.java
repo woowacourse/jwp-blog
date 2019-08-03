@@ -53,26 +53,16 @@ public class UserServiceTest {
 
     @Test
     void 사용자_정보_수정_확인() {
-        UserResponse updateUser = userService.update(defaultUser.getEmail(), "dowon");
+        UserResponse updateUser = userService.update(defaultUser, new UserRequest("john123@example.com", "dowon", null));
         assertThat(updateUser).isEqualTo(new UserResponse(updateUser.getId(), defaultUser.getEmail(), "dowon"));
-    }
-
-    @Test
-    void 사용자_정보_수정_오류확인_이메일이_null인_경우() {
-        assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> userService.update(null, "dowon"));
-    }
-
-    @Test
-    void 사용자_정보_수정_오류확인_이름이_null인_경우() {
-        assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> userService.update(defaultUser.getEmail(), null));
     }
 
     @Test
     void 사용자_정보_수정_오류확인_사용자가_없을_경우() {
         assertThatExceptionOfType(UserNotFoundException.class)
-                .isThrownBy(() -> userService.update("done@naver.com", "dowon"));
+                .isThrownBy(() -> userService.update(
+                        new UserResponse(DEFAULT_USER_ID - 1, "done@naver.com", "done"),
+                        new UserRequest("john@example.com", "dowon", null)));
     }
 
     @Test

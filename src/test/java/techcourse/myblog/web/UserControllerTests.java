@@ -173,7 +173,8 @@ public class UserControllerTests {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .cookie("JSESSIONID", jSessionId)
                 .body(BodyInserters
-                        .fromFormData("name", "dowon"))
+                        .fromFormData("name", "dowon")
+                        .with("email", "john123@example.com"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".*/mypage");

@@ -23,7 +23,6 @@ public class UserRequest {
     public UserRequest(final String email, final String name, final String password) {
         Objects.requireNonNull(email);
         Objects.requireNonNull(name);
-        Objects.requireNonNull(password);
 
         this.email = email;
         this.name = name;
