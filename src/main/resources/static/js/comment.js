@@ -3,10 +3,15 @@ const template = '<li class="comment-item border bottom mrg-btm-30">\n' +
     'src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">\n' +
     '<div class="info">\n' +
     '<a class="text-bold inline-block"\n' +
-    'href="/mypage/{{author.id}}"\n>{{author.name.name}}</a>\n' +
-    '<button class="inline-block sub-title pull-right">\n' +
+    'href="/mypage/{{userId}}"\n>{{userName}}</a>\n' +
+    // '<form action="/articles/{{articleId}}/comments/{{commentId}}"\n' +
+    // 'method="post">\n' +
+    // '<input type="hidden" name="_method" value="delete">'+
+    '<button class="inline-block sub-title pull-right"\n' +
+    '">\n' +
     '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5 delete-comment-btn"></i>\n' +
     '</button>\n' +
+    // '</form>\n' +
     '<a class="inline-block sub-title pull-right">\n' +
     '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5 edit-comment-btn"></i>\n' +
     '</a>\n' +
@@ -15,9 +20,7 @@ const template = '<li class="comment-item border bottom mrg-btm-30">\n' +
     '<input id="change{{id}}" class="width-80 tempInput"\n' +
     'style="display: none;">\n' +
     '</div>\n' +
-    '</li>';
-
-const host = 'http://' + window.location.host;
+    '</li>'
 
 const commentTemplate = Handlebars.compile(template);
 
@@ -35,7 +38,7 @@ function editBtnClickHandler(event) {
             const updateComment = {
                 contents: editAble.value,
             }
-            putData('PUT', host + '/ajax/articles/' + articleId + '/comments/' + editId, updateComment)
+            putData('PUT', 'http://localhost:8080/ajax/articles/' + articleId + '/comments/' + editId, updateComment)
                 .then(data => initComments(data))
                 .catch(data => console.log(data))
             editAble.style.display = "none";
@@ -49,7 +52,7 @@ function editBtnClickHandler(event) {
     if (event.target.classList.contains("delete-comment-btn")) {
         const editAble = getInputContents(comment);
         const editId = editAble.id.substring(6, editAble.id.length);
-        putData('DELETE', host + '/ajax/articles/' + articleId + '/comments/' + editId)
+        putData('DELETE', 'http://localhost:8080/ajax/articles/' + articleId + '/comments/' + editId)
             .then(data => initComments(data))
             .catch(data => console.log(data))
 
@@ -61,7 +64,6 @@ function initComments(data) {
     data.forEach(x => {
         refresh(x);
     });
-    addCommentCount(data);
 }
 
 function cancelEditHandler(event) {
@@ -102,26 +104,5 @@ function refresh(commentData) {
     commentList.insertAdjacentHTML("beforeend", commentTemplate(commentData))
 }
 
-function addSave(event) {
-    const articleId = window.location.pathname.split("/")[2];
-    const commentContents = document.getElementById('comment-contents');
-    const comments = {
-        contents: commentContents.value
-    };
-
-    putData('POST', host + '/ajax/articles/' + articleId + '/comments', comments)
-        .then(data => initComments(data))
-        .catch(data => console.log(data));
-    editor.setValue('');
-    commentContents.value = '';
-}
-
-function addCommentCount(data) {
-    const commentCount = document.getElementById("comment-count");
-    commentCount.innerText = data.length;
-}
-
-const saveBtn = document.getElementById('save-btn');
-saveBtn.addEventListener('click', addSave);
 commentList.addEventListener('click', editBtnClickHandler);
 commentList.addEventListener('keyup', cancelEditHandler);

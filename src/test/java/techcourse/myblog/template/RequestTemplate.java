@@ -109,6 +109,15 @@ public class RequestTemplate {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
     }
 
+    public WebTestClient.RequestBodySpec loggedInPutAjaxRequest(String uri) {
+        return webTestClient
+                .put()
+                .uri(uri)
+                .header("Cookie", getCookie())
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8);
+    }
+
     public String createArticle() {
         final String[] path = new String[1];
         loggedInPostRequest("/articles")

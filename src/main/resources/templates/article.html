@@ -69,7 +69,7 @@
                         <span class="font-size-16 text-info" th:text="${#lists.size(comments)}"></span>
                     </div>
                     <div class="comment">
-                        <ul class="list-unstyled list-info">
+                        <ul class="list-unstyled list-info" id="comment-list">
                             <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
                                 <img class="thumb-img img-circle"
                                      src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
@@ -81,22 +81,26 @@
                                           th:method="delete">
                                         <button class="inline-block sub-title pull-right"
                                                 th:if="${session.user.id == comment.author.id}" type="submit">
-                                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5 delete-comment-btn"></i>
                                         </button>
                                     </form>
                                     <!--                                    <form th:action="@{/comments/{commentId}/edit(commentId=${comment.id})}">-->
-                                    <a class="inline-block sub-title pull-right"
-                                       th:href="@{/comments/{commentId}/edit(commentId=${comment.id})}"
-                                       th:if="${session.user.id == comment.author.id}">
-                                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                    <a class="inline-block sub-title pull-right">
+                                        <!--th:href="@{/comments/{commentId}/edit(commentId=${comment.id})}"-->
+                                        <!--th:if="${session.user.id == comment.author.id}">-->
+                                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5 edit-comment-btn"></i>
                                     </a>
                                     <!--                                    </form>-->
-                                    <p class="width-80" th:text="${comment.contents}"></p>
+                                    <p th:id="comment+${comment.id}" class="width-80 tempComment" style="display: block"
+                                       th:text="${comment.contents}"></p>
+                                    <input th:id="change+${comment.id}" class="width-80 tempInput"
+                                           style="display: none;">
                                 </div>
                             </li>
                         </ul>
                         <div class="add-comment">
-                            <form method="post" th:action="@{/articles/{articleId}/comments(articleId=${article.id})}">
+                            <form method="post" id="commentForm"
+                                  th:action="@{/articles/{articleId}/comments(articleId=${article.id})}">
                                 <input id="comment-contents" name="contents" type="hidden">
                                 <div id="editSection"></div>
                                 <button class="btn btn-default" id="save-btn" type="submit">
@@ -132,5 +136,7 @@
             height: '200px'
         });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+    <script src="/js/comment.js"></script>
 </th:block>
 </html>

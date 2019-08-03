@@ -39,6 +39,9 @@ public class User {
         return this;
     }
 
+    public String userName() {
+        return name.getName();
+    }
     public boolean checkPassword(String password) {
         return this.password.isCorrect(password);
     }
