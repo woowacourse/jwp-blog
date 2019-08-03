@@ -28,18 +28,13 @@ public class ArticleController {
         return "article-edit";
     }
 
-    @PostMapping
-    public String saveArticlePage(ArticleDto articleDto, User user) {
-        log.debug(">>> save article : {}, user : {}", articleDto, user);
-        Article article = articleService.saveArticle(articleDto.toArticle(user));
-        return "redirect:/articles/" + article.getId();
-    }
-
     @GetMapping("{articleId}/edit")
     public String showArticleEditingPage(@PathVariable long articleId, Model model, User user) {
         log.debug(">>> article Id : {}", articleId);
-        Article article = articleService.findArticleById(articleId);
-        if (article.isNotMatchAuthor(user)) {
+        Article article;
+        try {
+            article =  articleService.find(articleId, user);
+        } catch (RuntimeException e) {
             return "redirect:/";
         }
 
@@ -58,26 +53,30 @@ public class ArticleController {
         return "article";
     }
 
+    @PostMapping
+    public String saveArticlePage(ArticleDto articleDto, User user) {
+        log.debug(">>> save article : {}, user : {}", articleDto, user);
+        Article article = articleService.saveArticle(articleDto.toArticle(user));
+        return "redirect:/articles/" + article.getId();
+    }
+
     @PutMapping("{articleId}")
     public String updateArticleByIdPage(@PathVariable long articleId, ArticleDto articleDto, User user) {
         log.debug(">>> put article Id : {}, ArticleDto : {}, user : {}", articleId, articleDto, user);
         articleDto.setId(articleId);
-
-        if (articleService.isSuccessUpdate(articleDto, user)) {
-            return "redirect:/articles/" + articleId;
+        try {
+            articleService.update(articleDto, user);
+        } catch (RuntimeException e) {
+            return "redirect:/";
         }
-        return "redirect:/";
+
+        return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("{articleId}")
     public String deleteArticleByIdPage(@PathVariable long articleId, User user) {
         log.debug(">>> article Id : {}", articleId);
-        Article article = articleService.findArticleById(articleId);
-        if (article.isNotMatchAuthor(user)) {
-            return "redirect:/";
-        }
-        articleService.deleteArticle(articleId);
-
+        articleService.delete(articleId, user);
         return "redirect:/";
     }
 }

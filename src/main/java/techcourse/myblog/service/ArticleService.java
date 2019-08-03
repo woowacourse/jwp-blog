@@ -33,18 +33,32 @@ public class ArticleService {
         return commentRepository.findAllByArticle_Id(id);
     }
 
-    public void deleteArticle(long articleId) {
+    public void deleteById(long articleId) {
         articleRepository.deleteById(articleId);
     }
 
-    @Transactional
-    public boolean isSuccessUpdate(ArticleDto articleDto, User user) {
-        Article preArticle = articleRepository.findById(articleDto.getId()).orElseThrow(RuntimeException::new);
-        if (preArticle.isNotMatchAuthor(user)) {
-            return false;
-        }
+    private void delete(Article article) {
+        articleRepository.delete(article);
+    }
 
-        preArticle.update(articleDto);
-        return true;
+    @Transactional
+    public Article find(long articleId, User user) {
+        Article article = findArticleById(articleId);
+        article.checkMatchAuthor(user);
+        return article;
+    }
+
+    @Transactional
+    public Article update(ArticleDto articleDto, User user) {
+        Article preArticle = articleRepository.findById(articleDto.getId()).orElseThrow(RuntimeException::new);
+        return preArticle.update(articleDto, user);
+    }
+
+    @Transactional
+    public void delete(long articleId, User user) {
+        Article article = articleRepository.findById(articleId).orElseThrow(RuntimeException::new);
+        if (article.isMatchAuthor(user)) {
+            deleteById(articleId);
+        }
     }
 }

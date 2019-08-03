@@ -18,19 +18,7 @@ public class AccountService {
         this.userRepository = userRepository;
     }
 
-    public boolean isExistsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    public User save(User user) {
-        return userRepository.save(user);
-    }
-
-    public void delete(User user) {
-        userRepository.delete(user);
-    }
-
-    public List<User> findAllUsers() {
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 
@@ -40,8 +28,30 @@ public class AccountService {
     }
 
     @Transactional
+    public User save(UserDto userDto) {
+        User user = userDto.toUser();
+        if (isExistsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException();
+        }
+        return save(user);
+    }
+
+    @Transactional
     public User update(UserDto userDto, User user) {
+        user.checkMatch(userDto);
         user.update(userDto);
         return user;
+    }
+
+    public void delete(User user) {
+        userRepository.delete(user);
+    }
+
+    private boolean isExistsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    private User save(User user) {
+        return userRepository.save(user);
     }
 }

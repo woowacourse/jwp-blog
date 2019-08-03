@@ -32,34 +32,9 @@ public class AccountController {
         return "signup";
     }
 
-    @PostMapping("user")
-    public String processSignup(@Valid UserDto userDto, Errors errors) {
-        log.debug(">>> UserDto : {} Error : {}", userDto, errors);
-        if (errors.hasErrors()) {
-            return "signup";
-        }
-
-        User user = userDto.toUser();
-        if (accountService.isExistsByEmail(user.getEmail())) {
-            errors.rejectValue("email", "0", "이메일 중복입니다.");
-            return "signup";
-        }
-
-        accountService.save(user);
-        return "redirect:/";
-    }
-
-    @DeleteMapping("user")
-    public String deleteUser(HttpSession session, User user) {
-        log.debug(">>> deleteUser: request : {}", session);
-        session.removeAttribute("user");
-        accountService.delete(user);
-        return "redirect:/";
-    }
-
     @GetMapping("users")
     public String showUserList(Model model) {
-        List<User> users = accountService.findAllUsers();
+        List<User> users = accountService.findAll();
         model.addAttribute("users", users);
         return "user-list";
     }
@@ -78,17 +53,45 @@ public class AccountController {
         return "mypage-edit";
     }
 
+    @PostMapping("user")
+    public String processSignup(@Valid UserDto userDto, Errors errors) {
+        log.debug(">>> UserDto : {} Error : {}", userDto, errors);
+        if (errors.hasErrors()) {
+            return "signup";
+        }
+
+        try {
+            accountService.save(userDto);
+        } catch (RuntimeException e) {
+            errors.rejectValue("email", "0", "이메일 중복입니다.");
+            return "signup";
+        }
+        return "redirect:/";
+    }
+
     @PutMapping("profile/edit")
     public String processUpdateProfile(@Valid UserDto userDto, Errors errors, User user, HttpSession session) {
         if (errors.hasErrors()) {
             return "mypage-edit";
         }
-        if (user.isNotMatch(userDto)) {
+
+        User updatedUser;
+        try {
+            updatedUser = accountService.update(userDto, user);
+        } catch (RuntimeException e) {
             return "redirect:/";
         }
 
-        session.setAttribute("user", accountService.update(userDto, user));
+        session.setAttribute("user", updatedUser);
 
         return "redirect:/accounts/profile/" + userDto.getId();
+    }
+
+    @DeleteMapping("user")
+    public String deleteUser(HttpSession session, User user) {
+        log.debug(">>> deleteUser: request : {}", session);
+        session.removeAttribute("user");
+        accountService.delete(user);
+        return "redirect:/";
     }
 }

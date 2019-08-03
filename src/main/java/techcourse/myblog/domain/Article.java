@@ -28,17 +28,33 @@ public class Article {
         this.author = author;
     }
 
-    public boolean isNotMatchAuthor(User target) {
-        return author.getId() != target.getId();
+    public Article update(ArticleDto articleDto, User author) {
+        checkMatchAuthor(author);
+        return update(articleDto);
     }
 
-    public void update(ArticleDto articleDto) {
+    public Article update(ArticleDto articleDto) {
         this.title = articleDto.getTitle();
         this.contents = articleDto.getContents();
         this.coverUrl = articleDto.getCoverUrl();
+        return this;
+    }
+
+    public void checkMatchAuthor(User user) {
+        if (isNotMatchAuthor(user)) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public boolean isNotMatch(long id) {
         return !this.id.equals(id);
+    }
+
+    public boolean isMatchAuthor(User target) {
+        return author.equals(target);
+    }
+
+    public boolean isNotMatchAuthor(User target) {
+        return !isMatchAuthor(target);
     }
 }

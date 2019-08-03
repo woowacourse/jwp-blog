@@ -50,5 +50,11 @@ public class User {
         this.email = userDto.getEmail();
         this.password = userDto.getPassword();
     }
+
+    public void checkMatch(UserDto userDto) {
+        if (isNotMatch(userDto)) {
+            throw new IllegalArgumentException();
+        }
+    }
 }
 
