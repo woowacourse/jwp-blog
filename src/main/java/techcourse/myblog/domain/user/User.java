@@ -1,6 +1,6 @@
 package techcourse.myblog.domain.user;
 
-import techcourse.myblog.exception.NameToUpdateNotFoundException;
+import techcourse.myblog.exception.UserHasNotAuthorityException;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -26,14 +26,15 @@ public class User {
     public User(final String email, final String name, final String password) {
         this.email = Objects.requireNonNull(email);
         this.name = Objects.requireNonNull(name);
-        this.password = Objects.requireNonNull(password);
+        this.password = password;
     }
 
-    public void update(final String name) {
-        if (Objects.isNull(name)) {
-            throw new NameToUpdateNotFoundException();
+    public void update(final User userInfo) {
+        if (this.email.equals(userInfo.getEmail())) {
+            this.name = userInfo.getName();
+            return;
         }
-        this.name = name;
+        throw new UserHasNotAuthorityException();
     }
 
     public boolean match(final String email) {

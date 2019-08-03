@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import techcourse.myblog.service.dto.user.UserRequest;
 import techcourse.myblog.service.dto.user.UserResponse;
 import techcourse.myblog.service.user.UserService;
 
@@ -50,9 +51,9 @@ public class UserPageController {
     }
 
     @PutMapping("/mypage-edit")
-    public String editMyPage(final HttpSession session, final String name) {
-        UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
-        session.setAttribute(USER_SESSION_KEY, userService.update(user.getEmail(), name));
+    public String editMyPage(final HttpSession session, final UserRequest userInfo) {
+        UserResponse accessUser = (UserResponse) session.getAttribute(USER_SESSION_KEY);
+        session.setAttribute(USER_SESSION_KEY, userService.update(accessUser, userInfo));
         return "redirect:/mypage";
     }
 }

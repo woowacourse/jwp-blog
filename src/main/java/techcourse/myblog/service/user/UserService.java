@@ -2,6 +2,7 @@ package techcourse.myblog.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.DuplicatedEmailException;
 import techcourse.myblog.exception.UserNotFoundException;
@@ -21,6 +22,7 @@ import static techcourse.myblog.service.user.UserAssembler.convertToEntity;
 @Service
 public class UserService {
     public static final String USER_SESSION_KEY = "user";
+
     final private UserRepository userRepository;
 
     @Autowired
@@ -37,7 +39,7 @@ public class UserService {
         return convertToDto(userRepository.save(user));
     }
 
-    public UserResponse findById(Long id) {
+    public UserResponse findById(final Long id) {
         User retrieveUser = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
         return convertToDto(retrieveUser);
@@ -49,9 +51,12 @@ public class UserService {
                 .collect(collectingAndThen(toList(), Collections::unmodifiableList));
     }
 
-    public UserResponse update(final String email, final String name) {
-        User retrieveUser = userRepository.findByEmail(Objects.requireNonNull(email)).orElseThrow(UserNotFoundException::new);
-        retrieveUser.update(Objects.requireNonNull(name));
+    @Transactional
+    public UserResponse update(final UserResponse accessUser, final UserRequest userInfo) {
+        User retrieveUser = userRepository.findById(Objects.requireNonNull(accessUser.getId()))
+                .orElseThrow(UserNotFoundException::new);
+        User user = convertToEntity(userInfo);
+        retrieveUser.update(user);
         return convertToDto(retrieveUser);
     }
 
