@@ -45,8 +45,7 @@ public class ArticleTest {
     void 게시글_수정_오류확인_인자가_null인_경우() {
         Article article = new Article("title", "", "content", DEFAULT_AUTHOR);
         assertThatExceptionOfType(ArticleToUpdateNotFoundException.class)
-                .isThrownBy(() -> article.update(null, "user@example.com"))
-                .withMessage("업데이트 해야할 게시글이 없습니다.");
+                .isThrownBy(() -> article.update(null, "user@example.com"));
     }
 
     @Test

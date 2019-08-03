@@ -31,7 +31,7 @@ public class User {
 
     public void update(final String name) {
         if (Objects.isNull(name)) {
-            throw new NameToUpdateNotFoundException("수정할 이름이 존재하지 않습니다.");
+            throw new NameToUpdateNotFoundException();
         }
         this.name = name;
     }

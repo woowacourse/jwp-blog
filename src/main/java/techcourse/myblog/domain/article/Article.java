@@ -49,7 +49,7 @@ public class Article {
 
     public void update(final Article article, final String email) {
         if (Objects.isNull(article)) {
-            throw new ArticleToUpdateNotFoundException("업데이트 해야할 게시글이 없습니다.");
+            throw new ArticleToUpdateNotFoundException();
         }
         if (Objects.isNull(email)) {
             throw new UserNotLogInException();

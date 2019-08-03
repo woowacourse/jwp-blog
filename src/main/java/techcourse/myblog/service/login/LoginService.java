@@ -30,7 +30,7 @@ public class LoginService {
 
     private void validatePassword(final String password, final User user) {
         if (!user.getPassword().equals(password)) {
-            throw new InvalidPasswordException("틀린 비밀번호입니다.");
+            throw new InvalidPasswordException();
         }
     }
 

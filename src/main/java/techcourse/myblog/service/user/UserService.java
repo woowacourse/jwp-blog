@@ -32,7 +32,7 @@ public class UserService {
         User user = convertToEntity(Objects.requireNonNull(userRequest));
         String email = user.getEmail();
         if (userRepository.findByEmail(email).isPresent()) {
-            throw new DuplicatedEmailException("이메일이 중복됩니다.");
+            throw new DuplicatedEmailException();
         }
         return convertToDto(userRepository.save(user));
     }
