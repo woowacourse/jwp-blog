@@ -1,19 +1,19 @@
 package techcourse.myblog.domain;
 
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
-@EqualsAndHashCode(of = {"id"})
 @NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "USER_ID")
     private Long id;
     private String name;
     @Column(unique = true)
@@ -30,6 +30,20 @@ public class User {
 
     public boolean authenticate(String email, String password) {
         return this.email.equals(email) && this.password.equals(password);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email);
     }
 
     public boolean equals(String email) {

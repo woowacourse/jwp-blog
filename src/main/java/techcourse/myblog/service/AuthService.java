@@ -7,6 +7,7 @@ import techcourse.myblog.exception.NotExistUserException;
 import techcourse.myblog.exception.NotMatchAuthenticationException;
 import techcourse.myblog.repository.UserRepository;
 
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Service
@@ -26,5 +27,9 @@ public class AuthService {
         }
 
         throw new NotMatchAuthenticationException("인증 정보가 일치하지 않습니다.");
+    }
+
+    public void logout(HttpSession session) {
+        session.removeAttribute("user");
     }
 }

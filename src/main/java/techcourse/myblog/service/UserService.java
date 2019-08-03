@@ -10,6 +10,7 @@ import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.translator.ModelTranslator;
 import techcourse.myblog.translator.UserTranslator;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,10 +18,12 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final ModelTranslator<User, UserDto> userTranslator;
+    private final AuthService authService;
 
-    public UserService(final UserRepository userRepository) {
+    public UserService(final UserRepository userRepository, final AuthService authService) {
         this.userRepository = userRepository;
         this.userTranslator = new UserTranslator();
+        this.authService = authService;
     }
 
     public List<User> fetchAllUsers() {
@@ -45,10 +48,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void exit(String email, String sessionEmail) {
+    public void exit(String email, String sessionEmail, HttpSession session) {
         User authenticatedUser = getAuthenticatedUser(email, sessionEmail);
 
         userRepository.delete(authenticatedUser);
+        authService.logout(session);
     }
 
     public User getAuthenticatedUser(String email, String sessionEmail) {

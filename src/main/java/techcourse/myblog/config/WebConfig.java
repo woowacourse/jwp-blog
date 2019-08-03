@@ -1,10 +1,12 @@
 package techcourse.myblog.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@EnableJpaAuditing
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
@@ -17,6 +19,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/auth/logout");
 
         registry.addInterceptor(new NeedAuthInterceptor())
-                .addPathPatterns("/auth/login", "/auth/logout", "/users/signup");
+                .addPathPatterns("/auth/login", "/users/signup");
     }
 }
