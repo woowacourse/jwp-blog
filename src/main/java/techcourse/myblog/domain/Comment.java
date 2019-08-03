@@ -3,6 +3,7 @@ package techcourse.myblog.domain;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.application.service.exception.NotMatchCommentAuthorException;
 
 import javax.persistence.*;
 
@@ -68,7 +69,14 @@ public class Comment {
         this.article = article;
     }
 
-    public void changeContent(CommentDto commentDto) {
+    public boolean isNotAuthor(User user) {
+        return !author.equals(user);
+    }
+
+    public void modify(CommentDto commentDto, User user) {
+        if (isNotAuthor(user)) {
+            throw new NotMatchCommentAuthorException("댓글의 작성자가 아닙니다!");
+        }
         contents = commentDto.getContents();
     }
 

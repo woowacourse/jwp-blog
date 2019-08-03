@@ -65,7 +65,7 @@ public class CommentService {
     @Transactional
     public void delete(long commentId, User user) {
         Comment comment = findCommentById(commentId);
-        if (!comment.getAuthor().equals(user)) {
+        if (comment.isNotAuthor(user)){
             throw new NotMatchCommentAuthorException("댓글의 작성자가 아닙니다!");
         }
         commentRepository.deleteById(commentId);
@@ -74,9 +74,6 @@ public class CommentService {
     @Transactional
     public void modify(Long commentId, CommentDto commentDto, User user) {
         Comment comment = findCommentById(commentId);
-        if (!comment.getAuthor().equals(user)) {
-            throw new NotMatchCommentAuthorException("댓글의 작성자가 아닙니다!");
-        }
-        comment.changeContent(commentDto);
+        comment.modify(commentDto, user);
     }
 }
