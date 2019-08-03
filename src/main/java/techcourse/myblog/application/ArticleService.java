@@ -41,11 +41,23 @@ public class ArticleService {
         return savedArticle.getId();
     }
 
-    public Article findById(Long articleId) {
+    public Article findArticleById(Long articleId) {
         return articleRepository.findById(articleId)
                 .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
     }
 
+    public Article findArticleWrittenByUser(Long articleId, UserResponse userResponse) {
+        Article article = findArticleById(articleId);
+        User user = modelMapper.map(userResponse, User.class);
+
+        if (!article.isSameAuthor(user)) {
+            throw new NotSameAuthorException("해당 게시물의 작성자가 아닙니다.");
+        }
+
+        return article;
+    }
+
+    // todo edit과 delete 모순 해결. article은 도대체 어디서 생성할 것인가....
     @Transactional
     public void editArticle(ArticleDto articleDto, Long articleId, UserResponse userResponse) {
         Article article = articleRepository.findById(articleId)

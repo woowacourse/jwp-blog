@@ -15,12 +15,17 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class CommentControllerTests {
+
+    private static final String name = "bmo";
+    private static final String email = "bmo@bmo.com";
+    private static final String password = "Password123!";
+    private static final String title = "googler bmo";
+    private static final String coverUrl = "bmo.jpg";
+    private static final String contents = "why bmo so great?";
 
     private String cookie;
 
@@ -29,13 +34,6 @@ public class CommentControllerTests {
 
     @BeforeEach
     void setUp() {
-        String name = "bmo";
-        String email = "bmo@bmo.com";
-        String password = "Password123!";
-        String title = "googler bmo";
-        String coverUrl = "bmo.jpg";
-        String contents = "why bmo so great?";
-
 
         // 회원가입
         webTestClient.post().uri("/users")
@@ -87,13 +85,13 @@ public class CommentControllerTests {
         requestSaveComment(commentContents);
 
         // 댓글 수정
-        String updatedContentes = "updated comment contents";
+        String updatedContents = "updated comment contents";
         webTestClient.put()
                 .uri("/articles/1/comments/1")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("contents", updatedContentes))
+                        .fromFormData("contents", updatedContents))
                 .exchange()
                 .expectStatus()
                 .isFound()
@@ -126,7 +124,8 @@ public class CommentControllerTests {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("contents", commentContents))
-                .exchange();
+                .exchange()
+                ;
     }
 
     @Test
@@ -148,3 +147,4 @@ public class CommentControllerTests {
                 });
     }
 }
+

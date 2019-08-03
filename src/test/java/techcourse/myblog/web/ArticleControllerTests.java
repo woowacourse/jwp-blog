@@ -15,8 +15,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -65,7 +63,9 @@ public class ArticleControllerTests {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-                .expectStatus().isFound();
+                .expectStatus()
+                .isFound()
+        ;
     }
 
     @Test
@@ -92,8 +92,8 @@ public class ArticleControllerTests {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .consumeWith(response2 -> {
-                    String body = new String(response2.getResponseBody());
+                .consumeWith(response -> {
+                    String body = new String(response.getResponseBody());
                     assertThat(body.contains(title)).isTrue();
                     assertThat(body.contains(coverUrl)).isTrue();
                     assertThat(body.contains(contents)).isTrue();
@@ -113,17 +113,20 @@ public class ArticleControllerTests {
     @Test
     void 게시글수정페이지() {
         webTestClient.get().uri("/articles/1/edit")
+                .header("Cookie", cookie)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk()
+        ;
     }
 
     @Test
     void 게시글수정() {
         webTestClient.put().uri("/articles/1")
                 .header("Cookie", cookie)
-                .body(BodyInserters.fromFormData("title", "수정")
-                        .with("coverUrl", "수정")
-                        .with("contents", "수정"))
+                .body(BodyInserters.fromFormData("title", "updated title")
+                        .with("coverUrl", "updated coverUrl")
+                        .with("contents", "updated Contents"))
                 .exchange()
                 .expectStatus().isOk();
     }

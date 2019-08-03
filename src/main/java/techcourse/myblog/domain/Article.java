@@ -12,7 +12,7 @@ public class Article {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false) // target entity의 column 이름이 name
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
     private String title;

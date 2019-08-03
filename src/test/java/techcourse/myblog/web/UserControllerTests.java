@@ -14,8 +14,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -123,7 +121,7 @@ public class UserControllerTests {
                 .valueMatches("location", ".*/login")
                 .expectStatus()
                 .is3xxRedirection()
-        ; // 로그인 화면으로 갈 것임
+        ;
     }
 
     @Test
@@ -134,7 +132,7 @@ public class UserControllerTests {
                 .valueMatches("location", ".*/login")
                 .expectStatus()
                 .is3xxRedirection()
-        ; // 로그인 화면으로 갈 것임
+        ;
     }
 
     @Test
