@@ -22,5 +22,8 @@ public class WebConfig implements WebMvcConfigurer {
             .addPathPatterns("/signup")
             .addPathPatterns("/users")
             .addPathPatterns("/users/login");
+
+        registry.addInterceptor(new CommonModelInterceptor())
+            .addPathPatterns("/**");
     }
 }
