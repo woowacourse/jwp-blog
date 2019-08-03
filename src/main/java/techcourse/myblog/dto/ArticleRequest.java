@@ -1,21 +1,23 @@
 package techcourse.myblog.dto;
 
+import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 
-public class ArticleRequestDto {
+public class ArticleRequest {
     @NotNull
     private String title;
+    @Lob
     @NotNull
     private String contents;
     private String coverUrl;
 
-    public ArticleRequestDto(String title, String contents, String coverUrl) {
+    public ArticleRequest() {
+    }
+
+    public ArticleRequest(String title, String contents, String coverUrl) {
         this.title = title;
         this.contents = contents;
         this.coverUrl = coverUrl;
-    }
-
-    public ArticleRequestDto() {
     }
 
     public String getTitle() {

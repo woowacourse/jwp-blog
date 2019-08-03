@@ -5,8 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
-import techcourse.myblog.dto.ArticleRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.dto.ArticleRequest;
+import techcourse.myblog.dto.UserResponse;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.utils.model.ModelUtil;
 import techcourse.myblog.utils.session.SessionUtil;
@@ -56,17 +56,17 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String saveArticle(@Valid ArticleRequestDto articleRequestDto) {
-        UserResponseDto userResponseDto = (UserResponseDto) session.getAttribute(USER);
-        Article article = articleService.save(articleRequestDto, userResponseDto);
+    public String saveArticle(@Valid ArticleRequest articleRequest) {
+        UserResponse userResponse = (UserResponse) session.getAttribute(USER);
+        Article article = articleService.save(articleRequest, userResponse);
 
         return "redirect:/articles/" + article.getId();
     }
 
     @PutMapping("/articles/{articleId}")
-    public String modifyArticle(@PathVariable long articleId, @Valid ArticleRequestDto articleRequestDto) {
-        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(session, USER);
-        articleService.update(articleId, articleRequestDto, userResponseDto);
+    public String modifyArticle(@PathVariable long articleId, @Valid ArticleRequest articleRequest) {
+        UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
+        articleService.update(articleId, articleRequest, userResponse);
 
         return "redirect:/articles/" + articleId;
     }

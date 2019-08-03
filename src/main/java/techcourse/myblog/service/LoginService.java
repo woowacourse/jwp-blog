@@ -2,8 +2,8 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.dto.LoginRequest;
+import techcourse.myblog.dto.UserResponse;
 import techcourse.myblog.exception.LoginException;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.utils.converter.DtoConverter;
@@ -19,20 +19,20 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
-    public UserResponseDto loginByEmailAndPwd(UserRequestDto userRequestDto) {
-        User user = getUser(userRequestDto);
-        checkMatchPassword(user, userRequestDto);
+    public UserResponse loginByEmailAndPwd(LoginRequest loginRequestDto) {
+        User user = getUser(loginRequestDto);
+        checkMatchPassword(user, loginRequestDto);
 
         return DtoConverter.convert(user);
     }
 
-    private User getUser(UserRequestDto userRequestDto) {
-        return userRepository.findByEmail(userRequestDto.getEmail())
+    private User getUser(LoginRequest loginRequestDto) {
+        return userRepository.findByEmail(loginRequestDto.getEmail())
                 .orElseThrow(() -> new LoginException(NOT_EXIST_USER));
     }
 
-    private void checkMatchPassword(User user, UserRequestDto dto) {
-        if (!user.isMatchPassword(dto.getPassword())) {
+    private void checkMatchPassword(User user, LoginRequest loginRequestDto) {
+        if (!user.isMatchPassword(loginRequestDto.getPassword())) {
             throw new LoginException(INCORRECT_PASSWORD);
         }
     }

@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.CommentRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.dto.CommentRequest;
+import techcourse.myblog.dto.UserResponse;
 import techcourse.myblog.exception.CommentAuthenticationException;
 import techcourse.myblog.exception.CommentException;
 import techcourse.myblog.repository.CommentRepository;
@@ -27,9 +27,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void addComment(CommentRequestDto commentRequestDto, UserResponseDto userResponseDto, Long articleId) {
-        String contents = commentRequestDto.getContents();
-        User commenter = userService.getUserByEmail(userResponseDto);
+    public void addComment(CommentRequest commentRequest, UserResponse userResponse, Long articleId) {
+        String contents = commentRequest.getContents();
+        User commenter = userService.getUserByEmail(userResponse);
         Article article = findArticleByArticleId(articleId);
 
         Comment comment = commentRepository.save(new Comment(contents, commenter, article));
@@ -41,9 +41,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void update(Long commentId, CommentRequestDto commentRequestDto) {
+    public void update(Long commentId, CommentRequest commentRequest) {
         Comment comment = getCommentFindById(commentId);
-        comment.update(commentRequestDto.getContents());
+        comment.update(commentRequest.getContents());
     }
 
     private Comment getCommentFindById(Long commentId) {
@@ -54,8 +54,8 @@ public class CommentService {
         commentRepository.deleteById(commentId);
     }
 
-    public void checkAuthentication(UserResponseDto userResponseDto, Long commentId) {
-        String userEmail = userResponseDto.getEmail();
+    public void checkAuthentication(UserResponse userResponse, Long commentId) {
+        String userEmail = userResponse.getEmail();
         Comment comment = getCommentFindById(commentId);
         String commenterEmail = comment.getCommenter().getEmail();
         log.debug("userEmail : {}, commenterEmail : {} ", userEmail, commenterEmail);

@@ -1,25 +1,26 @@
 package techcourse.myblog.dto;
 
-import javax.validation.constraints.NotNull;
+import javax.persistence.Column;
 import javax.validation.constraints.Pattern;
 
-public class UserRequestDto {
+public class SignUpRequest {
+
     private static final String NAME_PATTERN = "^[ㄱ-ㅎ가-힣a-zA-Z]{2,10}$";
     private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}";
 
-    @NotNull
+    @Column(nullable = false)
     @Pattern(regexp = NAME_PATTERN)
     private String name;
-    @NotNull
+    @Column(nullable = false)
     @Pattern(regexp = PASSWORD_PATTERN)
     private String password;
-    @NotNull
+    @Column(unique = true, nullable = false)
     private String email;
 
-    public UserRequestDto() {
+    public SignUpRequest() {
     }
 
-    public UserRequestDto(String name, String password, String email) {
+    public SignUpRequest(String name, String password, String email) {
         this.name = name;
         this.password = password;
         this.email = email;

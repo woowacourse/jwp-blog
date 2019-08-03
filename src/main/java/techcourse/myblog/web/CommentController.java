@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import techcourse.myblog.dto.CommentRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.dto.CommentRequest;
+import techcourse.myblog.dto.UserResponse;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.utils.session.SessionUtil;
 
@@ -26,26 +26,26 @@ public class CommentController {
     }
 
     @PostMapping("/comment/{articleId}")
-    public String saveComment(@PathVariable Long articleId, @Valid CommentRequestDto commentRequestDto) {
-        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(session, USER);
-        commentService.addComment(commentRequestDto, userResponseDto, articleId);
+    public String saveComment(@PathVariable Long articleId, @Valid CommentRequest commentRequest) {
+        UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
+        commentService.addComment(commentRequest, userResponse, articleId);
 
         return "redirect:/articles/" + articleId;
     }
 
     @PutMapping("/comment/{articleId}/{commentId}")
-    public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @Valid CommentRequestDto commentRequestDto) {
-        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(session, USER);
-        commentService.checkAuthentication(userResponseDto, commentId);
-        commentService.update(commentId, commentRequestDto);
+    public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @Valid CommentRequest commentRequest) {
+        UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
+        commentService.checkAuthentication(userResponse, commentId);
+        commentService.update(commentId, commentRequest);
 
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/comment/{articleId}/{commentId}")
     public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId) {
-        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(session, USER);
-        commentService.checkAuthentication(userResponseDto, commentId);
+        UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
+        commentService.checkAuthentication(userResponse, commentId);
         commentService.remove(commentId);
 
         return "redirect:/articles/" + articleId;

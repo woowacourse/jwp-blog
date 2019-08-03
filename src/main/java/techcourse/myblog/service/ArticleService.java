@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.ArticleRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.dto.ArticleRequest;
+import techcourse.myblog.dto.UserResponse;
 import techcourse.myblog.exception.ArticleException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.utils.converter.DtoConverter;
@@ -49,18 +49,18 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article save(ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
-        User user = userService.getUserByEmail(userResponseDto);
-        Article article = DtoConverter.convert(articleRequestDto, user);
+    public Article save(ArticleRequest articleRequest, UserResponse userResponse) {
+        User user = userService.getUserByEmail(userResponse);
+        Article article = DtoConverter.convert(articleRequest, user);
         articleRepository.save(article);
         return article;
     }
 
     @Transactional
-    public Article update(long articleId, ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
+    public Article update(long articleId, ArticleRequest articleRequest, UserResponse userResponse) {
         Article originArticle = findArticle(articleId);
-        User author = userService.getUserByEmail(userResponseDto);
-        originArticle.update(DtoConverter.convert(articleRequestDto, author));
+        User author = userService.getUserByEmail(userResponse);
+        originArticle.update(DtoConverter.convert(articleRequest, author));
         return originArticle;
     }
 

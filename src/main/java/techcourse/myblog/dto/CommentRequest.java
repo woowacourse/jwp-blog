@@ -1,15 +1,17 @@
 package techcourse.myblog.dto;
 
+import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 
-public class CommentRequestDto {
+public class CommentRequest {
+    @Lob
     @NotNull
     private String contents;
 
-    public CommentRequestDto() {
+    public CommentRequest() {
     }
 
-    public CommentRequestDto(String contents) {
+    public CommentRequest(String contents) {
         this.contents = contents;
     }
 
