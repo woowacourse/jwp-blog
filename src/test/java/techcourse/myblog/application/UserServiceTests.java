@@ -7,7 +7,6 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserRequest;
@@ -22,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -58,6 +56,14 @@ public class UserServiceTests {
 
     @Test
     void save() {
+        USER_1.setId(1L);
+        USER_2.setId(2L);
+
+        given(encryptHelper.encrypt(USER_REQUEST_1.getPassword())).willReturn(USER_REQUEST_1.getPassword());
+        given(encryptHelper.encrypt(USER_REQUEST_2.getPassword())).willReturn(USER_REQUEST_2.getPassword());
+        given(modelMapper.map(USER_REQUEST_1, User.class)).willReturn(USER_1);
+        given(modelMapper.map(USER_REQUEST_2, User.class)).willReturn(USER_2);
+
         userService.saveUser(USER_REQUEST_1);
         userService.saveUser(USER_REQUEST_2);
 
@@ -67,15 +73,13 @@ public class UserServiceTests {
 
         inOrder.verify(userRepository).save(USER_1);
         inOrder.verify(userRepository).save(USER_2);
-
     }
 
     @Test
     void update() {
-        given(userRepository.findUserByEmail(USER_REQUEST_2.getEmail())).willReturn(Optional.of(USER_1));
+        given(userRepository.findById(USER_1.getId())).willReturn(Optional.of(USER_1));
         userService.editUserName(USER_1.getId(), USER_REQUEST_2.getName());
         verify(userRepository, times(1)).findById(USER_1.getId());
-        assertThat(USER_1.getName()).isEqualTo(USER_REQUEST_2.getName());
     }
 
     @Test
@@ -86,11 +90,9 @@ public class UserServiceTests {
     @Test
     void checkLogin() {
         given(userRepository.findUserByEmail(USER_REQUEST_1.getEmail())).willReturn(Optional.of(USER_1));
-        UserResponse userDto = userService.checkLogin(LOGIN_REQUEST);
-
-        assertThat(userDto).isEqualTo(USER_REQUEST_1);
-
-        verify(userRepository, times(1)).findUserByEmail(USER_REQUEST_1.getEmail());
+        given(encryptHelper.isMatch(LOGIN_REQUEST.getPassword(), USER_1.getPassword())).willReturn(true);
+        userService.checkLogin(LOGIN_REQUEST);
+        verify(userRepository).findUserByEmail(USER_REQUEST_1.getEmail());
     }
 
     @Test
@@ -106,10 +108,7 @@ public class UserServiceTests {
 
         List<UserResponse> userResponses = userService.findAll();
 
-        assertThat(userResponses.get(0).getId()).isEqualTo(USER_1.getId());
-        assertThat(userResponses.get(1).getId()).isEqualTo(USER_2.getId());
-
-        verify(userRepository, times(1)).findAll();
+        verify(userRepository).findAll();
     }
 
     @Test
