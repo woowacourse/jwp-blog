@@ -37,13 +37,6 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @DeleteMapping
-    public String deleteUser(@ModelAttribute User user, SessionStatus sessionStatus) {
-        userService.delete(user.getId());
-        sessionStatus.setComplete();
-        return "redirect:/";
-    }
-
     @PutMapping
     public String updateUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -53,6 +46,13 @@ public class UserController {
 
         model.addAttribute("user", user);
         return "redirect:/users/mypage";
+    }
+
+    @DeleteMapping
+    public String deleteUser(@ModelAttribute User user, SessionStatus sessionStatus) {
+        userService.delete(user.getId());
+        sessionStatus.setComplete();
+        return "redirect:/";
     }
 
     @GetMapping("/mypage")
