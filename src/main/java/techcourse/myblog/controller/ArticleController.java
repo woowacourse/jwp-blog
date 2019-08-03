@@ -31,7 +31,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}")
-    public String show(@PathVariable Long articleId, @UserFromSession Optional<User> user, Model model) {
+    public String show(@PathVariable Long articleId, HttpSession session, Model model) {
         Article article = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -39,21 +39,22 @@ public class ArticleController {
         model.addAttribute("article", article);
         model.addAttribute("comments", article.getComments());
 
+        Optional<User> user = Optional.ofNullable((User) session.getAttribute("user"));
         user.ifPresent(value -> model.addAttribute("user", value));
 
         return "article";
     }
 
     @GetMapping("/new")
-    public String createForm(HttpSession session, @UserFromSession Optional<User> user,
+    public String createForm(HttpSession session, @UserFromSession User user,
                              Model model) {
-        model.addAttribute("user", user.orElseThrow(UnauthenticatedUserException::new));
+        model.addAttribute("user", user);
         return "article-edit";
     }
 
     @PostMapping
-    public String create(ArticleDTO articleDTO, @UserFromSession Optional<User> user) {
-        Article article = articleDTO.toDomain(user.orElseThrow(UnauthenticatedUserException::new));
+    public String create(ArticleDTO articleDTO, @UserFromSession User user) {
+        Article article = articleDTO.toDomain(user);
 
         articleRepository.save(article);
         return "redirect:/articles/" + article.getId();
@@ -61,13 +62,11 @@ public class ArticleController {
 
     @GetMapping("/{articleId}/edit")
     public Object updateForm(@PathVariable Long articleId,
-                             @UserFromSession Optional<User> optionalUser,
+                             @UserFromSession User user,
                              Model model) {
         Article savedArticle = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
-
-        User user = optionalUser.orElseThrow(UnauthenticatedUserException::new);
 
         checkAuthor(user, savedArticle);
 
@@ -79,13 +78,11 @@ public class ArticleController {
 
     @Transactional
     @PutMapping("/{articleId}")
-    public String update(@PathVariable Long articleId, @UserFromSession Optional<User> optionalUser,
+    public String update(@PathVariable Long articleId, @UserFromSession User user,
                          ArticleDTO articleDTO) {
         Article savedArticle = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
-
-        User user = optionalUser.orElseThrow(UnauthenticatedUserException::new);
 
         checkAuthor(user, savedArticle);
         savedArticle.update(articleDTO.toDomain(savedArticle.getAuthor()));
@@ -100,11 +97,11 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{articleId}")
-    public String delete(@PathVariable Long articleId, @UserFromSession Optional<User> user) {
+    public String delete(@PathVariable Long articleId, @UserFromSession User user) {
         Article savedArticle = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
-        checkAuthor(user.orElseThrow(UnauthenticatedUserException::new), savedArticle);
+        checkAuthor(user, savedArticle);
 
 
         articleRepository.deleteById(articleId);
