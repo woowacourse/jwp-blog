@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.InvalidPasswordException;
 import techcourse.myblog.exception.UserNotFoundException;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.user.UserResponseDto;
 import techcourse.myblog.service.user.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -12,12 +12,14 @@ import java.util.Objects;
 public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HttpSession session = request.getSession();
-        Object obj = session.getAttribute("user");
-        if (Objects.isNull(obj)) {
+        if (hasUser(request.getSession())) {
             response.sendRedirect("/login");
             return false;
         }
         return true;
+    }
+
+    private boolean hasUser(HttpSession session) {
+        return Objects.isNull(session.getAttribute("user"));
     }
 }

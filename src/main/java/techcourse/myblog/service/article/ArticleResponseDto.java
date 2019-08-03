@@ -1,6 +1,6 @@
-package techcourse.myblog.service.dto.article;
+package techcourse.myblog.service.article;
 
-import techcourse.myblog.service.dto.comment.CommentResponseDto;
+import techcourse.myblog.service.comment.CommentResponseDto;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

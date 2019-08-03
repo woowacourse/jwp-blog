@@ -7,8 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.DuplicatedEmailException;
 import techcourse.myblog.exception.UserNotFoundException;
-import techcourse.myblog.service.dto.user.UserRequestDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

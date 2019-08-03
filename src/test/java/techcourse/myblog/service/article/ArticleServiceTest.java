@@ -6,9 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.ArticleNotFoundException;
-import techcourse.myblog.service.dto.article.ArticleRequestDto;
-import techcourse.myblog.service.dto.article.ArticleResponseDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.user.UserResponseDto;
 import techcourse.myblog.service.user.UserService;
 
 import java.util.List;

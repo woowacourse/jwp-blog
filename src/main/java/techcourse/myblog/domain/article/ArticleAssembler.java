@@ -1,11 +1,10 @@
-package techcourse.myblog.service.article;
+package techcourse.myblog.domain.article;
 
-import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.comment.CommentAssembler;
-import techcourse.myblog.service.dto.article.ArticleRequestDto;
-import techcourse.myblog.service.dto.article.ArticleResponseDto;
-import techcourse.myblog.service.dto.comment.CommentResponseDto;
+import techcourse.myblog.service.article.ArticleRequestDto;
+import techcourse.myblog.service.article.ArticleResponseDto;
+import techcourse.myblog.domain.comment.CommentAssembler;
+import techcourse.myblog.service.comment.CommentResponseDto;
 
 import java.util.List;
 import java.util.Objects;

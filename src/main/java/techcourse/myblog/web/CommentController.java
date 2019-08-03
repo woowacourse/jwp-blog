@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.service.comment.CommentService;
-import techcourse.myblog.service.dto.comment.CommentRequestDto;
-import techcourse.myblog.service.dto.user.UserResponseDto;
+import techcourse.myblog.service.comment.CommentRequestDto;
+import techcourse.myblog.service.user.UserResponseDto;
 
 import javax.servlet.http.HttpSession;
 

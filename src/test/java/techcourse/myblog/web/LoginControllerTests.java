@@ -1,45 +1,19 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LoginControllerTests {
+    private static final String DEFAULT_USER_EMAIL = "john123@example.com";
+    private static final String DEFAULT_USER_PASSWORD = "p@ssW0rd";
+
     @Autowired
     private WebTestClient webTestClient;
-    private String name;
-    private String email;
-    private String password;
-
-    @BeforeEach
-    void setUp() {
-        name = "done";
-        email = "done@woowa.com";
-        password = "12345678";
-
-        webTestClient.post().uri("/users")
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .body(BodyInserters
-                .fromFormData("name", name)
-                .with("email", email)
-                .with("password", password))
-            .exchange();
-    }
-
-    @AfterEach
-    void tearDown() {
-        webTestClient.delete().uri("/mypage")
-            .exchange();
-    }
 
     @Test
     void 로그인_화면_이동_확인() {
@@ -49,36 +23,29 @@ public class LoginControllerTests {
     }
 
     @Test
-    void 로그인_확인() {
-        webTestClient.post().uri("/users/login")
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .body(BodyInserters
-                .fromFormData("email", email)
-                .with("password", password))
-            .exchange()
+    void 로그인_성공() {
+        requestLogin(DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD)
             .expectStatus().is3xxRedirection()
             .expectHeader().valueMatches("Location", ".*localhost:[0-9]+/.*");
     }
 
-    @Test
-    void 로그인_실패_확인_이메일실패() {
-        webTestClient.post().uri("/users/login")
+    private WebTestClient.ResponseSpec requestLogin(String email, String password) {
+        return webTestClient.post().uri("/users/login")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .body(BodyInserters
-                .fromFormData("email", "done@gmail.com")
+            .body(BodyInserters.fromFormData("email", email)
                 .with("password", password))
-            .exchange()
+            .exchange();
+    }
+
+    @Test
+    void 이메일이_없는경우() {
+        requestLogin("done@gmail.com", DEFAULT_USER_PASSWORD)
             .expectStatus().isNoContent();
     }
 
     @Test
-    void 로그인_실패_확인_비밀번호_불일치() {
-        webTestClient.post().uri("/users/login")
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .body(BodyInserters
-                .fromFormData("email", email)
-                .with("password", "wrongPassword"))
-            .exchange()
+    void 비밀번호_불일치() {
+        requestLogin(DEFAULT_USER_EMAIL, "wrongPassword")
             .expectStatus().is4xxClientError();
     }
 }
