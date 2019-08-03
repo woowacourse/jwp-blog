@@ -32,8 +32,8 @@ public class CommentService {
     }
 
     @Transactional
-    public boolean isSuccessUpdate(CommentDto commentDto, User user) {
-        Comment preComment = commentRepository.findById(commentDto.getId()).orElseThrow(RuntimeException::new);
+    public boolean isSuccessUpdate(long id, CommentDto commentDto, User user) {
+        Comment preComment = commentRepository.findById(id).orElseThrow(RuntimeException::new);
         log.debug(">>> isSuccessUpdate : preComment : {}", preComment);
 
         try {

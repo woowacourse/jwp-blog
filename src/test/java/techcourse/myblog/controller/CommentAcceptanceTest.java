@@ -103,11 +103,10 @@ public class CommentAcceptanceTest extends MyblogApplicationTests {
     @Test
     void comment_update() {
         String updateContents = "update";
-        webTestClient.put().uri("/comment").header("Cookie", defaultCookie)
+        webTestClient.put().uri("/comment/1").header("Cookie", defaultCookie)
                 .body(BodyInserters
                 .fromFormData("contents", updateContents)
-                .with("articleId","1")
-                .with("id","1"))
+                .with("articleId","1"))
                 .exchange()
                 .expectStatus()
                 .isFound().expectBody().consumeWith(response -> {
@@ -118,11 +117,10 @@ public class CommentAcceptanceTest extends MyblogApplicationTests {
                         assertThat(body.contains(updateContents)).isTrue();
                         assertThat(body.contains(COMMENT_CONTENTS)).isFalse();
 
-                        webTestClient.put().uri("/comment").header("Cookie", defaultCookie)
+                        webTestClient.put().uri("/comment/1").header("Cookie", defaultCookie)
                                 .body(BodyInserters
                                 .fromFormData("contents", COMMENT_CONTENTS)
-                                .with("articleId", "1")
-                                .with("id", "1"))
+                                .with("articleId", "1"))
                                 .exchange()
                                 .expectStatus().isFound();
                     });
@@ -132,11 +130,10 @@ public class CommentAcceptanceTest extends MyblogApplicationTests {
     @Test
     void comment_update_비로그인() {
         String updateContents = "update";
-        webTestClient.put().uri("/comment")
+        webTestClient.put().uri("/comment/1")
                 .body(BodyInserters
                 .fromFormData("contents", updateContents)
-                .with("articleId", "1")
-                .with("id", "1"))
+                .with("articleId", "1"))
                 .exchange()
                 .expectStatus()
                 .isFound()
@@ -149,11 +146,10 @@ public class CommentAcceptanceTest extends MyblogApplicationTests {
     @Test
     void comment_update_다른사용자() {
         String updateContents = "update";
-        webTestClient.put().uri("/comment").header("Cookie", testCookie)
+        webTestClient.put().uri("/comment/1").header("Cookie", testCookie)
                 .body(BodyInserters
                         .fromFormData("contents", updateContents)
-                        .with("articleId", "1")
-                        .with("id", "1"))
+                        .with("articleId", "1"))
                 .exchange()
                 .expectStatus()
                 .isFound()
@@ -166,11 +162,10 @@ public class CommentAcceptanceTest extends MyblogApplicationTests {
     @Test
     void comment_update_틀린게시글() {
         String updateContents = "update";
-        webTestClient.put().uri("/comment").header("Cookie", testCookie)
+        webTestClient.put().uri("/comment/1").header("Cookie", testCookie)
                 .body(BodyInserters
                         .fromFormData("contents", updateContents)
-                        .with("articleId", "2")
-                        .with("id", "1"))
+                        .with("articleId", "2"))
                 .exchange()
                 .expectStatus()
                 .isFound()

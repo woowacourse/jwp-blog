@@ -9,14 +9,10 @@ import techcourse.myblog.domain.User;
 @Data
 @Slf4j
 public class CommentDto {
-    private long id;
     private String contents;
     private long articleId;
 
     public Comment toComment(User user, Article article) {
-        if (id != 0) {
-            return new Comment(id, contents, user, article);
-        }
         return new Comment(contents, user, article);
     }
 }

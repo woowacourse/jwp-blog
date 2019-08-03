@@ -80,7 +80,7 @@ class NoSignInInterceptorTest extends MyblogApplicationTests {
 
     @Test
     void comment수정_비로그인접근시_로그인으로_리다이렉트확신() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(put("/comment").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        MvcResult mvcResult = mockMvc.perform(put("/comment/1").contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("articleId", String.valueOf(ARTICLE_ID))
                 .param("contents", "updatedContents"))
                 .andDo(print())

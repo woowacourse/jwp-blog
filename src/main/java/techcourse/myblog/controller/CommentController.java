@@ -41,10 +41,10 @@ public class CommentController {
         return "redirect:/articles/" + commentDto.getArticleId();
     }
 
-    @PutMapping
-    public String update(CommentDto commentDto, User user) {
+    @PutMapping("{id}")
+    public String update(@PathVariable long id, CommentDto commentDto, User user) {
         log.debug(">>> update commentDto : {}", commentDto);
-        if (commentService.isSuccessUpdate(commentDto, user)) {
+        if (commentService.isSuccessUpdate(id, commentDto, user)) {
             return "redirect:/articles/" + commentDto.getArticleId();
         }
 
