@@ -5,7 +5,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import techcourse.myblog.application.assembler.ArticleAssembler;
-import techcourse.myblog.application.assembler.UserAssembler;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.exception.CommentNotFoundException;
@@ -36,46 +35,83 @@ public class CommentServiceTests {
     private CommentService commentService;
 
     private ArticleAssembler articleAssembler = ArticleAssembler.getInstance();
-    private UserAssembler userAssembler = UserAssembler.getInstance();
 
     @Mock
     private CommentRepository commentRepository;
-
     @Mock
     private ArticleService articleService;
-
     @Mock
     private UserService userService;
+
+    @Mock
+    private User firstUser;
+    @Mock
+    private User secondUser;
+    @Mock
+    private Article article;
+    @Mock
+    private Comment firstComment;
+    @Mock
+    private Comment secondComment;
 
     public CommentServiceTests() {
         MockitoAnnotations.initMocks(this);
         commentService = new CommentService(commentRepository, userService, articleService);
+        initUserMock();
+        initArticleMock();
+        initCommentMock();
         initUserServiceMock();
         initArticleServiceMock();
         initCommentRepository();
     }
 
+    private void initUserMock() {
+        when(firstUser.getId()).thenReturn(1L);
+        when(firstUser.getName()).thenReturn(NAME);
+        when(firstUser.getEmail()).thenReturn(FIRST_EMAIL);
+        when(firstUser.getPassword()).thenReturn(PASSWORD);
+        when(secondUser.getId()).thenReturn(2L);
+        when(secondUser.getName()).thenReturn(NAME);
+        when(secondUser.getEmail()).thenReturn(SECOND_EMAIL);
+        when(secondUser.getPassword()).thenReturn(PASSWORD);
+    }
+
+    private void initArticleMock() {
+        when(article.getAuthor()).thenReturn(firstUser);
+        when(article.getId()).thenReturn(EXIST_ARTICLE_ID);
+        when(article.getContents()).thenReturn(CONTENTS);
+        when(article.getTitle()).thenReturn(TITLE);
+        when(article.getCoverUrl()).thenReturn(COVER_URL);
+    }
+
+    private void initCommentMock() {
+        when(firstComment.getId()).thenReturn(1L);
+        when(firstComment.getAuthor()).thenReturn(firstUser);
+        when(firstComment.getContents()).thenReturn(CONTENTS);
+        when(firstComment.getArticle()).thenReturn(article);
+        when(firstComment.isNotAuthor(firstUser)).thenReturn(false);
+        when(firstComment.isNotAuthor(secondUser)).thenReturn(true);
+        when(secondComment.getId()).thenReturn(2L);
+        when(secondComment.getAuthor()).thenReturn(secondUser);
+        when(secondComment.getContents()).thenReturn(CONTENTS);
+        when(secondComment.getArticle()).thenReturn(article);
+        when(secondComment.isNotAuthor(secondUser)).thenReturn(false);
+        when(secondComment.isNotAuthor(firstUser)).thenReturn(true);
+    }
+
     private void initUserServiceMock() {
-        when(userService.findUserById(1L)).thenReturn(new User(1L, FIRST_EMAIL, NAME, PASSWORD));
-        when(userService.findUserById(2L)).thenReturn(new User(2L, SECOND_EMAIL, NAME, PASSWORD));
+        when(userService.findUserById(1L)).thenReturn(firstUser);
+        when(userService.findUserById(2L)).thenReturn(secondUser);
     }
 
     private void initArticleServiceMock() {
-        User user = userService.findUserById(1L);
-        ArticleDto articleDto = new ArticleDto(EXIST_ARTICLE_ID
-                , TITLE
-                , COVER_URL
-                , CONTENTS
-                , userAssembler.convertEntityToDto(user));
+        ArticleDto articleDto = articleAssembler.convertEntityToDto(article);
         when(articleService.findById(EXIST_ARTICLE_ID)).thenReturn(articleDto);
-        when(articleService.findArticleById(EXIST_ARTICLE_ID))
-                .thenReturn(new Article(EXIST_ARTICLE_ID, TITLE, COVER_URL, CONTENTS, user));
+        when(articleService.findArticleById(EXIST_ARTICLE_ID)).thenReturn(article);
     }
 
     private void initCommentRepository() {
         Article article = articleService.findArticleById(EXIST_ARTICLE_ID);
-        Comment firstComment = new Comment(1L, CONTENTS, userService.findUserById(1L), article);
-        Comment secondComment = new Comment(2L, CONTENTS, userService.findUserById(2L), article);
         when(commentRepository.save(firstComment)).thenReturn(firstComment);
         when(commentRepository.findByArticle(article)).thenReturn(Arrays.asList(firstComment, secondComment));
         Mockito.doNothing().when(commentRepository).deleteById(1L);

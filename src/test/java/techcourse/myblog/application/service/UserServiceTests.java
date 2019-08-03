@@ -28,7 +28,9 @@ public class UserServiceTests {
     private static final UserRequestDto NOT_EXIST_USER_DTO = new UserRequestDto(NOT_EXIST_EMAIL, NAME, PASSWORD);
 
     private final UserService userService;
-    private final User existUser = new User(1L, EXIST_EMAIL, NAME, PASSWORD);
+
+    @Mock
+    private User existUser;
 
     @Mock
     private UserRepository userRepository;
@@ -36,7 +38,19 @@ public class UserServiceTests {
     private UserServiceTests() {
         MockitoAnnotations.initMocks(this);
         userService = new UserService(userRepository);
+        initUser();
         initUserRepositoryMock();
+    }
+
+    private void initUser() {
+        when(existUser.getPassword()).thenReturn(PASSWORD);
+        when(existUser.getEmail()).thenReturn(EXIST_EMAIL);
+        when(existUser.getName()).thenReturn(NAME);
+        when(existUser.getId()).thenReturn(1L);
+        when(existUser.authenticate(PASSWORD)).thenReturn(true);
+        when(existUser.authenticate(PASSWORD + "123")).thenReturn(false);
+        when(existUser.compareEmail(NOT_EXIST_EMAIL)).thenReturn(false);
+        when(existUser.compareEmail(EXIST_EMAIL)).thenReturn(true);
     }
 
     private void initUserRepositoryMock() {

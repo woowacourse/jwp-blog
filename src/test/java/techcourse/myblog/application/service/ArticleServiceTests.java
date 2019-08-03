@@ -31,23 +31,36 @@ public class ArticleServiceTests {
     private static final String CONTENTS = "contents";
     private static final String COVER_URL = "cover_url";
 
-    private final User firstUser = new User(1L, EXIST_EMAIL, NAME, PASSWORD);
-    private final User secondUser = new User(2L, EXIST_EMAIL + "c", NAME + "c", PASSWORD + "c");
-
     private ArticleService articleService;
     private UserAssembler userAssembler = UserAssembler.getInstance();
 
     @Mock
     private UserService userService;
-
     @Mock
     private ArticleRepository articleRepository;
+
+    @Mock
+    private User firstUser;
+    @Mock
+    private User secondUser;
 
     private ArticleServiceTests() {
         MockitoAnnotations.initMocks(this);
         articleService = new ArticleService(articleRepository, userService);
+        initUserMock();
         initUserServiceMock();
         initArticleRepositoryMock();
+    }
+
+    private void initUserMock() {
+        when(firstUser.getEmail()).thenReturn(EXIST_EMAIL);
+        when(firstUser.getId()).thenReturn(1L);
+        when(firstUser.getName()).thenReturn(NAME);
+        when(firstUser.getPassword()).thenReturn(PASSWORD);
+        when(secondUser.getEmail()).thenReturn(EXIST_EMAIL + "c");
+        when(secondUser.getId()).thenReturn(2L);
+        when(secondUser.getName()).thenReturn(NAME + "c");
+        when(secondUser.getPassword()).thenReturn(PASSWORD + "c");
     }
 
     private void initUserServiceMock() {
