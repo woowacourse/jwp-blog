@@ -34,7 +34,7 @@ public class LoginService {
     }
 
     private void checkMatchPassword(User user, UserRequestDto dto) {
-        if (!user.isMatchPassword(dto)) {
+        if (!user.isMatchPassword(dto.getPassword())) {
             throw new LoginException(INCORRECT_PASSWORD);
         }
     }

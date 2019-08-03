@@ -1,7 +1,6 @@
 package techcourse.myblog.domain;
 
 import org.hibernate.validator.constraints.Length;
-import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.exception.SignUpException;
 
 import javax.persistence.*;
@@ -35,6 +34,11 @@ public class User {
     public User() {
     }
 
+    public User(String password, String email) {
+        this.password = validatePassword(password);
+        this.email = email;
+    }
+
     public User(String name, String password, String email) {
         this.name = validateName(name);
         this.password = validatePassword(password);
@@ -57,13 +61,13 @@ public class User {
         return name;
     }
 
-    public void updateNameAndEmail(UserRequestDto userRequestDto) {
-        this.name = userRequestDto.getName();
-        this.email = userRequestDto.getEmail();
+    public void updateNameAndEmail(String name, String email) {
+        this.name = name;
+        this.email = email;
     }
 
-    public boolean isMatchPassword(UserRequestDto dto) {
-        return this.password.equals(dto.getPassword());
+    public boolean isMatchPassword(String password) {
+        return this.password.equals(password);
     }
 
     public Long getId() {

@@ -1,7 +1,6 @@
 package techcourse.myblog.domain;
 
 import org.springframework.data.annotation.CreatedDate;
-import techcourse.myblog.dto.CommentRequestDto;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -37,8 +36,8 @@ public class Comment {
         this.article = article;
     }
 
-    public void update(CommentRequestDto commentRequestDto) {
-        this.contents = commentRequestDto.getContents();
+    public void update(String contents) {
+        this.contents = contents;
     }
 
     public Long getId() {
