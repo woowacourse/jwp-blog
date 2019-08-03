@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class Article {
@@ -25,5 +26,9 @@ public class Article {
         this.contents = contents;
         this.coverUrl = coverUrl;
         this.author = author;
+    }
+
+    public boolean isNotMatchAuthor(long userId) {
+        return author.getId() != userId;
     }
 }

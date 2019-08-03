@@ -16,6 +16,7 @@ public class CommentDto {
     private long id;
     private String contents;
     private long articleId;
+
     public Comment toComment(User user, Article article) {
         return new Comment(contents, user, article);
     }

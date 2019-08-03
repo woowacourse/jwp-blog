@@ -1,9 +1,6 @@
 package techcourse.myblog.controller;
 
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +26,7 @@ public class CommentController {
         User user = (User) session.getAttribute("user");
         try {
             commentService.save(user.getId(), commentDto);
-        }catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return "redirect:/";
         }
         return "redirect:/articles/" + commentDto.getArticleId();
@@ -52,8 +49,8 @@ public class CommentController {
     @PutMapping("/comment")
     public String update(CommentDto commentDto, HttpSession httpSession) {
         log.debug(">>> update commentDto : {}", commentDto);
-        long userId = (long) httpSession.getAttribute("user");
-        Comment comment = commentService.update(userId, commentDto);
+        User user = (User) httpSession.getAttribute("user");
+        Comment comment = commentService.update(user, commentDto);
         return "redirect:/articles/" + comment.getArticleId();
     }
 

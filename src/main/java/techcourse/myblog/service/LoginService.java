@@ -1,8 +1,6 @@
 package techcourse.myblog.service;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.UserDto;
@@ -24,8 +22,8 @@ public class LoginService {
         return user;
     }
 
-    public void MatchPassword(UserDto userDto) throws IllegalArgumentException {
-        log.debug(" >>> MatchPassword userDto : {}", userDto);
+    public void checkValidUser(UserDto userDto) throws IllegalArgumentException {
+        log.debug(" >>> checkValidUser userDto : {}", userDto);
         User user = userRepository.findByEmail(userDto.getEmail()).orElseThrow(IllegalArgumentException::new);
         user.matchPassword(userDto);
     }

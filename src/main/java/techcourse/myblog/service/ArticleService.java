@@ -1,17 +1,11 @@
 package techcourse.myblog.service;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.ArticleDto;
-import techcourse.myblog.controller.dto.CommentDto;
 import techcourse.myblog.domain.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -26,12 +20,11 @@ public class ArticleService {
         this.userRepository = userRepository;
     }
 
-    public long save(ArticleDto articleDto, long userId){
+    public long save(ArticleDto articleDto, long userId) {
         User author = getUserOrElseThrow(userId);
         Article newArticle = articleDto.toArticle(author);
-        Article article = articleRepository.save(newArticle);
-
-        return newArticle.getId();
+        Article savedArticle = articleRepository.save(newArticle);
+        return savedArticle.getId();
     }
 
     public Article update(ArticleDto articleDto, long userId) {
@@ -48,7 +41,7 @@ public class ArticleService {
 
     public boolean isNotAuthor(long articleId, long userId) {
         Article article = getArticleOrElseThrow(articleId);
-        return article.getId() != userId;
+        return article.isNotMatchAuthor(userId);
 
     }
 

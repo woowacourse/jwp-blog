@@ -1,18 +1,14 @@
 package techcourse.myblog.controller;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.service.AccountService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
@@ -54,7 +50,7 @@ public class AccountController {
 
     @DeleteMapping("user")
     public String deleteUser(HttpSession httpSession) {
-        User user  = (User) httpSession.getAttribute("user");
+        User user = (User) httpSession.getAttribute("user");
         httpSession.removeAttribute("user");
         accountService.deleteUser(user.getId());
         return "redirect:/";

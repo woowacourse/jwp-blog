@@ -1,6 +1,9 @@
 package techcourse.myblog.domain;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import techcourse.myblog.controller.dto.UserDto;
 
 import javax.persistence.*;
@@ -38,7 +41,7 @@ public class User {
     }
 
     public void matchPassword(UserDto userDto) {
-        if(userDto.getPassword().equals(password)) {
+        if (userDto.getPassword().equals(password)) {
             return;
         }
         throw new IllegalArgumentException();

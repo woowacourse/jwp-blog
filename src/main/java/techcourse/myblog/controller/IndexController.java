@@ -8,6 +8,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.service.IndexService;
 
 import java.util.List;
+
 @Slf4j
 @Controller
 public class IndexController {

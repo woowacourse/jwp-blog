@@ -1,7 +1,5 @@
 package techcourse.myblog.service;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.UserDto;
@@ -20,7 +18,7 @@ public class AccountService {
     }
 
     public void signUp(UserDto userDto) {
-        User user =userDto.toUser();
+        User user = userDto.toUser();
         userRepository.save(user);
     }
 

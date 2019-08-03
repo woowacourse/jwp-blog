@@ -1,13 +1,11 @@
 package techcourse.myblog;
 
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -17,13 +15,11 @@ import org.springframework.web.reactive.function.BodyInserters;
 
 import java.util.function.Consumer;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @AutoConfigureWebTestClient
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MyblogApplicationTests {
-    protected final String COMMENT_CONTENTS = "contents123";
+    protected final String COMMENT_CONTENTS = "testContents";
     protected final long USER_ID = 1;
     protected final String USER_NAME = "default";
     protected final String USER_PASSWORD = "asdASD12!@";
@@ -99,7 +95,7 @@ public class MyblogApplicationTests {
 
     protected MultiValueMap<String, String> getCustomArticleDtoMap(String title, String coverUrl, String contents, long articleId) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("title",title);
+        map.add("title", title);
         map.add("coverUrl", coverUrl);
         map.add("contents", contents);
         map.add("id", String.valueOf(articleId));
@@ -109,7 +105,7 @@ public class MyblogApplicationTests {
     protected MultiValueMap<String, String> getCustomCommentDtoMap(String contents, long articleId) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("contents", contents);
-        map.add("article_id", String.valueOf(articleId));
+        map.add("articleId", String.valueOf(articleId));
         return map;
     }
 

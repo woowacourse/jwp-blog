@@ -1,7 +1,5 @@
 package techcourse.myblog.service;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.controller.dto.CommentDto;
@@ -28,7 +26,7 @@ public class CommentService {
     private Comment getCommentOrElseThrow(long userId, CommentDto commentDto) {
         Article article = articleRepository.findById(commentDto.getArticleId()).orElseThrow(IllegalArgumentException::new);
         User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
-        return commentDto.toComment(user,article);
+        return commentDto.toComment(user, article);
     }
 
     public void delete(long userId, CommentDto commentDto) {
@@ -40,8 +38,8 @@ public class CommentService {
         return commentRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 
-    public Comment update(long userId, CommentDto commentDto) {
-        Comment comment = getCommentOrElseThrow(userId, commentDto);
+    public Comment update(User user, CommentDto commentDto) {
+        Comment comment = getCommentOrElseThrow(user.getId(), commentDto);
         commentRepository.save(comment);
         return comment;
     }

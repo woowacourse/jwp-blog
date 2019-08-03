@@ -5,8 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.LoginService;
@@ -34,7 +32,7 @@ public class LoginController {
         log.debug(">>> prcessLogin userDto : {}", userDto);
 
         try {
-            loginService.MatchPassword(userDto);
+            loginService.checkValidUser(userDto);
             user = loginService.findUserIdByUserEmail(userDto.getEmail());
         } catch (Exception e) {
             model.addAttribute("error", ERROR_MESSAGE);

@@ -11,6 +11,7 @@ sourceCompatibility = '1.8'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 configurations {
@@ -35,6 +36,7 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testImplementation 'com.h2database:h2'
+    testCompile "org.mockito:mockito-core:2.+"
     runtimeOnly 'mysql:mysql-connector-java'
     runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 }

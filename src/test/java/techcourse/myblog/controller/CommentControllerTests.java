@@ -1,4 +1,5 @@
 package techcourse.myblog.controller;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,24 @@ public class CommentControllerTests extends MyblogApplicationTests {
 
     @BeforeEach
     void setUp() {
-        cookie = getLoginCookie(USER_EMAIL,USER_PASSWORD);
+        cookie = getLoginCookie(USER_EMAIL, USER_PASSWORD);
+    }
+
+    @Test
+    @DisplayName("코멘트 생성")
+    void comment_save() {
+        MultiValueMap<String, String> map = getCustomCommentDtoMap("secondComment", 1);
+        StatusAssertions statusAssertions = getResponseSpecWithCookieWithBody(HttpMethod.POST, "/comment", cookie, map);
+        String redirecUrl = getRedirectUrl(statusAssertions);
+        Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains("secondComment")).isTrue();
+        };
+
+        getRequestWithCookieExpectStatus(HttpMethod.GET, redirecUrl, cookie)
+                .isOk()
+                .expectBody()
+                .consumeWith(entityExchangeResultConsumer);
     }
 
     @Test
@@ -51,8 +69,9 @@ public class CommentControllerTests extends MyblogApplicationTests {
     @Test
     @DisplayName("올바른 유저일 때 코멘트 삭제 하고 잘 리다이렉트 되는 지 테스트")
     void delete_comment() {
-        StatusAssertions statusAssertion = getRequestWithCookieExpectStatus(HttpMethod.DELETE, "/comment", cookie);
-        String redirectUrl = getRedirectUrl(statusAssertion);
+        MultiValueMap<String, String> map = getCustomCommentDtoMap("testContents", 1);
+        StatusAssertions statusAssertions = getResponseSpecWithCookieWithBody(HttpMethod.DELETE, "/comment", cookie, map);
+        String redirectUrl = getRedirectUrl(statusAssertions);
         getRequestWithCookieExpectStatus(HttpMethod.GET, redirectUrl, cookie)
                 .isOk();
     }

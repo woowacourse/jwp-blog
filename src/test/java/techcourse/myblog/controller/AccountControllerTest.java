@@ -2,12 +2,10 @@ package techcourse.myblog.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import techcourse.myblog.MyblogApplicationTests;
 
@@ -129,7 +127,7 @@ public class AccountControllerTest extends MyblogApplicationTests {
     @Test
     @DisplayName("회원가입 할 때 비밀번호 7자리 없을 때 계속 회원가입할 창에 머물게 하는 지 확인")
     void failSignupTest_7Letter_Password() {
-        MultiValueMap<String, String> map = getCustomUserDtoMap("abcdea", "kangmin789@naver.com", "asdASD12!@", 3);
+        MultiValueMap<String, String> map = getCustomUserDtoMap("abcdea", "kangmin789@naver.com", "asAD1!@", 3);
         judgeSignupValidation(map);
     }
 

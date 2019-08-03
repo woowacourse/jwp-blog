@@ -19,6 +19,6 @@ public class ArticleDto {
     private String coverUrl;
 
     public Article toArticle(User author) {
-        return new Article(title,contents,coverUrl,author);
+        return new Article(title, contents, coverUrl, author);
     }
 }

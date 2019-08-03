@@ -5,11 +5,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.MyblogApplicationTests;
 
 import java.util.function.Consumer;
@@ -91,6 +89,7 @@ public class ArticleControllerTests extends MyblogApplicationTests {
     }
 
     @Test
+    @DisplayName("아티클 수정 페이지 아티클 내용이 잘 들어있는 지 테스트")
     void showArticleEditingPage() {
         Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
             String body = new String(response.getResponseBody());
@@ -138,24 +137,25 @@ public class ArticleControllerTests extends MyblogApplicationTests {
                 .expectBody()
                 .consumeWith(entityExchangeResultConsumer);
     }
+
     @Test
     @DisplayName("아티클저자가 아닌 유저가 아티클 수정 페이지 접근시 리다이렉트")
     void another_user_do_not_access_article_edit() {
-        String cookie = getLoginCookie("kangmin789@naver.com","asdASD12!@");
+        String cookie = getLoginCookie("kangmin789@naver.com", "asdASD12!@");
 
-        getRequestWithCookieExpectStatus(HttpMethod.GET,ARTICLE_URL + "/1/edit",cookie)
+        getRequestWithCookieExpectStatus(HttpMethod.GET, ARTICLE_URL + "/1/edit", cookie)
                 .isFound();
     }
 
     @Test
     @DisplayName("아티클저자가 아닌 유저가 아티클 put 접근시 리다이렉트")
     void another_user_do_not_access_article_put() {
-        String cookie = getLoginCookie("default2@default.com" ,  "abcdEFGH123!@#");
-        MultiValueMap<String, String > map = getCustomArticleDtoMap(ARTICLE_TITLE,ARTICLE_COVER_URL,ARTICLE_CONTENTS,ARTICLE_ID);
+        String cookie = getLoginCookie("default2@default.com", "abcdEFGH123!@#");
+        MultiValueMap<String, String> map = getCustomArticleDtoMap(ARTICLE_TITLE, ARTICLE_COVER_URL, ARTICLE_CONTENTS, ARTICLE_ID);
         Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
             assertThat(response.getResponseHeaders().getLocation().getPath().contains("/")).isTrue();
         };
-        getResponseSpecWithCookieWithBody(HttpMethod.PUT,ARTICLE_URL + "/1",cookie,map)
+        getResponseSpecWithCookieWithBody(HttpMethod.PUT, ARTICLE_URL + "/1", cookie, map)
                 .isFound()
                 .expectBody()
                 .consumeWith(entityExchangeResultConsumer);
@@ -164,12 +164,12 @@ public class ArticleControllerTests extends MyblogApplicationTests {
     @Test
     @DisplayName("아티클저자가 아닌 유저가 아티클 delete 접근시 리다이렉트")
     void another_user_do_not_access_article_delete() {
-        String cookie = getLoginCookie("default2@default.com" ,  "abcdEFGH123!@#");
-        MultiValueMap<String, String > map = getCustomArticleDtoMap(ARTICLE_TITLE,ARTICLE_COVER_URL,ARTICLE_CONTENTS,ARTICLE_ID);
+        String cookie = getLoginCookie("default2@default.com", "abcdEFGH123!@#");
+        MultiValueMap<String, String> map = getCustomArticleDtoMap(ARTICLE_TITLE, ARTICLE_COVER_URL, ARTICLE_CONTENTS, ARTICLE_ID);
         Consumer<EntityExchangeResult<byte[]>> entityExchangeResultConsumer = (response) -> {
-            assertThat(response.getResponseHeaders().getLocation().getPath().contains(ARTICLE_URL+"/1")).isTrue();
+            assertThat(response.getResponseHeaders().getLocation().getPath().contains(ARTICLE_URL + "/1")).isTrue();
         };
-        getRequestWithCookieExpectStatus(HttpMethod.DELETE,ARTICLE_URL+"/1",cookie)
+        getRequestWithCookieExpectStatus(HttpMethod.DELETE, ARTICLE_URL + "/1", cookie)
                 .isFound()
                 .expectBody()
                 .consumeWith(entityExchangeResultConsumer);

@@ -85,7 +85,7 @@ public class ArticleController {
         User user = (User) httpSession.getAttribute("user");
 
         if (articleService.isNotAuthor(article.getId(), user.getId())) {
-            return "redirect:"+ARTICLE_URL+"/"+articleId;
+            return "redirect:" + ARTICLE_URL + "/" + articleId;
         }
 
         articleService.delete(articleId);
