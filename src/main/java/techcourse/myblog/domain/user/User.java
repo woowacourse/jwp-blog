@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Entity
+@Entity(name = "BlogUser")
 @EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
