@@ -3,40 +3,32 @@ package techcourse.myblog.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.service.exception.NoRowException;
 import techcourse.myblog.web.dto.UserDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserServiceTest {
-
-    private static int flagNo = 1;
     @Autowired
     private UserService userService;
     private User beforeUser;
 
     @BeforeEach
     void setUp() {
-        beforeUser = userService.save(
-                new UserDto("aiden",
-                        flagNo + "aiden1@naver.com",
-                        "aiden3")
-        );
-        flagNo++;
+        beforeUser = userService.findByEmail("aiden@woowa.com");
     }
 
     @Test
-    void findByEmail() {
+    void 사용자_조회() {
         assertThat(userService.findByEmail(beforeUser.getEmail())).isEqualTo(beforeUser);
     }
 
     @Test
-    void save() {
+    void 사용자_저장() {
         User newUser = userService.save(
                 new UserDto("whale", "whale@naver.com", "whale2")
         );
@@ -44,29 +36,29 @@ class UserServiceTest {
     }
 
     @Test
-    void update() {
-        User updatedUser = userService.update(new UserDto("pobi", beforeUser.getEmail(), beforeUser.getPassword()));
+    void 사용자_수정() {
+        User updatedUser = userService.update(
+                new UserDto("pobi", beforeUser.getEmail(), beforeUser.getPassword()),
+                beforeUser
+        );
         assertThat(userService.findByEmail(beforeUser.getEmail())).isEqualTo(updatedUser);
     }
 
     @Test
-    void remove() {
+    void 사용자_삭제() {
+        beforeUser = userService.findByEmail("woowa@woowa.com");
         userService.remove(beforeUser.getEmail());
         assertThatThrownBy(() -> userService.findByEmail(beforeUser.getEmail()))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NoRowException.class);
     }
 
     @Test
-    void isExist_true() {
+    void 존재_확인() {
         assertThat(userService.exists(beforeUser.getEmail())).isTrue();
     }
 
     @Test
-    void isExist_false() {
+    void 존재_안함() {
         assertThat(userService.exists("coogie@naver.com")).isFalse();
-    }
-
-    @Test
-    void name() {
     }
 }

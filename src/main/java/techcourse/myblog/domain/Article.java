@@ -1,30 +1,41 @@
 package techcourse.myblog.domain;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.web.dto.ArticleDto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Article")
 public class Article {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(length = 70, nullable = false)
     private String title;
+
+    @Column(length = 2083, nullable = false)
     private String coverUrl;
+
+    @Lob
+    @Column(nullable = false)
     private String contents;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    private User author;
 
     public Article() {
     }
 
-    public Article(String title, String coverUrl, String contents) {
+    public Article(String title, String coverUrl, String contents, User author) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.author = author;
     }
 
     public Article update(ArticleDto articleDto) {
@@ -36,10 +47,6 @@ public class Article {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -54,6 +61,10 @@ public class Article {
         return contents;
     }
 
+    public User getAuthor() {
+        return author;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,11 +73,23 @@ public class Article {
         return Objects.equals(id, article.id) &&
                 Objects.equals(title, article.title) &&
                 Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
+                Objects.equals(contents, article.contents) &&
+                Objects.equals(author, article.author);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents);
+        return Objects.hash(id, title, coverUrl, contents, author);
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                ", author=" + author +
+                '}';
     }
 }

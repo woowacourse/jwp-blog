@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.exception.NoPermissionArticleException;
+import techcourse.myblog.service.exception.NoRowException;
 import techcourse.myblog.service.exception.WrongEmailAndPasswordException;
 import techcourse.myblog.web.dto.LoginDto;
 import techcourse.myblog.web.dto.UserDto;
@@ -29,12 +31,16 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(IllegalArgumentException::new);
+        return userRepository.findByEmail(email)
+                .orElseThrow(NoRowException::new);
     }
 
-    public User update(UserDto userDto) {
+    public User update(UserDto userDto, User requestUser) {
         User user = findByEmail(userDto.getEmail());
-        return userRepository.save(user.update(userDto.create()));
+        if (requestUser.equals(user)) {
+            return userRepository.save(user.update(userDto.create()));
+        }
+        throw new NoPermissionArticleException("수정할 수 있는 권한이 없습니다.");
     }
 
     public void remove(String email) {
