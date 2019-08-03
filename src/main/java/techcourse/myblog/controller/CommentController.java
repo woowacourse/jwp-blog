@@ -13,7 +13,6 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.exception.NotFoundCommentException;
-import techcourse.myblog.exception.UnauthenticatedUserException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.service.dto.CommentDTO;
@@ -72,8 +71,7 @@ public class CommentController {
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(NotFoundCommentException::new);
-
-        validateUser(user, comment);
+        comment.validate(user);
 
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -83,11 +81,7 @@ public class CommentController {
         return new RedirectView("/articles/" + articleId);
     }
 
-    private void validateUser(User user, Comment comment) {
-        if (!user.equals(comment.getAuthor())) {
-            throw new UnauthenticatedUserException();
-        }
-    }
+
 
     @PutMapping("/{commentId}")
     public RedirectView update(@PathVariable long articleId,
@@ -95,13 +89,12 @@ public class CommentController {
                                @ModelAttribute CommentDTO commentDTO,
                                @UserFromSession User user) {
 
-        Comment savedComment = commentRepository.findById(commentId)
+        Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(NotFoundCommentException::new);
+        comment.validate(user);
 
-        validateUser(user, savedComment);
-
-        savedComment.update(commentDTO.toDomain(savedComment.getArticle(), savedComment.getAuthor()));
-        commentRepository.save(savedComment);
+        comment.update(commentDTO.toDomain(comment.getArticle(), comment.getAuthor()));
+        commentRepository.save(comment);
 
         return new RedirectView("/articles/" + articleId);
     }

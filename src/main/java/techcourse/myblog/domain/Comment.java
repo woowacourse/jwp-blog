@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import techcourse.myblog.exception.UnauthenticatedUserException;
 
 import javax.persistence.*;
 
@@ -33,5 +34,11 @@ public class Comment {
 
     public void update(Comment comment) {
         this.contents = comment.contents;
+    }
+
+    public void validate(User user) {
+        if (author.equals(user) == false) {
+            throw new UnauthenticatedUserException();
+        }
     }
 }
