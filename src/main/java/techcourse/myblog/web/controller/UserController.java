@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.web.UserSession;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;

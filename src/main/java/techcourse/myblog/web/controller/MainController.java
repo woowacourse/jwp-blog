@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

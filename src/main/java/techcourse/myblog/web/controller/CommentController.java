@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.service.CommentService;
+import techcourse.myblog.web.UserSession;
 
 @Controller
 @RequestMapping("/articles/{articleId}/comments")
