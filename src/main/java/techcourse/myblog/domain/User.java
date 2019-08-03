@@ -41,18 +41,19 @@ public class User {
         return id != target.getId();
     }
 
-    public boolean isNotMatch(UserDto target) {
-        return id != target.getId();
+    public boolean isNotMatch(long id) {
+        return this.id != id;
     }
 
-    public void update(UserDto userDto) {
+    public User update(UserDto userDto) {
         this.name = userDto.getName();
         this.email = userDto.getEmail();
         this.password = userDto.getPassword();
+        return this;
     }
 
-    public void checkMatch(UserDto userDto) {
-        if (isNotMatch(userDto)) {
+    public void checkMatch(long id) {
+        if (isNotMatch(id)) {
             throw new IllegalArgumentException();
         }
     }

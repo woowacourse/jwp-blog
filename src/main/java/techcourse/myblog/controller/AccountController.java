@@ -69,22 +69,22 @@ public class AccountController {
         return "redirect:/";
     }
 
-    @PutMapping("profile/edit")
-    public String processUpdateProfile(@Valid UserDto userDto, Errors errors, User user, HttpSession session) {
+    @PutMapping("profile/{id}")
+    public String processUpdateProfile(@PathVariable long id, @Valid UserDto userDto, Errors errors, User user, HttpSession session) {
         if (errors.hasErrors()) {
             return "mypage-edit";
         }
 
         User updatedUser;
         try {
-            updatedUser = accountService.update(userDto, user);
+            updatedUser = accountService.update(id, userDto, user);
         } catch (RuntimeException e) {
             return "redirect:/";
         }
 
         session.setAttribute("user", updatedUser);
 
-        return "redirect:/accounts/profile/" + userDto.getId();
+        return "redirect:/accounts/profile/" + id;
     }
 
     @DeleteMapping("user")

@@ -42,7 +42,7 @@ public class CommentControllerTests extends MyblogApplicationTests {
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         session = new MockHttpSession();
-        user = new UserDto(DEFAULT_USER_ID, DEFAULT_USER_NAME, DEFAULT_USER_PASSWORD, DEFAULT_USER_EMAIL).toUser();
+        user = new UserDto(DEFAULT_USER_NAME, DEFAULT_USER_PASSWORD, DEFAULT_USER_EMAIL).toUser();
         article = new ArticleDto(ARTICLE_TITLE, ARTICLE_CONTENTS, ARTICLE_COVER_URL).toArticle(user);
         session.setAttribute("user", user);
         comment = new Comment(COMMENT_CONTENTS, user, article);

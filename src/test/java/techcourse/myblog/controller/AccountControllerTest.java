@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.MyblogApplicationTests;
@@ -182,82 +184,73 @@ public class AccountControllerTest extends MyblogApplicationTests {
 
     @Test
     void 마이페이지_접근() {
-        webTestClient.get().uri( ACCOUNT_URL + "/profile/" + DEFAULT_USER_ID)
+        EntityExchangeResult<byte[]> result = testShowProfilePage(DEFAULT_USER_ID).isOk().expectBody().returnResult();
+
+        String body = new String(result.getResponseBody());
+        assertThat(body.contains(DEFAULT_USER_EMAIL)).isTrue();
+        assertThat(body.contains(DEFAULT_USER_NAME)).isTrue();
+    }
+
+    private StatusAssertions testShowProfilePage(long userId) {
+        return webTestClient.get().uri(ACCOUNT_URL + "/profile/" + userId)
                 .exchange()
-                .expectStatus()
-                .isOk().expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(DEFAULT_USER_EMAIL)).isTrue();
-            assertThat(body.contains(DEFAULT_USER_NAME)).isTrue();
-        });
+                .expectStatus();
     }
 
     @Test
     void 본인_마이페이지_수정_페이지_접근() {
         String cookie = loginControllerTest.getLoginCookie(DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD);
 
-        webTestClient.get().uri( ACCOUNT_URL + "/profile/edit").header("Cookie", cookie)
+        EntityExchangeResult<byte[]> result = testShowProfileEditPage(cookie).isOk().expectBody().returnResult();
+
+        String body = new String(result.getResponseBody());
+        assertThat(body.contains(DEFAULT_USER_NAME)).isTrue();
+        assertThat(body.contains(DEFAULT_USER_EMAIL)).isTrue();
+    }
+
+    private StatusAssertions testShowProfileEditPage(String cookie) {
+        return webTestClient.get().uri(ACCOUNT_URL + "/profile/edit").header("Cookie", cookie)
                 .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(DEFAULT_USER_NAME)).isTrue();
-                    assertThat(body.contains(DEFAULT_USER_EMAIL)).isTrue();
-                });
+                .expectStatus();
     }
 
     @Test
     void 미로그인시_본인_마이페이지_수정_페이지_접근() {
-        webTestClient.get().uri( ACCOUNT_URL +"/profile/edit")
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isTrue();
-                });
+        EntityExchangeResult<byte[]> result = testShowProfileEditPage("").isFound().expectBody().returnResult();
+        assertThat(result.getResponseHeaders().getLocation().toString().contains("login")).isTrue();
     }
 
     @Test
     void 마이페이지_수정_후_저장_성공() {
         String cookie = loginControllerTest.getLoginCookie(DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD);
 
-        webTestClient.put().uri(ACCOUNT_URL + "/profile/edit").header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("name", DEFAULT_USER_NAME + "a")
-                        .with("email", DEFAULT_USER_EMAIL)
-                        .with("password", DEFAULT_USER_PASSWORD)
-                        .with("id", String.valueOf(DEFAULT_USER_ID)))
-                .exchange()
-                .expectStatus()
+        testUpdateProfile(cookie, DEFAULT_USER_NAME + "a", DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD, String.valueOf(DEFAULT_USER_ID))
                 .isFound()
                 .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get().uri(ACCOUNT_URL + "/profile/edit").header("Cookie", cookie)
-                            .exchange()
-                            .expectStatus()
-                            .isOk()
-                            .expectBody()
-                            .consumeWith(innerResponse -> {
-                                String body = new String(innerResponse.getResponseBody());
-                                assertThat(body.contains(DEFAULT_USER_NAME + "a")).isTrue();
-                                assertThat(body.contains(DEFAULT_USER_EMAIL)).isTrue();
-                            });
+                .returnResult();
 
-                    webTestClient.put().uri(ACCOUNT_URL + "/profile/edit").header("Cookie", cookie)
-                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .body(BodyInserters
-                                    .fromFormData("name", DEFAULT_USER_NAME)
-                                    .with("email", DEFAULT_USER_EMAIL)
-                                    .with("password", DEFAULT_USER_PASSWORD)
-                                    .with("id", String.valueOf(DEFAULT_USER_ID)))
-                            .exchange()
-                            .expectStatus()
-                            .isFound();
-                });
+
+        EntityExchangeResult<byte[]> result = testShowProfileEditPage(cookie)
+                .isOk()
+                .expectBody()
+                .returnResult();
+
+        String body = new String(result.getResponseBody());
+        assertThat(body.contains(DEFAULT_USER_NAME + "a")).isTrue();
+        assertThat(body.contains(DEFAULT_USER_EMAIL)).isTrue();
+
+        testUpdateProfile(cookie, DEFAULT_USER_NAME, DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD, String.valueOf(DEFAULT_USER_ID));
+    }
+
+    private StatusAssertions testUpdateProfile(String cookie, String name, String email, String password, String id) {
+        return webTestClient.put().uri(ACCOUNT_URL + "/profile/" + id).header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password))
+                .exchange()
+                .expectStatus();
     }
 
     @Test
@@ -283,9 +276,8 @@ public class AccountControllerTest extends MyblogApplicationTests {
 
         testSignupProcess(name, password, email);
         String cookie = loginControllerTest.getLoginCookie(email, password);
-        webTestClient.delete().uri(ACCOUNT_URL + "/user").header("Cookie", cookie)
-                .exchange()
-                .expectStatus()
+//        String cookie = loginControllerTest.getLoginCookie(DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD);
+        testDeleteUser(cookie)
                 .isFound();
 
         webTestClient.get().uri(ACCOUNT_URL + "/users")
@@ -298,6 +290,12 @@ public class AccountControllerTest extends MyblogApplicationTests {
                     assertThat(body.contains(email)).isFalse();
                 })
         ;
+    }
+
+    private StatusAssertions testDeleteUser(String cookie) {
+        return webTestClient.delete().uri(ACCOUNT_URL + "/user").header("Cookie", cookie)
+                .exchange()
+                .expectStatus();
     }
 
 
