@@ -11,4 +11,14 @@ public class ArticleDto {
     private String coverUrl;
     private String contents;
     private String email;
+
+    public ArticleDto() {
+    }
+
+    public ArticleDto(String title, String coverUrl, String contents, String email) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+        this.email = email;
+    }
 }

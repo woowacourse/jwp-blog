@@ -1,5 +1,6 @@
 package techcourse.myblog.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,21 +19,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
+import static techcourse.myblog.service.ArticleServiceTest.*;
+import static techcourse.myblog.service.UserServiceTest.*;
 
 @ExtendWith(SpringExtension.class)
 class CommentServiceTest {
-    private static final String COMMENTS_CONTENTS = "comment_contents";
-    private static final String COMMENTS_CONTENTS_2 = "comment_contents2";
     private static final Long TEST_COMMENT_ID = 1l;
     private static final Long TEST_ARTICLE_ID = 2l;
-    private static final String USER_NAME = "test";
-    private static final String EMAIL = "test@test.com";
-    private static final String PASSWORD = "password!1";
-    private static final String TITLE = "title";
-    private static final String COVER_URL = "cover_url";
-    private static final String CONTENTS = "contents";
-    private static final User USER = new User(USER_NAME, EMAIL, PASSWORD);
-    private static final Article ARTICLE = new Article(TITLE, COVER_URL, CONTENTS, USER);
+    private static final String COMMENTS_CONTENTS = "comment_contents";
 
     @InjectMocks
     private CommentService commentService;
@@ -40,53 +34,68 @@ class CommentServiceTest {
     @Mock
     private CommentRepository commentRepository;
 
-    @Test
-    @DisplayName("comment 잘 저장한다.")
-    void save() {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setContents(COMMENTS_CONTENTS);
-        commentDto.setUser(USER);
-        commentDto.setArticle(ARTICLE);
-        commentService.save(commentDto);
+    private User user;
+    private Article article;
+    private Comment comment;
 
-        verify(commentRepository, atLeast(1)).save(new Comment(COMMENTS_CONTENTS, USER, ARTICLE));
+    @BeforeEach
+    void setUp() {
+        user = new User(USER_NAME, EMAIL, PASSWORD);
+        article = new Article(TITLE, COVER_URL, CONTENTS, user);
+        comment = new Comment(COMMENTS_CONTENTS, user, article);
     }
 
     @Test
-    @DisplayName("Comment를 잘 조회한다.")
+    @DisplayName("comment를 저장한다.")
+    void saveComment() {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setContents(COMMENTS_CONTENTS);
+        commentDto.setUser(user);
+        commentDto.setArticle(article);
+
+        commentService.save(commentDto);
+
+        verify(commentRepository, atLeast(1))
+                .save(comment);
+    }
+
+    @Test
+    @DisplayName("Comment를 조회한다.")
     void findById() {
         given(commentRepository.findById(TEST_COMMENT_ID))
-                .willReturn(Optional.of(new Comment(COMMENTS_CONTENTS, USER, ARTICLE)));
-        Comment foundComment = commentService.findById(TEST_COMMENT_ID);
+                .willReturn(Optional.of(comment));
 
-        assertThat(foundComment).isEqualTo(new Comment(COMMENTS_CONTENTS, USER, ARTICLE));
+        assertThat(commentService.findById(TEST_COMMENT_ID)).isEqualTo(comment);
     }
 
     @Test
     @DisplayName("comment를 업데이트 한다.")
-    void update() {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setArticleId(TEST_ARTICLE_ID);
-        commentDto.setContents(COMMENTS_CONTENTS_2);
+    void updateComment() {
+        // Given
+        final String updatedContents = "updated contents";
 
         given(commentRepository.findById(TEST_COMMENT_ID))
-                .willReturn(Optional.of(new Comment(COMMENTS_CONTENTS, USER, ARTICLE)));
+                .willReturn(Optional.of(comment));
 
+        // When
+        CommentDto commentDto = new CommentDto();
+        commentDto.setArticleId(TEST_ARTICLE_ID);
+        commentDto.setContents(updatedContents);
         Comment updatedComment = commentService.update(commentDto, TEST_COMMENT_ID);
 
-        assertThat(updatedComment.getContents()).isEqualTo(COMMENTS_CONTENTS_2);
+        // Then
+        assertThat(updatedComment.getContents()).isEqualTo(updatedContents);
     }
 
     @Test
     @DisplayName("comment를 삭제한다.")
-    void delete() {
-        Comment comment = new Comment(COMMENTS_CONTENTS, USER, ARTICLE);
-        ARTICLE.addComment(comment);
+    void deleteComment() {
+        article.addComment(comment);
         given(commentRepository.findById(TEST_COMMENT_ID))
                 .willReturn(Optional.of(comment));
 
         commentService.delete(TEST_COMMENT_ID);
         verify(commentRepository, atLeast(1)).deleteById(TEST_COMMENT_ID);
-        assertThat(ARTICLE.getSortedComments()).doesNotContain(comment);
+        assertThat(article.getComments()).doesNotContain(comment);
     }
 }

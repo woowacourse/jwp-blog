@@ -1,5 +1,7 @@
 package techcourse.myblog.service;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,19 +20,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
+import static techcourse.myblog.service.UserServiceTest.USER_NAME;
 
 @ExtendWith(SpringExtension.class)
 class LoginServiceTest {
-    private static final String TEST_EMAIL_1 = "test1@test.com";
-    private static final String TEST_EMAIL_2 = "test2@test.com";
-    private static final String TEST_PASSWORD_1 = "!Q@W3e4r";
-    private static final String TEST_PASSWORD_2 = "!Q@W3e4r5t";
-    private static final String TEST_USERNAME_1 = "test1";
+    private static final String TEST_EMAIL = "test1@test.com";
+    private static final String ABSENT_EMAIL = "test2@test.com";
+    private static final String TEST_PASSWORD = "!Q@W3e4r";
+    private static final String WRONG_PASSWORD = "!Q@W3e4r5t";
 
-    private static final User USER_1 = new User(TEST_USERNAME_1, TEST_EMAIL_1, TEST_PASSWORD_1);
-    private static final LoginDto LOGIN = new LoginDto(TEST_EMAIL_1, TEST_PASSWORD_1);
-    private static final LoginDto WRONG_LOGIN_ID = new LoginDto(TEST_EMAIL_2, TEST_PASSWORD_1);
-    private static final LoginDto WRONG_PASSWORD_ID = new LoginDto(TEST_EMAIL_1, TEST_PASSWORD_2);
 
     @InjectMocks
     LoginService loginService;
@@ -38,29 +36,45 @@ class LoginServiceTest {
     @Mock
     UserRepository userRepository;
 
-    @Test
-    void 로그인_성공_테스트() {
-        given(userRepository.findByEmail(TEST_EMAIL_1)).willReturn(Optional.of(USER_1));
-        assertThat(loginService.getLoginUser(LOGIN).getEmail()).isEqualTo(TEST_EMAIL_1);
+    User user;
+
+    @BeforeEach
+    void setUp() {
+         user = new User(USER_NAME, TEST_EMAIL, TEST_PASSWORD);
     }
 
     @Test
-    void 로그인_아이디_찾기_실패_테스트() {
-        given(userRepository.findByEmail(TEST_EMAIL_1)).willReturn(null);
+    @DisplayName("로그인에 성공한다")
+    void login() {
+        LoginDto correctLoginDto = new LoginDto(TEST_EMAIL, TEST_PASSWORD);
+
+        given(userRepository.findByEmail(TEST_EMAIL)).willReturn(Optional.of(user));
+        assertThat(loginService.getLoginUser(correctLoginDto).getEmail()).isEqualTo(TEST_EMAIL);
+    }
+
+    @Test
+    @DisplayName("아이디가 없는 경우 로그인에 실패한다.")
+    void failLoginWhenUserHasNoId() {
+        LoginDto wrongIdLoginDto = new LoginDto(ABSENT_EMAIL, TEST_PASSWORD);
+
+        given(userRepository.findByEmail(TEST_EMAIL)).willReturn(null);
 
         assertThrows(UserNotFoundException.class, () -> {
-            loginService.getLoginUser(WRONG_LOGIN_ID);
-            verify(userRepository, atLeastOnce()).findByEmail(WRONG_LOGIN_ID.getEmail());
+            loginService.getLoginUser(wrongIdLoginDto);
+            verify(userRepository, atLeastOnce()).findByEmail(wrongIdLoginDto.getEmail());
         });
     }
 
     @Test
-    void 로그인_패스워드_불일치_테스트() {
-        given(userRepository.findByEmail(TEST_EMAIL_1)).willReturn(Optional.of(USER_1));
+    @DisplayName("패스워드가 일치하지 않는 경우 로그인에 실패한다.")
+    void failLoginWhenWrongPassword() {
+        LoginDto wrongPasswordLoginDto = new LoginDto(TEST_EMAIL, WRONG_PASSWORD);
+
+        given(userRepository.findByEmail(TEST_EMAIL)).willReturn(Optional.of(user));
 
         assertThrows(LoginFailException.class, () -> {
-            loginService.getLoginUser(WRONG_PASSWORD_ID);
-            verify(userRepository, atLeastOnce()).findByEmail(WRONG_PASSWORD_ID.getEmail());
+            loginService.getLoginUser(wrongPasswordLoginDto);
+            verify(userRepository, atLeastOnce()).findByEmail(wrongPasswordLoginDto.getEmail());
         });
     }
 }
