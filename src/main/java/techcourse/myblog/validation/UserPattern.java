@@ -8,4 +8,6 @@ public class UserPattern {
     public static final String NAME_CONSTRAINT_MESSAGE = "이름은 2~10자, 숫자나 특수문자가 포함될 수 없습니다.";
     public static final String EMAIL_CONSTRAINT_MESSAGE = "이메일 양식을 지켜주세요.";
     public static final String PASSWORD_CONSTRAINT_MESSAGE = "비밀번호는 8자 이상, 소문자, 대문자, 숫자, 특수문자의 조합으로 입력하세요.";
+
+    public static final String EMPTY_CONSTRAINT_MESSAGE = "값을 입력하세요.";
 }
