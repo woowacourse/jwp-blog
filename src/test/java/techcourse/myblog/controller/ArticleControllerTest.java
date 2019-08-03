@@ -95,6 +95,17 @@ class ArticleControllerTest {
     class with_login_authorized_user {
 
         @Test
+        void 게시글_조회() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+
+            webTestClient.get().uri("articles/" + foundArticle.getId())
+                    .header("cookie", cookie)
+                    .exchange()
+                    .expectStatus().isOk();
+        }
+
+        @Test
         void 게시글_생성() {
             webTestClient.post().uri("/articles")
                     .header("cookie", cookie)
@@ -143,6 +154,18 @@ class ArticleControllerTest {
     @DisplayName("게시글 저자가 아닌 유저가 로그인되어 있는 경우")
     class non_author_login {
         @Test
+        void 게시글_조회() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+
+            webTestClient.get().uri("articles/" + foundArticle.getId())
+                    .header("cookie", anotherCookie)
+                    .exchange()
+                    .expectStatus().isOk();
+        }
+
+
+        @Test
         void 게시글_수정() {
             List<Article> foundArticles = articleRepository.findAll();
             Article foundArticle = foundArticles.get(0);
@@ -185,6 +208,17 @@ class ArticleControllerTest {
     @Nested
     @DisplayName("로그인하지 않은 경우")
     class without_login {
+
+        @Test
+        void 게시글_조회() {
+            List<Article> foundArticles = articleRepository.findAll();
+            Article foundArticle = foundArticles.get(0);
+
+            webTestClient.get().uri("articles/" + foundArticle.getId())
+                    .exchange()
+                    .expectStatus().isOk();
+        }
+
         @Test
         void 게시글_생성() {
             String uri = "/articles";
