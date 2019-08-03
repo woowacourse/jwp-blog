@@ -7,9 +7,9 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import techcourse.myblog.annotation.UserFromSession;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.exception.UnauthenticatedUserException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
@@ -18,10 +18,14 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Optional<User> resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public User resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         User user = (User) request.getSession().getAttribute("user");
 
-        return Optional.ofNullable(user);
+        if (user == null) {
+            throw new UnauthenticatedUserException();
+        }
+
+        return user;
     }
 }
