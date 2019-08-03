@@ -3,41 +3,37 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserRepository;
-import techcourse.myblog.service.dto.UserDto;
-
-import java.util.List;
-import java.util.Optional;
+import techcourse.myblog.domain.repository.UserRepository;
+import techcourse.myblog.support.exception.DuplicatedEmailException;
 
 @Service
+@Transactional
 public class UserWriteService {
     private final UserRepository userRepository;
 
-    public UserWriteService(final UserRepository userRepository) {
+    public UserWriteService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    @Transactional
-    public User save(UserDto userDto) {
-        verifyDuplicateEmail(userDto.getEmail());
-        return userRepository.save(userDto.toUser());
+    public void save(User user) {
+        verifyDuplicateEmail(user);
+        userRepository.save(user);
     }
 
-    private void verifyDuplicateEmail(String email) {
-        if (userRepository.findByEmail(email).isPresent()) {
-            throw new DuplicateEmailException("이미 사용중인 이메일주소 입니다.");
-        }
+    private void verifyDuplicateEmail(User user) {
+        userRepository.findByEmail(user.getEmail())
+                .ifPresent(x -> { throw new DuplicatedEmailException(); });
     }
 
-    @Transactional
-    public void update(User user, UserDto userDto) {
-        Optional<User> beforeChangeUser = userRepository.findById(user.getId());
-        beforeChangeUser.ifPresent(modifyUser -> modifyUser.modify(userDto.toUser()));
-        user.modify(userDto.toUser());
+    public void update(User loginUser, User user) {
+        userRepository.findByEmail(loginUser.getEmail())
+                .ifPresent(existingUser -> {
+                    loginUser.modifyName(user);
+                    existingUser.modifyName(user);
+                });
     }
 
-    @Transactional
-    public void deleteById(Long id) {
-        userRepository.deleteById(id);
+    public void remove(User user) {
+        userRepository.delete(user);
     }
 }

@@ -1,26 +1,23 @@
 package techcourse.myblog.service;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.service.common.ArticleCommonTests;
-import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.service.common.ArticleCommonServiceTests;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.BDDMockito.given;
+import static techcourse.myblog.utils.ArticleTestObjects.UPDATE_ARTICLE_DTO;
 
-public class ArticleWriteServiceTests extends ArticleCommonTests {
-
+class ArticleWriteServiceTests extends ArticleCommonServiceTests {
     @Test
-    void 게시글_수정_확인() {
-        ArticleDto updateArticleDto = new ArticleDto("new-title", "new-coverUrl", "new-contents");
-        articleWriteService.update(article.getId(), updateArticleDto);
-        Optional<Article> optionalArticle = articleReadService.findById(article.getId());
-        
-        assertEquals("new-title", optionalArticle.get().getTitle());
-        assertEquals("new-coverUrl", optionalArticle.get().getCoverUrl());
-        assertEquals("new-contents", optionalArticle.get().getContents());
+    void update_test() {
+        Long articleId = 1L;
+        given(articleRepository.findByIdAndAuthor(articleId, author)).willReturn(Optional.of(article));
+        given(articleRepository.findById(articleId)).willReturn(Optional.of(article));
+
+        assertDoesNotThrow(() -> articleWriteService.update(articleId, UPDATE_ARTICLE_DTO.toArticle(author)));
+
+        compareArticle(articleRepository.findById(articleId).get(), UPDATE_ARTICLE_DTO.toArticle(author));
     }
 }

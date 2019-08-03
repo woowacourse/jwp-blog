@@ -1,6 +1,6 @@
 plugins {
-	id 'org.springframework.boot' version '2.1.6.RELEASE'
-	id 'java'
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
+    id 'java'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -8,28 +8,30 @@ apply plugin: 'io.spring.dependency-management'
 group = 'techcourse'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
-jar {
-	baseName = 'spring-validation'
-	version = '0.0.1-SNAPSHOT'
-}
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.projectlombok:lombok'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+    implementation 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'mysql:mysql-connector-java'
+    implementation group: 'org.hibernate', name: 'hibernate-java8', version: '5.0.0.CR1'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
     }
-	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
-	testImplementation 'com.h2database:h2'
-	implementation 'org.springframework.boot:spring-boot-devtools'
-	implementation 'org.apache.commons:commons-lang3:3.0'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'mysql:mysql-connector-java'
-	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    testImplementation 'com.h2database:h2'
+    runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 }
