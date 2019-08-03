@@ -41,9 +41,7 @@ class CommentRepositoryTest {
 
         persistArticle = testEntityManager.persist(article);
 
-        Comment comment = new Comment("댓글내용");
-        comment.setAuthor(persistUser);
-        comment.setArticle(persistArticle);
+        Comment comment = new Comment("댓글내용", persistUser, persistArticle);
 
         persistComment = testEntityManager.persist(comment);
         persistArticle.add(persistComment);
@@ -95,9 +93,7 @@ class CommentRepositoryTest {
     }
 
     private void addCommentAt(Article article, int i) {
-        Comment comment = new Comment("댓글내용++추가등록" + i + "번째");
-        comment.setAuthor(persistUser);
-        comment.setArticle(article);
+        Comment comment = new Comment("댓글내용++추가등록" + i + "번째", persistUser, article);
         testEntityManager.persist(comment);
     }
 

@@ -45,7 +45,6 @@ class CommentControllerTest extends WebClientGenerator {
     @BeforeEach
     public void setUp() {
         userDto = new UserDto("루피", "pirates@luff.com", "12345678");
-//        responseSpec(POST, "/users", parser(userDto));
         userRepository.save(userDto.toDomain());
     }
 
@@ -71,7 +70,6 @@ class CommentControllerTest extends WebClientGenerator {
         ArticleDto articleDto = new ArticleDto("title", "url", "contents");
         Article article = articleDto.toDomain(loginUser);
         articleRepository.save(article);
-//        logInResponseSpec(POST, "/articles/write", userDto, parser(articleDto));
     }
 
     private Article getSavedArticle() {
