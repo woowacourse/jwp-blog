@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -30,24 +29,6 @@ public class CommentController {
     public CommentController(CommentRepository commentRepository, ArticleRepository articleRepository) {
         this.commentRepository = commentRepository;
         this.articleRepository = articleRepository;
-    }
-
-    @GetMapping("/{commentId}")
-    public String updateForm(@PathVariable long articleId,
-                             @PathVariable long commentId,
-                             Model model) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(NotFoundCommentException::new);
-
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(NotFoundArticleException::new);
-
-        model.addAttribute("article", article);
-        model.addAttribute("editCommentId", commentId);
-        model.addAttribute("comments", article.getComments());
-        model.addAttribute("comment", comment);
-
-        return "article";
     }
 
     @PostMapping
