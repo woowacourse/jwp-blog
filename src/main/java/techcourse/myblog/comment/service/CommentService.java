@@ -9,6 +9,7 @@ import techcourse.myblog.article.exception.NotFoundArticleException;
 import techcourse.myblog.article.exception.NotMatchUserException;
 import techcourse.myblog.comment.domain.Comment;
 import techcourse.myblog.comment.domain.CommentRepository;
+import techcourse.myblog.comment.dto.CommentAjaxResponseDto;
 import techcourse.myblog.comment.dto.CommentCreateDto;
 import techcourse.myblog.comment.dto.CommentResponseDto;
 import techcourse.myblog.comment.dto.CommentUpdateDto;
@@ -45,6 +46,13 @@ public class CommentService {
         List<Comment> comments = (List<Comment>) commentRepository.findAllByArticleId(articleId);
         return comments.stream()
                 .map(comment -> modelMapper.map(comment, CommentResponseDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<CommentAjaxResponseDto> findAllByArticleIdTwo(long articleId) {
+        List<Comment> comments = (List<Comment>) commentRepository.findAllByArticleId(articleId);
+        return comments.stream()
+                .map(CommentAjaxResponseDto::new)
                 .collect(Collectors.toList());
     }
 
