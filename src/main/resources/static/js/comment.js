@@ -104,5 +104,20 @@ function refresh(commentData) {
     commentList.insertAdjacentHTML("beforeend", commentTemplate(commentData))
 }
 
+function addSave(event) {
+    const articleId = window.location.pathname.split("/")[2];
+    const commentContents = document.getElementById('comment-contents');
+    const comments = {
+        contents: commentContents.value
+    }
+
+    putData('POST', 'http://localhost:8080/ajax/articles/' + articleId + '/comments', comments)
+        .then(data => initComments(data))
+        .catch(data => console.log(data));
+    //TODO 작성후 작성한 댓글판 초기화하기
+}
+
+const saveBtn = document.getElementById('save-btn');
+saveBtn.addEventListener('click', addSave);
 commentList.addEventListener('click', editBtnClickHandler);
 commentList.addEventListener('keyup', cancelEditHandler);

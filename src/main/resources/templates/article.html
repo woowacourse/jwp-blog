@@ -99,14 +99,14 @@
                             </li>
                         </ul>
                         <div class="add-comment">
-                            <form method="post" id="commentForm"
-                                  th:action="@{/articles/{articleId}/comments(articleId=${article.id})}">
+                            <!--<form method="post" id="commentForm"-->
+                            <!--th:action="@{/articles/{articleId}/comments(articleId=${article.id})}">-->
                                 <input id="comment-contents" name="contents" type="hidden">
                                 <div id="editSection"></div>
-                                <button class="btn btn-default" id="save-btn" type="submit">
+                            <button class="btn btn-default" id="save-btn">
                                     <i class="ti-save"></i>
                                 </button>
-                            </form>
+                            <!--</form>-->
                         </div>
                     </div>
                 </div>
