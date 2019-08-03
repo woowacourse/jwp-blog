@@ -15,7 +15,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //private String contents;
+
     @Embedded
     private CommentContents commentContents;
 
@@ -33,7 +33,6 @@ public class Comment {
     }
 
     public Comment(CommentContents commentContents, User author, Article article) {
-//        this.contents = contents;
         this.commentContents = commentContents;
         this.author = author;
         this.article = article;
@@ -71,14 +70,8 @@ public class Comment {
     }
 
     public void changeContent(CommentContents commentContents) {
-//        contents = commentDto.getContents();
         this.commentContents = commentContents;
     }
-
-//    public void changeContent(CommentDto commentDto) {
-////        contents = commentDto.getContents();
-//        commentContents = this.commentContents;
-//    }
 
     @Override
     public boolean equals(Object o) {
