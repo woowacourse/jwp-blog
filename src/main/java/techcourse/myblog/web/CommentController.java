@@ -4,13 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.comment.CommentService;
 import techcourse.myblog.service.comment.CommentRequestDto;
-import techcourse.myblog.service.user.UserResponseDto;
-
-import javax.servlet.http.HttpSession;
-
-import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
+import techcourse.myblog.service.comment.CommentService;
 
 @Controller
 public class CommentController {

@@ -1,9 +1,9 @@
 package techcourse.myblog.domain.article;
 
+import techcourse.myblog.domain.comment.CommentAssembler;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.article.ArticleRequestDto;
 import techcourse.myblog.service.article.ArticleResponseDto;
-import techcourse.myblog.domain.comment.CommentAssembler;
 import techcourse.myblog.service.comment.CommentResponseDto;
 
 import java.util.List;

@@ -1,7 +1,6 @@
 package techcourse.myblog.domain.comment;
 
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.comment.CommentRequestDto;
 import techcourse.myblog.service.comment.CommentResponseDto;

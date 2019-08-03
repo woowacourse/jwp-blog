@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserAssembler;
 import techcourse.myblog.exception.DuplicatedEmailException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.repository.UserRepository;
@@ -13,9 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
-import static techcourse.myblog.domain.user.UserAssembler.convertToDto;
 import static techcourse.myblog.domain.user.UserAssembler.convertToEntity;
 
 @Service

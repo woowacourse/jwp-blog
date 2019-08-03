@@ -6,17 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.article.ArticleAssembler;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.article.ArticleService;
 import techcourse.myblog.service.article.ArticleRequestDto;
 import techcourse.myblog.service.article.ArticleResponseDto;
-import techcourse.myblog.service.user.UserResponseDto;
+import techcourse.myblog.service.article.ArticleService;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
 
 @ControllerAdvice
 @Controller

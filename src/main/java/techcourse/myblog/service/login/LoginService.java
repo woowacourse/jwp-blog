@@ -7,11 +7,8 @@ import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.InvalidPasswordException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.service.user.UserResponseDto;
 
 import java.util.Objects;
-
-import static techcourse.myblog.domain.user.UserAssembler.convertToDto;
 
 @Service
 public class LoginService {
