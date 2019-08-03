@@ -49,8 +49,8 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article update(ArticleDto articleDto, User user) {
-        Article preArticle = articleRepository.findById(articleDto.getId()).orElseThrow(RuntimeException::new);
+    public Article update(ArticleDto articleDto, long articleId, User user) {
+        Article preArticle = articleRepository.findById(articleId).orElseThrow(RuntimeException::new);
         return preArticle.update(articleDto, user);
     }
 

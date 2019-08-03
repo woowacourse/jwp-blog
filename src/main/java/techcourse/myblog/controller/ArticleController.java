@@ -63,9 +63,8 @@ public class ArticleController {
     @PutMapping("{articleId}")
     public String updateArticleByIdPage(@PathVariable long articleId, ArticleDto articleDto, User user) {
         log.debug(">>> put article Id : {}, ArticleDto : {}, user : {}", articleId, articleDto, user);
-        articleDto.setId(articleId);
         try {
-            articleService.update(articleDto, user);
+            articleService.update(articleDto, articleId, user);
         } catch (RuntimeException e) {
             return "redirect:/";
         }

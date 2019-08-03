@@ -12,7 +12,6 @@ import techcourse.myblog.domain.User;
 @NoArgsConstructor
 @Slf4j
 public class ArticleDto {
-    private long id;
     private String title;
     private String contents;
     private String coverUrl;
