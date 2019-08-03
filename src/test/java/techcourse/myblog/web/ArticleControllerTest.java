@@ -1,129 +1,195 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article;
+import techcourse.myblog.dto.ArticleRequest;
 
-import java.util.function.Consumer;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticleControllerTest {
-    private Article article;
+public class ArticleControllerTest extends AbstractControllerTest {
+    private static final String TITLE = "title";
+    private static final String COVER_URL = "coverUrl";
+    private static final String CONTENTS = "contents";
 
     @Autowired
     private WebTestClient webTestClient;
 
-    @BeforeEach
-    public void setUp() {
-        article = new Article(0L, "제목입니다", "커버입니다", "내용입니다");
-    }
-
     @Test
-    public void 인덱스_페이지를_확인한다() {
-        webTestClient.get().uri("/")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    public void 게시글_작성_페이지를_확인한다() {
-        webTestClient.get().uri("/writing")
-                .exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    public void 게시글_작성이_잘_되는지_확인한다() {
-        createArticle(article, response -> {
-            webTestClient.get()
-                    .uri(response.getResponseHeaders().getLocation())
-                    .exchange()
-                    .expectStatus().isOk()
-                    .expectBody()
-                    .consumeWith(res -> {
-                        String body = new String(res.getResponseBody());
-                        assertThat(body.contains(article.getTitle())).isTrue();
-                        assertThat(body.contains(article.getCoverUrl())).isTrue();
-                        assertThat(body.contains(article.getContents())).isTrue();
-                    });
-        });
-    }
-
-    @Test
-    public void 게시글_수정_페이지에_글_내용이_잘_나오는지_확인한다() {
-        createArticle(article, response -> {
-            webTestClient.get()
-                    .uri(response.getResponseHeaders().getLocation() + "/edit")
-                    .exchange()
-                    .expectStatus().isOk()
-                    .expectBody()
-                    .consumeWith(res -> {
-                        String body = new String(res.getResponseBody());
-                        assertThat(body.contains(article.getTitle())).isTrue();
-                        assertThat(body.contains(article.getCoverUrl())).isTrue();
-                        assertThat(body.contains(article.getContents())).isTrue();
-                    });
-        });
-    }
-
-    @Test
-    public void 게시글_수정이_잘_되는지_확인한다() {
-        createArticle(article, response -> {
-            webTestClient.put()
-                    .uri(response.getResponseHeaders().getLocation())
-                    .body(BodyInserters
-                            .fromFormData("title", "새로운 제목입니다")
-                            .with("coverUrl", "새로운 커버입니다")
-                            .with("contents", "새로운 내용입니다"))
-                    .exchange()
-                    .expectStatus().is3xxRedirection()
-                    .expectBody()
-                    .consumeWith(res -> {
-                        webTestClient.get()
-                                .uri(res.getResponseHeaders().getLocation())
-                                .exchange()
-                                .expectStatus().isOk()
-                                .expectBody()
-                                .consumeWith(r -> {
-                                    String body = new String(r.getResponseBody());
-                                    assertThat(body.contains("새로운 제목입니다")).isTrue();
-                                    assertThat(body.contains("새로운 커버입니다")).isTrue();
-                                    assertThat(body.contains("새로운 내용입니다")).isTrue();
-                                });
-                    });
-        });
-    }
-
-    @Test
-    public void 게시글_삭제가_잘_되는지_확인한다() {
-        createArticle(article, response -> {
-            webTestClient.delete()
-                    .uri(response.getResponseHeaders().getLocation())
-                    .exchange()
-                    .expectStatus().is3xxRedirection();
-        });
-    }
-
-    private void createArticle(Article article, Consumer<EntityExchangeResult<byte[]>> consumer) {
-        webTestClient.post()
-                .uri("/articles")
-                .body(BodyInserters
-                        .fromFormData("title", article.getTitle())
-                        .with("coverUrl", article.getCoverUrl())
-                        .with("contents", article.getContents()))
+    public void 로그인_전에_글쓰기_페이지에_접근하면_로그인_페이지로_리다이렉트한다() {
+        webTestClient.get().uri("/articles")
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectBody()
-                .consumeWith(consumer);
+                .expectHeader().valueMatches("location", ".*/login.*");
+    }
+
+    @Test
+    public void 로그인_후에_글쓰기_페이지에_접근한다() {
+        String jSessionId = extractJSessionId(login(user1));
+        webTestClient.get().uri("/articles")
+                .cookie(JSESSIONID, jSessionId)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    public void 로그인_전에_글쓰기를_시도하면_로그인_페이지로_리다이렉트한다() {
+        ArticleRequest articleDto = new ArticleRequest(TITLE, COVER_URL, CONTENTS);
+        getResponse(webTestClient.post().uri("/articles"), articleDto, null)
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
+    }
+
+    @Test
+    public void 로그인_후에_글을_작성한다() {
+        String jSessionId = extractJSessionId(login(user1));
+        ArticleRequest articleDto = new ArticleRequest(TITLE, COVER_URL, CONTENTS);
+
+        WebTestClient.RequestBodySpec requestBodySpec = webTestClient.post().uri("/articles")
+                .cookie(JSESSIONID, jSessionId);
+
+        WebTestClient.ResponseSpec responseSpec = getResponse(requestBodySpec, articleDto, jSessionId)
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles.*");
+
+        checkBody(responseSpec, articleDto);
+    }
+
+    @Test
+    public void 로그인_전에_글_수정을_시도하면_로그인_페이지로_리다이렉트한다() {
+        webTestClient.get().uri("articles/1/edit")
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
+    }
+
+    @Test
+    public void 로그인_후에_글을_수정한다() {
+        String jSessionId = extractJSessionId(login(user1));
+        ArticleRequest articleDto = new ArticleRequest(TITLE, COVER_URL, "new contents!");
+
+        WebTestClient.RequestBodySpec requestBodySpec = webTestClient.put().uri("/articles/1")
+                .cookie(JSESSIONID, jSessionId);
+
+        WebTestClient.ResponseSpec responseSpec = getResponse(requestBodySpec, articleDto, jSessionId)
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles.*");
+
+        checkBody(responseSpec, articleDto);
+    }
+
+    @Test
+    public void 로그인_전에_글_삭제를_시도하면_로그인_페이지로_리다이렉트한다() {
+        webTestClient.delete().uri("articles/1")
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
+    }
+
+    @Test
+    public void 로그인_후에_글을_삭제한다() {
+        String jSessionId = extractJSessionId(login(user1));
+        webTestClient.delete().uri("/articles/2")
+                .cookie(JSESSIONID, jSessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/.*");
+    }
+
+    @Test
+    public void 로그인_전에_댓글_작성을_시도하면_로그인_페이지로_리다이렉트한다() {
+        webTestClient.post().uri("/articles/1/comment")
+                .body(BodyInserters
+                        .fromFormData(CONTENTS, CONTENTS))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
+    }
+
+    @Test
+    public void 로그인_후에_댓글을_작성한다() {
+        String jSessionId = extractJSessionId(login(user1));
+        webTestClient.post().uri("/articles/1/comment")
+                .cookie(JSESSIONID, jSessionId)
+                .body(BodyInserters
+                        .fromFormData(CONTENTS, CONTENTS))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles.*");
+    }
+
+    @Test
+    public void 로그인_후에_댓글을_수정한다() {
+        String jSessionId = extractJSessionId(login(user1));
+        webTestClient.put().uri("/articles/1/comment/1")
+                .cookie(JSESSIONID, jSessionId)
+                .body(BodyInserters
+                        .fromFormData(CONTENTS, "new contents!"))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles.*");
+    }
+
+    @Test
+    public void 로그인_후에_댓글을_삭제한다() {
+        String jSessionId = extractJSessionId(login(user1));
+        webTestClient.delete().uri("/articles/1/comment/2")
+                .cookie(JSESSIONID, jSessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/articles.*");
+    }
+
+    @Test
+    public void 타인의_댓글_수정을_시도하면_메인으로_리다이렉트한다() {
+        String jSessionId = extractJSessionId(login(user2));
+        webTestClient.put().uri("/articles/1/comment/1")
+                .cookie(JSESSIONID, jSessionId)
+                .body(BodyInserters
+                        .fromFormData(CONTENTS, "new contents!"))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/.*");
+    }
+
+    @Test
+    public void 타인의_댓글_삭제를_시도하면_메인으로_리다이렉트한다() {
+        String jSessionId = extractJSessionId(login(user2));
+        webTestClient.delete().uri("/articles/1/comment/1")
+                .cookie(JSESSIONID, jSessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/.*");
+    }
+
+    private WebTestClient.ResponseSpec getResponse(WebTestClient.RequestBodySpec requestBodySpec, ArticleRequest articleDto, String jSessionId) {
+        return requestBodySpec
+                .cookie(JSESSIONID, jSessionId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData(TITLE, articleDto.getTitle())
+                        .with(COVER_URL, articleDto.getCoverUrl())
+                        .with(CONTENTS, articleDto.getContents()))
+                .exchange();
+    }
+
+    private void checkBody(WebTestClient.ResponseSpec responseSpec, ArticleRequest articleDto) {
+        responseSpec.expectBody()
+                .consumeWith(response -> {
+                    webTestClient.get().uri(Objects.requireNonNull(response.getResponseHeaders().get("Location")).get(0))
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody()
+                            .consumeWith(res -> {
+                                String body = new String(Objects.requireNonNull(res.getResponseBody()));
+                                assertThat(body.contains(articleDto.getTitle())).isTrue();
+                                assertThat(body.contains(articleDto.getCoverUrl())).isTrue();
+                                assertThat(body.contains(articleDto.getContents())).isTrue();
+                            });
+                });
     }
 }

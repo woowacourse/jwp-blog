@@ -1,18 +1,15 @@
 package techcourse.myblog.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserAssembler;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.DuplicateEmailException;
-import techcourse.myblog.exception.FailedLoginException;
-import techcourse.myblog.exception.FailedPasswordVerificationException;
-import techcourse.myblog.exception.InvalidUserDataException;
+import techcourse.myblog.domain.assembler.UserAssembler;
+import techcourse.myblog.dto.UserRequest;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.web.LoginUser;
 
 import javax.servlet.http.HttpSession;
 
@@ -24,13 +21,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/signup")
+    @GetMapping("/users/new")
     public String showSignup() {
         return "signup";
     }
 
-    @PostMapping("/users/new")
-    public String enrollUser(UserDto userDto) {
+    @PostMapping("/users")
+    public String enrollUser(UserRequest userDto) {
         userService.save(userDto);
         return "redirect:/login";
     }
@@ -41,16 +38,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserDto userDto, HttpSession httpSession) {
+    public String login(UserRequest userDto, HttpSession httpSession) {
         User user = userService.findUserByEmailAndPassword(userDto);
-        httpSession.setAttribute("loginUser", new LoginUser(user.getName(), user.getEmail()));
+        httpSession.setAttribute("user", user);
         return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
-        if (httpSession.getAttribute("loginUser") != null) {
-            httpSession.removeAttribute("loginUser");
+        if (httpSession.getAttribute("user") != null) {
+            httpSession.removeAttribute("user");
         }
         return "redirect:/";
     }
@@ -63,7 +60,7 @@ public class UserController {
 
     @GetMapping("/mypage")
     public String showMypage(Model model, HttpSession httpSession) {
-        String email = ((LoginUser) httpSession.getAttribute("loginUser")).getEmail();
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
         User user = userService.findUserByEmail(email);
         model.addAttribute("user", UserAssembler.writeDto(user));
         return "mypage";
@@ -71,51 +68,23 @@ public class UserController {
 
     @GetMapping("/mypage/edit")
     public String showEditPage(Model model, HttpSession httpSession) {
-        String email = ((LoginUser) httpSession.getAttribute("loginUser")).getEmail();
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
         User user = userService.findUserByEmail(email);
         model.addAttribute("user", UserAssembler.writeDto(user));
         return "mypage-edit";
     }
 
-    @PutMapping("/mypage/edit")
-    public String updateUser(UserDto userDto, HttpSession httpSession) {
+    @PutMapping("/mypage")
+    public String updateUser(UserRequest userDto, HttpSession httpSession) {
         User updatedUser = userService.update(userDto);
-        httpSession.setAttribute("loginUser", new LoginUser(updatedUser.getName(), updatedUser.getEmail()));
+        httpSession.setAttribute("user", updatedUser);
         return "redirect:/mypage";
     }
 
-    @DeleteMapping("/mypage/delete")
+    @DeleteMapping("/mypage")
     public String deleteUser(HttpSession httpSession) {
-        String email = ((LoginUser) httpSession.getAttribute("loginUser")).getEmail();
+        String email = ((User) httpSession.getAttribute("user")).getEmail();
         userService.deleteByEmail(email);
         return "redirect:/logout";
-    }
-
-    @ExceptionHandler(InvalidUserDataException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleInvalidUserDataException(InvalidUserDataException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "signup";
-    }
-
-    @ExceptionHandler(DuplicateEmailException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleDuplicateEmailException(DuplicateEmailException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "signup";
-    }
-
-    @ExceptionHandler(FailedLoginException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleFailedLoginException(FailedLoginException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "login";
-    }
-
-    @ExceptionHandler(FailedPasswordVerificationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleFailedPasswordVerificationException(FailedPasswordVerificationException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "signup";
     }
 }
