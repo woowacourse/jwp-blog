@@ -3,13 +3,13 @@ package techcourse.myblog.interceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import techcourse.myblog.users.UserSession;
+import techcourse.myblog.web.UserSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static techcourse.myblog.users.UserSession.USER_SESSION;
+import static techcourse.myblog.web.UserSession.USER_SESSION;
 
 @Component
 public class AuthInterceptor extends HandlerInterceptorAdapter {

@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import techcourse.myblog.users.User;
-import techcourse.myblog.users.UserSession;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.web.UserSession;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class GuestInterceptorTest {

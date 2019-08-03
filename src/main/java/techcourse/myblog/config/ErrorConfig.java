@@ -5,7 +5,7 @@ import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.WebRequest;
-import techcourse.myblog.users.ValidUserException;
+import techcourse.myblog.exception.ValidUserException;
 
 import java.util.Map;
 

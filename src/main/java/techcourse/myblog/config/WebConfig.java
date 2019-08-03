@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import techcourse.myblog.interceptor.AuthInterceptor;
 import techcourse.myblog.interceptor.GuestInterceptor;
 import techcourse.myblog.interceptor.LoginInterceptor;
-import techcourse.myblog.users.UserSessionArgumentResolver;
+import techcourse.myblog.support.UserSessionArgumentResolver;
 
 import java.util.List;
 
