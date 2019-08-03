@@ -37,23 +37,24 @@ public class User {
         this.email = email;
     }
 
-    public boolean isNotMatch(User target) {
+    public User update(UserDto userDto, User user) {
+        checkMatch(user);
+        return update(userDto);
+    }
+
+    boolean isNotMatch(User target) {
         return id != target.getId();
     }
 
-    public boolean isNotMatch(long id) {
-        return this.id != id;
-    }
-
-    public User update(UserDto userDto) {
+    private User update(UserDto userDto) {
         this.name = userDto.getName();
         this.email = userDto.getEmail();
         this.password = userDto.getPassword();
         return this;
     }
 
-    public void checkMatch(long id) {
-        if (isNotMatch(id)) {
+    private void checkMatch(User target) {
+        if (!equals(target)) {
             throw new IllegalArgumentException();
         }
     }

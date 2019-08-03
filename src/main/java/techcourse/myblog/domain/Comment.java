@@ -36,6 +36,11 @@ public class Comment {
 
     public Comment update(CommentDto commentDto, User user) {
         checkUpdateCondition(commentDto, user);
+        return update(commentDto);
+    }
+
+    private Comment update(CommentDto commentDto) {
+        checkUpdateCondition(commentDto, user);
         this.contents = commentDto.getContents();
         return this;
     }

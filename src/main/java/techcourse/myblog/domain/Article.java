@@ -46,15 +46,15 @@ public class Article {
         }
     }
 
-    public boolean isNotMatch(long id) {
-        return !this.id.equals(id);
-    }
-
     public boolean isMatchAuthor(User target) {
         return author.equals(target);
     }
 
-    public boolean isNotMatchAuthor(User target) {
+    boolean isNotMatch(long id) {
+        return !this.id.equals(id);
+    }
+
+    private boolean isNotMatchAuthor(User target) {
         return !isMatchAuthor(target);
     }
 }

@@ -38,9 +38,8 @@ public class AccountService {
 
     @Transactional
     public User update(long id, UserDto userDto, User user) {
-        user.checkMatch(id);
         User preUser = findById(id);
-        return preUser.update(userDto);
+        return preUser.update(userDto, user);
     }
 
     public void delete(User user) {
