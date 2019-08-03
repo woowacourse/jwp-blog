@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.annotation.UserFromSession;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
@@ -18,7 +19,6 @@ import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.service.dto.CommentDTO;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/articles/{articleId}/comments")
@@ -53,13 +53,7 @@ public class CommentController {
     @PostMapping
     public RedirectView create(@ModelAttribute CommentDTO commentDTO,
                                @PathVariable long articleId,
-                               HttpSession httpSession) {
-
-        User user = (User) httpSession.getAttribute("user");
-
-        if (user == null) {
-            throw new UnauthenticatedUserException();
-        }
+                               @UserFromSession User user) {
 
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -74,12 +68,12 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public RedirectView delete(@PathVariable long articleId,
                                @PathVariable long commentId,
-                               HttpSession httpSession) {
+                               @UserFromSession User user) {
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(NotFoundCommentException::new);
 
-        validateUser(httpSession, comment);
+        validateUser(user, comment);
 
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -89,13 +83,7 @@ public class CommentController {
         return new RedirectView("/articles/" + articleId);
     }
 
-    private void validateUser(HttpSession httpSession, Comment comment) {
-        User user = (User) httpSession.getAttribute("user");
-
-        if (user == null) {
-            throw new UnauthenticatedUserException();
-        }
-
+    private void validateUser(User user, Comment comment) {
         if (!user.equals(comment.getAuthor())) {
             throw new UnauthenticatedUserException();
         }
@@ -105,12 +93,12 @@ public class CommentController {
     public RedirectView update(@PathVariable long articleId,
                                @PathVariable long commentId,
                                @ModelAttribute CommentDTO commentDTO,
-                               HttpSession httpSession) {
+                               @UserFromSession User user) {
 
         Comment savedComment = commentRepository.findById(commentId)
                 .orElseThrow(NotFoundCommentException::new);
 
-        validateUser(httpSession, savedComment);
+        validateUser(user, savedComment);
 
         savedComment.update(commentDTO.toDomain(savedComment.getArticle(), savedComment.getAuthor()));
         commentRepository.save(savedComment);
