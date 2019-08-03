@@ -52,31 +52,36 @@ public class MyBlogExceptionHandler {
 
     @ExceptionHandler(LoginFailedException.class)
     public RedirectView handleLoginFail(LoginFailedException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return new RedirectView("/login");
+        return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
     }
 
     @ExceptionHandler(MismatchAuthorException.class)
     public RedirectView handleMismatchArticleAuthorFail(MismatchAuthorException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return new RedirectView("/");
+        return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
     }
 
     @ExceptionHandler(NotFoundArticleException.class)
     public RedirectView handleArticleFail(NotFoundArticleException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return new RedirectView("/");
+        return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
     }
 
     @ExceptionHandler(InvalidCommentException.class)
     public RedirectView handleCommentFail(InvalidCommentException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return new RedirectView("/");
+        return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
     }
 
     @ExceptionHandler(CommentUpdateFailedException.class)
     public RedirectView handleUpdateCommentFail(CommentUpdateFailedException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
+        return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
+    }
+
+    @ExceptionHandler(UnauthorizedRequestException.class)
+    public RedirectView handleUnauthorizedRequest(UnauthorizedRequestException e, RedirectAttributes redirectAttributes) {
+        return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
+    }
+
+    private RedirectView redirectToRootWithErrorMsg(RedirectAttributes redirectAttributes, String errorMsg) {
+        redirectAttributes.addFlashAttribute("error", errorMsg);
         return new RedirectView("/");
     }
 }

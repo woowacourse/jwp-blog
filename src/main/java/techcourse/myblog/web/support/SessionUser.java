@@ -16,4 +16,8 @@ public class SessionUser {
     public String getEmail() {
         return user.getEmail();
     }
+
+    public boolean matchId(Long userId) {
+        return user.matchId(userId);
+    }
 }

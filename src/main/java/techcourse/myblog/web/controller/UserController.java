@@ -67,6 +67,8 @@ public class UserController {
                                  @PathVariable Long userId,
                                  @Validated(UserInfo.class) UserDto userDto,
                                  BindingResult bindingResult) throws EditUserBindException {
+        checkAuthorization(loginUser, userId);
+
         if (bindingResult.hasErrors()) {
             throw new EditUserBindException(bindingResult);
         }
@@ -77,8 +79,15 @@ public class UserController {
 
     @DeleteMapping("/users/{userId}")
     public RedirectView removeUser(SessionUser loginUser, @PathVariable Long userId) {
+        checkAuthorization(loginUser, userId);
 
         userWriteService.remove(loginUser.getUser());
         return new RedirectView("/logout");
+    }
+
+    private void checkAuthorization(SessionUser loginUser, @PathVariable Long userId) {
+        if (!loginUser.matchId(userId)) {
+            throw new UnauthorizedRequestException();
+        }
     }
 }

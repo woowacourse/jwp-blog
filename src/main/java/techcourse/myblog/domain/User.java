@@ -75,4 +75,8 @@ public class User {
         this.name = name;
         return this;
     }
+
+    public boolean matchId(Long userId) {
+        return id.equals(userId);
+    }
 }
