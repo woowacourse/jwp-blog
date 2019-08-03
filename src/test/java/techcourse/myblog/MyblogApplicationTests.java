@@ -19,7 +19,6 @@ import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
 @AutoConfigureWebTestClient
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -104,6 +103,13 @@ public class MyblogApplicationTests {
         map.add("coverUrl", coverUrl);
         map.add("contents", contents);
         map.add("id", String.valueOf(articleId));
+        return map;
+    }
+
+    protected MultiValueMap<String, String> getCustomCommentDtoMap(String contents, long articleId) {
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("contents", contents);
+        map.add("article_id", String.valueOf(articleId));
         return map;
     }
 
