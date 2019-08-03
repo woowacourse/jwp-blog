@@ -11,7 +11,7 @@ import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.ArticleWriteService;
 import techcourse.myblog.service.CommentService;
-import techcourse.myblog.web.LoginUser;
+import techcourse.myblog.web.support.SessionUser;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -37,7 +37,7 @@ public class ArticleController {
     }
 
     @PostMapping("/write")
-    public RedirectView createArticle(LoginUser loginUser, @ModelAttribute("/articles/writing") @Valid ArticleDto articleDto) {
+    public RedirectView createArticle(SessionUser loginUser, @ModelAttribute("/articles/writing") @Valid ArticleDto articleDto) {
         Article savedArticle = articleWriteService.save(articleDto.toArticle(loginUser.getUser()));
         return new RedirectView("/articles/" + savedArticle.getId());
     }
@@ -52,21 +52,21 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}/edit")
-    public String editArticleForm(LoginUser loginUser, @PathVariable Long articleId, Model model) {
+    public String editArticleForm(SessionUser loginUser, @PathVariable Long articleId, Model model) {
         Article article = articleReadService.findByIdAndAuthor(articleId, loginUser.getUser());
         model.addAttribute("article", article);
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
-    public RedirectView editArticle(LoginUser loginUser, @PathVariable Long articleId, @ModelAttribute("/") @Valid ArticleDto articleDto) {
+    public RedirectView editArticle(SessionUser loginUser, @PathVariable Long articleId, @ModelAttribute("/") @Valid ArticleDto articleDto) {
         articleWriteService.update(articleId, articleDto.toArticle(loginUser.getUser()));
 
         return new RedirectView("/articles/" + articleId);
     }
 
     @DeleteMapping("/{articleId}")
-    public RedirectView deleteArticle(LoginUser loginUser, @PathVariable Long articleId) {
+    public RedirectView deleteArticle(SessionUser loginUser, @PathVariable Long articleId) {
         articleReadService.findByIdAndAuthor(articleId, loginUser.getUser());
         articleWriteService.removeById(articleId);
         return new RedirectView("/");

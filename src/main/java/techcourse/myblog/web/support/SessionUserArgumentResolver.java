@@ -6,16 +6,14 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.web.LoginUser;
-import techcourse.myblog.web.controller.LoginFailedException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
+public class SessionUserArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType() == LoginUser.class;
+        return parameter.getParameterType() == SessionUser.class;
     }
 
     @Override
@@ -23,8 +21,8 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         HttpServletRequest req = (HttpServletRequest) webRequest.getNativeRequest();
 
         User user = (User) Optional.ofNullable(req.getSession().getAttribute("user"))
-                .orElseThrow(() -> new LoginFailedException());
+                .orElseThrow(() -> new InvalidUserSessionException());
 
-        return new LoginUser(user);
+        return new SessionUser(user);
     }
 }

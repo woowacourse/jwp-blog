@@ -7,7 +7,7 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.CommentService;
-import techcourse.myblog.web.LoginUser;
+import techcourse.myblog.web.support.SessionUser;
 
 @Controller
 @RequestMapping("/articles/{articleId}/comments")
@@ -21,7 +21,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public RedirectView createComment(LoginUser loginUser, @PathVariable Long articleId, CommentDto commentDto) {
+    public RedirectView createComment(SessionUser loginUser, @PathVariable Long articleId, CommentDto commentDto) {
         Article article = articleReadService.findById(articleId);
         commentService.save(commentDto.toComment(loginUser.getUser(), article));
 
@@ -29,7 +29,7 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public RedirectView updateComment(LoginUser loginUser, @PathVariable Long commentId, @PathVariable Long articleId, CommentDto commentDto) {
+    public RedirectView updateComment(SessionUser loginUser, @PathVariable Long commentId, @PathVariable Long articleId, CommentDto commentDto) {
         Article article = articleReadService.findById(articleId);
         commentService.modify(commentId, commentDto.toComment(loginUser.getUser(), article));
 
@@ -37,7 +37,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public RedirectView removeComment(@PathVariable Long commentId, @PathVariable Long articleId, LoginUser loginUser) {
+    public RedirectView removeComment(@PathVariable Long commentId, @PathVariable Long articleId, SessionUser loginUser) {
         commentService.deleteById(commentId, loginUser.getUser());
 
         return new RedirectView("/articles/" + articleId);

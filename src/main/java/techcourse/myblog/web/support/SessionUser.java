@@ -1,11 +1,11 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.support;
 
 import techcourse.myblog.domain.User;
 
-public class LoginUser {
+public class SessionUser {
     private User user;
 
-    public LoginUser(User user) {
+    public SessionUser(User user) {
         this.user = user;
     }
 
