@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.6.RELEASE'
 	id 'java'
+	id "org.asciidoctor.convert" version "1.5.3"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -12,6 +13,27 @@ sourceCompatibility = '1.8'
 repositories {
 	mavenCentral()
 }
+
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+
+test {
+	outputs.dir snippetsDir
+}
+
+asciidoctor {
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+bootJar {
+	dependsOn asciidoctor
+	from ("${asciidoctor.outputDir}/html5") {
+		into 'static/docs'
+	}
+}
+
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -35,4 +57,7 @@ dependencies {
 	}
 
 	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+
+	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.3.RELEASE'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-estclient:2.0.3.RELEASE'
 }

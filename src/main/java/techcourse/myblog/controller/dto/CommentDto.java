@@ -1,15 +1,11 @@
 package techcourse.myblog.controller.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-import techcourse.myblog.model.Article;
-import techcourse.myblog.model.User;
 
+@AllArgsConstructor
 @Getter
-@Setter
 public class CommentDto {
     private Long articleId;
     private String contents;
-    private User user;
-    private Article article;
 }

@@ -17,8 +17,6 @@ import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.utils.Utils;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
@@ -37,7 +35,6 @@ class CommentControllerTest {
     private static final String COMMENTS_CONTENTS = "Ccomment_contents";
     private static final String COMMENTS_CONTENTS_2 = "Ccomment_contents2";
     private static final String COMMENTS_CONTENTS_3 = "Ccomment_contents3";
-    private static final String COMMENTS_CONTENTS_4 = "Ccomment_contents4";
 
     @LocalServerPort
     private int serverPort;
@@ -56,25 +53,15 @@ class CommentControllerTest {
         Utils.createUser(webTestClient, new UserDto(USER_NAME, EMAIL, PASSWORD));
         cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL, PASSWORD));
 
-        ArticleDto articleDto = new ArticleDto();
-        articleDto.setTitle(TITLE);
-        articleDto.setCoverUrl(COVER_URL);
-        articleDto.setContents(CONTENTS);
+        ArticleDto articleDto = new ArticleDto(TITLE, COVER_URL, CONTENTS);
 
         articleUrl = Utils.createArticle(articleDto, cookie, baseUrl);
-        articleId = getArticleId(articleUrl);
+        articleId = Utils.getArticleId(articleUrl);
 
-        CommentDto commentDto = new CommentDto();
-        commentDto.setArticleId(Long.parseLong(articleId));
-        commentDto.setContents(COMMENTS_CONTENTS);
+        CommentDto commentDto = new CommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS);
         Utils.createComment(commentDto, cookie, baseUrl);
-        commentDto.setContents(COMMENTS_CONTENTS_4);
-        Utils.createComment(commentDto, cookie, baseUrl);
-    }
-
-    private String getArticleId(String articleUrl) {
-        List<String> list = Arrays.asList(articleUrl.split("/"));
-        return list.get(list.size() - 1);
+        CommentDto commentDto2 = new CommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS_2);
+        Utils.createComment(commentDto2, cookie, baseUrl);
     }
 
     @Test

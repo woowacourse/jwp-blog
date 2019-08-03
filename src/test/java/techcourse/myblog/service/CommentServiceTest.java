@@ -10,6 +10,7 @@ import techcourse.myblog.controller.dto.CommentDto;
 import techcourse.myblog.model.Article;
 import techcourse.myblog.model.Comment;
 import techcourse.myblog.model.User;
+import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 
 import java.util.Optional;
@@ -40,14 +41,15 @@ class CommentServiceTest {
     @Mock
     private CommentRepository commentRepository;
 
+    @Mock
+    private ArticleRepository articleRepository;
+
     @Test
     @DisplayName("comment 잘 저장한다.")
     void save() {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setContents(COMMENTS_CONTENTS);
-        commentDto.setUser(USER);
-        commentDto.setArticle(ARTICLE);
-        commentService.save(commentDto);
+        CommentDto commentDto = new CommentDto(TEST_ARTICLE_ID,COMMENTS_CONTENTS);
+        given(articleRepository.findById(TEST_ARTICLE_ID)).willReturn(Optional.of(ARTICLE));
+        commentService.save(commentDto, USER);
 
         verify(commentRepository, atLeast(1)).save(new Comment(COMMENTS_CONTENTS, USER, ARTICLE));
     }
@@ -65,9 +67,7 @@ class CommentServiceTest {
     @Test
     @DisplayName("comment를 업데이트 한다.")
     void update() {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setArticleId(TEST_ARTICLE_ID);
-        commentDto.setContents(COMMENTS_CONTENTS_2);
+        CommentDto commentDto = new CommentDto(TEST_ARTICLE_ID,COMMENTS_CONTENTS_2);
 
         given(commentRepository.findById(TEST_COMMENT_ID))
                 .willReturn(Optional.of(new Comment(COMMENTS_CONTENTS, USER, ARTICLE)));

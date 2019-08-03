@@ -46,14 +46,14 @@ public class ArticleController {
     public String updateArticle(@PathVariable Long articleId, ArticleDto articleDto, @ModelAttribute User user) {
         articleService.checkOwner(articleId, user);
 
-        articleDto.setId(articleId);
-        articleService.update(articleDto, user);
+        articleService.update(articleDto, user, articleId);
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/{articleId}")
     public String deleteArticle(@PathVariable Long articleId, @ModelAttribute User user) {
         articleService.checkOwner(articleId, user);
+
         articleService.delete(articleId);
         return "redirect:/";
     }

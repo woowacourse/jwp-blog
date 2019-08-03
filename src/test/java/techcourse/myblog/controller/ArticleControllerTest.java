@@ -52,11 +52,7 @@ public class ArticleControllerTest {
         Utils.createUser(webTestClient, new UserDto(USER_NAME, EMAIL, PASSWORD));
         cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL, PASSWORD));
 
-        ArticleDto articleDto = new ArticleDto();
-        articleDto.setTitle(TITLE);
-        articleDto.setCoverUrl(COVER_URL);
-        articleDto.setContents(CONTENTS);
-
+        ArticleDto articleDto = new ArticleDto(TITLE, COVER_URL, CONTENTS);
         articleUrl = Utils.createArticle(articleDto, cookie, baseUrl);
     }
 

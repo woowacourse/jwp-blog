@@ -21,6 +21,10 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 class ArticleServiceTest {
+    private static final String EMAIL = "test@test.com";
+    private static final String USER_NAME = "test";
+    private static final String PASSWORD = "passWord!1";
+
     private static final Long TEST_ID = 1L;
     private static final String TITLE = "title";
     private static final String COVER_URL = "coverUrl";
@@ -30,7 +34,7 @@ class ArticleServiceTest {
     private static final String COVER_URL_2 = "coverUrl2";
     private static final String CONTENTS_2 = "Contents2";
 
-    private static final User USER = new User("test", "test@test.com", "passWord!1");
+    private static final User USER = new User(USER_NAME, EMAIL, PASSWORD);
 
     @InjectMocks
     ArticleService articleService;
@@ -44,11 +48,7 @@ class ArticleServiceTest {
     @BeforeEach
     void setUp() {
         testArticle = new Article(TITLE, COVER_URL, CONTENTS, USER);
-        testArticleDto = new ArticleDto();
-
-        testArticleDto.setTitle(TITLE);
-        testArticleDto.setCoverUrl(COVER_URL);
-        testArticleDto.setContents(CONTENTS);
+        testArticleDto = new ArticleDto(TITLE, COVER_URL, CONTENTS);
     }
 
     @Test
@@ -61,25 +61,16 @@ class ArticleServiceTest {
 
     @Test
     void article_저장_테스트() {
-        ArticleDto testArticleDto = new ArticleDto();
-        testArticleDto.setTitle(TITLE);
-        testArticleDto.setCoverUrl(COVER_URL);
-        testArticleDto.setContents(CONTENTS);
-
         articleService.save(testArticleDto, USER);
         verify(articleRepository, atLeast(1)).save(testArticle);
     }
 
     @Test
     void ariticle_수정_테스트() {
-        ArticleDto testArticleDto2 = new ArticleDto();
-        testArticleDto2.setId(TEST_ID);
-        testArticleDto2.setTitle(TITLE_2);
-        testArticleDto2.setCoverUrl(COVER_URL_2);
-        testArticleDto2.setContents(CONTENTS_2);
+        ArticleDto testArticleDto2 = new ArticleDto(TITLE_2, COVER_URL_2, CONTENTS_2);
 
         given(articleRepository.findById(TEST_ID)).willReturn(Optional.of(testArticle));
-        Article updateArticle = articleService.update(testArticleDto2, USER);
+        Article updateArticle = articleService.update(testArticleDto2, USER, TEST_ID);
 
         verify(articleRepository, atLeast(1)).findById(TEST_ID);
         assertThat(updateArticle.getTitle()).isEqualTo(TITLE_2);
@@ -90,11 +81,6 @@ class ArticleServiceTest {
     @Test
     @DisplayName("article 삭제 테스트")
     void delete() {
-        ArticleDto articleDto = new ArticleDto();
-        articleDto.setTitle(TITLE);
-        articleDto.setCoverUrl(COVER_URL);
-        articleDto.setContents(CONTENTS);
-
         articleService.delete(TEST_ID);
 
         verify(articleRepository, atLeast(1)).deleteById(TEST_ID);

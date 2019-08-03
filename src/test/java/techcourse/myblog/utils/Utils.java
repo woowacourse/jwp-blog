@@ -8,6 +8,8 @@ import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.controller.dto.UserDto;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
@@ -32,7 +34,7 @@ public class Utils {
     }
 
     public static String createArticle(ArticleDto articleDto, String cookie, String baseUrl) {
-        return given()
+       return given()
                 .param("title", articleDto.getTitle())
                 .param("coverUrl", articleDto.getCoverUrl())
                 .param("contents", articleDto.getContents())
@@ -68,5 +70,10 @@ public class Utils {
                 .cookie(cookie)
                 .post(baseUrl + "/comments")
                 .getHeader("Location");
+    }
+
+    public static String getArticleId(String articleUrl) {
+        List<String> list = Arrays.asList(articleUrl.split("/"));
+        return list.get(list.size() - 1);
     }
 }

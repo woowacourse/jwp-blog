@@ -1,14 +1,11 @@
 package techcourse.myblog.controller.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@AllArgsConstructor
 @Getter
-@Setter
 public class ArticleDto {
-    private Long id;
     private String title;
     private String coverUrl;
     private String contents;
-    private String email;
 }

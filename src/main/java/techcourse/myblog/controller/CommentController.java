@@ -15,20 +15,15 @@ import techcourse.myblog.service.CommentService;
 @Controller
 public class CommentController {
     private final CommentService commentService;
-    private final ArticleService articleService;
 
-    public CommentController(CommentService commentService, ArticleService articleService) {
+    public CommentController(CommentService commentService) {
         this.commentService = commentService;
-        this.articleService = articleService;
     }
 
     @PostMapping
     public String createComment(CommentDto commentDto, @ModelAttribute User user) {
-        Article foundArticle = articleService.findById(commentDto.getArticleId());
-        commentDto.setUser(user);
-        commentDto.setArticle(foundArticle);
-        commentService.save(commentDto);
-        return "redirect:/articles/" + foundArticle.getId();
+        Long articleId = commentService.save(commentDto, user);
+        return "redirect:/articles/" + articleId;
     }
 
     @GetMapping("/{commentId}/edit")
