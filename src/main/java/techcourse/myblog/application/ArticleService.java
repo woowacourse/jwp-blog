@@ -57,32 +57,26 @@ public class ArticleService {
         return article;
     }
 
-    // todo edit과 delete 모순 해결. article은 도대체 어디서 생성할 것인가....
     @Transactional
     public void editArticle(ArticleDto articleDto, Long articleId, UserResponse userResponse) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
 
-        User author = userRepository.findById(userResponse.getId())
-                .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
-
-        if (!article.isSameAuthor(author)) {
-            throw new NotSameAuthorException("해당 작성자만 글을 수정할 수 있습니다.");
-        }
+        checkAuthenticatedAuthor(article, userResponse);
 
         article.updateArticle(modelMapper.map(articleDto, Article.class));
     }
 
     public void deleteById(Long articleId, UserResponse userResponse) {
-        checkAuthenticatedAuthor(articleId, userResponse);
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
+
+        checkAuthenticatedAuthor(article, userResponse);
 
         articleRepository.deleteById(articleId);
     }
 
-    private void checkAuthenticatedAuthor(Long articleId, UserResponse userResponse) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
-
+    private void checkAuthenticatedAuthor(Article article, UserResponse userResponse) {
         User author = userRepository.findById(userResponse.getId())
                 .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
 
