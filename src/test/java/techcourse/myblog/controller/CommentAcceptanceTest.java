@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.contentOf;
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CommentControllerTestWebClientTest extends MyblogApplicationTests {
+public class CommentAcceptanceTest extends MyblogApplicationTests {
     private WebTestClient webTestClient;
     private LoginControllerTest loginControllerTest;
 
@@ -32,7 +32,7 @@ public class CommentControllerTestWebClientTest extends MyblogApplicationTests {
     private String testCookie;
 
     @Autowired
-    public CommentControllerTestWebClientTest(WebTestClient webTestClient) {
+    public CommentAcceptanceTest(WebTestClient webTestClient) {
         this.webTestClient = webTestClient;
         this.loginControllerTest = new LoginControllerTest(this.webTestClient, userRepository);
     }
