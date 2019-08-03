@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.CommentService;
 import techcourse.myblog.domain.Email;
 import techcourse.myblog.domain.vo.CommentContents;
