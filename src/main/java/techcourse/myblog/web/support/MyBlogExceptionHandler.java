@@ -1,4 +1,4 @@
-package techcourse.myblog.web.controller;
+package techcourse.myblog.web.support;
 
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,6 +10,7 @@ import techcourse.myblog.domain.InvalidCommentException;
 import techcourse.myblog.service.DuplicatedEmailException;
 import techcourse.myblog.service.MismatchAuthorException;
 import techcourse.myblog.service.NotFoundArticleException;
+import techcourse.myblog.web.controller.*;
 
 @ControllerAdvice
 public class MyBlogExceptionHandler {
