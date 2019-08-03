@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 @Component
 public class LoginInterceptor extends HandlerInterceptorAdapter {
-    private static final Pattern PATTERN = Pattern.compile("^/articles/[\\d]+$");
+    private static final Pattern PATTERN = Pattern.compile("^\\/articles\\/[\\d]+$");
     private static final Logger log = LoggerFactory.getLogger(LoginInterceptor.class);
 
     @Override

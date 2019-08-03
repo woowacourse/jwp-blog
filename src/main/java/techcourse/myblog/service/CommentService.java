@@ -37,6 +37,7 @@ public class CommentService {
         Article article = findArticleByArticleId(articleId);
 
         Comment comment = commentRepository.save(new Comment(contents, commenter, article));
+        article.addComment(comment);
 
         return comment;
     }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
 import techcourse.myblog.dto.ArticleRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.service.ArticleService;
@@ -12,6 +13,7 @@ import techcourse.myblog.utils.session.SessionUtil;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 import static techcourse.myblog.utils.session.SessionContext.USER;
 
@@ -39,8 +41,9 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String getArticle(@PathVariable long articleId, Model model) {
+        List<Comment> comments = articleService.getComments(articleId);
         ModelUtil.addAttribute(model, "article", articleService.findArticle(articleId));
-        ModelUtil.addAttribute(model, "comments", articleService.getCommentsByArticleId(articleId));
+        ModelUtil.addAttribute(model, "comments", comments);
 
         return "article";
     }

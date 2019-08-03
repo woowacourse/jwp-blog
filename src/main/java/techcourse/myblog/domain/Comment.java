@@ -17,11 +17,11 @@ public class Comment {
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "commenterId", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
+    @JoinColumn(name = "commenter_id", foreignKey = @ForeignKey(name = "fk_comment_to_user"), nullable = false)
     private User commenter;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "articleId")
+    @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_comment_to_article"), nullable = false)
     private Article article;
 
     @CreatedDate

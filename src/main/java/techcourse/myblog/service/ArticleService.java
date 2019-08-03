@@ -14,7 +14,6 @@ import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.exception.ArticleException;
 import techcourse.myblog.exception.UserException;
 import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.utils.converter.DtoConverter;
 import techcourse.myblog.utils.page.PageRequest;
@@ -30,12 +29,10 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
 
-    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository, CommentRepository commentRepository) {
+    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository) {
         this.articleRepository = articleRepository;
         this.userRepository = userRepository;
-        this.commentRepository = commentRepository;
     }
 
     @Transactional(readOnly = true)
@@ -73,14 +70,12 @@ public class ArticleService {
 
     @Transactional
     public void delete(long articleId) {
-        Article article = getArticle(articleId);
-        commentRepository.deleteAllByArticle(article);
         articleRepository.deleteById(articleId);
     }
 
-    @Transactional
-    public List<Comment> getCommentsByArticleId(Long articleId) {
-        Article article = getArticle(articleId);
-        return commentRepository.findByArticle(article);
+    @Transactional(readOnly = true)
+    public List<Comment> getComments(long articleId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(ArticleException::new);
+        return article.getComments();
     }
 }

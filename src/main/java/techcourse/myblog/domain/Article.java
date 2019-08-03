@@ -1,6 +1,9 @@
 package techcourse.myblog.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -19,8 +22,12 @@ public class Article {
     private String coverUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_article_to_user"), nullable = false)
     private User author;
+
+    @OneToMany(mappedBy = "article", orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
 
     public Article() {
     }
@@ -59,10 +66,18 @@ public class Article {
         return author;
     }
 
+    public List<Comment> getComments() {
+        return Collections.unmodifiableList(comments);
+    }
+
     public void update(Article modifiedArticle) {
         this.title = modifiedArticle.title;
         this.contents = modifiedArticle.contents;
         this.coverUrl = modifiedArticle.coverUrl;
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
     }
 
     @Override
