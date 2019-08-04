@@ -3,6 +3,7 @@ package techcourse.myblog.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.domain.user.UserException;
@@ -10,6 +11,7 @@ import techcourse.myblog.domain.user.UserException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @DataJpaTest
+@ActiveProfiles("test")
 class UserRepositoryTest {
 
     @Autowired
@@ -28,4 +30,8 @@ class UserRepositoryTest {
                 .isInstanceOf(UserException.class);
     }
 
+    @Test
+    void name() {
+        User user = userRepository.findByEmail_Email("test@test.com").get();
+    }
 }

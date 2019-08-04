@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.web.support.SessionInfo;
 import techcourse.myblog.web.support.UserSessionInfo;
 
 @Controller
@@ -34,13 +35,14 @@ public class ArticleController {
     }
 
     @PostMapping
-    public String saveArticle(ArticleDto dto, UserSessionInfo userSessionInfo) {
-        return "redirect:/articles/" + articleService.save(dto.toEntity(userSessionInfo.toUser()));
+    public String saveArticle(ArticleDto dto,
+                              @SessionInfo UserSessionInfo userSessionInfo) {
+        return "redirect:/articles/" + articleService.save(dto, userSessionInfo.toUser()).getId();
     }
 
     @PutMapping("/{articleId}")
     public String getModifiedArticle(@PathVariable long articleId,
-                                     UserSessionInfo userSessionInfo,
+                                     @SessionInfo UserSessionInfo userSessionInfo,
                                      ArticleDto dto,
                                      Model model) {
         setArticleModel(model, articleService.update(articleId, dto, userSessionInfo.toUser()));
@@ -48,7 +50,8 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{articleId}")
-    public String deleteArticle(@PathVariable long articleId, UserSessionInfo userSessionInfo) {
+    public String deleteArticle(@PathVariable long articleId,
+                                @SessionInfo UserSessionInfo userSessionInfo) {
         articleService.delete(articleId, userSessionInfo.toUser());
         return "redirect:/";
     }

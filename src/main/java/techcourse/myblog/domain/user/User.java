@@ -27,7 +27,7 @@ public class User {
     private UserEmail email;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
-    private List<Article> aritlces = new ArrayList<>();
+    private List<Article> articles = new ArrayList<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
@@ -85,5 +85,13 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
+
+    public void addArticle(Article article) {
+        articles.add(article);
     }
 }

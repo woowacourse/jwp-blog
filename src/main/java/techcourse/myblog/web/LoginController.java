@@ -14,7 +14,8 @@ public class LoginController {
     private final LoginService loginService;
     private final LoginSessionManager loginSessionManager;
 
-    public LoginController(LoginService loginService, LoginSessionManager loginSessionManager) {
+    public LoginController(LoginService loginService,
+                           LoginSessionManager loginSessionManager) {
         this.loginService = loginService;
         this.loginSessionManager = loginSessionManager;
     }

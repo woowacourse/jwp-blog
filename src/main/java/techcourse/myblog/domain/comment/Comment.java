@@ -26,11 +26,11 @@ public class Comment {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
     private User author;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     private Article article;
 
@@ -39,8 +39,10 @@ public class Comment {
 
     public Comment(String contents, Article article, User author) {
         this.contents = contents;
-        this.article = article;
         this.author = author;
+        this.article = article;
+        article.addComment(this);
+        author.addComment(this);
     }
 
     public Long getId() {

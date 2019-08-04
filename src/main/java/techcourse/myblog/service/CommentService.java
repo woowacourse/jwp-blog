@@ -23,20 +23,20 @@ public class CommentService {
         this.articleService = articleService;
     }
 
-    public Comment addComment(long articleId, String email, CommentDto commentDto) {
+    public Comment addComment(long articleId, User author, CommentDto commentDto) {
         Article article = articleService.findArticle(articleId);
-        User author = userService.getUserByEmail(email);
         Comment comment = commentDto.toEntity(article, author);
         return commentRepository.save(comment);
     }
 
-    public void deleteComment(long commentId, String email) {
+    public void deleteComment(long commentId, User author) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentException::new);
-        if (!comment.isAuthor(email)) {
+        if (!comment.isAuthor(author)) {
             throw new CommentException("당신은 죽을수도 있습니다.");
         }
         commentRepository.deleteById(commentId);
     }
+
 
     public void updateComment(long commentId, String email, CommentDto commentDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentException::new);

@@ -39,9 +39,10 @@ public class ArticleService {
         return articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(NOT_EXIST_ARTICLE));
     }
 
-    public Long save(Article article) {
-        Article newArticle = articleRepository.save(article);
-        return newArticle.getId();
+    @Transactional
+    public Article save(ArticleDto articleDto, User author) {
+        Article article = articleDto.toEntity(author);
+        return articleRepository.save(article);
     }
 
     public Article update(long articleId, ArticleDto articleDto, User author) {

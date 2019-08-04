@@ -1,18 +1,19 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.service.ArticleService;
 
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Transactional
 public class ArticleControllerTest extends AuthedWebTestClient {
     private static final Logger log = LoggerFactory.getLogger(ArticleControllerTest.class);
 
@@ -23,15 +24,8 @@ public class ArticleControllerTest extends AuthedWebTestClient {
     @Autowired
     private ArticleRepository articleRepository;
 
-    @BeforeEach
-    void setUp() {
-        init();
-    }
-
-    @AfterEach
-    void tearDown() {
-        end();
-    }
+    @Autowired
+    private ArticleService articleService;
 
     @Test
     void index() {
@@ -44,6 +38,7 @@ public class ArticleControllerTest extends AuthedWebTestClient {
     }
 
     @Test
+    @Transactional
     void saveArticle() {
         post("/articles")
                 .body(params(Arrays.asList("title", "contents", "coverUrl"), title, contents, coverUrl))

@@ -3,9 +3,13 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.UserRepository;
 
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -16,19 +20,24 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 class CommentControllerTest extends AuthedWebTestClient {
     private long articleId;
 
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @BeforeEach
     void setUp() {
-        init();
         setArticleId();
     }
 
     @AfterEach
     void tearDown() {
-        end();
         delete("/articles/" + articleId).exchange();
     }
 
     @Test
+    @Transactional
     void 코멘트_생성_테스트() {
         addComment().expectStatus().is3xxRedirection();
         checkBody("comment", true);

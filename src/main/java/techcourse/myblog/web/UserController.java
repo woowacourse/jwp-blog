@@ -11,6 +11,7 @@ import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.web.support.LoginSessionManager;
+import techcourse.myblog.web.support.SessionInfo;
 import techcourse.myblog.web.support.UserSessionInfo;
 
 import java.util.List;
@@ -51,14 +52,15 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public String updateUser(UserDto userDto, UserSessionInfo userSessionInfo) {
+    public String updateUser(UserDto userDto,
+                             @SessionInfo UserSessionInfo userSessionInfo) {
         User user = userService.updateUser(userSessionInfo.toUser(), userDto);
         loginSessionManager.setLoginSession(user);
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/users")
-    public String deleteUser(UserSessionInfo userSessionInfo) {
+    public String deleteUser(@SessionInfo UserSessionInfo userSessionInfo) {
         userService.deleteUser(userSessionInfo.getEmail());
         loginSessionManager.clearSession();
         return "redirect:/";

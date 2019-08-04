@@ -5,8 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.dto.ArticleDto;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
+@ActiveProfiles("test")
 class ArticleRepositoryTest {
 
     @Autowired
@@ -25,7 +28,7 @@ class ArticleRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        user = userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
+        user = userRepository.findByEmail(UserEmail.of("test@test.com")).get();
         Article article1 = new Article("a1", "b", "c", user);
         Article article2 = new Article("a2", "b", "c", user);
         Article article3 = new Article("a3", "b", "c", user);
@@ -33,6 +36,7 @@ class ArticleRepositoryTest {
         articleRepository.save(article1);
         articleRepository.save(article2);
         articleRepository.save(article3);
+        articleRepository.flush();
     }
 
     @AfterEach

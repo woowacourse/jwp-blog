@@ -41,6 +41,6 @@ public class UserService {
     }
 
     public void deleteUser(String userEmail) {
-        userRepository.delete(getUserByEmail(userEmail));
+        userRepository.deleteById(getUserByEmail(userEmail).getId());
     }
 }

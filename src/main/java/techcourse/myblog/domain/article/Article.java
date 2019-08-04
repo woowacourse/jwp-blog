@@ -49,12 +49,12 @@ public class Article {
     public Article(String title, String contents, String coverUrl, User author) {
         this.title = title;
         this.contents = contents;
-        this.coverUrl = getDefaultUrl(coverUrl);
+        this.coverUrl = validUrl(coverUrl);
         this.author = author;
         author.addArticle(this);
     }
 
-    private String getDefaultUrl(String coverUrl) {
+    private String validUrl(String coverUrl) {
         if (coverUrl.isEmpty()) {
             return DEFAULT_URL;
         }

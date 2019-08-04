@@ -4,8 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.ActiveProfiles;
 import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.domain.user.UserException;
 import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.repository.UserRepository;
@@ -14,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class LoginServiceTest {
 
     @Autowired
@@ -22,13 +24,12 @@ class LoginServiceTest {
     @Autowired
     private UserRepository userRepository;
 
-    private LoginDto loginDto = new LoginDto("andole@gmail.com", "A!1bcdefg");
+    private User user;
+    private LoginDto loginDto = new LoginDto("test@test.com", "A!1bcdefg");
 
     @BeforeEach
-    @Transactional
     void setUp() {
-        userRepository.deleteAll();
-        userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
+        user = userRepository.findByEmail(UserEmail.of("test@test.com")).get();
     }
 
     @Test
@@ -44,7 +45,7 @@ class LoginServiceTest {
 
     @Test
     void 비밀번호_다름() {
-        assertThatThrownBy(() -> loginService.loginByEmailAndPwd(new LoginDto("andole@gmail.com", "Z!1bcdefg")))
+        assertThatThrownBy(() -> loginService.loginByEmailAndPwd(new LoginDto("test@test.com", "Z!1bcdefg")))
                 .isInstanceOf(UserException.class);
     }
 }

@@ -24,7 +24,7 @@
 
                 <form accept-charset="utf-8" method="post" name="article"
                       th:action="${#strings.concat('/articles/', article.id)}">
-                    <input email="DELETE" name="_method" type="hidden">
+                    <input name="_method" type="hidden" value="DELETE">
                     <button class="btn btn-default" id="delete-btn" type="submit">
                         <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
                     </button>

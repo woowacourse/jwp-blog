@@ -10,10 +10,10 @@ import techcourse.myblog.domain.user.User;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-public class SessionArgumentResolver implements HandlerMethodArgumentResolver {
+public class UserSessionArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType() == UserSessionInfo.class;
+        return parameter.hasParameterAnnotation(SessionInfo.class);
     }
 
     @Override
