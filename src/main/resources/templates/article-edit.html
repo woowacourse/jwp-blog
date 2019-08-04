@@ -1,43 +1,56 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- include fragments/head -->
-    <th:block th:replace="fragments/head"></th:block>
-    <!-- include fragments/common_code_editor -->
-    <th:block th:replace="fragments/code-editor"></th:block>
-
-    <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/article-edit.css">
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:include="common/meta"></th:block>
+    <th:block th:include="common/css"></th:block>
+    <link href="/css/index.css" rel="stylesheet">
+    <link href="/css/article-edit.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+    <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css" rel="stylesheet">
+    <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css" rel="stylesheet">
 </head>
 <body>
 <div>
-    <header th:replace="fragments/header :: header"> </header>
-
-    <form th:action="${article} ? '/articles/' + ${article.articleId} : '/articles' " name="article" th:method="${article} ? 'put' : 'post'" accept-charset="utf-8" >
+    <th:block th:include="common/navbar"></th:block>
+    <form accept-charset="utf-8"
+          method="post" name="article"
+          th:action="${#strings.isEmpty(article)? '/articles': #strings.concat('/articles/', article.id)}">
+        <input name="_method" th:if="not ${#strings.isEmpty(article)}" type="hidden" value="PUT">
         <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
+            <div class="cover-img overlay-dark bg" th:style="
+            'background:url('+ ${#strings.isEmpty(article)? '/images/pages/index/bg.jpg' : article.coverUrl} + ');'">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input type="text" th:value="${article} ? ${article.title} : ''" name="title" class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"  placeholder="제목을 입력해주세요" autocomplete="off" required="required">
-                        <input type="text" th:value="${article} ? ${article.coverUrl} : ''" name="coverUrl" class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"  placeholder="배경 url을 입력해주세요" autocomplete="off">
+                        <input th:value="${#strings.isEmpty(article) ? '' : article.id}" type="hidden">
+                        <input autocomplete="off"
+                               class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
+                               name="title"
+                               th:placeholder="${#strings.isEmpty(article)? '제목을 입력해주세요' : article.title}"
+                               type="text">
+                        <input autocomplete="off"
+                               class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
+                               name="coverUrl"
+                               th:placeholder="${#strings.isEmpty(article)? '배경 url을 입력해주세요' : article.coverUrl}"
+                               type="text">
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
             <div class="row">
                 <div class="col-lg-1 col-md-1"></div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input id="article-contents" name="contents" type="hidden">
-                    <div id="editSection" th:text="${article} ? ${article.contents} : ''"></div>
+                    <div id="editSection" th:text="${#strings.isEmpty(article)? '' : article.contents}"></div>
                 </div>
                 <div class="col-lg-1 col-md-1">
                     <div class="btn-group btn-group-vertical">
-                        <button id="save-btn" type="submit" class="btn btn-default">
+                        <button class="btn btn-default" id="save-btn" type="submit">
                             <i class="ti-save"></i>
                         </button>
-                        <a href="/" class="btn btn-default">
+                        <a class="btn btn-default" href="/">
                             <i class="ti-close"></i>
                         </a>
                     </div>
@@ -46,13 +59,8 @@
         </div>
     </form>
 </div>
-
-<!-- include fragments/footer -->
-<th:block th:replace="fragments/script"></th:block>
-
-<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<th:block th:include="common/js"></th:block>
 <script type="text/javascript">
-    const initValue = document.getElementById("article-contents").value;
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
@@ -62,9 +70,10 @@
                 document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
             }
         },
-        height: 'calc(100vh - 360px)',
-        initialValue: initValue
+        height: 'calc(100vh - 360px)'
     });
+
+
 </script>
 </body>
 </html>

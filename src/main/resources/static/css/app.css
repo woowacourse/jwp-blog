@@ -3025,8 +3025,7 @@ iframe {
 }
 
 @media only screen and (max-width: 992px) {
-    .header .header-container .nav-left > li > a, .
-    .header-container .nav-right > li > a {
+    .header .header-container .nav-left > li > a, .header .header-container .nav-right > li > a {
         padding: 0 15px
     }
 }
