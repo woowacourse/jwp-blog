@@ -14,11 +14,15 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTests {
-    @Autowired
-    WebTestClient webTestClient;
+    private WebTestClient webTestClient;
+    private UserRepository userRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserControllerTests(WebTestClient webTestClient, UserRepository userRepository) {
+        this.webTestClient = webTestClient;
+        this.userRepository = userRepository;
+
+    }
 
     @BeforeEach
     void setUp() {
