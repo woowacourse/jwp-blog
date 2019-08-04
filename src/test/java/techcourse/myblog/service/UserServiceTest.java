@@ -3,10 +3,7 @@ package techcourse.myblog.service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import techcourse.myblog.AbstractTest;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicatedUserException;
 import techcourse.myblog.exception.NotFoundUserException;
@@ -20,44 +17,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class UserServiceTest extends AbstractTest {
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    private Long userId;
-    private User user;
-    private UserDto.Response userDto;
-
-    private Long otherUserId;
-    private User otherUser;
-    private UserDto.Response otherUserDto;
-
+class UserServiceTest extends ServiceTest {
     @BeforeEach
     void setUp() {
-        user = User.builder()
-                .id(userId)
-                .email("email")
-                .password("password")
-                .name("name")
-                .build();
+        init();
+    }
 
-        otherUser = User.builder()
-            .email("bbb@gamil.com")
-            .name("asd")
-            .password("123qwe!@#")
-            .build();
-
-        userId = userService.save(modelMapper.map(user, UserDto.Create.class));
-        userDto = modelMapper.map(user, UserDto.Response.class);
-        userDto.setId(userId);
-
-        otherUserId = userService.save(modelMapper.map(otherUser, UserDto.Create.class));
-        otherUserDto = modelMapper.map(otherUser, UserDto.Response.class);
-        otherUserDto.setId(otherUserId);
+    @AfterEach
+    void tearDown() {
+        terminate();
     }
 
     @Test
@@ -146,9 +114,4 @@ class UserServiceTest extends AbstractTest {
             userService.deleteById(otherUserDto, userId));
     }
 
-    @AfterEach
-    void tearDown() {
-        userService.deleteById(userDto, userId);
-        userService.deleteById(otherUserDto, otherUserId);
-    }
 }
