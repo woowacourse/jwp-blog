@@ -33,7 +33,7 @@ public class CommentWrtieServiceTests {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         commentReadService = new CommentReadService(commentRepository);
-        commentWriteService = new CommentWriteService(commentRepository);
+        commentWriteService = new CommentWriteService(commentRepository, commentReadService);
         reader = READER_DTO.toUser();
         article = ARTICLE_DTO.toArticle(reader);
     }
