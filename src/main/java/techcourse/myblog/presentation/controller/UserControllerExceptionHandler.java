@@ -35,7 +35,7 @@ public class UserControllerExceptionHandler {
     }
 
     @ExceptionHandler({NotFoundArticleException.class, NotFoundCommentException.class})
-    public RedirectView handleNotFoundException(NotFoundArticleException e, RedirectAttributes redirectAttributes) {
+    public RedirectView handleNotFoundException(RuntimeException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/");
     }
