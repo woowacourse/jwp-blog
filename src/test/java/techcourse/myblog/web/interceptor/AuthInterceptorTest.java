@@ -105,6 +105,8 @@ public class AuthInterceptorTest {
                                 webSession.getAttributes().put("user",
                                         new User("CODEMCD", "iloveCU@gmail.com", "PassWord!1")))
                         .then()
-        ).build();
+        )
+                .build()
+        ;
     }
 }

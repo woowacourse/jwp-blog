@@ -49,26 +49,6 @@ public class Comment {
         return id;
     }
 
-    public String getContents() {
-        return contents;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public Article getArticle() {
-        return article;
-    }
-
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
-    }
-
-    public LocalDateTime getUpdatedTime() {
-        return updatedTime;
-    }
-
     public boolean isSameAuthor(User author) {
         return this.author.equals(author);
     }
@@ -78,6 +58,50 @@ public class Comment {
             throw new IllegalArgumentException();
         }
         this.contents = updatedComment.getContents();
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getContents() {
+        return contents;
+    }
+
+    public void setContents(String contents) {
+        this.contents = contents;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public LocalDateTime getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(LocalDateTime updatedTime) {
+        this.updatedTime = updatedTime;
     }
 
     @Override

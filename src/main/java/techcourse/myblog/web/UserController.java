@@ -97,7 +97,7 @@ public class UserController {
     @DeleteMapping("/users/{userId}")
     public String deleteUser(@PathVariable("userId") Long userId, HttpServletRequest request) {
         userService.deleteById(userId);
-        request.getSession().removeAttribute(USER_INFO);
+        request.getSession().invalidate();
 
         return "redirect:/";
     }

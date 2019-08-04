@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CommentControllerTests {
 
     private String cookie;
+    private String cookie2;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -31,16 +32,24 @@ public class CommentControllerTests {
     void setUp() {
         String name = "bmo";
         String email = "bmo@bmo.com";
+        String email2 = "cmo@bmo.com";
         String password = "Password123!";
         String title = "googler bmo";
         String coverUrl = "bmo.jpg";
         String contents = "why bmo so great?";
 
-
         // 회원가입
         webTestClient.post().uri("/users")
                 .body(BodyInserters.fromFormData("name", name)
                         .with("email", email)
+                        .with("password", password))
+                .exchange()
+        ;
+
+        // 회원가입2
+        webTestClient.post().uri("/users")
+                .body(BodyInserters.fromFormData("name", name)
+                        .with("email", email2)
                         .with("password", password))
                 .exchange()
         ;
@@ -54,7 +63,20 @@ public class CommentControllerTests {
                 .isFound()
                 .returnResult(String.class)
                 .getResponseHeaders()
-                .getFirst("Set-Cookie");
+                .getFirst("Set-Cookie")
+        ;
+
+        // 로그인2
+        cookie2 = webTestClient.post().uri("/login")
+                .body(BodyInserters.fromFormData("email", email2)
+                        .with("password", password))
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .getFirst("Set-Cookie")
+        ;
 
         // 게시글 작성
         webTestClient.post()
@@ -103,7 +125,47 @@ public class CommentControllerTests {
     }
 
     @Test
+    void 다른_유저가_댓글_수정하는_오류() {
+        // 댓글 작성
+        String commentContents = "comment contents";
+        requestSaveComment(commentContents);
+
+        // 댓글 수정
+        String updatedContents = "updated comment contents";
+        webTestClient.put()
+                .uri("/articles/1/comments/1")
+                .header("Cookie", cookie2)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("contents", updatedContents))
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .expectHeader()
+                .valueMatches("location", ".*/")
+        ;
+    }
+
+    @Test
     void 댓글_삭제_성공_테스트() {
+        // 댓글 작성
+        String commentContents = "comment contents";
+        requestSaveComment(commentContents);
+
+        // 댓글 삭제
+        webTestClient.delete()
+                .uri("/articles/1/comments/1")
+                .header("Cookie", cookie2)
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .expectHeader()
+                .valueMatches("location", ".*/")
+        ;
+    }
+
+    @Test
+    void 다른_유저가_댓글_삭제_오류() {
         // 댓글 작성
         String commentContents = "comment contents";
         requestSaveComment(commentContents);
@@ -116,17 +178,8 @@ public class CommentControllerTests {
                 .expectStatus()
                 .isFound()
                 .expectHeader()
-                .valueMatches("location", ".*/articles/1");
-    }
-
-    private WebTestClient.ResponseSpec requestSaveComment(String commentContents) {
-        return webTestClient.post()
-                .uri("/articles/1/comments")
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("contents", commentContents))
-                .exchange();
+                .valueMatches("location", ".*/articles/1")
+        ;
     }
 
     @Test
@@ -138,6 +191,7 @@ public class CommentControllerTests {
         // 댓글 조회
         webTestClient.get()
                 .uri("/articles/1")
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -145,6 +199,18 @@ public class CommentControllerTests {
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
                     assertTrue(body.contains(commentContents));
-                });
+                })
+        ;
+    }
+
+    private WebTestClient.ResponseSpec requestSaveComment(String commentContents) {
+        return webTestClient.post()
+                .uri("/articles/1/comments")
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("contents", commentContents))
+                .exchange()
+                ;
     }
 }

@@ -220,6 +220,8 @@ public class UserControllerTests {
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection()
+                .expectHeader()
+                .valueMatches("location", ".*/")
         ;
     }
 }
