@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.UserWriteService;
 import techcourse.myblog.application.dto.UserDto;
-import techcourse.myblog.presentation.argument.LoginUser;
+import techcourse.myblog.presentation.support.LoginUser;
 import techcourse.myblog.domain.user.validation.UserInfo;
 
 @Controller

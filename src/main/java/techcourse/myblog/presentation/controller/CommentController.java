@@ -8,7 +8,7 @@ import techcourse.myblog.application.ArticleReadService;
 import techcourse.myblog.application.CommentReadService;
 import techcourse.myblog.application.CommentWriteService;
 import techcourse.myblog.application.dto.CommentDto;
-import techcourse.myblog.presentation.argument.LoginUser;
+import techcourse.myblog.presentation.support.LoginUser;
 
 @Controller
 @RequestMapping("/articles/{articleId}/comment")
