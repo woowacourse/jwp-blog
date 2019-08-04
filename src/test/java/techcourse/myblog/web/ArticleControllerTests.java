@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -28,7 +29,7 @@ import static techcourse.myblog.web.UserControllerTest.testPassword;
 public class ArticleControllerTests {
     private WebTestClient webTestClient;
     private static String testTitle = "testTitle";
-    private static String testCoverUrl = "testCoverUrl";
+    private static String testCoverUrl = "https://www.incimages.com/uploaded_files/image/970x450/getty_509107562_2000133320009280346_351827.jpg";
     private static String testContents = "testContents";
     private static String testUniContents = StringEscapeUtils.escapeJava(testContents);
     private String cookie;
@@ -54,46 +55,32 @@ public class ArticleControllerTests {
 
     @Test
     void showArticleWritingPageTest() {
-        webTestClient.get()
-                .uri("/articles/writing")
-                .header("Cookie", cookie)
-                .exchange()
-                .expectStatus()
-                .isOk();
+        EntityExchangeResult<byte[]> result = getRequest("/articles/writing");
+        assertThat(result.getStatus().is2xxSuccessful()).isTrue();
     }
 
     @Test
     void addNewArticleTest() {
-        testSaveNewArticle("testArticle", "testCoverUrl", "testContents");
+        String redirectUrl = postRequest("/articles", ArticleVO.class, testTitle, testContents, testCoverUrl);
+        EntityExchangeResult<byte[]> result = getRequest(redirectUrl);
+        String body = new String(result.getResponseBody());
+        assertTest(body, testTitle, testContents, testCoverUrl);
     }
 
     @Test
     void showArticlesPageTest() {
-        webTestClient.get().uri("/articles")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .consumeWith(innerResponse -> {
-                    String body = new String(innerResponse.getResponseBody());
-                    assertThat(body.contains(testTitle)).isTrue();
-                    assertThat(body.contains(testCoverUrl)).isTrue();
-                    //assertThat(body.contains(testContents)).isTrue();
-                });
+        EntityExchangeResult<byte[]> result = getRequest("/articles");
+        assertThat(result.getStatus().is2xxSuccessful()).isTrue();
+        String body = new String(result.getResponseBody());
+        assertTest(body, testTitle, testCoverUrl);
     }
 
     @Test
     void showArticleByIdPageTest() {
-        webTestClient.get().uri("/articles/1")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(testTitle)).isTrue();
-                    assertThat(body.contains(testCoverUrl)).isTrue();
-                    assertThat(body.contains(testUniContents)).isTrue();
-                });
+        EntityExchangeResult<byte[]> result = getRequest("/articles");
+        assertThat(result.getStatus().is2xxSuccessful()).isTrue();
+        String body = new String(result.getResponseBody());
+        assertTest(body, testTitle, testCoverUrl, testUniContents);
     }
 
     @Test
@@ -121,9 +108,7 @@ public class ArticleControllerTests {
                             .expectBody()
                             .consumeWith(innerResponse -> {
                                 String body = new String(innerResponse.getResponseBody());
-                                assertThat(body.contains(updatedTitle)).isTrue();
-                                assertThat(body.contains(updatedCoverUrl)).isTrue();
-                                assertThat(body.contains(updatedUniContents)).isTrue();
+                                assertTest(body, updatedTitle, updatedCoverUrl, updatedUniContents);
                             });
                 });
 
@@ -168,9 +153,7 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains(testTitle)).isTrue();
-                    assertThat(body.contains(testCoverUrl)).isTrue();
-                    assertThat(body.contains(testUniContents)).isTrue();
+                    assertTest(body, testTitle, testCoverUrl, testUniContents);
                 });
     }
 
@@ -184,9 +167,7 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains("GUEST")).isTrue();
-                    assertThat(body.contains("로그인")).isTrue();
-                    assertThat(body.contains("회원가입")).isTrue();
+                    assertTest(body, "GUEST", "로그인", "회원가입");
                     assertThat(body.contains("로그아웃")).isFalse();
                 });
     }
@@ -202,9 +183,7 @@ public class ArticleControllerTests {
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains("first")).isTrue();
-                    assertThat(body.contains("second")).isTrue();
-                    assertThat(body.contains("third")).isTrue();
+                    assertTest(body, "first", "second", "third");
                 });
     }
 
@@ -297,32 +276,6 @@ public class ArticleControllerTests {
                 });
     }
 
-    private void testSaveNewArticle(String title, String coverUrl, String contents) {
-        webTestClient.post()
-                .uri("/articles")
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(mapBy(ArticleVO.class, title, contents, coverUrl))
-                .exchange()
-                .expectStatus()
-                .is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    String redirectUrl = response.getResponseHeaders().getLocation().toString();
-                    webTestClient.get().uri(redirectUrl)
-                            .exchange()
-                            .expectStatus()
-                            .isOk()
-                            .expectBody()
-                            .consumeWith(innerResponse -> {
-                                String body = new String(innerResponse.getResponseBody());
-                                assertThat(body.contains(title)).isTrue();
-                                assertThat(body.contains(coverUrl)).isTrue();
-                                assertThat(body.contains(StringEscapeUtils.escapeJava(testContents))).isTrue();
-                            });
-                });
-    }
-
     private <T> BodyInserters.FormInserter<String> mapBy(Class<T> classType, String... parameters) {
         BodyInserters.FormInserter<String> body = BodyInserters.fromFormData(Strings.EMPTY, Strings.EMPTY);
 
@@ -330,5 +283,36 @@ public class ArticleControllerTests {
             body.with(classType.getDeclaredFields()[i].getName(), parameters[i]);
         }
         return body;
+    }
+
+    EntityExchangeResult<byte[]> getRequest(String uri) {
+        return webTestClient.get()
+                .uri(uri)
+                .header("Cookie", cookie)
+                .exchange()
+                .expectBody()
+                .returnResult();
+    }
+
+    String postRequest(String uri, Class mappingClass, String... args) {
+        return webTestClient.post()
+                .uri(uri)
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(mapBy(mappingClass, args))
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .expectBody()
+                .returnResult()
+                .getResponseHeaders()
+                .getLocation()
+                .toString();
+    }
+
+    private void assertTest(String body, String... args) {
+        for (String arg : args) {
+            assertThat(body.contains(arg)).isTrue();
+        }
     }
 }

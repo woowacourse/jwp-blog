@@ -13,7 +13,7 @@ public class ArticleRequestDto {
     private long id;
     private String title;
     private String contents;
-    @URL(protocol = "http")
+    @URL
     private String coverUrl;
 
     public Article toArticle() {
