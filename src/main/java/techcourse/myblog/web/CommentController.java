@@ -38,8 +38,7 @@ public class CommentController {
     @PutMapping(COMMENT + "/{articleId}" + "/{commentId}")
     public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @Valid CommentRequest commentRequest) {
         UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
-        commentService.checkAuthentication(userResponse, commentId);
-        commentService.update(commentId, commentRequest);
+        commentService.update(commentId, commentRequest, userResponse);
 
         return REDIRECT + ARTICLES + "/" + articleId;
     }
@@ -47,8 +46,7 @@ public class CommentController {
     @DeleteMapping(COMMENT + "/{articleId}" + "/{commentId}")
     public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId) {
         UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
-        commentService.checkAuthentication(userResponse, commentId);
-        commentService.remove(commentId);
+        commentService.remove(commentId, userResponse);
 
         return REDIRECT + ARTICLES + "/" + articleId;
     }

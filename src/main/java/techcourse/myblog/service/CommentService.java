@@ -38,7 +38,8 @@ public class CommentService {
     }
 
     @Transactional
-    public void update(Long commentId, CommentRequest commentRequest) {
+    public void update(Long commentId, CommentRequest commentRequest, UserResponse userResponse) {
+        checkAuthentication(commentId, userResponse);
         Comment comment = getCommentFindById(commentId);
         comment.update(CommentAssembler.toEntity(commentRequest));
     }
@@ -47,14 +48,15 @@ public class CommentService {
         return commentRepository.findById(commentId).orElseThrow(CommentException::new);
     }
 
-    public void remove(Long commentId) {
+    public void remove(Long commentId, UserResponse userResponse) {
+        checkAuthentication(commentId, userResponse);
         commentRepository.deleteById(commentId);
     }
 
-    public void checkAuthentication(UserResponse userResponse, Long commentId) {
-        String userEmail = userResponse.getEmail();
+    public void checkAuthentication(Long commentId, UserResponse userResponse) {
         Comment comment = getCommentFindById(commentId);
         String commenterEmail = comment.getCommenter().getEmail();
+        String userEmail = userResponse.getEmail();
         log.debug("userEmail : {}, commenterEmail : {} ", userEmail, commenterEmail);
 
         if (!userEmail.equals(commenterEmail)) {
