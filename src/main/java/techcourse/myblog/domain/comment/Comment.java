@@ -76,6 +76,10 @@ public class Comment {
         return author.equals(comment.getAuthor());
     }
 
+    public boolean matchAuthor(User user) {
+        return author.equals(user);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

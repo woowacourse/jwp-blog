@@ -145,6 +145,6 @@ public class CommentControllerTests {
                 .cookie("JSESSIONID", outsiderJSessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/articles/\\d*");
+                .expectHeader().valueMatches("Location", ".*/");
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.CommentNotFoundException;
+import techcourse.myblog.exception.UserHasNotAuthorityException;
 import techcourse.myblog.service.dto.comment.CommentRequest;
 import techcourse.myblog.service.dto.comment.CommentResponse;
 import techcourse.myblog.service.dto.user.UserResponse;
@@ -39,9 +40,17 @@ public class CommentServiceTest {
     }
 
     @Test
-    void 댓글_삭제() {
-        commentService.delete(DEFAULT_COMMENT_ID);
+    void 댓글작성자가_댓글_삭제() {
+        commentService.delete(DEFAULT_COMMENT_ID, new UserResponse(1000L, "paul123@example.com", "paul"));
         assertThatExceptionOfType(CommentNotFoundException.class)
                 .isThrownBy(() -> commentService.findById(DEFAULT_COMMENT_ID));
+    }
+
+    @Test
+    void 댓글작성자가_아닌_회원이_댓글_삭제() {
+        assertThatExceptionOfType(UserHasNotAuthorityException.class)
+                .isThrownBy(() -> commentService.delete(
+                        DEFAULT_COMMENT_ID,
+                        new UserResponse(DEFAULT_USER_ID, "john123@example.com", "john")));
     }
 }

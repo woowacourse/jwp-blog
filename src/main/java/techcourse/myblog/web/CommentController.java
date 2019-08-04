@@ -37,10 +37,8 @@ public class CommentController {
 
     @DeleteMapping("/{commentId}")
     public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession session) {
-        UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
-        if (user.getId().equals(commentService.findById(commentId).getAuthorId())) {
-            commentService.delete(commentId);
-        }
+        UserResponse accessUser = (UserResponse) session.getAttribute(USER_SESSION_KEY);
+        commentService.delete(commentId, accessUser);
         return "redirect:/articles/" + articleId;
     }
 }

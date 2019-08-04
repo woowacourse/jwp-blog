@@ -7,6 +7,7 @@ import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.CommentNotFoundException;
+import techcourse.myblog.exception.UserHasNotAuthorityException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.presentation.ArticleRepository;
 import techcourse.myblog.presentation.CommentRepository;
@@ -47,14 +48,17 @@ public class CommentService {
         return convertToDto(comment);
     }
 
-    public void delete(final Long id) {
-        commentRepository.findById(id)
-                .orElseThrow(CommentNotFoundException::new);
-        commentRepository.deleteById(id);
+    public void delete(final Long id, final UserResponse accessUser) {
+        Comment comment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
+        User user = userRepository.findById(accessUser.getId()).orElseThrow(UserNotFoundException::new);
+        if (comment.matchAuthor(user)) {
+            commentRepository.delete(comment);
+            return;
+        }
+        throw new UserHasNotAuthorityException();
     }
 
     public CommentResponse findById(final Long id) {
-        return convertToDto(commentRepository.findById(id)
-                .orElseThrow(CommentNotFoundException::new));
+        return convertToDto(commentRepository.findById(id).orElseThrow(CommentNotFoundException::new));
     }
 }
