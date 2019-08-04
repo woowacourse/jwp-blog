@@ -27,7 +27,7 @@ class CommentRepositoryTests {
 		user = userRepository.findById(1L).get();
 
 		Contents contents = new Contents("contents");
-		actualComment = new Comment(contents);
+		actualComment = new Comment(user, contents);
 		actualComment = commentRepository.save(actualComment);
 	}
 
