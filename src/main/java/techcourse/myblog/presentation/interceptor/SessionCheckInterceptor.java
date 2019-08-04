@@ -18,11 +18,11 @@ public class SessionCheckInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession(false);
         if(session == null || session.getAttribute("user") == null){
-            response.sendRedirect("/login");
             FlashMap flashMap = new FlashMap();
             flashMap.put("errormessage", "로그인이 필요합니다.");
             FlashMapManager flashMapManager = RequestContextUtils.getFlashMapManager(request);
             flashMapManager.saveOutputFlashMap(flashMap, request, response);
+            response.sendRedirect("/login");
             return false;
         }
 

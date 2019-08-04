@@ -1,107 +1,226 @@
 package techcourse.myblog.presentation.controller;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CommentControllerTests extends ControllerTests{
-
-    private static final Logger log = LoggerFactory.getLogger(CommentControllerTests.class);
-
-    private static String EMAIL = "hard@gmail.com";
-    private static String NAME = "hard";
-    private static String PASSWORD = "qwerasdf";
-
-    private static Long commentId = 3L;
+public class CommentControllerTests extends ControllerTests {
+    private static final String TITLE = "ThisIsTitle";
+    private static final String COVER_URL = "ThisIsCoverUrl";
+    private static final String CONTENTS = "ThisIsContents";
+    private static final String EMAIL = "hard@gmail.com";
+    private static final String NAME = "hard";
+    private static final String PASSWORD = "qwerasdf";
+    private static final String COMMENT_CONTENTS = "444";
+    private static final String COMMENT_MODIFIED_CONTENTS = "445";
 
     @Autowired
     WebTestClient webTestClient;
 
-    @Test
-    void new_comment_test() {
+    @BeforeEach
+    void setUp() {
         registerUser(NAME, EMAIL, PASSWORD);
-        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
-        String articleUri = postArticle(sessionId);
+    }
 
-        // 댓글 작성
-        webTestClient.post().uri(articleUri + "/comments")
+    @Test
+    void create_댓글_작성_테스트() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
+        Long articleId = createArticle(TITLE, COVER_URL, CONTENTS, sessionId);
+
+        webTestClient.post().uri("/articles/" + articleId + "/comments")
                 .header("Cookie", sessionId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("contents", "444"))
+                        .fromFormData("contents", COMMENT_CONTENTS))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo(articleUri));
+                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo("/articles/" + articleId));
 
-        // 댓글 조회 (생성 확인)
-        webTestClient.get().uri(articleUri)
+        countComment();
+
+        webTestClient.get().uri("/articles/" + articleId)
                 .header("Cookie", sessionId)
                 .exchange()
                 .expectBody().consumeWith(response -> {
             String body = new String(response.getResponseBody());
-            assertThat(body.contains("444")).isTrue();
-            assertThat(body.contains("445")).isFalse();
-        });
-
-        // 댓글 수정
-        webTestClient.put().uri(articleUri + "/comments/" + commentId)
-                .header("Cookie", sessionId)
-                .body(BodyInserters
-                        .fromFormData("contents", "445"))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo(articleUri));
-
-        // 댓글 조회 (수정 확인)
-        webTestClient.get().uri(articleUri)
-                .header("Cookie", sessionId)
-                .exchange()
-                .expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains("444")).isFalse();
-            assertThat(body.contains("445")).isTrue();
-        });
-
-        // 댓글 삭제
-        webTestClient.delete().uri(articleUri + "/comments/" + commentId)
-                .header("Cookie", sessionId)
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo(articleUri));
-
-
-        // 댓글 조회 (삭제 확인)
-        webTestClient.get().uri(articleUri)
-                .header("Cookie", sessionId)
-                .exchange()
-                .expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains("444")).isFalse();
-            assertThat(body.contains("445")).isFalse();
+            assertThat(body.contains(COMMENT_CONTENTS)).isTrue();
+            assertThat(body.contains(COMMENT_MODIFIED_CONTENTS)).isFalse();
         });
     }
 
-    private String postArticle(String sessionId) {
-        EntityExchangeResult result = webTestClient.post().uri("/articles")
-                .header("Cookie", sessionId)
+    @Test
+    void create_비로그인시_생성_에러_테스트() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
+        Long articleId = createArticle(TITLE, COVER_URL, CONTENTS, sessionId);
+
+        webTestClient.post().uri("/articles/" + articleId + "/comments")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("title", "111")
-                        .with("coverUrl", "222")
-                        .with("contents", "333"))
+                        .fromFormData("contents", COMMENT_CONTENTS))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectBody().returnResult();
-        countArticle();
-        return result.getResponseHeaders().getLocation().getPath();
+                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo("/login"));
+
+        webTestClient.get().uri("/articles/" + articleId)
+                .exchange()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(COMMENT_CONTENTS)).isFalse();
+        });
+    }
+
+    @Test
+    void update_댓글_수정_테스트() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
+        Long articleId = createArticle(TITLE, COVER_URL, CONTENTS, sessionId);
+        Long commentId = createComments("444", articleId, sessionId);
+
+        webTestClient.put().uri("/articles/" + articleId + "/comments/" + commentId)
+                .header("Cookie", sessionId)
+                .body(BodyInserters
+                        .fromFormData("contents", COMMENT_MODIFIED_CONTENTS))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo("/articles/" + articleId));
+
+
+        webTestClient.get().uri("/articles/" + articleId)
+                .header("Cookie", sessionId)
+                .exchange()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(COMMENT_CONTENTS)).isFalse();
+            assertThat(body.contains(COMMENT_MODIFIED_CONTENTS)).isTrue();
+        });
+    }
+
+    @Test
+    void update_작성자가_아닐때_에러_테스트() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
+        Long articleId = createArticle(TITLE, COVER_URL, CONTENTS, sessionId);
+        Long commentId = createComments(COMMENT_CONTENTS, articleId, sessionId);
+        registerUser(NAME + "a", EMAIL + "a", PASSWORD + "a");
+        sessionId = logInAndGetSessionId(EMAIL + "a", PASSWORD + "a");
+
+        webTestClient.put().uri("/articles/" + articleId + "/comments/" + commentId)
+                .header("Cookie", sessionId)
+                .body(BodyInserters
+                        .fromFormData("contents", COMMENT_MODIFIED_CONTENTS))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo("/articles/" + articleId));
+
+        webTestClient.get().uri("/articles/" + articleId)
+                .header("Cookie", sessionId)
+                .exchange()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(COMMENT_CONTENTS)).isTrue();
+            assertThat(body.contains(COMMENT_MODIFIED_CONTENTS)).isFalse();
+        });
+    }
+
+    @Test
+    void update_비로그인시_에러_테스트() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
+        Long articleId = createArticle(TITLE, COVER_URL, CONTENTS, sessionId);
+        Long commentId = createComments(COMMENT_CONTENTS, articleId, sessionId);
+
+        webTestClient.put().uri("/articles/" + articleId + "/comments/" + commentId)
+                .body(BodyInserters
+                        .fromFormData("contents", COMMENT_MODIFIED_CONTENTS))
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo("/login"));
+
+        webTestClient.get().uri("/articles/" + articleId)
+                .header("Cookie", sessionId)
+                .exchange()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(COMMENT_CONTENTS)).isTrue();
+            assertThat(body.contains(COMMENT_MODIFIED_CONTENTS)).isFalse();
+        });
+    }
+
+    @Test
+    void delete_삭제_테스트() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
+        Long articleId = createArticle(TITLE, COVER_URL, CONTENTS, sessionId);
+        Long commentId = createComments(COMMENT_CONTENTS, articleId, sessionId);
+
+        webTestClient.delete().uri("/articles/" + articleId + "/comments/" + commentId)
+                .header("Cookie", sessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo("/articles/" + articleId));
+
+        webTestClient.get().uri("/articles/" + articleId)
+                .header("Cookie", sessionId)
+                .exchange()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(COMMENT_CONTENTS)).isFalse();
+            assertThat(body.contains(COMMENT_MODIFIED_CONTENTS)).isFalse();
+        });
+    }
+
+    @Test
+    void delete_작성자가_아닐때_에러_테스트() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
+        Long articleId = createArticle(TITLE, COVER_URL, CONTENTS, sessionId);
+        Long commentId = createComments(COMMENT_CONTENTS, articleId, sessionId);
+        registerUser(NAME + "a", EMAIL + "a", PASSWORD + "a");
+        sessionId = logInAndGetSessionId(EMAIL + "a", PASSWORD + "a");
+
+        webTestClient.delete().uri("/articles/" + articleId + "/comments/" + commentId)
+                .header("Cookie", sessionId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo("/articles/" + articleId));
+
+        webTestClient.get().uri("/articles/" + articleId)
+                .header("Cookie", sessionId)
+                .exchange()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(COMMENT_CONTENTS)).isTrue();
+            assertThat(body.contains(COMMENT_MODIFIED_CONTENTS)).isFalse();
+        });
+    }
+
+    @Test
+    void delete_비로그인시_삭제_에러_테스트() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
+        Long articleId = createArticle(TITLE, COVER_URL, CONTENTS, sessionId);
+        Long commentId = createComments(COMMENT_CONTENTS, articleId, sessionId);
+
+        webTestClient.delete().uri("/articles/" + articleId + "/comments/" + commentId)
+                .exchange()
+                .expectStatus().is3xxRedirection()
+                .expectBody().consumeWith(body -> assertThat(body.getResponseHeaders().getLocation().getPath()).isEqualTo("/login"));
+
+        webTestClient.get().uri("/articles/" + articleId)
+                .header("Cookie", sessionId)
+                .exchange()
+                .expectBody().consumeWith(response -> {
+            String body = new String(response.getResponseBody());
+            assertThat(body.contains(COMMENT_CONTENTS)).isTrue();
+            assertThat(body.contains(COMMENT_MODIFIED_CONTENTS)).isFalse();
+        });
+    }
+
+    @AfterEach
+    void tearDown() {
+        String sessionId = logInAndGetSessionId(EMAIL, PASSWORD);
+        deleteUser(sessionId);
     }
 }

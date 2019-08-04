@@ -56,15 +56,22 @@ public abstract class ControllerTests {
                 .body(fromFormData("title", title)
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
-                .exchange();
+                .exchange()
+                .expectBody().returnResult();
 
         return articleId;
     }
 
-    private void deleteArticle(Long articleId, String sessionId) {
-        webTestClient.delete().uri("/articles/" + articleId)
+    Long createComments(String contents, Long articleId, String sessionId) {
+        commentId++;
+
+        webTestClient.post().uri("/articles/" + articleId + "/comments")
                 .header("Cookie", sessionId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(fromFormData("contents", contents))
                 .exchange();
+
+        return commentId;
     }
 
     Long countUser() {
@@ -77,17 +84,5 @@ public abstract class ControllerTests {
 
     Long countComment() {
         return ++commentId;
-    }
-
-    public static Long getUserId() {
-        return userId;
-    }
-
-    public static Long getArticleId() {
-        return articleId;
-    }
-
-    public static Long getCommentId() {
-        return commentId;
     }
 }

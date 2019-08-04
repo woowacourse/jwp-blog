@@ -13,7 +13,6 @@ import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 import techcourse.myblog.presentation.controller.exception.InvalidUpdateException;
 
-import javax.persistence.RollbackException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
