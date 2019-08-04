@@ -1,4 +1,4 @@
-package techcourse.myblog.service.exception;
+package techcourse.myblog.application.exception;
 
 public class NoArticleException extends RuntimeException {
     public NoArticleException(String message) {

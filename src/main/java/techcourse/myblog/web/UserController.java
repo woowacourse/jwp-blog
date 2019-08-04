@@ -4,18 +4,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.service.UserService;
-import techcourse.myblog.service.dto.UserEditRequest;
-import techcourse.myblog.service.dto.UserLoginRequest;
-import techcourse.myblog.service.dto.UserRequest;
-import techcourse.myblog.service.dto.UserResponse;
+import techcourse.myblog.application.UserService;
+import techcourse.myblog.application.dto.LoginRequest;
+import techcourse.myblog.application.dto.UserEditRequest;
+import techcourse.myblog.application.dto.UserRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class UserController {
@@ -29,7 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String createLoginForm(UserLoginRequest userLoginRequest) {
+    public String createLoginForm(LoginRequest loginRequest) {
         return "login";
     }
 
@@ -52,11 +48,7 @@ public class UserController {
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        List<UserResponse> users = new ArrayList<>();
-        for (User user : userService.findAll()) {
-            users.add(new UserResponse(user.getName(), user.getEmail()));
-        }
-        model.addAttribute(USERS_INFO, users);
+        model.addAttribute(USERS_INFO, userService.findAll());
 
         return "user-list";
     }
@@ -74,14 +66,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid UserLoginRequest userLoginRequest, BindingResult bindingResult, HttpSession httpSession) {
+    public String login(@Valid LoginRequest loginRequest, BindingResult bindingResult, HttpSession httpSession) {
         if (bindingResult.hasErrors()) {
             return "login";
         }
 
-        User user = userService.findUserByEmail(userLoginRequest);
-
-        httpSession.setAttribute(USER_INFO, user);
+        httpSession.setAttribute(USER_INFO, userService.checkLogin(loginRequest));
 
         return "redirect:/";
     }
@@ -94,12 +84,12 @@ public class UserController {
     }
 
     @PutMapping("/users/{userId}")
-    public String editUser(@PathVariable("userId") Long userId, @Valid UserEditRequest userEditRequest, BindingResult bindingResult, HttpServletRequest request) {
+    public String editUser(@PathVariable("userId") Long userId, @Valid UserEditRequest userEditRequest,
+                           BindingResult bindingResult, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             return "mypage-edit";
         }
-        User user = userService.editUserName(userId, userEditRequest.getName());
-        request.getSession().setAttribute(USER_INFO, user);
+        request.getSession().setAttribute(USER_INFO, userService.editUserName(userId, userEditRequest.getName()));
 
         return "redirect:/";
     }
@@ -107,7 +97,7 @@ public class UserController {
     @DeleteMapping("/users/{userId}")
     public String deleteUser(@PathVariable("userId") Long userId, HttpServletRequest request) {
         userService.deleteById(userId);
-        request.getSession().removeAttribute(USER_INFO);
+        request.getSession().invalidate();
 
         return "redirect:/";
     }

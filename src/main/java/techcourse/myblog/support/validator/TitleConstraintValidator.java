@@ -1,6 +1,6 @@
 package techcourse.myblog.support.validator;
 
-import techcourse.myblog.domain.ArticleRepository;
+import techcourse.myblog.domain.repository.ArticleRepository;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

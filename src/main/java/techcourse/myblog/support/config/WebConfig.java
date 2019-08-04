@@ -1,5 +1,6 @@
 package techcourse.myblog.support.config;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -17,9 +18,15 @@ public class WebConfig {
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(new AuthInterceptor())
                         .addPathPatterns("/users")
-                        .addPathPatterns("/mypage-edit")
+                        .addPathPatterns("/login")
                         .addPathPatterns("/mypage")
-                        .addPathPatterns("/mypage/*");
+                        .addPathPatterns("/mypage/*")
+                        .addPathPatterns("/mypage-edit")
+                        .addPathPatterns("/articles/*")
+                        .addPathPatterns("/articles/*/edit")
+                        .addPathPatterns("/articles/*/comments")
+                        .addPathPatterns("/articles/*/comments/*")
+                ;
             }
         };
     }
@@ -28,4 +35,10 @@ public class WebConfig {
     public EncryptHelper encryptConfigure() {
         return new PasswordBCryptor();
     }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+
 }

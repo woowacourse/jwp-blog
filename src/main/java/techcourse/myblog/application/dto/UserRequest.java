@@ -1,13 +1,11 @@
-package techcourse.myblog.service.dto;
+package techcourse.myblog.application.dto;
 
 import techcourse.myblog.support.validator.EmailConstraint;
-import techcourse.myblog.support.validator.EqualFields;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-@EqualFields(baseField = "password", matchField = "reconfirmPassword")
 public class UserRequest {
     @NotBlank(message = "이름을 작성해주세요!")
     @Pattern(regexp = "[^ !@#$%^&*(),.?\\\":{}|<>0-9]{2,10}",
@@ -24,8 +22,11 @@ public class UserRequest {
             message = "비밀번호는 8자 이상의 소문자, 대문자, 숫자, 특수문자의 조합이어야 합니다!")
     private String password;
 
-    @NotBlank(message = "설정한 비밀번호를 재작성해주세요!")
-    private String reconfirmPassword;
+    public UserRequest(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
     public String getName() {
         return name;
@@ -49,13 +50,5 @@ public class UserRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getReconfirmPassword() {
-        return reconfirmPassword;
-    }
-
-    public void setReconfirmPassword(String reconfirmPassword) {
-        this.reconfirmPassword = reconfirmPassword;
     }
 }

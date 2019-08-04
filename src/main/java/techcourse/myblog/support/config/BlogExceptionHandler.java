@@ -3,21 +3,43 @@ package techcourse.myblog.support.config;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import techcourse.myblog.service.dto.UserEditRequest;
-import techcourse.myblog.service.dto.UserLoginRequest;
-import techcourse.myblog.service.exception.EditException;
-import techcourse.myblog.service.exception.ErrorMessage;
-import techcourse.myblog.service.exception.LoginException;
-import techcourse.myblog.service.exception.NoArticleException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.application.dto.LoginRequest;
+import techcourse.myblog.application.dto.UserEditRequest;
+import techcourse.myblog.application.exception.*;
 
 @ControllerAdvice
 public class BlogExceptionHandler {
+
+    @ExceptionHandler(NotSameAuthorException.class)
+    public RedirectView handleNotSameAuthorException(NotSameAuthorException e, RedirectAttributes redirectAttributes) {
+        ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
+        redirectAttributes.addFlashAttribute("error", errorMessage);
+        return new RedirectView("/");
+    }
+
+
+    @ExceptionHandler(NoUserException.class)
+    public RedirectView handleNoUserException(NoUserException e, RedirectAttributes redirectAttributes) {
+        ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
+        redirectAttributes.addFlashAttribute("error", errorMessage);
+        return new RedirectView("/");
+    }
+
     @ExceptionHandler(LoginException.class)
     public String handleLoginException(LoginException e, Model model) {
         ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
         model.addAttribute("error", errorMessage);
-        model.addAttribute("userLoginRequest", new UserLoginRequest());
+        model.addAttribute("loginRequest", new LoginRequest());
         return "login";
+    }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    public String handleCommentNotFoundException(CommentNotFoundException e, Model model) {
+        ErrorMessage errorMessage = new ErrorMessage(e.getMessage());
+        model.addAttribute("error", errorMessage);
+        return "404";
     }
 
     @ExceptionHandler(EditException.class)
