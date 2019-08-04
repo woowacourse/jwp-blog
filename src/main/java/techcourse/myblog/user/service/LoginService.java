@@ -25,7 +25,7 @@ public class LoginService {
         User user = getUser(userRequestDto);
         checkMatchPassword(user, userRequestDto);
 
-        return UserConverter.convert(user);
+        return UserConverter.toResponseDto(user);
     }
 
     private User getUser(UserRequestDto userRequestDto) {

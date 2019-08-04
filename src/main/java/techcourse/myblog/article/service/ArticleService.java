@@ -23,6 +23,8 @@ import java.util.List;
 @Transactional
 public class ArticleService {
     private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
+    private static final String LOG_TAG = "[ArticleService]";
+
     private static final String ID = "id";
     private static final int START_PAGE = 1;
     private static final int VIEW_ARTICLE_COUNT = 10;
@@ -51,7 +53,8 @@ public class ArticleService {
 
     public Article save(ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
         User user = userService.getUserByEmail(userResponseDto.getEmail());
-        Article article = ArticleConverter.convert(articleRequestDto, user);
+        Article article = ArticleConverter.toEntity(articleRequestDto, user);
+
         articleRepository.save(article);
         return article;
     }
@@ -60,7 +63,7 @@ public class ArticleService {
         Article originArticle = findArticle(articleId);
         User user = userService.getUserByEmail(userResponseDto.getEmail());
 
-        originArticle.update(ArticleConverter.convert(articleRequestDto, originArticle.getAuthor()), user);
+        originArticle.update(ArticleConverter.toEntity(articleRequestDto, originArticle.getAuthor()), user);
         return originArticle;
     }
 
@@ -74,9 +77,11 @@ public class ArticleService {
     }
 
     public void checkAuthentication(Long articleId, UserResponseDto userResponseDto) {
+        User user = userService.getUserByEmail(userResponseDto.getEmail());
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        log.debug("{} article.getAuthor().getEmail() >> {}", LOG_TAG, article.getAuthor().getEmail());
 
-        if (!article.getAuthor().getEmail().equals(userResponseDto.getEmail())) {
+        if (!article.isAuthor(user)) {
             throw new NotFoundArticleException();
         }
     }

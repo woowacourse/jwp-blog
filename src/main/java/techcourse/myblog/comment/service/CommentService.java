@@ -1,5 +1,7 @@
 package techcourse.myblog.comment.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.article.domain.Article;
@@ -16,6 +18,9 @@ import techcourse.myblog.user.service.UserService;
 @Service
 @Transactional
 public class CommentService {
+    private static final Logger log = LoggerFactory.getLogger(CommentService.class);
+    private static final String LOG_TAG = "[CommentService]";
+
     private final UserService userService;
     private final ArticleService articleService;
     private final CommentRepository commentRepository;
@@ -51,7 +56,7 @@ public class CommentService {
     public void checkAuthentication(Long commentId, UserResponseDto userResponseDto) {
         Comment comment = getCommentById(commentId);
         User user = userService.getUserByEmail(userResponseDto.getEmail());
-        System.out.println(comment.getCommenter().getEmail());
+        log.debug("{} comment.getCommenter().getEmail() >> {}", LOG_TAG, comment.getCommenter().getEmail());
         if (!comment.isCommenter(user)) {
             throw new CommentAuthenticationException();
         }

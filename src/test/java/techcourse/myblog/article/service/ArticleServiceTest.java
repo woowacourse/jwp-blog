@@ -8,8 +8,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.article.exception.NotFoundArticleException;
 import techcourse.myblog.article.repository.ArticleRepository;
-import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.user.domain.User;
+import techcourse.myblog.user.repository.UserRepository;
+import techcourse.myblog.utils.converter.UserConverter;
 
 import java.util.Optional;
 
@@ -34,6 +35,12 @@ class ArticleServiceTest {
     @MockBean(name = "articleRepository")
     private ArticleRepository articleRepository;
 
+    @MockBean(name = "userRepository")
+    private UserRepository userRepository;
+
+    @MockBean(name = "notAuthor")
+    private User notAuthor;
+
     private Article article;
 
     @BeforeEach
@@ -44,20 +51,22 @@ class ArticleServiceTest {
     @Test
     public void 게시글_작성자와_게시글_수정_또는_삭제하려는_사용자가_일치하는_경우() {
         // given
-        UserResponseDto userResponseDto = new UserResponseDto(NAME, EMAIL);
         when(articleRepository.findById(article.getId())).thenReturn(Optional.of(article));
+        when(userRepository.findByEmail(AUTHOR.getEmail())).thenReturn(Optional.of(AUTHOR));
 
         // then
-        assertDoesNotThrow(() -> articleService.checkAuthentication(article.getId(), userResponseDto));
+        assertDoesNotThrow(() -> articleService.checkAuthentication(article.getId(), UserConverter.toResponseDto(AUTHOR)));
     }
 
     @Test
     public void 작성자_외의_사용자가_게시글을_수정_또는_삭제하려고_하는_경우_예외처리() {
         // given
-        UserResponseDto userResponseDto = new UserResponseDto("에헴에헴", "ehem@ehem.com");
+        when(notAuthor.getId()).thenReturn(1L);
+        when(userRepository.findByEmail(notAuthor.getEmail())).thenReturn(Optional.of(notAuthor));
         when(articleRepository.findById(article.getId())).thenReturn(Optional.of(article));
 
         // then
-        assertThrows(NotFoundArticleException.class, () -> articleService.checkAuthentication(article.getId(), userResponseDto));
+        assertThrows(NotFoundArticleException.class,
+                () -> articleService.checkAuthentication(article.getId(), UserConverter.toResponseDto(notAuthor)));
     }
 }

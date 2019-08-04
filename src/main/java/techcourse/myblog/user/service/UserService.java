@@ -2,9 +2,9 @@ package techcourse.myblog.user.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.user.domain.User;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.exception.DuplicateUserException;
 import techcourse.myblog.user.exception.NotFoundUserException;
 import techcourse.myblog.user.repository.UserRepository;
@@ -25,9 +25,9 @@ public class UserService {
 
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
         checkRegisteredEmail(userRequestDto);
-        User user = userRepository.save(UserConverter.convert(userRequestDto));
+        User user = userRepository.save(UserConverter.toEntity(userRequestDto));
 
-        return UserConverter.convert(user);
+        return UserConverter.toResponseDto(user);
     }
 
     private void checkRegisteredEmail(UserRequestDto dto) {
@@ -45,7 +45,7 @@ public class UserService {
     public UserResponseDto updateUser(UserRequestDto userRequestDto, UserResponseDto origin) {
         User user = getUserByEmail(origin.getEmail());
         user.updateNameAndEmail(userRequestDto);
-        return UserConverter.convert(user);
+        return UserConverter.toResponseDto(user);
     }
 
     @Transactional(readOnly = true)
