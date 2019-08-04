@@ -69,14 +69,14 @@ public class UserController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable Long id, Model model) {
-        UserDto.Response userResponseDto = userService.findById(id);
+        UserDto.Response userResponseDto = userService.getUserById(id);
         model.addAttribute("user", userResponseDto);
         return "mypage";
     }
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
-        UserDto.Response userResponseDto = userService.findById(id);
+        UserDto.Response userResponseDto = userService.getUserById(id);
         model.addAttribute("user", userResponseDto);
         return "mypage-edit";
     }

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.service.UserService;
 
 import java.util.List;
 
@@ -46,7 +45,7 @@ class UserServiceTest {
 
     @Test
     void findById() {
-        final UserDto.Response expected = userService.findById(id);
+        final UserDto.Response expected = userService.getUserById(id);
 
         assertEquals(register.getName(), expected.getName());
     }

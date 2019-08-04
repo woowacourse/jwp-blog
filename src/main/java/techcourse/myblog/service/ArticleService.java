@@ -14,13 +14,18 @@ import java.util.List;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class ArticleService {
-    private final ArticleRepository articleRepository;
     private final UserService userService;
 
+    private final ArticleRepository articleRepository;
+
+    public ArticleService(final UserService userService, final ArticleRepository articleRepository) {
+        this.userService = userService;
+        this.articleRepository = articleRepository;
+    }
+
     public Long save(final Long userId, final ArticleDto.Request articleDto) {
-        User author = userService.getUserById(userId);
+        User author = userService.findById(userId);
 
         Article article = articleDto.toArticle(author);
 
@@ -67,11 +72,13 @@ public class ArticleService {
         return articleDto;
     }
 
-    private Article findById(Long id) {
+    @Transactional(readOnly = true)
+    public Article findById(Long id) {
         return articleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("없는 글입니다." + id));
     }
 
+    @Transactional(readOnly = true)
     public List<Article> findAllByAuthor(String author) {
         if(author != null){
             User user = userService.findByEmail(author);

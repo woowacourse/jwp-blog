@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
@@ -9,11 +8,11 @@ import techcourse.myblog.exception.ValidUserException;
 import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class UserService {
     public static final String EMAIL_DUPLICATE_MESSAGE = "이미 사용중인 이메일입니다.";
     public static final String PASSWORD_INVALID_MESSAGE = "비밀번호와 비밀번호 확인이 일치하지 않습니다.";
@@ -21,11 +20,15 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    public UserService(final UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public Long save(UserDto.Register userDto) {
         verifyDuplicateEmail(userDto.getEmail());
         verifyPassword(userDto);
 
-        User user = userDto.toUser();
+        final User user = userDto.toUser();
 
         return userRepository.save(user).getId();
     }
@@ -42,33 +45,33 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public User login(UserDto.Register userDto) {
-        User user = userRepository.findByEmail(userDto.getEmail())
-                .orElseThrow(() -> new ValidUserException(EMAIL_OR_PASSWORD_NOT_MATCH, "password"));
+        final Optional<User> user = userRepository.findByEmail(userDto.getEmail());
 
-        if (!user.authenticate(userDto.getPassword())) {
+        if (!user.isPresent() || !user.get().authenticate(userDto.getPassword())) {
             throw new ValidUserException(EMAIL_OR_PASSWORD_NOT_MATCH, "password");
         }
 
-        return user;
+        return user.get();
     }
 
     public List<UserDto.Response> findAllExceptPassword() {
-        List<User> users = userRepository.findAll();
+        final List<User> users = userRepository.findAll();
+
         return users.stream()
                 .map(UserDto.Response::createByUser)
                 .collect(Collectors.toList());
     }
 
-    public UserDto.Response findById(Long id) {
-        User user = getUserById(id);
+    public UserDto.Response getUserById(Long id) {
+        final User user = findById(id);
 
         return UserDto.Response.createByUser(user);
     }
 
     public UserDto.Response update(UserDto.Update userDto) {
-        User user = userRepository.findById(userDto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다. : " + userDto.getId()));
+        final User user = findById(userDto.getId());
 
         user.update(userDto.toUser());
 
@@ -79,7 +82,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User getUserById(final Long id ){
+    public User findById(final Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다. : " + id));
     }
