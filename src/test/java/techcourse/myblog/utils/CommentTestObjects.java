@@ -1,6 +1,6 @@
 package techcourse.myblog.utils;
 
-import techcourse.myblog.service.dto.CommentDto;
+import techcourse.myblog.application.dto.CommentDto;
 
 public class CommentTestObjects {
     public static final CommentDto COMMENT_DTO = new CommentDto("contents");
