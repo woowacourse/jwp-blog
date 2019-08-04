@@ -3,8 +3,9 @@ package techcourse.myblog;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
+import techcourse.myblog.web.ControllerTest;
 
-public class HelloWorldControllerTest extends AbstractTest{
+public class HelloWorldControllerTest extends ControllerTest {
 
 
     @Test

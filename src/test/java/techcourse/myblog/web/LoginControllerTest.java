@@ -6,29 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.AbstractTest;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-public class LoginControllerTest extends AbstractTest {
-    private String cookie;
+public class LoginControllerTest extends ControllerTest {
 
     @BeforeEach
     void setUp() {
-        webTestClient.post().uri("/users")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!")
-                        .with("name", "name"))
-                .exchange();
-
-        cookie = webTestClient.post().uri("/login")
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .body(BodyInserters
-                .fromFormData("email", "email@gmail.com")
-                .with("password", "password1234!"))
-            .exchange()
-            .returnResult(String.class).getResponseHeaders().getFirst("Set-Cookie");
+        init();
     }
 
     @Test
