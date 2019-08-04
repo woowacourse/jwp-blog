@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 public class CommentDto {
-    @NotBlank
+    @NotBlank(message = "댓글을 입력하세요")
     private String contents;
 
     public CommentDto(String contents) {
