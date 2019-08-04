@@ -8,6 +8,7 @@ import techcourse.myblog.application.dto.CommentRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class Comment {
@@ -20,12 +21,12 @@ public class Comment {
     private String contents;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
     @ManyToOne
-    @JoinColumn(name = "article_id", nullable = false)
+    @JoinColumn(name = "article_id", nullable = false, foreignKey = @ForeignKey)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
@@ -68,18 +69,27 @@ public class Comment {
         return updatedTime;
     }
 
-    // TODO: user로 변경하기
-    public boolean isSameAuthor(Long authorId) {
-        return this.author.getId().equals(authorId);
+    public boolean isSameAuthor(User author) {
+        return this.author.equals(author);
     }
 
-    // TODO : Entity와 DTO의 연관관계가 생김     ㅜ여기서
-    // CommentRequest에 userId가 있으면 user를 받아줄 필요없이 처리 가능할 수도?
-    // comment에 user가 있으면 직접참조, user_id가 있으면 간접참조
-    public void changeContents(CommentRequest commentRequest, Long authorId) {
-        if (!isSameAuthor(authorId)) {
+    public void updateContents(Comment updatedComment, User author) {
+        if (!isSameAuthor(author)) {
             throw new IllegalArgumentException();
         }
-        this.contents = commentRequest.getContents();
+        this.contents = updatedComment.getContents();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(id, comment.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
