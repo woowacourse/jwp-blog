@@ -8,8 +8,6 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseCookie;
-import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.domain.repository.UserRepository;
 
@@ -20,7 +18,7 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserControllerTests {
+public class UserControllerTests extends AuthedWebTestClient {
     private static final String JSESSIONID = "JSESSIONID";
     private static final String EMAIL = "email";
     private static final String NAME = "name";
@@ -69,35 +67,40 @@ public class UserControllerTests {
 
     @Test
     void userList_페이지_이동() {
-        getExchange(USERS_URL).isOk()
-                .expectBody().consumeWith(response -> {
-            String body = new String(Objects.requireNonNull(response.getResponseBody()));
-            checkUserInfo(body);
-        });
+        get(USERS_URL, TEST_EMAIL, TEST_PASSWORD)
+                .isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(Objects.requireNonNull(response.getResponseBody()));
+                    checkUserInfo(body);
+                });
     }
 
     @Test
     void mypage_이동() {
-        getExchange(MY_PAGES_URL + userId).isOk()
-                .expectBody().consumeWith(response -> {
-            String body = new String(Objects.requireNonNull(response.getResponseBody()));
-            checkUserInfo(body);
-        });
+        get(MY_PAGES_URL + userId, TEST_EMAIL, TEST_PASSWORD).isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(Objects.requireNonNull(response.getResponseBody()));
+                    checkUserInfo(body);
+                });
     }
 
     @Test
     void mypage_edit_이동() {
-        getExchange(UPDATE_URL + userId).isOk()
-                .expectBody().consumeWith(response -> {
-            String body = new String(Objects.requireNonNull(response.getResponseBody()));
-            checkUserInfo(body);
-        });
+        get(UPDATE_URL + userId, TEST_EMAIL, TEST_PASSWORD)
+                .isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String body = new String(Objects.requireNonNull(response.getResponseBody()));
+                    checkUserInfo(body);
+                });
     }
 
     @Test
     void mypage_업데이트() {
         webTestClient.put().uri(UPDATE_URL + userId)
-                .cookie(JSESSIONID, getResponseCookie().getValue())
+                .cookie(JSESSIONID, getResponseCookie(TEST_EMAIL, TEST_PASSWORD).getValue())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(fromFormData(NAME, TEST_NAME))
                 .exchange()
@@ -107,27 +110,8 @@ public class UserControllerTests {
 
     @AfterEach
     void 계정_삭제() {
-        webTestClient.delete().uri(DELETE_URL + userId)
-                .cookie(JSESSIONID, getResponseCookie().getValue())
-                .exchange()
-                .expectStatus().is3xxRedirection()
+        delete(DELETE_URL + userId, TEST_EMAIL, TEST_PASSWORD).is3xxRedirection()
                 .expectHeader().valueMatches(LOCATION, DELETE_PATTERN);
-    }
-
-    private ResponseCookie getResponseCookie() {
-        return webTestClient.post().uri(LOGIN_URL)
-                .body(fromFormData(EMAIL, TEST_EMAIL)
-                        .with(PASSWORD, TEST_PASSWORD))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .returnResult(ResponseCookie.class).getResponseCookies().getFirst(JSESSIONID);
-    }
-
-    private StatusAssertions getExchange(String users) {
-        return webTestClient.get().uri(users)
-                .cookie(JSESSIONID, getResponseCookie().getValue())
-                .exchange()
-                .expectStatus();
     }
 
     private void checkUserInfo(String body) {

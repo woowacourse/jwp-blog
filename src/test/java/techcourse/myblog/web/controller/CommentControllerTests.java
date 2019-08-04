@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseCookie;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.ArticleRepository;
@@ -21,21 +20,15 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CommentControllerTests {
+public class CommentControllerTests extends AuthedWebTestClient {
     private static final String JSESSIONID = "JSESSIONID";
-    private static final String URI_ARTICLES = "/articles";
     private static final String SEAN_NAME = "sean";
     private static final String SEAN_EMAIL = "sean@gmail.com";
     private static final String POBI_NAME = "pobi";
     private static final String POBI_EMAIL = "pobi@gmail.com";
     private static final String DEFAULT_PASSWORD = "Woowahan123!";
-    private static final String TITLE = "title";
     private static final String CONTENT = "contents";
-    private static final String COVER_URL = "coverUrl";
     private static final String DEFAULT_URL = "/";
-    private static final String LOGIN_UTL = "/login";
-    private static final String EMAIL = "email";
-    private static final String PASSWORD = "password";
     private static final String UPDATED_COMMENT = "updated_comment";
     private static final String ARTICLE_PATTERN = ".*articles/";
 
@@ -60,19 +53,13 @@ public class CommentControllerTests {
         userRepository.save(new User(SEAN_NAME, SEAN_EMAIL, DEFAULT_PASSWORD));
         userRepository.save(new User(POBI_NAME, POBI_EMAIL, DEFAULT_PASSWORD));
 
-        webTestClient.post().uri(URI_ARTICLES)
-                .cookie(JSESSIONID, getResponseCookie(SEAN_EMAIL, DEFAULT_PASSWORD).getValue())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData(TITLE, TITLE)
-                        .with(COVER_URL, COVER_URL)
-                        .with(CONTENT, CONTENT))
-                .exchange()
-                .expectStatus().isFound()
-                .expectBody().consumeWith(response -> {
-            String path = Objects.requireNonNull(response.getResponseHeaders().getLocation()).getPath();
-            int index = path.lastIndexOf(DEFAULT_URL);
-            SEAN_ARTICLE_ID = Integer.parseInt(path.substring(index + 1));
-        });
+        post(SEAN_EMAIL)
+                .expectBody()
+                .consumeWith(response -> {
+                    String path = Objects.requireNonNull(response.getResponseHeaders().getLocation()).getPath();
+                    int index = path.lastIndexOf(DEFAULT_URL);
+                    SEAN_ARTICLE_ID = Integer.parseInt(path.substring(index + 1));
+                });
 
         commentId++;
         addComments();
@@ -81,36 +68,35 @@ public class CommentControllerTests {
     @Test
     void 댓글_수정() {
         getStatus(POBI_EMAIL, UPDATED_COMMENT)
-                .expectStatus().isFound()
-                .expectHeader().valueMatches(HttpHeaders.LOCATION, ARTICLE_PATTERN + SEAN_ARTICLE_ID);
+                .expectStatus()
+                .isFound()
+                .expectHeader()
+                .valueMatches(HttpHeaders.LOCATION, ARTICLE_PATTERN + SEAN_ARTICLE_ID);
     }
 
     @Test
     void 다른_사람이_댓글_삭제() {
         String deletePath = "/articles/" + SEAN_ARTICLE_ID + "/comments/" + commentId;
 
-        webTestClient.delete().uri(deletePath)
-                .cookie(JSESSIONID, getResponseCookie(SEAN_EMAIL, DEFAULT_PASSWORD).getValue())
-                .exchange().expectStatus()
+        delete(deletePath, SEAN_EMAIL, DEFAULT_PASSWORD)
                 .is3xxRedirection();
     }
 
     @Test
     void 다른_사람이_댓글_수정() {
         getStatus(SEAN_EMAIL, UPDATED_COMMENT)
-                .expectStatus().is3xxRedirection();
+                .expectStatus()
+                .is3xxRedirection();
     }
 
     @Test
     void 댓글_삭제() {
         String deletePath = "/articles/" + SEAN_ARTICLE_ID + "/comments/" + commentId;
 
-        webTestClient.delete().uri(deletePath)
-                .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
-                .exchange().expectStatus()
+        delete(deletePath, POBI_EMAIL, DEFAULT_PASSWORD)
                 .isFound()
-                .expectHeader().valueMatches(HttpHeaders.LOCATION, ARTICLE_PATTERN + SEAN_ARTICLE_ID);
-
+                .expectHeader()
+                .valueMatches(HttpHeaders.LOCATION, ARTICLE_PATTERN + SEAN_ARTICLE_ID);
     }
 
     @AfterEach
@@ -118,15 +104,6 @@ public class CommentControllerTests {
         commentRepository.deleteAll();
         articleRepository.deleteAll();
         userRepository.deleteAll();
-    }
-
-    private ResponseCookie getResponseCookie(String email, String password) {
-        return webTestClient.post().uri(LOGIN_UTL)
-                .body(fromFormData(EMAIL, email)
-                        .with(PASSWORD, password))
-                .exchange()
-                .expectStatus().is3xxRedirection()
-                .returnResult(ResponseCookie.class).getResponseCookies().getFirst(JSESSIONID);
     }
 
     private void addComments() {
