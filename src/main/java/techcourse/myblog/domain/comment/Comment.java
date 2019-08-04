@@ -5,10 +5,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.*;
-import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.exception.InvalidCommentException;
-import techcourse.myblog.domain.article.exception.MismatchAuthorException;
+import techcourse.myblog.domain.comment.exception.MismatchCommentAuthorException;
+import techcourse.myblog.domain.user.User;
 
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -78,7 +78,7 @@ public class Comment {
         if (matchArticle(comment) && matchAuthor(comment)) {
             return;
         }
-        throw new MismatchAuthorException();
+        throw new MismatchCommentAuthorException();
     }
 
     private boolean matchAuthor(Comment comment) {

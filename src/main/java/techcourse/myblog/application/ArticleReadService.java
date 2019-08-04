@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.article.ArticleRepository;
-import techcourse.myblog.domain.article.exception.MismatchAuthorException;
+import techcourse.myblog.domain.article.exception.MismatchArticleAuthorException;
 import techcourse.myblog.application.exception.NotFoundArticleException;
 
 import java.util.Collections;
@@ -31,6 +31,6 @@ public class ArticleReadService {
 
     public Article findByIdAndAuthor(Long articleId, User user) {
         return articleRepository.findByIdAndAuthor(articleId, user)
-                .orElseThrow(MismatchAuthorException::new);
+                .orElseThrow(NotFoundArticleException::new);
     }
 }

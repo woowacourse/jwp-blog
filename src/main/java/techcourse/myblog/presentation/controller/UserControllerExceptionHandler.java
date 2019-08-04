@@ -9,37 +9,39 @@ import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.exception.DuplicatedEmailException;
 import techcourse.myblog.application.exception.LoginFailedException;
 import techcourse.myblog.application.exception.NotFoundArticleException;
-import techcourse.myblog.domain.article.exception.MismatchAuthorException;
+import techcourse.myblog.application.exception.NotFoundCommentException;
+import techcourse.myblog.domain.article.exception.MismatchArticleAuthorException;
 import techcourse.myblog.domain.comment.exception.InvalidCommentException;
+import techcourse.myblog.domain.comment.exception.MismatchCommentAuthorException;
 
 @ControllerAdvice
 public class UserControllerExceptionHandler {
     @ExceptionHandler(LoginFailedException.class)
-    public RedirectView handleLoginFail(LoginFailedException e, RedirectAttributes redirectAttributes) {
+    public RedirectView handleLoginException(LoginFailedException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/login");
     }
 
     @ExceptionHandler(DuplicatedEmailException.class)
-    public RedirectView handleSignupFail(DuplicatedEmailException e, RedirectAttributes redirectAttributes) {
+    public RedirectView handleSignupException(DuplicatedEmailException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/signup");
     }
 
-    @ExceptionHandler(MismatchAuthorException.class)
-    public RedirectView handleMismatchArticleAuthorFail(MismatchAuthorException e, RedirectAttributes redirectAttributes) {
+    @ExceptionHandler({MismatchArticleAuthorException.class, MismatchCommentAuthorException.class})
+    public RedirectView handleMismatchAuthorException(RuntimeException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/");
     }
 
-    @ExceptionHandler(NotFoundArticleException.class)
-    public RedirectView handleArticleFail(NotFoundArticleException e, RedirectAttributes redirectAttributes) {
+    @ExceptionHandler({NotFoundArticleException.class, NotFoundCommentException.class})
+    public RedirectView handleNotFoundException(NotFoundArticleException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/");
     }
 
     @ExceptionHandler(InvalidCommentException.class)
-    public RedirectView handleCommentFail(InvalidCommentException e, RedirectAttributes redirectAttributes) {
+    public RedirectView handleCommentException(InvalidCommentException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/");
     }

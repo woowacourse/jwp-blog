@@ -6,7 +6,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.application.exception.LoginFailedException;
+import techcourse.myblog.presentation.argument.exception.NotSignedInException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -23,7 +23,7 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
         HttpServletRequest req = (HttpServletRequest) webRequest.getNativeRequest();
         HttpSession httpSession = req.getSession();
         User user = Optional.ofNullable((User) httpSession.getAttribute("user"))
-                .orElseThrow(LoginFailedException::new);
+                .orElseThrow(NotSignedInException::new);
 
         return new LoginUser(user);
     }
