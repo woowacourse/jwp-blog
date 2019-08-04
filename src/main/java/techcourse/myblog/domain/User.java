@@ -1,66 +1,59 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import techcourse.myblog.application.service.exception.NotExistUserIdException;
 
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
+
+@Getter
 @Entity
+@EqualsAndHashCode(of = "id")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    private String name;
+    @NotBlank
+    @Email
+    @Column(unique = true)
     private String email;
+
+    @NotBlank
+    @Pattern(regexp = "^([A-Za-z가-힣]{2,10})$")
+    private String name;
+
+    @NotBlank
+    @Pattern(regexp = "^([a-zA-Z0-9!@#$%^&*]{8,})$")
     private String password;
 
-    public static User of(String name, String email, String password) {
-        User user = new User();
-        user.name = name;
-        user.email = email;
-        user.password = password;
-        return user;
+    private User() {
     }
 
-    public void updateUser(String name) {
+    public User(String email, String name, String password) {
+        this.email = email;
         this.name = name;
+        this.password = password;
     }
 
-    public boolean isEqualPassword(String password) {
+    public void modify(User user) {
+        if (!this.equals(user)) {
+            throw new NotExistUserIdException("해당 유저가 아닙니다.");
+        }
+        this.password = user.password;
+        this.name = user.name;
+    }
+
+    public boolean checkPassword(String password) {
         return this.password.equals(password);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(password, user.password);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, email, password);
+    public boolean checkEmail(String email) {
+        return this.email.equals(email);
     }
 }
