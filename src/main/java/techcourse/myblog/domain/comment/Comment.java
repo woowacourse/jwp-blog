@@ -4,6 +4,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
+import techcourse.myblog.exception.UserHasNotAuthorityException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -63,8 +64,16 @@ public class Comment {
         return updateDate;
     }
 
-    public void update(String contents) {
-        this.contents = contents;
+    public void update(Comment comment) {
+        if (matchAuthor(comment)) {
+            this.contents = comment.getContents();
+            return;
+        }
+        throw new UserHasNotAuthorityException();
+    }
+
+    private boolean matchAuthor(Comment comment) {
+        return author.equals(comment.getAuthor());
     }
 
     @Override

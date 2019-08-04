@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import techcourse.myblog.exception.DuplicatedEmailException;
+import techcourse.myblog.exception.UserHasNotAuthorityException;
 
 @ControllerAdvice
 public class UserControllerAdvice {
@@ -14,5 +15,11 @@ public class UserControllerAdvice {
     public String duplicatedEmail() {
         log.debug("이메일이 중복됩니다.");
         return "signup";
+    }
+
+    @ExceptionHandler(UserHasNotAuthorityException.class)
+    public String UserHasNotAuthority() {
+        log.debug("접근 권한이 없습니다.");
+        return "redirect:/";
     }
 }

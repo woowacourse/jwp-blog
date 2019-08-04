@@ -110,7 +110,7 @@ public class CommentControllerTests {
                 .body(BodyInserters.fromFormData("comment", "newHello"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("Location", ".*/articles/\\d*");
+                .expectHeader().valueMatches("Location", ".*/");
     }
 
     @Test

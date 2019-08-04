@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.CommentNotFoundException;
 import techcourse.myblog.service.dto.comment.CommentRequest;
 import techcourse.myblog.service.dto.comment.CommentResponse;
+import techcourse.myblog.service.dto.user.UserResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -33,7 +34,7 @@ public class CommentServiceTest {
     @Test
     void 댓글_수정() {
         CommentRequest commentDto = new CommentRequest("new Hello");
-        CommentResponse updateComment = commentService.update(commentDto, DEFAULT_COMMENT_ID);
+        CommentResponse updateComment = commentService.update(commentDto, DEFAULT_COMMENT_ID, DEFAULT_ARTICLE_ID, new UserResponse(DEFAULT_USER_ID + 1, "paul123@example.com", "paul"));
         assertThat(updateComment).isEqualTo(new CommentResponse(DEFAULT_COMMENT_ID, "new Hello", 1000L, "paul", null));
     }
 
