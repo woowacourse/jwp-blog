@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.application.annotation.EmailAnnot;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.service.ArticleService;
 import techcourse.myblog.application.service.CommentService;
@@ -22,13 +23,13 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public RedirectView createArticles(ArticleDto article, Email email) {
+    public RedirectView createArticles(ArticleDto article, @EmailAnnot Email email) {
         Long id = articleService.save(article, email.getEmail());
         return new RedirectView("/articles/" + id);
     }
 
     @GetMapping("/articles/{articleId}")
-    public ModelAndView readArticlePageByArticleId(@PathVariable Long articleId, Email email) {
+    public ModelAndView readArticlePageByArticleId(@PathVariable Long articleId, @EmailAnnot Email email) {
         ModelAndView modelAndView = new ModelAndView("/article");
         modelAndView.addObject("article", articleService.findById(articleId));
         modelAndView.addObject("comments", commentService.findAllCommentsByArticleId(articleId, email.getEmail()));
@@ -36,7 +37,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public ModelAndView readArticleEditPage(@PathVariable Long articleId, Email email) {
+    public ModelAndView readArticleEditPage(@PathVariable Long articleId, @EmailAnnot Email email) {
         articleService.checkAuthor(articleId, email.getEmail());
         ModelAndView modelAndView = new ModelAndView("/article-edit");
         modelAndView.addObject("article", articleService.findById(articleId));

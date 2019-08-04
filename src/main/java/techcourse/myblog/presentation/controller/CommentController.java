@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.application.annotation.EmailAnnot;
 import techcourse.myblog.application.service.CommentService;
 import techcourse.myblog.domain.Email;
 import techcourse.myblog.domain.vo.CommentContents;
@@ -22,14 +23,14 @@ public class CommentController {
     }
 
     @PostMapping("/articles/{articleId}/comments")
-    public RedirectView addComment(CommentContents contents, @PathVariable Long articleId, Email email) {
+    public RedirectView addComment(CommentContents contents, @PathVariable Long articleId, @EmailAnnot Email email) {
         commentService.save(contents, articleId, email);
         RedirectView redirectView = new RedirectView("/articles/" + articleId);
         return redirectView;
     }
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
-    public ModelAndView deleteComment(@PathVariable Long commentId, @PathVariable Long articleId, Email email) {
+    public ModelAndView deleteComment(@PathVariable Long commentId, @PathVariable Long articleId, @EmailAnnot Email email) {
         commentService.checkAuthor(commentId, email.getEmail());
         commentService.delete(commentId);
         ModelAndView modelAndView = new ModelAndView();

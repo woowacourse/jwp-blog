@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import techcourse.myblog.application.annotation.EmailAnnot;
 import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.UserService;
+import techcourse.myblog.domain.Email;
 import techcourse.myblog.presentation.controller.exception.InvalidUpdateException;
 
 import javax.servlet.http.HttpSession;
@@ -58,30 +60,27 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public ModelAndView readMyPage(HttpSession httpSession) {
+    public ModelAndView readMyPage(@EmailAnnot Email email) {
         ModelAndView modelAndView = new ModelAndView();
-        String email = (String) httpSession.getAttribute("email");
         modelAndView.setViewName("mypage");
-        modelAndView.addObject("user", userService.findByEmail(email));
+        modelAndView.addObject("user", userService.findByEmail(email.getEmail()));
 
         return modelAndView;
     }
 
     @GetMapping("/mypage/edit")
-    public ModelAndView readMyPageEdit(HttpSession httpSession) {
+    public ModelAndView readMyPageEdit(@EmailAnnot Email email) {
         ModelAndView modelAndView = new ModelAndView();
-        String email = (String) httpSession.getAttribute("email");
         modelAndView.setViewName("mypage-edit");
-        modelAndView.addObject("user", userService.findByEmail(email));
+        modelAndView.addObject("user", userService.findByEmail(email.getEmail()));
         return modelAndView;
     }
 
     @PutMapping("/mypage/edit")
-    public RedirectView updateUser(HttpSession httpSession, @Valid UserDto user) {
+    public RedirectView updateUser(@EmailAnnot Email email, @Valid UserDto user) {
         RedirectView redirectView = new RedirectView();
-        String email = (String) httpSession.getAttribute("email");
 
-        if (user.compareEmail(email)) {
+        if (user.compareEmail(email.getEmail())) {
             userService.modify(user);
 
             redirectView.setUrl("/mypage");

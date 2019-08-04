@@ -13,7 +13,6 @@ import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 import techcourse.myblog.presentation.controller.exception.InvalidUpdateException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
 
 @ControllerAdvice(basePackages = {"techcourse.myblog.presentation.controller"})
