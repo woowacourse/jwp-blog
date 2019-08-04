@@ -7,6 +7,7 @@ import techcourse.myblog.service.dto.ArticleRequestDto;
 import techcourse.myblog.service.exception.ArticleNotFoundException;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -37,6 +38,6 @@ public class ArticleService {
     }
 
     public List<Article> findAll() {
-        return articleRepository.findAll();
+        return Collections.unmodifiableList(articleRepository.findAll());
     }
 }

@@ -9,6 +9,7 @@ import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,12 +33,12 @@ public class CommentService {
     }
 
     public List<Comment> findByArticle(Article article) {
-        return commentRepository.findByArticleOrderByCreatedAt(article);
+        return Collections.unmodifiableList(commentRepository.findByArticleOrderByCreatedAt(article));
     }
 
     public List<CommentResponseDto> commentsToDtos(List<Comment> comments) {
-        return comments.stream()
+        return Collections.unmodifiableList(comments.stream()
                 .map(CommentResponseDto::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 }
