@@ -3,13 +3,13 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.SignUpRequest;
 import techcourse.myblog.dto.UpdateUserRequest;
 import techcourse.myblog.dto.UserResponse;
 import techcourse.myblog.exception.SignUpException;
 import techcourse.myblog.exception.UserException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.utils.converter.DtoConverter;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,9 +28,9 @@ public class UserService {
     @Transactional
     public UserResponse addUser(SignUpRequest signUpRequestDto) {
         checkRegisteredEmail(signUpRequestDto);
-        User user = userRepository.save(DtoConverter.convert(signUpRequestDto));
+        User user = userRepository.save(UserAssembler.toEntity(signUpRequestDto));
 
-        return DtoConverter.convert(user);
+        return UserAssembler.toDto(user);
     }
 
     private void checkRegisteredEmail(SignUpRequest signUpRequestDto) {
@@ -48,8 +48,8 @@ public class UserService {
     @Transactional
     public UserResponse updateUser(UpdateUserRequest updateUserRequestDto, UserResponse origin) {
         User user = getUserByEmail(origin);
-        user.updateNameAndEmail(updateUserRequestDto.getName(), updateUserRequestDto.getEmail());
-        return DtoConverter.convert(user);
+        user.updateNameAndEmail(UserAssembler.toEntity(updateUserRequestDto));
+        return UserAssembler.toDto(user);
     }
 
     User getUserByEmail(UserResponse userResponse) {
@@ -58,6 +58,7 @@ public class UserService {
 
     @Transactional
     public void deleteUser(UserResponse userResponse) {
-        userRepository.delete(getUserByEmail(userResponse));
+        User user = getUserByEmail(userResponse);
+        userRepository.delete(user);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.CommentAssembler;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentRequest;
 import techcourse.myblog.dto.UserResponse;
@@ -30,20 +31,16 @@ public class CommentService {
     public void addComment(CommentRequest commentRequest, UserResponse userResponse, Long articleId) {
         String contents = commentRequest.getContents();
         User commenter = userService.getUserByEmail(userResponse);
-        Article article = findArticleByArticleId(articleId);
+        Article article = articleService.findArticleById(articleId);
 
         Comment comment = commentRepository.save(new Comment(contents, commenter, article));
         article.addComment(comment);
     }
 
-    private Article findArticleByArticleId(Long articleId) {
-        return articleService.findArticle(articleId);
-    }
-
     @Transactional
     public void update(Long commentId, CommentRequest commentRequest) {
         Comment comment = getCommentFindById(commentId);
-        comment.update(commentRequest.getContents());
+        comment.update(CommentAssembler.toEntity(commentRequest));
     }
 
     private Comment getCommentFindById(Long commentId) {

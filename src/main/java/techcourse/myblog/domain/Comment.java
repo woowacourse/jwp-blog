@@ -30,14 +30,18 @@ public class Comment {
     public Comment() {
     }
 
+    public Comment(String contents) {
+        this.contents = contents;
+    }
+
     public Comment(String contents, User commenter, Article article) {
         this.contents = contents;
         this.commenter = commenter;
         this.article = article;
     }
 
-    public void update(String contents) {
-        this.contents = contents;
+    public void update(Comment comment) {
+        this.contents = comment.contents;
     }
 
     public Long getId() {

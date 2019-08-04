@@ -2,11 +2,11 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.UserAssembler;
 import techcourse.myblog.dto.LoginRequest;
 import techcourse.myblog.dto.UserResponse;
 import techcourse.myblog.exception.LoginException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.utils.converter.DtoConverter;
 
 @Service
 public class LoginService {
@@ -23,7 +23,7 @@ public class LoginService {
         User user = getUser(loginRequestDto);
         checkMatchPassword(user, loginRequestDto);
 
-        return DtoConverter.convert(user);
+        return UserAssembler.toDto(user);
     }
 
     private User getUser(LoginRequest loginRequestDto) {

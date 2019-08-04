@@ -2,21 +2,20 @@ package techcourse.myblog.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.*;
 import techcourse.myblog.dto.ArticleRequest;
+import techcourse.myblog.dto.ArticleResponse;
+import techcourse.myblog.dto.CommentResponse;
 import techcourse.myblog.dto.UserResponse;
 import techcourse.myblog.exception.ArticleException;
 import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.utils.converter.DtoConverter;
 import techcourse.myblog.utils.page.PageRequest;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
@@ -33,43 +32,48 @@ public class ArticleService {
         this.userService = userService;
     }
 
-    public List<Article> findAll() {
+    public List<ArticleResponse> getArticles() {
         PageRequest pageRequest = new PageRequest(START_PAGE, VIEW_ARTICLE_COUNT, Sort.Direction.DESC, ID);
-        Page<Article> page = articleRepository.findAll(pageRequest.of());
-        log.info("page : {} ", page.getContent());
-        return page.getContent();
+        List<Article> articles = articleRepository.findAll(pageRequest.of()).getContent();
+        log.info("page : {} ", articles);
+        return articles.stream()
+                .map(ArticleAssembler::toDto)
+                .collect(Collectors.toList());
     }
 
-    public Article findArticle(long articleId) {
-        return getArticle(articleId);
+    public ArticleResponse getArticle(long articleId) {
+        return ArticleAssembler.toDto(findArticleById(articleId));
     }
 
-    private Article getArticle(long articleId) {
+    Article findArticleById(long articleId) {
         return articleRepository.findById(articleId).orElseThrow(ArticleException::new);
     }
 
     @Transactional
-    public Article save(ArticleRequest articleRequest, UserResponse userResponse) {
-        User user = userService.getUserByEmail(userResponse);
-        Article article = DtoConverter.convert(articleRequest, user);
+    public ArticleResponse save(ArticleRequest articleRequest, UserResponse userResponse) {
+        User author = userService.getUserByEmail(userResponse);
+        Article article = ArticleAssembler.toEntity(articleRequest, author);
         articleRepository.save(article);
-        return article;
+        return ArticleAssembler.toDto(article);
     }
 
     @Transactional
-    public Article update(long articleId, ArticleRequest articleRequest, UserResponse userResponse) {
-        Article originArticle = findArticle(articleId);
+    public void update(long articleId, ArticleRequest articleRequest, UserResponse userResponse) {
+        Article originArticle = findArticleById(articleId);
         User author = userService.getUserByEmail(userResponse);
-        originArticle.update(DtoConverter.convert(articleRequest, author));
-        return originArticle;
+        originArticle.update(ArticleAssembler.toEntity(articleRequest, author));
     }
 
     public void delete(long articleId) {
         articleRepository.deleteById(articleId);
     }
 
-    public List<Comment> getComments(long articleId) {
-        Article article = articleRepository.findById(articleId).orElseThrow(ArticleException::new);
-        return article.getComments();
+    public List<CommentResponse> getComments(long articleId) {
+        Article article = findArticleById(articleId);
+        List<Comment> comments = article.getComments();
+
+        return comments.stream()
+                .map(CommentAssembler::toDto)
+                .collect(Collectors.toList());
     }
 }

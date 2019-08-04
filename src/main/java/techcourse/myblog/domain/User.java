@@ -1,6 +1,5 @@
 package techcourse.myblog.domain;
 
-import org.hibernate.validator.constraints.Length;
 import techcourse.myblog.exception.SignUpException;
 
 import javax.persistence.*;
@@ -14,28 +13,22 @@ public class User {
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}");
     private static final String INVALID_PASSWORD = "패스워드 : 8자 이상의 대문자, 소문자, 특수문자, 숫자 각각 1개 이상 포함";
     private static final String INVALID_NAME = "이름 : 2 ~ 10자의 한글 또는 영어(숫자, 특수문자 사용 불가)";
-    private static final int MIN_NAME_LENGTH = 2;
-    private static final int MAX_NAME_LENGTH = 10;
-    private static final int MIN_PASSWORD_LENGTH = 8;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
     @Column(nullable = false)
-    @Length(min = MIN_NAME_LENGTH, max = MAX_NAME_LENGTH)
     private String name;
     @Column(nullable = false)
-    @Length(min = MIN_PASSWORD_LENGTH)
     private String password;
-
     @Column(unique = true, nullable = false)
     private String email;
 
     public User() {
     }
 
-    public User(String password, String email) {
-        this.password = validatePassword(password);
+    public User(String name, String email) {
+        this.name = name;
         this.email = email;
     }
 
@@ -61,9 +54,9 @@ public class User {
         return name;
     }
 
-    public void updateNameAndEmail(String name, String email) {
-        this.name = name;
-        this.email = email;
+    public void updateNameAndEmail(User user) {
+        this.name = user.name;
+        this.email = user.email;
     }
 
     public boolean isMatchPassword(String password) {

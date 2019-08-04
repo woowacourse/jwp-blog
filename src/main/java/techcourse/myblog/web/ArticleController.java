@@ -3,9 +3,8 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
 import techcourse.myblog.dto.ArticleRequest;
+import techcourse.myblog.dto.ArticleResponse;
 import techcourse.myblog.dto.UserResponse;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.utils.model.ModelUtil;
@@ -13,7 +12,6 @@ import techcourse.myblog.utils.session.SessionUtil;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.List;
 
 import static techcourse.myblog.utils.session.SessionContext.USER;
 
@@ -29,7 +27,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String index(Model model) {
-        ModelUtil.addAttribute(model, "articles", articleService.findAll());
+        ModelUtil.addAttribute(model, "articles", articleService.getArticles());
 
         return "index";
     }
@@ -41,16 +39,15 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String getArticle(@PathVariable long articleId, Model model) {
-        List<Comment> comments = articleService.getComments(articleId);
-        ModelUtil.addAttribute(model, "article", articleService.findArticle(articleId));
-        ModelUtil.addAttribute(model, "comments", comments);
+        ModelUtil.addAttribute(model, "article", articleService.getArticle(articleId));
+        ModelUtil.addAttribute(model, "comments", articleService.getComments(articleId));
 
         return "article";
     }
 
     @GetMapping("/articles/{articleId}/edit")
     public String getEditArticle(@PathVariable long articleId, Model model) {
-        ModelUtil.addAttribute(model, "article", articleService.findArticle(articleId));
+        ModelUtil.addAttribute(model, "article", articleService.getArticle(articleId));
 
         return "article-edit";
     }
@@ -58,9 +55,10 @@ public class ArticleController {
     @PostMapping("/articles")
     public String saveArticle(@Valid ArticleRequest articleRequest) {
         UserResponse userResponse = (UserResponse) session.getAttribute(USER);
-        Article article = articleService.save(articleRequest, userResponse);
+        ArticleResponse articleResponseDto = articleService.save(articleRequest, userResponse);
+        Long articleId = articleResponseDto.getId();
 
-        return "redirect:/articles/" + article.getId();
+        return "redirect:/articles/" + articleId;
     }
 
     @PutMapping("/articles/{articleId}")
