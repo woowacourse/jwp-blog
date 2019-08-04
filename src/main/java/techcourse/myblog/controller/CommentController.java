@@ -22,7 +22,6 @@ public class CommentController {
 
     @PostMapping("/comment")
     public String save(HttpSession session, CommentDto commentDto) {
-        log.debug(">>> post commentDto : {}", commentDto);
         User user = (User) session.getAttribute("user");
         try {
             commentService.save(user.getId(), commentDto);
@@ -34,7 +33,6 @@ public class CommentController {
 
     @DeleteMapping("/comment")
     public String delete(HttpSession session, CommentDto commentDto) {
-        log.debug(">>> delete commentDto : {}", commentDto);
         User user = (User) session.getAttribute("user");
         commentService.delete(user.getId(), commentDto);
         return "redirect:/articles/" + commentDto.getArticleId();
@@ -48,7 +46,6 @@ public class CommentController {
 
     @PutMapping("/comment")
     public String update(CommentDto commentDto, HttpSession httpSession) {
-        log.debug(">>> update commentDto : {}", commentDto);
         User user = (User) httpSession.getAttribute("user");
         Comment comment = commentService.update(user, commentDto);
         return "redirect:/articles/" + comment.getArticleId();

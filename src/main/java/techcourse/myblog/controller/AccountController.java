@@ -34,7 +34,6 @@ public class AccountController {
 
     @PostMapping("user")
     public String processSignup(@Valid UserDto userDto, Errors errors) {
-        log.debug(">>> UserDto : {} Error : {}", userDto, errors);
         if (errors.hasErrors()) {
             return "signup";
         }

@@ -12,27 +12,41 @@ import java.util.Map;
 public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if ("/accounts/user".equals(request.getRequestURI()) && "POST".equals(request.getMethod())) {
+        if (isRegistAccountRequest(request)) {
             return true;
         }
 
         Map<?, ?> pathVariables = (Map<?, ?>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-        log.debug(">>> pathVariables : {}, RequestURI : {}", pathVariables, request.getRequestURI());
-        boolean isArticleIdPresent = pathVariables
-                .keySet()
-                .stream()
-                .anyMatch(p -> (p).equals("articleId"));
+        boolean isArticleIdPresent = isArticleIdPresent(pathVariables);
 
-        if (isArticleIdPresent && ("/articles/" + pathVariables.get("articleId")).equals(request.getRequestURI()) && "GET".equals(request.getMethod())) {
-            log.debug(">>> article interceptor");
+        if (isGetArticleRequest(request, pathVariables, isArticleIdPresent)) {
             return true;
         }
 
-        if (request.getSession().getAttribute("user") == null) {
+        if (isNotLogin(request)) {
             response.sendRedirect("/login");
             return false;
         }
 
         return true;
+    }
+
+    private boolean isArticleIdPresent(Map<?, ?> pathVariables) {
+        return pathVariables
+                .keySet()
+                .stream()
+                .anyMatch(p -> (p).equals("articleId"));
+    }
+
+    private boolean isNotLogin(HttpServletRequest request) {
+        return request.getSession().getAttribute("user") == null;
+    }
+
+    private boolean isGetArticleRequest(HttpServletRequest request, Map<?, ?> pathVariables, boolean isArticleIdPresent) {
+        return isArticleIdPresent && ("/articles/" + pathVariables.get("articleId")).equals(request.getRequestURI()) && "GET".equals(request.getMethod());
+    }
+
+    private boolean isRegistAccountRequest(HttpServletRequest request) {
+        return "/accounts/user".equals(request.getRequestURI()) && "POST".equals(request.getMethod());
     }
 }

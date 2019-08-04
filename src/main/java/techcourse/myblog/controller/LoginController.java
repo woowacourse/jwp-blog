@@ -29,7 +29,6 @@ public class LoginController {
     @PostMapping("/login")
     public String processLogin(UserDto userDto, HttpSession httpSession, Model model) {
         User user;
-        log.debug(">>> prcessLogin userDto : {}", userDto);
 
         try {
             loginService.checkValidUser(userDto);
@@ -45,7 +44,6 @@ public class LoginController {
 
     @GetMapping("/logout")
     public String processLogout(HttpSession httpSession) {
-        log.debug(">>> session : {}", httpSession.getAttribute("user"));
         try {
             httpSession.removeAttribute("user");
         } catch (IllegalStateException e) {

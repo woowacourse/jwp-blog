@@ -108,6 +108,21 @@
 </footer>
 
 <div th:include="fragments/main/js :: js"></div>
-<script src="/js/index.js"></script>
+<script src="/js/index.js">
+</script>
+<script>
+    const xhr = new XMLHttpRequest()
+    const message = JSON.stringify({"name": "brown"})
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === xhr.DONE && xhr.status == 200) {
+            console.log("보내기성공")
+        }
+    }
+
+    xhr.open('POST', 'http://localhost:8080/robby')
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+    xhr.send(message)
+</script>
 </body>
 </html>

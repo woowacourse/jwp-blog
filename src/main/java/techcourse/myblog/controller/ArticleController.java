@@ -34,7 +34,6 @@ public class ArticleController {
 
     @PostMapping()
     public String saveArticlePage(HttpSession httpSession, ArticleDto articleDto) {
-        log.debug(">>> save article : {}", articleDto);
         User user = (User) httpSession.getAttribute("user");
         long articleId = articleService.save(articleDto, user.getId());
         return "redirect:/articles/" + articleId;
@@ -42,7 +41,6 @@ public class ArticleController {
 
     @GetMapping("{articleId}/edit")
     public String showArticleEditingPage(@PathVariable long articleId, HttpSession httpSession, Model model) {
-        log.debug(">>> article Id : {}", articleId);
         User user = (User) httpSession.getAttribute("user");
 
         if (articleService.isNotAuthor(articleId, user.getId())) {
@@ -55,9 +53,7 @@ public class ArticleController {
 
     @GetMapping("{articleId}")
     public String showArticleByIdPage(@PathVariable long articleId, Model model) {
-        log.debug(">>> article Id : {}", articleId);
         List<Comment> comments = articleService.getComments(articleId);
-        log.debug(">>> get article comment size : {}", comments.size());
         model.addAttribute("article", articleService.getArticleOrElseThrow(articleId));
         model.addAttribute("comments", comments);
         return "article";
@@ -65,22 +61,18 @@ public class ArticleController {
 
     @PutMapping("{articleId}")
     public String updateArticleByIdPage(HttpSession httpSession, ArticleDto articleDto) {
-        log.debug(">>> put ArticleDto : {}", articleDto);
         User user = (User) httpSession.getAttribute("user");
-        log.debug(">>> put Article before save: {}", articleDto);
 
         if (articleService.isNotAuthor(articleDto.getId(), user.getId())) {
             return "redirect:/";
         }
 
         Article article = articleService.update(articleDto, user.getId());
-        log.debug(">>> put Article : {}", article);
         return "redirect:/articles/" + article.getId();
     }
 
     @DeleteMapping("{articleId}")
     public String deleteArticleByIdPage(@PathVariable long articleId, HttpSession httpSession) {
-        log.debug(">>> article Id : {}", articleId);
         Article article = articleService.getArticleOrElseThrow(articleId);
         User user = (User) httpSession.getAttribute("user");
 

@@ -3,7 +3,6 @@ package techcourse.myblog.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.StatusAssertions;
@@ -15,7 +14,7 @@ import java.util.function.Consumer;
 import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.controller.ArticleController.ARTICLE_URL;
 
-@AutoConfigureWebTestClient
+
 public class ArticleControllerTests extends MyblogApplicationTests {
     String cookie;
 
