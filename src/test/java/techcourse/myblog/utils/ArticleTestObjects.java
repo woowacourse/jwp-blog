@@ -1,6 +1,6 @@
 package techcourse.myblog.utils;
 
-import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.application.dto.ArticleDto;
 
 public class ArticleTestObjects {
     public static final ArticleDto ARTICLE_DTO = new ArticleDto("title", "coverUrl", "contents");

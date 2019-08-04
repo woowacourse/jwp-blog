@@ -1,6 +1,6 @@
 package techcourse.myblog.utils;
 
-import techcourse.myblog.service.dto.UserDto;
+import techcourse.myblog.application.dto.UserDto;
 
 public class UserTestObjects {
     private static final String AUTHOR_NAME = "미르";
