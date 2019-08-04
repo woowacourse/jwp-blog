@@ -5,6 +5,7 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 import techcourse.myblog.user.Information;
+import techcourse.myblog.user.User;
 
 public class UserChangeableInfoDto {
 	private static final String BLANK_NAME = "이름을 입력해주세요.";
@@ -35,7 +36,7 @@ public class UserChangeableInfoDto {
 		return username;
 	}
 
-	public Information valueOfInfo() {
-		return new Information(this);
+	public Information valueOfInfo(User loginUser) {
+		return new Information(loginUser.getEmail(), loginUser.getPassword(), this);
 	}
 }

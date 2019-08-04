@@ -24,7 +24,7 @@ public class User {
 	}
 
 	public void editUser(Information information) {
-		this.information.update(information);
+		this.information = information;
 	}
 
 	public boolean matchUser(User user) {

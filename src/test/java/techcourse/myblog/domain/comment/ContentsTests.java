@@ -12,8 +12,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ContentsTests {
 	@Test
 	void valueOfComment() {
+		Information userInfo = new UserSignUpInfoDto("tiber", "tiber@naver.com", "asdfASDF1@")
+				.valueOfInfo();
+		User user = new User(userInfo);
+
 		Contents contents = new Contents("contentText");
-		Comment comment = new Comment(contents);
+		Comment comment = new Comment(user, contents);
 		assertThat(contents.getText()).isEqualTo(comment.getText());
 	}
 

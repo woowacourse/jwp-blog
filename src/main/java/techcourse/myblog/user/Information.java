@@ -40,20 +40,17 @@ public class Information {
 		this.password = userSignUpInfoDto.getPassword();
 	}
 
-	public Information(UserChangeableInfoDto userChangeableInfoDto) {
-		this.username = userChangeableInfoDto.getUsername();
-		this.githubUrl = userChangeableInfoDto.getGithubUrl();
-		this.faceBookUrl = userChangeableInfoDto.getFaceBookUrl();
-	}
-
+	//todo: 업성도 될듯
 	public Information(String email) {
 		this.email = email;
 	}
 
-	public void update(Information information) {
-		this.username = information.username;
-		this.githubUrl = information.githubUrl;
-		this.faceBookUrl = information.faceBookUrl;
+	public Information(String email, String password, UserChangeableInfoDto userChangeableInfoDto) {
+		this.email = email;
+		this.password = password;
+		this.username = userChangeableInfoDto.getUsername();
+		this.githubUrl = userChangeableInfoDto.getGithubUrl();
+		this.faceBookUrl = userChangeableInfoDto.getFaceBookUrl();
 	}
 
 	public String getUsername() {

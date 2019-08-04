@@ -24,7 +24,7 @@ public class UserTests {
 	@Test
 	void update() {
 		Information updateInfo = new UserChangeableInfoDto("jason", "www.github.com/jason", "wwww.facebook.com/jason")
-				.valueOfInfo();
+				.valueOfInfo(user);
 		user.editUser(updateInfo);
 		assertThat(user.getUsername()).isEqualTo(updateInfo.getUsername());
 		assertThat(user.getGithubUrl()).isEqualTo(updateInfo.getGithubUrl());
