@@ -17,8 +17,10 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
+    @Lob
     private String coverUrl;
 
     private String contents;
