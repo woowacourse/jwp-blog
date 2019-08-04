@@ -4,8 +4,8 @@
     <th:block th:include="includes/meta :: common_meta"></th:block>
     <th:block th:include="includes/css :: common_css"></th:block>
     <th:block th:include="includes/article_js :: article_js"></th:block>
-    <link rel="stylesheet" href="/static/css/index.css">
-    <link rel="stylesheet" href="/static/css/article-edit.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/article-edit.css">
 </head>
 <body>
 <div>
@@ -15,7 +15,7 @@
         <input th:if="${article!=null}" type="hidden" name="_method" value="put"/>
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg"
-                 style="background-image: url('/static/images/pages/index/study.jpg')">
+                 style="background-image: url('/images/pages/index/study.jpg')">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
                         <input type="text" name="title" th:value="${article} ? ${article.title} : ''"
