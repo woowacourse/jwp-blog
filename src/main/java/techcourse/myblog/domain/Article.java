@@ -1,63 +1,53 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import techcourse.myblog.application.service.exception.NotExistUserIdException;
 
+import javax.persistence.*;
+
+@Getter
+@EqualsAndHashCode(of = "id")
 @Entity
 public class Article {
     @Id
-    @GeneratedValue
-    private Long articleId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String coverUrl;
+
+    @Lob
+    @Column(nullable = false)
     private String contents;
 
-    public static Article of(String title, String coverUrl, String contents) {
-        Article article = new Article();
-        article.title = title;
-        article.coverUrl = coverUrl;
-        article.contents = contents;
-        return article;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    private Article() {
     }
 
-    public void updateArticle(Article article) {
-        this.title = article.getTitle();
-        this.coverUrl = article.getCoverUrl();
-        this.contents = article.getContents();
+    public Article(String title, String coverUrl, String contents, User user) {
+        this.title = title;
+        this.coverUrl = coverUrl;
+        this.contents = contents;
+        this.user = user;
     }
 
-    public Long getArticleId() {
-        return articleId;
+    public void modify(Article article, User user) {
+        if (!this.user.equals(user)) {
+            throw new NotExistUserIdException("작성자가 아닙니다.");
+        }
+        this.title = article.title;
+        this.coverUrl = article.coverUrl;
+        this.contents = article.contents;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return Objects.equals(articleId, article.articleId) &&
-                Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(articleId, title, coverUrl, contents);
+    public boolean checkAuthor(String email) {
+        return user.checkEmail(email);
     }
 }
