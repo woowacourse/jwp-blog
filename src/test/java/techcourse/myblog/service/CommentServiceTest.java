@@ -59,7 +59,7 @@ class CommentServiceTest {
     void findById() {
         given(commentRepository.findById(TEST_COMMENT_ID))
                 .willReturn(Optional.of(new Comment(COMMENTS_CONTENTS, USER, ARTICLE)));
-        Comment foundComment = commentService.findById(TEST_COMMENT_ID);
+        Comment foundComment = commentService.findById(TEST_COMMENT_ID, USER);
 
         assertThat(foundComment).isEqualTo(new Comment(COMMENTS_CONTENTS, USER, ARTICLE));
     }
@@ -72,7 +72,7 @@ class CommentServiceTest {
         given(commentRepository.findById(TEST_COMMENT_ID))
                 .willReturn(Optional.of(new Comment(COMMENTS_CONTENTS, USER, ARTICLE)));
 
-        Comment updatedComment = commentService.update(commentDto, TEST_COMMENT_ID);
+        Comment updatedComment = commentService.update(commentDto, TEST_COMMENT_ID, USER);
 
         assertThat(updatedComment.getContents()).isEqualTo(COMMENTS_CONTENTS_2);
     }
@@ -85,7 +85,7 @@ class CommentServiceTest {
         given(commentRepository.findById(TEST_COMMENT_ID))
                 .willReturn(Optional.of(comment));
 
-        commentService.delete(TEST_COMMENT_ID);
+        commentService.delete(TEST_COMMENT_ID, USER);
         verify(commentRepository, atLeast(1)).deleteById(TEST_COMMENT_ID);
         assertThat(ARTICLE.getComments()).doesNotContain(comment);
     }

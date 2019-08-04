@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.controller.dto.ArticleDto;
 import techcourse.myblog.controller.dto.LoginDto;
@@ -27,6 +28,10 @@ public class ArticleControllerTest {
     private static final String USER_NAME = "atest";
     private static final String EMAIL = "atest@test.com";
     private static final String PASSWORD = "apassWord!1";
+
+    private static final String USER_NAME_2 = "aatest";
+    private static final String EMAIL_2 = "aatest@test.com";
+    private static final String PASSWORD_2 = "aapassWord!1";
 
     private static final String TITLE = "atitle";
     private static final String COVER_URL = "acoverUrl";
@@ -148,6 +153,45 @@ public class ArticleControllerTest {
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus().is3xxRedirection();
+    }
+
+    @Test
+    @DisplayName("게시물의 권한에 따라 수정하지 못한다.")
+    void canNotUpdate() {
+        Utils.createUser(webTestClient, new UserDto(USER_NAME_2, EMAIL_2, PASSWORD_2));
+        cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL_2, PASSWORD_2));
+
+        EntityExchangeResult<byte[]> result = webTestClient.put().uri(articleUrl)
+                .header("Cookie", cookie)
+                .body(fromFormData("title", TITLE_2)
+                        .with("coverUrl", COVER_URL_2)
+                        .with("contents", CONTENTS_2))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .returnResult();
+
+        assertThat(result.toString()).contains("게시글을 작성한 유저만 수정할 수 있습니다.");
+
+        Utils.deleteUser(webTestClient, cookie);
+    }
+
+    @Test
+    @DisplayName("게시물의 권한에 따라 수정하지 못한다.")
+    void canNotDelete() {
+        Utils.createUser(webTestClient, new UserDto(USER_NAME_2, EMAIL_2, PASSWORD_2));
+        cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL_2, PASSWORD_2));
+
+        EntityExchangeResult<byte[]> result = webTestClient.delete().uri(articleUrl)
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .returnResult();
+
+        assertThat(result.toString()).contains("게시글을 작성한 유저만 수정할 수 있습니다.");
+
+        Utils.deleteUser(webTestClient, cookie);
     }
 
     @AfterEach

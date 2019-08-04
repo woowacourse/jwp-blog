@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.controller.dto.ArticleDto;
 import techcourse.myblog.controller.dto.CommentDto;
@@ -28,6 +29,10 @@ class CommentControllerTest {
     private static final String EMAIL = "Ctest@test.com";
     private static final String PASSWORD = "CassWord!1";
 
+    private static final String USER_NAME_2 = "CCCCtest";
+    private static final String EMAIL_2 = "CCCCtest@test.com";
+    private static final String PASSWORD_2 = "CCCCCCassWord!1";
+
     private static final String TITLE = "Ctitle";
     private static final String COVER_URL = "CcoverUrl";
     private static final String CONTENTS = "Ccontents blabla.";
@@ -45,10 +50,11 @@ class CommentControllerTest {
     private String cookie;
     private String articleUrl;
     private String articleId;
+    private String baseUrl;
 
     @BeforeEach
     void setUp() {
-        String baseUrl = "http://localhost:" + serverPort;
+        baseUrl = "http://localhost:" + serverPort;
 
         Utils.createUser(webTestClient, new UserDto(USER_NAME, EMAIL, PASSWORD));
         cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL, PASSWORD));
@@ -56,7 +62,7 @@ class CommentControllerTest {
         ArticleDto articleDto = new ArticleDto(TITLE, COVER_URL, CONTENTS);
 
         articleUrl = Utils.createArticle(articleDto, cookie, baseUrl);
-        articleId = Utils.getArticleId(articleUrl);
+        articleId = Utils.getId(articleUrl);
 
         CommentDto commentDto = new CommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS);
         Utils.createComment(commentDto, cookie, baseUrl);
@@ -153,6 +159,49 @@ class CommentControllerTest {
                                 assertThat(body).doesNotContain(COMMENTS_CONTENTS_2);
                             });
                 });
+    }
+
+    @Test
+    @DisplayName("댓글을 권한에 따라 수정하지 못한다.")
+    void canNotUpdateComment() {
+        Utils.createUser(webTestClient, new UserDto(USER_NAME_2, EMAIL_2, PASSWORD_2));
+        cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL_2, PASSWORD_2));
+
+        EntityExchangeResult<byte[]> result = webTestClient.put().uri("/comments/1")
+                .header("Cookie", cookie)
+                .header("Cookie", cookie)
+                .body(fromFormData("articleId", articleId)
+                        .with("contents", COMMENTS_CONTENTS_3))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .returnResult();
+
+        assertThat(result.toString()).contains("댓글을 작성한 유저만 수정할 수 있습니다.");
+
+        Utils.deleteUser(webTestClient, cookie);
+    }
+
+    @Test
+    @DisplayName("댓글을 권한에 따라 삭제하지 못한다.")
+    void canNotDeleteComment() {
+        Utils.createUser(webTestClient, new UserDto(USER_NAME_2, EMAIL_2, PASSWORD_2));
+        cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL_2, PASSWORD_2));
+
+        CommentDto commentDto3 = new CommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS_3);
+        String createLocationUrl = Utils.createComment(commentDto3, cookie, baseUrl);
+        String id = Utils.getId(createLocationUrl);
+
+        EntityExchangeResult<byte[]> result = webTestClient.delete().uri("/comments/" + id)
+                .header("Cookie", cookie)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .returnResult();
+
+        assertThat(result.toString()).contains("댓글을 작성한 유저만 수정할 수 있습니다.");
+
+        Utils.deleteUser(webTestClient, cookie);
     }
 
     @AfterEach

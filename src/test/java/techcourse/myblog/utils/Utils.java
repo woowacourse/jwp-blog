@@ -72,7 +72,7 @@ public class Utils {
                 .getHeader("Location");
     }
 
-    public static String getArticleId(String articleUrl) {
+    public static String getId(String articleUrl) {
         List<String> list = Arrays.asList(articleUrl.split("/"));
         return list.get(list.size() - 1);
     }
