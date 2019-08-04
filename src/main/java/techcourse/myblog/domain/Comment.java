@@ -68,6 +68,7 @@ public class Comment {
         return updatedTime;
     }
 
+    // TODO: user로 변경하기
     public boolean isSameAuthor(Long authorId) {
         return this.author.getId().equals(authorId);
     }
