@@ -172,7 +172,7 @@ public class ArticleControllerTests {
             .cookie(KEY_JSESSIONID, sid)
             .exchange()
             .expectStatus().is3xxRedirection()
-            .expectHeader().valueMatches("location", ".*/articles/\\d*");
+            .expectHeader().valueMatches("location", ".*/");
     }
 
     @Test

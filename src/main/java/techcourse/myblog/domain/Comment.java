@@ -56,4 +56,8 @@ public class Comment {
     public void update(String contents) {
         this.contents = contents;
     }
+
+    public boolean matchAuthor(Long userId) {
+        return author.matchId(userId);
+    }
 }

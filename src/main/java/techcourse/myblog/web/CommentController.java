@@ -26,18 +26,14 @@ public class CommentController {
     @PutMapping("/articles/{articleId}/comments/{commentId}")
     public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, CommentRequestDto commentRequestDto,
                                 @SessionAttribute(name = "user", required = false) User user) {
-        if (user.matchId(commentService.findById(commentId).getAuthor().getId())) {
-            commentService.update(commentRequestDto, commentId);
-        }
+        commentService.update(commentRequestDto, commentId, user.getId());
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}/comments/{commentId}")
     public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId,
                                 @SessionAttribute(name = "user", required = false) User user) {
-        if (user.matchId(commentService.findById(commentId).getAuthor().getId())) {
-            commentService.delete(commentId);
-        }
+        commentService.delete(commentId, user.getId());
         return "redirect:/articles/" + articleId;
     }
 }

@@ -6,9 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.exception.ArticleNotFoundException;
-import techcourse.myblog.exception.CommentNotFoundException;
-import techcourse.myblog.exception.UserNotFoundException;
+import techcourse.myblog.exception.*;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
@@ -39,17 +37,18 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public Comment update(final CommentRequestDto commentRequestDto, final Long commentId) {
+    public Comment update(final CommentRequestDto commentRequestDto, final Long commentId, final Long currentUserId) {
         Comment comment = commentRepository.findById(commentId)
-            .orElseThrow(CommentNotFoundException::new);
+            .filter(comment1 -> comment1.matchAuthor(currentUserId))
+            .orElseThrow(CommentUpdateException::new);
         comment.update(commentRequestDto.getContents());
         return comment;
     }
 
-    public void delete(final Long id) {
-        commentRepository.findById(id)
-            .orElseThrow(CommentNotFoundException::new);
-        commentRepository.deleteById(id);
+    public void delete(final Long id, final Long currentUserId) {
+        commentRepository.delete(commentRepository.findById(id)
+            .filter(comment -> comment.matchAuthor(currentUserId))
+            .orElseThrow(CommentDeleteException::new));
     }
 
     @Transactional(readOnly = true)

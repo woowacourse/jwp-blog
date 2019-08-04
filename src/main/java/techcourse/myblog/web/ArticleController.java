@@ -53,20 +53,15 @@ public class ArticleController {
     @PutMapping("/articles/{id}")
     public String updateArticle(@PathVariable final Long id, final ArticleRequestDto articleDTO,
                                 @SessionAttribute(name = "user", required = false) User user) {
-        if (user.matchId(articleService.findById(id).getAuthor().getId())) {
-            articleService.update(id, articleDTO);
-        }
+        articleService.update(id, articleDTO, user.getId());
         return "redirect:/articles/" + id;
     }
 
     @DeleteMapping("/articles/{id}")
     public String deleteArticle(@PathVariable final Long id,
                                 @SessionAttribute(name = "user", required = false) User user) {
-        if (user.matchId(articleService.findById(id).getAuthor().getId())) {
-            articleService.delete(id);
-            return "redirect:/";
-        }
-        return "redirect:/articles/" + id;
+        articleService.delete(id, user.getId());
+        return "redirect:/";
     }
 
     @GetMapping("/articles/{id}/edit")

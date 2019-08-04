@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import techcourse.myblog.exception.ArticleDeleteException;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
 
@@ -25,5 +26,11 @@ public class ArticleControllerAdvice {
     public String articleToUpdateNotFound() {
         log.debug("업데이트 해야할 게시글이 없습니다.");
         return "index";
+    }
+
+    @ExceptionHandler(ArticleDeleteException.class)
+    public String articleUpdateFail() {
+        log.debug("게시글 삭제에 실패했습니다.");
+        return "redirect:/";
     }
 }

@@ -87,7 +87,7 @@ public class CommentControllerTests {
             .body(BodyInserters.fromFormData("contents", "newHello"))
             .exchange()
             .expectStatus().is3xxRedirection()
-            .expectHeader().valueMatches("Location", ".*/articles/\\d*");
+            .expectHeader().valueMatches("Location", ".*/");
     }
 
     @Test
@@ -134,7 +134,7 @@ public class CommentControllerTests {
             .cookie(KEY_JSESSIONID, sid)
             .exchange()
             .expectStatus().is3xxRedirection()
-            .expectHeader().valueMatches("Location", ".*/articles/\\d*");
+            .expectHeader().valueMatches("Location", ".*/");
 
         // Then
         assertThat(new String(getSync(webTestClient, "/articles/" + DEFAULT_ARTICLE_ID, sid)

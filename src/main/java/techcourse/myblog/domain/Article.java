@@ -89,6 +89,10 @@ public class Article {
         return Collections.unmodifiableList(comments);
     }
 
+    public boolean matchAuthor(Long userId) {
+        return author.matchId(userId);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

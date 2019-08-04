@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.exception.ArticleDeleteException;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.repository.ArticleRepository;
@@ -48,17 +49,21 @@ public class ArticleService {
         return persistArticle.getId();
     }
 
-    public void update(final Long id, final ArticleRequestDto articleDto) {
+    public void update(final Long articleId, final ArticleRequestDto articleDto, final Long currentUserId) {
         Objects.requireNonNull(articleDto);
-        articleRepository.findById(Objects.requireNonNull(id))
-            .ifPresent((retrieveArticle -> retrieveArticle.update(new Article(
-                articleDto.getTitle(),
-                articleDto.getCoverUrl(),
-                articleDto.getContents(),
-                retrieveArticle.getAuthor()))));
+        articleRepository.findById(Objects.requireNonNull(articleId))
+            .filter(article -> article.matchAuthor(currentUserId))
+            .ifPresent((retrieveArticle ->
+                retrieveArticle.update(new Article(
+                    articleDto.getTitle(),
+                    articleDto.getCoverUrl(),
+                    articleDto.getContents(),
+                    retrieveArticle.getAuthor()))));
     }
 
-    public void delete(final Long id) {
-        articleRepository.deleteById(Objects.requireNonNull(id));
+    public void delete(final Long id, final Long currentUserId) {
+        articleRepository.delete(articleRepository.findById(id)
+            .filter(article -> article.matchAuthor(currentUserId))
+            .orElseThrow(ArticleDeleteException::new));
     }
 }
