@@ -13,6 +13,7 @@ import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.support.encrytor.EncryptHelper;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ public class UserService {
                 .map(user -> modelMapper.map(user, UserResponse.class))
                 .collect(Collectors.toList());
 
-        return userResponses;
+        return Collections.unmodifiableList(userResponses);
     }
 
     public UserResponse checkLogin(LoginRequest loginRequest) {
