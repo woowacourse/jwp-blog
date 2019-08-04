@@ -9,6 +9,6 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class UserEditParams {
+public class UserEditRequestDto {
     private String name;
 }

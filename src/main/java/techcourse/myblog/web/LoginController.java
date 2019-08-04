@@ -6,7 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserLoginParams;
+import techcourse.myblog.domain.userinfo.UserEmail;
+import techcourse.myblog.domain.userinfo.UserPassword;
+import techcourse.myblog.dto.UserLoginRequestDto;
 import techcourse.myblog.service.LoginService;
 
 import javax.servlet.http.HttpSession;
@@ -30,18 +32,22 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(UserLoginParams userLoginParams, HttpSession httpSession) {
-        log.info("login post request params={}", userLoginParams);
-        loginService.checkLogin(userLoginParams.getEmail(), userLoginParams.getPassword());
+    public String login(UserLoginRequestDto userLoginRequestDto, HttpSession httpSession) {
+        UserEmail userEmail = new UserEmail(userLoginRequestDto.getEmail());
+        UserPassword userPassword = new UserPassword(userLoginRequestDto.getPassword());
 
-        User user = loginService.findByEmail(userLoginParams.getEmail());
+        loginService.checkLogin(userEmail, userPassword);
+        log.info("login post request params={}", userLoginRequestDto);
+
+        User user = loginService.findByEmail(userLoginRequestDto.getEmail());
         httpSession.setAttribute(USER, user);
-        return "index";
+        return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession httpSession) {
         log.info("logout get request params={}", httpSession.getAttribute(USER));
+
         httpSession.removeAttribute(USER);
         return "redirect:/";
     }

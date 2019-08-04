@@ -1,4 +1,4 @@
-package techcourse.myblog.interceptor;
+package techcourse.myblog.web.interceptor;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ class LoginInterceptorTest {
 
     @Test
     void login_없이_articles_하위_경로_접근() {
-        webTestClient.get().uri("/articles/1")
+        webTestClient.get().uri("/articles/1/edit")
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".*/login");

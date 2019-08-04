@@ -22,7 +22,7 @@
 		<div class="row">
 			<div class="col-md-7 mx-auto">
 				<div class="card">
-					<form action="/mypage/edit" method="post">
+					<form action="/mypage" method="post">
 						<input id="article-write" type="hidden" name="_method" value="put"/>
 						<div class="card-heading pdd-btm-5 border bottom">
 							<h4 class="card-title d-inline-block">profile</h4>
@@ -35,7 +35,7 @@
 								</div>
 								<div class="col-md-6">
 									<input type="text" name="name" class="form-control" th:if="${session.user}"
-									       th:value="${session.user.name}">
+									       th:value="${session.user.name.name}">
 								</div>
 							</div>
 							<hr>
@@ -44,7 +44,7 @@
 									<p class="mrg-top-10 text-dark"><b>Email</b></p>
 								</div>
 								<div class="col-md-6">
-									<p class="mrg-top-10" th:if="${session.user}" th:text="${session.user.email}">
+									<p class="mrg-top-10" th:if="${session.user}" th:text="${session.user.email.email}">
 										gracefulBrown@woowahan.com</p>
 								</div>
 							</div>

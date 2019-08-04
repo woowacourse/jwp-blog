@@ -10,7 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.dto.UserSaveParams;
+import techcourse.myblog.dto.UserSaveRequestDto;
+import techcourse.myblog.testutil.LoginTestUtil;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -21,11 +22,14 @@ class LoginControllerTests {
     private WebTestClient webTestClient;
 
     private String jSessionId;
+    private UserSaveRequestDto userSaveRequestDto;
 
     @BeforeEach
     void setUp() {
-        LoginTestConfig.signUp(webTestClient);
-        jSessionId = LoginTestConfig.getJSessionId(webTestClient);
+        userSaveRequestDto = new UserSaveRequestDto("테스트", "login@test.com", "password1!");
+
+        LoginTestUtil.signUp(webTestClient, userSaveRequestDto);
+        jSessionId = LoginTestUtil.getJSessionId(webTestClient, userSaveRequestDto);
     }
 
     @Test
@@ -44,14 +48,12 @@ class LoginControllerTests {
 
     @Test
     void login() {
-        UserSaveParams userSaveParams = LoginTestConfig.getUserSaveParams();
-
         webTestClient.post().uri("/login")
                 .body(BodyInserters
-                        .fromFormData("email", userSaveParams.getEmail())
-                        .with("password", userSaveParams.getPassword()))
+                        .fromFormData("email", userSaveRequestDto.getEmail())
+                        .with("password", userSaveRequestDto.getPassword()))
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
@@ -64,6 +66,6 @@ class LoginControllerTests {
 
     @AfterEach
     void tearDown() {
-        LoginTestConfig.deleteUser(webTestClient);
+        LoginTestUtil.deleteUser(webTestClient, userSaveRequestDto);
     }
 }

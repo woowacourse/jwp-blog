@@ -1,7 +1,8 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.dto.UserEditParams;
+import techcourse.myblog.domain.userinfo.UserPassword;
+import techcourse.myblog.dto.UserEditRequestDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,8 +16,11 @@ class UserTest {
                 .password("password1!")
                 .build();
 
-        assertThat(user.matchPassword("password1!")).isTrue();
-        assertThat(user.matchPassword("password2@")).isFalse();
+        UserPassword rightUserPassword = new UserPassword("password1!");
+        UserPassword wrongUserPassword = new UserPassword("password2@");
+
+        assertThat(user.matchPassword(rightUserPassword)).isTrue();
+        assertThat(user.matchPassword(wrongUserPassword)).isFalse();
     }
 
     @Test
@@ -27,11 +31,11 @@ class UserTest {
                 .password("password1!")
                 .build();
 
-        UserEditParams userEditParams = new UserEditParams();
-        userEditParams.setName("newName");
+        UserEditRequestDto userEditRequestDto = new UserEditRequestDto();
+        userEditRequestDto.setName("newName");
 
-        user.update(userEditParams);
+        user.update(userEditRequestDto);
 
-        assertThat(user.getName()).isEqualTo("newName");
+        assertThat(user.matchName("newName")).isTrue();
     }
 }

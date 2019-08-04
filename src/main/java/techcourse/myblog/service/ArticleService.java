@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleSaveParams;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.repository.ArticleRepository;
+import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.exception.IllegalArticleDeleteRequestException;
 
 import javax.transaction.Transactional;
 
@@ -21,26 +23,55 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public Article save(Article article) {
+    public Article save(ArticleSaveRequestDto articleSaveRequestDto, User author) {
+        Article article = Article.builder()
+                .title(articleSaveRequestDto.getTitle())
+                .coverUrl(articleSaveRequestDto.getCoverUrl())
+                .contents(articleSaveRequestDto.getContents())
+                .author(author)
+                .build();
+
         log.debug("save article={}", article);
         return articleRepository.save(article);
     }
 
     public Article findById(long id) {
         return articleRepository.findById(id)
-                .orElseThrow(() -> new ArticleNotFoundException(ERROR_ARTICLE_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> {
+                    log.error("error find article by id={}", id);
+                    return new ArticleNotFoundException(ERROR_ARTICLE_NOT_FOUND_MESSAGE);
+                });
     }
 
     @Transactional
-    public void update(ArticleSaveParams articleSaveParams, long id) {
-        log.debug("update article params={}", articleSaveParams);
+    public void update(ArticleSaveRequestDto articleSaveRequestDto, long id, User user) {
+        if (isArticleNotFound(id)) {
+            log.error("update article request by illegal article id={}", id);
+            throw new ArticleNotFoundException(ERROR_ARTICLE_NOT_FOUND_MESSAGE);
+        }
 
         Article article = findById(id);
-        article.update(articleSaveParams);
+        article.update(articleSaveRequestDto, user);
     }
 
-    public void deleteById(long id) {
-        log.debug("delete article id={}", id);
+    @Transactional
+    public void deleteById(long id, User user) {
+        if (isArticleNotFound(id)) {
+            log.error("delete article request by illegal article id={}", id);
+            throw new ArticleNotFoundException(ERROR_ARTICLE_NOT_FOUND_MESSAGE);
+        }
+
+        Article article = findById(id);
+        if (article.isNotAuthor(user)) {
+            log.error("delete article request by illegal user id={}, article id={}", user.getId(), id);
+            throw new IllegalArticleDeleteRequestException();
+        }
+
         articleRepository.deleteById(id);
+        log.debug("delete article id={}", id);
+    }
+
+    private boolean isArticleNotFound(long id) {
+        return findById(id) == null;
     }
 }

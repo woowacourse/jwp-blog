@@ -8,7 +8,7 @@ import techcourse.myblog.domain.User;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserSaveParams {
+public class UserSaveRequestDto {
     private String name;
     private String email;
     private String password;

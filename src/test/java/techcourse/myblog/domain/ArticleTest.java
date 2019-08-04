@@ -1,10 +1,13 @@
 package techcourse.myblog.domain;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.dto.ArticleSaveParams;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.util.ReflectionTestUtils;
+import techcourse.myblog.dto.ArticleSaveRequestDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DataJpaTest
 class ArticleTest {
 
     @Test
@@ -27,21 +30,55 @@ class ArticleTest {
 
     @Test
     void update() {
+        User author = User.builder()
+                .name("테스트")
+                .email("articleAuthor@test.com")
+                .password("password1!")
+                .build();
+
         Article article = Article.builder()
                 .title("title")
                 .coverUrl("coverUrl")
                 .contents("contents")
+                .author(author)
                 .build();
 
-        ArticleSaveParams articleSaveParams = new ArticleSaveParams();
-        articleSaveParams.setTitle("newTitle");
-        articleSaveParams.setCoverUrl("newCoverUrl");
-        articleSaveParams.setContents("newContents");
+        ArticleSaveRequestDto articleSaveRequestDto = new ArticleSaveRequestDto();
+        articleSaveRequestDto.setTitle("newTitle");
+        articleSaveRequestDto.setCoverUrl("newCoverUrl");
+        articleSaveRequestDto.setContents("newContents");
 
-        article.update(articleSaveParams);
+        article.update(articleSaveRequestDto, author);
 
         assertThat(article.getTitle()).isEqualTo("newTitle");
         assertThat(article.getCoverUrl()).isEqualTo("newCoverUrl");
         assertThat(article.getContents()).isEqualTo("newContents");
+    }
+
+    @Test
+    void isAuthor() {
+        User author = User.builder()
+                .name("테스트")
+                .email("articleAuthor@test.com")
+                .password("password1!")
+                .build();
+        ReflectionTestUtils.setField(author, "id", 1L);
+
+        User anotherAuthor = User.builder()
+                .name("테스트")
+                .email("articleAnotherAuthor@test.com")
+                .password("password1!")
+                .build();
+        ReflectionTestUtils.setField(anotherAuthor, "id", 2L);
+
+        Article article = Article.builder()
+                .title("title")
+                .coverUrl("coverUrl")
+                .contents("contents")
+                .author(author)
+                .build();
+
+        assertThat(article.isAuthor(author)).isTrue();
+        assertThat(article.isAuthor(anotherAuthor)).isFalse();
     }
 }

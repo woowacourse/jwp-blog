@@ -4,11 +4,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class ArticleControllerAdvice {
+public class CommentControllerAdvice {
 
-    @ExceptionHandler({ArticleNotFoundException.class
-            , IllegalArticleUpdateRequestException.class
-            , IllegalArticleDeleteRequestException.class})
+    @ExceptionHandler(IllegalCommentUpdateRequestException.class)
     public String handleArticleNotFoundException() {
         return "error";
     }

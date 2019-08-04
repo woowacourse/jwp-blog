@@ -10,7 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.dto.UserSaveParams;
+import techcourse.myblog.dto.UserSaveRequestDto;
+import techcourse.myblog.testutil.LoginTestUtil;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -19,24 +20,31 @@ class UserControllerTests {
     @Autowired
     private WebTestClient webTestClient;
 
+    private UserSaveRequestDto userSaveRequestDto;
     private String jSessionId;
-    private UserSaveParams signUpParams = new UserSaveParams("이름", "test2@test.com", "password2@");
 
     @BeforeEach
-    void setUp() {
-        LoginTestConfig.signUp(webTestClient);
-        jSessionId = LoginTestConfig.getJSessionId(webTestClient);
+    void setUp_user_save() {
+        userSaveRequestDto = new UserSaveRequestDto("테스트", "user@test.com", "password1!");
+
+        LoginTestUtil.signUp(webTestClient, userSaveRequestDto);
+        jSessionId = LoginTestUtil.getJSessionId(webTestClient, userSaveRequestDto);
     }
 
     @Test
-    void 회원가입_성공() {
+    void saveUser() {
+        UserSaveRequestDto userSaveRequestDto = new UserSaveRequestDto("newUserName", "newUserEmail@test.com", "password1!");
+
         webTestClient.post().uri("/users")
                 .body(BodyInserters
-                        .fromFormData("name", signUpParams.getName())
-                        .with("email", signUpParams.getEmail())
-                        .with("password", signUpParams.getPassword()))
+                        .fromFormData("name", userSaveRequestDto.getName())
+                        .with("email", userSaveRequestDto.getEmail())
+                        .with("password", userSaveRequestDto.getPassword()))
                 .exchange()
-                .expectStatus().is3xxRedirection();
+                .expectStatus().is3xxRedirection()
+                .expectHeader().valueMatches("location", ".*/login.*");
+
+        LoginTestUtil.deleteUser(webTestClient, userSaveRequestDto);
     }
 
     @Test
@@ -65,29 +73,16 @@ class UserControllerTests {
 
     @Test
     void mypage_edit_페이지_이동() {
-        UserSaveParams userSaveParams = LoginTestConfig.getUserSaveParams();
-
         webTestClient.post().uri("/mypage/edit")
                 .body(BodyInserters
-                        .fromFormData("password", userSaveParams.getPassword()))
+                        .fromFormData("password", userSaveRequestDto.getPassword()))
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().isOk();
     }
 
-    @Test
-    void mypage_delete() {
-        LoginTestConfig.signUp(webTestClient, signUpParams);
-        String jSessionIdByDelete = LoginTestConfig.getJSessionId(webTestClient, signUpParams);
-
-        webTestClient.delete().uri("/mypage")
-                .cookie("JSESSIONID", jSessionIdByDelete)
-                .exchange()
-                .expectStatus().is3xxRedirection();
-    }
-
     @AfterEach
-    void tearDown() {
-        LoginTestConfig.deleteUser(webTestClient);
+    void tearDown_user_delete() {
+        LoginTestUtil.deleteUser(webTestClient, userSaveRequestDto);
     }
 }

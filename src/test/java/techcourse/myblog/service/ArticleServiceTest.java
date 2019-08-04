@@ -1,54 +1,59 @@
 package techcourse.myblog.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleSaveParams;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.exception.IllegalArticleDeleteRequestException;
+import techcourse.myblog.exception.IllegalArticleUpdateRequestException;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@Transactional
 class ArticleServiceTest {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private UserService userService;
+
+    private User author;
+    private ArticleSaveRequestDto articleSaveRequestDto;
     private Article article;
 
     @BeforeEach
-    void setUp() {
-        article = articleService.save(Article.builder()
-                .title("title")
-                .coverUrl("coverUrl")
-                .contents("contents")
-                .build());
+    void setUp_article_save() {
+        author = User.builder()
+                .name("이름")
+                .email("test123@test.com")
+                .password("asdfas1!")
+                .build();
+        userService.save(author);
+
+        articleSaveRequestDto = new ArticleSaveRequestDto("title", "coverUrl", "contents");
+        article = articleService.save(articleSaveRequestDto, author);
     }
 
     @Test
     void findAllArticles() {
-        Iterable<Article> articles = articleService.findAllArticles();
+        List<Article> articles = new ArrayList<>();
+        for (Article foundArticle : articleService.findAllArticles()) {
+            articles.add(foundArticle);
+        }
 
-        assertThat(articles.iterator().next()).isEqualTo(article);
-    }
-
-    @Test
-    void save() {
-        Article newArticle = Article.builder()
-                .title("newTitle")
-                .coverUrl("newCoverUrl")
-                .contents("newContents")
-                .build();
-        Article savedArticle = articleService.save(newArticle);
-
-        assertThat(savedArticle.getTitle()).isEqualTo(newArticle.getTitle());
-        assertThat(savedArticle.getCoverUrl()).isEqualTo(newArticle.getCoverUrl());
-        assertThat(savedArticle.getContents()).isEqualTo(newArticle.getContents());
-
-        articleService.deleteById(savedArticle.getId());
+        assertThat(articles.contains(article)).isTrue();
     }
 
     @Test
@@ -59,37 +64,62 @@ class ArticleServiceTest {
 
     @Test
     void update() {
-        ArticleSaveParams articleSaveParams = new ArticleSaveParams();
-        articleSaveParams.setTitle("newTitle");
-        articleSaveParams.setCoverUrl("newCoverUrl");
-        articleSaveParams.setContents("newContents");
+        ArticleSaveRequestDto articleSaveRequestDto = new ArticleSaveRequestDto();
+        articleSaveRequestDto.setTitle("newTitle");
+        articleSaveRequestDto.setCoverUrl("newCoverUrl");
+        articleSaveRequestDto.setContents("newContents");
         Long id = article.getId();
 
-        articleService.update(articleSaveParams, id);
+        articleService.update(articleSaveRequestDto, id, author);
 
         Article updatedArticle = articleService.findById(id);
-        assertThat(updatedArticle.getTitle()).isEqualTo(articleSaveParams.getTitle());
-        assertThat(updatedArticle.getCoverUrl()).isEqualTo(articleSaveParams.getCoverUrl());
-        assertThat(updatedArticle.getContents()).isEqualTo(articleSaveParams.getContents());
+        assertThat(updatedArticle.getTitle()).isEqualTo(articleSaveRequestDto.getTitle());
+        assertThat(updatedArticle.getCoverUrl()).isEqualTo(articleSaveRequestDto.getCoverUrl());
+        assertThat(updatedArticle.getContents()).isEqualTo(articleSaveRequestDto.getContents());
     }
 
     @Test
-    void deleteById() {
-        Article newArticle = Article.builder()
-                .title("newTitle")
-                .coverUrl("newCoverUrl")
-                .contents("newContents")
+    void update_작성자가_아닌_경우() {
+        ArticleSaveRequestDto anotherArticleSaveRequestDto = new ArticleSaveRequestDto();
+        anotherArticleSaveRequestDto.setTitle("newTitle");
+        anotherArticleSaveRequestDto.setCoverUrl("newCoverUrl");
+        anotherArticleSaveRequestDto.setContents("newContents");
+        Long id = article.getId();
+
+        User anotherAuthor = User.builder()
+                .name("이름")
+                .email("anotherAuthor@test.com")
+                .password("password1!")
                 .build();
-        Article savedArticle = articleService.save(newArticle);
-        Long id = savedArticle.getId();
+        userService.save(anotherAuthor);
 
-        articleService.deleteById(id);
+        assertThrows(IllegalArticleUpdateRequestException.class
+                , () -> articleService.update(anotherArticleSaveRequestDto, id, anotherAuthor));
 
-        assertThrows(ArticleNotFoundException.class, () -> articleService.findById(id));
+        Article updatedArticle = articleService.findById(id);
+        assertThat(updatedArticle.getTitle()).isEqualTo(articleSaveRequestDto.getTitle());
+        assertThat(updatedArticle.getCoverUrl()).isEqualTo(articleSaveRequestDto.getCoverUrl());
+        assertThat(updatedArticle.getContents()).isEqualTo(articleSaveRequestDto.getContents());
     }
 
-    @AfterEach
-    void tearDown() {
-        articleService.deleteById(article.getId());
+    @Test
+    void delete() {
+        articleService.deleteById(article.getId(), author);
+        assertThrows(ArticleNotFoundException.class, () -> articleService.findById(article.getId()));
+    }
+
+    @Test
+    void delete_작성자가_아닌_경우() {
+        User anotherAuthor = User.builder()
+                .name("이름")
+                .email("anotherAuthor@test.com")
+                .password("password1!")
+                .build();
+        userService.save(anotherAuthor);
+
+        assertThrows(IllegalArticleDeleteRequestException.class
+                , () -> articleService.deleteById(article.getId(), anotherAuthor));
+
+        assertDoesNotThrow(() -> articleService.findById(article.getId()));
     }
 }
