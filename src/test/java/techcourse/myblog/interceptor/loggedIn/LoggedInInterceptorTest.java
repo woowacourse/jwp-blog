@@ -2,21 +2,17 @@ package techcourse.myblog.interceptor.loggedIn;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
-import techcourse.myblog.web.LoginTemplate;
+import techcourse.myblog.web.LoggedInTemplate;
 
-@AutoConfigureWebTestClient
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LoggedInInterceptorTest extends LoginTemplate {
+public class LoggedInInterceptorTest extends LoggedInTemplate {
     @BeforeEach
     void setUp() {
-        registeredWebTestClient();
+        signUpUser();
     }
 
     @Test
     void 로그인_되어있을때_로그인_페이지_접근() {
-        loggedInGetRequest("login")
+        loggedInGetRequest("/login")
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection()
@@ -26,7 +22,7 @@ public class LoggedInInterceptorTest extends LoginTemplate {
 
     @Test
     void 로그인_되어있을때_회원가입_페이지_접근() {
-        loggedInGetRequest("signup")
+        loggedInGetRequest("/signup")
                 .exchange()
                 .expectStatus()
                 .is3xxRedirection()

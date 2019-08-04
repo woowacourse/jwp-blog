@@ -6,12 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserRequestDto;
-import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.domain.UserAssembler;
+import techcourse.myblog.dto.SignUpRequest;
+import techcourse.myblog.dto.UpdateUserRequest;
+import techcourse.myblog.dto.UserResponse;
 import techcourse.myblog.exception.SignUpException;
 import techcourse.myblog.exception.UserException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.utils.converter.DtoConverter;
 
 import java.util.Optional;
 
@@ -22,90 +23,87 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserServiceTest {
-    private static final String NAME = "코니코니";
-    private static final String EMAIL = "cony@naver.com";
-    private static final String PASSWORD = "@Password1234";
+    private static final String NAME = "ike";
+    private static final String PASSWORD = "Password!1";
+    private static final String EMAIL = "ike@gmail.com";
+
+    private static final String NAME_2 = "bob";
+    private static final String EMAIL_2 = "bob@gmail.com";
 
     private User user;
-    private UserRequestDto userRequestDto;
+    private SignUpRequest signUpRequestDto;
+    private UpdateUserRequest updateUserRequestDto;
 
     @Autowired
     private UserService userService;
 
-    @MockBean(name = "userRepository") // 사용되던 Bean의 껍데기만 가져오고 내부의 구현 부분은 모두 사용자에게 위임한 형태
+    @MockBean(name = "userRepository")
     private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
         user = new User(NAME, PASSWORD, EMAIL);
-        userRequestDto = new UserRequestDto();
-        userRequestDto.setEmail(EMAIL);
-        userRequestDto.setName(NAME);
-        userRequestDto.setPassword(PASSWORD);
+        signUpRequestDto = new SignUpRequest(NAME, PASSWORD, EMAIL);
+        updateUserRequestDto = new UpdateUserRequest(NAME_2, EMAIL_2);
     }
 
     @Test
-    public void 중복된_이메일을_등록하는_경우_예외처리() {
+    public void 중복된_이메일을_회원가입하는_경우_실패_테스트() {
         // given
         when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.of(user));
 
         // then
-        assertThrows(SignUpException.class, () -> userService.addUser(userRequestDto));
+        assertThrows(SignUpException.class, () -> userService.addUser(signUpRequestDto));
     }
 
     @Test
     public void 회원정보가_정상적으로_수정되는지_테스트() {
         // given
-        String changedName = "NameHas";
-        String changedPassword = "PasswordHasChanged1TIME!";
-        userRequestDto.setName(changedName);
-        userRequestDto.setPassword(changedPassword);
+        User changedUser = new User(NAME_2, PASSWORD, EMAIL_2);
 
-        User changedUser = DtoConverter.convert(this.userRequestDto);
-
-        when(userRepository.save(this.user)).thenReturn(this.user);
+        when(userRepository.save(user)).thenReturn(user);
         when(userRepository.save(changedUser)).thenReturn(changedUser);
         when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.of(changedUser));
 
         // when
-        UserResponseDto userResponseDto = userService.updateUser(userRequestDto, DtoConverter.convert(changedUser));
+        UserResponse userResponse = userService.updateUser(updateUserRequestDto, UserAssembler.toDto(user));
 
         // then
-        assertThat(userResponseDto.getName()).isEqualTo(changedName);
+        assertThat(userResponse.getName()).isEqualTo(NAME_2);
     }
 
     @Test
-    public void 존재하지_않는_회원정보를_수정하는_경우_예외처리() {
+    public void 존재하지_않는_회원정보를_수정하는_경우_실패_테스트() {
         // given
         when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.empty());
 
         // then
-        assertThatThrownBy(() -> userService.updateUser(userRequestDto, DtoConverter.convert(this.user)))
+        assertThatThrownBy(() -> userService.updateUser(updateUserRequestDto, UserAssembler.toDto(user)))
                 .isInstanceOf(UserException.class);
     }
 
     @Test
     public void 회원이_정상적으로_탈퇴되는지_테스트() {
         // given
-        UserResponseDto userResponseDto = DtoConverter.convert(this.user);
-        when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.of(this.user));
-        doNothing().when(userRepository).delete(this.user);
+        UserResponse userResponse = UserAssembler.toDto(user);
+        when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.of(user));
+        doNothing().when(userRepository).delete(user);
 
         // when
-        userService.deleteUser(userResponseDto);
+        userService.deleteUser(userResponse);
 
         // then
-        verify(userRepository, times(1)).delete(this.user);
+        verify(userRepository, times(1)).delete(user);
     }
 
     @Test
-    public void 존재하지_않은_회원이_탈퇴하는_경우_예외처리() {
+    public void 존재하지_않은_회원이_탈퇴하는_경우_실패_테스트() {
         // given
-        UserResponseDto userResponseDto = DtoConverter.convert(this.user);
+        UserResponse userResponse = UserAssembler.toDto(user);
         when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.empty());
 
         // then
-        assertThatThrownBy(() -> userService.deleteUser(userResponseDto))
+        assertThatThrownBy(() -> userService.deleteUser(userResponse))
                 .isInstanceOf(UserException.class);
     }
 }
