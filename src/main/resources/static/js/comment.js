@@ -7,7 +7,7 @@ const COMMENT = (function () {
         "<input id=\"{{contentsId}}\" name=\"contents\" type=\"hidden\">" +
         "<div id=\"{{editorId}}\" class = \"comment-editor\"></div>" +
         "<input name=\"_method\" type=\"hidden\" value=\"put\"/>" +
-        "<button class=\"btn btn-default\" id=\"save-btn2\" type=\"submit\">댓글 수정" +
+        "<button class=\"btn btn-default\" id=\"{{buttonId}}\" type=\"submit\">댓글 수정" +
         "</button>" + "</div>" +
         "</form>";
 
@@ -43,9 +43,15 @@ const COMMENT = (function () {
                 const commentId = tokens[tokens.length - 1]
                 const editorId = "editSection" + commentId
                 const contentsId = "comment-contents" + commentId
+                const buttonId = "comment-edit-finish-button" + commentId
 
                 parent.insertAdjacentHTML("beforeend",
-                    compiledCommentEditTemplate({"url": url, "editorId": editorId, "contentsId": contentsId}))
+                    compiledCommentEditTemplate({
+                        "url": url,
+                        "editorId": editorId,
+                        "contentsId": contentsId,
+                        "buttonId": buttonId
+                    }))
 
                 const editor2 = new tui.Editor({
                     el: document.querySelector('#' + editorId),
@@ -53,7 +59,8 @@ const COMMENT = (function () {
                     previewStyle: 'horizontal',
                     events: {
                         change: function () {
-                            document.getElementById(contentsId).setAttribute('value', editor2.getMarkdown())
+                            document.getElementById(contentsId).setAttribute
+                            ('value', editor2.getMarkdown())
                         }
                     },
                     height: '200px'
