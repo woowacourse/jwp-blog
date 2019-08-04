@@ -2,108 +2,79 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class ArticleControllerTests {
+public class ArticleControllerTests extends ControllerTemplate {
+
+    private static final String TITLE = "ThisIsTitle";
+    private static final String COVER_URL = "ThisIsCoverUrl";
+    private static final String CONTENTS = "ThisIsContents";
 
     private String cookie;
 
-    @Autowired
-    private WebTestClient webTestClient;
-
     @BeforeEach
     void setUp() {
-        String name = "bmo";
-        String email = "bmo@bmo.com";
-        String password = "Password123!";
-
         // 회원가입
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange()
-        ;
+        requestSignUp(NAME, EMAIL, PASSWORD);
 
         // 로그인
-        cookie = webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .getFirst("Set-Cookie");
+        requestLogin(EMAIL, PASSWORD);
+        cookie = getCookie(EMAIL, PASSWORD);
 
         // 게시글 작성
-        String title = "titleTest";
-        String coverUrl = "coverUrlTest";
-        String contents = "contentsTest";
-        webTestClient.post()
-                .uri("/articles")
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-                .expectStatus().isFound();
+        requestWriteArticle(cookie, TITLE, COVER_URL, CONTENTS)
+                .expectStatus()
+                .isFound()
+        ;
     }
 
     @Test
     void index() {
         webTestClient.get().uri("/")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk()
+        ;
     }
 
     @Test
     void articleForm() {
         webTestClient.get().uri("/writing")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk()
+        ;
     }
 
     @Test
     void 게시글조회() {
-        String title = "titleTest";
-        String coverUrl = "coverUrlTest";
-        String contents = "contentsTest";
         webTestClient.get()
                 .uri("/articles/" + "1")
+                .header("Cookie", cookie)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus()
+                .isOk()
                 .expectBody()
                 .consumeWith(response2 -> {
                     String body = new String(response2.getResponseBody());
-                    assertThat(body.contains(title)).isTrue();
-                    assertThat(body.contains(coverUrl)).isTrue();
-                    assertThat(body.contains(contents)).isTrue();
-                });
+                    assertThat(body.contains(TITLE)).isTrue();
+                    assertThat(body.contains(COVER_URL)).isTrue();
+                    assertThat(body.contains(CONTENTS)).isTrue();
+                })
+        ;
     }
 
     @Test
     void 존재하지_않는_게시글_조회_에러() {
         webTestClient.get()
                 .uri("/articles/" + "2")
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -128,7 +99,9 @@ public class ArticleControllerTests {
                         .with("coverUrl", "수정")
                         .with("contents", "수정"))
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk()
+        ;
     }
 
     @Test
@@ -139,16 +112,19 @@ public class ArticleControllerTests {
                 .expectHeader()
                 .valueMatches("location", ".*/")
                 .expectStatus()
-                .is3xxRedirection();
+                .isFound()
+        ;
     }
 
     @Test
     void article_Duplicate_Fail() {
         webTestClient.post().uri("/articles")
-                .body(BodyInserters.fromFormData("title", "titleTest")
+                .body(BodyInserters.fromFormData("title", TITLE)
                         .with("coverUrl", "커버")
                         .with("contents", "중복"))
                 .exchange()
-                .expectStatus().is4xxClientError();
+                .expectStatus()
+                .is4xxClientError()
+        ;
     }
 }

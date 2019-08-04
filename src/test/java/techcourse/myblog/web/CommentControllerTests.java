@@ -2,99 +2,47 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class CommentControllerTests {
+public class CommentControllerTests extends ControllerTemplate {
 
-    private String cookie;
+    private static final String ANOTHER_NAME = "kim";
+    private static final String ANOTHER_EMAIL = "kim@gmail.com";
+    private static final String ANOTHER_PASSWORD = "Password1234!";
+    private static final String TITLE = "ThisIsTitle";
+    private static final String COVER_URL = "ThisIsCoverUrl";
+    private static final String CONTENTS = "ThisIsContents";
+    private static final String COMMENT_CONTENTS = "ThisIsComment";
+
+    private String cookie1;
     private String cookie2;
-
-    @Autowired
-    private WebTestClient webTestClient;
 
     @BeforeEach
     void setUp() {
-        String name = "bmo";
-        String email = "bmo@bmo.com";
-        String email2 = "cmo@bmo.com";
-        String password = "Password123!";
-        String title = "googler bmo";
-        String coverUrl = "bmo.jpg";
-        String contents = "why bmo so great?";
-
         // 회원가입
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange()
-        ;
+        requestSignUp(NAME, EMAIL, PASSWORD);
 
         // 회원가입2
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", name)
-                        .with("email", email2)
-                        .with("password", password))
-                .exchange()
-        ;
+        requestSignUp(ANOTHER_NAME, ANOTHER_EMAIL, ANOTHER_PASSWORD);
 
         // 로그인
-        cookie = webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .getFirst("Set-Cookie")
-        ;
+        cookie1 = getCookie(EMAIL, PASSWORD);
 
         // 로그인2
-        cookie2 = webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", email2)
-                        .with("password", password))
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .getFirst("Set-Cookie")
-        ;
+        cookie2 = getCookie(ANOTHER_EMAIL, ANOTHER_PASSWORD);
 
         // 게시글 작성
-        webTestClient.post()
-                .uri("/articles")
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-        ;
-    }
+        requestWriteArticle(cookie1, TITLE, COVER_URL, CONTENTS);
 
-    @Test
-    void 댓글_작성_성공_테스트() {
-        String commentContents = "comment contents";
-        requestSaveComment(commentContents)
+        // 댓글 작성 성공 테스트
+        requestWriteComment(cookie1, COMMENT_CONTENTS)
                 .expectStatus()
                 .isFound()
                 .expectHeader()
@@ -104,15 +52,10 @@ public class CommentControllerTests {
 
     @Test
     void 댓글_수정_성공_테스트() {
-        // 댓글 작성
-        String commentContents = "comment contents";
-        requestSaveComment(commentContents);
-
-        // 댓글 수정
-        String updatedContents = "updated comment contents";
+        String updatedContents = "ThisIsUpdatedCommentContents";
         webTestClient.put()
                 .uri("/articles/1/comments/1")
-                .header("Cookie", cookie)
+                .header("Cookie", cookie1)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("contents", updatedContents))
@@ -126,12 +69,7 @@ public class CommentControllerTests {
 
     @Test
     void 다른_유저가_댓글_수정하는_오류() {
-        // 댓글 작성
-        String commentContents = "comment contents";
-        requestSaveComment(commentContents);
-
-        // 댓글 수정
-        String updatedContents = "updated comment contents";
+        String updatedContents = "ThisIsUpdatedCommentContents";
         webTestClient.put()
                 .uri("/articles/1/comments/1")
                 .header("Cookie", cookie2)
@@ -148,11 +86,6 @@ public class CommentControllerTests {
 
     @Test
     void 댓글_삭제_성공_테스트() {
-        // 댓글 작성
-        String commentContents = "comment contents";
-        requestSaveComment(commentContents);
-
-        // 댓글 삭제
         webTestClient.delete()
                 .uri("/articles/1/comments/1")
                 .header("Cookie", cookie2)
@@ -166,51 +99,30 @@ public class CommentControllerTests {
 
     @Test
     void 다른_유저가_댓글_삭제_오류() {
-        // 댓글 작성
-        String commentContents = "comment contents";
-        requestSaveComment(commentContents);
-
-        // 댓글 삭제
         webTestClient.delete()
                 .uri("/articles/1/comments/1")
-                .header("Cookie", cookie)
+                .header("Cookie", cookie2)
                 .exchange()
                 .expectStatus()
                 .isFound()
                 .expectHeader()
-                .valueMatches("location", ".*/articles/1")
+                .valueMatches("location", ".*/")
         ;
     }
 
     @Test
     void 댓글_조회_성공_테스트() {
-        // 댓글 작성
-        String commentContents = "댓글 본문";
-        requestSaveComment(commentContents);
-
-        // 댓글 조회
         webTestClient.get()
                 .uri("/articles/1")
-                .header("Cookie", cookie)
+                .header("Cookie", cookie1)
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertTrue(body.contains(commentContents));
+                    assertTrue(body.contains(COMMENT_CONTENTS));
                 })
         ;
-    }
-
-    private WebTestClient.ResponseSpec requestSaveComment(String commentContents) {
-        return webTestClient.post()
-                .uri("/articles/1/comments")
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("contents", commentContents))
-                .exchange()
-                ;
     }
 }

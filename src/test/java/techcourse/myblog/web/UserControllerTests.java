@@ -2,38 +2,19 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class UserControllerTests {
-    @Autowired
-    private WebTestClient webTestClient;
+public class UserControllerTests extends ControllerTemplate {
 
     @BeforeEach
     void setUp() {
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", "Bob")
-                        .with("email", "test@gmail.com")
-                        .with("password", "PassWord1!")
-                        .with("reconfirmPassword", "PassWord1!"))
-                .exchange()
-                .expectStatus()
-                .isFound()
-        ;
+        requestSignUp(NAME, EMAIL, PASSWORD);
     }
 
     @Test
@@ -56,12 +37,8 @@ public class UserControllerTests {
 
     @Test
     void 유저_동일한_email() {
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", "Alice")
-                        .with("email", "test@gmail.com")
-                        .with("password", "PassWord1!")
-                        .with("reconfirmPassword", "PassWord1!"))
-                .exchange()
+        String anotherName = "kim";
+        requestSignUp(anotherName, EMAIL, PASSWORD)
                 .expectStatus()
                 .isOk()
                 .expectBody()
@@ -74,10 +51,7 @@ public class UserControllerTests {
 
     @Test
     void 로그인후_메인화면() {
-        webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", "test@gmail.com")
-                        .with("password", "PassWord1!"))
-                .exchange()
+        requestLogin(EMAIL, PASSWORD)
                 .expectStatus()
                 .is3xxRedirection()
         ;
@@ -85,10 +59,8 @@ public class UserControllerTests {
 
     @Test
     void 로그인실패_이메일이_없는_경우() {
-        webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", "nothing@gmail.com")
-                        .with("password", "PassWord1!"))
-                .exchange()
+        String notFoundEmail = "nothing@gmail.com";
+        requestLogin(notFoundEmail, PASSWORD)
                 .expectStatus()
                 .isOk()
                 .expectBody()
@@ -101,10 +73,8 @@ public class UserControllerTests {
 
     @Test
     void 로그인실패_비밀번호가_틀린_경우() {
-        webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", "test@gmail.com")
-                        .with("password", "PassWord1!!"))
-                .exchange()
+        String notFoundPassword = "Password111!";
+        requestLogin(EMAIL,notFoundPassword)
                 .expectStatus()
                 .isOk()
                 .expectBody()
@@ -122,7 +92,7 @@ public class UserControllerTests {
                 .expectHeader()
                 .valueMatches("location", ".*/login")
                 .expectStatus()
-                .is3xxRedirection()
+                .isFound()
         ; // 로그인 화면으로 갈 것임
     }
 
@@ -133,7 +103,7 @@ public class UserControllerTests {
                 .expectHeader()
                 .valueMatches("location", ".*/login")
                 .expectStatus()
-                .is3xxRedirection()
+                .isFound()
         ; // 로그인 화면으로 갈 것임
     }
 
@@ -144,13 +114,13 @@ public class UserControllerTests {
                 .expectHeader()
                 .valueMatches("location", ".*/login")
                 .expectStatus()
-                .is3xxRedirection()
+                .isFound()
         ; // 로그인 화면으로 갈 것임
     }
 
     @Test
     void 로그인_후_userlist_정상_이동() {
-        String cookie = getCookie();
+        String cookie = getCookie(EMAIL, PASSWORD);
         webTestClient.get().uri("/users")
                 .header("Cookie", cookie)
                 .exchange()
@@ -161,7 +131,7 @@ public class UserControllerTests {
 
     @Test
     void 로그인_후_mypage_정상_이동() {
-        String cookie = getCookie();
+        String cookie = getCookie(EMAIL, PASSWORD);
         webTestClient.get().uri("/mypage")
                 .header("Cookie", cookie)
                 .exchange()
@@ -172,7 +142,7 @@ public class UserControllerTests {
 
     @Test
     void 로그인_후_mypageedit_정상_이동() {
-        String cookie = getCookie();
+        String cookie = getCookie(EMAIL, PASSWORD);
         webTestClient.get().uri("/mypage-edit")
                 .header("Cookie", cookie)
                 .exchange()
@@ -181,25 +151,13 @@ public class UserControllerTests {
         ;
     }
 
-    private String getCookie() {
-        return webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", "test@gmail.com")
-                        .with("password", "PassWord1!"))
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .getFirst("Set-Cookie");
-    }
-
     @Test
     void 회원_이름_정상_수정() {
         webTestClient.put().uri("/users/1")
                 .body(BodyInserters.fromFormData("name", "editName"))
                 .exchange()
                 .expectStatus()
-                .is3xxRedirection()
+                .isFound()
                 .expectBody()
                 .consumeWith(response -> {
                     webTestClient.get().uri(response.getResponseHeaders().getLocation())
