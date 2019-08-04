@@ -1,18 +1,26 @@
 package techcourse.myblog.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class ArticleDto {
     @Data
     public static class Create {
+        @Size(max = 40)
+        @NotBlank
         private String title;
+
+        @NotBlank
         private String coverUrl;
+
+        @Size(max = 300)
+        @NotBlank
         private String contents;
 
-        //최초 save는 Id값 불필요
         public Article toArticle(User author) {
             return Article.builder()
                     .title(title)
@@ -25,20 +33,16 @@ public class ArticleDto {
 
     @Data
     public static class Update {
+        @Size(max = 40)
+        @NotBlank
         private String title;
-        private String coverUrl;
-        private String contents;
 
-        //save 하기 위해 Id값 필요
-        public Article toArticle(Long articleId, User author) {
-            return Article.builder()
-                    .id(articleId)
-                    .title(title)
-                    .coverUrl(coverUrl)
-                    .contents(contents)
-                    .author(author)
-                    .build();
-        }
+        @NotBlank
+        private String coverUrl;
+
+        @Size(max = 300)
+        @NotBlank
+        private String contents;
     }
 
     @Data

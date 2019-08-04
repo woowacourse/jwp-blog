@@ -1,7 +1,7 @@
 package techcourse.myblog.dto;
 
 import lombok.Data;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.user.User;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -39,19 +39,10 @@ public class UserDto {
 
     @Data
     public static class Update {
-//        @NotBlank
+        @NotBlank
         @Pattern(regexp = "[A-Za-zㄱ-ㅎㅏ-ㅣ가-힣]{2,10}",
                 message = "올바른 이름 형식이 아닙니다.")
         private String name;
-
-        public User toUser(Long id, String email, String password) {
-            return User.builder()
-                    .id(id)
-                    .name(name)
-                    .email(email)
-                    .password(password)
-                    .build();
-        }
     }
 
     @Data

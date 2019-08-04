@@ -2,21 +2,25 @@ package techcourse.myblog.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.user.User;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public class CommentDto {
-    //TODO : articleId를 가져도 되는지 ? 엔티티에는 없지만
     @Data
     public static class Create {
         private Long articleId;
+
+        @Size(max = 300)
+        @NotBlank
         private String contents;
+
         private LocalDateTime regDate;
 
-        //최초 생성 id필요없음, 수정 날짜 필요없음
         public Comment toComment(User user, Article article) {
             return Comment.builder()
                 .user(user)
@@ -30,6 +34,9 @@ public class CommentDto {
     @Data
     public static class Update {
         private Long articleId;
+
+        @Size(max = 300)
+        @NotBlank
         private String contents;
         private LocalDateTime regDate;
         private LocalDateTime modifiedDate;
