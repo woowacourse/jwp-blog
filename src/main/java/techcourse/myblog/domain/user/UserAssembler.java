@@ -1,8 +1,8 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.user;
 
-import techcourse.myblog.dto.SignUpRequest;
-import techcourse.myblog.dto.UpdateUserRequest;
-import techcourse.myblog.dto.UserResponse;
+import techcourse.myblog.dto.user.SignUpRequest;
+import techcourse.myblog.dto.user.UpdateUserRequest;
+import techcourse.myblog.dto.user.UserResponse;
 
 public class UserAssembler {
     public static User toEntity(SignUpRequest dto) {

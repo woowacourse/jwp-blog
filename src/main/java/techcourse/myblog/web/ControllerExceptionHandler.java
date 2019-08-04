@@ -7,7 +7,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
-import techcourse.myblog.exception.*;
+import techcourse.myblog.exception.article.ArticleException;
+import techcourse.myblog.exception.comment.CommentAuthenticationException;
+import techcourse.myblog.exception.user.LoginException;
+import techcourse.myblog.exception.user.SignUpException;
+import techcourse.myblog.exception.user.UserException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {

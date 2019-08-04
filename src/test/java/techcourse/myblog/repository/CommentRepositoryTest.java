@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.CommentAssembler;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.CommentRequest;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.comment.CommentAssembler;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.dto.comment.CommentRequest;
 
 import java.util.Collections;
 

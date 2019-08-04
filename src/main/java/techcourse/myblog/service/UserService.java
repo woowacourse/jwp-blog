@@ -2,13 +2,13 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserAssembler;
-import techcourse.myblog.dto.SignUpRequest;
-import techcourse.myblog.dto.UpdateUserRequest;
-import techcourse.myblog.dto.UserResponse;
-import techcourse.myblog.exception.SignUpException;
-import techcourse.myblog.exception.UserException;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserAssembler;
+import techcourse.myblog.dto.user.SignUpRequest;
+import techcourse.myblog.dto.user.UpdateUserRequest;
+import techcourse.myblog.dto.user.UserResponse;
+import techcourse.myblog.exception.user.SignUpException;
+import techcourse.myblog.exception.user.UserException;
 import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;

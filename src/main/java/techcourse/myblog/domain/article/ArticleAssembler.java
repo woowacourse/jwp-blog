@@ -1,7 +1,8 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.article;
 
-import techcourse.myblog.dto.ArticleRequest;
-import techcourse.myblog.dto.ArticleResponse;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.dto.article.ArticleRequest;
+import techcourse.myblog.dto.article.ArticleResponse;
 
 public class ArticleAssembler {
     public static Article toEntity(ArticleRequest dto, User author) {

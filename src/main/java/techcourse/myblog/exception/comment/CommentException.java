@@ -1,4 +1,4 @@
-package techcourse.myblog.exception;
+package techcourse.myblog.exception.comment;
 
 public class CommentException extends RuntimeException {
 

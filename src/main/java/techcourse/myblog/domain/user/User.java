@@ -1,6 +1,6 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.user;
 
-import techcourse.myblog.exception.SignUpException;
+import techcourse.myblog.exception.user.SignUpException;
 
 import javax.persistence.*;
 import java.util.Objects;

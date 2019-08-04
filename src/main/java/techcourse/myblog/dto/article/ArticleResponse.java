@@ -1,6 +1,6 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.dto.article;
 
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.user.User;
 
 public class ArticleResponse {
     private Long id;

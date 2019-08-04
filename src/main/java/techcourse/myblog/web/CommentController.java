@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import techcourse.myblog.dto.CommentRequest;
-import techcourse.myblog.dto.UserResponse;
+import techcourse.myblog.dto.comment.CommentRequest;
+import techcourse.myblog.dto.user.UserResponse;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.utils.session.SessionUtil;
 

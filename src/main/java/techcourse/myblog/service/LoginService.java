@@ -1,11 +1,11 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserAssembler;
-import techcourse.myblog.dto.LoginRequest;
-import techcourse.myblog.dto.UserResponse;
-import techcourse.myblog.exception.LoginException;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserAssembler;
+import techcourse.myblog.dto.user.LoginRequest;
+import techcourse.myblog.dto.user.UserResponse;
+import techcourse.myblog.exception.user.LoginException;
 import techcourse.myblog.repository.UserRepository;
 
 @Service

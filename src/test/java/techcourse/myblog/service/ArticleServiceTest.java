@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.ArticleRequest;
-import techcourse.myblog.dto.UserResponse;
-import techcourse.myblog.exception.ArticleAuthenticationException;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.dto.article.ArticleRequest;
+import techcourse.myblog.dto.user.UserResponse;
+import techcourse.myblog.exception.article.ArticleAuthenticationException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 

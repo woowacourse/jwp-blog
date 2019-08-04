@@ -1,6 +1,8 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.comment;
 
 import org.springframework.data.annotation.CreatedDate;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package techcourse.myblog.exception;
+package techcourse.myblog.exception.article;
 
 public class ArticleException extends RuntimeException {
 

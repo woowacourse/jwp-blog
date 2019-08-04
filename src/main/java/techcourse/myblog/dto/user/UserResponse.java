@@ -1,4 +1,4 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.dto.user;
 
 public class UserResponse {
 

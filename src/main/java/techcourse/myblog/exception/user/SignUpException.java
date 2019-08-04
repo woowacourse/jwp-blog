@@ -1,4 +1,4 @@
-package techcourse.myblog.exception;
+package techcourse.myblog.exception.user;
 
 public class SignUpException extends RuntimeException {
     public SignUpException() {

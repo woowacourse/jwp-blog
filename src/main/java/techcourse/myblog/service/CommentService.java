@@ -4,14 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.Comment;
-import techcourse.myblog.domain.CommentAssembler;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.CommentRequest;
-import techcourse.myblog.dto.UserResponse;
-import techcourse.myblog.exception.CommentAuthenticationException;
-import techcourse.myblog.exception.CommentException;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.comment.CommentAssembler;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.dto.comment.CommentRequest;
+import techcourse.myblog.dto.user.UserResponse;
+import techcourse.myblog.exception.comment.CommentAuthenticationException;
+import techcourse.myblog.exception.comment.CommentException;
 import techcourse.myblog.repository.CommentRepository;
 
 @Service

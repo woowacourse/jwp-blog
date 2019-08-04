@@ -1,7 +1,7 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.dto.comment;
 
 import org.springframework.data.annotation.CreatedDate;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.user.User;
 
 import java.util.Date;
 

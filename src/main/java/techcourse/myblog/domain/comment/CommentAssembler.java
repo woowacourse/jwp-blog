@@ -1,7 +1,8 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.comment;
 
-import techcourse.myblog.dto.CommentRequest;
-import techcourse.myblog.dto.CommentResponse;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.dto.comment.CommentRequest;
+import techcourse.myblog.dto.comment.CommentResponse;
 
 public class CommentAssembler {
     public static Comment toEntity(CommentRequest dto) {

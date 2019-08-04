@@ -1,4 +1,7 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.article;
+
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;

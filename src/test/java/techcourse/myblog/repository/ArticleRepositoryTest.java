@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleAssembler;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.ArticleRequest;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleAssembler;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.dto.article.ArticleRequest;
 
 import java.util.ArrayList;
 import java.util.List;

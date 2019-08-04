@@ -1,4 +1,4 @@
-package techcourse.myblog.dto;
+package techcourse.myblog.dto.article;
 
 import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
