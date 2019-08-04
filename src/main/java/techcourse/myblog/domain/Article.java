@@ -1,7 +1,6 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
-import techcourse.myblog.service.dto.ArticleRequestDto;
 
 import javax.persistence.*;
 

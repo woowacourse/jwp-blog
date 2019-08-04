@@ -24,7 +24,7 @@ public class CommentService {
     @Transactional
     public Comment update(long commentId, CommentRequestDto commentRequestDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
-        comment.update(commentRequestDto);
+        comment.update(commentRequestDto.toComment());
         return comment;
     }
 

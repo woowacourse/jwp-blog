@@ -8,6 +8,7 @@
 <body>
 <div>
     <div th:replace="fragments/main/header :: header"></div>
+
     <form th:action="${article != null ? '/articles/' + article.id : '/articles'}" name="article" th:method="${article != null ? 'put' : 'post'}"
           accept-charset="utf-8">
         <input type="hidden" name="id" th:if="${article}" th:value="${article.id}"/>
@@ -26,6 +27,8 @@
                 </div>
             </div>
         </div>
+
+        <div th:replace="fragments/main/errorMsg :: errorMsg"></div>
 
         <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
             <div class="row">

@@ -5,7 +5,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import techcourse.myblog.service.dto.CommentRequestDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -39,7 +38,7 @@ public class Comment {
         this.article = article;
     }
 
-    public void update(CommentRequestDto commentRequestDto) {
-        this.comment = commentRequestDto.getComment();
+    public void update(Comment comment) {
+        this.comment = comment.getComment();
     }
 }

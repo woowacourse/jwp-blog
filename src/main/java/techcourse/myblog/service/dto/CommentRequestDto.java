@@ -21,4 +21,11 @@ public class CommentRequestDto {
                 .commenter(commenter)
                 .build();
     }
+
+    public Comment toComment() {
+        return Comment.builder()
+                .comment(this.comment)
+                .build();
+    }
 }
+

@@ -3,7 +3,10 @@ package techcourse.myblog.presentation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
@@ -13,6 +16,7 @@ import techcourse.myblog.service.dto.ArticleRequestDto;
 import techcourse.myblog.service.dto.CommentRequestDto;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import static techcourse.myblog.service.UserService.LOGGED_IN_USER_SESSION_KEY;
 
@@ -34,7 +38,7 @@ public class ArticleController {
     }
 
     @PostMapping("")
-    public String addNewArticle(ArticleRequestDto articleRequestDto, HttpSession session) {
+    public String addNewArticle(@ModelAttribute("/articles/writing") @Valid ArticleRequestDto articleRequestDto, HttpSession session) {
         User user = (User) session.getAttribute(LOGGED_IN_USER_SESSION_KEY);
         Article newArticle = articleRequestDto.toArticle();
         newArticle.setAuthor(user);
@@ -83,5 +87,13 @@ public class ArticleController {
         Comment newComment = commentRequestDto.toComment(commenter, article);
         commentService.save(newComment);
         return "redirect:/articles/" + articleId;
+    }
+
+
+    @ExceptionHandler(BindException.class)
+    public RedirectView handleBindError(BindException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("article", e.getBindingResult().getTarget());
+        redirectAttributes.addFlashAttribute("errorMsg", e.getAllErrors().get(0).getDefaultMessage());
+        return new RedirectView(e.getObjectName());
     }
 }

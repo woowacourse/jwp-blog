@@ -1,7 +1,6 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
-import techcourse.myblog.service.dto.UserRequestDto;
 
 import javax.persistence.*;
 
@@ -30,14 +29,14 @@ public class User {
         this.email = email;
     }
 
-    public void update(UserRequestDto userRequestDto) {
-        this.name = userRequestDto.getName();
-        this.password = userRequestDto.getPassword();
-        this.email = userRequestDto.getEmail();
+    public void update(User user) {
+        this.name = user.getName();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
     }
 
-    public boolean isMatch(UserRequestDto userRequestDto) {
-        return email.equals(userRequestDto.getEmail())
-                && password.equals(userRequestDto.getPassword());
+    public boolean isMatch(User user) {
+        return email.equals(user.getEmail())
+                && password.equals(user.getPassword());
     }
 }

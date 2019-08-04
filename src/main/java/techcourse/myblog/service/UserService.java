@@ -21,12 +21,12 @@ public class UserService {
     @Transactional
     public void update(String email, UserRequestDto userRequestDto) {
         User user = userRepository.findByEmail(email).orElseThrow(ArticleNotFoundException::new);
-        user.update(userRequestDto);
+        user.update(userRequestDto.toUser());
     }
 
     public User authenticate(UserRequestDto userRequestDto) {
         User user = userRepository.findByEmail(userRequestDto.getEmail()).orElseThrow(AuthenticationFailException::new);
-        if (user.isMatch(userRequestDto)) {
+        if (user.isMatch(userRequestDto.toUser())) {
             return user;
         }
         throw new AuthenticationFailException();

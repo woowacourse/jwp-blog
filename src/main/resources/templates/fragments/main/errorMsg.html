@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="errorMsg" th:if="${errorMsg != null}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMsg}"></span>
+    </div>
+</body>
