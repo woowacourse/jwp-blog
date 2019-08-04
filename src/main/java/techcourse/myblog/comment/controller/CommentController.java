@@ -1,5 +1,6 @@
 package techcourse.myblog.comment.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.argumentresolver.UserSession;
 import techcourse.myblog.comment.dto.CommentCreateDto;
+import techcourse.myblog.comment.dto.CommentResponseDto;
 import techcourse.myblog.comment.dto.CommentUpdateDto;
 import techcourse.myblog.comment.exception.InvalidCommentLengthException;
 import techcourse.myblog.comment.service.CommentService;
@@ -14,6 +16,7 @@ import techcourse.myblog.comment.service.CommentService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+@Slf4j
 @Controller
 public class CommentController {
 
@@ -30,9 +33,10 @@ public class CommentController {
     }
 
     @PostMapping("/articles/{articleId}/comments")
-    public RedirectView createComment(@PathVariable long articleId, UserSession userSession, CommentCreateDto commentDto) {
-        commentService.save(articleId, userSession.getId(), commentDto);
-        return new RedirectView("/articles/" + articleId);
+    @ResponseBody
+    public CommentResponseDto createComment(@PathVariable long articleId, UserSession userSession, @RequestBody CommentCreateDto commentDto) {
+        log.debug(">>> commentDto : {}", commentDto);
+        return commentService.save(articleId, userSession.getId(), commentDto);
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
