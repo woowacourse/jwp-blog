@@ -19,12 +19,13 @@ import java.util.List;
 public class ArticleService {
     private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
 
-    private final ArticleConverter articleConverter = ArticleConverter.getInstance();
+    private final ArticleConverter articleConverter;
     private final ArticleRepository articleRepository;
     private final UserService userService;
 
     @Autowired
-    public ArticleService(ArticleRepository articleRepository, UserService userService) {
+    public ArticleService(ArticleRepository articleRepository, UserService userService, ArticleConverter articleConverter) {
+        this.articleConverter = articleConverter;
         this.articleRepository = articleRepository;
         this.userService = userService;
     }
