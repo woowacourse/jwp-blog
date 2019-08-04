@@ -76,23 +76,23 @@
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4">
                             <div class="info">
                                 <span class="text-bold inline-block" name="author" th:text="${comment.author.userName}">Jun</span>
-                                <form class="pull-right" method="post" th:action="@{'/comments/' + ${comment.id}}"
-                                      style="display: inline-block;">
+                                <form class="pull-right" method="post" style="display: inline-block;"
+                                      th:action="@{'/comments/' + ${comment.id}}">
                                     <input name="_method" type="hidden" value="delete">
-                                    <button class="btn-sm btn-link pull-right" type="submit"
-                                            style="border-width: 0; text-decoration: none;
+                                    <button class="btn-sm btn-link pull-right" style="border-width: 0; text-decoration: none;
                                                padding-left: 1rem; padding-right: 0.5rem;
-                                               padding-bottom: 0; padding-top: 0">
+                                               padding-bottom: 0; padding-top: 0"
+                                            type="submit">
                                         <i class="ti-trash" style="color: gray;"></i>
                                     </button>
                                 </form>
                                 <form class="pull-right" method="get"
-                                      th:action="@{'/comments/' + ${comment.id} + '/edit'}"
-                                      style="display: inline-block;">
-                                    <button class="btn-sm btn-link pull-right" type="submit"
-                                            style="border-width: 0; text-decoration: none;
+                                      style="display: inline-block;"
+                                      th:action="@{'/comments/' + ${comment.id} + '/edit'}">
+                                    <button class="btn-sm btn-link pull-right" style="border-width: 0; text-decoration: none;
                                                padding-left: 1rem; padding-right: 0.5rem;
-                                               padding-bottom: 0; padding-top: 0">
+                                               padding-bottom: 0; padding-top: 0"
+                                            type="submit">
                                         <i class="ti-pencil" style="color: gray;"></i>
                                     </button>
                                 </form>

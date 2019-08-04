@@ -1,6 +1,7 @@
 package techcourse.myblog.controller.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
 @Getter

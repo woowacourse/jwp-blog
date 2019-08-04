@@ -33,6 +33,7 @@ public class CommentService {
     private Article findByArticleId(Long articleId) {
         return articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
     }
+
     public Comment findById(Long commentId, User user) {
         return checkOwner(commentId, user);
     }

@@ -47,7 +47,7 @@ class CommentServiceTest {
     @Test
     @DisplayName("comment 잘 저장한다.")
     void save() {
-        CommentDto commentDto = new CommentDto(TEST_ARTICLE_ID,COMMENTS_CONTENTS);
+        CommentDto commentDto = new CommentDto(TEST_ARTICLE_ID, COMMENTS_CONTENTS);
         given(articleRepository.findById(TEST_ARTICLE_ID)).willReturn(Optional.of(ARTICLE));
         commentService.save(commentDto, USER);
 
@@ -67,7 +67,7 @@ class CommentServiceTest {
     @Test
     @DisplayName("comment를 업데이트 한다.")
     void update() {
-        CommentDto commentDto = new CommentDto(TEST_ARTICLE_ID,COMMENTS_CONTENTS_2);
+        CommentDto commentDto = new CommentDto(TEST_ARTICLE_ID, COMMENTS_CONTENTS_2);
 
         given(commentRepository.findById(TEST_COMMENT_ID))
                 .willReturn(Optional.of(new Comment(COMMENTS_CONTENTS, USER, ARTICLE)));

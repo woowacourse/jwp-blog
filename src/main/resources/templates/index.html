@@ -73,15 +73,17 @@
                                     </div>
                                 </a>
                                 <nav>
-                                    <ul th:if="${articles}" class="pagination justify-content-center">
-                                        <li th:if="${!articles.first}" class="page-item">
-                                            <a class="page-link" th:href="@{'?page=' + ${articles.number - 1}}">&larr; Newer Posts </a>
+                                    <ul class="pagination justify-content-center" th:if="${articles}">
+                                        <li class="page-item" th:if="${!articles.first}">
+                                            <a class="page-link" th:href="@{'?page=' + ${articles.number - 1}}">&larr;
+                                                Newer Posts </a>
                                         </li>
-                                        <li th:if="${!articles.last}" class="page-item">
-                                            <a class="page-link" th:href="@{'?page=' + ${articles.number + 1}}">Older Posts &rarr;</a>
+                                        <li class="page-item" th:if="${!articles.last}">
+                                            <a class="page-link" th:href="@{'?page=' + ${articles.number + 1}}">Older
+                                                Posts &rarr;</a>
                                         </li>
                                     </ul>
-                                    <ul th:unless="${articles}" class="pagination justify-content-center">
+                                    <ul class="pagination justify-content-center" th:unless="${articles}">
                                     </ul>
                                 </nav>
                             </div>

@@ -8,6 +8,7 @@ import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.controller.dto.UserDto;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,12 +17,7 @@ import static org.springframework.web.reactive.function.BodyInserters.fromFormDa
 
 public class Utils {
     public static String getResponseBody(byte[] body) {
-        try {
-            return new String(body, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("인코딩 에러");
-        }
+        return new String(body, StandardCharsets.UTF_8);
     }
 
     public static void createUser(WebTestClient webTestClient, UserDto userDto) {
@@ -34,7 +30,7 @@ public class Utils {
     }
 
     public static String createArticle(ArticleDto articleDto, String cookie, String baseUrl) {
-       return given()
+        return given()
                 .param("title", articleDto.getTitle())
                 .param("coverUrl", articleDto.getCoverUrl())
                 .param("contents", articleDto.getContents())

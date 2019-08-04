@@ -20,7 +20,7 @@ public class HomeController {
 
     @GetMapping
     public String home(Model model,
-                       @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC, size = 2) Pageable pageable) {
+                       @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC, size = 2) Pageable pageable) {
         model.addAttribute("articles", articleService.getAllArticles(pageable));
         return "index";
     }
