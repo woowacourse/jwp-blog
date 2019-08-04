@@ -12,9 +12,9 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Getter
-public class Article {
+public class Article extends AuditLog {
     private static final String INVALID_ERROR = "작성자가 아닙니다.";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
