@@ -19,6 +19,8 @@ import techcourse.myblog.utils.page.PageRequest;
 
 import java.util.List;
 
+import static techcourse.myblog.utils.session.SessionContext.USER;
+
 @Service
 @Transactional
 public class ArticleService {
@@ -60,14 +62,18 @@ public class ArticleService {
     }
 
     public Article update(long articleId, ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
-        Article originArticle = findArticle(articleId);
+        Article currentArticle = findArticle(articleId);
+        Article changedArticle = ArticleConverter.toEntity(articleRequestDto, currentArticle.getAuthor());
         User user = userService.getUserByEmail(userResponseDto.getEmail());
 
-        originArticle.update(ArticleConverter.toEntity(articleRequestDto, originArticle.getAuthor()), user);
-        return originArticle;
+        checkAuthentication(user.getId(), userResponseDto);
+        currentArticle.update(changedArticle, user);
+
+        return currentArticle;
     }
 
-    public void delete(long articleId) {
+    public void delete(long articleId, UserResponseDto userResponseDto) {
+        checkAuthentication(articleId, userResponseDto);
         articleRepository.deleteById(articleId);
     }
 

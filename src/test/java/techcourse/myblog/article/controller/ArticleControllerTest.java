@@ -92,7 +92,7 @@ public class ArticleControllerTest extends LoginTemplate {
                         .with("contents", "updatedContents"))
                 .exchange()
                 .expectStatus().isFound()
-                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/");
+                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/.*");
     }
 
     @Test

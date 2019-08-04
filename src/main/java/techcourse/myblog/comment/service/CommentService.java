@@ -41,6 +41,8 @@ public class CommentService {
 
     public void update(Long commentId, CommentRequestDto commentRequestDto, UserResponseDto userResponseDto) {
         Comment comment = getCommentById(commentId);
+
+        checkAuthentication(commentId, userResponseDto);
         comment.update(commentRequestDto, userService.getUserByEmail(userResponseDto.getEmail()));
     }
 
@@ -48,15 +50,18 @@ public class CommentService {
         return commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
     }
 
-    public void remove(Long commentId) {
+    public void remove(Long commentId, UserResponseDto userResponseDto) {
         Comment comment = getCommentById(commentId);
+
+        checkAuthentication(commentId, userResponseDto);
         commentRepository.delete(comment);
     }
 
     public void checkAuthentication(Long commentId, UserResponseDto userResponseDto) {
-        Comment comment = getCommentById(commentId);
         User user = userService.getUserByEmail(userResponseDto.getEmail());
+        Comment comment = getCommentById(commentId);
         log.debug("{} comment.getCommenter().getEmail() >> {}", LOG_TAG, comment.getCommenter().getEmail());
+
         if (!comment.isCommenter(user)) {
             throw new CommentAuthenticationException();
         }
