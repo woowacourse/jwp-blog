@@ -7,11 +7,10 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
-import techcourse.myblog.dto.CommentDto;
-
-import javax.servlet.http.HttpSession;
+import techcourse.myblog.web.annotation.LoginUser;
 
 @Controller
 @RequestMapping("/articles/{articleId}/comments")
@@ -26,29 +25,26 @@ public class CommentController {
     }
 
     @PostMapping("")
-    public RedirectView createComment(CommentDto commentDto, HttpSession httpSession) {
-        Comment comment = convert(commentDto, httpSession);
+    public RedirectView createComment(CommentDto commentDto, @LoginUser User loginUser) {
+        Comment comment = convert(commentDto, loginUser);
         commentService.save(comment);
         return new RedirectView("/articles/" + commentDto.getArticleId());
     }
 
     @PutMapping("/{commentId}")
-    public RedirectView updateComment(@PathVariable long articleId, @PathVariable long commentId, String contents, HttpSession httpSession) {
-        User loginUser = (User) httpSession.getAttribute("user");
+    public RedirectView updateComment(@PathVariable long articleId, @PathVariable long commentId, @LoginUser User loginUser, String contents) {
         commentService.update(commentId, loginUser, contents);
         return new RedirectView("/articles/" + articleId);
     }
 
     @DeleteMapping("/{commentId}")
-    public RedirectView deleteComment(@PathVariable long commentId, @PathVariable long articleId, HttpSession httpSession) {
-        User loginUser = (User) httpSession.getAttribute("user");
+    public RedirectView deleteComment(@PathVariable long commentId, @PathVariable long articleId, @LoginUser User loginUser) {
         commentService.deleteById(commentId, loginUser.getId());
         return new RedirectView("/articles/" + articleId);
     }
 
-    private Comment convert(CommentDto commentDto, HttpSession httpSession) {
-        User author = (User) httpSession.getAttribute("user");
+    private Comment convert(CommentDto commentDto, @LoginUser User loginUser) {
         Article article = articleService.findById(commentDto.getArticleId());
-        return new Comment(commentDto.getContents(), author, article);
+        return new Comment(commentDto.getContents(), loginUser, article);
     }
 }

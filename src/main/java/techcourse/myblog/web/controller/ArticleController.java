@@ -7,11 +7,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.web.annotation.LoginUser;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Slf4j
@@ -31,9 +31,8 @@ public class ArticleController {
     }
 
     @PostMapping("")
-    public String createArticle(@Valid ArticleDto newArticleDto, HttpSession httpSession) {
-        User author = (User) httpSession.getAttribute(USER);
-        Article article = articleService.save(newArticleDto.toEntity(author));
+    public String createArticle(@Valid ArticleDto newArticleDto, @LoginUser User loginUser) {
+        Article article = articleService.save(newArticleDto.toEntity(loginUser));
         return "redirect:/articles/" + article.getId();
     }
 
@@ -46,24 +45,21 @@ public class ArticleController {
     }
 
     @GetMapping("/{articleId}/edit")
-    public String moveArticleEditPage(@PathVariable long articleId, Model model, HttpSession httpSession) {
-        User loginUser = (User) httpSession.getAttribute(USER);
+    public String moveArticleEditPage(@PathVariable long articleId, Model model, @LoginUser User loginUser) {
         Article article = articleService.findById(articleId, loginUser.getId());
         model.addAttribute(ARTICLE, article);
         return "article-edit";
     }
 
     @PutMapping("/{articleId}")
-    public String updateArticle(@PathVariable long articleId, @Valid ArticleDto updateArticleDto, Model model, HttpSession httpSession) {
-        User author = (User) httpSession.getAttribute(USER);
-        Article updateArticle = articleService.update(articleId, updateArticleDto.toEntity(author));
+    public String updateArticle(@PathVariable long articleId, @Valid ArticleDto updateArticleDto, @LoginUser User loginUser, Model model) {
+        Article updateArticle = articleService.update(articleId, updateArticleDto.toEntity(loginUser));
         model.addAttribute(ARTICLE, updateArticle);
         return "redirect:/articles/" + updateArticle.getId();
     }
 
     @DeleteMapping("/{articleId}")
-    public String deleteArticle(@PathVariable long articleId, HttpSession httpSession) {
-        User loginUser = (User) httpSession.getAttribute(USER);
+    public String deleteArticle(@PathVariable long articleId, @LoginUser User loginUser) {
         Article article = articleService.findById(articleId, loginUser.getId());
         articleService.deleteById(article.getId());
         return "redirect:/";
