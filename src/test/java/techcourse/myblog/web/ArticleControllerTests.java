@@ -113,8 +113,11 @@ public class ArticleControllerTests {
     @Test
     void 게시글수정페이지() {
         webTestClient.get().uri("/articles/1/edit")
+                .header("Cookie", cookie)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk()
+        ;
     }
 
     @Test

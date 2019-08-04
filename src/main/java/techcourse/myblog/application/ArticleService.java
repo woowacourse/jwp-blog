@@ -41,9 +41,20 @@ public class ArticleService {
         return savedArticle.getId();
     }
 
-    public Article findById(Long articleId) {
+    public Article findArticleById(Long articleId) {
         return articleRepository.findById(articleId)
                 .orElseThrow(() -> new NoArticleException("해당 게시물은 존재하지 않습니다!"));
+    }
+
+    public Article findArticleWrittenByUser(Long articleId, UserResponse userResponse) {
+        Article article = findArticleById(articleId);
+        User user = modelMapper.map(userResponse, User.class);
+
+        if (!article.isSameAuthor(user)) {
+            throw new NotSameAuthorException("해당 작성자만 글을 수정할 수 있습니다.");
+        }
+
+        return article;
     }
 
     @Transactional

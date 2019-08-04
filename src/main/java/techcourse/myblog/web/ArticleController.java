@@ -52,7 +52,7 @@ public class ArticleController {
 
     @GetMapping("/articles/{articleId}")
     public String selectArticle(@PathVariable("articleId") long articleId, Model model) {
-        Article article = articleService.findById(articleId);
+        Article article = articleService.findArticleById(articleId);
         List<Comment> comments = commentService.findCommentsByArticle(article);
         model.addAttribute(ARTICLE_INFO, article);
         model.addAttribute(COMMENTS_INFO, comments);
@@ -61,8 +61,9 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String edit(@PathVariable("articleId") long articleId, Model model) {
-        Article article = articleService.findById(articleId);
+    public String edit(@PathVariable("articleId") long articleId, Model model, HttpSession httpSession) {
+        UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
+        Article article = articleService.findArticleWrittenByUser(articleId, userResponse);
         model.addAttribute(ARTICLE_INFO, article);
 
         return "article-edit";
