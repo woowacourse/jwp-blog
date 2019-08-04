@@ -3,17 +3,26 @@ package techcourse.myblog.domain.article;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.article.Article;
 import techcourse.myblog.article.Contents;
+import techcourse.myblog.dto.request.UserSignUpInfoDto;
+import techcourse.myblog.user.Information;
+import techcourse.myblog.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ArticleTests {
 	@Test
 	void update() {
+		Information userInfo = new UserSignUpInfoDto("tiber", "tiber@naver.com", "asdfASDF1@")
+				.valueOfInfo();
+		User user = new User(userInfo);
+
 		Contents actualContents = new Contents("title", "contents", "www.coverUrl.com");
-		Article article = new Article(actualContents);
+		Article article = new Article(user, actualContents);
 		Contents updateContents = new Contents("updateTitle", "updateContents", "www.updateUrl.com");
-		Article modifiedArticle = new Article(updateContents);
+		Article modifiedArticle = new Article(user, updateContents);
+
 		article.update(updateContents);
+
 		assertThat(article.getTitle()).isEqualTo(modifiedArticle.getTitle());
 		assertThat(article.getText()).isEqualTo(modifiedArticle.getText());
 		assertThat(article.getCoverUrl()).isEqualTo(modifiedArticle.getCoverUrl());
