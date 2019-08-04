@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static techcourse.myblog.dto.UserDto.*;
 
 @AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SignupValidationTest {
     private static final String EMAIL = "email";

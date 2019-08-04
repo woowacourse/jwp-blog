@@ -22,7 +22,6 @@ import java.util.Objects;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
     private static final String JSESSIONID = "JSESSIONID";

@@ -16,7 +16,6 @@ import techcourse.myblog.domain.repository.UserRepository;
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LoginControllerTests {
     private static final String JSESSIONID = "JSESSIONID";
