@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.article.ArticleAssembler;
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.article.ArticleRequestDto;
-import techcourse.myblog.service.article.ArticleResponseDto;
-import techcourse.myblog.service.article.ArticleService;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.dto.ArticleRequestDto;
+import techcourse.myblog.web.dto.ArticleAssembler;
+import techcourse.myblog.web.dto.ArticleDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +25,7 @@ public class ArticleController {
 
     @GetMapping("/")
     public String showMain(Model model) {
-        List<ArticleResponseDto> articleDtos = articleService.findAll()
+        List<ArticleDto> articleDtos = articleService.findAll()
             .stream()
             .map(ArticleAssembler::convertToDto)
             .collect(Collectors.toList());

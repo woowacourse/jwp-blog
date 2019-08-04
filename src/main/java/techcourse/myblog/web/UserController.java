@@ -8,18 +8,18 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserAssembler;
-import techcourse.myblog.service.user.UserRequestDto;
-import techcourse.myblog.service.user.UserResponseDto;
-import techcourse.myblog.service.user.UserService;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.web.dto.UserAssembler;
+import techcourse.myblog.web.dto.UserDto;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
+import static techcourse.myblog.service.UserService.USER_SESSION_KEY;
 
 @Controller
 public class UserController {
@@ -37,9 +37,9 @@ public class UserController {
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        List<UserResponseDto> userResponseDtos = userService.findAll().stream().map(UserAssembler::convertToDto)
+        List<UserDto> userDtos = userService.findAll().stream().map(UserAssembler::convertToDto)
             .collect(Collectors.toList());
-        model.addAttribute("users", userResponseDtos);
+        model.addAttribute("users", userDtos);
         return "user-list";
     }
 

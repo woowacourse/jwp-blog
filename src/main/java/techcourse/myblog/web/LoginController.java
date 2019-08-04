@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.login.LoginService;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.service.LoginService;
 
 import javax.servlet.http.HttpSession;
 
-import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
+import static techcourse.myblog.service.UserService.USER_SESSION_KEY;
 
 @Controller
 public class LoginController {

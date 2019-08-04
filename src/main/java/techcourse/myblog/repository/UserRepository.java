@@ -2,7 +2,7 @@ package techcourse.myblog.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.User;
 
 import java.util.Optional;
 

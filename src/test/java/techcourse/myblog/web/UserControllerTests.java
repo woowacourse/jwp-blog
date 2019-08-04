@@ -73,7 +73,7 @@ public class UserControllerTests {
             .expectStatus().isOk();
     }
 
-        @Test
+    @Test
     void 회원목록_조회_확인() {
         webTestClient.get().uri("/users")
             .exchange()
