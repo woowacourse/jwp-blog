@@ -21,6 +21,6 @@ INSERT INTO article(user_id, title, cover_url, contents) VALUES (1, '14','https:
 INSERT INTO article(user_id, title, cover_url, contents) VALUES (1, '15','https://avatars3.githubusercontent.com/u/46308949?s=460&v=4','냉무');
 INSERT INTO article(user_id, title, cover_url, contents) VALUES (1, '16','https://avatars3.githubusercontent.com/u/15669435?s=180&v=4','contents');
 
-INSERT INTO comment(contents, user_id, article_id) VALUES  ('contents', 1, 1);
-INSERT INTO comment(contents, user_id, article_id) VALUES  ('contents', 1, 1);
-INSERT INTO comment(contents, user_id, article_id) VALUES  ('contents', 1, 1);
+INSERT INTO comment(contents, user_id, article_id) VALUES  ('contents', 1, 16);
+INSERT INTO comment(contents, user_id, article_id) VALUES  ('contents', 1, 16);
+INSERT INTO comment(contents, user_id, article_id) VALUES  ('contents', 1, 16);

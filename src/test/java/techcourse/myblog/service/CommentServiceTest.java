@@ -52,7 +52,7 @@ class CommentServiceTest {
         commentDto.setArticleId(articleId);
         commentDto.setContents("contents");
 
-        commentId = commentService.save(commentDto, userId);
+        commentId = commentService.save(commentDto, userId).getId();
     }
 
     @Test

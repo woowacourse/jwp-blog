@@ -47,12 +47,14 @@ public class CommentDto {
     public static class Response {
         private Long id;
         private String contents;
+        private String name;
         private LocalDateTime modifiedDate;
 
         Response(Comment comment) {
             this.id = comment.getId();
             this.contents = comment.getContents();
             this.modifiedDate = comment.getModifiedDate();
+            this.name = comment.getUser().getName();
         }
 
         public static Response createByComment(Comment comment) {
