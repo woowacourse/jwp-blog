@@ -7,8 +7,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.service.ArticleService;
-import techcourse.myblog.domain.service.CommentService;
+import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CommentService;
 import techcourse.myblog.dto.CommentDto;
 
 import javax.servlet.http.HttpSession;

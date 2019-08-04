@@ -7,8 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.service.ArticleService;
-import techcourse.myblog.domain.service.CommentService;
+import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.CommentService;
 import techcourse.myblog.dto.ArticleDto;
 
 import javax.servlet.http.HttpSession;

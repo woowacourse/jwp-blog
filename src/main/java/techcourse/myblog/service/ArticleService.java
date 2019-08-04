@@ -1,4 +1,4 @@
-package techcourse.myblog.domain.service;
+package techcourse.myblog.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

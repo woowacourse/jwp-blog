@@ -1,4 +1,4 @@
-package techcourse.myblog.domain.service;
+package techcourse.myblog.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

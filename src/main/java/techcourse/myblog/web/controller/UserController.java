@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.service.UserService;
+import techcourse.myblog.service.UserService;
 import techcourse.myblog.dto.MyPageDto;
 import techcourse.myblog.dto.UserDto;
 
