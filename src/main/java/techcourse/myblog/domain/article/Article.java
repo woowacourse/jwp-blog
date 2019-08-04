@@ -35,7 +35,7 @@ public class Article {
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
@@ -51,6 +51,7 @@ public class Article {
         this.contents = contents;
         this.coverUrl = getDefaultUrl(coverUrl);
         this.author = author;
+        author.addArticle(this);
     }
 
     private String getDefaultUrl(String coverUrl) {
