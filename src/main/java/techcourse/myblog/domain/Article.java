@@ -31,10 +31,10 @@ public class Article {
         this.coverUrl = coverUrl;
     }
 
-    public void update(ArticleRequestDto articleRequestDto) {
-        this.title = articleRequestDto.getTitle();
-        this.contents = articleRequestDto.getContents();
-        this.coverUrl = articleRequestDto.getCoverUrl();
+    public void update(Article article) {
+        this.title = article.getTitle();
+        this.contents = article.getContents();
+        this.coverUrl = article.getCoverUrl();
     }
 
     public void setAuthor(User persistUser) {
