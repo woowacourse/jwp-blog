@@ -1,4 +1,4 @@
-package techcourse.myblog.interceptor.loggedIn;
+package techcourse.myblog.web.interceptor.loggedIn;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

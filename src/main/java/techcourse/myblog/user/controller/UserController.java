@@ -88,20 +88,18 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public String updateUser(@Valid UserRequestDto userRequestDto, BindingResult result) {
+    public String updateUser(@Valid UserRequestDto userRequestDto, BindingResult result, UserResponseDto origin) {
         if (result.hasErrors()) {
             return "mypage";
         }
 
-        UserResponseDto origin = (UserResponseDto) SessionUtil.getAttribute(session, USER);
         UserResponseDto userResponseDto = userService.updateUser(userRequestDto, origin);
         SessionUtil.setAttribute(session, USER, userResponseDto);
         return "redirect:/mypage";
     }
 
     @DeleteMapping("/users")
-    public String deleteUser() {
-        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(session, USER);
+    public String deleteUser(UserResponseDto userResponseDto) {
         userService.deleteUser(userResponseDto);
         SessionUtil.removeAttribute(session, USER);
         return "redirect:/";

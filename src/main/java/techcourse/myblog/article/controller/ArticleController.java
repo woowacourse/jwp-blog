@@ -16,11 +16,9 @@ import static techcourse.myblog.utils.session.SessionContext.USER;
 
 @Controller
 public class ArticleController {
-    private final HttpSession httpSession;
     private final ArticleService articleService;
 
-    public ArticleController(HttpSession httpSession, ArticleService articleService) {
-        this.httpSession = httpSession;
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
     }
 
@@ -51,23 +49,20 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String saveArticle(ArticleRequestDto articleRequestDto) {
-        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(httpSession, USER);
+    public String saveArticle(ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
         Article article = articleService.save(articleRequestDto, userResponseDto);
         return "redirect:/articles/" + article.getId();
     }
 
     @PutMapping("/articles/{articleId}")
-    public String modifyArticle(@PathVariable long articleId, ArticleRequestDto articleRequestDto) {
-        UserResponseDto userResponseDto = (UserResponseDto) SessionUtil.getAttribute(httpSession, USER);
+    public String modifyArticle(@PathVariable long articleId, ArticleRequestDto articleRequestDto, UserResponseDto userResponseDto) {
         articleService.update(articleId, articleRequestDto, userResponseDto);
 
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable long articleId) {
-        UserResponseDto userResponseDto = (UserResponseDto) httpSession.getAttribute(USER);
+    public String deleteArticle(@PathVariable long articleId, UserResponseDto userResponseDto) {
         articleService.delete(articleId, userResponseDto);
 
         return "redirect:/";

@@ -67,12 +67,7 @@ public class Comment {
     }
 
     public boolean isCommenter(User user) {
-        System.out.println("commenter " + commenter.getId());
-        System.out.println("user " + user.getId());
-        System.out.println("user vs comment object" + user.equals(commenter));
-        System.out.println("user id vs comment id" + user.getId().equals(commenter.getId()));
         return user.equals(commenter);
-        //return user.getId().equals(id);
     }
 
     @Override
