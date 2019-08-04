@@ -10,11 +10,14 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.dto.CommentSaveRequestDto;
 import techcourse.myblog.exception.CommentNotFoundException;
+import techcourse.myblog.exception.IllegalCommentDeleteRequestException;
+import techcourse.myblog.exception.IllegalCommentUpdateRequestException;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -30,9 +33,10 @@ class CommentServiceTest {
     @Autowired
     private UserService userService;
 
-    private Comment comment;
-    private Article article;
     private User author;
+    private Article article;
+    private CommentSaveRequestDto commentSaveRequestDto;
+    private Comment comment;
 
     @BeforeEach
     void setUp() {
@@ -48,9 +52,9 @@ class CommentServiceTest {
 
         Long articleId = article.getId();
 
-        CommentSaveRequestDto commentSaveRequestDto = new CommentSaveRequestDto();
+        commentSaveRequestDto = new CommentSaveRequestDto();
         commentSaveRequestDto.setArticleId(articleId);
-        commentSaveRequestDto.setComment("댓글");
+        commentSaveRequestDto.setContents("댓글");
         comment = commentService.save(commentSaveRequestDto, author);
     }
 
@@ -63,6 +67,13 @@ class CommentServiceTest {
     }
 
     @Test
+    void findArticleIdById() {
+        Long articleId = commentService.findArticleIdById(comment.getId());
+
+        assertThat(articleId).isEqualTo(article.getId());
+    }
+
+    @Test
     void update() {
         String editedContents = "수정된내용";
         commentService.update(comment.getId(), editedContents, author);
@@ -72,10 +83,21 @@ class CommentServiceTest {
     }
 
     @Test
-    void findArticleIdById() {
-        Long articleId = commentService.findArticleIdById(comment.getId());
+    void update_작성자가_아닌_경우() {
+        User anotherAuthor = User.builder()
+                .name("이름")
+                .email("anotherAuthor@test.com")
+                .password("password1!")
+                .build();
+        userService.save(anotherAuthor);
 
-        assertThat(articleId).isEqualTo(article.getId());
+        String editedContents = "수정된내용";
+
+        assertThrows(IllegalCommentUpdateRequestException.class
+                , () -> commentService.update(comment.getId(), editedContents, anotherAuthor));
+
+        Comment updatedComment = commentService.findById(comment.getId());
+        assertThat(updatedComment.getContents()).isEqualTo(commentSaveRequestDto.getContents());
     }
 
     @Test
@@ -83,5 +105,20 @@ class CommentServiceTest {
         commentService.deleteById(comment.getId(), author);
 
         assertThrows(CommentNotFoundException.class, () -> commentService.findById(comment.getId()));
+    }
+
+    @Test
+    void delete_작성자가_아닌_경우() {
+        User anotherAuthor = User.builder()
+                .name("이름")
+                .email("anotherAuthor@test.com")
+                .password("password1!")
+                .build();
+        userService.save(anotherAuthor);
+
+        assertThrows(IllegalCommentDeleteRequestException.class
+                , () -> commentService.deleteById(comment.getId(), anotherAuthor));
+
+        assertDoesNotThrow(() -> commentService.findById(comment.getId()));
     }
 }

@@ -50,7 +50,7 @@ class CommentControllerTests {
 
         webTestClient.post().uri("/comment/writing")
                 .body(BodyInserters
-                        .fromFormData("comment", "댓글")
+                        .fromFormData("contents", "댓글")
                         .with("articleId", articleId))
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
@@ -62,7 +62,7 @@ class CommentControllerTests {
     void saveComment() {
         webTestClient.post().uri("/comment/writing")
                 .body(BodyInserters
-                        .fromFormData("comment", "새 댓글")
+                        .fromFormData("contents", "새 댓글")
                         .with("articleId", articleId))
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()

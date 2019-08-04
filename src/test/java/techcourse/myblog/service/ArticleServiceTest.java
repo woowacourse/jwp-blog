@@ -8,12 +8,15 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.exception.IllegalArticleDeleteRequestException;
+import techcourse.myblog.exception.IllegalArticleUpdateRequestException;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -27,6 +30,7 @@ class ArticleServiceTest {
     private UserService userService;
 
     private User author;
+    private ArticleSaveRequestDto articleSaveRequestDto;
     private Article article;
 
     @BeforeEach
@@ -38,7 +42,7 @@ class ArticleServiceTest {
                 .build();
         userService.save(author);
 
-        ArticleSaveRequestDto articleSaveRequestDto = new ArticleSaveRequestDto("title", "coverUrl", "contents");
+        articleSaveRequestDto = new ArticleSaveRequestDto("title", "coverUrl", "contents");
         article = articleService.save(articleSaveRequestDto, author);
     }
 
@@ -75,10 +79,47 @@ class ArticleServiceTest {
     }
 
     @Test
+    void update_작성자가_아닌_경우() {
+        ArticleSaveRequestDto anotherArticleSaveRequestDto = new ArticleSaveRequestDto();
+        anotherArticleSaveRequestDto.setTitle("newTitle");
+        anotherArticleSaveRequestDto.setCoverUrl("newCoverUrl");
+        anotherArticleSaveRequestDto.setContents("newContents");
+        Long id = article.getId();
+
+        User anotherAuthor = User.builder()
+                .name("이름")
+                .email("anotherAuthor@test.com")
+                .password("password1!")
+                .build();
+        userService.save(anotherAuthor);
+
+        assertThrows(IllegalArticleUpdateRequestException.class
+                , () -> articleService.update(anotherArticleSaveRequestDto, id, anotherAuthor));
+
+        Article updatedArticle = articleService.findById(id);
+        assertThat(updatedArticle.getTitle()).isEqualTo(articleSaveRequestDto.getTitle());
+        assertThat(updatedArticle.getCoverUrl()).isEqualTo(articleSaveRequestDto.getCoverUrl());
+        assertThat(updatedArticle.getContents()).isEqualTo(articleSaveRequestDto.getContents());
+    }
+
+    @Test
     void delete() {
         articleService.deleteById(article.getId(), author);
         assertThrows(ArticleNotFoundException.class, () -> articleService.findById(article.getId()));
+    }
 
-        userService.deleteUser(author.getId());
+    @Test
+    void delete_작성자가_아닌_경우() {
+        User anotherAuthor = User.builder()
+                .name("이름")
+                .email("anotherAuthor@test.com")
+                .password("password1!")
+                .build();
+        userService.save(anotherAuthor);
+
+        assertThrows(IllegalArticleDeleteRequestException.class
+                , () -> articleService.deleteById(article.getId(), anotherAuthor));
+
+        assertDoesNotThrow(() -> articleService.findById(article.getId()));
     }
 }

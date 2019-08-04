@@ -27,7 +27,7 @@ public class CommentService {
         Article article = articleService.findById(articleId);
 
         Comment comment = Comment.builder()
-                .contents(commentSaveRequestDto.getComment())
+                .contents(commentSaveRequestDto.getContents())
                 .article(article)
                 .user(user)
                 .build();

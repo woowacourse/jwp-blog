@@ -10,6 +10,6 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class CommentSaveRequestDto {
-    private String comment;
+    private String contents;
     private Long articleId;
 }
