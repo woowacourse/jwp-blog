@@ -46,7 +46,7 @@ public class CommentController {
     @DeleteMapping(COMMENT + "/{articleId}" + "/{commentId}")
     public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId) {
         UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
-        commentService.remove(commentId, userResponse);
+        commentService.delete(commentId, userResponse);
 
         return REDIRECT + ARTICLES + "/" + articleId;
     }

@@ -48,7 +48,7 @@ public class CommentService {
         return commentRepository.findById(commentId).orElseThrow(CommentException::new);
     }
 
-    public void remove(Long commentId, UserResponse userResponse) {
+    public void delete(Long commentId, UserResponse userResponse) {
         checkAuthentication(commentId, userResponse);
         commentRepository.deleteById(commentId);
     }
