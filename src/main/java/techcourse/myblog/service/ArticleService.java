@@ -10,6 +10,7 @@ import techcourse.myblog.dto.ArticleRequest;
 import techcourse.myblog.dto.ArticleResponse;
 import techcourse.myblog.dto.CommentResponse;
 import techcourse.myblog.dto.UserResponse;
+import techcourse.myblog.exception.ArticleAuthenticationException;
 import techcourse.myblog.exception.ArticleException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.utils.page.PageRequest;
@@ -59,12 +60,26 @@ public class ArticleService {
 
     @Transactional
     public void update(long articleId, ArticleRequest articleRequest, UserResponse userResponse) {
-        Article originArticle = findArticleById(articleId);
-        User author = userService.getUserByEmail(userResponse);
-        originArticle.update(ArticleAssembler.toEntity(articleRequest, author));
+        Article article = findArticleById(articleId);
+        User user = userService.getUserByEmail(userResponse);
+
+        checkAuthentication(article, userResponse);
+        article.update(ArticleAssembler.toEntity(articleRequest, user));
     }
 
-    public void delete(long articleId) {
+    private void checkAuthentication(Article article, UserResponse userResponse) {
+        String articleAuthorEmail = article.getAuthor().getEmail();
+        String loggedInUserEmail = userResponse.getEmail();
+
+        if (!articleAuthorEmail.equals(loggedInUserEmail)) {
+            throw new ArticleAuthenticationException();
+        }
+    }
+
+    public void delete(long articleId, UserResponse userResponse) {
+        Article article = findArticleById(articleId);
+        checkAuthentication(article, userResponse);
+
         articleRepository.deleteById(articleId);
     }
 
