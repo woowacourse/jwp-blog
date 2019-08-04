@@ -62,7 +62,7 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info">2</span>
+                    <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
                 </div>
                 <div class="comment">
                     <ul id="comment-list" class="list-unstyled list-info">
@@ -72,7 +72,7 @@
                             <span th:text="${comment.getCommenter().getName()}" href="" class="text-bold inline-block"></span>
                             <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
+                                    <span th:text="${comment.getMinAgo() + ' min ago'}">6 min ago</span>
                             </span>
 
                             <!--평소에 보여지는 것-->
