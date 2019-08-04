@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static techcourse.myblog.web.UserController.LOGGED_IN_USER;
-
 @Component
 public class LoggedInUserInterceptor extends HandlerInterceptorAdapter {
     @Override
@@ -18,9 +16,8 @@ public class LoggedInUserInterceptor extends HandlerInterceptorAdapter {
             Object handler
     ) throws Exception {
         HttpSession session = request.getSession();
-        String path = request.getRequestURI();
 
-        if (isLoggedIn(session) && path.equals("/login")) {
+        if (isLoggedIn(session)) {
             response.sendRedirect("/");
             return false;
         }
@@ -28,6 +25,6 @@ public class LoggedInUserInterceptor extends HandlerInterceptorAdapter {
     }
 
     private boolean isLoggedIn(HttpSession session) {
-        return session.getAttribute(LOGGED_IN_USER) != null;
+        return session.getAttribute("user") != null;
     }
 }

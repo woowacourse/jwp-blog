@@ -1,114 +1,92 @@
 package techcourse.myblog.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserFactory;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.dto.UserProfileDto;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import techcourse.myblog.controller.dto.UserDto;
+import techcourse.myblog.exception.EmailDuplicatedException;
+import techcourse.myblog.model.User;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.service.exception.NotFoundUserException;
-import techcourse.myblog.service.exception.SignUpException;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserServiceTest {
-    public static final String VALID_PASSWORD = "passWORD1!";
+@ExtendWith(SpringExtension.class)
+class UserServiceTest {
+    static final String USER_NAME = "test1";
+    static final String EMAIL = "test1@test.com";
+    static final String PASSWORD = "!Q@W3e4r";
 
-    @Autowired
-    private UserService userService;
+    @InjectMocks
+    UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
+    @Mock
+    UserRepository userRepository;
 
-    private UserDto testUserDto;
-    private Long setUpArticleId;
+    private InOrder inOrder;
+    private User testUser;
+    private UserDto userDto;
 
     @BeforeEach
     void setUp() {
-        testUserDto = new UserDto("name", "email@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
-        User testUser = UserFactory.generateUser(testUserDto);
-
-        userRepository.save(testUser);
-        setUpArticleId = testUser.getId();
+        inOrder = inOrder(userRepository);
+        testUser = new User(USER_NAME, EMAIL, PASSWORD);
+        userDto = new UserDto(USER_NAME, EMAIL, PASSWORD);
     }
 
     @Test
-    @DisplayName("새로운 User를 생성한다.")
+    @DisplayName("User를 저장한다.")
     void saveUser() {
-        UserDto userDto = new UserDto("new", "new@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
-        Long createdId = userService.save(userDto);
+        User anotherUser = new User("another", "another@test.com", "QW!@ER#$");
+        userService.save(userDto);
 
-        User user = userRepository.findById(createdId).orElseThrow(NotFoundUserException::new);
-        assertThat(user.getEmail()).isEqualTo("new@woowa.com");
+        verify(userRepository, atLeastOnce()).save(testUser);
+        verify(userRepository, times(1)).save(testUser);
+        verify(userRepository, never()).save(anotherUser);
+
+        inOrder.verify(userRepository).save(testUser);
     }
 
     @Test
-    @DisplayName("이메일이 중복되는 경우에 예외를 던져준다.")
+    @DisplayName("email이 이미 사용중인지 확인한다.")
     void checkEmailDuplication() {
-        UserDto duplicatedEmailUserDto = new UserDto(
-                "name",
-                "email@woowa.com",
-                VALID_PASSWORD,
-                VALID_PASSWORD
-        );
+        given(userRepository.save(testUser)).willThrow(new DataIntegrityViolationException("duplicate email"));
 
-        assertThatThrownBy(() -> userService.save(duplicatedEmailUserDto))
-                .isInstanceOf(SignUpException.class);
+        assertThatThrownBy(() -> userService.save(userDto)).isInstanceOf(EmailDuplicatedException.class);
+        verify(userRepository, atLeast(1)).save(testUser);
     }
 
     @Test
-    @DisplayName("User정보를 User id를 통해 찾는다.")
-    void findByIdTest() {
-        User foundUser = userRepository.findById(setUpArticleId)
-                .orElseThrow(NotFoundUserException::new);
-
-        assertThat(foundUser.getEmail()).isEqualTo(testUserDto.getEmail());
-    }
-
-    @Test
-    @DisplayName("User 정보를 update한다.")
+    @DisplayName("User의 정보를 수정한다.")
     void updateUser() {
-        UserProfileDto updatedUserProfile = new UserProfileDto(
-                setUpArticleId,
-                "updated",
-                "email@woowa.com"
-        );
+        final String updatedName = "updated";
+        final String updatedPassword = "updated!@QW12";
 
-        userService.update(updatedUserProfile);
-        User updatedUser = userRepository.findById(setUpArticleId)
-                .orElseThrow(NotFoundUserException::new);
+        given(userRepository.findByEmail(EMAIL)).willReturn(Optional.of(testUser));
 
-        assertThat(updatedUser.getName()).isEqualTo("updated");
+        User updateUser = userService.update(new UserDto(updatedName, EMAIL, updatedPassword));
+
+        verify(userRepository, atLeastOnce()).findByEmail(EMAIL);
+        assertThat(updateUser.getUserName()).isEqualTo(updatedName);
+        assertThat(updateUser.getPassword()).isEqualTo(updatedPassword);
     }
 
     @Test
-    @DisplayName("id를 이용해 User를 삭제한다.")
+    @DisplayName("User를 삭제한다.")
     void deleteUser() {
-        // When
-        Long deletedId;
-        testUserDto = new UserDto("deleted", "deleted@woowa.com", VALID_PASSWORD, VALID_PASSWORD);
-        User testUser = UserFactory.generateUser(testUserDto);
+        final Long testId = 1l;
+        userService.delete(testId);
 
-        userRepository.save(testUser);
-        deletedId = testUser.getId();
-
-        // Then
-        userService.deleteById(deletedId);
-
-        // Given
-        assertThatThrownBy(() -> userService.findById(deletedId))
-                .isInstanceOf(NotFoundUserException.class);
-    }
-
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteById(setUpArticleId);
+        verify(userRepository, atLeast(1)).deleteById(testId);
     }
 }

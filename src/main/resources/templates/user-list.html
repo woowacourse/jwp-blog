@@ -1,21 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <th:block th:replace="fragments/config :: configFragment"/>
     <title>우아한테크코스 기술블로그</title>
-    <th:block th:replace="fragments/head :: headFragment"></th:block>
-    <link rel="stylesheet" href="css/index.css">
+    <link href="/css/index.css" rel="stylesheet">
 </head>
 <body>
 <div>
-    <th:block th:if="${session.loggedInUser}">
-        <th:block th:replace="fragments/login-header :: loginHeaderFragment"></th:block>
-    </th:block>
-    <th:block th:unless="${session.loggedInUser}">
-        <th:block th:replace="fragments/logout-header :: logoutHeaderFragment"></th:block>
-    </th:block>
+    <th:block th:replace="fragments/header :: headerFragment"/>
 
     <div class="about-cover card no-border">
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
@@ -31,17 +23,18 @@
                     <div class="card-heading border bottom">
                         <h4 class="card-title">User List</h4>
                     </div>
-                    <div th:each="user : ${users}" class="card-body">
+                    <div class="card-body" th:each="user : ${users}">
                         <ul class="list-unstyled list-info">
                             <li>
                                 <div class="pdd-vertical-10">
-                                    <img class="thumb-img img-circle"
-                                         src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
+                                    <img alt=""
+                                         class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
                                     <div class="info">
-                                        <a th:href="${'/mypage/' + user?.id}"
-                                           class="title no-pdd-vertical text-semibold inline-block lh-1" th:text="${user?.name}"></a>
+                                        <a class="title no-pdd-vertical text-semibold inline-block lh-1"
+                                           th:href="${'/mypage/' + user.id}"
+                                           th:text="${user.userName}">Brown</a>
                                         <span class="sub-title">
-                                            <span th:text="${user.email}"></span>
+                                            <span th:text="${user.email}">gracefulBrown@woowahan.com</span>
                                         </span>
                                     </div>
                                 </div>
@@ -54,9 +47,7 @@
     </div>
 </div>
 
-<footer th:replace="fragments/footer :: footerFragment"></footer>
-
-<th:block th:replace="fragments/script :: scriptFragment"></th:block>
-</script>
+<th:block th:replace="fragments/footer :: footerFragment"/>
+<th:block th:replace="fragments/script :: scriptFragment"/>
 </body>
 </html>

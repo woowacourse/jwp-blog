@@ -1,68 +1,48 @@
 package techcourse.myblog.service;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.UserFactory;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.dto.UserProfileDto;
+import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.controller.dto.UserDto;
+import techcourse.myblog.exception.EmailDuplicatedException;
+import techcourse.myblog.exception.UserNotFoundException;
+import techcourse.myblog.model.User;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.service.exception.NotFoundUserException;
-import techcourse.myblog.service.exception.SignUpException;
-import techcourse.myblog.service.exception.UserArgumentException;
-import techcourse.myblog.service.exception.UserUpdateException;
 
-import javax.transaction.Transactional;
 import java.util.List;
-
-import static techcourse.myblog.service.exception.UserArgumentException.EMAIL_DUPLICATION_MESSAGE;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public List<User> findAll() {
+    public Long save(UserDto userDto) {
+        User newUser = new User(userDto.getUserName(), userDto.getEmail(), userDto.getPassword());
+
+        try {
+            userRepository.save(newUser);
+            return newUser.getId();
+        } catch (DataIntegrityViolationException e) {
+            throw new EmailDuplicatedException("이미 사용중인 이메일입니다.");
+        }
+    }
+
+    public List<User> getUsers() {
         return userRepository.findAll();
     }
 
-    public Long save(UserDto userDto) {
-        try {
-            checkDuplicatedEmail(userDto.getEmail());
-            User user = UserFactory.generateUser(userDto);
-            userRepository.save(user);
-            return user.getId();
-        } catch (Exception e) {
-            throw new SignUpException(e.getMessage());
-        }
-    }
-
-    public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(NotFoundUserException::new);
-    }
-
-    private void checkDuplicatedEmail(String email) {
-        if (userRepository.findByEmail(email).isPresent()) {
-            throw new UserArgumentException(EMAIL_DUPLICATION_MESSAGE);
-        }
-    }
-
     @Transactional
-    public Long update(UserProfileDto userProfileDto) {
-        try {
-            User user = userRepository.findByEmail(userProfileDto.getEmail())
-                    .orElseThrow(NotFoundUserException::new);
-            user.updateByUserProfileDto(userProfileDto);
-            return user.getId();
-        } catch (Exception e) {
-            throw new UserUpdateException(e.getMessage());
-        }
+    public User update(UserDto userDto) {
+        User oldUser = userRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("유저 정보가 없습니다."));
+        User updatedUser = new User(userDto.getUserName(), userDto.getEmail(), userDto.getPassword());
+        return oldUser.update(updatedUser);
     }
 
-    public void deleteById(Long id) {
-        userRepository.deleteById(id);
+    public void delete(Long userId) {
+        userRepository.deleteById(userId);
     }
 }

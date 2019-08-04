@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static techcourse.myblog.web.UserController.LOGGED_IN_USER;
-
 @Component
 public class GuestInterceptor extends HandlerInterceptorAdapter {
     @Override
@@ -19,18 +17,19 @@ public class GuestInterceptor extends HandlerInterceptorAdapter {
     ) throws Exception {
         HttpSession session = request.getSession();
 
-        if (isLoggedOut(session) && !isGetArticles(request)) {
+        if (isLoggedOut(session) && !isSignUp(request)) {
             response.sendRedirect("/login");
             return false;
         }
         return true;
     }
 
-    private boolean isGetArticles(HttpServletRequest request) {
-        return request.getRequestURI().equals("/articles") && request.getMethod().equals("GET");
+    private boolean isSignUp(HttpServletRequest request) {
+        return request.getRequestURI().equals("/users")
+                && request.getMethod().equals("POST");
     }
 
     private boolean isLoggedOut(HttpSession session) {
-        return session.getAttribute(LOGGED_IN_USER) == null;
+        return session.getAttribute("user") == null;
     }
 }

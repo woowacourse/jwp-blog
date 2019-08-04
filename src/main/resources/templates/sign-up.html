@@ -1,28 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-    <title>우아한테크코스 기술블로그</title>
-    <th:block th:replace="fragments/head :: headFragment"></th:block>
+    <th:block th:replace="fragments/config :: configFragment"/>
+    <title>우아한 크루의 블로그</title>
 </head>
 <body>
 <div class="app">
-    <div class="header navbar bg-transparent no-border">
-        <div class="header-container pdd-right-15">
-            <ul class="nav-left mrg-left-0">
-                <li>
-                    <a href="/">
-                        <div class="logo logo-dark d-none"
-                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white"
-                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <th:block th:replace="fragments/logo :: logoFragment"/>
+
     <div class="authentication">
         <div class="sign-in-2">
             <div class="container-fluid no-pdd-horizon overlay-dark bg"
@@ -39,46 +24,53 @@
                                                     <div class="mrg-btm-30">
                                                         <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                             회원가입</h2>
+                                                        <span style="color:red" th:if="${error != null}"
+                                                              th:text="${error}">errorMessage</span>
+                                                        <span id="error" style="color:red"
+                                                              th:unless="${error != null}"></span>
                                                     </div>
-                                                    <form action="/users" method="post">
+                                                    <form action="/users" method="post" name="userForm">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
-                                                            <input required minlength="2" maxlength="8"
-                                                                   pattern="[(가-힣a-zA-Z)]+" type="text" id="name"
-                                                                   name="name" class="form-control">
+                                                            <input class="form-control" id="userName"
+                                                                   name="userName"
+                                                                   type="text">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Email Address</label>
-                                                            <input required type="email" id="email" name="email"
-                                                                   class="form-control">
+                                                            <input class="form-control" id="email"
+                                                                   name="email"
+                                                                   type="email">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Password</label>
-                                                            <input required minlength="8" type="password" id="password"
-                                                                   name="password" class="form-control"
-                                                                   placeholder="Password">
+                                                            <input class="form-control" id="password"
+                                                                   name="password"
+                                                                   onkeyup="checkPassword()"
+                                                                   placeholder="Password"
+                                                                   type="password">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Confirm
                                                                 Password</label>
-                                                            <input required minlength="8" type="password"
-                                                                   id="password-confirm" name="passwordConfirm"
-                                                                   class="form-control"
-                                                                   placeholder="Password">
-                                                        </div>
-                                                        <div th:text="${errorMessage}" class="alert alert-danger" role="alert">
+                                                            <input class="form-control" id="confirmPassword"
+                                                                   name="confirmPassword"
+                                                                   onkeyup="checkPassword()"
+                                                                   placeholder="Password"
+                                                                   type="password">
+                                                            <span id="message"></span>
                                                         </div>
                                                         <div class="form-group">
-                                                            <button type="submit"
-                                                                    class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
+                                                            <button class="btn btn-info btn-block border-radius-6 font-size-16 text-white"
+                                                                    onclick="checkUserForm()"
+                                                                    type="button">
                                                                 가입하기
                                                             </button>
                                                         </div>
                                                     </form>
                                                     <div class="text-dark">
                                                         <span>이미 회원이신가요?</span>
-                                                        <a href="/login"
-                                                           class="text-info pointer mrg-left-5">로그인</a>
+                                                        <a class="text-info pointer mrg-left-5" href="/login">로그인</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -94,60 +86,31 @@
     </div>
 </div>
 
-<th:block th:replace="fragments/script :: scriptFragment"></th:block>
-<script th:inline="javascript">
-    if ([[${errorMessage}]]) {
-        $('.alert').alert()
-    } else {
-        $('.alert').alert('close')
-    }
-
-    const nameInput = document.getElementById("name");
-    const passwordInput = document.getElementById("password");
-    const passwordConfirmInput = document.getElementById("password-confirm");
-
-    nameInput.addEventListener('input', () => {
-      nameInput.setCustomValidity('');
-      nameInput.checkValidity();
-    });
-
-    nameInput.addEventListener('invalid', () => {
-        if (nameInput.value === '') {
-            nameInput.setCustomValidity('이름을 입력해 주세요.');
+<th:block th:replace="fragments/script :: scriptFragment"/>
+<script>
+    var checkUserForm = function () {
+        var password = document.getElementById("password");
+        var confirmPassword = document.getElementById("confirmPassword");
+        if (confirmPassword.value !== password.value) {
+            document.getElementById("error").innerHTML = "페스워드랑 확인 패스워드가 서로 불일치 합니다.";
+            document.querySelector('input[name="password"]').value = "";
+            document.querySelector('input[name="confirmPassword"]').value = "";
+            return false;
         } else {
-            nameInput.setCustomValidity('이름은 2~10자로 제한하며 숫자나 특수문자가 포함될 수 없습니다.');
+            document.querySelector('form[name="userForm"]').submit();
+            return true;
         }
-    });
-
-    passwordInput.addEventListener('input', () => {
-        const lowerCaseRegex = /[a-z]+/;
-        const upperCaseRegex = /[A-Z]+/;
-        const numberRegex = /[0-9]+/;
-        const specialCharacterRegex = /[`~!@#$%^&*|\\\'\";:\/?+=-_,.<>]/;
-        const koreanRegex = /[ㄱ-ㅎ가-힣]+/;
-        const password = passwordInput.value;
-
-        if (!lowerCaseRegex.test(password)
-            || !upperCaseRegex.test(password)
-            || !numberRegex.test(password)
-            || !specialCharacterRegex.test(password)
-            || koreanRegex.test(password)) {
-            passwordInput.setCustomValidity('대문자, 소문자, 숫자, 특수문자가 포함되어야 합니다.');
+    };
+    var checkPassword = function () {
+        if (document.userForm.password.value === document.userForm.confirmPassword.value) {
+            document.getElementById('message').style.color = 'green';
+            document.getElementById('message').innerHTML = 'matching';
         } else {
-            passwordInput.setCustomValidity('');
+            document.getElementById('message').style.color = 'red';
+            document.getElementById('message').innerHTML = 'not matching';
         }
-    });
-
-<!--    submit 할때만 일어나야하는 일   -->
-    passwordConfirmInput.addEventListener('input', () => {
-        if (passwordInput.value !== passwordConfirmInput.value) {
-            passwordConfirmInput.setCustomValidity('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-        } else {
-            passwordConfirmInput.setCustomValidity('');
-        }
-    });
-
-
+    };
 </script>
+
 </body>
 </html>
