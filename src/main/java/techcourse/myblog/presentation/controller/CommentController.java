@@ -39,7 +39,7 @@ public class CommentController {
     }
 
     @PutMapping("/articles/{articleId}/comments/{commentId}")
-    public RedirectView updateComment(CommentContents commentContents, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, Email email) {
+    public RedirectView updateComment(CommentContents commentContents, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, @EmailAnnot Email email) {
         commentService.checkAuthor(commentId, email.getEmail());
         commentService.modify(commentId, commentContents);
         return new RedirectView("/articles/"+articleId);
