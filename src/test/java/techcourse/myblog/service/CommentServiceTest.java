@@ -80,7 +80,7 @@ class CommentServiceTest {
 
     @Test
     void delete() {
-        commentService.deleteById(comment.getId());
+        commentService.deleteById(comment.getId(), author);
 
         assertThrows(CommentNotFoundException.class, () -> commentService.findById(comment.getId()));
     }

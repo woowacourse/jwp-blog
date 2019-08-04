@@ -9,7 +9,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.CommentRepository;
 import techcourse.myblog.dto.CommentSaveRequestDto;
 import techcourse.myblog.exception.CommentNotFoundException;
-import techcourse.myblog.exception.IllegalCommentUpdateRequestException;
+import techcourse.myblog.exception.IllegalCommentDeleteRequestException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -18,6 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
+    private static final String ERROR_COMMENT_NOT_FOUND_MESSAGE = "찾는 댓글이 존재하지 않습니다!";
     private final CommentRepository commentRepository;
     private final ArticleService articleService;
 
@@ -39,19 +40,6 @@ public class CommentService {
         return commentRepository.findByArticleId(articleId);
     }
 
-    @Transactional
-    public void update(Long id, String editedContents, User user) {
-        Comment comment = findById(id);
-        if (!comment.isUser(user)) {
-            log.debug("update comment request by illegal user id={}, comment id={}, editedContents={}"
-                    , user.getId(), id, editedContents);
-            throw new IllegalCommentUpdateRequestException();
-        }
-
-        comment.update(editedContents);
-        log.debug("update comment id={}, editedContents={}", id, editedContents);
-    }
-
     public Long findArticleIdById(Long id) {
         Comment comment = findById(id);
         Article article = comment.getArticle();
@@ -67,8 +55,36 @@ public class CommentService {
                 });
     }
 
-    public void deleteById(Long id) {
+    @Transactional
+    public void update(Long id, String editedContents, User user) {
+        if (isCommentNotFound(id)) {
+            log.error("update article request by illegal article id={}", id);
+            throw new CommentNotFoundException(ERROR_COMMENT_NOT_FOUND_MESSAGE);
+        }
+
+        Comment comment = findById(id);
+        comment.update(editedContents, user);
+        log.debug("update comment id={}, editedContents={}", id, editedContents);
+    }
+
+    @Transactional
+    public void deleteById(Long id, User user) {
+        if (isCommentNotFound(id)) {
+            log.error("delete comment request by illegal article id={}", id);
+            throw new CommentNotFoundException(ERROR_COMMENT_NOT_FOUND_MESSAGE);
+        }
+
+        Comment comment = findById(id);
+        if (comment.isNotUser(user)) {
+            log.error("delete comment request by illegal user id={}, article id={}", user.getId(), id);
+            throw new IllegalCommentDeleteRequestException();
+        }
+
         commentRepository.deleteById(id);
         log.debug("delete comment id={}", id);
+    }
+
+    private boolean isCommentNotFound(Long id) {
+        return findById(id) == null;
     }
 }

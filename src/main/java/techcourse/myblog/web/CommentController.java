@@ -35,11 +35,11 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteComment(@PathVariable Long id) {
+    public String deleteComment(@PathVariable Long id, User user) {
         log.info("delete comment delete request id={}", id);
 
         Long articleId = commentService.findArticleIdById(id);
-        commentService.deleteById(id);
+        commentService.deleteById(id, user);
         return "redirect:/articles/" + articleId;
     }
 }

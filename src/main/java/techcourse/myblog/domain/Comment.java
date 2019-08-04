@@ -1,11 +1,14 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import techcourse.myblog.exception.IllegalCommentUpdateRequestException;
 
 import javax.persistence.*;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @EqualsAndHashCode(of = "id")
@@ -37,11 +40,21 @@ public class Comment {
         this.article = article;
     }
 
-    public void update(String editedContents) {
+    public void update(String editedContents, User user) {
+        if (isNotUser(user)) {
+            log.debug("update comment request by illegal user id={}, comment id={}, editedContents={}"
+                    , user.getId(), id, editedContents);
+            throw new IllegalCommentUpdateRequestException();
+        }
+
         this.contents = editedContents;
     }
 
     public boolean isUser(User user) {
         return this.user.equals(user);
+    }
+
+    public boolean isNotUser(User user) {
+        return !isUser(user);
     }
 }
