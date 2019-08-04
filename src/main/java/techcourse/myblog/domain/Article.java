@@ -1,6 +1,8 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.dto.ArticleDto;
 
 import javax.persistence.*;
@@ -27,6 +29,7 @@ public class Article {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
     public boolean isWrittenBy(User user) {
