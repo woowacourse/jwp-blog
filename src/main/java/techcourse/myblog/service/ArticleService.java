@@ -5,11 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.repository.ArticleRepository;
 
 import java.util.List;
 
@@ -18,11 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     public Long save(final Long userId, final ArticleDto.Request articleDto) {
-        User author = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("등록된 유저가 아닙니다."));
+        User author = userService.getUserById(userId);
 
         Article article = articleDto.toArticle(author);
 
@@ -50,9 +48,6 @@ public class ArticleService {
         return articleRepository.findAll(pageable);
     }
 
-    public List<Article> findAll(){
-        return articleRepository.findAll();
-    }
     @Transactional(readOnly = true)
     public ArticleDto.Response getOne(Long id) {
         final Article article = findById(id);
@@ -75,5 +70,13 @@ public class ArticleService {
     private Article findById(Long id) {
         return articleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("없는 글입니다." + id));
+    }
+
+    public List<Article> findAllByAuthor(String author) {
+        if(author != null){
+            User user = userService.findByEmail(author);
+            return articleRepository.findAllByAuthor(user);
+        }
+        return articleRepository.findAll();
     }
 }

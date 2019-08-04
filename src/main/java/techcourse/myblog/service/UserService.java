@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.ValidUserException;
+import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,8 +61,7 @@ public class UserService {
     }
 
     public UserDto.Response findById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다. : " + id));
+        User user = getUserById(id);
 
         return UserDto.Response.createByUser(user);
     }
@@ -78,6 +77,16 @@ public class UserService {
 
     public void deleteById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public User getUserById(final Long id ){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다. : " + id));
+    }
+
+    public User findByEmail(final String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 email 입니다."));
     }
 }
 
