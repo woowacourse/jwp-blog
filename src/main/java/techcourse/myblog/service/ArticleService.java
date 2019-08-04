@@ -50,7 +50,7 @@ public class ArticleService {
 
     public List<Comment> findAllComment(Long articleId) {
         Article foundArticle = findById(articleId);
-        return foundArticle.getComments();
+        return foundArticle.getSortedComments();
     }
 
     public void checkOwner(Long articleId, User user) {
