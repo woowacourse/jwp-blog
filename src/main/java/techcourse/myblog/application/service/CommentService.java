@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.application.converter.CommentConverter;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.service.exception.CommentNotFoundException;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
@@ -21,12 +22,14 @@ public class CommentService {
     private CommentRepository commentRepository;
     private UserService userService;
     private ArticleService articleService;
+    private CommentConverter commentConverter;
 
     @Autowired
-    public CommentService(CommentRepository commentRepository, UserService userService, ArticleService articleService) {
+    public CommentService(CommentRepository commentRepository, UserService userService, ArticleService articleService, CommentConverter commentConverter) {
         this.commentRepository = commentRepository;
         this.userService = userService;
         this.articleService = articleService;
+        this.commentConverter = commentConverter;
     }
 
     @Transactional
@@ -41,7 +44,7 @@ public class CommentService {
     public List<CommentDto> findAllCommentsByArticleId(Long articleId, String sessionEmail) {
         Article article = articleService.findById(articleId);
         List<Comment> comments = commentRepository.findByArticle(article);
-        List<CommentDto> commentDtos = Comment.toDto(comments, sessionEmail);
+        List<CommentDto> commentDtos = commentConverter.toDto(comments, sessionEmail);
         return commentDtos;
     }
 

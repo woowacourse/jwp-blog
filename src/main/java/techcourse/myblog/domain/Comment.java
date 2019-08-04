@@ -38,16 +38,6 @@ public class Comment {
         this.article = article;
     }
 
-    public static List<CommentDto> toDto(List<Comment> comments, String email) {
-        return comments.stream()
-                .map(comment -> comment.toDto(email))
-                .collect(Collectors.toList());
-    }
-
-    private CommentDto toDto(String email) {
-        return new CommentDto(id, commentContents.getContents(), author.getName(), author.compareEmail(email));
-    }
-
     public Long getId() {
         return id;
     }
@@ -64,13 +54,13 @@ public class Comment {
         return article;
     }
 
+    public void changeContent(CommentContents commentContents) {
+        this.commentContents = commentContents;
+    }
+
     @Override
     public String toString() {
         return "Comment{" + commentContents.getContents() + "}";
-    }
-
-    public void changeContent(CommentContents commentContents) {
-        this.commentContents = commentContents;
     }
 
     @Override
