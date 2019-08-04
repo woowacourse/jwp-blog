@@ -9,9 +9,9 @@ import javax.validation.constraints.Pattern;
 
 @AllArgsConstructor
 @Getter
-public class UserDTO {
+public class UserDto {
     @NotBlank(message = "이름을 작성해 주세요.")
-    @Pattern(regexp = "^[a-z]{2,10}$", message = "이름은 2~10자의 영문자 이어야 합니다. ")
+    @Pattern(regexp = "^[A-Za-z]{2,10}$", message = "이름은 2~10자의 영문자 이어야 합니다. ")
     private String userName;
 
     @NotBlank(message = "메일을 작성해 주세요.")

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class LoginDTO {
-    private String email;
-    private String password;
+public class CommentDto {
+    private Long articleId;
+    private String contents;
 }
