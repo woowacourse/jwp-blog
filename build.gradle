@@ -13,6 +13,7 @@ repositories {
 	mavenCentral()
 }
 
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
@@ -35,4 +36,7 @@ dependencies {
 	}
 
 	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+
+	compileOnly 'org.projectlombok:lombok:1.18.8'
+	annotationProcessor 'org.projectlombok:lombok:1.18.8'	
 }
