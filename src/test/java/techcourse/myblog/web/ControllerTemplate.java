@@ -58,7 +58,7 @@ public class ControllerTemplate {
                         .with("coverUrl", coverUrl)
                         .with("contents", contents))
                 .exchange()
-        ;
+                ;
     }
 
     public WebTestClient.ResponseSpec requestWriteComment(String cookie, String contents) {
@@ -69,6 +69,6 @@ public class ControllerTemplate {
                 .body(BodyInserters
                         .fromFormData("contents", contents))
                 .exchange()
-        ;
+                ;
     }
 }

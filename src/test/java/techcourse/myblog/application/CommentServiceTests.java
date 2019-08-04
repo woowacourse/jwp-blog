@@ -12,7 +12,9 @@ import techcourse.myblog.application.exception.CommentNotFoundException;
 import techcourse.myblog.application.exception.NoArticleException;
 import techcourse.myblog.application.exception.NoUserException;
 import techcourse.myblog.application.exception.NotSameAuthorException;
-import techcourse.myblog.domain.*;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.domain.repository.CommentRepository;
 import techcourse.myblog.domain.repository.UserRepository;
@@ -170,7 +172,7 @@ public class CommentServiceTests {
                 () -> commentService.updateComment(COMMENT_ID, userResponse, commentRequest));
     }
 
-    private UserResponse 사용자_응답_만들기(Long 아이디){
+    private UserResponse 사용자_응답_만들기(Long 아이디) {
         UserResponse 사용자_응답 = new UserResponse();
         사용자_응답.setId(아이디);
         사용자_응답.setName(NAME);

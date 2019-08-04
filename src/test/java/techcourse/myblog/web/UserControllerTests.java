@@ -74,7 +74,7 @@ public class UserControllerTests extends ControllerTemplate {
     @Test
     void 로그인실패_비밀번호가_틀린_경우() {
         String notFoundPassword = "Password111!";
-        requestLogin(EMAIL,notFoundPassword)
+        requestLogin(EMAIL, notFoundPassword)
                 .expectStatus()
                 .isOk()
                 .expectBody()

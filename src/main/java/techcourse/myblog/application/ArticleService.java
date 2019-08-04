@@ -8,8 +8,8 @@ import techcourse.myblog.application.exception.NoArticleException;
 import techcourse.myblog.application.exception.NoUserException;
 import techcourse.myblog.application.exception.NotSameAuthorException;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.domain.repository.UserRepository;
 
 import javax.transaction.Transactional;
