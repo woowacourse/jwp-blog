@@ -15,7 +15,7 @@ public class UserRepositoryTests {
 
 	@Test
 	void findByEmail() {
-		User user = userRepository.findByInformation_Email("tiber@naver.com").get();
+		User user = userRepository.findByInformationEmail("tiber@naver.com").get();
 		assertThat(user.getId()).isEqualTo(1L);
 	}
 }
