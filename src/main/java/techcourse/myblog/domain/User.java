@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
+import techcourse.myblog.dto.UserDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,5 +25,7 @@ public class User {
 
     private String name;
 
-    //Update 추가
+    public void update(UserDto.Update userDto) {
+        name = userDto.getName();
+    }
 }

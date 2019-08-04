@@ -1,4 +1,4 @@
-package techcourse.myblog.exception.valid;
+package techcourse.myblog.exception;
 
 public class InvalidEditFormException extends RuntimeException {
     public InvalidEditFormException(String message) {

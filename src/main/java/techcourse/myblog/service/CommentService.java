@@ -48,13 +48,11 @@ public class CommentService {
 
     @Transactional
     //TODO : @Transactional 사용하면 엔티티만 변경해도 적용??
-    public Long update(UserDto.Response userDto, Long commentId, CommentDto.Update commentDto) {
+    public CommentDto.Response update(UserDto.Response userDto, Long commentId, CommentDto.Update commentDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
         checkAuthor(userDto, comment);
-
-        Article article = articleRepository.findById(commentDto.getArticleId()).orElseThrow(NotFoundArticleException::new);
-        Comment updatedComment = commentDto.toComment(commentId, userDto.toUser(), article);
-        return commentRepository.save(updatedComment).getId();
+        comment.update(commentDto);
+        return modelMapper.map(comment, CommentDto.Response.class);
     }
 
     public void deleteById(UserDto.Response userDto, Long commentId) {
@@ -64,6 +62,7 @@ public class CommentService {
         commentRepository.deleteById(commentId);
     }
 
+    //TODO : 중복 find
     private void checkAuthor(UserDto.Response userDto, Comment comment) {
         if (!comment.isWrittenBy(userDto.toUser())) {
             throw new NotMatchAuthorException();

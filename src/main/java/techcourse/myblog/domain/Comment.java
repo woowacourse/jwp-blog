@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import techcourse.myblog.dto.CommentDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -41,5 +42,10 @@ public class Comment {
 
     public boolean isWrittenBy(User other) {
         return user.equals(other);
+    }
+
+    public void update(CommentDto.Update commentDto) {
+        contents = commentDto.getContents();
+        modfiedDate = commentDto.getModifiedDate(); //TODO : 자동
     }
 }

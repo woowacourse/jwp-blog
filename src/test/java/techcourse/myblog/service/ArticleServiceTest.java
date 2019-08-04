@@ -106,9 +106,10 @@ class ArticleServiceTest extends AbstractTest {
             .author(user)
             .build();
 
-        long updatedArticleId = articleService.update(userDto, articleId, modelMapper.map(updatedArticle, ArticleDto.Update.class));
+        ArticleDto.Response updatedArticleDto =
+            articleService.update(userDto, articleId, modelMapper.map(updatedArticle, ArticleDto.Update.class));
 
-        assertThat(articleService.findById(updatedArticleId))
+        assertThat(updatedArticleDto)
             .isEqualTo(modelMapper.map(updatedArticle, ArticleDto.Response.class));
     }
 

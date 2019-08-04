@@ -7,8 +7,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.exception.valid.InvalidEditFormException;
-import techcourse.myblog.exception.valid.InvalidSignUpFormException;
+import techcourse.myblog.exception.InvalidEditFormException;
+import techcourse.myblog.exception.InvalidSignUpFormException;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;

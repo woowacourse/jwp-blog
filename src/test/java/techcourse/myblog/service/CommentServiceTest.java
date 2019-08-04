@@ -97,6 +97,7 @@ class CommentServiceTest extends AbstractTest {
         commentDto.setArticleId(articleId);
     }
 
+    //TODO : MICKITO 미스터코 코드
     //TODO : 시간 변환되서 일단 ID로
     @Test
     void 댓글_전체_조회_테스트() {
@@ -116,11 +117,7 @@ class CommentServiceTest extends AbstractTest {
         CommentDto.Update updateCommentDto = modelMapper.map(updateComment, CommentDto.Update.class);
         updateCommentDto.setArticleId(articleId);
 
-        commentService.update(userDto, commentId, updateCommentDto);
-
-        //TODO : 일일히 articleId 추가...
-        CommentDto.Response newCommentDto = modelMapper.map(updateComment, CommentDto.Response.class);
-        newCommentDto.setArticleId(articleId);
+        CommentDto.Response newCommentDto = commentService.update(userDto, commentId, updateCommentDto);
 
         assertThat(commentService.findAllByArticle(articleId)).isEqualTo(Arrays.asList(newCommentDto));
     }

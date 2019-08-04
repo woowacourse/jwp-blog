@@ -13,6 +13,7 @@ import techcourse.myblog.exception.NotMatchAuthorException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,10 +48,12 @@ public class ArticleService {
         return modelMapper.map(article, ArticleDto.Response.class);
     }
 
-    public Long update(UserDto.Response userDto, Long articleId, ArticleDto.Update articleDto) {
+    @Transactional
+    public ArticleDto.Response update(UserDto.Response userDto, Long articleId, ArticleDto.Update articleDto) {
         checkAuthor(userDto, articleId);
-        Article updatedArticle = articleDto.toArticle(articleId, userDto.toUser());
-        return articleRepository.save(updatedArticle).getId();
+        Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
+        article.update(articleDto);
+        return modelMapper.map(article, ArticleDto.Response.class);
     }
 
     public void deleteById(UserDto.Response userDto, Long articleId) {

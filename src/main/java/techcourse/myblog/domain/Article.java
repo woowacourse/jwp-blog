@@ -1,6 +1,7 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
+import techcourse.myblog.dto.ArticleDto;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class Article {
+    //TODO:ondelete
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,5 +29,11 @@ public class Article {
 
     public boolean isWrittenBy(User user) {
         return author.equals(user);
+    }
+
+    public void update(ArticleDto.Update article) {
+        title = article.getTitle();
+        contents = article.getContents();
+        coverUrl = article.getCoverUrl();
     }
 }

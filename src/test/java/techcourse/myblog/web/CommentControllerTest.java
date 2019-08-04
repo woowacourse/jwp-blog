@@ -95,6 +95,7 @@ class CommentControllerTest extends AbstractTest {
             .expectHeader().valueMatches("location", ".*/login");
     }
 
+    //TODO :
     @AfterEach
     void 댓글_삭제_테스트() {
         webTestClient.delete().uri("/comments/" + commentId)

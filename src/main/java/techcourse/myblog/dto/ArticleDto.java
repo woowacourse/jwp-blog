@@ -6,7 +6,6 @@ import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 
 public class ArticleDto {
-//TODO : User도 Create 해줘야함
     @Data
     public static class Create {
         private String title;

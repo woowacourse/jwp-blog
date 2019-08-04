@@ -31,9 +31,9 @@ public class UserService {
 
     public Long save(UserDto.Create userDto) {
         User newUser = userDto.toUser();
-        if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
+        userRepository.findByEmail(newUser.getEmail()).ifPresent((user) -> {
             throw new DuplicatedUserException();
-        }
+        });
         return userRepository.save(newUser).getId();
     }
 
@@ -57,8 +57,8 @@ public class UserService {
     public UserDto.Response update(UserDto.Response userSession, Long userId, UserDto.Update userDto) {
         checkUser(userSession, userId);
         User user = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
-        User updatedUser = userDto.toUser(userId, user.getEmail(), user.getPassword());
-        return modelMapper.map(userRepository.save(updatedUser), UserDto.Response.class);
+        user.update(userDto);
+        return modelMapper.map(userDto, UserDto.Response.class);
     }
 
     public void deleteById(UserDto.Response userSession, Long userId) {
