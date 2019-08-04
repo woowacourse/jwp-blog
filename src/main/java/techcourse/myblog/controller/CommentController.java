@@ -7,7 +7,6 @@ import techcourse.myblog.controller.dto.CommentDto;
 import techcourse.myblog.model.Article;
 import techcourse.myblog.model.Comment;
 import techcourse.myblog.model.User;
-import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 
 @RequestMapping("/comments")
@@ -28,28 +27,19 @@ public class CommentController {
 
     @GetMapping("/{commentId}/edit")
     public String editCommentForm(@PathVariable Long commentId, Model model, @ModelAttribute User user) {
-        commentService.checkOwner(commentId, user);
-
-        Comment comment = commentService.findById(commentId);
+        Comment comment = commentService.findById(commentId, user);
         model.addAttribute("comment", comment);
         return "comment-edit";
     }
 
     @DeleteMapping("/{commentId}")
-    private String deleteComment(@PathVariable Long commentId, @ModelAttribute User user) {
-        commentService.checkOwner(commentId, user);
-
-        Comment comment = commentService.findById(commentId);
-        Long articleId = comment.getArticle().getId();
-        commentService.delete(commentId);
-        return "redirect:/articles/" + articleId;
+    public String deleteComment(@PathVariable Long commentId, @ModelAttribute User user) {
+        return "redirect:/articles/" + commentService.delete(commentId, user).getId();
     }
 
     @PutMapping("/{commentId}")
     public String updateComment(@PathVariable Long commentId, CommentDto commentDto, @ModelAttribute User user) {
-        commentService.checkOwner(commentId, user);
-
-        Comment newComment = commentService.update(commentDto, commentId);
+        Comment newComment = commentService.update(commentDto, commentId, user);
         Article commentedArticle = newComment.getArticle();
         return "redirect:/articles/" + commentedArticle.getId();
     }

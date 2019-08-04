@@ -33,25 +33,30 @@ public class CommentService {
     private Article findByArticleId(Long articleId) {
         return articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
     }
-    public Comment findById(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("댓글을 찾을 수 없습니다."));
+    public Comment findById(Long commentId, User user) {
+        return checkOwner(commentId, user);
     }
 
     @Transactional
-    public Comment update(CommentDto commentDto, Long commentId) {
-        Comment oldComment = findById(commentId);
+    public Comment update(CommentDto commentDto, Long commentId, User user) {
+        Comment oldComment = findById(commentId, user);
         Comment updatedComment = new Comment(commentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle());
         return oldComment.update(updatedComment);
     }
 
-    public void delete(Long commentId) {
-        Comment comment = findById(commentId);
-        comment.getArticle().deleteComment(comment);
+    public Article delete(Long commentId, User user) {
+        Comment comment = findById(commentId, user);
+        Article deleteArticle = comment.getArticle();
+
+        deleteArticle.deleteComment(comment);
         commentRepository.deleteById(commentId);
+
+        return deleteArticle;
     }
 
-    public void checkOwner(Long commentId, User user) {
-        Comment comment = findById(commentId);
+    private Comment checkOwner(Long commentId, User user) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("댓글을 찾을수 없습니다."));
         comment.checkOwner(user);
+        return comment;
     }
 }
