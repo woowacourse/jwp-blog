@@ -30,10 +30,8 @@ public class CommentController {
 
     @PutMapping("/{commentId}")
     public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession session, CommentRequest commentRequest) {
-        UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
-        if (user.getId().equals(commentService.findById(commentId).getAuthorId())) {
-            commentService.update(commentRequest, commentId);
-        }
+        UserResponse accessUser = (UserResponse) session.getAttribute(USER_SESSION_KEY);
+        commentService.update(commentRequest, commentId, articleId, accessUser);
         return "redirect:/articles/" + articleId;
     }
 
