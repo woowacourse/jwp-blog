@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,10 +11,9 @@ import techcourse.myblog.domain.exception.InvalidAccessException;
 import javax.persistence.*;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode
 @Getter
-@Table(name = "article")
 public class Article {
     private static final String INVALID_ERROR = "작성자가 아닙니다.";
     @Id
@@ -42,8 +42,8 @@ public class Article {
         this.contents = contents;
     }
 
-    public void update(Article articleToUpdate, long loginUserID) {
-        isAuthor(loginUserID);
+    public void update(Article articleToUpdate, long loginUserId) {
+        isAuthor(loginUserId);
         this.title = articleToUpdate.title;
         this.coverUrl = articleToUpdate.coverUrl;
         this.contents = articleToUpdate.contents;

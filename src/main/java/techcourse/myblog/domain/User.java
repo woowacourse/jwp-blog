@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @EqualsAndHashCode
-@NoArgsConstructor
-@Table(name = "user")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

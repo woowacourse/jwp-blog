@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +13,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 @Getter
-@NoArgsConstructor
-@Table(name = "comment")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Comment extends AuditLog {
     private static final String INVALID_ERROR = "잘못된 접근 입니다.";
 
