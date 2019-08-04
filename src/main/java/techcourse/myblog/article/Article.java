@@ -26,11 +26,7 @@ public class Article {
 
 	private Article() {
 	}
-
-	public Article(Contents contents) {
-		this.contents = contents;
-	}
-
+	
 	public Article(User user, Contents contents) {
 		this.author = user;
 		this.contents = contents;

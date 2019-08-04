@@ -31,15 +31,6 @@ public class Comment {
 	private Comment() {
 	}
 
-	public Comment(Contents contents) {
-		this.contents = contents;
-	}
-
-	public Comment(Contents contents, User user) {
-		this.author = user;
-		this.contents = contents;
-	}
-
 	public Comment(User user, Contents contents) {
 		this.author = user;
 		this.contents = contents;

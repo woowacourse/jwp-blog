@@ -23,7 +23,7 @@ public class UserService {
 
 	public void signUp(UserSignUpInfoDto userSignUpInfoDto) {
 		Information information = userSignUpInfoDto.valueOfInfo();
-		if (userRepository.findByInformation_Email(userSignUpInfoDto.getEmail()).isPresent()) {
+		if (userRepository.findByInformationEmail(userSignUpInfoDto.getEmail()).isPresent()) {
 			throw new AlreadyExistEmailException();
 		}
 		User user = new User(information);
@@ -35,7 +35,7 @@ public class UserService {
 	}
 
 	public User findUser(User user) {
-		return userRepository.findByInformation_Email(user.getEmail())
+		return userRepository.findByInformationEmail(user.getEmail())
 				.orElseThrow(NotFoundUserException::new);
 	}
 
@@ -48,7 +48,7 @@ public class UserService {
 	}
 
 	public User editUser(User loginUser,  UserChangeableInfoDto userChangeableInfoDto) {
-		Information information = userChangeableInfoDto.valueOfInfo();
+		Information information = userChangeableInfoDto.valueOfInfo(loginUser);
 		User user = findUser(loginUser);
 		user.editUser(information);
 		userRepository.save(user);
