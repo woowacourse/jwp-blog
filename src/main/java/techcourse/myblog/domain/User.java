@@ -23,7 +23,7 @@ public class User extends BaseEntity {
     private String password;
 
     @Builder
-    private User(final Long id, final String email, final String name, final String password) {
+    public User(final Long id, final String email, final String name, final String password) {
         if (id == null) {
             UserValidator.validateEmail(email);
             UserValidator.validatePassword(password);
