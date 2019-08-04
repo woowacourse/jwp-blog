@@ -1,8 +1,5 @@
 package techcourse.myblog.user.domain.vo;
 
-import lombok.EqualsAndHashCode;
-
-@EqualsAndHashCode
 public class Email {
     private static final String EMAIL_REGEX = "^[_a-zA-Z0-9-.]+@[.a-zA-Z0-9-]+\\.[a-zA-Z]+$";
 

@@ -10,6 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import techcourse.myblog.user.UserDataForTest;
 import techcourse.myblog.user.domain.User;
 import techcourse.myblog.user.domain.UserRepository;
+import techcourse.myblog.user.domain.vo.Email;
 import techcourse.myblog.user.dto.UserCreateDto;
 import techcourse.myblog.user.dto.UserLoginDto;
 import techcourse.myblog.user.dto.UserResponseDto;
@@ -55,7 +56,7 @@ class UserServiceTest {
     void 회원정보_등록_테스트() {
         UserCreateDto userCreateDto = modelMapper.map(user, UserCreateDto.class);
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.empty());
+        given(userRepository.findByEmail(any(Email.class))).willReturn(Optional.empty());
         given(userRepository.save(userCreateDto.toUser())).willReturn(user);
 
         assertThat(userService.save(userCreateDto))
@@ -66,7 +67,7 @@ class UserServiceTest {
     void 회원정보_등록시_예외처리() {
         UserCreateDto duplicatedUser = modelMapper.map(user, UserCreateDto.class);
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+        given(userRepository.findByEmail(any(Email.class))).willReturn(Optional.of(user));
 
         assertThrows(DuplicatedUserException.class, () -> userService.save(duplicatedUser));
     }
@@ -96,7 +97,7 @@ class UserServiceTest {
     void 로그인_성공_테스트() {
         UserLoginDto login = modelMapper.map(user, UserLoginDto.class);
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+        given(userRepository.findByEmail(any(Email.class))).willReturn(Optional.of(user));
 
         assertDoesNotThrow(() -> userService.login(login));
     }
@@ -105,7 +106,7 @@ class UserServiceTest {
     void 로그인_시_아이디_불일치_예외처리() {
         UserLoginDto wrongIdLogin = modelMapper.map(user, UserLoginDto.class);
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.empty());
+        given(userRepository.findByEmail(any(Email.class))).willReturn(Optional.empty());
 
         assertThrows(NotFoundUserException.class, () -> userService.login(wrongIdLogin));
     }
@@ -115,7 +116,7 @@ class UserServiceTest {
         UserLoginDto wrongPasswordLogin = modelMapper.map(user, UserLoginDto.class);
         wrongPasswordLogin.setPassword("wrong1234!!");
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+        given(userRepository.findByEmail(any(Email.class))).willReturn(Optional.of(user));
 
         assertThrows(NotMatchPasswordException.class, () -> userService.login(wrongPasswordLogin));
     }

@@ -1,8 +1,5 @@
 package techcourse.myblog.user.domain.vo;
 
-import lombok.EqualsAndHashCode;
-
-@EqualsAndHashCode
 public class Name {
     private static final String NAME_REGEX = "[A-Za-zㄱ-ㅎㅏ-ㅣ가-힣]{2,10}";
 
