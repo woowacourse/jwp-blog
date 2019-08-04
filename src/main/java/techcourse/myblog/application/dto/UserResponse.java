@@ -5,7 +5,7 @@ public class UserResponse {
     private String name;
     private String email;
 
-    private UserResponse() {
+    public UserResponse() {
     }
 
     public Long getId() {
