@@ -16,7 +16,7 @@ public class LoginService {
 	}
 
 	public User login(UserLoginDto userLoginDto) {
-		User loginUser = userRepository.findByInformation_Email(userLoginDto.getEmail())
+		User loginUser = userRepository.findByInformationEmail(userLoginDto.getEmail())
 				.orElseThrow(LoginException::new);
 		if (!loginUser.matchPassword(userLoginDto.getPassword())) {
 			throw new LoginException();
