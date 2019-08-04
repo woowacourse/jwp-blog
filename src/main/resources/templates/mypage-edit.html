@@ -1,33 +1,26 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- include fragments/head -->
-    <th:block th:replace="fragments/head"></th:block>
-    <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/mypage.css">
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:include="/common/meta"></th:block>
+    <th:block th:include="/common/css"></th:block>
+    <link href="/css/index.css" rel="stylesheet">
+    <link href="/css/mypage.css" rel="stylesheet">
 </head>
 <body>
 <div>
-    <header th:replace="fragments/header :: header"></header>
-
-    <div class="about-cover card no-border">
-        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
-            <div class="display-block height-100">
-
-            </div>
-        </div>
-    </div>
+    <th:block th:include="/common/navbar"></th:block>
+    <th:blcok th:include="/common/main_cover"></th:blcok>
 
     <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
         <div class="row">
             <div class="col-md-7 mx-auto">
-                <form action="/mypage/edit" th:method="put">
-                    <input type="hidden" name="userId" th:value="${user.userId}">
-                    <input type="hidden" name="password" th:value="${user.password}">
-                    <div class="card">
+                <div class="card">
+                    <form action="/users" method="post">
+                        <input name="_method" type="hidden" value="put">
                         <div class="card-heading pdd-btm-5 border bottom">
                             <h4 class="card-title d-inline-block">profile</h4>
-                            <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정
+                            <button class="btn btn-info float-right mrg-btm-0 relative bottom-5" type="submit">수정
                             </button>
                         </div>
                         <div class="card-block">
@@ -36,8 +29,7 @@
                                     <p class="mrg-top-10 text-dark"><b>Name</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="text" name="name" class="form-control" th:value="${user.name}" placeholder="숫자 및 특수문자 제외 2자 이상 10자 이내"
-                                           pattern="^[a-zA-Zㄱ-ㅎ가-힣]*$" minlength="2" maxlength="10" required>
+                                    <input class="form-control" name="name" th:value="${session.user.name}" type="text">
                                 </div>
                             </div>
                             <hr>
@@ -46,8 +38,8 @@
                                     <p class="mrg-top-10 text-dark"><b>Email</b></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="hidden" name="email" th:value="${user.email}">
-                                    <p class="mrg-top-10" th:text="${user.email}"></p>
+                                    <input class="form-control" name="email" th:value="${session.user.email}"
+                                           type="text">
                                 </div>
                             </div>
                             <hr>
@@ -57,12 +49,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div>
-                                        <label for="img-upload" class="pointer">
-                                            <img src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
-                                                 width="117" alt="">
+                                        <label class="pointer" for="img-upload">
+                                            <img alt=""
+                                                 src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4"
+                                                 width="117">
                                             <span class="btn btn-default display-block no-mrg-btm">Choose file</span>
-                                            <input class="d-none" type="file" name="uploadedimages0" multiple
-                                                   id="img-upload">
+                                            <input class="d-none" id="img-upload" multiple name="uploadedimages0"
+                                                   type="file">
                                         </label>
                                     </div>
                                 </div>
@@ -83,7 +76,7 @@
                                             <span class="font-size-14 mrg-left-10 text-dark text-bold">Github</span>
                                         </div>
                                         <div class="col-md-8 text-right">
-                                            <input type="text" class="form-control"
+                                            <input class="form-control" type="text"
                                                    value="https://www.github.com/profile">
                                         </div>
                                     </div>
@@ -98,21 +91,20 @@
                                             <span class="mrg-left-10 font-size-14 text-dark text-bold">Facebook</span>
                                         </div>
                                         <div class="col-md-8 text-right">
-                                            <input type="text" class="form-control"
+                                            <input class="form-control" type="text"
                                                    value="https://www.facebook.com/profile">
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- include fragments/footer -->
-<th:block th:replace="fragments/script"></th:block>
+<th:block th:include="common/js"></th:block>
 </body>
 </html>

@@ -2,6 +2,7 @@ HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
+bin/
 !**/src/main/**
 !**/src/test/**
 
@@ -32,5 +33,5 @@ out/
 .vscode/
 
 
-### OS Gerernated files ###
+### VS Code ###
 .DS_Store*
