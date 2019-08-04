@@ -1,4 +1,4 @@
-package techcourse.myblog.presentation.argument;
+package techcourse.myblog.presentation.support;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -6,7 +6,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.presentation.argument.exception.NotSignedInException;
+import techcourse.myblog.presentation.support.exception.NotSignedInException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

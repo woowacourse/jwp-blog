@@ -1,4 +1,4 @@
-package techcourse.myblog.presentation.config;
+package techcourse.myblog.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import techcourse.myblog.presentation.interceptor.CommonInterceptor;
 import techcourse.myblog.presentation.interceptor.LogoutInterceptor;
-import techcourse.myblog.presentation.argument.LoginUserHandlerMethodArgumentResolver;
+import techcourse.myblog.presentation.support.LoginUserHandlerMethodArgumentResolver;
 import techcourse.myblog.presentation.interceptor.LoginInterceptor;
 
 import java.util.List;
