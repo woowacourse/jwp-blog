@@ -5,8 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.*;
+import techcourse.myblog.domain.article.exception.MismatchArticleAuthorException;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.article.exception.MismatchAuthorException;
 
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -67,7 +67,7 @@ public class Article {
         if (matchAuthor(article)) {
             return;
         }
-        throw new MismatchAuthorException();
+        throw new MismatchArticleAuthorException();
     }
 
     private boolean matchAuthor(Article article) {

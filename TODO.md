@@ -106,9 +106,9 @@
 - [x] ``DELETE /comment/{commentId}/``
 
 ### 예외처리 나누기
-- [ ] 서비스 / 도메인 영역 분리하여 예외처리 다르게 하기
-    - [ ] LoginFailedException.class service / argument resolver
-    - [ ] MismatchAuthorException comment/ article 분리 및 findByIdAnd*** 삭제   
+- [x] 서비스 / 도메인 영역 분리하여 예외처리 다르게 하기
+    - [x] LoginFailedException.class service / argument resolver
+    - [x] MismatchAuthorException comment/ article 분리 및 findByIdAnd*** 삭제   
 
 ### 댓글 Ajax 구현
 - [ ] ``POST /comment/{articleId}``

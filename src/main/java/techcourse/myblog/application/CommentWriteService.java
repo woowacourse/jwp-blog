@@ -9,20 +9,21 @@ import techcourse.myblog.domain.comment.CommentRepository;
 @Transactional
 public class CommentWriteService {
     private final CommentRepository commentRepository;
-    
-    public CommentWriteService(CommentRepository commentRepository) {
+    private final CommentReadService commentReadService;
+
+    public CommentWriteService(CommentRepository commentRepository, CommentReadService commentReadService) {
         this.commentRepository = commentRepository;
+        this.commentReadService = commentReadService;
     }
-    
+
     public void save(Comment comment) {
         commentRepository.save(comment);
     }
-    
+
     public void modify(Long commentId, Comment comment) {
-        commentRepository.findById(commentId)
-                .ifPresent(originalComment -> originalComment.update(comment));
+        commentReadService.findById(commentId).update(comment);
     }
-    
+
     public void deleteById(Long id) {
         commentRepository.deleteById(id);
     }
