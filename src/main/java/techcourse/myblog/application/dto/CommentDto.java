@@ -9,7 +9,6 @@ import techcourse.myblog.domain.user.User;
 import javax.validation.constraints.NotBlank;
 
 @Getter
-@Setter
 public class CommentDto {
     @NotBlank
     private String contents;
