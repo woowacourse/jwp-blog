@@ -14,9 +14,11 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import static techcourse.myblog.utils.session.SessionContext.USER;
+import static techcourse.myblog.web.URL.*;
 
 @Controller
 public class CommentController {
+
     private final HttpSession session;
     private final CommentService commentService;
 
@@ -25,30 +27,30 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/comment/{articleId}")
+    @PostMapping(COMMENT + "/{articleId}")
     public String saveComment(@PathVariable Long articleId, @Valid CommentRequest commentRequest) {
         UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
         commentService.addComment(commentRequest, userResponse, articleId);
 
-        return "redirect:/articles/" + articleId;
+        return REDIRECT + ARTICLES + "/" + articleId;
     }
 
-    @PutMapping("/comment/{articleId}/{commentId}")
+    @PutMapping(COMMENT + "/{articleId}" + "/{commentId}")
     public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @Valid CommentRequest commentRequest) {
         UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
         commentService.checkAuthentication(userResponse, commentId);
         commentService.update(commentId, commentRequest);
 
-        return "redirect:/articles/" + articleId;
+        return REDIRECT + ARTICLES + "/" + articleId;
     }
 
-    @DeleteMapping("/comment/{articleId}/{commentId}")
+    @DeleteMapping(COMMENT + "/{articleId}" + "/{commentId}")
     public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId) {
         UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
         commentService.checkAuthentication(userResponse, commentId);
         commentService.remove(commentId);
 
-        return "redirect:/articles/" + articleId;
+        return REDIRECT + ARTICLES + "/" + articleId;
     }
 
 }

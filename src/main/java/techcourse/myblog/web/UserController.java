@@ -22,10 +22,13 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import static techcourse.myblog.utils.session.SessionContext.USER;
+import static techcourse.myblog.web.URL.*;
 
 @Controller
 public class UserController {
+
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
     private final UserService userService;
     private final LoginService loginService;
     private final HttpSession session;
@@ -36,73 +39,73 @@ public class UserController {
         this.session = session;
     }
 
-    @GetMapping("/login")
+    @GetMapping(LOGIN)
     public String login() {
-        return "login";
+        return LOGIN;
     }
 
-    @PostMapping("/logout")
+    @PostMapping(LOGOUT)
     public String logout() {
         SessionUtil.removeAttribute(session, USER);
 
-        return "redirect:/";
+        return REDIRECT + INDEX;
     }
 
-    @PostMapping("/login")
+    @PostMapping(LOGIN)
     public String login(@Valid LoginRequest loginRequestDto, BindingResult result) {
         if (result.hasErrors()) {
-            return "login";
+            return LOGIN;
         }
         UserResponse userResponse = loginService.loginByEmailAndPwd(loginRequestDto);
         SessionUtil.setAttribute(session, USER, userResponse);
 
-        return "redirect:/";
+        return REDIRECT + INDEX;
     }
 
-    @GetMapping("/users")
+    @GetMapping(USERS)
     public String users(Model model) {
         ModelUtil.addAttribute(model, "users", userService.findAll());
 
-        return "user-list";
+        return USER_LIST;
     }
 
-    @GetMapping("/signup")
+    @GetMapping(SIGNUP)
     public String signupForm() {
-        return "signup";
+        return SIGNUP;
     }
 
-    @GetMapping("/mypage")
+    @GetMapping(MYPAGE)
     public String mypage() {
-        return "mypage";
+        return MYPAGE;
     }
 
-    @GetMapping("/mypage-edit")
+    @GetMapping(MYPAGE_EDIT)
     public String editUser() {
-        return "mypage-edit";
+        return MYPAGE_EDIT;
     }
 
-    @PostMapping("/signup")
+    @PostMapping(SIGNUP)
     public String addUser(@Valid SignUpRequest signUpRequestDto, BindingResult result) {
         if (result.hasErrors()) {
-            return "signup";
+            return SIGNUP;
         }
         UserResponse userResponse = userService.addUser(signUpRequestDto);
         SessionUtil.setAttribute(session, USER, userResponse);
 
-        return "redirect:/";
+        return REDIRECT + INDEX;
     }
 
-    @PutMapping("/users")
+    @PutMapping(USERS)
     public String updateUser(@Valid UpdateUserRequest updateUserRequestDto, BindingResult result) {
         if (result.hasErrors()) {
             log.error("updateUser : not logged in");
-            return "mypage";
+            return MYPAGE;
         }
         UserResponse origin = (UserResponse) SessionUtil.getAttribute(session, USER);
         UserResponse userResponse = userService.updateUser(updateUserRequestDto, origin);
         SessionUtil.setAttribute(session, USER, userResponse);
 
-        return "redirect:/mypage";
+        return REDIRECT + MYPAGE;
     }
 
     @DeleteMapping("/users")
@@ -111,6 +114,6 @@ public class UserController {
         userService.deleteUser(userResponse);
         SessionUtil.removeAttribute(session, USER);
 
-        return "redirect:/";
+        return REDIRECT + INDEX;
     }
 }

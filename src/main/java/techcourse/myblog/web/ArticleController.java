@@ -14,9 +14,11 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import static techcourse.myblog.utils.session.SessionContext.USER;
+import static techcourse.myblog.web.URL.*;
 
 @Controller
 public class ArticleController {
+
     private final HttpSession session;
     private final ArticleService articleService;
 
@@ -29,50 +31,50 @@ public class ArticleController {
     public String index(Model model) {
         ModelUtil.addAttribute(model, "articles", articleService.getArticles());
 
-        return "index";
+        return "/index";
     }
 
-    @GetMapping("/writing")
+    @GetMapping(WRITING)
     public String getArticleEditForm() {
-        return "article-edit";
+        return ARTICLE_EDIT;
     }
 
-    @GetMapping("/articles/{articleId}")
+    @GetMapping(ARTICLES + "/{articleId}")
     public String getArticle(@PathVariable long articleId, Model model) {
         ModelUtil.addAttribute(model, "article", articleService.getArticle(articleId));
         ModelUtil.addAttribute(model, "comments", articleService.getComments(articleId));
 
-        return "article";
+        return ARTICLE;
     }
 
-    @GetMapping("/articles/{articleId}/edit")
+    @GetMapping(ARTICLES + "/{articleId}" + "/edit")
     public String getEditArticle(@PathVariable long articleId, Model model) {
         ModelUtil.addAttribute(model, "article", articleService.getArticle(articleId));
 
-        return "article-edit";
+        return ARTICLE_EDIT;
     }
 
-    @PostMapping("/articles")
+    @PostMapping(ARTICLES)
     public String saveArticle(@Valid ArticleRequest articleRequest) {
         UserResponse userResponse = (UserResponse) session.getAttribute(USER);
         ArticleResponse articleResponseDto = articleService.save(articleRequest, userResponse);
         Long articleId = articleResponseDto.getId();
 
-        return "redirect:/articles/" + articleId;
+        return REDIRECT + ARTICLES + "/" + articleId;
     }
 
-    @PutMapping("/articles/{articleId}")
+    @PutMapping(ARTICLES + "/{articleId}")
     public String modifyArticle(@PathVariable long articleId, @Valid ArticleRequest articleRequest) {
         UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
         articleService.update(articleId, articleRequest, userResponse);
 
-        return "redirect:/articles/" + articleId;
+        return REDIRECT + ARTICLES + "/" + articleId;
     }
 
-    @DeleteMapping("/articles/{articleId}")
+    @DeleteMapping(ARTICLES + "/{articleId}")
     public String deleteArticle(@PathVariable long articleId) {
         articleService.delete(articleId);
 
-        return "redirect:/";
+        return REDIRECT;
     }
 }
