@@ -30,10 +30,17 @@ class ArticleTest {
 
     @Test
     void update() {
+        User author = User.builder()
+                .name("테스트")
+                .email("articleAuthor@test.com")
+                .password("password1!")
+                .build();
+
         Article article = Article.builder()
                 .title("title")
                 .coverUrl("coverUrl")
                 .contents("contents")
+                .author(author)
                 .build();
 
         ArticleSaveRequestDto articleSaveRequestDto = new ArticleSaveRequestDto();
@@ -41,7 +48,7 @@ class ArticleTest {
         articleSaveRequestDto.setCoverUrl("newCoverUrl");
         articleSaveRequestDto.setContents("newContents");
 
-        article.update(articleSaveRequestDto);
+        article.update(articleSaveRequestDto, author);
 
         assertThat(article.getTitle()).isEqualTo("newTitle");
         assertThat(article.getCoverUrl()).isEqualTo("newCoverUrl");

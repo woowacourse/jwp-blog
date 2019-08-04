@@ -9,7 +9,6 @@ import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.dto.ArticleSaveRequestDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.IllegalArticleDeleteRequestException;
-import techcourse.myblog.exception.IllegalArticleUpdateRequestException;
 
 import javax.transaction.Transactional;
 
@@ -46,14 +45,13 @@ public class ArticleService {
 
     @Transactional
     public void update(ArticleSaveRequestDto articleSaveRequestDto, long id, User user) {
-        Article article = findById(id);
-        if (article.isNotAuthor(user)) {
-            log.error("update article request by illegal user id={}, article id={}, articleSaveRequestDto={}"
-                    , user.getId(), id, articleSaveRequestDto);
-            throw new IllegalArticleUpdateRequestException();
+        if (isArticleNotFound(id)) {
+            log.error("update article request by illegal article id={}", id);
+            throw new ArticleNotFoundException(ERROR_ARTICLE_NOT_FOUND_MESSAGE);
         }
 
-        article.update(articleSaveRequestDto);
+        Article article = findById(id);
+        article.update(articleSaveRequestDto, user);
     }
 
     @Transactional

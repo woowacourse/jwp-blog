@@ -1,13 +1,16 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.dto.ArticleSaveRequestDto;
+import techcourse.myblog.exception.IllegalArticleUpdateRequestException;
 
 import javax.persistence.*;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @EqualsAndHashCode(of = "id")
@@ -46,7 +49,13 @@ public class Article {
         return StringUtils.isNotBlank(coverUrl);
     }
 
-    public void update(ArticleSaveRequestDto articleSaveRequestDto) {
+    public void update(ArticleSaveRequestDto articleSaveRequestDto, User user) {
+        if (isNotAuthor(user)) {
+            log.error("update article request by illegal user id={}, article id={}, articleSaveRequestDto={}"
+                    , user.getId(), id, articleSaveRequestDto);
+            throw new IllegalArticleUpdateRequestException();
+        }
+
         this.title = articleSaveRequestDto.getTitle();
         this.coverUrl = articleSaveRequestDto.getCoverUrl();
         this.contents = articleSaveRequestDto.getContents();
