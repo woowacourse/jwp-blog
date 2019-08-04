@@ -2,11 +2,14 @@ package techcourse.myblog.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.AdditionalMatchers;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.CommentDeleteException;
 import techcourse.myblog.exception.CommentUpdateException;
+import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
@@ -68,12 +71,14 @@ public class CommentServiceTest {
         when(defaultComment.matchAuthor(DEFAULT_USER_ID)).thenReturn(true);
 
         userRepository = mock(UserRepository.class);
-        when(userRepository.findById(DEFAULT_USER_ID)).thenReturn(Optional.of(defaultUser));
+        when(userRepository.findById(defaultUser.getId())).thenReturn(Optional.of(defaultUser));
+        when(userRepository.findById(AdditionalMatchers.not(eq(defaultUser.getId())))).thenThrow(UserNotFoundException.class);
         articleRepository = mock(ArticleRepository.class);
-        when(articleRepository.findById(DEFAULT_ARTICLE_ID)).thenReturn(Optional.of(defaultArticle));
+        when(articleRepository.findById(defaultArticle.getId())).thenReturn(Optional.of(defaultArticle));
+        when(articleRepository.findById(AdditionalMatchers.not(eq(defaultArticle.getId())))).thenThrow(ArticleNotFoundException.class);
         commentRepository = mock(CommentRepository.class);
         when(commentRepository.save(any())).thenReturn(defaultComment);
-        when(commentRepository.findById(DEFAULT_COMMENT_ID)).thenReturn(Optional.of(defaultComment));
+        when(commentRepository.findById(defaultComment.getId())).thenReturn(Optional.of(defaultComment));
 
         commentService = new CommentService(commentRepository, userRepository, articleRepository);
     }

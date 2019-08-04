@@ -59,12 +59,12 @@ public class ArticleServiceTest {
 
         articleRepository = mock(ArticleRepository.class);
         when(articleRepository.save(any())).thenReturn(defaultArticle);
-        when(articleRepository.findById(DEFAULT_ARTICLE_ID)).thenReturn(Optional.of(defaultArticle));
-        when(articleRepository.findById(AdditionalMatchers.not(eq(DEFAULT_ARTICLE_ID)))).thenThrow(ArticleNotFoundException.class);
+        when(articleRepository.findById(defaultArticle.getId())).thenReturn(Optional.of(defaultArticle));
+        when(articleRepository.findById(AdditionalMatchers.not(eq(defaultArticle.getId())))).thenThrow(ArticleNotFoundException.class);
         when(articleRepository.findAll()).thenReturn(Collections.singletonList(defaultArticle));
         userRepository = mock(UserRepository.class);
-        when(userRepository.findById(DEFAULT_USER_ID)).thenReturn(Optional.of(defaultUser));
-        when(userRepository.findById(AdditionalMatchers.not(eq(DEFAULT_USER_ID)))).thenThrow(UserNotFoundException.class);
+        when(userRepository.findById(defaultUser.getId())).thenReturn(Optional.of(defaultUser));
+        when(userRepository.findById(AdditionalMatchers.not(eq(defaultUser.getId())))).thenThrow(UserNotFoundException.class);
 
         articleService = new ArticleService(articleRepository, userRepository);
     }
