@@ -3,7 +3,7 @@ package techcourse.myblog.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicatedUserException;
 import techcourse.myblog.exception.NotFoundUserException;
@@ -58,7 +58,7 @@ public class UserService {
         checkUser(userSession, userId);
         User user = userRepository.findById(userId).orElseThrow(NotFoundUserException::new);
         user.update(userDto);
-        return modelMapper.map(userDto, UserDto.Response.class);
+        return modelMapper.map(user, UserDto.Response.class);
     }
 
     public void deleteById(UserDto.Response userSession, Long userId) {

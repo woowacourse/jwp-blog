@@ -1,4 +1,4 @@
-package techcourse.myblog.advice;
+package techcourse.myblog.web.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.*;
-import techcourse.myblog.exception.valid.InvalidEditFormException;
-import techcourse.myblog.exception.valid.InvalidSignUpFormException;
 
 import javax.servlet.http.HttpSession;
 
@@ -66,8 +64,9 @@ public class ExceptionAdvice {
         return "error";
     }
 
-    @ExceptionHandler(NotMatchUserException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    //TODO : article페이지
+    @ExceptionHandler(NotMatchUserException.class) //TODO: Exeception에 id / error or exception
+    @ResponseStatus(HttpStatus.BAD_REQUEST) //TODO : 403, 404 .html, RedirectionAttributes
     public String handleNotMatchUserException(NotMatchUserException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         model.addAttribute("path", "/");

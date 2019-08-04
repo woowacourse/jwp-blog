@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleVo;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.ArticleDto;
@@ -60,9 +61,7 @@ abstract public class ServiceTest {
             .build();
 
         article = Article.builder()
-            .title("title")
-            .coverUrl("coverUrl")
-            .contents("contents")
+            .articleVo(new ArticleVo("title", "coverUrl", "contents"))
             .author(user)
             .build();
 
@@ -82,7 +81,7 @@ abstract public class ServiceTest {
         otherUserDto = modelMapper.map(otherUser, UserDto.Response.class);
         otherUserDto.setId(otherUserId);
 
-        articleId = articleService.save(userDto, modelMapper.map(article, ArticleDto.Create.class));
+        articleId = articleService.save(userDto, modelMapper.map(article, ArticleVo.class));
         articleDto = modelMapper.map(article, ArticleDto.Response.class);
         articleDto.setId(articleId);
 

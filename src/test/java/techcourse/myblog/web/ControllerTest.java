@@ -51,7 +51,8 @@ abstract public class ControllerTest {
             .header("Cookie", cookie)
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(BodyInserters
-                .fromFormData("contents", "datgeul").with("articleId", articleId))
+                .fromFormData("contents", "datgeul")
+                .with("articleId", articleId))
             .exchange().expectStatus().isFound()
             .returnResult(String.class)
             .getResponseHeaders()

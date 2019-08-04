@@ -3,8 +3,9 @@ package techcourse.myblog.service;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleVo;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.NotFoundArticleException;
@@ -24,10 +25,10 @@ public class ArticleService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public Long save(UserDto.Response userDto, ArticleDto.Create articleDto) {
+    public Long save(UserDto.Response userDto, ArticleVo articleVo) {
         User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundUserException::new);
-        Article newArticle = articleDto.toArticle(user);
-        return articleRepository.save(newArticle).getId();
+        Article article = new Article(articleVo, user);
+        return articleRepository.save(article).getId();
     }
 
     public List<ArticleDto.Response> findAll() {
@@ -49,10 +50,10 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleDto.Response update(UserDto.Response userDto, Long articleId, ArticleDto.Update articleDto) {
+    public ArticleDto.Response update(UserDto.Response userDto, Long articleId, ArticleVo articleVo) {
         checkAuthor(userDto, articleId);
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        article.update(articleDto);
+        article.update(articleVo);
         return modelMapper.map(article, ArticleDto.Response.class);
     }
 

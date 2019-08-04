@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.CommentDto;
 
 import javax.persistence.*;
@@ -35,12 +37,12 @@ public class Comment {
     private LocalDateTime modfiedDate;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+//    @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "article_id")
+//    @JoinColumn(name = "article_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 

@@ -1,9 +1,9 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.article;
 
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
 
@@ -14,31 +14,28 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class Article {
-    //TODO:ondelete
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
-
-    @Lob
-    private String coverUrl;
-
-    private String contents;
+    @Embedded
+    private ArticleVo articleVo;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
+    public Article(ArticleVo articleVo, User author) {
+        this.articleVo = articleVo;
+        this.author = author;
+    }
+
     public boolean isWrittenBy(User user) {
         return author.equals(user);
     }
 
-    public void update(ArticleDto.Update article) {
-        title = article.getTitle();
-        contents = article.getContents();
-        coverUrl = article.getCoverUrl();
+    public void update(ArticleVo articleVo) {
+        this.articleVo = articleVo;
     }
 }

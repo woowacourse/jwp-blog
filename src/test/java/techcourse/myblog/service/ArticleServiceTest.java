@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleVo;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.exception.NotMatchAuthorException;
 
@@ -29,7 +30,7 @@ class ArticleServiceTest extends ServiceTest {
     }
 
     @Test
-    void 게시글_단건_조회_테스트() {
+    void 게시글_단건_protected조회_테스트() {
         assertThat(articleService.findById(articleId)).isEqualTo(articleDto);
     }
 
@@ -48,14 +49,14 @@ class ArticleServiceTest extends ServiceTest {
     void 게시글_수정_테스트() {
         Article updatedArticle = Article.builder()
             .id(articleId)
-            .title("updatedTitle")
-            .coverUrl("updatedCoverUrl")
-            .contents("updatedContents")
+            .articleVo(new ArticleVo("updatedTitle",
+                "updatedCoverUrl",
+                "updatedContents"))
             .author(user)
             .build();
 
         ArticleDto.Response updatedArticleDto =
-            articleService.update(userDto, articleId, modelMapper.map(updatedArticle, ArticleDto.Update.class));
+            articleService.update(userDto, articleId, modelMapper.map(updatedArticle, ArticleVo.class));
 
         assertThat(updatedArticleDto)
             .isEqualTo(modelMapper.map(updatedArticle, ArticleDto.Response.class));
@@ -65,14 +66,14 @@ class ArticleServiceTest extends ServiceTest {
     void 다른_작성자_게시글_수정_테스트() {
         Article updatedArticle = Article.builder()
             .id(articleId)
-            .title("updatedTitle")
-            .coverUrl("updatedCoverUrl")
-            .contents("updatedContents")
+            .articleVo(new ArticleVo("updatedTitle",
+                "updatedCoverUrl",
+                "updatedContents"))
             .author(user)
             .build();
 
         assertThrows(NotMatchAuthorException.class, () ->
-            articleService.update(otherUserDto, articleId, modelMapper.map(updatedArticle, ArticleDto.Update.class)));
+            articleService.update(otherUserDto, articleId, modelMapper.map(updatedArticle, ArticleVo.class)));
     }
 
     @Test
