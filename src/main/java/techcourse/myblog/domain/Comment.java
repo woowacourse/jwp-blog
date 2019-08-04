@@ -2,13 +2,10 @@ package techcourse.myblog.domain;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.domain.vo.CommentContents;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Entity
 public class Comment {
