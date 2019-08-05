@@ -16,6 +16,7 @@ public class CommentDto {
     private String userName;
     private LocalDateTime createDateTime;
     private LocalDateTime updateDateTime;
+    private long articleId;
 
     public static CommentDto of(Comment comment) {
         CommentDto commentDto = new CommentDto();
@@ -24,6 +25,7 @@ public class CommentDto {
         commentDto.setUserName(comment.getUser().getName());
         commentDto.setCreateDateTime(comment.getCreateDateTime());
         commentDto.setUpdateDateTime(comment.getCreateDateTime());
+        commentDto.setArticleId(comment.getArticle().getId());
 
         return commentDto;
     }

@@ -18,12 +18,12 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/{articleId}")
-    public RedirectView create(HttpSession httpSession, CommentDto commentDto, @PathVariable Long articleId) {
+    @PostMapping("/{articleId}/writing")
+    public CommentDto create(HttpSession httpSession, CommentDto commentDto, @PathVariable Long articleId) {
         String email = (String) httpSession.getAttribute("email");
 
-        commentService.save(commentDto, email, articleId);
-        return new RedirectView("/articles/" + articleId);
+        return commentService.save(commentDto, email, articleId);
+        //return new RedirectView("/articles/" + articleId);
     }
 
     @DeleteMapping("/{articleId}/{commentId}")

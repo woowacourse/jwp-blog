@@ -3,9 +3,11 @@ package techcourse.myblog.presentation.controller;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
 import techcourse.myblog.application.dto.ArticleDto;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.dto.LoginDto;
@@ -38,6 +40,25 @@ class CommentControllerTest {
                         });
                     });
         });
+
+        CommentDto commentDto = new CommentDto();
+        commentDto.setContents("testCommentContents");
+
+        initalWork(createComment -> {
+            webTestClient.post()
+                    .uri("/articles/" + 1 + sessionId)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON_UTF8)
+                    .body(Mono.just(commentDto), CommentDto.class)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .expectBody()
+                    .jsonPath("$.name").isNotEmpty()
+                    .jsonPath("$.name").isEqualTo("test-webclient-repository");
+        });
+
+
     }
 
     @Test

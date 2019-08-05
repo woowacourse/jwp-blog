@@ -27,12 +27,13 @@ public class CommentService {
     }
 
     @Transactional
-    public long save(CommentDto commentDto, String userEmail, long articleId) {
+    public CommentDto save(CommentDto commentDto, String userEmail, long articleId) {
         User user = userService.findUserByEmail(userEmail);
         Article article = articleService.findArticleById(articleId);
 
         Comment comment = new Comment(commentDto.getContents(), user, article);
-        return commentRepository.save(comment).getId();
+
+        return CommentDto.of(commentRepository.save(comment));
     }
 
     @Transactional(readOnly = true)
