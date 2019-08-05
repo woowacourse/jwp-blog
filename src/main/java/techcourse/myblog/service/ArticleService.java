@@ -2,10 +2,7 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.User;
 import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.service.exception.NoPermissionArticleException;
-import techcourse.myblog.service.exception.NoRowException;
 import techcourse.myblog.web.dto.ArticleDto;
 
 import java.util.List;
@@ -25,27 +22,19 @@ public class ArticleService {
 
     public Article findById(Long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(NoRowException::new);
+                .orElseThrow(IllegalArgumentException::new);
     }
 
-    public Article save(ArticleDto articleDto, User user) {
-        return articleRepository.save(articleDto.create(user));
+    public Article save(ArticleDto articleDto) {
+        return articleRepository.save(articleDto.create());
     }
 
-    public Article update(Long articleId, ArticleDto articleDto, User loginUser) {
-        exist(articleId, loginUser);
+    public Article update(Long articleId, ArticleDto articleDto) {
         Article selectedArticle = findById(articleId);
         return articleRepository.save(selectedArticle.update(articleDto));
     }
 
-    public void delete(Long articleId, User loginUser) {
-        exist(articleId, loginUser);
+    public void delete(Long articleId) {
         articleRepository.deleteById(articleId);
-    }
-
-    public void exist(Long articleId, User author) {
-        if (!articleRepository.existsByIdAndAuthor(articleId, author)) {
-            throw new NoPermissionArticleException("게시글에 대한 권한이 없습니다.");
-        }
     }
 }

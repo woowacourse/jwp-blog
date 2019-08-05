@@ -2,34 +2,25 @@ package techcourse.myblog.domain;
 
 import techcourse.myblog.web.dto.UserDto;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
     private String email;
-
-    @Column(length = 10, nullable = false)
     private String name;
-
-    @Column(length = 14, nullable = false)
     private String password;
 
     public User() {
     }
 
     public User(String name, String email, String password) {
-        this(null, name, email, password);
-    }
-
-    public User(Long id, String name, String email, String password) {
-        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -65,6 +56,16 @@ public class User {
     }
 
     @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -78,15 +79,5 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id, email, name, password);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                '}';
     }
 }
