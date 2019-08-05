@@ -181,7 +181,7 @@ public class UserServiceTest {
 	@Test
 	@DisplayName("유저 이름 변경")
 	void update() {
-		Long userId = 1L;
+		Long userId = 2L;
 		User user = userService.findById(userId);
 		String updateName = "UPDATE";
 		UserRequestDto userRequestDto = new UserRequestDto(updateName, user.getEmail(), null, null);

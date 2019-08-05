@@ -24,7 +24,6 @@ public class CommentRestControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-
     @Test
     @DisplayName("댓글 생성 테스트")
     void createTest() throws IOException {
