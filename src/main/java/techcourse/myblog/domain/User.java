@@ -1,42 +1,50 @@
 package techcourse.myblog.domain;
 
-import lombok.*;
-import techcourse.myblog.dto.UserDto;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import techcourse.myblog.controller.dto.UserDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
-@ToString
-@Builder
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@RequiredArgsConstructor()
-@EqualsAndHashCode(of = "id")
+@ToString
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
+    private Long id;
     @Column(nullable = false)
-    @NonNull
     @Size(min = 2, max = 10)
     private String name;
-
     @Column(nullable = false)
-    @NonNull
+    @Size(max = 30)
+    private String password;
+    @Column(nullable = false, unique = true)
+    @Size(max = 20)
     private String email;
 
-    @Column(nullable = false)
-    @NonNull
-    private String password;
-
-    public boolean isSamePassword(String password) {
-        return this.password.equals(password);
+    public User(String name, String password, String email) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
     }
 
-    public String updateName(UserDto userDto) {
-        return this.name = userDto.getName();
+    public User(Long id, String name, String password, String email) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.email = email;
+    }
+
+    public void matchPassword(UserDto userDto) {
+        if (userDto.getPassword().equals(password)) {
+            return;
+        }
+        throw new IllegalArgumentException();
     }
 }
+

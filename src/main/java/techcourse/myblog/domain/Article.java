@@ -5,23 +5,30 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
-@Builder
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column
     private String title;
-
-    @Column
-    private String coverUrl;
-
-    @Column
     private String contents;
+    private String coverUrl;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User author;
+
+    public Article(String title, String contents, String coverUrl, User author) {
+        this.title = title;
+        this.contents = contents;
+        this.coverUrl = coverUrl;
+        this.author = author;
+    }
+
+    public boolean isNotMatchAuthor(long userId) {
+        return author.getId() != userId;
+    }
 }

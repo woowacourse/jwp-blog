@@ -1,31 +1,27 @@
 package techcourse.myblog.controller;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.service.IndexService;
 
-import javax.servlet.http.HttpSession;
+import java.util.List;
 
-@Controller
-@RequiredArgsConstructor
 @Slf4j
+@Controller
 public class IndexController {
-    private final ArticleRepository articleRepository;
+    private final IndexService indexService;
+
+    public IndexController(IndexService indexService) {
+        this.indexService = indexService;
+    }
 
     @GetMapping("/")
-    public String index(HttpSession session, Model model) {
-        model.addAttribute("articles", articleRepository.findAll());
-        log.debug("index : from index");
-
-        UserDto userDto = (UserDto) session.getAttribute("user");
-
-        if (userDto != null) {
-            model.addAttribute("user", userDto);
-        }
+    public String showArticlesPage(Model model) {
+        List<Article> articles = indexService.finaAll();
+        model.addAttribute("articles", articles);
         return "index";
     }
 }
