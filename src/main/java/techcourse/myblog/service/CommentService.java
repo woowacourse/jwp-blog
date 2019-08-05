@@ -25,7 +25,8 @@ public class CommentService {
 
     public Comment addComment(long articleId, User author, CommentDto commentDto) {
         Article article = articleService.findArticle(articleId);
-        Comment comment = commentDto.toEntity(article, author);
+        User user = userService.getUserByEmail(author.getEmail());
+        Comment comment = commentDto.toEntity(article, user);
         return commentRepository.save(comment);
     }
 
@@ -37,12 +38,11 @@ public class CommentService {
         commentRepository.deleteById(commentId);
     }
 
-
     public void updateComment(long commentId, String email, CommentDto commentDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentException::new);
         if (!comment.isAuthor(email)) {
             throw new CommentException("FBI WARNING");
         }
-        comment.updateContents(commentDto.getContents(), userService.getUserByEmail(email));
+        comment.updateContents(commentDto.getContents());
     }
 }

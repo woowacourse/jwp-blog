@@ -10,6 +10,7 @@ import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserException;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
 
@@ -18,9 +19,11 @@ import java.util.List;
 public class ArticleService {
     private static final String NOT_EXIST_ARTICLE = "해당 아티클이 없습니다.";
     private final ArticleRepository articleRepository;
+    private final UserRepository userRepository;
 
-    public ArticleService(ArticleRepository articleRepository) {
+    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository) {
         this.articleRepository = articleRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -41,7 +44,8 @@ public class ArticleService {
 
     @Transactional
     public Article save(ArticleDto articleDto, User author) {
-        Article article = articleDto.toEntity(author);
+        User user = userRepository.getOne(author.getId());
+        Article article = articleDto.toEntity(user);
         return articleRepository.save(article);
     }
 

@@ -5,7 +5,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -77,15 +76,12 @@ public class Comment {
         return article;
     }
 
-    public Comment updateContents(String contents, User author) {
-        if (!isAuthor(author)) {
-            throw new UserException();
-        }
+    public Comment updateContents(String contents) {
         this.contents = contents;
         return this;
     }
 
-    public Comment updateContents(Comment comment, User author) {
-        return updateContents(comment.contents, author);
+    public Comment updateContents(Comment comment) {
+        return updateContents(comment.contents);
     }
 }
