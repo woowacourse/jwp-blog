@@ -19,7 +19,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 	}
 
 	private boolean isAccessibleNonLoginUser(HttpServletResponse response, String path) throws IOException {
-		if ((!path.equals("/")) && (!path.equals("/signup")) && (!path.equals("/login") && (!path.equals("/users")))) {
+		if((!"/".equals(path)) && (!"/signup".equals(path)) && (!"/login".equals(path)) && (!"/users".equals(path))) {
 			response.sendRedirect("/login");
 			return false;
 		}
@@ -27,7 +27,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 	}
 
 	private boolean isAccessibleLoginUser(HttpServletResponse response, String path) throws IOException {
-		if (path.equals("/login") || path.equals("/signup")) {
+		if("/login".equals(path) || "/signup".equals(path)) {
 			response.sendRedirect("/");
 			return false;
 		}
