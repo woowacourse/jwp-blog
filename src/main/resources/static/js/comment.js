@@ -3,15 +3,10 @@ const template = '<li class="comment-item border bottom mrg-btm-30">\n' +
     'src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">\n' +
     '<div class="info">\n' +
     '<a class="text-bold inline-block"\n' +
-    'href="/mypage/{{userId}}"\n>{{userName}}</a>\n' +
-    // '<form action="/articles/{{articleId}}/comments/{{commentId}}"\n' +
-    // 'method="post">\n' +
-    // '<input type="hidden" name="_method" value="delete">'+
-    '<button class="inline-block sub-title pull-right"\n' +
-    '">\n' +
+    'href="/mypage/{{author.id}}"\n>{{author.name.name}}</a>\n' +
+    '<button class="inline-block sub-title pull-right>"\n' +
     '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5 delete-comment-btn"></i>\n' +
     '</button>\n' +
-    // '</form>\n' +
     '<a class="inline-block sub-title pull-right">\n' +
     '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5 edit-comment-btn"></i>\n' +
     '</a>\n' +
@@ -116,7 +111,6 @@ function addSave(event) {
         .catch(data => console.log(data));
     editor.setValue('');
     commentContents.value = '';
-    1
 }
 
 const saveBtn = document.getElementById('save-btn');
