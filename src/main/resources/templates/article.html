@@ -190,13 +190,34 @@
     function showCommentInput(event, commentId) {
         event.preventDefault()
         const e = document.createElement('span');
-        e.innerHTML = '<textarea id="comment-edit-input" name="editedContents"></textarea><button type="submit" class="btn btn-tumblr" >수정</button>';
+        e.innerHTML = '<textarea id="comment-edit-input" name="editedContents"></textarea><button type="button" class="btn btn-tumblr" onclick="updateComment(' + commentId + ')">수정</button>';
+        e.setAttribute("id", "comment-update-span-" + commentId);
         document.getElementById("comment-edit-" + commentId).appendChild(e);
 
         const commentContents = document.getElementById("comment-contents-p-" + commentId);
         document.getElementById("comment-edit-input").value = commentContents.innerHTML;
 
         commentContents.parentNode.removeChild(commentContents);
+    }
+
+    function updateComment(commentId) {
+        fetch('/comment/' + commentId, {
+            method: "PUT",
+            body: JSON.stringify({
+                editedContents: document.getElementById("comment-edit-input").value
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(response => response.json())
+            .then(function (json) {
+                const e = document.createElement('span');
+                e.innerHTML = '<p id="comment-contents-p-' + commentId + '" class="width-80">' + json.editedContents + '</p>';
+                let element = document.getElementById("comment-update-span-" + commentId);
+                element.parentNode.appendChild(e);
+                element.remove();
+            });
     }
 
     function deleteComment(event, commentId) {
