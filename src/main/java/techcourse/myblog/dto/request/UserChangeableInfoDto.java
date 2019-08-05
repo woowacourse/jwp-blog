@@ -37,6 +37,6 @@ public class UserChangeableInfoDto {
 	}
 
 	public Information valueOfInfo(User loginUser) {
-		return new Information(loginUser.getEmail(), loginUser.getPassword(), this);
+		return new Information(loginUser.getEmail(), username, loginUser.getPassword(), githubUrl, faceBookUrl);
 	}
 }

@@ -43,6 +43,6 @@ public class UserSignUpInfoDto {
 	}
 
 	public Information valueOfInfo() {
-		return new Information(this);
+		return new Information(email, username, password);
 	}
 }

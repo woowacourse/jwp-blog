@@ -6,8 +6,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
-import techcourse.myblog.dto.request.UserChangeableInfoDto;
-import techcourse.myblog.dto.request.UserSignUpInfoDto;
 
 @Embeddable
 public class Information {
@@ -34,23 +32,22 @@ public class Information {
 	private Information() {
 	}
 
-	public Information(UserSignUpInfoDto userSignUpInfoDto) {
-		this.email = userSignUpInfoDto.getEmail();
-		this.username = userSignUpInfoDto.getUsername();
-		this.password = userSignUpInfoDto.getPassword();
-	}
-
-	//todo: 업성도 될듯
 	public Information(String email) {
 		this.email = email;
 	}
 
-	public Information(String email, String password, UserChangeableInfoDto userChangeableInfoDto) {
+	public Information(String email, String username, String password) {
+		this.email = email;
+		this.username = username;
+		this.password = password;
+	}
+
+	public Information(String email, String username, String password, String githubUrl, String faceBookUrl) {
 		this.email = email;
 		this.password = password;
-		this.username = userChangeableInfoDto.getUsername();
-		this.githubUrl = userChangeableInfoDto.getGithubUrl();
-		this.faceBookUrl = userChangeableInfoDto.getFaceBookUrl();
+		this.username = username;
+		this.githubUrl = githubUrl;
+		this.faceBookUrl = faceBookUrl;
 	}
 
 	public String getUsername() {
