@@ -12,7 +12,6 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.dto.CommentRequest;
-import techcourse.myblog.exception.IllegalRequestException;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.exception.NotFoundCommentException;
 import techcourse.myblog.exception.UnauthorizedException;
@@ -26,7 +25,6 @@ public class CommentService {
 
     private static final String NOT_FOUND_COMMENT_ERROR = "존재하지 않는 댓글";
     private static final String NOT_FOUND_ARTICLE_ERROR = "존재하지 않는 게시글";
-    private static final String UNAUTHORIZED_USER_ERROR = "권한이 없는 사용자 입니다.";
 
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
@@ -35,10 +33,6 @@ public class CommentService {
     public CommentService(CommentRepository commentRepository, ArticleRepository articleRepository) {
         this.commentRepository = commentRepository;
         this.articleRepository = articleRepository;
-    }
-
-    public Comment find(Long commentId) {
-        return findCommentById(commentId);
     }
 
     private Comment findCommentById(Long commentId) {
@@ -75,42 +69,20 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    public void delete2(Long commentId, User user) {
-        Comment comment = getAuthorizedComment2(commentId, user);
-        commentRepository.delete(comment);
-    }
-
     private Comment getAuthorizedComment(Long commentId, User user) {
         Comment comment = findCommentById(commentId);
         checkAuthorizedUser(user, comment);
         return comment;
     }
 
-    private Comment getAuthorizedComment2(Long commentId, User user) {
-        Comment comment = findCommentById(commentId);
-        checkAuthorizedUser2(user, comment);
-        return comment;
-    }
-
     private void checkAuthorizedUser(User user, Comment comment) {
-        if (!comment.isAuthorized(user)) {
-            throw new IllegalRequestException(UNAUTHORIZED_USER_ERROR);
-        }
-    }
-
-    private void checkAuthorizedUser2(User user, Comment comment) {
         if (!comment.isAuthorized(user)) {
             throw new UnauthorizedException();
         }
     }
 
-    public void update(long commentId, CommentDto commentDto, User user) {
-        Comment comment = getAuthorizedComment(commentId, user);
-        comment.update(commentDto.getContents());
-    }
-
     public Comment update(Long commentId, CommentRequest commentRequest, User user) {
-        Comment comment = getAuthorizedComment2(commentId, user);
+        Comment comment = getAuthorizedComment(commentId, user);
         return comment.update(commentRequest.getContents());
     }
 
