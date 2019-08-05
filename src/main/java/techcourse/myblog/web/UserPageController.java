@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import techcourse.myblog.service.dto.user.UserRequest;
 import techcourse.myblog.service.dto.user.UserResponse;
 import techcourse.myblog.service.user.UserService;
+import techcourse.myblog.web.argumentResolver.AccessUserInfo;
 
 import javax.servlet.http.HttpSession;
 
@@ -26,26 +27,23 @@ public class UserPageController {
     }
 
     @GetMapping("")
-    public ModelAndView showMyPage(final HttpSession session) {
+    public ModelAndView showMyPage(final AccessUserInfo accessUserInfo) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("mypage");
-        UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
-        modelAndView.addObject("user", user);
+        modelAndView.addObject("user", accessUserInfo.getUser());
         return modelAndView;
     }
 
     @DeleteMapping("")
-    public String deleteUser(final HttpSession session) {
-        UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
-        userService.delete(user);
+    public String deleteUser(final AccessUserInfo accessUserInfo) {
+        userService.delete(accessUserInfo.getUser());
         return "redirect:/logout";
     }
 
     @GetMapping("/mypage-edit")
-    public ModelAndView showMyPageEdit(final HttpSession session) {
-        UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
+    public ModelAndView showMyPageEdit(final AccessUserInfo accessUserInfo) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("user", user);
+        modelAndView.addObject("user", accessUserInfo.getUser());
         modelAndView.setViewName("mypage-edit");
         return modelAndView;
     }
