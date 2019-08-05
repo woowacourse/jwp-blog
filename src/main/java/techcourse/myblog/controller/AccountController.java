@@ -64,7 +64,7 @@ public class AccountController {
         try {
             accountService.save(userDto);
         } catch (UserDuplicateEmailException e) {
-            errors.rejectValue("email", "0", "이메일 중복입니다.");
+            errors.rejectValue("email", "0", e.getMessage());
             return "signup";
         }
 
