@@ -14,12 +14,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class LoginUserResolver implements HandlerMethodArgumentResolver {
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
-		return parameter.getParameterType().isAssignableFrom(User.class);
+		return parameter.hasParameterAnnotation(LoginUser.class);
 	}
 
 	@Override
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-								  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+								  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 		Object userEmail = webRequest.getAttribute("email", RequestAttributes.SCOPE_SESSION);
 
 		if (userEmail != null) {
