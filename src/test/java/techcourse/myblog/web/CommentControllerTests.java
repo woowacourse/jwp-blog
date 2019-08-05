@@ -9,6 +9,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.application.dto.CommentRequest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,6 +25,7 @@ public class CommentControllerTests {
     private static final String title = "googler bmo";
     private static final String coverUrl = "bmo.jpg";
     private static final String contents = "why bmo so great?";
+    private static final String BLANK = " ";
 
     private String cookie;
 
@@ -67,11 +70,24 @@ public class CommentControllerTests {
     @Test
     void 댓글_작성_성공_테스트() {
         String commentContents = "comment contents";
-        requestSaveComment(commentContents)
+        requestSaveCommentJson(commentContents)
                 .expectStatus()
-                .isFound()
-                .expectHeader()
-                .valueMatches("location", ".*/articles/1")
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.result").isEqualTo("ok")
+                .jsonPath("$.comment.contents").isEqualTo(commentContents)
+                ;
+    }
+
+    @Test
+    void 빈칸_입력_댓글_작성_실패_테스트() {
+        String commentContents = BLANK;
+        requestSaveCommentJson(commentContents)
+                .expectStatus()
+                .is4xxClientError()
+                .expectBody()
+                .jsonPath("$.result").isEqualTo("fail")
+                .jsonPath("$.message").isEqualTo("댓글 내용을 입력하세요.")
         ;
     }
 
@@ -123,6 +139,16 @@ public class CommentControllerTests {
                         .fromFormData("contents", commentContents))
                 .exchange()
                 ;
+    }
+
+    private WebTestClient.ResponseSpec requestSaveCommentJson(String commentContents) {
+        CommentRequest request = new CommentRequest(commentContents);
+        return webTestClient.post()
+                .uri("/articles/1/comments")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .header("Cookie", cookie)
+                .body(Mono.just(request), CommentRequest.class)
+                .exchange();
     }
 
     @Test

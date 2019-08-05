@@ -20,7 +20,7 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/comments")
+//    @PostMapping("/comments")
     public String saveComment(@PathVariable("articleId") Long articleId, @Valid CommentRequest commentRequest,
                               BindingResult bindingResult, HttpSession httpSession) {
         if (!bindingResult.hasErrors()) {

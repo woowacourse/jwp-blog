@@ -1,13 +1,11 @@
 package techcourse.myblog.application;
 
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.application.dto.CommentRequest;
 import techcourse.myblog.application.dto.UserResponse;
-import techcourse.myblog.application.exception.CommentNotFoundException;
-import techcourse.myblog.application.exception.NoArticleException;
-import techcourse.myblog.application.exception.NoUserException;
-import techcourse.myblog.application.exception.NotSameAuthorException;
+import techcourse.myblog.application.exception.*;
 import techcourse.myblog.domain.*;
 
 import javax.transaction.Transactional;
@@ -29,15 +27,20 @@ public class CommentService {
         this.modelMapper = modelMapper;
     }
 
-    public void save(CommentRequest commentRequest, Long articleId, Long userId) {
+    public Comment save(CommentRequest commentRequest, Long articleId, Long userId) {
+        if (StringUtils.isBlank(commentRequest.getContents())) {
+            throw new EmptyCommentRequestException();
+        }
+
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new NoArticleException("게시글이 존재하지 않습니다."));
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
 
         Comment comment = new Comment(commentRequest.getContents(), user, article);
 
-        commentRepository.save(comment);
+        return commentRepository.save(comment);
     }
 
     public List<Comment> findCommentsByArticle(Article article) {
