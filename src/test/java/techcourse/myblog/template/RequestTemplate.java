@@ -109,6 +109,15 @@ public class RequestTemplate {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
     }
 
+    public WebTestClient.RequestBodySpec loggedInPostAjaxRequest(String uri) {
+        return webTestClient
+                .post()
+                .uri(uri)
+                .header("Cookie", getCookie())
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8);
+    }
+
     public WebTestClient.RequestBodySpec loggedInPutAjaxRequest(String uri) {
         return webTestClient
                 .put()
@@ -116,6 +125,14 @@ public class RequestTemplate {
                 .header("Cookie", getCookie())
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8);
+    }
+
+    public WebTestClient.RequestHeadersSpec<?> loggedInDeleteAjaxRequest(String uri) {
+        return webTestClient
+                .delete()
+                .uri(uri)
+                .header("Cookie", getCookie())
+                .accept(MediaType.APPLICATION_JSON_UTF8);
     }
 
     public String createArticle() {
