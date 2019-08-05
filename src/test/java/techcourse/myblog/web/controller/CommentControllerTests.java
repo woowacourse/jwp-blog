@@ -3,8 +3,10 @@ package techcourse.myblog.web.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import reactor.core.publisher.Mono;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.repository.CommentRepository;
 import techcourse.myblog.dto.ArticleDto;
@@ -41,10 +43,16 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     public void 로그인_상태_댓글작성_성공() {
-        String loginWriteCommentRedirectUrl = getRedirectUrl(loginAndRequest(authorDto, POST, savedArticleUrl + "/comments", parser(commentDto)));
-        String responseBody = getResponseBody(loginAndRequest(authorDto, GET, loginWriteCommentRedirectUrl));
-
-        assertThat(responseBody.contains(commentDto.getContents())).isTrue();
+        webTestClient.post().uri(savedArticleUrl + "/comments")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentDto), CommentDto.class)
+                .cookie("JSESSIONID", getLoginSessionId(authorDto))
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.contents").isEqualTo(commentDto.getContents());
     }
 
     @Test
