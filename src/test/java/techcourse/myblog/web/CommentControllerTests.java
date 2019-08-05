@@ -10,11 +10,12 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.service.CommentService;
+import techcourse.myblog.testutil.CommonTestUtil;
 import techcourse.myblog.testutil.LoginTestUtil;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-class CommentControllerTests {
+class CommentControllerTests extends CommonTestUtil {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -24,6 +25,10 @@ class CommentControllerTests {
 
     private String jSessionId;
     private String articleId;
+
+    public CommentControllerTests(WebTestClient webTestClient) {
+        super(webTestClient);
+    }
 
     @BeforeEach
     void setUp() {
@@ -64,6 +69,7 @@ class CommentControllerTests {
                 .cookie("JSESSIONID", jSessionId)
                 .exchange()
                 .expectStatus().is3xxRedirection();
+
     }
 
     @AfterEach

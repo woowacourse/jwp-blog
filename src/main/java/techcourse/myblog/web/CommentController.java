@@ -3,6 +3,7 @@ package techcourse.myblog.web;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +21,12 @@ import static techcourse.myblog.util.SessionKeys.USER;
 @Controller
 public class CommentController {
 
+    private static final String USER_IS_NOT_AUTHOR = "해당 댓글의 작성자가 아닙니다.";
+    private static final String COMMENT_IS_NOT_EXIST = "존재하지 않는 댓글입니다.";
     private final CommentService commentService;
 
     public CommentController(final CommentService commentService) {
-        this.commentService=commentService;
+        this.commentService = commentService;
     }
 
     @PostMapping("/comment/writing")
@@ -34,19 +37,25 @@ public class CommentController {
     }
 
     @PutMapping("/comment/edit/{id}")
-    public String editComment(@PathVariable Long id, String editedContents, HttpSession httpSession) {
+    public String editComment(@PathVariable Long id, String editedContents, HttpSession httpSession, Model model) {
         Long articleId = commentService.findArticleIdById(id);
         if (checkUserIsCommentAuthor(id, httpSession)) {
             commentService.update(id, editedContents);
         }
+        model.addAttribute("errorMessage", USER_IS_NOT_AUTHOR);
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/comment/edit/{id}")
-    public String deleteComment(@PathVariable Long id, HttpSession httpSession) {
+    public String deleteComment(@PathVariable Long id, HttpSession httpSession, Model model) {
         Long articleId = commentService.findArticleIdById(id);
-        if (checkUserIsCommentAuthor(id, httpSession)) {
-            commentService.deleteById(id);
+        if (!checkUserIsCommentAuthor(id, httpSession)) {
+            model.addAttribute("errorMessage", USER_IS_NOT_AUTHOR);
+            return "redirect:/articles/" + articleId;
+        }
+        if (!commentService.deleteById(id)) {
+            model.addAttribute("erroMessage", COMMENT_IS_NOT_EXIST);
+            return "redirect:/articles/" + articleId;
         }
         return "redirect:/articles/" + articleId;
     }
