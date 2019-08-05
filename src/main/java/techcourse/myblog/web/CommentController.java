@@ -2,14 +2,15 @@ package techcourse.myblog.web;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.domain.userinfo.UserName;
 import techcourse.myblog.dto.CommentSaveRequestDto;
+import techcourse.myblog.dto.CommentSaveResponseDto;
 import techcourse.myblog.service.CommentService;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/comment")
 public class CommentController {
@@ -17,11 +18,12 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/writing")
-    public String saveComment(CommentSaveRequestDto commentSaveRequestDto, User user) {
+    public CommentSaveResponseDto saveComment(@RequestBody CommentSaveRequestDto commentSaveRequestDto, User user) {
         log.info("save comment post request params={}", commentSaveRequestDto);
         commentService.save(commentSaveRequestDto, user);
 
-        return "redirect:/articles/" + commentSaveRequestDto.getArticleId();
+        UserName userName = user.getName();
+        return new CommentSaveResponseDto(commentSaveRequestDto.getContents(), commentSaveRequestDto.getArticleId(), userName.getName());
     }
 
     @PutMapping("/{id}")

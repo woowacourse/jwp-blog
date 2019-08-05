@@ -64,7 +64,7 @@
 					<span th:text="${comments.size()}" class="font-size-16 text-info"></span>
 				</div>
 				<div class="comment">
-					<ul class="list-unstyle list-info">
+					<ul id="comment-ul-tag" class="list-unstyle list-info">
 						<li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
 							<form th:id="'comment-update-form' + ${comment.id}" method="post"
 							      th:action="'/comment/' + ${comment.id}">
@@ -87,14 +87,12 @@
 						</li>
 					</ul>
 					<div class="add-comment">
-						<form method="post" action="/comment/writing">
-							<input type="hidden" id="comment-contents" name="contents">
-							<div id="editSection"></div>
-							<input type="hidden" name="articleId" th:value="${article.id}">
-							<div class="mrg-top-20 text-right">
-								<button type="submit" class="btn btn-tumblr">댓글 작성</button>
-							</div>
-						</form>
+						<input type="hidden" id="comment-contents" name="contents">
+						<div id="editSection"></div>
+						<input type="hidden" name="articleId" th:value="${article.id}">
+						<div class="mrg-top-20 text-right">
+							<button id="comment-submit-button" type="button" class="btn btn-tumblr">댓글 작성</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -147,6 +145,43 @@
         },
         height: '200px'
     });
+
+    document.querySelector("#comment-submit-button").addEventListener("click", createComment);
+
+    function createComment() {
+        const articleId = /*[[${article.id}]]*/;
+
+        fetch('/comment/writing', {
+            method: "POST",
+            body: JSON.stringify({
+                contents: editor.getMarkdown(),
+                articleId: articleId
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(response => response.json())
+            .then(function (json) {
+                const node = document.createElement("LI");
+                node.innerHTML = '<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">' +
+                    '<div class="info">' +
+                    '<span class="text-bold inline-block">' + json.userName + '</span>' +
+                    '<span class="sub-title inline-block pull-right">' +
+                    '<a onclick="showCommentInput(event)">' +
+                    '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>' +
+                    '</a>' +
+                    '<a onclick="deleteComment(event)">' +
+                    '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>' +
+                    '</a>' +
+                    '</span>' +
+                    '<p id="comment-contents-p" class="width-80">' + json.contents + '</p>' +
+                    '<div id="comment-edit"></div>' +
+                    '</div>';
+
+                document.getElementById("comment-ul-tag").appendChild(node);
+            })
+    }
 
     function showCommentInput(event) {
         event.preventDefault()
