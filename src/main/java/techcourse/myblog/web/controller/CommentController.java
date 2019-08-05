@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +8,7 @@ import techcourse.myblog.web.support.SessionInfo;
 import techcourse.myblog.web.support.UserSessionInfo;
 
 @Controller
-@RequestMapping("/articles/{articleId}/comment")
+@RequestMapping("/articles/{articleId}/comments")
 public class CommentController {
     private final CommentService commentService;
 

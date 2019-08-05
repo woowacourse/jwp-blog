@@ -47,7 +47,7 @@ class CommentControllerTest extends AuthedWebTestClient {
     void 코멘트_수정_테스트() {
         addComment().expectStatus().is3xxRedirection();
         String result = new String(get("/articles/" + articleId).exchange().expectBody().returnResult().getResponseBody());
-        Pattern pattern = Pattern.compile("/articles/\\d+/comment/\\d+");
+        Pattern pattern = Pattern.compile("/articles/\\d+/comments/\\d+");
         Matcher matcher = pattern.matcher(result);
         matcher.find();
         String url = matcher.group(0);
@@ -61,7 +61,7 @@ class CommentControllerTest extends AuthedWebTestClient {
     void 코멘트_삭제_테스트() {
         addComment().expectStatus().is3xxRedirection();
         String result = new String(get("/articles/" + articleId).exchange().expectBody().returnResult().getResponseBody());
-        Pattern pattern = Pattern.compile("/articles/\\d+/comment/\\d+");
+        Pattern pattern = Pattern.compile("/articles/\\d+/comments/\\d+");
         Matcher matcher = pattern.matcher(result);
         matcher.find();
         String url = matcher.group(0);
@@ -72,7 +72,7 @@ class CommentControllerTest extends AuthedWebTestClient {
     }
 
     private WebTestClient.ResponseSpec addComment() {
-        return post("/articles/" + articleId + "/comment")
+        return post("/articles/" + articleId + "/comments")
                 .body(params(Arrays.asList("contents"), "comment"))
                 .exchange();
     }

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import techcourse.myblog.domain.comment.CommentException;
-import techcourse.myblog.web.CommentController;
+import techcourse.myblog.web.controller.CommentController;
 
 @ControllerAdvice(assignableTypes = CommentController.class)
 public class CommentControllerAdvice {
