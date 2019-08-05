@@ -14,10 +14,11 @@ import org.springframework.test.web.reactive.server.WebTestClient.RequestHeaders
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.user.UserRepository;
 import techcourse.myblog.application.dto.ArticleDto;
-import techcourse.myblog.application.dto.UserDto;
 
 import java.util.Objects;
 
@@ -75,7 +76,7 @@ public class ControllerTestTemplate {
         return loginAndRequestWithData(method, path, data, savedUserDto);
     }
     
-    private String getLoginSessionId(UserDto userDto) {
+    protected String getLoginSessionId(UserDto userDto) {
         return Objects.requireNonNull(httpRequestWithData(POST, LOGIN_URL, parseUser(userDto))
                 .isFound()
                 .returnResult(String.class)

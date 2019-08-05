@@ -16,8 +16,8 @@ public class CommentWriteService {
         this.commentReadService = commentReadService;
     }
 
-    public void save(Comment comment) {
-        commentRepository.save(comment);
+    public Comment save(Comment comment) {
+        return commentRepository.save(comment);
     }
 
     public void modify(Long commentId, Comment comment) {
