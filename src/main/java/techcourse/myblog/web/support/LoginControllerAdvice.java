@@ -8,14 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import techcourse.myblog.domain.User.UserException;
+import techcourse.myblog.domain.user.UserException;
 
 @ControllerAdvice(annotations = Controller.class)
 public class LoginControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(LoginControllerAdvice.class);
 
     @ExceptionHandler(UserException.class)
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public String failToLogin(UserException e, Model model) {
         log.debug("LOGIN FAILED {}", e.getMessage());
         model.addAttribute("error", e.getMessage());

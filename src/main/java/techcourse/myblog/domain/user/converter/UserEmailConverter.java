@@ -1,8 +1,11 @@
-package techcourse.myblog.domain.User;
+package techcourse.myblog.domain.user.converter;
+
+import techcourse.myblog.domain.user.UserEmail;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+@Deprecated
 @Converter
 public class UserEmailConverter implements AttributeConverter<UserEmail, String> {
     @Override

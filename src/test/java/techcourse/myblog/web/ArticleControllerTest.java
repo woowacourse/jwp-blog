@@ -1,23 +1,19 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article.Article;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.service.ArticleService;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
 public class ArticleControllerTest extends AuthedWebTestClient {
     private static final Logger log = LoggerFactory.getLogger(ArticleControllerTest.class);
 
@@ -28,15 +24,8 @@ public class ArticleControllerTest extends AuthedWebTestClient {
     @Autowired
     private ArticleRepository articleRepository;
 
-    @BeforeEach
-    void setUp() {
-        init();
-    }
-
-    @AfterEach
-    void tearDown() {
-        end();
-    }
+    @Autowired
+    private ArticleService articleService;
 
     @Test
     void index() {
@@ -49,13 +38,10 @@ public class ArticleControllerTest extends AuthedWebTestClient {
     }
 
     @Test
+    @Transactional
     void saveArticle() {
         post("/articles")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
+                .body(params(Arrays.asList("title", "contents", "coverUrl"), title, contents, coverUrl))
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".+\\/articles/.+");
@@ -63,26 +49,22 @@ public class ArticleControllerTest extends AuthedWebTestClient {
 
     @Test
     void Article_get_by_id() {
-        long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+        long articleId = setArticleId();
         get("/articles/" + articleId).exchange().expectStatus().isOk();
     }
 
     @Test
     void updateArticle() {
-        long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+        long articleId = setArticleId();
         put("/articles/" + articleId)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", "updatedTitle")
-                        .with("coverUrl", "updatedCoverUrl")
-                        .with("contents", "updatedContents"))
+                .body(params(Arrays.asList("title", "contents", "coverUrl"), "updated", "updated", "updated"))
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void deleteArticle() {
-        long articleId = articleRepository.save(new Article(title, contents, coverUrl)).getId();
+        long articleId = setArticleId();
         delete("/articles/" + articleId)
                 .exchange()
                 .expectStatus()
@@ -90,5 +72,12 @@ public class ArticleControllerTest extends AuthedWebTestClient {
 
         assertThatThrownBy(() -> articleRepository.findById(articleId).orElseThrow(IllegalAccessError::new))
                 .isInstanceOf(IllegalAccessError.class);
+    }
+
+    private long setArticleId() {
+        EntityExchangeResult<byte[]> result = post("/articles")
+                .body(params(Arrays.asList("title", "contents", "coverUrl"), "title", "contents", ""))
+                .exchange().expectBody().returnResult();
+        return Long.parseLong(result.getResponseHeaders().getLocation().getPath().split("/")[2]);
     }
 }

@@ -4,15 +4,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.Article.Article;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserEmail;
+import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ActiveProfiles("test")
+@Transactional
 class ArticleServiceTest {
 
     @Autowired
@@ -21,42 +28,46 @@ class ArticleServiceTest {
     @Autowired
     private ArticleRepository articleRepository;
 
-    private Article article;
+    @Autowired
+    private UserRepository userRepository;
+
+    private ArticleDto articleDto;
+    private User author;
 
     @BeforeEach
-    @Transactional
     void setUp() {
-        articleRepository.deleteAll();
-        article = new Article("t1", "c1", "c1");
+        author = userRepository.findByEmail(UserEmail.of("test@test.com")).get();
+        articleDto = new ArticleDto("t1", "c1", "c1");
     }
 
     @Test
     void findTest() {
-        long id = articleService.save(article);
-        assertThat(articleService.findArticle(id).getTitle()).isEqualTo(article.getTitle());
+        long id = articleService.save(articleDto, author).getId();
+        assertThat(articleService.findArticle(id).getTitle()).isEqualTo(articleDto.getTitle());
     }
 
     @Test
     void updateTest() {
-        long id = articleService.save(article);
-        Article editArticle = new Article("edit", "edit", "edit");
+        Article article = articleService.save(articleDto, author);
+        Article editArticle = new Article("z", "x", "c", author);
         article.update(editArticle);
-        articleService.save(article);
-        assertThat(articleService.findArticle(id).getTitle()).isEqualTo(editArticle.getTitle());
+        assertThat(articleService.findArticle(article.getId()).getTitle()).isEqualTo(editArticle.getTitle());
     }
 
     @Test
     void findAllTest() {
-        articleService.save(article);
+        int before = articleService.findAll().size();
+        articleService.save(new ArticleDto("1", "2", "3"), author);
         List<Article> articles = articleService.findAll();
-        assertThat(articles.size()).isEqualTo(1);
+        assertThat(articles.size()).isNotEqualTo(before);
     }
 
     @Test
     void deleteTest() {
-        long id = articleService.save(article);
-        articleService.delete(id);
+        long id = articleService.save(articleDto, author).getId();
+        int before = articleService.findAll().size();
+        articleService.delete(id, author);
         List<Article> articles = articleService.findAll();
-        assertThat(articles.size()).isEqualTo(0);
+        assertThat(articles.size()).isNotEqualTo(before);
     }
 }

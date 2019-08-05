@@ -5,16 +5,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import techcourse.myblog.domain.article.ArticleException;
-import techcourse.myblog.web.ArticleController;
+import techcourse.myblog.domain.comment.CommentException;
+import techcourse.myblog.web.CommentController;
 
-@ControllerAdvice(assignableTypes = ArticleController.class)
-public class ArticleControllerAdvice {
+@ControllerAdvice(assignableTypes = CommentController.class)
+public class CommentControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(ArticleControllerAdvice.class);
 
-    @ExceptionHandler(ArticleException.class)
-    public String articleHandler(ArticleException e, RedirectAttributes redirectAttributes) {
-        log.debug("article Manipulate FAILED {}", e.getMessage());
+    @ExceptionHandler(CommentException.class)
+    public String commentHandler(CommentException e, RedirectAttributes redirectAttributes) {
+        log.debug("Comment Exception : {}", e.getMessage());
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return "redirect:/error";
     }

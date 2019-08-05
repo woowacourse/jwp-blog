@@ -1,6 +1,7 @@
 package techcourse.myblog.dto;
 
-import techcourse.myblog.domain.Article.Article;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
 
 public class ArticleDto {
 
@@ -41,7 +42,7 @@ public class ArticleDto {
         this.coverUrl = coverUrl;
     }
 
-    public Article toEntity() {
-        return new Article(title, contents, coverUrl);
+    public Article toEntity(User author) {
+        return new Article(title, contents, coverUrl, author);
     }
 }

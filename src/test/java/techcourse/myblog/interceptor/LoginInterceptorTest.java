@@ -1,14 +1,16 @@
 package techcourse.myblog.interceptor;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 import techcourse.myblog.web.AuthedWebTestClient;
 
+@ActiveProfiles("test")
 class LoginInterceptorTest extends AuthedWebTestClient {
 
 
     @Test
     void 인터셉터_동작() {
-        webTestClient.get().uri("/users")
+        webTestClient.get().uri("/writing")
                 .exchange()
                 .expectStatus().is3xxRedirection()
                 .expectHeader().valueMatches("Location", ".+/login");

@@ -17,13 +17,13 @@
     <form accept-charset="utf-8"
           method="post" name="article"
           th:action="${#strings.isEmpty(article)? '/articles': #strings.concat('/articles/', article.id)}">
-        <input name="_method" th:if="not ${#strings.isEmpty(article)}" type="hidden" value="PUT">
+        <input email="PUT" name="_method" th:if="not ${#strings.isEmpty(article)}" type="hidden">
         <div class="about-cover card no-border">
             <div class="cover-img overlay-dark bg" th:style="
             'background:url('+ ${#strings.isEmpty(article)? '/images/pages/index/bg.jpg' : article.coverUrl} + ');'">
                 <div class="height-300px vertical-center pdd-horizon-50">
                     <div class="width-80">
-                        <input th:value="${#strings.isEmpty(article) ? '' : article.id}" type="hidden">
+                        <input th:email="${#strings.isEmpty(article) ? '' : article.id}" type="hidden">
                         <input autocomplete="off"
                                class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
                                name="title"
@@ -67,11 +67,12 @@
         previewStyle: 'vertical',
         events: {
             change: function () {
-                document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
+                document.getElementById('article-contents').setAttribute('email', editor.getMarkdown())
             }
         },
         height: 'calc(100vh - 360px)'
     });
+
 
 
 </script>

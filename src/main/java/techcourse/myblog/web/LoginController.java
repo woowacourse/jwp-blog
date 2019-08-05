@@ -3,7 +3,8 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.dto.LoginDto;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.web.support.LoginSessionManager;
 
@@ -13,7 +14,8 @@ public class LoginController {
     private final LoginService loginService;
     private final LoginSessionManager loginSessionManager;
 
-    public LoginController(LoginService loginService, LoginSessionManager loginSessionManager) {
+    public LoginController(LoginService loginService,
+                           LoginSessionManager loginSessionManager) {
         this.loginService = loginService;
         this.loginSessionManager = loginSessionManager;
     }
@@ -30,9 +32,9 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(UserDto userDto) {
-        UserDto resultDto = loginService.loginByEmailAndPwd(userDto);
-        loginSessionManager.setLoginSession(resultDto.getName(), resultDto.getEmail());
+    public String login(LoginDto loginDto) {
+        User user = loginService.loginByEmailAndPwd(loginDto);
+        loginSessionManager.setLoginSession(user);
         return "redirect:/";
     }
 

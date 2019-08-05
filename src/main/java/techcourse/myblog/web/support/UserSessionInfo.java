@@ -1,28 +1,25 @@
 package techcourse.myblog.web.support;
 
+import techcourse.myblog.domain.user.User;
+
 public class UserSessionInfo {
 
-    private String name;
-    private String email;
+    private final User user;
 
-    public UserSessionInfo(String name, String email) {
-        this.name = name;
-        this.email = email;
+
+    public UserSessionInfo(User user) {
+        this.user = user;
     }
 
     public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        return user.getName();
     }
 
     public String getEmail() {
-        return email;
+        return user.getEmail();
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public User toUser() {
+        return user;
     }
 }

@@ -3,7 +3,7 @@ package techcourse.myblog.interceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import techcourse.myblog.domain.User.UserException;
+import techcourse.myblog.domain.user.UserException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,8 +14,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (request.getSession().getAttribute("userName") == null) {
-            log.debug("Session.userName is null {}", request.getSession());
+        if (request.getSession().getAttribute("user") == null) {
+            log.debug("Session.user is null {}", request.getSession());
             return sendRedirect(response);
         }
         return true;
