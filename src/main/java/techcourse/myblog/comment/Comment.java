@@ -3,7 +3,7 @@ package techcourse.myblog.comment;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import techcourse.myblog.date.Date;
+import techcourse.myblog.date.BaseEntity;
 import techcourse.myblog.exception.InvalidAuthorException;
 import techcourse.myblog.user.User;
 
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Comment extends Date {
+public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,11 +24,6 @@ public class Comment extends Date {
     @Column(nullable = false)
     @Lob
     private String contents;
-
-//    @ManyToOne
-//    @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
-//    @Column(nullable = false)
-//    private Article article;
 
     @Builder
     public Comment(User author, String contents) {
