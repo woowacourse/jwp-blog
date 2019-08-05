@@ -1,5 +1,6 @@
 package techcourse.myblog.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -29,6 +30,7 @@ public class User {
 
     @NotBlank
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     private User() {
