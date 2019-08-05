@@ -45,23 +45,15 @@ public class ArticleService {
 
     @Transactional
     public void update(ArticleSaveRequestDto articleSaveRequestDto, long id, User user) {
-        if (isArticleNotFound(id)) {
-            log.error("update article request by illegal article id={}", id);
-            throw new ArticleNotFoundException(ERROR_ARTICLE_NOT_FOUND_MESSAGE);
-        }
-
         Article article = findById(id);
+
         article.update(articleSaveRequestDto, user);
     }
 
     @Transactional
     public void deleteById(long id, User user) {
-        if (isArticleNotFound(id)) {
-            log.error("delete article request by illegal article id={}", id);
-            throw new ArticleNotFoundException(ERROR_ARTICLE_NOT_FOUND_MESSAGE);
-        }
-
         Article article = findById(id);
+
         if (article.isNotAuthor(user)) {
             log.error("delete article request by illegal user id={}, article id={}", user.getId(), id);
             throw new IllegalArticleDeleteRequestException();
@@ -69,9 +61,5 @@ public class ArticleService {
 
         articleRepository.deleteById(id);
         log.debug("delete article id={}", id);
-    }
-
-    private boolean isArticleNotFound(long id) {
-        return findById(id) == null;
     }
 }
