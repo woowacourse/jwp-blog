@@ -4,7 +4,11 @@ import techcourse.myblog.application.exception.JsonAPIException;
 
 public class ErrorResponse extends BaseResponse {
 
-    private final String message;
+    private String message;
+
+    public ErrorResponse() {
+        super("fail");
+    }
 
     public ErrorResponse(JsonAPIException e) {
         super("fail");
