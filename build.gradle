@@ -1,6 +1,6 @@
 plugins {
-	id 'org.springframework.boot' version '2.1.6.RELEASE'
-	id 'java'
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
+    id 'java'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -10,21 +10,23 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-devtools'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'com.h2database:h2'
-	implementation 'mysql:mysql-connector-java'
-	testImplementation 'org.junit.jupiter:junit-jupiter-api'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'junit'
-	}
-	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
-	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
-	implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.h2database:h2'
+    implementation 'mysql:mysql-connector-java'
+    implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'junit'
+    }
+    testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+    runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
 }
