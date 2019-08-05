@@ -17,6 +17,7 @@ import techcourse.myblog.exception.NotFoundCommentException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.service.dto.CommentDTO;
+import techcourse.myblog.service.dto.CommentResponseDto;
 import techcourse.myblog.service.dto.ResponseMessage;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,16 +35,17 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseMessage> create(@RequestBody CommentDTO commentDTO,
-                                                  @PathVariable long articleId,
-                                                  @UserFromSession User user) {
+    public CommentResponseDto create(@RequestBody CommentDTO commentDTO,
+                                     @PathVariable long articleId,
+                                     @UserFromSession User user) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
         Comment comment = commentDTO.toDomain(article, user);
         article.add(comment);
         commentRepository.save(comment);
         ResponseMessage responseMessage = new ResponseMessage("success", comment.getId().toString(), "", "");
-        return new ResponseEntity<ResponseMessage>(responseMessage, HttpStatus.OK);
+        return new CommentResponseDto(article.getAuthor().getUserName(), comment.getContents(),
+                comment.getId());
     }
 
     @DeleteMapping("/{commentId}")
@@ -80,11 +82,12 @@ public class CommentController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public RedirectView exceptionHandler(RuntimeException exception, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> exceptionHandler(RuntimeException exception, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         redirectAttributes.addFlashAttribute("commentError", exception.getMessage());
-
+        ResponseMessage responseMessage = new ResponseMessage("", "",
+                exception.getMessage(), "");
         log.error("error : {}", exception.getMessage());
-        return new RedirectView(request.getHeader("Referer"));
+        return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
     }
 
 }

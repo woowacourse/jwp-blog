@@ -11,6 +11,7 @@ const COMMENT = (function () {
         "</button>" + "</div>" +
         "</form>";
 
+
     const compiledCommentEditTemplate = Handlebars.compile(commentEditTemplate)
 
 
@@ -102,17 +103,35 @@ function savePost(e) {
         credentials: "include"
     })
         .then(function (response) {
+            if (!response.ok) {
+                throw response;
+            }
             return response.json()
-        }).then(function (json) {
-        if (json.status == "success") {
+        })
+        .then((json) => {
             console.log(json)
-            addComment(contents, articleId)
-        }
-    });
+            addComment(articleId, json['contents'], json['userName'], json['id'])
+        })
+        .catch(
+            (e) => e.json().then(
+                (json) => console.log(json)
+            )
+        )
 }
 
-function addComment(contents, id) {
+function addComment(articleId, contents, userName, id) {
+    let commentTemplate = document.querySelector('#comment-template').innerText
+    let buttonTemplate = document.querySelector("#comment-button-template").innerHTML
+    let comments = document.querySelector("#comment-list")
 
+
+    commentTemplate = commentTemplate.split('{buttonTemplate}').join(buttonTemplate)
+    let compiledCommentTemplate = Handlebars.compile(commentTemplate)
+    comments.insertAdjacentHTML("beforeend", compiledCommentTemplate({
+        "userName": userName,
+        "contents": contents,
+        "articleId": articleId,
+        "commentId": id
+    }))
 }
-
 
