@@ -36,7 +36,7 @@ class CommentRepositoryTest {
 
     @Test
     void 주인_댓글_테스트() {
-        comment.updateContents(new Comment("edited", article, user));
+        comment.updateContents(new Comment("edited", article, user), user);
         assertThat(
                 articleRepository.findById(article.getId()).get().getComments().stream()
                         .anyMatch(comment -> comment.getContents().equals("edited"))

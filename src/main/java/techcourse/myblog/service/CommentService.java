@@ -38,11 +38,8 @@ public class CommentService {
         commentRepository.deleteById(commentId);
     }
 
-    public void updateComment(long commentId, String email, CommentDto commentDto) {
+    public void updateComment(long commentId, User user, CommentDto commentDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentException::new);
-        if (!comment.isAuthor(email)) {
-            throw new CommentException("FBI WARNING");
-        }
-        comment.updateContents(commentDto.getContents());
+        comment.updateContents(commentDto.getContents(), user);
     }
 }

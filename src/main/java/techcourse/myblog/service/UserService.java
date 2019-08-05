@@ -3,7 +3,6 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.domain.user.UserException;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.repository.UserRepository;
@@ -37,7 +36,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User getUserByEmail(String userEmail) {
-        return userRepository.findByEmail(UserEmail.of(userEmail)).orElseThrow(UserException::new);
+        return userRepository.findByEmail_Email(userEmail).orElseThrow(UserException::new);
     }
 
     public void deleteUser(String userEmail) {

@@ -1,5 +1,6 @@
 package techcourse.myblog.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 
@@ -27,9 +28,11 @@ public class User {
     private UserEmail email;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Article> articles = new ArrayList<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     protected User() {

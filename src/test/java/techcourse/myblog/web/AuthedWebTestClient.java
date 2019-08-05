@@ -42,12 +42,30 @@ public abstract class AuthedWebTestClient {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
     }
 
+    protected WebTestClient.RequestBodySpec postJson(String uri) {
+        String cookie = loginCookie();
+        return webTestClient.post()
+                .uri(uri)
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8);
+    }
+
     protected WebTestClient.RequestBodySpec put(String uri) {
         String cookie = loginCookie();
         return webTestClient.put()
                 .uri(uri)
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+    }
+
+    protected WebTestClient.RequestBodySpec putJson(String uri) {
+        String cookie = loginCookie();
+        return webTestClient.put()
+                .uri(uri)
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8);
     }
 
     protected WebTestClient.RequestHeadersSpec get(String uri) {

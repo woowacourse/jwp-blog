@@ -67,14 +67,14 @@ class CommentServiceTest {
         article.addComment(comment);
         article = articleRepository.findById(article.getId()).get();
         comment = article.getComments().get(0);
-        comment.updateContents("updated");
+        comment.updateContents("updated", user);
         assertThat(commentRepository.findById(comment.getId()).get().getContents()).isEqualTo("updated");
     }
 
     @Test
     void 다른사람이_수정_테스트() {
         Comment comment = commentService.addComment(article.getId(), user, new CommentDto("abc"));
-        assertThatThrownBy(() -> commentService.updateComment(article.getId(), "abc@gmail.com", new CommentDto("edit")))
+        assertThatThrownBy(() -> commentService.updateComment(article.getId(), user, new CommentDto("edit")))
                 .isInstanceOf(CommentException.class);
     }
 

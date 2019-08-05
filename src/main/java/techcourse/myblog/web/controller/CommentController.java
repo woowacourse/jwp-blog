@@ -37,7 +37,7 @@ public class CommentController {
                                 @PathVariable long commentId,
                                 @SessionInfo UserSessionInfo userSessionInfo,
                                 CommentDto commentDto) {
-        commentService.updateComment(commentId, userSessionInfo.getEmail(), commentDto);
+        commentService.updateComment(commentId, userSessionInfo.toUser(), commentDto);
         return "redirect:/articles/" + articleId;
     }
 }

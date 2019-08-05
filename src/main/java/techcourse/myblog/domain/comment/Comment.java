@@ -1,5 +1,6 @@
 package techcourse.myblog.domain.comment;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -27,10 +28,12 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
+    @JsonBackReference
     private User author;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
+    @JsonBackReference
     private Article article;
 
     protected Comment() {
@@ -64,10 +67,6 @@ public class Comment {
         return author;
     }
 
-    public boolean isAuthor(String authorEmail) {
-        return this.author.isMatchEmail(authorEmail);
-    }
-
     public boolean isAuthor(User author) {
         return this.author.isMatchEmail(author);
     }
@@ -76,12 +75,15 @@ public class Comment {
         return article;
     }
 
-    public Comment updateContents(String contents) {
+    public Comment updateContents(String contents, User author) {
+        if (!isAuthor(author)) {
+            throw new CommentException("FBI WARNING");
+        }
         this.contents = contents;
         return this;
     }
 
-    public Comment updateContents(Comment comment) {
-        return updateContents(comment.contents);
+    public Comment updateContents(Comment comment, User author) {
+        return updateContents(comment.contents, author);
     }
 }
