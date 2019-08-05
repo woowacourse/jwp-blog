@@ -2,7 +2,8 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.controller.dto.CommentDto;
+import techcourse.myblog.controller.dto.RequestCommentDto;
+import techcourse.myblog.controller.dto.ResponseCommentDto;
 import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.CommentNotFoundException;
 import techcourse.myblog.model.Article;
@@ -21,13 +22,13 @@ public class CommentService {
         this.articleRepository = articleRepository;
     }
 
-    public Long save(CommentDto commentDto, User user) {
-        Article foundArticle = findByArticleId(commentDto.getArticleId());
-        Comment comment = new Comment(commentDto.getContents(), user, foundArticle);
+    public ResponseCommentDto save(RequestCommentDto requestCommentDto, User user) {
+        Article foundArticle = findByArticleId(requestCommentDto.getArticleId());
+        Comment comment = new Comment(requestCommentDto.getContents(), user, foundArticle);
 
         foundArticle.addComment(comment);
         commentRepository.save(comment);
-        return foundArticle.getId();
+        return new ResponseCommentDto(comment.getId(), comment.getAuthor().getUserName(), comment.getUpdateTime(), comment.getContents());
     }
 
     private Article findByArticleId(Long articleId) {
@@ -39,9 +40,9 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment update(CommentDto commentDto, Long commentId, User user) {
+    public Comment update(RequestCommentDto requestCommentDto, Long commentId, User user) {
         Comment oldComment = findById(commentId, user);
-        Comment updatedComment = new Comment(commentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle());
+        Comment updatedComment = new Comment(requestCommentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle());
         return oldComment.update(updatedComment);
     }
 
