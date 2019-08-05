@@ -1,6 +1,7 @@
 package techcourse.myblog.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
@@ -8,6 +9,7 @@ import techcourse.myblog.domain.User;
 import javax.validation.constraints.NotBlank;
 
 @Getter
+@NoArgsConstructor
 public class CommentDto {
     @NotBlank(message = "댓글을 입력하세요")
     private String contents;
