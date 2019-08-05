@@ -46,13 +46,21 @@ public class CommentController {
         return commentService.save(commentRequest, articleId, user.getId());
     }
 
+//    @DeleteMapping("/comments/{commentId}")
+//    public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
+//                                HttpSession httpSession) {
+//        UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
+//        commentService.deleteComment(commentId, userResponse);
+//
+//        return "redirect:/articles/" + articleId;
+//    }
+
     @DeleteMapping("/comments/{commentId}")
-    public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
+    @ResponseBody
+    public void deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
                                 HttpSession httpSession) {
         UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
         commentService.deleteComment(commentId, userResponse);
-
-        return "redirect:/articles/" + articleId;
     }
 
     @PutMapping("/comments/{commentId}")
