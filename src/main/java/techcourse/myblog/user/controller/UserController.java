@@ -31,12 +31,12 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public RedirectView createUser(@Valid UserCreateDto userDto, BindingResult bindingResult) {
+    @ResponseBody
+    public UserResponseDto createUser(@RequestBody @Valid UserCreateDto userDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidSignUpFormException(bindingResult.getFieldError().getDefaultMessage());
         }
-        userService.save(userDto);
-        return new RedirectView("/login");
+        return userService.save(userDto);
     }
 
     @GetMapping("/users")

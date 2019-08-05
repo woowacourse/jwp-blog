@@ -37,16 +37,16 @@
                                                             <h2 class="text-center text-dark no-mrg-vertical mrg-btm-15">
                                                                 회원가입</h2>
                                                         </div>
-                                                        <form method="post" action="/users">
+<!--                                                        <form>-->
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Username</label>
-                                                                <input type="text" name="name" class="form-control"
+                                                                <input id="name" type="text" name="name" class="form-control"
                                                                        required pattern="[A-Za-zㄱ-ㅎㅏ-ㅣ가-힣]{2,10}">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Email
                                                                     Address</label>
-                                                                <input type="email" name="email" class="form-control">
+                                                                <input id="email" type="email" name="email" class="form-control">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="text-normal text-dark">Password</label>
@@ -61,12 +61,12 @@
                                                                        placeholder="Password">
                                                             </div>
                                                             <div class="form-group">
-                                                                <button type="submit"
-                                                                        class="btn btn-info btn-block border-radius-6 font-size-16 text-white">
+                                                                <button id="signup-btn" class="btn btn-info btn-block border-radius-6 font-size-16 text-white"
+                                                                        onclick="signUp()">
                                                                     가입하기
                                                                 </button>
                                                             </div>
-                                                        </form>
+<!--                                                        </form>-->
                                                         <div class="text-dark">
                                                             <span>이미 회원이신가요?</span>
                                                             <a href="/login" class="text-info pointer mrg-left-5">로그인</a>
@@ -85,11 +85,6 @@
         </div>
     </div>
     <script type="text/javascript" th:inline="javascript">
-        const errorMessage = [[${errorMessage}]];
-        if (errorMessage !== null) {
-            alert(errorMessage);
-        }
-
         const password = document.getElementById("password");
         const confirm_password = document.getElementById("confirm_password");
 
@@ -103,6 +98,41 @@
 
         password.onchange = validatePassword;
         confirm_password.onkeyup = validatePassword;
+
+        function signUp() {
+            const name = document.getElementById('name');
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            if (!name.validity.valid || !email.validity.valid || !password.validity.valid) {
+                alert("형식을 맞추세요");
+                return false;
+            }
+            const data = {};
+            data.name = name.value;
+            data.email = email.value;
+            data.password = password.value;
+            const dataBody = JSON.stringify(data);
+
+            fetch("http://localhost:8080/users", {
+                method: "POST",
+                body: dataBody,
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+                .then(response => response.json())
+                .then((response) => {
+                    if (response.errorMessage) {
+                        signUpError(response.errorMessage)
+                    } else {
+                        location.href = 'http://localhost:8080/login'
+                    }
+                });
+        }
+
+        function signUpError(errorMessage) {
+            alert(errorMessage);
+        }
     </script>
 </th:block>
 </html>

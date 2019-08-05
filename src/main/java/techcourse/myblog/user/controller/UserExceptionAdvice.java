@@ -12,11 +12,11 @@ import techcourse.myblog.utils.Error;
 
 @ControllerAdvice(value = "techcourse.myblog.user.controller")
 public class UserExceptionAdvice {
-    @ExceptionHandler(InvalidSignUpFormException.class)
+    @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleInvalidSignUpFormException(InvalidSignUpFormException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "signup";
+    @ExceptionHandler(InvalidSignUpFormException.class)
+    public Error handleInvalidSignUpFormException(InvalidSignUpFormException e) {
+        return new Error(e.getMessage());
     }
 
     @ExceptionHandler(InvalidEditFormException.class)
@@ -27,18 +27,18 @@ public class UserExceptionAdvice {
         return "mypage";
     }
 
+    @ResponseBody
     @ExceptionHandler(InvalidLoginFormException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
     public Error handleInvalidLoginException(InvalidLoginFormException e) {
         return new Error(e.getMessage());
     }
 
+    @ResponseBody
     @ExceptionHandler(DuplicatedUserException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handelDuplicatedUserException(DuplicatedUserException e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "signup";
+    public Error handelDuplicatedUserException(DuplicatedUserException e) {
+        return new Error(e.getMessage());
     }
 
     @ExceptionHandler(NotFoundUserException.class)

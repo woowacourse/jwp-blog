@@ -23,6 +23,12 @@ public class UserCreateDto {
             message = "올바른 이름 형식이 아닙니다.")
     private String name;
 
+    public UserCreateDto(String email, String password, String name) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+    }
+
     public User toUser() {
         return User.builder()
                 .email(email)
