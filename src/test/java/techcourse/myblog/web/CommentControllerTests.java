@@ -26,6 +26,8 @@ public class CommentControllerTests {
     private static final String coverUrl = "bmo.jpg";
     private static final String contents = "why bmo so great?";
     private static final String BLANK = " ";
+    private static final String name2 = "cmo";
+    private static final String email2 = "cmo@cmo.com";
 
     private String cookie;
 
@@ -36,23 +38,11 @@ public class CommentControllerTests {
     void setUp() {
 
         // 회원가입
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange()
-        ;
+        signup(name, email, password);
+        signup(name2, email2, password);
 
         // 로그인
-        cookie = webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .getFirst("Set-Cookie");
+        cookie = login(email, password);
 
         // 게시글 작성
         webTestClient.post()
@@ -67,6 +57,29 @@ public class CommentControllerTests {
         ;
     }
 
+    private String login(String email, String password) {
+        return webTestClient.post().uri("/login")
+                .body(BodyInserters.fromFormData("email", email)
+                        .with("password", password))
+                .exchange()
+                .expectStatus()
+                .isFound()
+                .returnResult(String.class)
+                .getResponseHeaders()
+                .getFirst("Set-Cookie");
+    }
+
+    private void signup(String name, String email, String password) {
+        webTestClient.post().uri("/users")
+                .body(BodyInserters.fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password))
+                .exchange()
+        ;
+    }
+
+    private
+
     @Test
     void 댓글_작성_성공_테스트() {
         String commentContents = "comment contents";
@@ -76,7 +89,7 @@ public class CommentControllerTests {
                 .expectBody()
                 .jsonPath("$.result").isEqualTo("ok")
                 .jsonPath("$.comment.contents").isEqualTo(commentContents)
-                ;
+        ;
     }
 
     @Test
@@ -117,17 +130,52 @@ public class CommentControllerTests {
     void 댓글_삭제_성공_테스트() {
         // 댓글 작성
         String commentContents = "comment contents";
-        requestSaveComment(commentContents);
+        requestSaveCommentJson(commentContents);
 
         // 댓글 삭제
         webTestClient.delete()
                 .uri("/articles/1/comments/1")
                 .header("Cookie", cookie)
                 .exchange()
-                .expectStatus()
-                .isFound()
-                .expectHeader()
-                .valueMatches("location", ".*/articles/1");
+                .expectBody()
+                .jsonPath("$.result").isEqualTo("ok")
+        ;
+    }
+
+    @Test
+    void 존재하지_않는_댓글_삭제() {
+        // 댓글 작성
+        String commentContents = "comment contents";
+        requestSaveCommentJson(commentContents);
+
+        // 댓글 삭제
+        webTestClient.delete()
+                .uri("/articles/1/comments/999")
+                .header("Cookie", cookie)
+                .exchange()
+                .expectBody()
+                .jsonPath("$.result").isEqualTo("fail")
+                .jsonPath("$.message").isEqualTo("존재하지 않는 댓글입니다.")
+        ;
+    }
+
+    @Test
+    void 작성자가_아닌_유저가_댓글_삭제시_예외_발생() {
+        // 작성자가 아닌 사용자로 로그인
+        String anotherUserCookie = login(email2, password);
+
+        // 댓글 작성
+        String commentContents = "comment contents";
+        requestSaveCommentJson(commentContents);
+
+        // 댓글 삭제
+        webTestClient.delete()
+                .uri("/articles/1/comments/1")
+                .header("Cookie", anotherUserCookie)
+                .exchange()
+                .expectBody()
+                .jsonPath("$.result").isEqualTo("fail")
+        ;
     }
 
     private WebTestClient.ResponseSpec requestSaveComment(String commentContents) {

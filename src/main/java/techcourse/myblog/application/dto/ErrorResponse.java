@@ -1,12 +1,12 @@
 package techcourse.myblog.application.dto;
 
-import techcourse.myblog.application.exception.EmptyCommentRequestException;
+import techcourse.myblog.application.exception.JsonAPIException;
 
 public class ErrorResponse extends BaseResponse {
 
     private final String message;
 
-    public ErrorResponse(EmptyCommentRequestException e) {
+    public ErrorResponse(JsonAPIException e) {
         super("fail");
         message = e.getMessage();
     }
