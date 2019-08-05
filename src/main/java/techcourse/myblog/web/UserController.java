@@ -1,6 +1,7 @@
 package techcourse.myblog.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,8 +9,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import techcourse.myblog.domain.User;
-import techcourse.myblog.dto.UserRequestDto;
+import techcourse.myblog.dto.user.LoginRequest;
+import techcourse.myblog.dto.user.SignUpRequest;
+import techcourse.myblog.dto.user.UpdateUserRequest;
+import techcourse.myblog.dto.user.UserResponse;
 import techcourse.myblog.service.LoginService;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.utils.model.ModelUtil;
@@ -19,91 +22,98 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import static techcourse.myblog.utils.session.SessionContext.USER;
+import static techcourse.myblog.web.URL.*;
 
 @Controller
 public class UserController {
+
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
     private final UserService userService;
     private final LoginService loginService;
-    @Autowired
-    private HttpSession session;
+    private final HttpSession session;
 
-    @Autowired
-    public UserController(UserService userService, LoginService loginService) {
+    public UserController(UserService userService, LoginService loginService, HttpSession session) {
         this.userService = userService;
         this.loginService = loginService;
+        this.session = session;
     }
 
-    @GetMapping("/login")
+    @GetMapping(LOGIN)
     public String login() {
-        return "login";
+        return LOGIN;
     }
 
-    @PostMapping("/logout")
+    @PostMapping(LOGOUT)
     public String logout() {
         SessionUtil.removeAttribute(session, USER);
-        return "redirect:/";
+
+        return REDIRECT + INDEX;
     }
 
-    @PostMapping("/login")
-    public String login(@Valid UserRequestDto userRequestDto, BindingResult result) {
+    @PostMapping(LOGIN)
+    public String login(@Valid LoginRequest loginRequestDto, BindingResult result) {
         if (result.hasErrors()) {
-            return "login";
+            return LOGIN;
         }
+        UserResponse userResponse = loginService.loginByEmailAndPwd(loginRequestDto);
+        SessionUtil.setAttribute(session, USER, userResponse);
 
-        User user = loginService.loginByEmailAndPwd(userRequestDto);
-        SessionUtil.setAttribute(session, USER, user);
-        return "redirect:/";
+        return REDIRECT + INDEX;
     }
 
-    @GetMapping("/users")
+    @GetMapping(USERS)
     public String users(Model model) {
         ModelUtil.addAttribute(model, "users", userService.findAll());
-        return "user-list";
+
+        return USER_LIST;
     }
 
-    @GetMapping("/signup")
+    @GetMapping(SIGNUP)
     public String signupForm() {
-        return "signup";
+        return SIGNUP;
     }
 
-    @GetMapping("/mypage")
+    @GetMapping(MYPAGE)
     public String mypage() {
-        return "mypage";
+        return MYPAGE;
     }
 
-    @GetMapping("/mypage-edit")
+    @GetMapping(MYPAGE_EDIT)
     public String editUser() {
-        return "mypage-edit";
+        return MYPAGE_EDIT;
     }
 
-    @PostMapping("/signup")
-    public String addUser(@Valid UserRequestDto userRequestDto, BindingResult result) {
+    @PostMapping(SIGNUP)
+    public String addUser(@Valid SignUpRequest signUpRequestDto, BindingResult result) {
         if (result.hasErrors()) {
-            return "signup";
+            return SIGNUP;
         }
+        UserResponse userResponse = userService.addUser(signUpRequestDto);
+        SessionUtil.setAttribute(session, USER, userResponse);
 
-        User user = userService.addUser(userRequestDto);
-        SessionUtil.setAttribute(session, USER, user);
-        return "redirect:/";
+        return REDIRECT + INDEX;
     }
 
-    @PutMapping("/users")
-    public String updateUser(@Valid UserRequestDto userRequestDto, BindingResult result) {
+    @PutMapping(USERS)
+    public String updateUser(@Valid UpdateUserRequest updateUserRequestDto, BindingResult result) {
         if (result.hasErrors()) {
-            return "mypage";
+            log.error("updateUser : not logged in");
+            return MYPAGE;
         }
+        UserResponse origin = (UserResponse) SessionUtil.getAttribute(session, USER);
+        UserResponse userResponse = userService.updateUser(updateUserRequestDto, origin);
+        SessionUtil.setAttribute(session, USER, userResponse);
 
-        User origin = (User) SessionUtil.getAttribute(session, USER);
-        User user = userService.updateUser(userRequestDto, origin);
-        SessionUtil.setAttribute(session, USER, user);
-        return "redirect:/mypage";
+        return REDIRECT + MYPAGE;
     }
 
     @DeleteMapping("/users")
     public String deleteUser() {
-        User user = (User) SessionUtil.getAttribute(session, USER);
-        userService.deleteUser(user);
+        UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
+        userService.deleteUser(userResponse);
         SessionUtil.removeAttribute(session, USER);
-        return "redirect:/";
+
+        return REDIRECT + INDEX;
     }
 }

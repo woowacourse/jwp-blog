@@ -1,9 +1,12 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.article;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.user.User;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -14,17 +17,29 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
+    @Lob
+    @Column(nullable = false)
     private String contents;
     private String coverUrl;
 
-    public Article(String title, String contents, String coverUrl) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_article_to_user"), nullable = false)
+    private User author;
+
+    @OneToMany(mappedBy = "article", orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+
+    public Article() {
+    }
+
+    public Article(String title, String contents, String coverUrl, User author) {
         this.title = title;
         this.contents = contents;
         this.coverUrl = getDefaultUrl(coverUrl);
-    }
-
-    protected Article() {
+        this.author = author;
     }
 
     private String getDefaultUrl(String coverUrl) {
@@ -50,10 +65,22 @@ public class Article {
         return id;
     }
 
+    public User getAuthor() {
+        return author;
+    }
+
+    public List<Comment> getComments() {
+        return Collections.unmodifiableList(comments);
+    }
+
     public void update(Article modifiedArticle) {
         this.title = modifiedArticle.title;
         this.contents = modifiedArticle.contents;
         this.coverUrl = modifiedArticle.coverUrl;
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
     }
 
     @Override

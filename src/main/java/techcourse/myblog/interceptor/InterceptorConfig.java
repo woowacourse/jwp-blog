@@ -19,14 +19,12 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/login")
-                .excludePathPatterns("/users")
-                .excludePathPatterns("/")
-                .excludePathPatterns("/css/**")
-                .excludePathPatterns("/js/**")
-                .excludePathPatterns("/signup")
-                .excludePathPatterns("/images/**");
+                .addPathPatterns("/writing")
+                .addPathPatterns("/articles")
+                .addPathPatterns("/articles/**")
+                .addPathPatterns("/users")
+                .addPathPatterns("/mypage")
+                .addPathPatterns("/mypage-edit");
 
         registry.addInterceptor(loggedInInterceptor)
                 .addPathPatterns("/login")

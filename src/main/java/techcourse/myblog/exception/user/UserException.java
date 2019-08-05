@@ -1,7 +1,11 @@
-package techcourse.myblog.exception;
+package techcourse.myblog.exception.user;
 
 public class UserException extends RuntimeException {
+
+    private static final String NOT_FOUND_USER = "존재하지 않은 회원입니다.";
+
     public UserException() {
+        super(NOT_FOUND_USER);
     }
 
     public UserException(String message) {

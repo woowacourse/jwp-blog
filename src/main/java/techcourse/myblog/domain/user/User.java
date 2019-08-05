@@ -1,8 +1,6 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.user;
 
-import org.hibernate.validator.constraints.Length;
-import techcourse.myblog.dto.UserRequestDto;
-import techcourse.myblog.exception.SignUpException;
+import techcourse.myblog.exception.user.SignUpException;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -20,16 +18,18 @@ public class User {
     @Id
     private Long id;
     @Column(nullable = false)
-    @Length(min = 2, max = 10)
     private String name;
     @Column(nullable = false)
-    @Length(min = 8)
     private String password;
-
     @Column(unique = true, nullable = false)
     private String email;
 
-    protected User() {
+    public User() {
+    }
+
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
     }
 
     public User(String name, String password, String email) {
@@ -54,6 +54,15 @@ public class User {
         return name;
     }
 
+    public void updateNameAndEmail(User user) {
+        this.name = user.name;
+        this.email = user.email;
+    }
+
+    public boolean isMatchPassword(String password) {
+        return this.password.equals(password);
+    }
+
     public Long getId() {
         return id;
     }
@@ -68,15 +77,6 @@ public class User {
 
     public String getEmail() {
         return email;
-    }
-
-    public void updateNameAndEmail(String name, String email) {
-        this.name = name;
-        this.email = email;
-    }
-
-    public boolean isMatchPassword(UserRequestDto dto) {
-        return this.password.equals(dto.getPassword());
     }
 
     @Override

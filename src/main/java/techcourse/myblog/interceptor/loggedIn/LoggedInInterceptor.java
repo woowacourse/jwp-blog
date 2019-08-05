@@ -19,14 +19,13 @@ public class LoggedInInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         HttpSession session = request.getSession();
         String uri = request.getRequestURI();
-        log.info("uri : {} ", uri);
+        log.debug("interceptor uri : {} ", uri);
 
-        if ("/login".equals(uri) || "/signup".equals(uri)) {
-            if (!SessionUtil.isNull(session)) {
-                response.sendRedirect("redirect:/");
-                return false;
-            }
+        if (!SessionUtil.isNull(session)) {
+            response.sendRedirect("redirect:/");
+            return false;
         }
+
         return true;
     }
 }

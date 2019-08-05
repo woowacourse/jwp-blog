@@ -1,4 +1,4 @@
-package techcourse.myblog.exception;
+package techcourse.myblog.exception.user;
 
 public class LoginException extends RuntimeException {
     public LoginException() {
