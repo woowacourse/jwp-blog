@@ -36,8 +36,7 @@ public class CommentService {
 		Article article = articleService.findById(articleId);
 		return commentRepository.findAllByArticle(article)
 				.stream()
-				.map(comment -> toCommentResponseDto(comment.getId(), comment.getAuthorId(),
-						comment.getAuthorName(), comment.getComment()))
+				.map(this::toCommentResponseDto)
 				.collect(Collectors.toList());
 	}
 
@@ -68,7 +67,7 @@ public class CommentService {
 		return comment.matchAuthorId(userSessionDto.getId());
 	}
 
-	private CommentResponseDto toCommentResponseDto(Long commentId, Long authorId, String userName, String comment) {
-		return new CommentResponseDto(commentId, authorId, userName, comment);
+	public CommentResponseDto toCommentResponseDto(Comment comment) {
+		return new CommentResponseDto(comment.getId(), comment.getAuthorId(), comment.getAuthorName(), comment.getComment());
 	}
 }
