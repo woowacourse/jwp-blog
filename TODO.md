@@ -99,8 +99,13 @@
     
 ## 댓글 관련 기능
 
-- [ ] 댓글 보기 : 게시글 조회할 때 연관 댓글 함께 보여주기
+- [x] 댓글 보기 : 게시글 조회할 때 연관 댓글 함께 보여주기
 ### 댓글 작성
-- [ ] ``POST /comment/{articleId}``
-- [ ] ``PUT /comment/{commentId}/``
-- [ ] ``DELETE /comment/{commentId}/``
+- [x] ``POST /comment/{articleId}``
+- [x] ``PUT /comment/{commentId}/``
+- [x] ``DELETE /comment/{commentId}/``
+
+### 댓글 관련 AJAX
+- [ ] 등록
+- [ ] 수정
+- [ ] 삭제
