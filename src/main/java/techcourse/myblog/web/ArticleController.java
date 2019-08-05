@@ -41,7 +41,6 @@ public class ArticleController {
     public String selectArticle(@PathVariable("articleId") long articleId, Model model) {
         Article article = articleService.findById(articleId);
         model.addAttribute("article", article);
-        model.addAttribute("comments", commentService.findByArticle(article));
         return "article";
     }
 

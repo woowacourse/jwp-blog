@@ -1,6 +1,5 @@
 package techcourse.myblog.service.dto;
 
-import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 
 public class CommentResponse {
@@ -8,14 +7,12 @@ public class CommentResponse {
     private String contents;
     private long elapsedTime;
     private User commenter;
-    private Article article;
 
-    public CommentResponse(Long id, String contents, long elapsedTime, User commenter, Article article) {
+    public CommentResponse(Long id, String contents, long elapsedTime, User commenter) {
         this.id = id;
         this.contents = contents;
         this.elapsedTime = elapsedTime;
         this.commenter = commenter;
-        this.article = article;
     }
 
     public Long getId() {
@@ -48,13 +45,5 @@ public class CommentResponse {
 
     public void setCommenter(User commenter) {
         this.commenter = commenter;
-    }
-
-    public Article getArticle() {
-        return article;
-    }
-
-    public void setArticle(Article article) {
-        this.article = article;
     }
 }

@@ -9,6 +9,7 @@ import techcourse.myblog.domain.User;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.CommentRequest;
+import techcourse.myblog.service.dto.CommentsResponse;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -22,6 +23,11 @@ public class CommentController {
     public CommentController(CommentService commentService, ArticleService articleService) {
         this.commentService = commentService;
         this.articleService = articleService;
+    }
+
+    @GetMapping("/{articleId}")
+    public ResponseEntity<CommentsResponse> getComment(@PathVariable("articleId") long articleId) {
+        return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.OK);
     }
 
     @PostMapping

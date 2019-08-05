@@ -7,6 +7,7 @@ import techcourse.myblog.domain.CommentRepository;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.dto.CommentRequest;
 import techcourse.myblog.service.dto.CommentResponse;
+import techcourse.myblog.service.dto.CommentsResponse;
 import techcourse.myblog.service.exception.NoCommentException;
 
 import javax.transaction.Transactional;
@@ -28,14 +29,22 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
+    public CommentsResponse findByArticleId(Long articleId) {
+        return new CommentsResponse(commentRepository.findByArticleId(articleId).stream()
+                .map(comment -> new CommentResponse(comment.getId(),
+                        comment.getContents(),
+                        comment.getCreatedDate().until(LocalDateTime.now(), ChronoUnit.MILLIS),
+                        comment.getCommenter()))
+                .collect(Collectors.toList()));
+    }
+
     public List<CommentResponse> findByArticle(Article article) {
         // FIXME: 2019-07-31 search more simple way
         return commentRepository.findByArticle(article).stream()
                 .map(comment -> new CommentResponse(comment.getId(),
                         comment.getContents(),
                         comment.getCreatedDate().until(LocalDateTime.now(), ChronoUnit.MILLIS),
-                        comment.getCommenter(),
-                        comment.getArticle()))
+                        comment.getCommenter()))
                 .collect(Collectors.toList());
     }
 
