@@ -90,4 +90,15 @@ public class Comment {
     private boolean matchArticle(Comment comment) {
         return comment.article.equals(this.article);
     }
+
+    public void validateAuthor(User user) {
+        if (matchAuthor(user)) {
+            return;
+        }
+        throw new MismatchCommentAuthorException();
+    }
+
+    private boolean matchAuthor(User user) {
+        return writer.equals(user);
+    }
 }
