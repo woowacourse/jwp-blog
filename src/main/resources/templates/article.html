@@ -60,7 +60,7 @@
                         <span th:text="${comments.size()}"class="font-size-16 text-info"></span>
                     </div>
                     <div class="comment">
-                        <ul class="list-unstyled list-info">
+                        <ul id="comment-list" class="list-unstyled list-info">
                             <li th:each="comment,index: ${comments}" class="comment-item border bottom mrg-btm-30">
                                 <img class="thumb-img img-circle"
                                      src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
@@ -71,7 +71,7 @@
                                         <span th:text="${comment.createdTimeAt}"></span>
                                     </span>
                                     <p th:text="${comment.contents}" class="comment-paragraph width-80"></p>
-                                    <textarea onkeyup="editChange(event)" th:placeholder="${comment.contents}"  class="comment-edit-form"  type="are" style="display:none; width:70%"></textarea>
+                                    <textarea onkeyup="editChange(event)" th:placeholder="${comment.contents}" class="comment-edit-form"  type="are" style="display:none; width:70%"></textarea>
                                 </div>
                                 <div class="comment-buttons">
                                     <form method="post" th:action="${'/articles/' + article.getId() + '/comment/' + comment.id}">
@@ -93,15 +93,13 @@
                                 </div>
                             </li>
                         </ul>
-                        <form th:if="${session.email} != null" th:action="${'/articles/' + article.getId() + '/comment'}" name="comment" method="post">
-                            <div class="add-comment">
-                                <input id="comment-contents" name="contents" type="hidden" value="">
-                                <div id="editSection"></div>
-                                <button id="save-btn" type="submit" class="btn btn-default">
-                                    <i class="ti-save"></i>
-                                </button>
-                            </div>
-                        </form>
+                        <div class="add-comment">
+                            <input id="comment-contents" name="contents" type="hidden" value="">
+                            <div id="editSection"></div>
+                            <button th:if="${session.email} != null" id="save-btn" type="submit" class="btn btn-default" onclick="saveComment()">
+                                <i class="ti-save"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -110,6 +108,7 @@
 </th:block>
 <th:block layout:fragment="custom-js">
     <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
     <script>
         const editor = new tui.Editor({
             el: document.querySelector('#editSection'),
@@ -136,6 +135,41 @@
             let nowContents = e.currentTarget.value;
             console.log(nowContents);
             content.getElementsByClassName('comment-edit-input')[0].setAttribute('value',nowContents);
+        }
+    </script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const articleId = /*[[${article.id}]]*/
+        /*]]>*/
+
+        const commentTemplate = 
+            '<li class="comment-item border bottom mrg-btm-30">' +
+                '<h1>{{comment}}</h1>' +
+            '</li>'
+    
+        const commentItemTemplate = Handlebars.compile(commentTemplate);
+
+        const saveComment = e => {
+            const url = "/articles/" + articleId + "/comment"
+            fetch(url, {
+                method: "POST",
+                body: JSON.stringify({
+                    contents: document.getElementById("comment-contents").getAttribute("value")
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then(res => {
+                addComment(res.json())
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+
+        const addComment = comment => {
+            console.log(comment)
+            const commentList = document.getElementById("comment-list")
+            commentList.insertAdjacentElement("beforeend", commentItemTemplate(comment));
         }
     </script>
 </th:block>
