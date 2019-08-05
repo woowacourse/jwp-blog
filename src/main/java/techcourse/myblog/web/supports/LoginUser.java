@@ -1,4 +1,4 @@
-package techcourse.myblog.custom;
+package techcourse.myblog.web.supports;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

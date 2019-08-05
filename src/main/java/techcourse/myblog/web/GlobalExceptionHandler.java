@@ -1,6 +1,6 @@
 package techcourse.myblog.web;
 
-import techcourse.myblog.exception.*;
+import techcourse.myblog.service.exception.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;

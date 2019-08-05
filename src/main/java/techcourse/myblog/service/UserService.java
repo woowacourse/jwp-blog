@@ -4,12 +4,12 @@ import java.util.List;
 
 import techcourse.myblog.domain.user.Information;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.dto.request.UserChangeableInfoDto;
-import techcourse.myblog.dto.request.UserSignUpInfoDto;
-import techcourse.myblog.exception.AlreadyExistEmailException;
-import techcourse.myblog.exception.NotFoundUserException;
-import techcourse.myblog.exception.NotMatchPasswordException;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.exception.AlreadyExistEmailException;
+import techcourse.myblog.service.exception.NotFoundUserException;
+import techcourse.myblog.service.exception.NotMatchPasswordException;
+import techcourse.myblog.service.request.UserChangeableInfoDto;
+import techcourse.myblog.service.request.UserSignUpInfoDto;
 
 import org.springframework.stereotype.Service;
 
@@ -47,7 +47,7 @@ public class UserService {
 		userRepository.delete(user);
 	}
 
-	public User editUser(User loginUser,  UserChangeableInfoDto userChangeableInfoDto) {
+	public User editUser(User loginUser, UserChangeableInfoDto userChangeableInfoDto) {
 		Information information = userChangeableInfoDto.valueOfInfo(loginUser);
 		User user = findUser(loginUser);
 		user.editUser(information);

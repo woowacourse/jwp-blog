@@ -1,4 +1,4 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controller;
 
 import javax.servlet.http.HttpSession;
 

@@ -1,9 +1,9 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controller;
 
-import techcourse.myblog.custom.LoginUser;
 import techcourse.myblog.domain.comment.Contents;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.CommentService;
+import techcourse.myblog.web.supports.LoginUser;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;

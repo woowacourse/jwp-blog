@@ -1,4 +1,4 @@
-package techcourse.myblog.exception;
+package techcourse.myblog.service.exception;
 
 public class NotFoundCommentException extends  RuntimeException {
 	public NotFoundCommentException() {

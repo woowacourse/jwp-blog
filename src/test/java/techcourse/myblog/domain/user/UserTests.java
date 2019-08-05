@@ -2,8 +2,8 @@ package techcourse.myblog.domain.user;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.dto.request.UserChangeableInfoDto;
-import techcourse.myblog.dto.request.UserSignUpInfoDto;
+import techcourse.myblog.service.request.UserChangeableInfoDto;
+import techcourse.myblog.service.request.UserSignUpInfoDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;

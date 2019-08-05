@@ -1,9 +1,9 @@
 package techcourse.myblog.service;
 
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.dto.request.UserLoginDto;
-import techcourse.myblog.exception.LoginException;
 import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.service.exception.LoginException;
+import techcourse.myblog.service.request.UserLoginDto;
 
 import org.springframework.stereotype.Service;
 

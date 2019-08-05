@@ -4,9 +4,9 @@ import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.comment.Contents;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.exception.NotFoundCommentException;
-import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.repository.CommentRepository;
+import techcourse.myblog.service.exception.NotFoundCommentException;
+import techcourse.myblog.service.exception.UnauthorizedException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

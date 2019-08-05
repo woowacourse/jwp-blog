@@ -1,4 +1,4 @@
-package techcourse.myblog.dto.request;
+package techcourse.myblog.service.request;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;

@@ -1,14 +1,14 @@
-package techcourse.myblog.web;
+package techcourse.myblog.web.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import techcourse.myblog.custom.LoginUser;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.dto.request.UserChangeableInfoDto;
-import techcourse.myblog.dto.request.UserSignUpInfoDto;
 import techcourse.myblog.service.UserService;
+import techcourse.myblog.service.request.UserChangeableInfoDto;
+import techcourse.myblog.service.request.UserSignUpInfoDto;
+import techcourse.myblog.web.supports.LoginUser;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

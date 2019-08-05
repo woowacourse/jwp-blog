@@ -3,7 +3,7 @@ package techcourse.myblog.domain.comment;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.domain.user.Information;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.dto.request.UserSignUpInfoDto;
+import techcourse.myblog.service.request.UserSignUpInfoDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
