@@ -13,15 +13,18 @@
             <ul class="nav-left mrg-left-0">
                 <li>
                     <a href="/">
-                        <div id="logo-dark" class="logo logo-dark d-none" style="background-image: url('/images/logo/logo_full_dark.png')"></div>
-                        <div id="logo-white" class="logo logo-white" style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                        <div id="logo-dark" class="logo logo-dark d-none"
+                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                        <div id="logo-white" class="logo logo-white"
+                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
             <ul class="nav-right">
                 <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
                     <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
-                        <img class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
+                        <img class="profile-img img-fluid"
+                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
                         <div class="user-info text-white">
                             <span class="name pdd-right-5">Brown</span>
                         </div>
@@ -68,12 +71,14 @@
                 <a th:href="'/articles/' + ${article.id} + '/edit'" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
+                <div id="articleId" th:text="${article.id}" type="hidden"></div>
                 <div id="viewerSection"></div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
                 <div class="profile-container row mrg-top-30 mrg-btm-30">
                     <div class="col-md-2 col-sm-4">
-                        <img class="width-80px border-radius-round" src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
+                        <img class="width-80px border-radius-round"
+                             src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                     </div>
                     <div class="col-md-10 col-sm-7">
                         <span class="font-size-16 text-bold pdd-btm-5">Brown</span><span class="font-size-12 text-gray"> / gracefulBrown@woowahan.com</span>
@@ -102,27 +107,32 @@
                     <span class="font-size-16 text-info">2</span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info" th:each="comment : ${comments}">
+                    <div id="comment-div">
+                        <ul class="list-unstyled list-info" th:each="comment : ${comments}">
 
-                        <li class="comment-item border bottom mrg-btm-30">
-                                <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
+                            <li class="comment-item border bottom mrg-btm-30">
+                                <img class="thumb-img img-circle"
+                                     src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
                                 <div class="info">
                                     <input type="text" th:id="'content-input'+ ${comment.id}" style="display:none"/>
-                                    <span href="" class="text-bold inline-block" th:text="${comment.authorName}">Jun</span>
+                                    <span href="" class="text-bold inline-block"
+                                          th:text="${comment.authorName}">Jun</span>
                                     <span class="sub-title inline-block pull-right">
                                         <i class="ti-timer pdd-right-5"></i>
                                         <span>6 min ago</span>
                                     </span>
 
-                                    <div th:if ="${comment.matchAuthor}">
+                                    <div th:if="${comment.matchAuthor}">
                                         <!-- <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}">
                                             <input type="hidden" name="_method" value="put"/> -->
-                                        <button type="button" class="float-right pointer btn btn-icon" th:onclick="'clickPencil('+${article.id}+', '+${comment.id}+')'">
+                                        <button type="button" class="float-right pointer btn btn-icon"
+                                                th:onclick="'clickPencil('+${article.id}+', '+${comment.id}+')'">
                                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                                         </button>
                                         <!-- </form>
- -->
-                                        <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}" method="post">
+    -->
+                                        <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}"
+                                              method="post">
                                             <input type="hidden" name="_method" value="DELETE"/>
                                             <button type="submit" class="float-right pointer btn btn-icon">
                                                 <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
@@ -131,21 +141,22 @@
                                     </div>
 
 
-                                    <p th:id="'commentContents-'+${comment.id}" class="width-80" th:text="${comment.contents}">브라운 멋져</p>
+                                    <p th:id="'commentContents-'+${comment.id}" class="width-80"
+                                       th:text="${comment.contents}">브라운 멋져</p>
                                 </div>
-                        </li>
+                            </li>
 
-                    </ul>
+                        </ul>
+                    </div>
                     <div class="add-comment">
                         <div id="editSection"></div>
-                        <form th:action="'/articles/' + ${article.id} + '/comments'" method="post">
-                            <input id="comment-contents" name="contents" type="hidden">
-                            <a class="float-right pointer btn btn-icon">
-                                <button id="save-btn" type="submit" class="btn btn-default">
-                                    <i class="ti-save"></i>
-                                </button>
-                            </a>
-                        </form>
+                        <input id="comment-contents" name="contents" type="hidden">
+                        <a class="float-right pointer btn btn-icon">
+                            <button id="save-btn" class="btn btn-default">
+                                <i class="ti-save"></i>
+                            </button>
+                        </a>
+
                     </div>
                 </div>
             </div>
@@ -154,7 +165,8 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <form id="commentModifyForm" method="post">
@@ -177,10 +189,11 @@
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <th:block th:include="fragments/body"></th:block>
 <script type="text/javascript" th:inline="javascript">
-
     /* <![CDATA[ */
+    const saveButton = document.getElementById('save-btn');
+    saveButton.addEventListener('click', saveComment)
+
     const initValue = /*[[${article.contents}]]*/;
-    /*]]>*/
 
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
@@ -188,7 +201,6 @@
         height: '100%',
         initialValue: initValue
     })
-
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
@@ -202,11 +214,63 @@
     });
 
     function clickPencil(articleId, commentId) {
-        let commentContents = document.getElementById("commentContents-"+commentId);
+        let commentContents = document.getElementById("commentContents-" + commentId);
         $('#modalInput').val(commentContents.textContent)
-        document.getElementById('commentModifyForm').action="/articles/"+articleId+"/comments/"+commentId
+        document.getElementById('commentModifyForm').action = "/articles/" + articleId + "/comments/" + commentId
         $('#exampleModal').modal('show')
     }
+
+    function saveComment() {
+        const contents = document.getElementById('comment-contents').value;
+        const articleId = document.getElementById('articleId').innerText;
+        const id =
+            console.log(contents);
+        console.log(articleId);
+        const email = [[${sessionEmail}]];
+        console.log(email)
+        fetch("http://localhost:8080/articles/" + articleId + "/jsoncomments", {
+            method: "POST",
+            body: JSON.stringify({
+                email: email,
+                contents: contents,
+                articleId: articleId,
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                "Accept": "application/json; charset=UTF-8"
+            }
+        })
+            .then(response => response.json())
+            .then(function (json) {
+                console.log("inside the function: ");
+                console.log(json);
+                const email = json.email;
+                const commentId = json.id;
+                const contents = json.contents;
+                const articleId = json.articleId;
+                console.log("json_email: " + email);
+                console.log("json_contents: " + contents);
+                console.log("json_commentId: " + commentId);
+                console.log("json_articleId: " + articleId);
+                const msg = "<ul class=\"list-unstyled list-info\">"
+                    + "<li class=\"comment-item border bottom mrg-btm-30\">"
+                    + "<img class=\"thumb-img img-circle\" src=\"https://avatars2.githubusercontent.com/u/3433096?v=4\" alt=\"\">"
+                    + "<div class=\"info\">"
+                    + "<input type=\"text\" id=\"content-input1\" style=\"display:none\">"
+                    + "<span href=\"\" id='email' class=\"text-bold inline-block\">"+ email + "</span>"
+                    + "<span class=\"sub-title inline-block pull-right\">"
+                    + "<i class=\"ti-timer pdd-right-5\"></i>"
+                    + "<span>6 min ago</span>"
+                    + " </span>"
+                    + "<p id='" + commentId + "' class=\"width-80\">" + contents + "</p>"
+                    + "</div>"
+                    + "</li>"
+                    + "</ul>"
+                $("#comment-div").append(msg)
+            })
+    }
+
+    /*]]>*/
 </script>
 </body>
 </html>

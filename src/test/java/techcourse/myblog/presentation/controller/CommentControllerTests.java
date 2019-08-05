@@ -2,7 +2,10 @@ package techcourse.myblog.presentation.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.application.dto.CommentJsonDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentControllerTests extends BasicControllerTests {
@@ -95,5 +98,28 @@ public class CommentControllerTests extends BasicControllerTests {
 
         checkTestPass("7788", false);
         finishTestForComment();
+    }
+
+    @Test
+    void create_comment_test() {
+        registerUser();
+        sessionId = logInAndGetSessionId();
+        result = writeArticle(sessionId);
+        articleUri = result.getResponseHeaders().getLocation().getPath();
+        CommentJsonDto commentJsonDto = new CommentJsonDto("hard@gmail.com", "777", 2L);
+        webTestClient.post().uri(articleUri + "/jsoncomments")
+                .header("Cookie", sessionId)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentJsonDto), CommentJsonDto.class)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.email").isEqualTo("hard@gmail.com")
+                .jsonPath("$.contents").isEqualTo("777")
+                .jsonPath("$.articleId").isEqualTo("2");
     }
 }

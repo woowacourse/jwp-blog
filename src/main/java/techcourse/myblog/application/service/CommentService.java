@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.application.converter.CommentConverter;
 import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.application.dto.CommentJsonDto;
 import techcourse.myblog.application.service.exception.CommentNotFoundException;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
 import techcourse.myblog.application.service.exception.NotMatchAuthorException;
@@ -64,5 +65,14 @@ public class CommentService {
         if (!author.compareEmail(email)) {
             throw new NotMatchAuthorException("너는 이 글에 작성자가 아니다. 꺼져라!");
         }
+    }
+
+    public CommentJsonDto saveJson(CommentJsonDto commentJsonDto) {
+        User author = userService.findUserByEmail(commentJsonDto.getEmail());
+        Article article = articleService.findById(commentJsonDto.getArticleId());
+        Comment comment = commentConverter.toEntity(commentJsonDto.getContents(), author, article);
+        Comment savedComment = commentRepository.save(comment);
+        CommentJsonDto responseCommentJsonDto = commentConverter.toCommentJsonDto(savedComment);
+        return responseCommentJsonDto;
     }
 }
