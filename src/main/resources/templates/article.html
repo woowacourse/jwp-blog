@@ -174,7 +174,7 @@
                     '<a onclick="showCommentInput(event, ' + json.commentId + ')">' +
                     '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>' +
                     '</a>' +
-                    '<a onclick="deleteComment(event)">' +
+                    '<a onclick="deleteComment(event, ' + json.commentId + ')">' +
                     '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>' +
                     '</a>' +
                     '</span>' +
@@ -199,16 +199,21 @@
         commentContents.parentNode.removeChild(commentContents);
     }
 
-    function deleteComment(event) {
+    function deleteComment(event, commentId) {
         event.preventDefault()
 
-        const thisElement = event.target;
-
-        thisElement.setAttribute("value", "delete");
-        let formElement = thisElement.parentNode.parentNode.parentNode.parentNode;
-        formElement.querySelector('input').setAttribute("value", "delete");
-
-        formElement.submit();
+        fetch('/comment/' + commentId, {
+            method: "DELETE",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(response => response.json())
+            .then(function (json) {
+                if (json.commentId == commentId) {
+                    document.getElementById("comment-update-form" + commentId).remove();
+                }
+            });
     }
 </script>
 </body>
