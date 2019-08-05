@@ -30,9 +30,7 @@ public class UserService {
 
     public UserResponseDto save(UserCreateDto userDto) {
         User newUser = userDto.toUser();
-        if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
-            throw new DuplicatedUserException(newUser.getEmail());
-        }
+        userRepository.findByEmail(newUser.getEmail()).orElseThrow(() -> new DuplicatedUserException(newUser.getEmail()));
         return modelMapper.map(userRepository.save(newUser), UserResponseDto.class);
     }
 
