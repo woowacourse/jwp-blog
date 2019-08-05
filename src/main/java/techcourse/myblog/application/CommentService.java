@@ -39,14 +39,14 @@ public class CommentService {
     public CommentResponse save(CommentRequest commentRequest, Long articleId, Long userId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new NoArticleException("게시글이 존재하지 않습니다."));
-        User user = userRepository.findById(userId)
+        User author = userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
 
-        Comment comment = new Comment(commentRequest.getContents(), user, article);
+        Comment comment = new Comment(commentRequest.getContents(), author, article);
         commentRepository.save(comment);
 
         CommentResponse commentResponse = modelMapper.map(comment, CommentResponse.class);
-        commentResponse.setAuthor(modelMapper.map(user, UserResponse.class));
+        commentResponse.setAuthor(modelMapper.map(author, UserResponse.class));
         return commentResponse;
     }
 
@@ -72,7 +72,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(Long commentId, UserResponse userResponse, CommentRequest commentRequest) {
+    public CommentResponse updateComment(Long commentId, UserResponse userResponse, CommentRequest commentRequest) {
         Comment comment = findCommentById(commentId);
         User author = userRepository.findById(userResponse.getId())
                 .orElseThrow(() -> new NoUserException("존재하지 않는 회원입니다."));
@@ -83,5 +83,9 @@ public class CommentService {
         } catch (IllegalArgumentException e) {
             throw new NotSameAuthorException("해당 작성자만 댓글을 수정할 수 있습니다.");
         }
+
+        CommentResponse commentResponse = modelMapper.map(updatedComment, CommentResponse.class);
+        commentResponse.setAuthor(modelMapper.map(author, UserResponse.class));
+        return commentResponse;
     }
 }

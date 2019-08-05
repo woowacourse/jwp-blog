@@ -127,10 +127,6 @@
                         </button>
                     </div>
 
-<!--                    <ul id="todo-list">-->
-<!--                        <input type="button" id="todo-btn" value="test">-->
-<!--                    </ul>-->
-
                 </div>
             </div>
         </div>
@@ -149,7 +145,7 @@
         "<i class=\"ti-timer pdd-right-5\"></i>" +
         "<span>{{comment.updatedTime}}</span>" +
         "</span>" +
-        "<p class=\"width-80\" id=\"'commentContents'+{{comment.id}}\">{{comment.contents}}</p>" +
+        "<p class=\"width-80\" id=\"commentContents-{{comment.id}}\">{{comment.contents}}</p>" +
         "{{>commentUpdateAndDeleteButton}}" +
         "</div>" +
         "</li>"
@@ -159,14 +155,12 @@
         "<button class=\"btn btn-icon float-right pointer\" onclick=\"deleteComment({{comment.id}})\">" +
         "<i class =\"ti-trash text-dark font-size-16 pdd-horizon-5\"></i>" +
         "</button>" +
-        "<form th:id=\"'comment-update-form'+${comment.id}\" th:action=\"'/articles/' + ${article.id} + '/comments/' + ${comment.id}\" method=\"post\">" +
-        "<input name=\"_method\" type=\"hidden\" value=\"put\"/>" +
-        "<input class= \"none\" type=\"text\" th:id=\"'content-input' + ${comment.id}\" th:value=\"${comment.contents}\" name=\"contents\">" +
+        "<input class= \"none\" type=\"text\" id=\"inputUpdateContents-{{comment.id}}\" value=\"{{comment.contents}}\">" +
         "</form>" +
-        "<button th:id=\"'show-button' + ${comment.id}\" th:onclick=\"'showCommentInput(' + ${comment.id} + ')'\" class=\"float-right pointer btn btn-icon\">" +
+        "<button id=\"showInputForm-{{comment.id}}\" onclick=\"showCommentInput({{comment.id}})\" class=\"float-right pointer btn btn-icon\">" +
         "수정" +
         "</button>" +
-        "<button th:id=\"'update-button' + ${comment.id}\" th:onclick=\"'updateComment(' + ${comment.id} + ')'\" class=\"none float-right pointer btn btn-icon\">" +
+        "<button id=\"updateButton-{{comment.id}}\" onclick=\"updateComment({{comment.id}})\" class=\"none float-right pointer btn btn-icon\">" +
         "확인" +
         "</button>" +
         "</div>"
@@ -210,8 +204,29 @@
     var submitButton = document.querySelector('#saveCommentBtn');
     submitButton.addEventListener('click', submitComment);
 
-    // var updateButton = document.querySelector('#updateCommentBtn');
-    // updateButton.addEventListener('click', updateComment);
+    function updateComment(commentId) {
+        var updatedContents = document.querySelector('#inputUpdateContents-' + commentId).value;
+        if (updatedContents === "") {
+            alert('내용을 입력하세요');
+            return;
+        }
+        fetch('/articles/' + articleId + '/comments/' + commentId, {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify({contents: updatedContents})
+        }).then(function(response) {
+            console.log(response);
+            return response.json();
+        }).then(function(comment) {
+            console.log(comment);
+            var currentContents = document.querySelector('#commentContents-' + commentId);
+            currentContents.innerHTML = "";
+            currentContents.insertAdjacentHTML('beforeend', comment.contents);
+            hideCommentInput(commentId);
+        })
+    }
 
     function deleteComment(commentId) {
         fetch('/articles/' + articleId + '/comments/' + commentId, {
@@ -245,21 +260,11 @@
         height: '200px'
     });
 
-    // function saveComment() {
-    //     var contents = editor.getMarkdown();
-    //     if (contents === "") {
-    //         alert('내용을 입력하세요!');
-    //         return;
-    //     }
-    //     document.getElementById("commentContents").value = contents;
-    //     document.getElementById("commentForm").submit();
-    // }
-
     function showCommentInput(commentId){
-        let commentContents = document.querySelector("#commentContents" + commentId);
-        let showButton = document.querySelector("#show-button" + commentId);
-        let updateButton = document.querySelector("#update-button" + commentId);
-        let contentInput = document.querySelector("#content-input" + commentId);
+        let commentContents = document.querySelector("#commentContents-" + commentId);
+        let showButton = document.querySelector("#showInputForm-" + commentId);
+        let updateButton = document.querySelector("#updateButton-" + commentId);
+        let contentInput = document.querySelector("#inputUpdateContents-" + commentId);
 
         contentInput.classList.remove("none");
         showButton.classList.add("none");
@@ -267,17 +272,29 @@
         updateButton.classList.remove("none");
     }
 
-    function updateComment(commentId){
-        let commentUpdateForm = document.querySelector("#comment-update-form" + commentId);
-        let contentInput = document.querySelector("#content-input" + commentId);
+    function hideCommentInput(commentId){
+        let commentContents = document.querySelector("#commentContents-" + commentId);
+        let showButton = document.querySelector("#showInputForm-" + commentId);
+        let updateButton = document.querySelector("#updateButton-" + commentId);
+        let contentInput = document.querySelector("#inputUpdateContents-" + commentId);
 
-        if (contentInput.value === "") {
-            alert("내용을 입력하세요!")
-            return;
-        }
-
-        commentUpdateForm.submit();
+        contentInput.classList.add("none");
+        showButton.classList.remove("none");
+        commentContents.classList.remove("none");
+        updateButton.classList.add("none");
     }
+
+    // function updateComment(commentId){
+    //     let commentUpdateForm = document.querySelector("#comment-update-form" + commentId);
+    //     let contentInput = document.querySelector("#content-input" + commentId);
+    //
+    //     if (contentInput.value === "") {
+    //         alert("내용을 입력하세요!")
+    //         return;
+    //     }
+    //
+    //     commentUpdateForm.submit();
+    // }
 </script>
 </body>
 </html>
