@@ -23,7 +23,7 @@ public class CommentConverter {
         return new Comment(new CommentContents(commentContents), author, article);
     }
 
-    public CommentJsonDto toCommentJsonDto(Comment savedComment) {
-        return new CommentJsonDto(savedComment.getUserEmail(),savedComment.getCommentContents(), savedComment.getArticleId(),savedComment.getId());
+    public CommentJsonDto toCommentJsonDto(Comment savedComment, Boolean isValidUser) {
+        return new CommentJsonDto(savedComment.getUserEmail(),savedComment.getCommentContents(), savedComment.getArticleId(),savedComment.getId(),isValidUser);
     }
 }

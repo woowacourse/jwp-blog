@@ -106,7 +106,7 @@ public class CommentControllerTests extends BasicControllerTests {
         sessionId = logInAndGetSessionId();
         result = writeArticle(sessionId);
         articleUri = result.getResponseHeaders().getLocation().getPath();
-        CommentJsonDto commentJsonDto = new CommentJsonDto("hard@gmail.com", "777", 2L);
+        CommentJsonDto commentJsonDto = new CommentJsonDto("hard@gmail.com", "777", 2L, null);
         webTestClient.post().uri(articleUri + "/jsoncomments")
                 .header("Cookie", sessionId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)

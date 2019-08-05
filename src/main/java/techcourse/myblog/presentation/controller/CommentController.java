@@ -45,8 +45,8 @@ public class CommentController {
 
     @PostMapping("/articles/{articleId}/jsoncomments")
     @ResponseBody
-    public CommentJsonDto saveComment(@RequestBody CommentJsonDto commentJsonDto) {
-        CommentJsonDto responseCommentJsonDto = commentService.saveJson(commentJsonDto);
+    public CommentJsonDto saveComment(@RequestBody CommentJsonDto commentJsonDto, @EmailAnnot Email email) {
+        CommentJsonDto responseCommentJsonDto = commentService.saveJson(commentJsonDto, email.getEmail());
         return responseCommentJsonDto;
     }
 }
