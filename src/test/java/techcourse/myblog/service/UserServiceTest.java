@@ -86,11 +86,11 @@ class UserServiceTest extends ServiceTest {
     @Test
     void 회원_정보_수정_테스트() {
         User updatedUser = User.builder()
-                .id(userId)
-                .email("email")
-                .password("password")
-                .name("updatedName")
-                .build();
+            .id(userId)
+            .email("email")
+            .password("password")
+            .name("updatedName")
+            .build();
         UserDto.Response result = userService.update(userDto, userId, modelMapper.map(updatedUser, UserDto.Update.class));
         assertThat(result).isEqualTo(modelMapper.map(updatedUser, UserDto.Response.class));
     }

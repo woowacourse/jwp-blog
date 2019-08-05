@@ -40,7 +40,7 @@ abstract public class ServiceTest {
 
     protected Long articleId;
     protected Article article;
-    protected ArticleDto.Response articleDto;
+    protected ArticleDto articleDto;
 
     protected Long commentId;
     protected Comment comment;
@@ -82,7 +82,7 @@ abstract public class ServiceTest {
         otherUserDto.setId(otherUserId);
 
         articleId = articleService.save(userDto, article.getArticleDetails());
-        articleDto = modelMapper.map(article, ArticleDto.Response.class);
+        articleDto = modelMapper.map(article, ArticleDto.class);
         articleDto.setId(articleId);
 
         CommentDto.Create commentCreateDto = modelMapper.map(comment, CommentDto.Create.class);
@@ -94,7 +94,7 @@ abstract public class ServiceTest {
         commentDto.setId(commentId);
     }
 
-    protected void terminate(){
+    protected void terminate() {
         commentService.deleteById(userDto, commentId);
         articleService.deleteById(userDto, articleId);
         userService.deleteById(userDto, userId);

@@ -18,8 +18,8 @@ public class LoginControllerTest extends ControllerTest {
     @Test
     void 로그인_페이지_이동_테스트() {
         webTestClient.get().uri("/login")
-                .exchange()
-                .expectStatus().isOk();
+            .exchange()
+            .expectStatus().isOk();
     }
 
     @Test
@@ -33,12 +33,12 @@ public class LoginControllerTest extends ControllerTest {
     @Test
     void 로그인_요청_성공_테스트() {
         webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", "password1234!"))
-                .exchange()
-                .expectStatus().isFound();
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", "email@gmail.com")
+                .with("password", "password1234!"))
+            .exchange()
+            .expectStatus().isFound();
     }
 
     @Test
@@ -58,12 +58,12 @@ public class LoginControllerTest extends ControllerTest {
         String noneEmail = "none@gamil.com";
 
         webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", noneEmail)
-                        .with("password", "password1234!"))
-                .exchange()
-                .expectStatus().isBadRequest();
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", noneEmail)
+                .with("password", "password1234!"))
+            .exchange()
+            .expectStatus().isBadRequest();
     }
 
     @Test
@@ -71,12 +71,12 @@ public class LoginControllerTest extends ControllerTest {
         String wrongPassword = "wrongPassword";
 
         webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("email", "email@gmail.com")
-                        .with("password", wrongPassword))
-                .exchange()
-                .expectStatus().isBadRequest();
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(BodyInserters
+                .fromFormData("email", "email@gmail.com")
+                .with("password", wrongPassword))
+            .exchange()
+            .expectStatus().isBadRequest();
     }
 
     @Test

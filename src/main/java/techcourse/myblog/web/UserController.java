@@ -9,6 +9,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.InvalidEditFormException;
 import techcourse.myblog.exception.InvalidSignUpFormException;
+import techcourse.myblog.resolver.Session;
+import techcourse.myblog.resolver.UserSession;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -21,12 +23,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/signup")
-    public String renderSignUpPage(HttpSession httpSession) {
+    public String renderSignUpPage() {
         return "signup";
     }
 
     @PostMapping("/users")
-    public RedirectView createUser(HttpSession httpSession, @Valid UserDto.Create userDto, BindingResult bindingResult) {
+    public RedirectView createUser(@Valid UserDto.Create userDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidSignUpFormException(bindingResult.getFieldError().getDefaultMessage());
         }
@@ -35,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public String readUsers(Model model, HttpSession httpSession) {
+    public String readUsers(Model model) {
         List<UserDto.Response> users = userService.findAll();
         model.addAttribute("users", users);
         return "user-list";
@@ -71,9 +73,8 @@ public class UserController {
     }
 
     @GetMapping("/mypage/{userId}/edit")
-    public String renderEditMypage(@PathVariable Long userId, HttpSession httpSession, Model model) {
-        UserDto.Response userSession = (UserDto.Response) httpSession.getAttribute("user");
-        UserDto.Response userDto = userService.findById(userSession, userId);
+    public String renderEditMypage(@PathVariable Long userId, @Session UserSession userSession, Model model) {
+        UserDto.Response userDto = userService.findById(userSession.getUserDto(), userId);
         model.addAttribute("user", userDto);
         return "mypage-edit";
     }

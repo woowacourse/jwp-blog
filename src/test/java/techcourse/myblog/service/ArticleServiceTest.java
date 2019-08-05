@@ -55,11 +55,11 @@ class ArticleServiceTest extends ServiceTest {
             .author(user)
             .build();
 
-        ArticleDto.Response updatedArticleDto =
+        ArticleDto updatedArticleDto =
             articleService.update(userDto, articleId, modelMapper.map(updatedArticle, ArticleDetails.class));
 
         assertThat(updatedArticleDto)
-            .isEqualTo(modelMapper.map(updatedArticle, ArticleDto.Response.class));
+            .isEqualTo(modelMapper.map(updatedArticle, ArticleDto.class));
     }
 
     @Test

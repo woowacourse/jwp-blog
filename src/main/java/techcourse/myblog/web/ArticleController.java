@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.article.ArticleDetails;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.CommentDto;
-import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.resolver.Session;
+import techcourse.myblog.resolver.UserSession;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -27,19 +27,18 @@ public class ArticleController {
     }
 
     @GetMapping("/writing")
-    public String renderCreatePage(HttpSession httpSession, Model model) {
+    public String renderCreatePage(Model model) {
         return "article-edit";
     }
 
     @PostMapping("/articles")
-    public String createArticle(ArticleDetails articleDetails, HttpSession httpSession) {
-        UserDto.Response user = (UserDto.Response) httpSession.getAttribute("user");
-        Long newArticleId = articleService.save(user, articleDetails);
+    public String createArticle(ArticleDetails articleDetails, @Session UserSession userSession) {
+        Long newArticleId = articleService.save(userSession.getUserDto(), articleDetails);
         return "redirect:/articles/" + newArticleId;
     }
 
     @GetMapping("/articles/{articleId}")
-    public String readArticle(@PathVariable Long articleId, HttpSession httpSession, Model model) {
+    public String readArticle(@PathVariable Long articleId, Model model) {
         model.addAttribute("article", articleService.findById(articleId));
         List<CommentDto.Response> comments = commentService.findAllByArticle(articleId);
         model.addAttribute("comments", comments);
@@ -47,23 +46,20 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{articleId}/edit")
-    public String renderUpdatePage(@PathVariable Long articleId, HttpSession httpSession, Model model) {
-        UserDto.Response userDto = (UserDto.Response) httpSession.getAttribute("user");
-        model.addAttribute("article", articleService.findById(userDto, articleId));
+    public String renderUpdatePage(@PathVariable Long articleId, @Session UserSession userSession, Model model) {
+        model.addAttribute("article", articleService.findById(userSession.getUserDto(), articleId));
         return "article-edit";
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable Long articleId, ArticleDetails articleDetails, HttpSession httpSession) {
-        UserDto.Response userDto = (UserDto.Response) httpSession.getAttribute("user");
-        ArticleDto updatedArticle = articleService.update(userDto, articleId, articleDetails);
+    public String updateArticle(@PathVariable Long articleId, ArticleDetails articleDetails, @Session UserSession userSession) {
+        ArticleDto updatedArticle = articleService.update(userSession.getUserDto(), articleId, articleDetails);
         return "redirect:/articles/" + updatedArticle.getId();
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable Long articleId, HttpSession httpSession) {
-        UserDto.Response userDto = (UserDto.Response) httpSession.getAttribute("user");
-        articleService.deleteById(userDto, articleId);
+    public String deleteArticle(@PathVariable Long articleId, @Session UserSession userSession) {
+        articleService.deleteById(userSession.getUserDto(), articleId);
         return "redirect:/";
     }
 }

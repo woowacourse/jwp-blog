@@ -24,14 +24,15 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String contents;
-
     @CreatedDate
     private LocalDateTime regDate;
 
     @LastModifiedDate
     private LocalDateTime modfiedDate;
+
+    @Column(nullable = false)
+    private String contents;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")
