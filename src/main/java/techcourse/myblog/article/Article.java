@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techcourse.myblog.comment.Comment;
-import techcourse.myblog.date.Date;
+import techcourse.myblog.date.BaseEntity;
 import techcourse.myblog.exception.InvalidAuthorException;
 import techcourse.myblog.user.User;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Article extends Date {
+public class Article extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
