@@ -114,7 +114,9 @@ function addSave(event) {
     putData('POST', 'http://localhost:8080/ajax/articles/' + articleId + '/comments', comments)
         .then(data => initComments(data))
         .catch(data => console.log(data));
-    //TODO 작성후 작성한 댓글판 초기화하기
+    editor.setValue('');
+    commentContents.value = '';
+    1
 }
 
 const saveBtn = document.getElementById('save-btn');
