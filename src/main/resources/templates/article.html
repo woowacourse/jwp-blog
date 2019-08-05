@@ -98,13 +98,11 @@
                         </li>
                     </ul>
                     <div class="add-comment">
-                        <form action="/comment" method="post">
-                            <input id="comment-contents" name="comment" type="hidden">
-                            <input id="article-id" name="articleId" type="hidden" th:value="${article?.id}">
-                            <button id="save-btn" type="submit" class="btn btn-default">
-                                <i class="ti-save"></i>
-                            </button>
-                        </form>
+                        <input id="comment-contents" name="comment" type="hidden">
+                        <input id="article-id" name="articleId" type="hidden" th:value="${article?.id}">
+                        <button id="save-btn" type="button" class="btn btn-default">
+                            <i class="ti-save"></i>
+                        </button>
                         <div id="editSection"></div>
                     </div>
                 </div>
@@ -136,9 +134,33 @@
 </div>
 
 <th:block th:replace="fragments/script :: scriptFragment"></th:block>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script src="/js/comment.js"></script>
 <script th:inline="javascript">
+    const commentHTML = "<li class=\"comment-item border bottom mrg-btm-30\">\n" +
+        "                            <img class=\"thumb-img img-circle\"\n" +
+        "                                 src=\"https://avatars3.githubusercontent.com/u/50367798?v=4\" alt=\"\">\n" +
+        "                            <div class=\"info\">\n" +
+        "                                <span text=\"{{commentAuthorName}}\" href=\"\" class=\"text-bold inline-block\">Jun</span>\n" +
+        "                                <span class=\"sub-title inline-block pull-right\">\n" +
+        "                                    <i class=\"ti-timer pdd-right-5\"></i>\n" +
+        "                                    <span>6 min ago</span>\n" +
+        "                            </span>\n" +
+        "                                <p class=\"width-80\">{{comment}}</p>\n" +
+        "                            </div>\n" +
+        "                                <button type=\"button\" class=\"btn btn-primary btn-lg\" data-toggle=\"modal\"\n" +
+        "                                        data-target=\"#myModal\"\n" +
+        "                                        onclick=\"'changeCommentEditAction([[${article.id}]],{{commentId}})'\">\n" +
+        "                                    <i class=\"ti-pencil\"></i>\n" +
+        "                                </button>\n" +
+        "                                <button id=\"delete-btn\" class=\"btn\" value=\"{{commentId}}\">\n" +
+        "                                    <i class=\"ti-trash\"></i>\n" +
+        "                                </button>\n" +
+        "                        </li>"
+
+    const commentTemplate = Handlebars.compile(commentHTML);
+
     const initValue = [[${article.contents}]]
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
@@ -164,15 +186,46 @@
         placeholder: '수정할 내용을 입력해 주세요.',
         events: {
             change: function () {
-                console.log("cg")
                 document.getElementById('comment-edit-contents').setAttribute('value', editComment.getMarkdown())
             }
         },
         height: '200px'
     });
+
     function changeCommentEditAction(articleId, commentId) {
         const action = "/articles/" + articleId + "/comment/" + commentId
         document.getElementById('comment-edit-form').setAttribute('action', action)
     }
+
+    document.getElementById("save-btn").addEventListener("click", function (e) {
+        const articleId = [[${article.id}]]
+        console.log("adsfsadfqwerqwer");
+        const URL = "http://localhost:8080/comment"
+        const obj = {
+            method: 'POST',
+            body: JSON.stringify({
+                articleId: articleId,
+                comment: document.getElementById("comment-contents").value
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        };
+
+        fetch(URL, obj)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (json) {
+                document.getElementById("comment-list")
+                    .insertAdjacentHTML("beforeend"
+                        , commentTemplate({
+                            "commentId": json.id
+                            , "comment": json.comment
+                            , "commentAuthorName": json.authorName
+                        }))
+            })
+    })
+
 </script>
 </html>
