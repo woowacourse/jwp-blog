@@ -1,26 +1,26 @@
 package techcourse.myblog.domain;
 
 import lombok.*;
-import techcourse.myblog.service.UserRequestDto;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @EqualsAndHashCode(of = {"id"})
 @ToString
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email", name = "uniqueEmailConstraint")}
+)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotNull
+    @Column(nullable = false, length = 100)
     private String name;
-    @NotNull
+    @Column(nullable = false, length = 100)
     private String password;
-    @NotNull
-    @Column(unique = true)
+    @Column(nullable = false)
     private String email;
 
     public User(String name, String password, String email) {
@@ -29,16 +29,14 @@ public class User {
         this.email = email;
     }
 
-    public void update(UserRequestDto userRequestDto) {
-        this.name = userRequestDto.getName();
-        this.password = userRequestDto.getPassword();
-        this.email = userRequestDto.getEmail();
+    public void update(User user) {
+        this.name = user.getName();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
     }
 
-    public boolean isMatch(UserRequestDto userRequestDto) {
-        if (email.equals(userRequestDto.getEmail()) && password.equals(userRequestDto.getPassword())) {
-            return true;
-        }
-        return false;
+    public boolean isMatch(User user) {
+        return email.equals(user.getEmail())
+                && password.equals(user.getPassword());
     }
 }

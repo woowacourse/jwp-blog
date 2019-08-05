@@ -4,6 +4,7 @@
     <head th:include="fragments/main/main_head :: mainHead"></head>
     <link rel="stylesheet" href="/css/article-edit.css">
     <link rel="stylesheet" href="/css/article.css">
+    <link rel="stylesheet" href="/css/comment.css">
 </head>
 <body>
 <div>
@@ -61,42 +62,52 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info">2</span>
+                    <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30">
+                    <ul id="comment-list" class="list-unstyled list-info">
+                        <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
                             <img class="thumb-img img-circle"
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                            <div class="info">
-                                <span href="" class="text-bold inline-block">Jun</span>
-                                <span class="sub-title inline-block pull-right">
+                            <span th:text="${comment.getCommenter().getName()}" href="" class="text-bold inline-block"></span>
+                            <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
+                                    <span th:text="${comment.getMinAgo() + ' min ago'}">6 min ago</span>
                             </span>
-                                <p class="width-80">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로 살다
-                                    보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄
-                                    수 있는 계기가 되었다.</p>
-                            </div>
-                        </li>
 
-                        <li class="comment-item border bottom mrg-btm-30">
-                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4"
-                                 alt="">
-                            <div class="info">
-                                <span href="" class="text-bold inline-block">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
-                                </span>
-                                <p class="width-80">브라운 멋져</p>
-                            </div>
-                        </li>
+                            <!--평소에 보여지는 것-->
+                            <div class="view info">
+                                <p th:text="${comment.getComment()}" class="width-80 target"></p>
 
+                                <form th:action="@{/comments/{id}(id=${comment.getId()})}" th:method="delete">
+                                    <button id="remove-btn" type="submit" class="btn btn-default">
+                                        <i class="ti-close"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!--클릭하면 보여지는 것-->
+                            <div class="edit info">
+                                <form th:action="@{/comments/{id}(id=${comment.id})}" th:method="put">
+                                    <input name="comment" type="text" th:value="${comment.getComment()}">
+                                    <button id="modify-btn" type="submit" class="btn btn-default">
+                                        <i class="ti-save"></i>
+                                    </button>
+                                </form>
+                            </div>
+
+                        </li>
                     </ul>
-                    <div class="add-comment">
-                        <div id="editSection"></div>
-                    </div>
+                    <form th:action="@{/articles/{id}/comments(id=${article.id})}" method="post">
+                        <div class="add-comment">
+                            <input id="article-contents" name="comment" type="hidden">
+                            <div id="editSection"></div>
+                        </div>
+                        <button id="save-btn" type="submit" class="btn btn-default">
+                            <i class="ti-save"></i>
+                        </button>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -105,6 +116,7 @@
 
 <div th:include="fragments/main/js :: js"></div>
 <script src="/js/index.js"></script>
+<script src="/js/comment.js"></script>
 <script th:inline="javascript">
     /*<![CDATA[*/
     const initValue = /*[[${article.contents}]]*/ 'default';
@@ -122,6 +134,7 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
+                document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
             }
         },
         height: '200px'
