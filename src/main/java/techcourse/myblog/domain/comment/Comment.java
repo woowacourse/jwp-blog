@@ -1,7 +1,9 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.comment;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,8 +20,10 @@ public class Comment {
     @UpdateTimestamp
     private LocalDateTime updateTimeAt;
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Article article;
     @ManyToOne
+    @JoinColumn(nullable = false)
     private User author;
     private String contents;
 
@@ -33,10 +37,6 @@ public class Comment {
 
     public long getId() {
         return this.id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public LocalDateTime getCreatedTimeAt() {
@@ -60,6 +60,6 @@ public class Comment {
     }
 
     public void setContents(String contents){
-        this.contents = contents ;
+        this.contents = contents;
     }
 }

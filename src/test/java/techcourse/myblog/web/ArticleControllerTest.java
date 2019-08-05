@@ -10,7 +10,12 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.domain.*;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.comment.CommentRepository;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -33,8 +38,6 @@ class ArticleControllerTest {
 
     @Autowired
     private ArticleRepository articleRepository;
-    @Autowired
-    private CommentRepository commentRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -161,42 +164,5 @@ class ArticleControllerTest {
         final Article written = articleRepository.save(TEST_ARTICLE);
         mockMvc.perform(delete("/articles/" + written.getId()).session(session));
         assertThat(articleRepository.findById(written.getId()).isPresent()).isFalse();
-    }
-
-    @Test
-    void writeCommentTest() throws Exception {
-        final Article written = articleRepository.save(TEST_ARTICLE);
-        mockMvc.perform(
-                post("/articles/" + written.getId() + "/comment").contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                                                .param("contents", "ㅎㅇ")
-                                                                .session(session)
-        ).andDo(print())
-        .andExpect(redirectedUrl("/articles/" + written.getId()));
-        assertThat(commentRepository.count()).isEqualTo(1);
-        articleRepository.deleteAll();
-        assertThat(commentRepository.count()).isEqualTo(0);
-    }
-
-    @Test
-    @Transactional
-    void updateCommentTest() throws Exception {
-        final String updatedContents = "내용쓰";
-        final Article written = articleRepository.save(new Article(testUser, TEST_TITLE, TEST_COVER_URL, TEST_CONTENTS));
-        final Comment comment = commentRepository.save(new Comment(written, testUser, "ㅎㅇㅎㅇ"));
-        mockMvc.perform(
-                put("/articles/" + written.getId() + "/comment/" + comment.getId()).contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("contents", updatedContents)
-                        .session(session)
-        ).andDo(print())
-        .andExpect(status().is3xxRedirection());
-        assertThat(commentRepository.findById(comment.getId()).get().getContents()).isEqualTo(updatedContents);
-    }
-
-    @Test
-    void deleteCommentTest() throws Exception {
-        final Article written = articleRepository.save(TEST_ARTICLE);
-        final Comment comment = commentRepository.save(TEST_COMMENT);
-        mockMvc.perform(delete("/articles/" + written.getId() + "/comment/" + comment.getId()).session(session));
-        assertThat(commentRepository.findById(comment.getId()).isPresent()).isFalse();
     }
 }

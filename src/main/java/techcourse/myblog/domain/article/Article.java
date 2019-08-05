@@ -1,8 +1,12 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.article;
+
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class Article {
@@ -11,6 +15,7 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne
+    @JoinColumn(nullable = false)
     private User author;
     private String title;
     private String coverUrl;
@@ -21,18 +26,20 @@ public class Article {
     public Article() {}
 
     public Article(User author, String title, String coverUrl, String contents) {
-        this.author = author;
+        this.author = Optional.ofNullable(author).orElseThrow(IllegalArgumentException::new);
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
 
-    public Long getId() {
-        return this.id;
+    public void update(Article toUpdate) {
+        this.title = toUpdate.title;
+        this.coverUrl = toUpdate.coverUrl;
+        this.contents = toUpdate.contents;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public Long getId() {
+        return this.id;
     }
 
     public User getAuthor() {

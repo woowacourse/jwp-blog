@@ -1,4 +1,4 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.comment;
 
 import org.springframework.data.repository.CrudRepository;
 

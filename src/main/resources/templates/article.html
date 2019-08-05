@@ -76,7 +76,7 @@
                                 <div class="comment-buttons">
                                     <form method="post" th:action="${'/articles/' + article.getId() + '/comment/' + comment.id}">
                                         <input type="hidden" name="_method" value="PUT">
-                                        <input class="comment-edit-input" name="content" type="hidden">
+                                        <input class="comment-edit-input" name="contents" type="hidden">
                                         <button type="submit" class="comment-edit-save" style="display:none">
                                             <i class="ti ti-save text-dark font-size-16 pdd-horizontal-5"></i>
                                         </button>
