@@ -3,9 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.service.UserQueryResult;
 import techcourse.myblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -34,20 +32,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public RedirectView login(
-            String email,
-            String password,
-            HttpSession session,
-            RedirectAttributes redirectAttributes
-    ) {
-        if (userService.tryLogin(email, password, session)) {
-            return new RedirectView("/");
-        }
-        redirectAttributes.addFlashAttribute(
-                "errorMessage",
-                "존재하지 않는 사용자이거나 잘못된 비밀번호입니다."
-        );
-        return new RedirectView("/login");
+    public RedirectView login(String email, String password, HttpSession session) {
+        userService.tryLogin(email, password, session);
+        return new RedirectView("/");
     }
 
     @GetMapping("/logout")
@@ -69,21 +56,9 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public RedirectView signup(
-            String name,
-            String email,
-            String password,
-            RedirectAttributes redirectAttributes
-    ) {
-        final UserQueryResult result = userService.tryRegister(name, email, password);
-        if (result == UserQueryResult.SUCCESS) {
-            return new RedirectView("/login");
-        }
-        redirectAttributes.addFlashAttribute(
-                "errorMessage",
-                (result == UserQueryResult.EMAIL_ALREADY_TAKEN) ? "이미 등록된 이메일입니다." : "잘못된 입력입니다."
-        );
-        return new RedirectView("/signup");
+    public RedirectView signup(String name, String email, String password) {
+        userService.tryRegister(name, email, password);
+        return new RedirectView("/login");
     }
 
     @GetMapping("/profile")
@@ -106,23 +81,11 @@ public class UserController {
     }
 
     @PutMapping("/profile/edit")
-    public RedirectView profileEdit(
-            String name,
-            String email,
-            HttpSession session,
-            RedirectAttributes redirectAttributes
-    ) {
-        final UserQueryResult result = userService.tryUpdate(name, email, getEmailFromSession(session));
-        if (result == UserQueryResult.SUCCESS) {
-            session.setAttribute("name", name);
-            session.setAttribute("email", email);
-            return new RedirectView("/profile");
-        }
-        redirectAttributes.addFlashAttribute(
-                "errorMessage",
-                (result == UserQueryResult.EMAIL_ALREADY_TAKEN) ? "이미 등록된 이메일입니다." : "잘못된 입력입니다."
-        );
-        return new RedirectView("/profile/edit");
+    public RedirectView profileEdit(String name, String email, HttpSession session) {
+        userService.tryUpdate(name, email, getEmailFromSession(session));
+        session.setAttribute("name", name);
+        session.setAttribute("email", email);
+        return new RedirectView("/profile");
     }
 
     @DeleteMapping("/profile")

@@ -1,9 +1,10 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.User;
+import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.user.User;
 
 import java.util.Optional;
 
@@ -27,22 +28,15 @@ public class ArticleService {
         return articleRepository.save(toWrite).getId();
     }
 
-    public boolean tryUpdate(long articleId, Article toUpdate) {
-        return articleRepository.findById(articleId).map(original -> {
-                                                            if (original.isSameAuthor(toUpdate)) {
-                                                                toUpdate.setId(articleId);
-                                                                articleRepository.save(toUpdate);
-                                                                return true;
-                                                            }
-                                                            return false;
-                                                        }).orElse(false);
+    @Transactional
+    public void tryUpdate(long articleId, Article toUpdate) {
+        articleRepository.findById(articleId).filter(article -> article.isSameAuthor(toUpdate))
+                                            .ifPresent(original -> original.update(toUpdate));
     }
 
+    @Transactional
     public void tryDelete(long articleId, User user) {
-        articleRepository.findById(articleId).ifPresent(article -> {
-            if (article.isSameAuthor(user)) {
-                articleRepository.deleteById(articleId);
-            }
-        });
+        articleRepository.findById(articleId).filter(article -> article.isSameAuthor(user))
+                                            .ifPresent(article -> articleRepository.deleteById(articleId));
     }
 }
