@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head th:replace="/fragments/article-head :: articleHead">
-
 </head>
 <body>
 <div>
@@ -10,8 +9,10 @@
             <ul class="nav-left mrg-left-0">
                 <li>
                     <a href="/">
-                        <div id="logo-dark" class="logo logo-dark d-none" style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
-                        <div id="logo-white" class="logo logo-white" style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
+                        <div id="logo-dark" class="logo logo-dark d-none"
+                             style="background-image: url('/static/images/logo/logo_full_dark.png')"></div>
+                        <div id="logo-white" class="logo logo-white"
+                             style="background-image: url('/static/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
@@ -22,7 +23,7 @@
     </header>
 
     <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg" th:style = "
+        <div class="cover-img overlay-dark bg" th:style="
                                             'background-image: url(' + ${#strings.isEmpty(article.coverUrl) ? '/static/images/pages/index/study.jpg' : article.coverUrl} + ');'">
             <div class="padding-30">
                 <h1 class="text-center cover-title" th:text="${article.title}">목적의식 있는 연습을 통한 효과적인 학습</h1>
@@ -36,9 +37,9 @@
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
                 <form method="post" th:action="'/articles/' + ${article.id}">
-                    <input name="_method" type="hidden" value="delete" />
+                    <input name="_method" type="hidden" value="delete"/>
                     <button class="btn btn-icon float-right pointer" id="delete-button" type="submit">
-                        <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
+                        <i class="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
                     </button>
                 </form>
                 <div id="viewerSection"></div>
@@ -47,7 +48,8 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
                 <div class="profile-container row mrg-top-30 mrg-btm-30">
                     <div class="col-md-2 col-sm-4">
-                        <img class="border-radius-round" width="80px" src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
+                        <img class="border-radius-round" width="80px"
+                             src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                     </div>
                     <div class="col-md-10 col-sm-7">
                         <span class="font-size-16 text-bold pdd-btm-5">Brown</span><span class="font-size-12 text-gray"> / gracefulBrown@woowahan.com</span>
@@ -77,23 +79,29 @@
                     <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
-                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
+                    <ul id="comments" class="list-unstyled list-info" data-th-data-article-id="${article.id}">
+                        <li class="comment-item border bottom mrg-btm-15 mrg-top-15" th:each="comment : ${comments}">
+                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4"
+                                 alt="">
                             <div class="info">
-                                <span href="" class="text-bold inline-block" th:text="${comment.commenter.name}">Jun</span>
+                                <span class="text-bold inline-block" th:text="${comment.commenter.name}">Jun</span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span class="elapsed-time" th:text="${comment.elapsedTime}">6</span>
                                 </span>
-                                <p class="width-80" th:text="${comment.contents}">브라운 멋져</p>
-                                <th:block th:if="${comment.commenter.id == session.user?.id}">
-                                    <a th:href="@{'/comments/' + ${comment.id}}">수정</a>
-                                    <form th:action="@{'/comments/' + ${comment.id}}" method="post">
-                                        <input type="hidden" name="_method" value="delete"/>
-                                        <button type="submit" class="warning">삭제</button>
-                                    </form>
-                                </th:block>
+                                <div th:id="'comment' + ${comment.id}" class="comment-box" data-th-data-id="${comment.id}">
+                                    <div>
+                                        <p class="width-80" th:text="${comment.contents}">브라운 멋져</p>
+                                    </div>
+                                    <div class="hidden">
+                                        <input type="text" th:value="${comment.contents}">
+                                        <button type="button" class="btn-sm btn-dark update-button">update</button>
+                                    </div>
+                                    <th:block th:if="${comment.commenter.id == session.user?.id}">
+                                        <button class="modify-button btn-sm btn-dark">edit</button>
+                                        <button type="button" class="btn-sm btn-dark remove-button">remove</button>
+                                    </th:block>
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -101,12 +109,13 @@
                         <div class="add-comment">
                             <div id="editSection"></div>
                         </div>
-                        <form action="/comments" method="post">
+                        <div>
                             <button id="comment-submit" type="submit" class="button">댓글달기</button>
                             <input id="comment-contents" name="contents" type="hidden"/>
                             <input name="articleId" type="hidden" th:value="${article.id}"/>
-                        </form>
+                        </div>
                     </th:block>
+                    <button id="test">TEST</button>
                 </div>
             </div>
         </div>
@@ -121,7 +130,7 @@
         viewer: true,
         height: '100%',
         initialValue: document.getElementById('article-contents').value
-    })
+    });
 
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
@@ -135,21 +144,118 @@
         height: '200px'
     });
 
-    document.getElementById("comment-submit").addEventListener('click', function() {
-        document.getElementById("comment-contents").value =  editor.el.value;
+    document.getElementById("comment-submit").addEventListener('click', function () {
+        document.getElementById("comment-contents").value = editor.getValue();
     });
 
-    const convertTime = function(elapsedtime) {
+    const convertTime = function (elapsedtime) {
         let hours = Math.floor(elapsedtime / 3600000);
-        return hours > 24 ? hours / 24 + "일전" : hours + "시간 전";
+        return hours > 24 ? hours / 24 + "일 전" : hours + "시간 전";
     };
 
-    window.addEventListener("load", function(){
+    window.addEventListener("load", function () {
         let span = document.getElementsByClassName("elapsed-time");
-        Array.from(span).forEach(function(s) {
+        Array.from(span).forEach(function (s) {
             s.textContent = convertTime(s.textContent);
         });
     });
+
+
+    document.getElementById("comments").addEventListener("click", (event) => {
+        const target = event.target;
+        const parent = target.closest('.comment-box');
+
+        if (target.classList.contains("modify-button")) {
+            parent.children[0].classList.add("hidden");
+            parent.children[1].classList.remove("hidden");
+            target.classList.add("hidden");
+            return;
+        }
+
+        if (target.classList.contains("update-button")) {
+            let id = parent.dataset.id;
+            let commentRequest = {
+                "id": id,
+                "contents": parent.getElementsByTagName('input')[0].value,
+            };
+
+            fetch('/comments/' + id, {
+                method: "PUT",
+                headers: {'Content-Type': 'application/json; charset=UTF-8'},
+                body: JSON.stringify(commentRequest),
+            })
+                .then(response => response.json())
+                .then(body => {
+                    const comment = document.getElementById("comment" + body.id);
+                    comment.children[1].classList.toggle("hidden");
+                    comment.children[2].classList.toggle("hidden");
+
+                    const contents = comment.children[0];
+                    contents.children[0].textContent = body.contents;
+                    contents.classList.toggle("hidden");
+                });
+            return;
+        }
+
+        if (target.classList.contains("remove-button")) {
+            let id = parent.dataset.id;
+
+            fetch('/comments/' + id, {
+                method: "DELETE",
+            }).then(() => {
+                parent.closest('li').remove();
+            });
+        }
+    });
+
+    document.getElementById('comment-submit').addEventListener('click', event => {
+        let commentRequest = {
+            articleId: document.getElementById("comments").dataset.articleId,
+            contents: document.getElementById('comment-contents').value,
+        };
+
+        fetch('/comments', {
+            method: "POST",
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+            body: JSON.stringify(commentRequest),
+        }).then(response => response.json())
+            .then(data => {
+                let template = document.getElementById('template');
+                let resultHtml = template.innerHTML.replace(/{id}/g, data.id)
+                    .replace(/{name}/g, data.commenter.name)
+                    .replace(/{contents}/g, data.contents)
+                    .replace(/{elapsedTime}/g, data.createdDate);
+
+                document.getElementById('comments').innerHTML += resultHtml;
+                editor.setValue("");
+            });
+    });
+
+</script>
+
+<script id="template" type="text/template">
+        <li class="comment-item border bottom mrg-btm-15 mrg-top-15">
+            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4"
+                 alt="">
+            <div class="info">
+                <span class="text-bold inline-block">{name}</span>
+                <span class="sub-title inline-block pull-right">
+                    <i class="ti-timer pdd-right-5"></i>
+                    <span class="elapsed-time">{elapsedTime}</span>
+                </span>
+                <div id="comment{id}" class="comment-box" data-id="{id}">
+                    <div>
+                        <p class="width-80">{contents}</p>
+                    </div>
+                    <div class="hidden">
+                        <input type="text" value="{contents}">
+                        <button type="button" class="btn-sm btn-dark update-button">update</button>
+                    </div>
+                        <button class="modify-button btn-sm btn-dark">edit</button>
+                        <button type="button" class="btn-sm btn-dark remove-button">remove</button>
+                </div>
+            </div>
+        </li>
 </script>
 </body>
 </html>
