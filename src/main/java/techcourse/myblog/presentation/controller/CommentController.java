@@ -32,10 +32,10 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public RedirectView updateComment(@PathVariable Long commentId, @PathVariable Long articleId, CommentDto commentDto, LoginUser loginUser) {
+    @ResponseBody
+    public Comment updateComment(@PathVariable Long commentId, @PathVariable Long articleId, @RequestBody CommentDto commentDto, LoginUser loginUser) {
         Article article = articleReadService.findById(articleId);
-        commentWriteService.modify(commentId, commentDto.toComment(loginUser.getUser(), article));
-        return new RedirectView("/articles/" + articleId);
+        return commentWriteService.modify(commentId, commentDto.toComment(loginUser.getUser(), article));
     }
 
     @DeleteMapping("/{commentId}")
