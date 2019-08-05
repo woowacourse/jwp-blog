@@ -22,8 +22,8 @@ public class CommentService {
         return Collections.unmodifiableList(commentRepository.findByArticleId(articleId));
     }
 
-    public void save(Comment comment) {
-        commentRepository.save(comment);
+    public Comment save(Comment comment) {
+        return commentRepository.save(comment);
     }
 
     public void deleteById(Long id, User user) {
