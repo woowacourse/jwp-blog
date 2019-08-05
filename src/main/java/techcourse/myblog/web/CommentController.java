@@ -5,11 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.service.comment.CommentService;
 import techcourse.myblog.service.dto.comment.CommentRequest;
-import techcourse.myblog.service.dto.user.UserResponse;
-
-import javax.servlet.http.HttpSession;
-
-import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
+import techcourse.myblog.web.argumentResolver.AccessUserInfo;
 
 @Controller
 @RequestMapping("/articles/{articleId}/comments")
@@ -22,23 +18,20 @@ public class CommentController {
     }
 
     @PostMapping("")
-    public String addComment(@PathVariable Long articleId, CommentRequest commentRequest, HttpSession session) {
-        UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
-        commentService.save(commentRequest, user.getId(), articleId);
+    public String addComment(@PathVariable final Long articleId, final CommentRequest commentRequest, final AccessUserInfo accessUserInfo) {
+        commentService.save(commentRequest, accessUserInfo.getUser().getId(), articleId);
         return "redirect:/articles/" + articleId;
     }
 
     @PutMapping("/{commentId}")
-    public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession session, CommentRequest commentRequest) {
-        UserResponse accessUser = (UserResponse) session.getAttribute(USER_SESSION_KEY);
-        commentService.update(commentRequest, commentId, articleId, accessUser);
+    public String updateComment(@PathVariable final Long articleId, @PathVariable final Long commentId, final CommentRequest commentRequest, final AccessUserInfo accessUserInfo) {
+        commentService.update(commentRequest, commentId, articleId, accessUserInfo.getUser());
         return "redirect:/articles/" + articleId;
     }
 
     @DeleteMapping("/{commentId}")
-    public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession session) {
-        UserResponse accessUser = (UserResponse) session.getAttribute(USER_SESSION_KEY);
-        commentService.delete(commentId, accessUser);
+    public String deleteComment(@PathVariable final Long articleId, @PathVariable final Long commentId, final AccessUserInfo accessUserInfo) {
+        commentService.delete(commentId, accessUserInfo.getUser());
         return "redirect:/articles/" + articleId;
     }
 }
