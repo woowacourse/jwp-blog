@@ -34,12 +34,12 @@ public class Comment {
     private LocalDateTime modfiedDate;
 
     @ManyToOne
-//    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne
-//    @JoinColumn(name = "article_id")
+    @JoinColumn(name = "article_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Article article;
 
@@ -49,6 +49,5 @@ public class Comment {
 
     public void update(CommentDto.Update commentDto) {
         contents = commentDto.getContents();
-        modfiedDate = commentDto.getModifiedDate(); //TODO : 자동
     }
 }
