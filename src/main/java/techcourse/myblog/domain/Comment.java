@@ -40,9 +40,16 @@ public class Comment {
 
     public Comment(String contents, Article article, User user) {
         checkContents(contents);
+        checkUser(user);
         this.contents = contents;
         this.article = article;
         this.commenter = user;
+    }
+
+    private void checkUser(User user) {
+        if (user == null) {
+            throw new InvalidAuthorException("로그인 후 댓글을 작성할 수 있습니다.");
+        }
     }
 
     private void checkContents(String contents) {

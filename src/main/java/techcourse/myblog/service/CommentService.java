@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
     public CommentService(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
     }
 
-    public void save(CommentRequest commentRequest, Article article, User user) {
+    public Comment save(CommentRequest commentRequest, Article article, User user) {
         Comment comment = new Comment(commentRequest.getContents(), article, user);
-        commentRepository.save(comment);
+        return commentRepository.save(comment);
     }
 
     public List<CommentResponse> findByArticle(Article article) {
@@ -45,7 +45,7 @@ public class CommentService {
         return comment.updateContents(commentRequest.getContents());
     }
 
-    public Comment findByIdWithUser(User user, Long commentId) {
+    private Comment findByIdWithUser(User user, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NoCommentException("존재하지 않는 댓글입니다."));
         comment.checkCommenter(user);
@@ -53,7 +53,7 @@ public class CommentService {
     }
 
     public void deleteById(Long commentId, User user) {
-        Comment comment = findByIdWithUser(user, commentId);
+        findByIdWithUser(user, commentId);
         commentRepository.deleteById(commentId);
     }
 }
