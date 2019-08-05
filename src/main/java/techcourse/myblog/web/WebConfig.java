@@ -6,7 +6,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import techcourse.myblog.web.argumentResolver.AccessUserArgumentResolver;
 import techcourse.myblog.web.interceptor.AuthenticationInterceptor;
-import techcourse.myblog.web.interceptor.UnAuthenticationInterceptor;
 
 import java.util.List;
 
@@ -22,12 +21,10 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/articles")
                 .addPathPatterns("/articles/*/edit")
                 .addPathPatterns("/articles/*/comments")
-                .addPathPatterns("/articles/*/comments/*");
-
-        registry.addInterceptor(new UnAuthenticationInterceptor())
-                .addPathPatterns("/signup")
-                .addPathPatterns("/users")
-                .addPathPatterns("/login");
+                .addPathPatterns("/articles/*/comments/*")
+                .excludePathPatterns("/signup")
+                .excludePathPatterns("/users")
+                .excludePathPatterns("/login");
     }
 
     @Override
