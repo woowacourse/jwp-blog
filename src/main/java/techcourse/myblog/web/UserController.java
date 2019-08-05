@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserService;
 import techcourse.myblog.service.dto.UserRequestDto;
-import techcourse.myblog.web.dto.UserAssembler;
 import techcourse.myblog.web.dto.UserDto;
 
 import javax.servlet.http.HttpSession;
@@ -37,7 +36,7 @@ public class UserController {
 
     @GetMapping("/users")
     public String showUsers(Model model) {
-        List<UserDto> userDtos = userService.findAll().stream().map(UserAssembler::convertToDto)
+        List<UserDto> userDtos = userService.findAll().stream().map(UserDto::from)
             .collect(Collectors.toList());
         model.addAttribute("users", userDtos);
         return "user-list";

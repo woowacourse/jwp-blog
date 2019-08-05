@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.dto.ArticleRequestDto;
-import techcourse.myblog.web.dto.ArticleAssembler;
 import techcourse.myblog.web.dto.ArticleDto;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class ArticleController {
     public String showMain(Model model) {
         List<ArticleDto> articleDtos = articleService.findAll()
             .stream()
-            .map(ArticleAssembler::convertToDto)
+            .map(ArticleDto::from)
             .collect(Collectors.toList());
         model.addAttribute("articleDtos", articleDtos);
         return "index";

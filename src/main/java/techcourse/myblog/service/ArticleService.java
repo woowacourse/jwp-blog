@@ -16,8 +16,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static techcourse.myblog.web.dto.ArticleAssembler.convertToEntity;
-
 @Service
 @Transactional
 public class ArticleService {
@@ -41,10 +39,10 @@ public class ArticleService {
             .orElseThrow(ArticleNotFoundException::new);
     }
 
-    public Long save(final ArticleRequestDto articleDTO, final Long authorId) {
+    public Long save(final ArticleRequestDto articleDto, final Long authorId) {
         User author = userRepository.findById(authorId)
             .orElseThrow(UserNotFoundException::new);
-        Article article = convertToEntity(articleDTO, author);
+        Article article = articleDto.toEntity(author);
         Article persistArticle = articleRepository.save(article);
         return persistArticle.getId();
     }

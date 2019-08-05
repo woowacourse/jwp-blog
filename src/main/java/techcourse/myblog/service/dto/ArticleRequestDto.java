@@ -1,5 +1,8 @@
 package techcourse.myblog.service.dto;
 
+import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.User;
+
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -29,6 +32,10 @@ public class ArticleRequestDto {
 
     public String getContents() {
         return contents;
+    }
+
+    public Article toEntity(User author) {
+        return new Article(title, coverUrl, contents, Objects.requireNonNull(author));
     }
 
     @Override

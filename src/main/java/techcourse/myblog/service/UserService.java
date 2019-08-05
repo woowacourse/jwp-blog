@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static techcourse.myblog.web.dto.UserAssembler.convertToEntity;
 
 @Service
 @Transactional
@@ -27,7 +26,7 @@ public class UserService {
     }
 
     public User save(final UserRequestDto userRequestDto) {
-        User user = convertToEntity(Objects.requireNonNull(userRequestDto));
+        User user = userRequestDto.toEntity();
         String email = user.getEmail();
         if (userRepository.findByEmail(email).isPresent()) {
             throw new DuplicatedEmailException("이메일이 중복됩니다.");

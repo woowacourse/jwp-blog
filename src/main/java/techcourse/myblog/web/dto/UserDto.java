@@ -1,5 +1,7 @@
 package techcourse.myblog.web.dto;
 
+import techcourse.myblog.domain.User;
+
 import java.util.Objects;
 
 public class UserDto {
@@ -15,6 +17,13 @@ public class UserDto {
         this.id = id;
         this.email = email;
         this.name = name;
+    }
+
+    public static UserDto from(User user) {
+        Long id = user.getId();
+        String email = user.getEmail();
+        String name = user.getName();
+        return new UserDto(id, email, name);
     }
 
     public Long getId() {

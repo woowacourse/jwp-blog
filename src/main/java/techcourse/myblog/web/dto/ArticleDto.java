@@ -1,8 +1,12 @@
 package techcourse.myblog.web.dto;
 
+import techcourse.myblog.domain.Article;
+
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
+
+import static java.util.stream.Collectors.toList;
 
 public class ArticleDto {
     private Long id;
@@ -25,6 +29,18 @@ public class ArticleDto {
         this.coverUrl = coverUrl;
         this.contents = contents;
         this.comments = comments;
+    }
+
+    public static ArticleDto from(Article article) {
+        Long id = article.getId();
+        String title = article.getTitle();
+        String coverUrl = article.getCoverUrl();
+        String contents = article.getContents();
+        List<CommentDto> comments = article.getComments().stream()
+            .map(CommentDto::from)
+            .collect(toList());
+
+        return new ArticleDto(id, title, coverUrl, contents, comments);
     }
 
     public Long getId() {

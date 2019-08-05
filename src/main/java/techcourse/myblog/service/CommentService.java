@@ -12,8 +12,6 @@ import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
 import techcourse.myblog.service.dto.CommentRequestDto;
 
-import static techcourse.myblog.web.dto.CommentAssembler.convertToEntity;
-
 @Service
 @Transactional
 public class CommentService {
@@ -33,7 +31,7 @@ public class CommentService {
             .orElseThrow(UserNotFoundException::new);
         Article article = articleRepository.findById(articleId)
             .orElseThrow(ArticleNotFoundException::new);
-        Comment comment = convertToEntity(commentRequestDto, user, article);
+        Comment comment = commentRequestDto.toEntity(user, article);
         return commentRepository.save(comment);
     }
 

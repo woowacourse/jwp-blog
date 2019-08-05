@@ -1,5 +1,7 @@
 package techcourse.myblog.service.dto;
 
+import techcourse.myblog.domain.User;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -40,5 +42,9 @@ public class UserRequestDto {
 
     public String getPassword() {
         return password;
+    }
+
+    public User toEntity() {
+        return new User(email, name, password);
     }
 }

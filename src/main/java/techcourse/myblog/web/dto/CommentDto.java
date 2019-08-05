@@ -1,5 +1,7 @@
 package techcourse.myblog.web.dto;
 
+import techcourse.myblog.domain.Comment;
+
 import java.util.Objects;
 
 public class CommentDto {
@@ -13,6 +15,14 @@ public class CommentDto {
         this.content = content;
         this.authorId = authorId;
         this.authorName = authorName;
+    }
+
+    public static CommentDto from(Comment comment) {
+        return new CommentDto(
+            comment.getId(),
+            comment.getContents(),
+            comment.getAuthor().getId(),
+            comment.getAuthor().getName());
     }
 
     public Long getId() {
