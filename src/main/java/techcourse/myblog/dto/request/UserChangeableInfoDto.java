@@ -16,20 +16,20 @@ public class UserChangeableInfoDto {
 	private String username;
 
 	private String githubUrl;
-	private String faceBookUrl;
+	private String facebookUrl;
 
-	public UserChangeableInfoDto(String username, String githubUrl, String faceBookUrl) {
+	public UserChangeableInfoDto(String username, String githubUrl, String facebookUrl) {
 		this.username = username;
 		this.githubUrl = githubUrl;
-		this.faceBookUrl = faceBookUrl;
+		this.facebookUrl = facebookUrl;
 	}
 
 	public String getGithubUrl() {
 		return githubUrl;
 	}
 
-	public String getFaceBookUrl() {
-		return faceBookUrl;
+	public String getFacebookUrl() {
+		return facebookUrl;
 	}
 
 	public String getUsername() {
@@ -37,6 +37,6 @@ public class UserChangeableInfoDto {
 	}
 
 	public Information valueOfInfo(User loginUser) {
-		return new Information(loginUser.getEmail(), username, loginUser.getPassword(), githubUrl, faceBookUrl);
+		return new Information(loginUser.getEmail(), username, loginUser.getPassword(), githubUrl, facebookUrl);
 	}
 }

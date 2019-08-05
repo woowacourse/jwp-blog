@@ -27,7 +27,7 @@ public class Information {
 
 	private String githubUrl;
 
-	private String faceBookUrl;
+	private String facebookUrl;
 
 	private Information() {
 	}
@@ -42,12 +42,12 @@ public class Information {
 		this.password = password;
 	}
 
-	public Information(String email, String username, String password, String githubUrl, String faceBookUrl) {
+	public Information(String email, String username, String password, String githubUrl, String facebookUrl) {
 		this.email = email;
 		this.password = password;
 		this.username = username;
 		this.githubUrl = githubUrl;
-		this.faceBookUrl = faceBookUrl;
+		this.facebookUrl = facebookUrl;
 	}
 
 	public String getUsername() {
@@ -67,7 +67,7 @@ public class Information {
 	}
 
 	public String getFacebookUrl() {
-		return faceBookUrl;
+		return facebookUrl;
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class Information {
 				", email='" + email + '\'' +
 				", password='" + password + '\'' +
 				", githubUrl='" + githubUrl + '\'' +
-				", faceBookUrl='" + faceBookUrl + '\'' +
+				", facebookUrl='" + facebookUrl + '\'' +
 				'}';
 	}
 }
