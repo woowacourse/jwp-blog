@@ -6,9 +6,9 @@ public class UserRequestDto {
     private static final String NAME_PATTERN = "^[ㄱ-ㅎ가-힣a-zA-Z]{2,10}$";
     private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[$@$!%*?&])[A-Za-z\\d$@$!%*?&]{8,}";
 
-    @Pattern(regexp = NAME_PATTERN)
+    @Pattern(regexp = NAME_PATTERN, message = "")
     private String name;
-    @Pattern(regexp = PASSWORD_PATTERN)
+    @Pattern(regexp = PASSWORD_PATTERN, message = "")
     private String password;
     private String email;
 
