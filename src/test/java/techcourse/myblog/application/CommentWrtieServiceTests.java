@@ -4,11 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.comment.Comment;
-import techcourse.myblog.domain.user.User;
 import techcourse.myblog.domain.comment.CommentRepository;
-import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.domain.user.User;
 
 import java.util.Optional;
 

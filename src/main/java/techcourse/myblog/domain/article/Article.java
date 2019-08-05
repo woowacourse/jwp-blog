@@ -1,5 +1,8 @@
 package techcourse.myblog.domain.article;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,6 +21,7 @@ import java.time.LocalDateTime;
 @Getter
 @EqualsAndHashCode(of = "id")
 @DynamicUpdate
+@JsonIgnoreProperties({"title", "coverUrl", "contents", "author"})
 public class Article {
     private static final int TITLE_LENGTH = 50;
     private static final String FK_FIELD_NAME = "author";

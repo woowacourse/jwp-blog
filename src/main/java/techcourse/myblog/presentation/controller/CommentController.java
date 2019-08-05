@@ -8,6 +8,7 @@ import techcourse.myblog.application.ArticleReadService;
 import techcourse.myblog.application.CommentReadService;
 import techcourse.myblog.application.CommentWriteService;
 import techcourse.myblog.application.dto.CommentDto;
+import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.presentation.support.LoginUser;
 
 @Controller
@@ -24,10 +25,10 @@ public class CommentController {
     }
 
     @PostMapping
-    public RedirectView createComment(@PathVariable Long articleId, CommentDto commentDto, LoginUser loginUser) {
-        Article article =  articleReadService.findById(articleId);
-        commentWriteService.save(commentDto.toComment(loginUser.getUser(), article));
-        return new RedirectView("/articles/" + articleId);
+    @ResponseBody
+    public Comment createComment(@PathVariable Long articleId, @RequestBody CommentDto commentDto, LoginUser loginUser) {
+        Article article = articleReadService.findById(articleId);
+        return commentWriteService.save(commentDto.toComment(loginUser.getUser(), article));
     }
 
     @PutMapping("/{commentId}")

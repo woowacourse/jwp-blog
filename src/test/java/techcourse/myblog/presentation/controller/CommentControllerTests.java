@@ -3,12 +3,14 @@ package techcourse.myblog.presentation.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import techcourse.myblog.domain.comment.Comment;
-import techcourse.myblog.domain.comment.CommentRepository;
+import reactor.core.publisher.Mono;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.presentation.controller.common.ControllerTestTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,9 +43,21 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     public void 로그인_상태_댓글작성_성공() {
-        String redirectUrl = getRedirectUrl(loginAndRequestWithDataWriter(POST, savedArticleUrl + "/comment", parser(commentDto)));
-        String responseBody = getResponseBody(loginAndRequestWriter(GET, redirectUrl));
-        assertTrue(responseBody.contains(commentDto.getContents()));
+        webTestClient.post().uri(savedArticleUrl + "/comment")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .cookie("JSESSIONID", getLoginSessionId(savedUserDto))
+                .body(Mono.just(COMMENT_DTO), CommentDto.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.id").isEqualTo("1")
+                .jsonPath("$.contents").isEqualTo("contents")
+                .jsonPath("$.writer.id").isEqualTo(savedUser.getId())
+                .jsonPath("$.writer.name").isEqualTo(savedUser.getName())
+                .jsonPath("$.writer.email").isEqualTo(savedUser.getEmail())
+        ;
     }
 
     @Test

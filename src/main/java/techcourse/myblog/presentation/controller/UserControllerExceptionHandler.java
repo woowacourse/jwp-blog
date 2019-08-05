@@ -49,7 +49,7 @@ public class UserControllerExceptionHandler {
     @ExceptionHandler(BindException.class)
     public RedirectView handleBindError(BindException e, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("userDto", new UserDto("", "", ""));
-        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userDto", e.getBindingResult());
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRequestDto", e.getBindingResult());
         return new RedirectView(e.getObjectName());
     }
 }

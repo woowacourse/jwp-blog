@@ -1,7 +1,6 @@
 package techcourse.myblog.application.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
 

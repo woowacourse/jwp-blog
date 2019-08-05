@@ -111,11 +111,11 @@
     - [x] MismatchAuthorException comment/ article 분리 및 findByIdAnd*** 삭제   
 
 ### 댓글 Ajax 구현
-- [ ] ``POST /comment/{articleId}``
-    - [ ] 해당 내용이 포함되었는지 테스트
+- [x] ``POST /comment/{articleId}``
+    - [x] 해당 내용이 포함되었는지 테스트
 - [ ] ``PUT /comment/{articleId}``
     - [ ] 수정 내용이 포함되었는지 테스트
-    - [ ] 작성자 일 경우 HttpStatus 200 확인 
+    - [ ] 작성자 일 경우 HttpStatus 200 확인
     - [ ] 작성자가 아닐 경우 HttpStatus 403 확인
 - [ ] ``DELETE /comment/{articleId}``
     - [ ] 작성자 일 경우 HttpStatus 200 확인 
