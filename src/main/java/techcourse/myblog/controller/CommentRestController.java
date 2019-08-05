@@ -19,7 +19,7 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentRequest;
 import techcourse.myblog.dto.CommentResponse;
-import techcourse.myblog.exception.InvalidUserSessionException;
+import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 
@@ -73,7 +73,7 @@ public class CommentRestController {
         User user = userSessionManager.getUser();
         Comment comment = commentService.find(commentId);
         if (!comment.isAuthorized(user)) {
-            throw new InvalidUserSessionException("권한이 없습니다.");
+            throw new UnauthorizedException();
         }
         Comment editedComment = comment.update(commentRequest.getContents());
         CommentResponse commentResponse = new CommentResponse(
@@ -84,4 +84,6 @@ public class CommentRestController {
         );
         return commentResponse;
     }
+
+
 }

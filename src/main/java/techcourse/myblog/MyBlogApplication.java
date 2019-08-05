@@ -22,16 +22,20 @@ public class MyBlogApplication {
     @Bean
     public CommandLineRunner runner(UserRepository userRepository, ArticleRepository articleRepository, CommentRepository commentRepository) {
         return (args -> {
-            User user = userRepository.save(
-                    new User("luffy", "luffy@luffy.com", "@Password12")
+            User luffy = userRepository.save(
+                    new User("luffy", "luffy@luffy.com", "12345678")
+            );
+            User cony = userRepository.save(
+                    new User("cony", "cony@cony.com", "12345678")
             );
 
+
             Article article = articleRepository.save(
-                    new Article("제목", "", "내용", user)
+                    new Article("제목", "", "내용", luffy)
             );
 
             commentRepository.save(
-                    new Comment("contents", user, article)
+                    new Comment("contents", luffy, article)
             );
         });
     }
