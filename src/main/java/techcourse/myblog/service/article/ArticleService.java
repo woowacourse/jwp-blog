@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.article.Article;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.exception.UserHasNotAuthorityException;
 import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.presentation.ArticleRepository;
 import techcourse.myblog.presentation.UserRepository;
@@ -67,7 +68,13 @@ public class ArticleService {
         retrieveArticle.update(convertToEntity(articleRequest, user));
     }
 
-    public void delete(final Long id) {
-        articleRepository.deleteById(Objects.requireNonNull(id));
+    public void delete(final Long id, final UserResponse accessUser) {
+        Article retrieveArticle = articleRepository.findById(id).orElseThrow(ArticleNotFoundException::new);
+        User user = userRepository.findById(accessUser.getId()).orElseThrow(UserNotFoundException::new);
+        if (retrieveArticle.matchAuthor(user)) {
+            articleRepository.delete(retrieveArticle);
+            return;
+        }
+        throw new UserHasNotAuthorityException();
     }
 }

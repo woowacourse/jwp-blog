@@ -32,4 +32,16 @@ public class ArticleTest {
         assertThatExceptionOfType(UserHasNotAuthorityException.class)
                 .isThrownBy(() -> oldArticle.update(newArticle));
     }
+
+    @Test
+    void 게시글_작성자인지_확인() {
+        Article article = new Article("title", "", "content", DEFAULT_AUTHOR);
+        assertThat(article.matchAuthor(DEFAULT_AUTHOR)).isTrue();
+    }
+
+    @Test
+    void 게시글_작성자인지_확인_게시글_작성자가_아닐_경우() {
+        Article article = new Article("title", "", "content", DEFAULT_AUTHOR);
+        assertThat(article.matchAuthor(new User("paul123,@example.com", "paul", "p@ssW0rd"))).isFalse();
+    }
 }

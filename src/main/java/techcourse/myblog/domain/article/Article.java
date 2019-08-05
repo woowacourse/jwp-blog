@@ -55,6 +55,10 @@ public class Article {
         throw new UserHasNotAuthorityException();
     }
 
+    public boolean matchAuthor(final User user) {
+        return author.match(user);
+    }
+
     public Long getId() {
         return id;
     }

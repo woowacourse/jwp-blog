@@ -3,9 +3,9 @@ package techcourse.myblog.service.article;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.exception.UserHasNotAuthorityException;
 import techcourse.myblog.service.dto.article.ArticleRequest;
 import techcourse.myblog.service.dto.article.ArticleResponse;
 import techcourse.myblog.service.dto.user.UserResponse;
@@ -64,21 +64,17 @@ public class ArticleServiceTest {
     }
 
     @Test
-    void 게시글_수정_오류확인_게시글이_null일_경우() {
-        assertThatExceptionOfType(NullPointerException.class)
-                .isThrownBy(() -> articleService.update(DEFAULT_ARTICLE_ID, null, new UserResponse(999L, "john123@example.com", "john")));
-    }
-
-    @Test
-    void 게시글_삭제_확인() {
-        articleService.delete(DEFAULT_ARTICLE_ID);
+    void 게시글_작성자가_게시글_삭제() {
+        articleService.delete(DEFAULT_ARTICLE_ID, new UserResponse(DEFAULT_USER_ID, "john123@example.com", "john"));
         assertThatExceptionOfType(ArticleNotFoundException.class)
                 .isThrownBy(() -> articleService.findById(DEFAULT_ARTICLE_ID));
     }
 
     @Test
-    void 게시글_삭제_오류확인_없는_게시글_삭제요청할_경우() {
-        assertThatExceptionOfType(EmptyResultDataAccessException.class)
-                .isThrownBy(() -> articleService.delete(DEFAULT_ARTICLE_ID + 1));
+    void 게시글_작성자가_아닌_회원이_게시글_삭제() {
+        assertThatExceptionOfType(UserHasNotAuthorityException.class)
+                .isThrownBy(() -> articleService.delete(
+                        DEFAULT_ARTICLE_ID,
+                        new UserResponse(DEFAULT_USER_ID + 1L, "paul123@example.com", "paul")));
     }
 }

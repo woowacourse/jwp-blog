@@ -46,11 +46,8 @@ public class ArticleController {
 
     @DeleteMapping("/{id}")
     public String deleteArticle(@PathVariable final Long id, final HttpSession session) {
-        UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
-        if (!user.getId().equals(articleService.findAuthor(id).getId())) {
-            return "redirect:/articles/" + id;
-        }
-        articleService.delete(id);
+        UserResponse accessUser = (UserResponse) session.getAttribute(USER_SESSION_KEY);
+        articleService.delete(id, accessUser);
         return "redirect:/";
     }
 
