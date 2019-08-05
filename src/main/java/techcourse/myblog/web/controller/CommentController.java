@@ -20,7 +20,7 @@ public class CommentController {
     public String addComment(@PathVariable long articleId,
                              @SessionInfo UserSessionInfo userSessionInfo,
                              CommentDto commentDto) {
-        commentService.addComment(articleId, userSessionInfo.toUser(), commentDto);
+        commentService.add(articleId, userSessionInfo.toUser(), commentDto);
         return "redirect:/articles/" + articleId;
     }
 
@@ -28,7 +28,7 @@ public class CommentController {
     public String deleteComment(@PathVariable long articleId,
                                 @PathVariable long commentId,
                                 @SessionInfo UserSessionInfo userSessionInfo) {
-        commentService.deleteComment(commentId, userSessionInfo.toUser());
+        commentService.delete(commentId, userSessionInfo.toUser());
         return "redirect:/articles/" + articleId;
     }
 
@@ -37,7 +37,7 @@ public class CommentController {
                                 @PathVariable long commentId,
                                 @SessionInfo UserSessionInfo userSessionInfo,
                                 CommentDto commentDto) {
-        commentService.updateComment(commentId, userSessionInfo.toUser(), commentDto);
+        commentService.update(commentId, userSessionInfo.toUser(), commentDto);
         return "redirect:/articles/" + articleId;
     }
 }

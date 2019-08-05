@@ -42,13 +42,13 @@ class ArticleServiceTest {
 
     @Test
     void findTest() {
-        long id = articleService.save(articleDto, author).getId();
+        long id = articleService.add(articleDto, author).getId();
         assertThat(articleService.findArticle(id).getTitle()).isEqualTo(articleDto.getTitle());
     }
 
     @Test
     void updateTest() {
-        Article article = articleService.save(articleDto, author);
+        Article article = articleService.add(articleDto, author);
         Article editArticle = new Article("z", "x", "c", author);
         article.update(editArticle);
         assertThat(articleService.findArticle(article.getId()).getTitle()).isEqualTo(editArticle.getTitle());
@@ -57,14 +57,14 @@ class ArticleServiceTest {
     @Test
     void findAllTest() {
         int before = articleService.findAll().size();
-        articleService.save(new ArticleDto("1", "2", "3"), author);
+        articleService.add(new ArticleDto("1", "2", "3"), author);
         List<Article> articles = articleService.findAll();
         assertThat(articles.size()).isNotEqualTo(before);
     }
 
     @Test
     void deleteTest() {
-        long id = articleService.save(articleDto, author).getId();
+        long id = articleService.add(articleDto, author).getId();
         int before = articleService.findAll().size();
         articleService.delete(id, author);
         List<Article> articles = articleService.findAll();

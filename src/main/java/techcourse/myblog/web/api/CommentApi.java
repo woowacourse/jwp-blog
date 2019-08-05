@@ -32,7 +32,7 @@ public class CommentApi {
                                                 @RequestBody CommentDto.JSON json,
                                                 @SessionInfo UserSessionInfo userSessionInfo) {
         log.debug("[Comment] [Create] API: ArticleId = {} Comment = {}", articleId, json.getContents());
-        commentService.addComment(articleId, userSessionInfo.toUser(), json.toDto());
+        commentService.add(articleId, userSessionInfo.toUser(), json.toDto());
         List<Comment> comments = articleService.findArticle(articleId).getComments();
         return new ResponseEntity<>(comments, HttpStatus.CREATED);
     }
@@ -43,7 +43,7 @@ public class CommentApi {
                                                 @RequestBody CommentDto.JSON json,
                                                 @SessionInfo UserSessionInfo userSessionInfo) {
         log.debug("[Comment] [Update] API: ArticleId = {} Comment = {}", commentId, json.getContents());
-        commentService.updateComment(commentId, userSessionInfo.toUser(), json.toDto());
+        commentService.update(commentId, userSessionInfo.toUser(), json.toDto());
         List<Comment> comments = articleService.findArticle(articleId).getComments();
         return new ResponseEntity<>(comments, HttpStatus.ACCEPTED);
     }
@@ -53,7 +53,7 @@ public class CommentApi {
                                                 @PathVariable long commentId,
                                                 @SessionInfo UserSessionInfo userSessionInfo) {
         log.debug("[Comment] [Delete] API: CommentId = {}", commentId);
-        commentService.deleteComment(commentId, userSessionInfo.toUser());
+        commentService.delete(commentId, userSessionInfo.toUser());
         List<Comment> comments = articleService.findArticle(articleId).getComments();
         return new ResponseEntity<>(comments, HttpStatus.ACCEPTED);
     }

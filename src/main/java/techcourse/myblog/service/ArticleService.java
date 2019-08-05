@@ -43,7 +43,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article save(ArticleDto articleDto, User author) {
+    public Article add(ArticleDto articleDto, User author) {
         User user = userRepository.getOne(author.getId());
         Article article = articleDto.toEntity(user);
         return articleRepository.save(article);
