@@ -54,11 +54,13 @@ public class CommentDto {
     }
 
     @Data
-    @EqualsAndHashCode(exclude = {"regDate", "modifiedDate"})
+    @EqualsAndHashCode(of = "id")
     public static class Response {
+        private Long id;
         private Long articleId;
         private LocalDateTime regDate;
         private LocalDateTime modifiedDate;
         private String contents;
+        private User user;
     }
 }

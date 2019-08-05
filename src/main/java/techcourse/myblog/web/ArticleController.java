@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.article.ArticleVo;
+import techcourse.myblog.domain.article.ArticleDetails;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.dto.UserDto;
@@ -32,9 +32,9 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public String createArticle(ArticleVo articleVo, HttpSession httpSession) {
+    public String createArticle(ArticleDetails articleDetails, HttpSession httpSession) {
         UserDto.Response user = (UserDto.Response) httpSession.getAttribute("user");
-        Long newArticleId = articleService.save(user, articleVo);
+        Long newArticleId = articleService.save(user, articleDetails);
         return "redirect:/articles/" + newArticleId;
     }
 
@@ -54,9 +54,9 @@ public class ArticleController {
     }
 
     @PutMapping("/articles/{articleId}")
-    public String updateArticle(@PathVariable Long articleId, ArticleVo articleVo, HttpSession httpSession) {
+    public String updateArticle(@PathVariable Long articleId, ArticleDetails articleDetails, HttpSession httpSession) {
         UserDto.Response userDto = (UserDto.Response) httpSession.getAttribute("user");
-        ArticleDto.Response updatedArticle = articleService.update(userDto, articleId, articleVo);
+        ArticleDto.Response updatedArticle = articleService.update(userDto, articleId, articleDetails);
         return "redirect:/articles/" + updatedArticle.getId();
     }
 

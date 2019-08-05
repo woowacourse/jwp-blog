@@ -15,9 +15,9 @@
 
         <div class="about-cover card no-border ">
             <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
-                <!--th:style=" 'background-image:url(' + ${article.coverUrl} + ');' "-->
+                <!--th:style=" 'background-image:url(' + ${article.articleDetails.coverUrl} + ');' "-->
                 <div class="padding-30">
-                    <h1 class="text-center cover-title" th:text="${article.title}"></h1>
+                    <h1 class="text-center cover-title" th:text="${article.articleDetails.title}"></h1>
                 </div>
             </div>
         </div>
@@ -135,7 +135,7 @@
             el: document.querySelector('#viewerSection'),
             viewer: true,
             height: '100%',
-            initialValue: [[ ${article.contents}]]
+            initialValue: [[ ${article.articleDetails.contents}]]
         });
 
         const editor = new tui.Editor({

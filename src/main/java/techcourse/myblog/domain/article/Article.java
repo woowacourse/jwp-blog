@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @EqualsAndHashCode(of = "id")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class Article {
@@ -19,15 +19,15 @@ public class Article {
     private Long id;
 
     @Embedded
-    private ArticleVo articleVo;
+    private ArticleDetails articleDetails;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
-    public Article(ArticleVo articleVo, User author) {
-        this.articleVo = articleVo;
+    public Article(ArticleDetails articleDetails, User author) {
+        this.articleDetails = articleDetails;
         this.author = author;
     }
 
@@ -35,7 +35,7 @@ public class Article {
         return author.equals(user);
     }
 
-    public void update(ArticleVo articleVo) {
-        this.articleVo = articleVo;
+    public void update(ArticleDetails articleDetails) {
+        this.articleDetails = articleDetails;
     }
 }

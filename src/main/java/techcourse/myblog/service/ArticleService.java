@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.article.ArticleVo;
+import techcourse.myblog.domain.article.ArticleDetails;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.dto.UserDto;
@@ -25,9 +25,9 @@ public class ArticleService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public Long save(UserDto.Response userDto, ArticleVo articleVo) {
+    public Long save(UserDto.Response userDto, ArticleDetails articleDetails) {
         User user = userRepository.findById(userDto.getId()).orElseThrow(NotFoundUserException::new);
-        Article article = new Article(articleVo, user);
+        Article article = new Article(articleDetails, user);
         return articleRepository.save(article).getId();
     }
 
@@ -50,10 +50,10 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleDto.Response update(UserDto.Response userDto, Long articleId, ArticleVo articleVo) {
+    public ArticleDto.Response update(UserDto.Response userDto, Long articleId, ArticleDetails articleDetails) {
         checkAuthor(userDto, articleId);
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        article.update(articleVo);
+        article.update(articleDetails);
         return modelMapper.map(article, ArticleDto.Response.class);
     }
 
