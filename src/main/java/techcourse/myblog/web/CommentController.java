@@ -30,13 +30,13 @@ public class CommentController {
 //        return "redirect:/articles/" + commentRequestDto.getArticleId();
 //    }
 
-    @PutMapping("/comment/{commentId}")
-    public String updateComment(@PathVariable("commentId") Long commentId,
-                                CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
-        Long userId = getLoggedInUser(httpServletRequest).getId();
-        commentService.update(userId, commentId, commentRequestDto);
-        return "redirect:/articles/" + commentService.findArticleId(commentId);
-    }
+//    @PutMapping("/comment/{commentId}")
+//    public String updateComment(@PathVariable("commentId") Long commentId,
+//                                CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
+//        Long userId = getLoggedInUser(httpServletRequest).getId();
+//        commentService.update(userId, commentId, commentRequestDto);
+//        return "redirect:/articles/" + commentService.findArticleId(commentId);
+//    }
 
     @DeleteMapping("/comment/{commentId}")
     public String deleteComment(@PathVariable("commentId") Long commentId, HttpServletRequest httpServletRequest) {

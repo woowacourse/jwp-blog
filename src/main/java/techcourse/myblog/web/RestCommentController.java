@@ -34,6 +34,14 @@ public class RestCommentController {
         commentService.save(userId, commentRequestDto);
     }
 
+    @PutMapping("/comments/{commentId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void updateComment(@PathVariable("commentId") Long commentId,
+                                CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
+        Long userId = getLoggedInUser(httpServletRequest).getId();
+        commentService.update(userId, commentId, commentRequestDto);
+    }
+
     private UserPublicInfoDto getLoggedInUser(HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
         UserPublicInfoDto user = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);

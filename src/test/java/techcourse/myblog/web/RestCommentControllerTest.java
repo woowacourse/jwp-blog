@@ -3,19 +3,25 @@ package techcourse.myblog.web;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.service.dto.CommentResponseDto;
 
 import static techcourse.myblog.Utils.TestConstants.SAMPLE_ARTICLE_ID;
+import static techcourse.myblog.Utils.TestConstants.SAMPLE_COMMENT_ID;
 import static techcourse.myblog.Utils.TestUtils.logInAsBaseUser;
+import static techcourse.myblog.Utils.TestUtils.logInAsMismatchUser;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class RestCommentControllerTest {
 
     @Autowired
     WebTestClient webTestClient;
+
+    @LocalServerPort
+    int localServerPort;
 
     @Test
     void 비동기_댓글_조회() {
@@ -38,5 +44,45 @@ class RestCommentControllerTest {
                         .with("comment", "comment"))
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void 비동기_댓글_생성_비로그인() {
+        webTestClient.post().uri("/comments")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(BodyInserters
+                        .fromFormData("articleId", "1")
+                        .with("comment", "comment"))
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader()
+                .valueMatches("location", ".*/login.*");
+    }
+
+    @Test
+    void 비동기_댓글_수정() {
+        webTestClient.put().uri("/comments/" + SAMPLE_COMMENT_ID)
+                .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(BodyInserters
+                        .fromFormData("articleId", "1")
+                        .with("comment", "comment"))
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void 비동기_댓글_수정_다른_유저() {
+        webTestClient.put().uri("/comments/" + SAMPLE_COMMENT_ID)
+                .cookie("JSESSIONID", logInAsMismatchUser(webTestClient))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(BodyInserters
+                        .fromFormData("articleId", "1")
+                        .with("comment", "comment"))
+                .exchange()
+                .expectStatus().is5xxServerError();
     }
 }
