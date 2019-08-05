@@ -1,11 +1,9 @@
 package techcourse.myblog.domain.article;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.article.Article;
-import techcourse.myblog.article.Contents;
+import techcourse.myblog.domain.user.Information;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.dto.request.UserSignUpInfoDto;
-import techcourse.myblog.user.Information;
-import techcourse.myblog.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

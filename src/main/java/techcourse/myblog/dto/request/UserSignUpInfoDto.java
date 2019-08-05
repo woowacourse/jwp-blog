@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
-import techcourse.myblog.user.Information;
+import techcourse.myblog.domain.user.Information;
 
 public class UserSignUpInfoDto {
 	private static final String BLANK_NAME = "이름을 입력해주세요.";

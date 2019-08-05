@@ -1,11 +1,11 @@
-package techcourse.myblog.article;
+package techcourse.myblog.domain.article;
 
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.*;
 
-import techcourse.myblog.comment.Comment;
-import techcourse.myblog.user.User;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.user.User;
 
 @Entity
 public class Article {

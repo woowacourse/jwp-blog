@@ -3,10 +3,10 @@ package techcourse.myblog.repository;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.article.Article;
-import techcourse.myblog.article.Contents;
-import techcourse.myblog.comment.Comment;
-import techcourse.myblog.user.User;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.Contents;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.user.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

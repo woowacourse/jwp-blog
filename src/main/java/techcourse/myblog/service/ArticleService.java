@@ -2,12 +2,12 @@ package techcourse.myblog.service;
 
 import java.util.List;
 
-import techcourse.myblog.article.Article;
-import techcourse.myblog.article.Contents;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.Contents;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.user.User;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

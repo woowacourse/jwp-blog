@@ -1,9 +1,9 @@
 package techcourse.myblog.web;
 
-import techcourse.myblog.article.Contents;
 import techcourse.myblog.custom.LoginUser;
+import techcourse.myblog.domain.article.Contents;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.user.User;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

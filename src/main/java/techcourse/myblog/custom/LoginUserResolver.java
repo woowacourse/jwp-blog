@@ -1,8 +1,8 @@
 package techcourse.myblog.custom;
 
+import techcourse.myblog.domain.user.Information;
+import techcourse.myblog.domain.user.User;
 import techcourse.myblog.exception.UnauthorizedException;
-import techcourse.myblog.user.Information;
-import techcourse.myblog.user.User;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;

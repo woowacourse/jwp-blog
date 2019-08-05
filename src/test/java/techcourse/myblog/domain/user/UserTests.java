@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.dto.request.UserChangeableInfoDto;
 import techcourse.myblog.dto.request.UserSignUpInfoDto;
-import techcourse.myblog.user.Information;
-import techcourse.myblog.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;

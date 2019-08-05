@@ -2,9 +2,9 @@ package techcourse.myblog.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.comment.Comment;
-import techcourse.myblog.comment.Contents;
-import techcourse.myblog.user.User;
+import techcourse.myblog.domain.comment.Comment;
+import techcourse.myblog.domain.comment.Contents;
+import techcourse.myblog.domain.user.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

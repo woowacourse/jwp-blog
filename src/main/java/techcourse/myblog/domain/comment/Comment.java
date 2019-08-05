@@ -1,9 +1,9 @@
-package techcourse.myblog.comment;
+package techcourse.myblog.domain.comment;
 
 import java.time.LocalDateTime;
 import javax.persistence.*;
 
-import techcourse.myblog.user.User;
+import techcourse.myblog.domain.user.User;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
