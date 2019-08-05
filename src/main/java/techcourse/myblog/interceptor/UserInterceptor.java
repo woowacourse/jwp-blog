@@ -1,20 +1,19 @@
-package techcourse.myblog.web.interceptor;
+package techcourse.myblog.interceptor;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @author heebg
+ * @version 1.0 2019-07-31
+ */
 public class UserInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if ("/accounts/user".equals(request.getRequestURI()) && "DELETE".equals(request.getMethod())) {
-            return true;
-        }
-
         if (request.getSession().getAttribute("user") != null) {
-            response.sendRedirect("/");
-            return false;
+            request.setAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return true;

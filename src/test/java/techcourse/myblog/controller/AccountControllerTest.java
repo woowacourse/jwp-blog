@@ -1,30 +1,27 @@
-package techcourse.myblog.web;
+package techcourse.myblog.controller;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import techcourse.myblog.MyblogApplicationTests;
 import techcourse.myblog.domain.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.controller.AccountController.ACCOUNT_URL;
 
 @AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AccountControllerTest {
+public class AccountControllerTest extends MyblogApplicationTests {
     private WebTestClient webTestClient;
     private String testName = "abcdeFGHIJ";
     private String testPassword = "abcdEFGH123!@#";
     private String testEmail = "abc@hi.com";
-    private long defaultId = 1;
-    private String defaultName = "default";
-    private String defaultPassword = testPassword;
-    private String defaultEmail = "default@default.com";
     private LoginControllerTest loginControllerTest;
 
     @Autowired
@@ -39,7 +36,7 @@ public class AccountControllerTest {
     @Test
     void showSignupPageTest() {
         webTestClient.get()
-                .uri("/accounts/signup")
+                .uri(ACCOUNT_URL + "/signup")
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -180,102 +177,93 @@ public class AccountControllerTest {
 
     @Test
     void signupTest_이메일_중복_확인2() {
-        testSignupProcess(testName, testPassword, defaultEmail)
+        testSignupProcess(testName, testPassword, DEFAULT_USER_EMAIL)
                 .expectStatus()
                 .isOk();
     }
 
     @Test
     void 마이페이지_접근() {
-        webTestClient.get().uri("/accounts/profile/" + defaultId)
+        EntityExchangeResult<byte[]> result = testShowProfilePage(DEFAULT_USER_ID).isOk().expectBody().returnResult();
+
+        String body = new String(result.getResponseBody());
+        assertThat(body.contains(DEFAULT_USER_EMAIL)).isTrue();
+        assertThat(body.contains(DEFAULT_USER_NAME)).isTrue();
+    }
+
+    private StatusAssertions testShowProfilePage(long userId) {
+        return webTestClient.get().uri(ACCOUNT_URL + "/profile/" + userId)
                 .exchange()
-                .expectStatus()
-                .isOk().expectBody().consumeWith(response -> {
-            String body = new String(response.getResponseBody());
-            assertThat(body.contains(defaultEmail)).isTrue();
-            assertThat(body.contains(defaultName)).isTrue();
-        });
+                .expectStatus();
     }
 
     @Test
     void 본인_마이페이지_수정_페이지_접근() {
-        String cookie = loginControllerTest.getLoginCookie(defaultEmail, defaultPassword);
+        String cookie = loginControllerTest.getLoginCookie(DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD);
 
-        webTestClient.get().uri("/accounts/profile/edit").header("Cookie", cookie)
+        EntityExchangeResult<byte[]> result = testShowProfileEditPage(cookie).isOk().expectBody().returnResult();
+
+        String body = new String(result.getResponseBody());
+        assertThat(body.contains(DEFAULT_USER_NAME)).isTrue();
+        assertThat(body.contains(DEFAULT_USER_EMAIL)).isTrue();
+    }
+
+    private StatusAssertions testShowProfileEditPage(String cookie) {
+        return webTestClient.get().uri(ACCOUNT_URL + "/profile/edit").header("Cookie", cookie)
                 .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertThat(body.contains(defaultName)).isTrue();
-                    assertThat(body.contains(defaultEmail)).isTrue();
-                });
+                .expectStatus();
     }
 
     @Test
     void 미로그인시_본인_마이페이지_수정_페이지_접근() {
-        webTestClient.get().uri("/accounts/profile/edit")
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .expectBody()
-                .consumeWith(response -> {
-                    assertThat(response.getResponseHeaders().getLocation().toString().contains("login")).isTrue();
-                });
+        EntityExchangeResult<byte[]> result = testShowProfileEditPage("").isFound().expectBody().returnResult();
+        assertThat(result.getResponseHeaders().getLocation().toString().contains("login")).isTrue();
     }
 
     @Test
     void 마이페이지_수정_후_저장_성공() {
-        String cookie = loginControllerTest.getLoginCookie(defaultEmail, defaultPassword);
+        String cookie = loginControllerTest.getLoginCookie(DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD);
 
-        webTestClient.put().uri("/accounts/profile/edit").header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("name", defaultName + "a")
-                        .with("email", defaultEmail)
-                        .with("password", defaultPassword)
-                        .with("id", String.valueOf(defaultId)))
-                .exchange()
-                .expectStatus()
+        testUpdateProfile(cookie, DEFAULT_USER_NAME + "a", DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD, String.valueOf(DEFAULT_USER_ID))
                 .isFound()
                 .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get().uri("/accounts/profile/edit").header("Cookie", cookie)
-                            .exchange()
-                            .expectStatus()
-                            .isOk()
-                            .expectBody()
-                            .consumeWith(innerResponse -> {
-                                String body = new String(innerResponse.getResponseBody());
-                                assertThat(body.contains(defaultName + "a")).isTrue();
-                                assertThat(body.contains(defaultEmail)).isTrue();
-                            });
+                .returnResult();
 
-                    webTestClient.put().uri("/accounts/profile/edit").header("Cookie", cookie)
-                            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                            .body(BodyInserters
-                                    .fromFormData("name", defaultName)
-                                    .with("email", defaultEmail)
-                                    .with("password", defaultPassword)
-                                    .with("id", String.valueOf(defaultId)))
-                            .exchange()
-                            .expectStatus()
-                            .isFound();
-                });
+
+        EntityExchangeResult<byte[]> result = testShowProfileEditPage(cookie)
+                .isOk()
+                .expectBody()
+                .returnResult();
+
+        String body = new String(result.getResponseBody());
+        assertThat(body.contains(DEFAULT_USER_NAME + "a")).isTrue();
+        assertThat(body.contains(DEFAULT_USER_EMAIL)).isTrue();
+
+        testUpdateProfile(cookie, DEFAULT_USER_NAME, DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD, String.valueOf(DEFAULT_USER_ID));
+    }
+
+    private StatusAssertions testUpdateProfile(String cookie, String name, String email, String password, String id) {
+        return webTestClient.put().uri(ACCOUNT_URL + "/profile/" + id).header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("name", name)
+                        .with("email", email)
+                        .with("password", password))
+                .exchange()
+                .expectStatus();
     }
 
     @Test
     void showUsersPage() {
-        webTestClient.get().uri("/accounts/users")
+        webTestClient.get().uri(ACCOUNT_URL + "/users")
                 .exchange()
                 .expectStatus()
                 .isOk()
                 .expectBody()
                 .consumeWith(response -> {
                     String body = new String(response.getResponseBody());
-                    assertThat(body.contains(defaultName)).isTrue();
-                    assertThat(body.contains(defaultEmail)).isTrue();
+                    assertThat(body.contains(DEFAULT_USER_NAME)).isTrue();
+                    assertThat(body.contains(DEFAULT_USER_EMAIL)).isTrue();
                 })
         ;
     }
@@ -288,12 +276,11 @@ public class AccountControllerTest {
 
         testSignupProcess(name, password, email);
         String cookie = loginControllerTest.getLoginCookie(email, password);
-        webTestClient.delete().uri("/accounts/user").header("Cookie", cookie)
-                .exchange()
-                .expectStatus()
+//        String cookie = loginControllerTest.getLoginCookie(DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD);
+        testDeleteUser(cookie)
                 .isFound();
 
-        webTestClient.get().uri("/accounts/users")
+        webTestClient.get().uri(ACCOUNT_URL + "/users")
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -305,10 +292,16 @@ public class AccountControllerTest {
         ;
     }
 
+    private StatusAssertions testDeleteUser(String cookie) {
+        return webTestClient.delete().uri(ACCOUNT_URL + "/user").header("Cookie", cookie)
+                .exchange()
+                .expectStatus();
+    }
+
 
     protected WebTestClient.ResponseSpec testSignupProcess(String name, String password, String email) {
         return webTestClient.post()
-                .uri("/accounts/user")
+                .uri(ACCOUNT_URL + "/user")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("name", name)
@@ -320,7 +313,7 @@ public class AccountControllerTest {
 
     private WebTestClient.ResponseSpec testSignupProcessWithCookie(String name, String password, String email, String cookie) {
         return webTestClient.post()
-                .uri("/accounts/user").header("Cookie", cookie)
+                .uri(ACCOUNT_URL + "/user").header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("name", name)

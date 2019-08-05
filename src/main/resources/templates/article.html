@@ -19,10 +19,10 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a th:href="@{/articles/{id}/edit(id=${article.id})}" class="float-right pointer btn btn-icon">
+                <a  th:if="${session.user != null && session.user.getId() == article.author.id}" th:href="@{/articles/{id}/edit(id=${article.id})}" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
-                <form th:action="@{/articles/{id}(id=${article.id})}" name="article" method="post"
+                <form th:if="${session.user != null && session.user.getId() == article.author.id}" th:action="@{/articles/{id}(id=${article.id})}" name="article" method="post"
                       accept-charset="utf-8">
                     <input type="hidden" name="_method" value="delete"/>
                     <button id="delete-btn" type="submit" class="float-right pointer btn btn-icon">
@@ -38,7 +38,7 @@
                              src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                     </div>
                     <div class="col-md-10 col-sm-7">
-                        <span class="font-size-16 text-bold pdd-btm-5">Brown</span><span class="font-size-12 text-gray"> / gracefulBrown@woowahan.com</span>
+                        <span class="font-size-16 text-bold pdd-btm-5" th:text="${article.author.name}">Brown</span><span class="font-size-12 text-gray" th:text="${article.author.email}"> / gracefulBrown@woowahan.com</span>
                         <p class="font-size-13 text-dimgray lh-1-3">
                             백엔드 개발자: 설계.테스트.생산성.클린코드.멘토링에 관심이 많음 <br>
                             Woowahantechcourse Organizer / Coach / Husband
@@ -61,42 +61,41 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info">2</span>
+                    <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
                 </div>
                 <div class="comment">
                     <ul class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30">
+                        <li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
+                        <form th:action="${'/comment/' + comment.id}" th:method="delete">
                             <img class="thumb-img img-circle"
-                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+                            src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                             <div class="info">
-                                <span href="" class="text-bold inline-block">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
-                            </span>
-                                <p class="width-80">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로 살다
+                                <span href="" th:text="${comment.user.name}" class="text-bold inline-block">Jun</span>
+                                <div th:if="${session.user != null && session.user.id == comment.user.id}">
+                                <button id="comment-edit-btn" type="submit" class="float-right pointer btn btn-icon">
+                                    <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                                </button>
+                                <a th:href="@{/comment/{id}/edit(id=${comment.id})}" id="comment-delete-btn" type="submit" class="float-right pointer btn btn-icon">
+                                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                </a>
+                                </div>
+                                <p class="width-80" th:text="${comment.contents}">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로 살다
                                     보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄
                                     수 있는 계기가 되었다.</p>
                             </div>
+                        </form>
                         </li>
-
-                        <li class="comment-item border bottom mrg-btm-30">
-                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4"
-                                 alt="">
-                            <div class="info">
-                                <span href="" class="text-bold inline-block">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
-                                </span>
-                                <p class="width-80">브라운 멋져</p>
-                            </div>
-                        </li>
-
                     </ul>
+                    <form action="/comment" method="post">
                     <div class="add-comment">
+                        <input id="comment-contents" name="contents" type="hidden">
+                        <input name="articleId" type="hidden" th:value="${article.id}">
                         <div id="editSection"></div>
                     </div>
+                    <button th:if="${session.user != null}" id="comment-btn" type="submit" class="float-right pointer btn btn-icon">
+                        Comment
+                    </button>
+                </form>
                 </div>
             </div>
         </div>
@@ -122,6 +121,7 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
+                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
             }
         },
         height: '200px'

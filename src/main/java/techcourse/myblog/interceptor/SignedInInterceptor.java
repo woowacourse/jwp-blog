@@ -1,21 +1,19 @@
-package techcourse.myblog.web.interceptor;
+package techcourse.myblog.interceptor;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Slf4j
-public class LoginInterceptor extends HandlerInterceptorAdapter {
+public class SignedInInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if ("/accounts/user".equals(request.getRequestURI()) && "POST".equals(request.getMethod())) {
+        if ("/accounts/user".equals(request.getRequestURI()) && "DELETE".equals(request.getMethod())) {
             return true;
         }
 
-        if (request.getSession().getAttribute("user") == null) {
-            response.sendRedirect("/login");
+        if (request.getSession().getAttribute("user") != null) {
+            response.sendRedirect("/");
             return false;
         }
 

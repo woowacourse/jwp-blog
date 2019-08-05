@@ -14,13 +14,13 @@
             </div>
         </div>
     </div>
-<form th:method="put" action="/accounts/profile/edit" th:object="${userDto}">
+<form th:method="put" th:action="${'/accounts/profile/' + session.user.id}" th:object="${userDto}">
     <div class="container-fluid max-width-lg mx-auto mrg-btm-30 padding-30">
         <div class="row">
             <div class="col-md-7 mx-auto">
                 <div class="card">
                     <input type="hidden" th:value="${session.user.password}" name="password">
-                    <input type="hidden" th:value="${session.user.id}" name="id">
+<!--                    <input type="hidden" th:value="${session.user.id}" name="id">-->
                     <div class="card-heading pdd-btm-5 border bottom">
                         <h4 class="card-title d-inline-block">profile</h4>
                         <button type="submit" class="btn btn-info float-right mrg-btm-0 relative bottom-5">수정</button>

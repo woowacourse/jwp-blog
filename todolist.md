@@ -105,19 +105,29 @@
 (추가)
 
 - [ ] readme 생성 (todolist와 분리)
-
-- [ ] url /articles를 prefix로 빼기 (/writing -> /articles/writing)
+- [ ] url /articles를 prefix로 빼기 (/writing -> /)
 - [x] ~~html에서 form 중복 제거하기 (article-edit.html)~~
 - [x] ~~html에서 form 중복 제거하기 (header.html)~~
-- [ ] article entity lombok @Data 대신 바꾸기
 - [ ] 테스트할 땐 db가 h2로 못가나? 
 - [ ] 자기가 쓴 글만 수정할 수 있도록 하기.
 - [ ] 로그인 필수 페이지 접근 시 로그인 시도 후 원래 가려던 페이지로 가기
 - [ ] ~~/accounts/users를 post /accounts/signup으로 변경~~
 - [ ] 이미지....이미지......
 - [ ] login.html / signup.html 에서 logo부분 중복 제거 (header.html 에 포함된 부분)
-- [ ] AccountController가 너무 많이 가지고있는듯...?  무슨 기준으로 나누지 테스트도 연관되어있어서
+- [x] ~~AccountController가 너무 많이 가지고있는듯...?  무슨 기준으로 나누지 테스트도 연관되어있어서 -> 테스트가 많은건 상관 없다!~~
 - [x] ~~drop menu 에서 로그인/비로그인 상관 없이 기본인 거 중복 제거~~
 - [ ] 로그인 페이지에서 회원가입 버튼 랜딩 url /accounts/signup으로 변경
 - [ ] DB 저장시 비밀번호 암호화
 - [ ] restful api 설계... url 이름들 변경하기
+- [ ] article entity lombok @Data 대신 바꾸기
+- [x] ~~HelloWorldCountroller : @RestController로 변경~~
+- [x] ~~Entity에서 id를 기본 자료형에서 참조자료형을 변경~~
+- [x] ~~https://stackoverflow.com/questions/3535791/primitive-or-wrapper-for-hibernate-primary-keys 읽기~~
+- [x] ~~DTO는 어느 패키지에? 패키지를 따로 나눠야하나 -> 일단 도메인 영역은 아닌걸로! 컨트롤러 패키지로 이동시킴~~
+- [x] ~~https://www.slipp.net/questions/93 읽기~~
+- [x] ~~gradle에서 implementation 대신 runtimeOnly로 변경~~
+- [ ] user entity에서 update 구현 (왜 jpa는 update가 없을까) (더티체킹)
+- [x] ~~user entity에서 setter 없애기~~
+- [ ] @bean vs @component ? 기본적으로 bean 주입은 component만 한다.
+- [ ] boolean existsByEmail()로
+- [ ] final 붙이자! 
