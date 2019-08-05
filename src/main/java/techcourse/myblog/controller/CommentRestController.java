@@ -20,6 +20,7 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentRequest;
 import techcourse.myblog.dto.CommentResponse;
+import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 
@@ -56,6 +57,9 @@ public class CommentRestController {
     @PostMapping
     public CommentResponse save(@RequestBody CommentRequest commentRequest) {
         User user = userSessionManager.getUser();
+        if (user == null) {
+            throw new UnauthorizedException();
+        }
         Article article = articleService.select(commentRequest.getArticleId());
         Comment comment = new Comment(commentRequest.getContents(), user, article);
         Comment savedComment = commentService.save(comment);

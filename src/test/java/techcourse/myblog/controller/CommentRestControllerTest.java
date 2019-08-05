@@ -120,11 +120,6 @@ public class CommentRestControllerTest extends WebClientGenerator {
                 .when()
                 .delete("http://localhost:" + port + "/comments/" + 2);
 
-//        Map<String, String> comment = response.getBody()
-//                .jsonPath()
-//                .get("");
-//
-//        assertThat(comment.get("contents")).isEqualTo(commentRequest.getContents());
     }
 
     @Test
