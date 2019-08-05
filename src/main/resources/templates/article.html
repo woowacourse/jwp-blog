@@ -88,11 +88,11 @@
                             <th:block th:if="${comment.authorId == session.loggedInUser?.id}">
                                 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
                                         data-target="#myModal"
-                                        th:onclick="'changeCommentEditAction(' + ${article.id} + ', ' + ${comment.id} + ')'">
+                                        th:value="${comment.id}">
                                     <i class="ti-pencil"></i>
                                 </button>
-                                <button id="delete-btn" class="btn" th:value="${comment.id}">
-                                    <i class="ti-trash"></i>
+                                <button class="btn delete-comment" th:value="${comment.id}">
+                                    🗑️
                                 </button>
                             </th:block>
                         </li>
@@ -118,17 +118,15 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">댓글 수정</h4>
             </div>
-            <form id="comment-edit-form" action="/articles/1/comment/1" method="post">
-                <input type="hidden" name="_method" value="put"/>
-                <div class="modal-body">
-                    <input id="comment-edit-contents" name="comment" type="hidden">
-                    <div id="commentEditSection"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-                    <button type="submit" class="btn btn-primary">수정</button>
-                </div>
-            </form>
+            <div class="modal-body">
+                <input type="hidden" id="comment-update-url" value=""/>
+                <input id="comment-edit-contents" name="comment" type="hidden">
+                <div id="commentEditSection"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="comment-update-button" class="btn btn-primary">수정</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+            </div>
         </div>
     </div>
 </div>
@@ -151,11 +149,11 @@
         "                            </div>\n" +
         "                                <button type=\"button\" class=\"btn btn-primary btn-lg\" data-toggle=\"modal\"\n" +
         "                                        data-target=\"#myModal\"\n" +
-        "                                        onclick=\"'changeCommentEditAction([[${article.id}]],{{commentId}})'\">\n" +
+        "                                        value=\"{{commentId}}\">\n" +
         "                                    <i class=\"ti-pencil\"></i>\n" +
         "                                </button>\n" +
-        "                                <button id=\"delete-btn\" class=\"btn\" value=\"{{commentId}}\">\n" +
-        "                                    <i class=\"ti-trash\"></i>\n" +
+        "                                <button class=\"btn delete-comment\" value=\"{{commentId}}\">\n" +
+        "                                   🗑️\n" +
         "                                </button>\n" +
         "                        </li>"
 
@@ -193,8 +191,9 @@
     });
 
     function changeCommentEditAction(articleId, commentId) {
-        const action = "/articles/" + articleId + "/comment/" + commentId
-        document.getElementById('comment-edit-form').setAttribute('action', action)
+        const url = "/articles/" + articleId + "/comment/" + commentId;
+        console.log("url is " + url);
+        document.getElementById('comment-update-url').setAttribute('value', url);
     }
 
     document.getElementById("save-btn").addEventListener("click", function (e) {
@@ -225,7 +224,59 @@
                             , "commentAuthorName": json.authorName
                         }))
             })
-    })
+    });
+
+    const handleUpdate = function (e) {
+        console.log("update 실행");
+        const url = document.getElementById("comment-update-url").value;
+        const URL = "http://localhost:8080/" + url;
+        const obj = {
+            method: 'PUT',
+            body: JSON.stringify({
+                comment: document.getElementById("comment-edit-contents").value
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        };
+
+        fetch(URL, obj)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (json) {
+                console.log(json);
+                const modal = document.getElementById("myModal");
+
+                modal.classList.remove("show");
+                $('#modal').modal('hide');
+                const items = document.getElementsByClassName("btn delete-comment");
+
+                for (const i in items) {
+                     console.log(items[i].value)
+                    if (items[i].value == json.id) {
+                        console.log("수정!")
+                        items[i].parentNode.querySelector("p").innerText = json.comment;
+                        return;
+                    }
+                }
+            })
+
+    };
+
+    document.getElementById("comment-update-button").addEventListener("click", handleUpdate);
+
+    const handleDelete = function (e) {
+        console.log("delete 실행");
+        const url = document.getElementById("comment-update-url").value;
+        const URL = "http://localhost:8080/" + url;
+        fetch(URL)
+            .then(function (response) {
+                console.log("삭제 결과물 " + response);
+            })
+
+    }
+
 
 </script>
 </html>
