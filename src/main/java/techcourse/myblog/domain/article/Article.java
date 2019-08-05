@@ -2,9 +2,7 @@ package techcourse.myblog.domain.article;
 
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
-import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
 import techcourse.myblog.exception.UserHasNotAuthorityException;
-import techcourse.myblog.exception.UserNotLogInException;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -46,20 +44,15 @@ public class Article {
         this.author = Objects.requireNonNull(author);
     }
 
-    public void update(final Article article, final String email) {
-        if (Objects.isNull(article)) {
-            throw new ArticleToUpdateNotFoundException();
+    public void update(final Article article) {
+        if (author.match(article.getAuthor())) {
+            this.title = article.getTitle();
+            this.coverUrl = article.getCoverUrl();
+            this.contents = article.getContents();
+            this.author = article.getAuthor();
+            return;
         }
-        if (Objects.isNull(email)) {
-            throw new UserNotLogInException();
-        }
-        if (!author.match(email)) {
-            throw new UserHasNotAuthorityException();
-        }
-        this.title = article.getTitle();
-        this.coverUrl = article.getCoverUrl();
-        this.contents = article.getContents();
-        this.author = article.getAuthor();
+        throw new UserHasNotAuthorityException();
     }
 
     public Long getId() {

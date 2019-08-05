@@ -61,14 +61,10 @@ public class ArticleService {
     }
 
     @Transactional
-    public void update(final Long id, final ArticleRequest articleDTO, final UserResponse user) {
-        Objects.requireNonNull(articleDTO);
-        articleRepository.findById(Objects.requireNonNull(id))
-                .ifPresent((retrieveArticle -> retrieveArticle.update(new Article(
-                        articleDTO.getTitle(),
-                        articleDTO.getCoverUrl(),
-                        articleDTO.getContents(),
-                        retrieveArticle.getAuthor()), Objects.requireNonNull(user).getEmail())));
+    public void update(final Long id, final ArticleRequest articleRequest, final UserResponse accessUser) {
+        Article retrieveArticle = articleRepository.findById(id).orElseThrow(ArticleNotFoundException::new);
+        User user = userRepository.findById(accessUser.getId()).orElseThrow(UserNotFoundException::new);
+        retrieveArticle.update(convertToEntity(articleRequest, user));
     }
 
     public void delete(final Long id) {

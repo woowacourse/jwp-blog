@@ -213,7 +213,7 @@ public class ArticleControllerTests {
                         .with("contents", "newContents"))
                 .exchange()
                 .expectStatus().is3xxRedirection()
-                .expectHeader().valueMatches("location", ".*/articles/\\d*");
+                .expectHeader().valueMatches("location", ".*/");
     }
 
     @Test

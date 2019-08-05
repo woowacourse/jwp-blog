@@ -38,12 +38,9 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public String updateArticle(@PathVariable final Long id, final ArticleRequest articleDTO, final HttpSession session) {
+    public String updateArticle(@PathVariable final Long id, final ArticleRequest article, final HttpSession session) {
         UserResponse user = (UserResponse) session.getAttribute(USER_SESSION_KEY);
-        if (!user.getId().equals(articleService.findAuthor(id).getId())) {
-            return "redirect:/articles/" + id;
-        }
-        articleService.update(id, articleDTO, user);
+        articleService.update(id, article, user);
         return "redirect:/articles/" + id;
     }
 
