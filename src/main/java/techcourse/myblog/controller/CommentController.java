@@ -2,7 +2,8 @@ package techcourse.myblog.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -16,10 +17,11 @@ import techcourse.myblog.exception.NotFoundCommentException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.service.dto.CommentDTO;
+import techcourse.myblog.service.dto.ResponseMessage;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Controller
+@RestController
 @RequestMapping("/articles/{articleId}/comments")
 public class CommentController {
     private final CommentRepository commentRepository;
@@ -32,18 +34,16 @@ public class CommentController {
     }
 
     @PostMapping
-    public RedirectView create(@ModelAttribute CommentDTO commentDTO,
-                               @PathVariable long articleId,
-                               @UserFromSession User user) {
-
+    public ResponseEntity<ResponseMessage> create(@RequestBody CommentDTO commentDTO,
+                                                  @PathVariable long articleId,
+                                                  @UserFromSession User user) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
         Comment comment = commentDTO.toDomain(article, user);
-
         article.add(comment);
         commentRepository.save(comment);
-
-        return new RedirectView("/articles/" + articleId);
+        ResponseMessage responseMessage = new ResponseMessage("success", comment.getId().toString(), "", "");
+        return new ResponseEntity<ResponseMessage>(responseMessage, HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")
