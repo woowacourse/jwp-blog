@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <th:block th:include="includes/common-head"></th:block>
+    <th:block th:include="fragments/head"></th:block>
+
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/customize.css">
+    <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
@@ -10,50 +14,20 @@
         <div class="header-container">
             <ul class="nav-left mrg-left-0">
                 <li>
-                    <a href="index.html">
-                        <div class="logo logo-dark d-none"
-                             style="background-image: url('/images/logo/logo_full_dark.png')"></div>
-                        <div class="logo logo-white"
-                             style="background-image: url('/images/logo/logo_full_white.png')"></div>
+                    <a href="/">
+                        <div class="logo logo-dark d-none" style="background-image: url('/images/logo/logo_full_dark.png')"></div>
+                        <div class="logo logo-white" style="background-image: url('/images/logo/logo_full_white.png')"></div>
                     </a>
                 </li>
             </ul>
             <ul class="nav-right">
-                <th:block th:if="${user}">
-                <li id="header-user-dropdown-btn" class="user-profile dropdown no-border pointer">
-                    <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
-                        <img class="profile-img img-fluid" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="Brown">
-                        <div class="user-info text-white">
-                            <span class="name pdd-right-5" th:text="${user.name}" >Brown</span>
-                            <i class="ti-angle-down font-size-10"></i>
-                        </div>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="text-dark">
-                            <a href="/mypage">
-                                <i class="ti-user pdd-right-10"></i>
-                                <span class="text-dark">마이 페이지</span>
-                            </a>
-                        </li>
-                        <li role="separator" class="divider"></li>
-                        <li class="text-dark">
-                            <a href="/logout">
-                                <i class="ti-power-off pdd-right-10"></i>
-                                <span class="text-dark">로그아웃</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                </th:block>
-                <th:block th:unless="${user}">
                 <li class="user-profile">
-                    <a href="/login">
+                    <a th:href="${email} ? '/mypage' : '/login'">
                         <div class="user-info login-btn pointer mrg-right-10">
-                            <span class="name pdd-right-5 text-white">Login</span>
+                            <span th:text="${email} ? ${email} : 'Login'" class="name pdd-right-5 text-white"></span>
                         </div>
                     </a>
                 </li>
-                </th:block>
             </ul>
         </div>
     </header>
@@ -62,7 +36,7 @@
         <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
         <div class="welcome-text-container">
             <div class="welcome-txt">
-                <h1 class="text-white border bottom font-size-35 padding-5">우아한테크코스</h1>
+                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
             </div>
         </div>
     </div>
@@ -83,47 +57,40 @@
                             <a href="#tab-centered-3" class="nav-link" role="tab" data-toggle="tab">Learning</a>
                         </li>
                     </ul>
-                    <div class="width-100 fixed left-0 border bottom"></div>
+                    <div class="width-100 absolute left-0 border bottom"></div>
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
-                            <div class="pdd-horizon-15 pdd-vertical-20" th:each="articleDTO : ${articleDtos}">
-                                <a href="article.html" th:href="@{/articles/{id}(id=${articleDTO.id})}" class="card article-container">
-                                    <div class="card-horizon">
-                                        <div class="image-container col-md-4">
-                                            <div class="background-holder has-content"
-                                                 style="background-image: url('/images/pages/index/study.jpg')"></div>
-                                        </div>
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col-md-8 ml-auto">
-                                                    <div class="pdd-vertical-30 pdd-horizon-25">
-                                                        <h2 class="mrg-btm-20 text-bold" th:text="${articleDTO.title}">-</h2>
-                                                        <p th:text="${articleDTO.contents}">-</p>
-                                                        <ul class="list-style-none pdd-left-0">
-                                                            <li class="inline-block mrg-right-5">
-                                                                <i class="ti-heart text-danger pdd-right-5"></i>
-                                                                <span class="text-gray font-size-14 relative">33</span>
-                                                            </li>
-                                                            <li class="inline-block">
-                                                                <i class="ti-comments text-primary pdd-right-5"></i>
-                                                                <span class="text-gray font-size-14 relative">3</span>
-                                                            </li>
-                                                        </ul>
+                        <div th:unless="${#lists.size(articles)}">아직은 글이 존재하지 않습니다.</div>
+                        <div th:each="article : ${articles}">
+                            <div role="tabpanel" class="tab-pane fade in active" th:id="'tab-centered-' + ${article.id}">
+                                <div class="pdd-horizon-15 pdd-vertical-20">
+                                    <a th:href="'articles/' + ${article.id}" class="card article-container">
+                                        <div class="card-horizon">
+                                            <div class="image-container col-md-4">
+                                                <div class="background-holder has-content" th:style="'background:url(' + ${article.coverUrl} + ');'"></div>
+                                            </div>
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-md-8 ml-auto">
+                                                        <div class="pdd-vertical-30 pdd-horizon-25">
+                                                            <h2 class="mrg-btm-20 text-bold" th:text="${article.title}"></h2>
+                                                            <p th:text="${article.contents}"></p>
+                                                            <ul class="list-style-none pdd-left-0">
+                                                                <li class="inline-block mrg-right-5">
+                                                                    <i class="ti-heart text-danger pdd-right-5"></i>
+                                                                    <span class="text-gray font-size-14 relative">33</span>
+                                                                </li>
+                                                                <li class="inline-block">
+                                                                    <i class="ti-comments text-primary pdd-right-5"></i>
+                                                                    <span class="text-gray font-size-14 relative">3</span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab-centered-2">
-                            <div class="pdd-horizon-15 pdd-vertical-20">
-
-                            </div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade" id="tab-centered-3">
-                            <div class="pdd-horizon-15 pdd-vertical-20">
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -132,8 +99,7 @@
             <div class="col-lg-3"></div>
         </div>
 
-        <a href="/writing"
-           class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
+        <a href="writing" class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
             <i class="ti-plus"></i>
         </a>
 
@@ -144,13 +110,14 @@
     <div class="footer">
         <div class="copyright">
             <img class="d-inline-block logo relative right-5" src="/images/logo/logo_full_dark.png">
-            <p class="pdd-left-5 mrg-top-minus-15px">Copyright © <b class="text-dark">우아한테크코스</b>. All rights reserved.
-            </p>
+            <p class="pdd-left-5 mrg-top-minus-15px">Copyright © <b class="text-dark">우아한테크코스</b>. All rights reserved.</p>
         </div>
-        <a href="https://woowabros.github.io/" target="_blank" class="btn btn-default btn-rounded bg-transparent">우아한형제들
-            기술블로그</a>
+        <a href="https://woowabros.github.io/" target="_blank" class="btn btn-default btn-rounded bg-transparent">우아한형제들 기술블로그</a>
     </div>
 </footer>
-<th:block th:include="includes/common-js"></th:block>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+<th:block th:include="fragments/body"></th:block>
 </body>
 </html>

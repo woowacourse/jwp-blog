@@ -1,49 +1,81 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
-
 
 @Entity
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
+
     private String title;
+    @Lob
     private String coverUrl;
     private String contents;
 
-    public Article() {
+    @ManyToOne
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User author;
+
+    private Article() {
     }
 
-    public Article(final String title, final String coverUrl, final String contents) {
-        checkNull(title, coverUrl, contents);
+    public static class ArticleBuilder {
+        private String title;
+        private String coverUrl;
+        private String contents;
+        private User author;
+
+        public ArticleBuilder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public ArticleBuilder coverUrl(String coverUrl) {
+            this.coverUrl = coverUrl;
+            return this;
+        }
+
+        public ArticleBuilder contents(String contents) {
+            this.contents = contents;
+            return this;
+        }
+
+        public ArticleBuilder author(User author) {
+            this.author = author;
+            return this;
+        }
+
+        public Article build() {
+            return new Article(this);
+        }
+    }
+
+    public Article(ArticleBuilder articleBuilder) {
+        this.title = articleBuilder.title;
+        this.coverUrl = articleBuilder.coverUrl;
+        this.contents = articleBuilder.contents;
+        this.author = articleBuilder.author;
+    }
+
+    public Article(String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
     }
 
-    private void checkNull(String title, String coverUrl, String contents) {
-        if (Objects.isNull(title) || Objects.isNull(coverUrl) || Objects.isNull(contents)) {
-            throw new NullPointerException();
-        }
-    }
-
-    public void update(final Article article) {
-        if (Objects.isNull(article)) {
-            throw new ArticleToUpdateNotFoundException("업데이트 해야할 게시글이 없습니다.");
-        }
+    public void modify(Article article) {
         this.title = article.getTitle();
         this.coverUrl = article.getCoverUrl();
         this.contents = article.getContents();
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -59,19 +91,31 @@ public class Article {
         return contents;
     }
 
+    public User getAuthor() {
+        return author;
+    }
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return id == article.id &&
-                Objects.equals(title, article.title) &&
-                Objects.equals(coverUrl, article.coverUrl) &&
-                Objects.equals(contents, article.contents);
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Article article = (Article) object;
+        return Objects.equals(id, article.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents);
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                ", author='" + author + '\'' +
+                '}';
     }
 }
