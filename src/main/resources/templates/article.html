@@ -26,12 +26,11 @@
                     <a th:if="${article.author.equals(user)}" th:href="'/articles/' + ${article.id} + '/edit'" class="pointer btn btn-icon">
                         <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                     </a>
-                    <form th:if="${article.author.equals(user)}" method="post" th:action="'/articles/' + ${article.id}" class="form">
-                        <input name="_method" type="hidden" value="DELETE" />
-                        <button class="btn btn-icon pointer" id="article-delete-button" type="submit">
+                    <div th:if="${article.author.equals(user)}" class="form">
+                        <button class="btn btn-icon pointer" id="article-delete-button" type="button">
                             <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
                         </button>
-                    </form>
+                    </div>
                 </div>
                 <div id="viewerSection"></div>
             </div>
@@ -83,12 +82,11 @@
                                         <button class="btn btn-icon pointer comment-modify" type="button">
                                             <i class ="ti-pencil text-dark font-size-16 pdd-horizon-5 comment-modify"></i>
                                         </button>
-                                        <form  method="post" th:action="${article.id} + '/comment/'+ ${comment.id}" class="form">
-                                            <input name="_method" type="hidden" value="DELETE" />
-                                            <button type="submit" class="btn btn-icon pointer">
-                                                <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
+                                        <div class="form">
+                                            <button type="button" th:value="${comment.id}" class="btn btn-icon pointer comment-remove-button">
+                                                <i class ="ti-trash text-dark font-size-16 pdd-horizon-5 comment-remove-button" th:value="${comment.id}"></i>
                                             </button>
-                                        </form>
+                                        </div>
                                     </div>
                                 </span>
                                 <p class="width-80" th:id="'comment-' + ${comment.id} + '-contents'" th:text="${comment.contents}"></p>
@@ -96,7 +94,7 @@
                             <form  method="post" th:action="${article.id} + '/comment/'+ ${comment.id}" class="edit edit-form">
                                 <input name="_method" type="hidden" value="PUT" />
                                 <input class="edit" th:id="'comment-' + ${comment.id}"name="contents" th:value="${comment.contents}">
-                                <button type="button" th:id="${comment.id}" class="btn btn-default comment-modify-button comment-modify">
+                                <button type="button" th:value="${comment.id}" class="btn btn-default comment-modify-button comment-modify">
                                     <i class="ti-save "></i>
                                 </button>
                                 <button type="button" class="btn btn-default comment-modify">
@@ -126,12 +124,11 @@
         <button class="btn btn-icon pointer comment-modify" type="button">
             <i class ="ti-pencil text-dark font-size-16 pdd-horizon-5 comment-modify"></i>
         </button>
-        <form  method="post" action="{{article.id}}/comment/{{id}}" class="form">
-            <input name="_method" type="hidden" value="DELETE" />
-            <button type="submit" class="btn btn-icon pointer">
-                <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
+        <div class="form">
+            <button type="button" class="btn btn-icon pointer comment-remove-button" value="{{id}}">
+                <i class ="ti-trash text-dark font-size-16 pdd-horizon-5 comment-remove-button" value="{{id}}"></i>
             </button>
-        </form>
+        </div>
     </div>
 </script>
 <script id="comment-template" type="rv-template">
@@ -148,7 +145,7 @@
         </div>
         <div class="edit edit-form">
             <input class="edit" id="comment-{{id}}" name="contents" value="{{contents}}">
-            <button type="button" id="{{id}}" class="btn btn-default comment-modify-button comment-modify">
+            <button type="button" class="btn btn-default comment-modify-button comment-modify" value="{{id}}">
                 <i class="ti-save"></i>
             </button>
             <button type="button" class="btn btn-default comment-modify">
@@ -196,9 +193,15 @@
                 commentList.addEventListener('click', commentService.modify);
             };
 
+            const removeComment = function() {
+                const commentList = document.getElementById('comment-list');
+                commentList.addEventListener('click', commentService.remove);
+            };
+
             const init = function() {
                 saveComment();
                 updateComment();
+                removeComment();
             };
 
             return {
@@ -233,7 +236,7 @@
                 if (!event.target.classList.contains('comment-modify-button')) {
                     return;
                 }
-                const commentId = event.target.id;
+                const commentId = event.target.value;
                 const inputComment = document.querySelector('#comment-' + commentId);
 
                 fetch('/articles/' + articleId + '/comment/' + commentId, {
@@ -252,6 +255,27 @@
                 }).then(json => {
                     const commentContents = document.querySelector('#comment-'+commentId+'-contents');
                     commentContents.innerText = json.contents;
+                }).catch(error => {
+                    error.json().then(json => alert(json.message));
+                });
+            };
+
+            const remove = (event) => {
+                if (!event.target.classList.contains('comment-remove-button')) {
+                    return;
+                }
+                const commentId = event.target.value;
+
+                fetch('/articles/' + articleId + '/comment/' + commentId, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.status === 200) {
+                        return response.text();
+                    }
+                    throw response;
+                }).then(text => {
+                    event.target.closest("LI").remove();
+                    alert(text);
                 }).catch(error => {
                     error.json().then(json => alert(json.message));
                 });
@@ -306,7 +330,8 @@
             return {
                 save: save,
                 modifyToggle: modifyToggle,
-                modify: modify
+                modify: modify,
+                remove: remove
             }
         };
 

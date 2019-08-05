@@ -28,9 +28,4 @@ public class CommentReadService {
     public List<Comment> findByArticleId(Long articleId) {
         return Collections.unmodifiableList(commentRepository.findByArticleId(articleId));
     }
-
-    public Comment findByIdAndWriter(Long commentId, User user) {
-        return commentRepository.findByIdAndWriter(commentId, user)
-                .orElseThrow(NotFoundCommentException::new);
-    }
 }

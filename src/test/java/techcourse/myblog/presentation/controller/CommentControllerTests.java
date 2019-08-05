@@ -14,6 +14,7 @@ import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.presentation.controller.common.ControllerTestTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpMethod.*;
 import static techcourse.myblog.utils.ArticleTestObjects.ARTICLE_DTO;
 import static techcourse.myblog.utils.CommentTestObjects.COMMENT_DTO;
@@ -22,6 +23,7 @@ import static techcourse.myblog.utils.UserTestObjects.READER_DTO;
 
 class CommentControllerTests extends ControllerTestTemplate {
     private static final String MISMATCH_COMMENT_AUTHOR_EXCEPTION_MESSAGE = "댓글 작성자가 아닙니다.";
+    private static final String DELETE_SUCCESS_MESSAGE = "삭제가 완료되었습니다.";
 
     @Autowired
     private CommentRepository commentRepository;
@@ -69,21 +71,31 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 작성자_로그인_상태_댓글삭제_성공() {
-        String commentUrl = getCommentUrl();
-        String redirectUrl = getRedirectUrl(loginAndRequestWriter(DELETE, commentUrl));
-    
-        assertEquals(redirectUrl, savedArticleUrl);
+        webTestClient.delete().uri(getCommentUrl())
+                .cookie("JSESSIONID", getLoginSessionId(savedUserDto))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(response -> {
+                    String result = new String(response.getResponseBody());
+                    assertTrue(result.contains(DELETE_SUCCESS_MESSAGE));
+                })
+        ;
     }
 
     @Test
     void 작성자가_아닌_사용자_로그인_상태_댓글삭제_실패() {
         UserDto other = READER_DTO;
         userRepository.save(other.toUser());
+        webTestClient.delete().uri(getCommentUrl())
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .cookie("JSESSIONID", getLoginSessionId(other))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo(MISMATCH_COMMENT_AUTHOR_EXCEPTION_MESSAGE)
+        ;
 
-        String commentUrl = getCommentUrl();
-        String redirectUrl = getRedirectUrl(loginAndRequest(DELETE, commentUrl, other));
-    
-        assertEquals("/", redirectUrl);
     }
 
     @Test
