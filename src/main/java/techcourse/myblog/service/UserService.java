@@ -41,7 +41,7 @@ public class UserService {
     }
 
     public User findUserByEmail(UserLoginRequest userLoginRequest) {
-        User user = userRepository.findUserByEmail(userLoginRequest.getEmail())
+        User user = userRepository.findByEmail(userLoginRequest.getEmail())
                 .orElseThrow(() -> new LoginException("email 없음"));
 
         checkPassword(userLoginRequest, user);
