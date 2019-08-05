@@ -68,8 +68,8 @@
                         </button>
                     </a>
                 </form>
-                <a th:href="'/articles/' + ${article.id} + '/edit'" class="float-right pointer btn btn-icon">
-                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                < a th:href="'/articles/' + ${article.id} + '/edit'" class="float-right pointer btn btn-icon">
+                <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
                 <div id="articleId" th:text="${article.id}" type="hidden"></div>
                 <div id="viewerSection"></div>
@@ -123,21 +123,14 @@
                                     </span>
 
                                     <div th:if="${comment.matchAuthor}">
-                                        <!-- <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}">
-                                            <input type="hidden" name="_method" value="put"/> -->
                                         <button type="button" class="float-right pointer btn btn-icon"
                                                 th:onclick="'clickPencil('+${article.id}+', '+${comment.id}+')'">
                                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                                         </button>
-                                        <!-- </form>
-    -->
-                                        <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}"
-                                              method="post">
-                                            <input type="hidden" name="_method" value="DELETE"/>
-                                            <button type="submit" class="float-right pointer btn btn-icon">
-                                                <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
-                                            </button>
-                                        </form>
+
+                                        <button type="submit" class="float-right pointer btn btn-icon">
+                                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                                        </button>
                                     </div>
 
 
@@ -223,8 +216,6 @@
     function saveComment() {
         const contents = document.getElementById('comment-contents').value;
         const articleId = document.getElementById('articleId').innerText;
-        const id =
-            console.log(contents);
         console.log(articleId);
         const email = [[${sessionEmail}]];
         console.log(email)
@@ -248,17 +239,20 @@
                 const commentId = json.id;
                 const contents = json.contents;
                 const articleId = json.articleId;
+                const isValidUser = json.validUser;
                 console.log("json_email: " + email);
                 console.log("json_contents: " + contents);
                 console.log("json_commentId: " + commentId);
                 console.log("json_articleId: " + articleId);
-                const msg = "<ul class=\"list-unstyled list-info\">"
+                console.log("json_isvaliduser: " + isValidUser);
+                let msg = "<ul class=\"list-unstyled list-info\">"
                     + "<li class=\"comment-item border bottom mrg-btm-30\">"
                     + "<img class=\"thumb-img img-circle\" src=\"https://avatars2.githubusercontent.com/u/3433096?v=4\" alt=\"\">"
                     + "<div class=\"info\">"
                     + "<input type=\"text\" id=\"content-input1\" style=\"display:none\">"
-                    + "<span href=\"\" id='email' class=\"text-bold inline-block\">"+ email + "</span>"
+                    + "<span href=\"\" id='email' class=\"text-bold inline-block\">" + email + "</span>"
                     + "<span class=\"sub-title inline-block pull-right\">"
+                    + "<div id='visiblebuttons'></div>"
                     + "<i class=\"ti-timer pdd-right-5\"></i>"
                     + "<span>6 min ago</span>"
                     + " </span>"
@@ -266,7 +260,20 @@
                     + "</div>"
                     + "</li>"
                     + "</ul>"
-                $("#comment-div").append(msg)
+                if (isValidUser) {
+                    const update = "<button type=\"button\" class=\"float-right pointer btn btn-icon\">"
+                        + "<i class=\"ti-pencil text-dark font-size-16 pdd-horizontal-5\"></i>"
+                        + "</button>";
+                    const deleteButton = "<button type=\"submit\" class=\"float-right pointer btn btn-icon\">"
+                        + "<i class=\"ti-trash text-dark font-size-16 pdd-horizontal-5\"></i>"
+                        + "</button>";
+                    $("#comment-div").append(msg)
+                    $("#visiblebuttons").append(update)
+                    $("#visiblebuttons").append(deleteButton)
+                } else {
+                    $("#comment-div").append(msg)
+                }
+
             })
     }
 

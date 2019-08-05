@@ -67,12 +67,16 @@ public class CommentService {
         }
     }
 
-    public CommentJsonDto saveJson(CommentJsonDto commentJsonDto) {
-        User author = userService.findUserByEmail(commentJsonDto.getEmail());
+    public CommentJsonDto saveJson(CommentJsonDto commentJsonDto,String loginUserEmail) {
+        String commentUserEmail = commentJsonDto.getEmail();
+        User loginUser = userService.findUserByEmail(loginUserEmail);
+        User commentUser = userService.findUserByEmail(commentJsonDto.getEmail());
+        Boolean isValidUser = loginUser.compareEmail(commentUserEmail);
+
         Article article = articleService.findById(commentJsonDto.getArticleId());
-        Comment comment = commentConverter.toEntity(commentJsonDto.getContents(), author, article);
+        Comment comment = commentConverter.toEntity(commentJsonDto.getContents(), commentUser, article);
         Comment savedComment = commentRepository.save(comment);
-        CommentJsonDto responseCommentJsonDto = commentConverter.toCommentJsonDto(savedComment);
+        CommentJsonDto responseCommentJsonDto = commentConverter.toCommentJsonDto(savedComment,isValidUser);
         return responseCommentJsonDto;
     }
 }
