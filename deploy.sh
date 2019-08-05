@@ -22,13 +22,8 @@ CURRENT_PID=$(pgrep -f java)
 
 echo "$CURRENT_PID"
 
-if [ -z $CURRENT_PID ]; then
-    echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다."
-else
-    echo "> kill -15 $CURRENT_PID"
-    kill -15 $CURRENT_PID
-    sleep 5
-fi
+for p in `sudo lsof -n -i:8080 | grep LISTEN | awk '{print $2}'`; do sudo kill -9 $p; done
+sleep 5
 
 echo "> 새 어플리케이션 배포"
 
@@ -37,3 +32,5 @@ JAR_NAME=$(ls $REPOSITORY/ |grep 'myblog' | tail -n 1)
 echo "> JAR Name: $JAR_NAME"
 
 nohup java -jar $REPOSITORY/$JAR_NAME &
+
+/home/ubuntu/./slack.sh "배포 완료"
