@@ -35,11 +35,11 @@ public class UserTest {
 
     @Test
     void 동일회원인지_비교_확인() {
-        assertThat(user.match("done@gmail.com")).isTrue();
+        assertThat(user.match(new User("done@gmail.com", "done", "12345678"))).isTrue();
     }
 
     @Test
     void 동일회원인지_비교_확인_다른_회원일_경우() {
-        assertThat(user.match("john123@example.com")).isFalse();
+        assertThat(user.match(new User("john123@example.com", "john", "p@ssW0rd"))).isFalse();
     }
 }
