@@ -12,31 +12,31 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class MyPageController {
-    private UserService userService;
-    private LoginChecker loginChecker;
+	private UserService userService;
+	private LoginChecker loginChecker;
 
-    public MyPageController(UserService userService, LoginChecker loginChecker) {
-        this.userService = userService;
-        this.loginChecker = loginChecker;
-    }
+	public MyPageController(UserService userService, LoginChecker loginChecker) {
+		this.userService = userService;
+		this.loginChecker = loginChecker;
+	}
 
-    @GetMapping("/mypage/{id}")
-    public String showMyPage(@PathVariable("id") long id, Model model) {
-        model.addAttribute("user", userService.findUserPublicInfoById(id));
-        return "mypage";
-    }
+	@GetMapping("/mypage/{id}")
+	public String showMyPage(@PathVariable("id") long id, Model model) {
+		model.addAttribute("user", userService.findUserPublicInfoById(id));
+		return "mypage";
+	}
 
-    @GetMapping("/mypage/{id}/edit")
-    public String showMyPageEdit(@PathVariable("id") long id, Model model,
-                                 HttpSession session, RedirectAttributes redirectAttributes) {
-        String errorMessage = (String) redirectAttributes.getFlashAttributes().get("errorMessage");
-        if (errorMessage != null) {
-            model.addAttribute("errorMessage", errorMessage);
-        }
-        if (loginChecker.isLoggedInSameId(session, id)) {
-            model.addAttribute("user", userService.findUserPublicInfoById(id));
-            return "mypage-edit";
-        }
-        return "redirect:/mypage/" + id;
-    }
+	@GetMapping("/mypage/{id}/edit")
+	public String showMyPageEdit(@PathVariable("id") long id, Model model,
+	                             HttpSession session, RedirectAttributes redirectAttributes) {
+		String errorMessage = (String) redirectAttributes.getFlashAttributes().get("errorMessage");
+		if (errorMessage != null) {
+			model.addAttribute("errorMessage", errorMessage);
+		}
+		if (loginChecker.isLoggedInSameId(session, id)) {
+			model.addAttribute("user", userService.findUserPublicInfoById(id));
+			return "mypage-edit";
+		}
+		return "redirect:/mypage/" + id;
+	}
 }
