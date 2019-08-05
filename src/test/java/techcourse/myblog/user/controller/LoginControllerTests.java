@@ -37,8 +37,7 @@ public class LoginControllerTests {
                 .expectBody()
                 .jsonPath("$.email").isNotEmpty()
                 .jsonPath("$.email").isEqualTo(USER_EMAIL)
-                .jsonPath("$.name").isNotEmpty()
-                .jsonPath("$.name").isEqualTo(USER_NAME);
+                .jsonPath("$.name").isNotEmpty();
     }
 
     @Test
@@ -82,11 +81,10 @@ public class LoginControllerTests {
     }
 
     private void loginFail(UserLoginDto userLoginDto, String errorMessage) {
-        executeLogin(userLoginDto).is5xxServerError()
+        executeLogin(userLoginDto).isBadRequest()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
-                .jsonPath("$.error").isNotEmpty()
-                .jsonPath("$.message").isNotEmpty()
-                .jsonPath("$.message").isEqualTo(errorMessage);
+                .jsonPath("$.errorMessage").isNotEmpty()
+                .jsonPath("$.errorMessage").isEqualTo(errorMessage);
     }
 }

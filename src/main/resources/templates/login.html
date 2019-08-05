@@ -90,17 +90,16 @@
             })
                 .then(response => response.json())
                 .then((response) => {
-                    if (response.error) {
-                        loginError(response)
+                    if (response.errorMessage) {
+                        loginError(response.errorMessage)
                     } else {
                         location.href = 'http://localhost:8080/'
                     }
                 });
         }
 
-        function loginError(error) {
-            console.log("error : " + error);
-            alert(error.message);
+        function loginError(errorMessage) {
+            alert(errorMessage);
         }
     </script>
 </th:block>
