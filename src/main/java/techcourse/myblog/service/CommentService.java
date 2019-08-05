@@ -48,11 +48,12 @@ public class CommentService {
 	}
 
 	@Transactional
-	public void update(UserSessionDto userSessionDto, Long commentId, CommentRequestDto commentRequestDto) {
+	public Comment update(UserSessionDto userSessionDto, Long commentId, CommentRequestDto commentRequestDto) {
 		Comment comment = findById(commentId);
 		if (matchUserId(userSessionDto, comment)) {
 			comment.updateComment(commentRequestDto.getComment());
 		}
+		return comment;
 	}
 
 	@Transactional

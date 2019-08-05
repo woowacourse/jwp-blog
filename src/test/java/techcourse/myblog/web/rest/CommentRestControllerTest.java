@@ -30,7 +30,18 @@ public class CommentRestControllerTest {
     void createTest() throws IOException {
         CommentRequestDto requestDto = new CommentRequestDto(1L, "hello");
 
-        EntityExchangeResult<byte[]> jsessionid = webTestClient.post().uri("/comment")
+        EntityExchangeResult<byte[]> jsessionid = saveComment(requestDto);
+
+        String body = new String(jsessionid.getResponseBody());
+        CommentResponseDto comment = new ObjectMapper().readValue(body, CommentResponseDto.class);
+
+        assertThat(comment.getId()).isNotNull();
+        assertThat(comment.getComment()).isEqualTo("hello");
+        assertThat(comment.getAuthorName()).isEqualTo(USER_NAME);
+    }
+
+    private EntityExchangeResult<byte[]> saveComment(CommentRequestDto requestDto) {
+        return webTestClient.post().uri("/comment")
                 .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -40,12 +51,68 @@ public class CommentRestControllerTest {
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
                 .returnResult();
+    }
 
-        String body = new String(jsessionid.getResponseBody());
+    @Test
+    @DisplayName("댓글 변경 테스트")
+    void updateTest() throws IOException {
+        CommentRequestDto requestDto = new CommentRequestDto(1L, "hello");
+
+        EntityExchangeResult<byte[]> resultBySave = saveComment(requestDto);
+        String body = new String(resultBySave.getResponseBody());
         CommentResponseDto comment = new ObjectMapper().readValue(body, CommentResponseDto.class);
 
-        assertThat(comment.getId()).isNotNull();
-        assertThat(comment.getComment()).isEqualTo("hello");
-        assertThat(comment.getAuthorName()).isEqualTo(USER_NAME);
+        Long articleId = requestDto.getArticleId();
+        Long commentId = comment.getId();
+        String uri = "/articles/" + articleId + "/comment/" + commentId;
+
+        CommentRequestDto updateDto = new CommentRequestDto(1L, "update");
+
+        EntityExchangeResult<byte[]> jsessionid = webTestClient.put().uri(uri)
+                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(updateDto), CommentRequestDto.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .returnResult();
+
+        String resultByUpdate = new String(jsessionid.getResponseBody());
+        CommentResponseDto updatedComment = new ObjectMapper().readValue(resultByUpdate, CommentResponseDto.class);
+
+        assertThat(updatedComment.getId()).isNotNull();
+        assertThat(updatedComment.getComment()).isEqualTo("update");
+        assertThat(updatedComment.getAuthorName()).isEqualTo(USER_NAME);
+    }
+
+    @Test
+    @DisplayName("댓글 삭제 테스트")
+    void deleteTest() throws IOException {
+        CommentRequestDto requestDto = new CommentRequestDto(1L, "hello");
+
+        EntityExchangeResult<byte[]> resultBySave = saveComment(requestDto);
+        String body = new String(resultBySave.getResponseBody());
+        CommentResponseDto comment = new ObjectMapper().readValue(body, CommentResponseDto.class);
+
+        Long articleId = requestDto.getArticleId();
+        Long commentId = comment.getId();
+        String uri = "/articles/" + articleId + "/comment/" + commentId;
+
+        EntityExchangeResult<byte[]> jsessionid = webTestClient.delete().uri(uri)
+                .cookie("JSESSIONID", LogInControllerTest.logInAsBaseUser(webTestClient))
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .returnResult();
+
+        String resultByUpdate = new String(jsessionid.getResponseBody());
+        CommentResponseDto deletedComment = new ObjectMapper().readValue(resultByUpdate, CommentResponseDto.class);
+
+        assertThat(deletedComment.getId()).isEqualTo(commentId);
+        assertThat(deletedComment.getAuthorId()).isNull();
     }
 }
