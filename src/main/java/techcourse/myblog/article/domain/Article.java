@@ -1,5 +1,6 @@
 package techcourse.myblog.article.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import techcourse.myblog.article.exception.ArticleAuthenticationException;
 import techcourse.myblog.comment.domain.Comment;
 import techcourse.myblog.user.domain.User;
@@ -28,6 +29,7 @@ public class Article {
     private User author;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Comment> comments;
 
     public Article() {

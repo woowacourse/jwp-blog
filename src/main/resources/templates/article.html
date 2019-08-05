@@ -143,6 +143,45 @@
         document.body.appendChild(updateForm);
         updateForm.submit();
     }
+
+    function getCommentTemplate(comment) {
+        const articleId = [[${article.id}]];
+        return '<li class="comment-item border bottom mrg-btm-30">' +
+            '<img alt="" class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4">' +
+            '<div class="info">' +
+            '<span class="text-bold inline-block" href="">' + comment.commenter.name + '</span>' +
+            '<span class="sub-title inline-block pull-right">' +
+            '<a id="edit-a-' + comment.id + '" onclick="editComment(' + comment.id + ')">수정</a>' +
+            '<a id="delete-a-' + comment.id + '" onclick="deleteComment(' + articleId + ',' + comment.id + ')">삭제</a>' +
+            '<a id="update-a-' + comment.id + '" onclick="updateComment(' + articleId + ',' + comment.id + ')" style="display: none">저장</a>' +
+            '<a id="cancel-a-' + comment.id + '" onclick="cancelComment(' + comment.id + ')" style="display: none">취소</a>' +
+            '<span>' + comment.date + '</span>' +
+            '</span>' +
+            '<p id="comment-div-' + comment.id + ' class="width-80">' + comment.contents + '</p>' +
+            '<textarea class="edit" id="edit-section-' + comment.id + '" name="edit-contents" style="display: none">' + comment.contents + '</textarea>' +
+            '</div>' +
+            '</li>';
+    }
+
+    document.getElementById('save-btn').addEventListener('click', function () {
+
+        const commentList = document.getElementById('comment-list');
+
+
+        const contents = document.getElementById('comment-contents').value;
+        console.log("contents   " + contents);
+        const commentData = {contents: contents};
+
+        fetch("/comment/" + [[${article.id}]], {
+            method: "POST",
+            headers: {'Content-Type': 'application/json; charset=utf-8'},
+            body: JSON.stringify(commentData)
+        }).then(response => response.json())
+            .then(json => {
+                console.log(json);
+                commentList.insertAdjacentHTML('beforeend', getCommentTemplate(json));
+            });
+    });
 </script>
 </body>
 </html>
