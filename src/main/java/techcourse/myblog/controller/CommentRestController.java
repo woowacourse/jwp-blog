@@ -1,6 +1,7 @@
 package techcourse.myblog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,6 @@ import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentRequest;
 import techcourse.myblog.dto.CommentResponse;
-import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 
@@ -71,11 +71,7 @@ public class CommentRestController {
     @PutMapping("/{commentId}")
     public CommentResponse put(@PathVariable Long commentId, @RequestBody CommentRequest commentRequest) {
         User user = userSessionManager.getUser();
-        Comment comment = commentService.find(commentId);
-        if (!comment.isAuthorized(user)) {
-            throw new UnauthorizedException();
-        }
-        Comment editedComment = comment.update(commentRequest.getContents());
+        Comment editedComment = commentService.update(commentId, commentRequest, user);
         CommentResponse commentResponse = new CommentResponse(
                 editedComment.getId(),
                 editedComment.getContents(),
@@ -85,5 +81,11 @@ public class CommentRestController {
         return commentResponse;
     }
 
+    @DeleteMapping("/{commentId}")
+    public String delete(@PathVariable Long commentId) {
+        User user = userSessionManager.getUser();
+        commentService.delete2(commentId, user);
+        return "success!";
+    }
 
 }

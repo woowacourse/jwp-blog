@@ -38,7 +38,7 @@ public class CommentRestControllerTest extends WebClientGenerator {
                 .jsonPath()
                 .get("");
 
-        assertThat(comments.size()).isEqualTo(1);
+        assertThat(comments.size()).isNotEqualTo(0);
     }
 
     @Test
@@ -100,6 +100,42 @@ public class CommentRestControllerTest extends WebClientGenerator {
                 .body(commentRequest)
                 .when()
                 .put("http://localhost:" + port + "/comments/" + 1);
+
+        Map<String, String> responseBody = response.getBody()
+                .jsonPath()
+                .get("");
+
+        assertThat(responseBody.get("message")).isEqualTo("자신이 작성한 글만 수정/삭제가 가능합니다.");
+    }
+
+    @Test
+    public void 로그인한_유저의_본인_Comment_삭제하기() {
+        UserDto userDto = new UserDto("", "luffy@luffy.com", "12345678");
+        MultiValueMap<String, ResponseCookie> loginCookie = getLoginCookie(userDto);
+
+        Response response = given()
+                .cookie("JSESSIONID", Objects.requireNonNull(loginCookie.getFirst("JSESSIONID")).getValue())
+                .expect()
+                .statusCode(200)
+                .when()
+                .delete("http://localhost:" + port + "/comments/" + 2);
+
+//        Map<String, String> comment = response.getBody()
+//                .jsonPath()
+//                .get("");
+//
+//        assertThat(comment.get("contents")).isEqualTo(commentRequest.getContents());
+    }
+
+    @Test
+    public void 타인의_Comment_삭제하기() {
+        UserDto userDto = new UserDto("", "cony@cony.com", "12345678");
+        MultiValueMap<String, ResponseCookie> loginCookie = getLoginCookie(userDto);
+
+        Response response = given()
+                .cookie("JSESSIONID", Objects.requireNonNull(loginCookie.getFirst("JSESSIONID")).getValue())
+                .when()
+                .delete("http://localhost:" + port + "/comments/" + 1);
 
         Map<String, String> responseBody = response.getBody()
                 .jsonPath()

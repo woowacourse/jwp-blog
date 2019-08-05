@@ -25,17 +25,21 @@ public class MyBlogApplication {
             User luffy = userRepository.save(
                     new User("luffy", "luffy@luffy.com", "12345678")
             );
+
             User cony = userRepository.save(
                     new User("cony", "cony@cony.com", "12345678")
             );
-
 
             Article article = articleRepository.save(
                     new Article("제목", "", "내용", luffy)
             );
 
             commentRepository.save(
-                    new Comment("contents", luffy, article)
+                    new Comment("contents1", luffy, article)
+            );
+
+            commentRepository.save(
+                    new Comment("contents2", luffy, article)
             );
         });
     }
