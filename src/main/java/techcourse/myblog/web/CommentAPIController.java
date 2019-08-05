@@ -50,5 +50,18 @@ public class CommentAPIController {
         }
     }
 
-
+    @PutMapping("/{commentId}")
+    public ResponseEntity<BaseResponse> updateComment(@PathVariable("commentId") Long commentId,
+                                                      @RequestBody CommentRequest commentRequest,
+                                                      HttpSession httpSession) {
+        try {
+            UserResponse userResponse = (UserResponse) httpSession.getAttribute("user");
+            commentService.updateComment(commentId, userResponse, commentRequest);
+            Comment comment = commentService.findCommentById(commentId);
+            return new ResponseEntity<>(new CommentResponse(comment), HttpStatus.OK);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            throw new JsonAPIException(e.getMessage());
+        }
+    }
 }

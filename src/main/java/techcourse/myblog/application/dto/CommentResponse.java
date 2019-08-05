@@ -8,6 +8,10 @@ public class CommentResponse extends BaseResponse {
 
     private CommentDto comment;
 
+    public CommentResponse() {
+        super(" ");
+    }
+
     public CommentResponse(Comment comment) {
         super("ok");
         this.comment = new CommentDto(comment.getId(),
@@ -30,6 +34,9 @@ public class CommentResponse extends BaseResponse {
         private String contents;
         private String authorName;
         private LocalDateTime createdTime;
+
+        public CommentDto() {
+        }
 
         public CommentDto(Long id, String contents, String authorName, LocalDateTime createdTime) {
             this.id = id;
