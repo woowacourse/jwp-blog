@@ -59,8 +59,8 @@ public class BlogExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler(EmptyCommentRequestException.class)
-    public ResponseEntity<BaseResponse> handleEmptyCommentRequestException(EmptyCommentRequestException e) {
+    @ExceptionHandler(JsonAPIException.class)
+    public ResponseEntity<BaseResponse> handleJsonAPIException(JsonAPIException e) {
         return new ResponseEntity<>(new ErrorResponse(e), HttpStatus.BAD_REQUEST);
     }
 }
