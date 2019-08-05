@@ -76,7 +76,7 @@
                     <span class="font-size-16 text-info" th:text="${comments==null ? 0 : comments.size()}"></span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
+                    <ul class="list-unstyled list-info" id="comment-list">
                         <li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
                             <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
                             <div class="info">
@@ -127,6 +127,10 @@
                         </button>
                     </div>
 
+<!--                    <ul id="todo-list">-->
+<!--                        <input type="button" id="todo-btn" value="test">-->
+<!--                    </ul>-->
+
                 </div>
             </div>
         </div>
@@ -134,24 +138,64 @@
 </div>
 
 <th:block th:include="/fragments/article-js :: articleJs"/>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
 <script>
+    const commentCreateTemplate =
+        "<li class=\"comment-item border bottom mrg-btm-30\">" +
+        "<img class=\"thumb-img img-circle\" src=\"https://avatars2.githubusercontent.com/u/3433096?v=4\" alt=\"\">" +
+        "<div class=\"info\">" +
+        "<span class=\"text-bold inline-block\">{{comment.author.name}}</span>" +
+        "<span class=\"sub-title inline-block pull-right\">" +
+        "<i class=\"ti-timer pdd-right-5\"></i>" +
+        "<span>{{comment.updatedTime}}</span>" +
+        "</span>" +
+        "<p class=\"width-80\" id=\"'commentContents'+{{comment.id}}\">{{comment.contents}}</p>" +
+        "{{>commentUpdateAndDeleteButton}}" +
+        "</div>" +
+        "</li>"
+
+    const commentUpdateAndDeleteTemplate =
+        "<div class=\"comment-button\" style = \"margin-bottom:90px\">" +
+        "<form method=\"post\" th:action=\"'/articles/' + ${article.id} + '/comments/' + ${comment.id}\">" +
+        "<input name=\"_method\" type=\"hidden\" value=\"delete\" />" +
+        "<button class=\"btn btn-icon float-right pointer\" type=\"submit\">" +
+        "<i class =\"ti-trash text-dark font-size-16 pdd-horizon-5\"></i>" +
+        "</button>" +
+        "</form>" +
+        "<form th:id=\"'comment-update-form'+${comment.id}\" th:action=\"'/articles/' + ${article.id} + '/comments/' + ${comment.id}\" method=\"post\">" +
+        "<input name=\"_method\" type=\"hidden\" value=\"put\"/>" +
+        "<input class= \"none\" type=\"text\" th:id=\"'content-input' + ${comment.id}\" th:value=\"${comment.contents}\" name=\"contents\">" +
+        "</form>" +
+        "<button th:id=\"'show-button' + ${comment.id}\" th:onclick=\"'showCommentInput(' + ${comment.id} + ')'\" class=\"float-right pointer btn btn-icon\">" +
+        "수정" +
+        "</button>" +
+        "<button th:id=\"'update-button' + ${comment.id}\" th:onclick=\"'updateComment(' + ${comment.id} + ')'\" class=\"none float-right pointer btn btn-icon\">" +
+        "확인" +
+        "</button>" +
+        "</div>"
+
+    const commentItemTemplate = Handlebars.compile(commentCreateTemplate);
+
     var articleId = [[${article.id}]]
+    var sessionUser = [[${session.user.id}]]
 
-    // function showComment()
-
-    function createComment(comment) {
+    function createComment(commentContents) {
         fetch('/articles/' + articleId + '/comments', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8'
             },
-            body: JSON.stringify(comment)
+            body: JSON.stringify(commentContents)
         }).then(function(response) {
             // console.log(response);
             return response.json();
-        }).then(function(data) {
-            console.log('2: ' + data.contents);
+        }).then(function(comment) {
+            console.log(comment);
+            if(sessionUser === comment.author.id) {
+                Handlebars.registerPartial("commentUpdateAndDeleteButton", commentUpdateAndDeleteTemplate)
+            }
+            document.getElementById('comment-list')
+                .insertAdjacentHTML('beforeend', commentItemTemplate({"comment":comment}))
         })
     }
 

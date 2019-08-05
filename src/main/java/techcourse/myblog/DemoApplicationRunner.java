@@ -22,6 +22,8 @@ public class DemoApplicationRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         User user = new User("BROWN", "user@naver.com", encryptHelper.encrypt("Password123!"));
+        User user2 = new User("CU", "user2@naver.com", encryptHelper.encrypt("Password123!"));
         userRepository.save(user);
+        userRepository.save(user2);
     }
 }
