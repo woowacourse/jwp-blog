@@ -12,7 +12,6 @@
   <div class="about-cover card no-border ">
     <div class="cover-img overlay-dark bg"
          th:style="'background-image: url(' + ${article.coverUrl} + ');'">
-      <!--        <div class="cover-img overlay-dark bg" style="background-image: url('/static/images/pages/index/study.jpg')">-->
       <div class="padding-30">
         <h1 class="text-center cover-title" th:text="${article.title}"></h1>
       </div>
@@ -35,7 +34,6 @@
         </form>
 
         <div id="viewerSection"></div>
-        <!--                <div th:text="${article.contents}"></div>-->
       </div>
       <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
         <div class="profile-container row mrg-top-30 mrg-btm-30">
@@ -74,36 +72,12 @@
         </div>
         <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
           <span class="font-size-16">댓글</span>
-          <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
+          <span class="font-size-16 text-info" id="count-of-comment"></span>
         </div>
         <div class="comment">
           <ul class="list-unstyled list-info" id="comment-list">
-            <!--                        <li class="comment-item border bottom mrg-btm-30" th:each="comment: ${comments}">-->
-            <!--                            <img class="thumb-img img-circle"-->
-            <!--                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">-->
-            <!--                            <div class="info">-->
-            <!--                                <span class="text-bold inline-block" href=""-->
-            <!--                                      th:text="${comment.author.name}">이름</span>-->
-            <!--                                <span class="sub-title inline-block pull-right">-->
-            <!--                                    <i class="ti-timer pdd-right-5"></i>-->
-            <!--                                    <span>6 min ago</span>-->
-            <!--                                </span>-->
-            <!--                                <form method="post" th:action="'/articles/' + ${article.id} + '/comments/' + ${comment.id}">-->
-            <!--                                    <input name="_method" type="hidden" value="DELETE" />-->
-            <!--                                    <button class="btn btn-icon float-right pointer" type="submit">-->
-            <!--                                        <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>-->
-            <!--                                    </button>-->
-            <!--                                </form>-->
-            <!--                                <a th:href="'/articles/' + ${article.id} + '/comments/' + ${comment.id}" class="float-right pointer btn btn-icon">-->
-            <!--                                  <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>-->
-            <!--                                </a>-->
-            <!--                                <p class="width-80" th:text="${comment.contents}">내용</p>-->
-            <!--                            </div>-->
-            <!--                        </li>-->
           </ul>
           <div class="add-comment">
-            <!--                        <form th:action="'/articles/' + ${article.id} + '/comments'" name="comment" method="post"-->
-            <!--                              accept-charset="utf-8">-->
             <input id="comment-contents" name="contents" required type="hidden">
             <div id="editSection"></div>
             <div class="col-lg-1 col-md-1">
@@ -114,7 +88,6 @@
                 </button>
               </div>
             </div>
-            <!--                        </form>-->
           </div>
         </div>
       </div>
@@ -165,6 +138,9 @@
                         <button id="comment-edit-button-${id}" class="float-right pointer btn btn-icon" onclick="openCommentEditor(${id})" style="display: block;">
                             <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                         </button>
+                        <button id="comment-delete-button-${id}" class="float-right pointer btn btn-icon" onclick="deleteComment(${id})">
+                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                        </button>
                         <p id="comment-view-${id}" class="width-80">${contents}</p>
                     </div>
                     <div id="commentEditor-${id}" style="display: none;">
@@ -176,7 +152,6 @@
                 </li>`
     }
 
-    // TODO: let commentEditViewer
     let commentEditor
 
     const openCommentEditor = (id) => {
@@ -199,10 +174,6 @@
         const commentEditContent = document.getElementById('comment-contents-' + id)
         commentEditor.setValue('')
         commentEditContent.setAttribute('value', '')
-
-        // const commentEditContent = document.getElementById('comment-contents-' + id)
-        // commentEditor.setValue(contents)
-        // commentEditContent.setAttribute('value', contents)
 
         const editButton = document.getElementById('comment-edit-button-' + id)
         editButton.style.display = "none"
@@ -230,20 +201,24 @@
     const url = window.location.pathname
     const articleId = url.replace("/articles/", "")
 
-    fetch('http://localhost:8080/comments?articleId=' + articleId)
-        .then(response => {
-            if (response.ok) {
-                return response.json()
-            }
-            throw new Error('dasdsdasdsdsadasd!!!!')
-        })
-        .then(comments => {
-            comments.forEach(comment => {
-                commentList.innerHTML += commentGenerator(comment.id, comment.contents, comment.authorName)
+
+    const loadComments = (id) => {
+        fetch('http://localhost:8080/comments?articleId=' + id)
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw new Error('dasdsdasdsdsadasd!!!!')
             })
-        }).catch((error) => {
-        console.log(error)
-    })
+            .then(comments => {
+                commentList.innerHTML = ''
+                comments.forEach(comment => {
+                    commentList.innerHTML += commentGenerator(comment.id, comment.contents, comment.authorName)
+                })
+            }).catch((error) => {
+            console.log(error)
+        })
+    }
 
     const saveComment = () => {
         const comment = commentContents.getAttribute('value')
@@ -269,14 +244,15 @@
                 }
                 throw new Error('asdfgh!!!!')
             })
-            .then(comment => {
-                commentList.innerHTML += commentGenerator(comment.id, comment.contents, comment.authorName)
+            .then(() => {
+                getCountOfComment(articleId)
+                loadComments(articleId)
                 commentContents.setAttribute('value', '')
                 editor.setValue('')
             })
             .catch((error) => {
                 console.log(error)
-                alert('로그인이 필요합니다.')
+                alert('권한이 없습니다.')
                 commentContents.setAttribute('value', '')
                 editor.setValue('')
             })
@@ -285,7 +261,6 @@
     const editComment = (id) => {
         const contentsBox = document.getElementById('comment-contents-' + id)
         const editContents = contentsBox.getAttribute('value')
-        const commentView = document.getElementById('comment-view-' + id)
         const commentRequest = {
             "contents": editContents
         }
@@ -307,29 +282,63 @@
                 if (response.ok) {
                     return response.json()
                 }
-                throw new Error('dasdasdas')
+                throw new Error('올바른 응답이 아닙니다.')
             })
-            .then(comment => {
-                commentView.innerText = comment.contents
+            .then(() => {
+                loadComments(articleId)
                 closeCommentEditor(id)
             })
             .catch((error) => {
                 console.log(error)
-                alert('로그인이 필요합니다.')
+                alert('권한이 없습니다.')
                 closeCommentEditor(id)
             })
     }
+
+    const deleteComment = (id) => {
+        fetch('http://localhost:8080/comments/' + id, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "DELETE"
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text()
+                }
+                throw new Error('올바른 응답이 아닙니다.')
+            })
+            .then(() => {
+                getCountOfComment(articleId)
+                loadComments(articleId)
+            })
+            .catch((error) => {
+                console.log(error)
+                alert('권한이 없습니다.')
+                closeCommentEditor(id)
+            })
+    }
+
+    function getCountOfComment(articleId) {
+        fetch('http://localhost:8080/comments/total?articleId=' + articleId)
+            .then(response => {
+                if (response.ok) {
+                    return response.text()
+                }
+                throw new Error('올바른 응답이 아닙니다.')
+            })
+            .then(text => {
+                const countOfComment = document.getElementById('count-of-comment')
+                countOfComment.innerText = text
+            })
+            .catch(() => {
+                console.log('네트워크 에러')
+            })
+    }
+
+    getCountOfComment(articleId)
+    loadComments(articleId)
 </script>
 </body>
 </html>
-
-
-<!--<form method="post" action="'/articles/' + ${article.id} + '/comments/' + ${comment.id}">-->
-<!--    <input name="_method" type="hidden" value="DELETE" />-->
-<!--    <button class="btn btn-icon float-right pointer" type="submit">-->
-<!--        <i class ="ti-trash text-dark font-size-16 pdd-horizon-5"></i>-->
-<!--    </button>-->
-<!--</form>-->
-<!--<a th:href="'/articles/' + ${article.id} + '/comments/' + ${comment.id}" class="float-right pointer btn btn-icon">-->
-<!--    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>-->
-<!--</a>-->
