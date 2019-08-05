@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <th:block th:include="includes/meta"></th:block>
-    <meta name="twitter:image" content="/images/logo/logo_thumnail_bg.jpg">
-    <meta name="twitter:domain" content="https://woowacourse.github.io/">
+    <th:block th:include="includes/head"></th:block>
 
-    <th:block th:include="includes/styles"></th:block>
     <link rel="stylesheet" href="/css/article.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
@@ -14,12 +11,12 @@
 </head>
 <body>
 <div>
-    <header th:replace="includes/header :: header" ></header>
+    <header th:replace="includes/header :: header"></header>
 
     <div class="about-cover card no-border ">
-        <div class="cover-img overlay-dark bg" th:style="'background-image: url(' + ${article.coverUrl} + ')'">
+        <div class="cover-img overlay-dark bg" th:style="'background:url(' + @{${articleDTO.coverUrl}} + ');'">
             <div class="padding-30">
-                <h1 class="text-center cover-title" th:text="${article.title}">목적의식 있는 연습을 통한 효과적인 학습</h1>
+                <h1 class="text-center cover-title" th:text="${articleDTO.title}">-</h1>
             </div>
         </div>
     </div>
@@ -27,7 +24,12 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a th:href="@{'/articles/' + ${article.id} + '/edit'}" class="float-right pointer btn btn-icon">
+                <form th:action="'/articles/' + ${articleDTO.id}" th:method="delete" class="float-right">
+                    <button type="submit" class="btn btn-icon btn-delete-article">
+                        <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                    </button>
+                </form>
+                <a th:href="@{/articles/{id}/edit(id=${articleDTO.id})}" class="float-right pointer btn btn-icon">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
                 <div id="viewerSection"></div>
@@ -35,7 +37,8 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
                 <div class="profile-container row mrg-top-30 mrg-btm-30">
                     <div class="col-md-2 col-sm-4">
-                        <img class="width-80px border-radius-round" src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
+                        <img class="width-80px border-radius-round"
+                             src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                     </div>
                     <div class="col-md-10 col-sm-7">
                         <span class="font-size-16 text-bold pdd-btm-5">Brown</span><span class="font-size-12 text-gray"> / gracefulBrown@woowahan.com</span>
@@ -65,50 +68,54 @@
                 </div>
                 <div class="comment">
                     <ul class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30">
-                            <img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                            <div class="info">
-                                <span href="" class="text-bold inline-block">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
-                            </span>
-                            <p class="width-80">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로 살다 보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄 수 있는 계기가 되었다.</p>
-                            </div>
-                        </li>
 
-                        <li class="comment-item border bottom mrg-btm-30">
-                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
+                        <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${articleDTO.comments}" th:data-id="${comment.id}">
+                            <img class="thumb-img img-circle"
+                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                             <div class="info">
-                                <span href="" class="text-bold inline-block">Jun</span>
+                                <span href="" class="text-bold inline-block" th:text="${comment.author.name}">Jun</span>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span>6 min ago</span>
-                                </span>
-                                <p class="width-80">브라운 멋져</p>
+                                    <button class="btn-update-comment"><i class="ti-pencil"></i></button>
+                            </span>
+                                <p class="width-80" th:text="${comment.contents}">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을
+                                    기반으로 미션을 진행하도록 설계했다. 교육자로 살다 보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의
+                                    재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄 수 있는 계기가 되었다.</p>
                             </div>
+                            <form th:action="@{'/articles/' + ${articleDTO.id} + '/comments/' + ${comment.id}}"
+                                  method="post" class="d-none">
+                                <textarea name="contents" rows="5"></textarea>
+                                <button type="submit">수정하기</button>
+                                <input type="hidden" name="_method" value="put"/>
+                            </form>
                         </li>
 
                     </ul>
                     <div class="add-comment">
-                        <div id="editSection"></div>
+                        <form th:action="@{'/articles/' + ${articleDTO.id} + '/comments'}" method="post"
+                              name="commentRequestDto">
+                            <input id="comment-contents" name="contents" type="hidden">
+                            <div id="editSection"></div>
+                            <button type="submit" class="btn btn-primary mt-3">등록하기</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <th:block th:include="includes/scripts"></th:block>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-<script th:inline="javascript">
-    const initValue = [[${article.contents}]]
+<script type="text/javascript" th:inline="javascript">
+    const initValue = /*[[${articleDTO.contents}]]*/;
+
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
         viewer: true,
         height: '100%',
         initialValue: initValue
-    })
+    });
 
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
@@ -116,10 +123,33 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
+                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
             }
         },
         height: '200px'
     });
+
+
+    function onUpdateClick(event) {
+        console.log(event);
+        const container = event.target.closest('li');
+        container.querySelector('form').classList.remove('d-none');
+        container.querySelector('p').classList.add('d-none');
+        event.target.classList.add('d-none');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('.comment > ul')
+            .addEventListener('click', (event) => {
+                console.log(event);
+                const target = event.target;
+                if (target.classList.contains('btn-update-comment') ||
+                    target.parentNode.classList.contains('btn-update-comment')) {
+                    onUpdateClick(event);
+                }
+            });
+    });
+
 </script>
 </body>
 </html>

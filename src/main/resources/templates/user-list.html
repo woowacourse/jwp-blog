@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <th:block th:include="includes/meta"></th:block>
-    <meta name="twitter:image" content="images/logo/logo_thumnail_bg.jpg">
-    <meta name="twitter:domain" content="https://woowacourse.github.io/">
-
-    <th:block th:include="includes/styles"></th:block>
+    <th:block th:include="includes/head"></th:block>
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
 <div>
     <header th:replace="includes/header :: header"></header>
-
     <div class="about-cover card no-border">
-        <div class="cover-img overlay-dark bg" style="background-image: url('images/pages/index/bg.jpg')">
+        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
             <div class="display-block height-100">
             </div>
         </div>
@@ -25,15 +21,17 @@
                     <div class="card-heading border bottom">
                         <h4 class="card-title">User List</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" th:each="user : ${users}">
                         <ul class="list-unstyled list-info">
-                            <li th:each="user : ${users}">
+                            <li>
                                 <div class="pdd-vertical-10">
-                                    <img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
+                                    <img class="thumb-img img-circle"
+                                         src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
                                     <div class="info">
-                                        <a href="" class="title no-pdd-vertical text-semibold inline-block lh-1" th:text="${user.username}"></a>
+                                        <a href="" class="title no-pdd-vertical text-semibold inline-block lh-1"
+                                           th:text="${user.name}">Brown</a>
                                         <span class="sub-title">
-                                            <span th:text="${user.email}"></span>
+                                            <span th:text="${user.email}">gracefulBrown@woowahan.com</span>
                                         </span>
                                     </div>
                                 </div>
@@ -46,16 +44,7 @@
     </div>
 </div>
 
-<footer class="content-footer">
-    <div class="footer">
-        <div class="copyright">
-            <img class="d-inline-block logo relative right-5" src="images/logo/logo_full_dark.png">
-            <p class="pdd-left-5 mrg-top-minus-15px">Copyright © <b class="text-dark">우아한테크코스</b>. All rights reserved.</p>
-        </div>
-        <a href="https://woowabros.github.io/" target="_blank" class="btn btn-default btn-rounded bg-transparent">우아한형제들 기술블로그</a>
-    </div>
-</footer>
-
+<footer th:replace="includes/footer :: footer"></footer>
 <th:block th:include="includes/scripts"></th:block>
 </body>
 </html>

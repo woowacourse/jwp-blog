@@ -1,93 +1,75 @@
 package techcourse.myblog.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.web.dto.ArticleRequestDto;
+import techcourse.myblog.domain.User;
+import techcourse.myblog.service.ArticleService;
+import techcourse.myblog.service.dto.ArticleRequestDto;
+import techcourse.myblog.web.dto.ArticleDto;
 
-import javax.validation.Valid;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
+@ControllerAdvice
 @Controller
 public class ArticleController {
-    private static final String EXCEPTION_MESSAGE_ARTICLE_NOT_FOUND = "게시물을 찾을 수 없습니다";
-
-    private static final Logger logger = LoggerFactory.getLogger(ArticleController.class);
-
-    private final ArticleRepository articleRepository;
+    final private ArticleService articleService;
 
     @Autowired
-    public ArticleController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public ArticleController(final ArticleService articleService) {
+        this.articleService = articleService;
     }
 
     @GetMapping("/")
-    public String indexView(Model model) {
-        List<Article> articles = articleRepository.findAll();
-        model.addAttribute("articles", articles);
+    public String showMain(Model model) {
+        List<ArticleDto> articleDtos = articleService.findAll()
+            .stream()
+            .map(ArticleDto::from)
+            .collect(Collectors.toList());
+        model.addAttribute("articleDtos", articleDtos);
         return "index";
     }
 
     @GetMapping("/writing")
-    public String writeArticleView() {
+    public String showWritingPage() {
         return "article-edit";
     }
 
     @PostMapping("/articles")
-    public String publishArticle(@Valid ArticleRequestDto article, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("error", true);
-            model.addAttribute("message", bindingResult.getAllErrors().get(0).getDefaultMessage());
-            return "article-edit";
-        }
-        Article saved = articleRepository.save(Article.from(article));
-        return "redirect:/articles/" + saved.getId();
+    public String createArticle(final ArticleRequestDto articleDTO, @SessionAttribute(name = "user", required = false) User user) {
+        Long id = articleService.save(articleDTO, user.getId());
+        return "redirect:/articles/" + id;
     }
 
-    @GetMapping("/articles/{articleId}")
-    public String articleView(@PathVariable Long articleId, Model model) {
-        try {
-            Article article = articleRepository.findById(articleId)
-                .orElseThrow(ArticleController::createNotFoundException);
-            model.addAttribute("article", article);
-            return "article";
-        } catch (NoSuchElementException e) {
-            return "redirect:/";
-        }
-    }
-
-    @GetMapping("/articles/{articleId}/edit")
-    public String editArticleView(@PathVariable Long articleId, Model model) {
-        Article article = articleRepository.findById(articleId)
-            .orElseThrow(ArticleController::createNotFoundException);
-        model.addAttribute("article", article);
-        return "article-edit";
-    }
-
-    @PutMapping("/articles/{articleId}")
-    public String editArticle(@PathVariable Long articleId, ArticleRequestDto reqArticle, Model model) {
-        Article article = Article.of(articleId, reqArticle.getTitle(), reqArticle.getCoverUrl(), reqArticle.getContents());
-        articleRepository.save(article);
-        Article articleToShow = articleRepository.findById(articleId)
-            .orElseThrow(ArticleController::createNotFoundException);
-        model.addAttribute("article", articleToShow);
+    @GetMapping("/articles/{id}")
+    public String showArticle(@PathVariable final Long id, Model model) {
+        model.addAttribute("articleDTO", articleService.findById(id));
         return "article";
     }
 
-    @DeleteMapping("/articles/{articleId}")
-    public String deleteArticle(@PathVariable Long articleId) {
-        articleRepository.deleteById(articleId);
+    @PutMapping("/articles/{id}")
+    public String updateArticle(@PathVariable final Long id, final ArticleRequestDto articleDTO,
+                                @SessionAttribute(name = "user", required = false) User user) {
+        articleService.update(id, articleDTO, user.getId());
+        return "redirect:/articles/" + id;
+    }
+
+    @DeleteMapping("/articles/{id}")
+    public String deleteArticle(@PathVariable final Long id,
+                                @SessionAttribute(name = "user", required = false) User user) {
+        articleService.delete(id, user.getId());
         return "redirect:/";
     }
 
-    private static NoSuchElementException createNotFoundException() {
-        return new NoSuchElementException(EXCEPTION_MESSAGE_ARTICLE_NOT_FOUND);
+    @GetMapping("/articles/{id}/edit")
+    public String showEditPage(@PathVariable final Long id, Model model,
+                               @SessionAttribute(name = "user", required = false) User user) {
+        if (!user.matchId(articleService.findById(id).getAuthor().getId())) {
+            return "redirect:/articles/" + id;
+        }
+        model.addAttribute("articleDTO", articleService.findById(id));
+        return "article-edit";
     }
 }

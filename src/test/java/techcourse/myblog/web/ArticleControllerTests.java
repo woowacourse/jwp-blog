@@ -1,147 +1,189 @@
 package techcourse.myblog.web;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.web.dto.ArticleRequestDto;
 
-import java.util.function.Consumer;
+import java.net.URI;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.web.ControllerTestUtil.*;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTests {
+    private static final Long DEFAULT_ARTICLE_ID = 999L;
+    private static final String DEFAULT_ARTICLE_TITLE = "some article";
+    private static final String DEFAULT_ARTICLE_CONTENT = "some content";
 
     @Autowired
     private WebTestClient webTestClient;
 
     @Test
-    void index() {
+    void 메인화면() {
         webTestClient.get().uri("/")
             .exchange()
             .expectStatus().isOk();
     }
 
     @Test
-    void articleForm() {
+    void 게시글_생성_페이지_이동() {
+        // Given
+        String sid = postLoginSync(webTestClient, DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD)
+            .getResponseCookies().getFirst(KEY_JSESSIONID).getValue();
+
+        // When & Then
         webTestClient.get().uri("/writing")
+            .cookie(KEY_JSESSIONID, sid)
             .exchange()
             .expectStatus().isOk();
     }
 
     @Test
-    void createArticlePost() {
-        Article newArticle = Article.of("hello", "http://asdf.com", "helloContent");
+    void 게시글_생성() {
+        // Given
+        String title = "article publish test";
+        String coverUrl = "https://images.pexels.com/photos/731217/pexels-photo-731217.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940";
+        String contents = "## some good title";
 
-        postArticle(newArticle, postResponse -> {
-            assertThat(postResponse.getResponseHeaders().containsKey("Location")).isTrue();
-        });
+        String sid = postLoginSync(webTestClient, DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD)
+            .getResponseCookies().getFirst(KEY_JSESSIONID).getValue();
+
+        // When
+        URI articleLocation = postArticleSync(webTestClient, title, coverUrl, contents, sid)
+            .getResponseHeaders().getLocation();
+
+        // Then
+        assertThat(new String(getSync(webTestClient, articleLocation.toASCIIString(), sid)
+            .getResponseBody()))
+            .contains(title)
+            .contains(contents);
     }
 
     @Test
-    void retrieveArticle() {
-        Article newArticle = Article.of("title", "http://background.com", "## some awesome contents");
-
-        postArticle(newArticle, postResponse -> {
-            retrieveArticle(postResponse.getResponseHeaders().get("Location").get(0), retrieveResponse -> {
-                String body = new String(retrieveResponse.getResponseBody());
-                assertThat(body)
-                    .contains(newArticle.getTitle())
-//                    .contains(newArticle.getCoverUrl())
-                    .contains(newArticle.getContents());
-            });
-        });
-    }
-
-    void postArticle(Article article, Consumer<EntityExchangeResult<byte[]>> consumer) {
-        webTestClient.post()
-            .uri("/articles")
-            .body(BodyInserters
-                .fromFormData("title", article.getTitle())
-                .with("coverUrl", article.getCoverUrl())
-                .with("contents", article.getContents()))
-            .exchange()
-            .expectStatus().is3xxRedirection()
-            .expectBody()
-            .consumeWith(consumer);
-    }
-
-    void retrieveArticle(String uri, Consumer<EntityExchangeResult<byte[]>> consumer) {
-        webTestClient.get()
-            .uri(uri)
+    void 게시글_조회() {
+        webTestClient.get().uri("/articles/" + DEFAULT_ARTICLE_ID)
             .exchange()
             .expectStatus().isOk()
             .expectBody()
-            .consumeWith(consumer);
-
+            .consumeWith(response -> {
+                String body = new String(Objects.requireNonNull(response.getResponseBody()));
+                assertThat(body).contains(DEFAULT_ARTICLE_TITLE);
+                assertThat(body).contains(DEFAULT_ARTICLE_CONTENT);
+            });
     }
 
     @Test
-    void editArticle() {
-        Article newArticle = Article.of("title", "http://background.com", "가나다라마바사");
+    void 게시글_작성자가_게시글_수정() {
+        // Given
+        String titleToChange = "changed title";
+        String coverUrlToChange = "";
+        String contentsToChange = "# changed article";
 
-        postArticle(newArticle, postResponse -> {
-            long id = getArticleIdFromUri(postResponse);
-            webTestClient.get()
-                .uri("/articles/" + id + "/edit")
-                .exchange()
-                .expectStatus().isOk();
-        });
-    }
+        String sid = postLoginSync(webTestClient, DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD)
+            .getResponseCookies().getFirst(KEY_JSESSIONID).getValue();
 
-    private long getArticleIdFromUri(EntityExchangeResult<byte[]> response) {
-        String[] splitted = response.getResponseHeaders().get("Location").get(0).split("[\\/\\;]");
-        int idIndex = splitted.length - 1;
-        if (splitted[idIndex].startsWith("jsessionid")) {
-            idIndex -= 1;
-        }
-        return Long.valueOf(splitted[idIndex]);
-    }
+        // When
+        URI articleLocation = postArticleSync(webTestClient,
+            "article update test",
+            "https://images.pexels.com/photos/731217/pexels-photo-731217.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "## awesome title", sid)
+            .getResponseHeaders().getLocation();
 
-    @Test
-    void editArticlePut() {
-        Article newArticle = Article.of("my article", "http://image.com/", "origin contents");
-        ArticleRequestDto changedArticle = ArticleRequestDto.of("changed title", "backgroundURL", "changed contents");
+        webTestClient.put().uri(articleLocation)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .cookie(KEY_JSESSIONID, sid)
+            .body(BodyInserters
+                .fromFormData("title", titleToChange)
+                .with("coverUrl", coverUrlToChange)
+                .with("contents", contentsToChange))
+            .exchange()
+            .expectBody()
+            .returnResult();
 
-        postArticle(newArticle, postResponse -> {
-            long id = getArticleIdFromUri(postResponse);
-
-            webTestClient.put()
-                .uri("/articles/" + id)
-                .body(BodyInserters
-                    .fromFormData("title", changedArticle.getTitle())
-                    .with("coverUrl", changedArticle.getCoverUrl())
-                    .with("contents", changedArticle.getContents()))
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .consumeWith(retrieveResponse -> {
-                    String body = new String(retrieveResponse.getResponseBody());
-                    assertThat(body)
-                        .contains(changedArticle.getTitle())
-                        .contains(changedArticle.getContents());
-                });
-        });
+        // Then
+        webTestClient.get().uri(articleLocation)
+            .exchange()
+            .expectBody()
+            .consumeWith(response -> {
+                String body = new String(Objects.requireNonNull(response.getResponseBody()));
+                assertThat(body).contains(titleToChange);
+                assertThat(body).contains(coverUrlToChange);
+                assertThat(body).contains(contentsToChange);
+            });
     }
 
     @Test
-    void deleteArticle() {
-        Article newArticle = Article.of("my article", "http://image.com/", "origin contents");
+    void 게시글_작성자가_게시글_삭제() {
+        String sid = postLoginSync(webTestClient, DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD)
+            .getResponseCookies().getFirst(KEY_JSESSIONID).getValue();
 
-        postArticle(newArticle, postResponse -> {
-            long id = getArticleIdFromUri(postResponse);
-            webTestClient.delete()
-                .uri("/articles/" + id)
-                .exchange()
-                .expectStatus().is3xxRedirection();
-        });
+        URI articleLocation = postArticleSync(webTestClient, "article to delete", "", "# This will be deleted", sid)
+            .getResponseHeaders().getLocation();
+
+        webTestClient.delete().uri(articleLocation)
+            .cookie(KEY_JSESSIONID, sid)
+            .exchange()
+            .expectStatus().is3xxRedirection()
+            .expectHeader().valueMatches("location", ".*/");
+
+        webTestClient.get().uri(articleLocation)
+            .exchange()
+            .expectStatus().isNoContent();
+    }
+
+    @Test
+    void 게시글_작성자가_게시글_수정_페이지_이동() {
+        String sid = postLoginSync(webTestClient, DEFAULT_USER_EMAIL, DEFAULT_USER_PASSWORD)
+            .getResponseCookies().getFirst(KEY_JSESSIONID).getValue();
+
+        webTestClient.get().uri("/articles/" + DEFAULT_ARTICLE_ID + "/edit")
+            .cookie(KEY_JSESSIONID, sid)
+            .exchange()
+            .expectStatus().isOk();
+    }
+
+    @Test
+    void 다른_사용자가_게시글_수정() {
+        String sid = postLoginSync(webTestClient, "paul123@example.com", "p@ssW0rd")
+            .getResponseCookies().getFirst(KEY_JSESSIONID).getValue();
+
+        webTestClient.put().uri("/articles/" + DEFAULT_ARTICLE_ID)
+            .cookie(KEY_JSESSIONID, sid)
+            .body(BodyInserters
+                .fromFormData("title", "newTitle")
+                .with("coverUrl", "")
+                .with("contents", "newContents"))
+            .exchange()
+            .expectStatus().is3xxRedirection()
+            .expectHeader().valueMatches("location", ".*/articles/\\d*")
+            .expectBody();
+    }
+
+    @Test
+    void 다른_사용자가_게시글_삭제() {
+        String sid = postLoginSync(webTestClient, "paul123@example.com", "p@ssW0rd")
+            .getResponseCookies().getFirst(KEY_JSESSIONID).getValue();
+
+        webTestClient.delete().uri("/articles/" + DEFAULT_ARTICLE_ID)
+            .cookie(KEY_JSESSIONID, sid)
+            .exchange()
+            .expectStatus().is3xxRedirection()
+            .expectHeader().valueMatches("location", ".*/");
+    }
+
+    @Test
+    void 다른_사용자가_게시글_수정_페이지_이동() {
+        String sid = postLoginSync(webTestClient, "paul123@example.com", "p@ssW0rd")
+            .getResponseCookies().getFirst(KEY_JSESSIONID).getValue();
+
+        webTestClient.get().uri("/articles/" + DEFAULT_ARTICLE_ID + "/edit")
+            .cookie(KEY_JSESSIONID, sid)
+            .exchange()
+            .expectStatus().is3xxRedirection()
+            .expectHeader().valueMatches("location", ".*/articles/\\d*");
     }
 }

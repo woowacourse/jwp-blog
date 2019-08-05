@@ -1,42 +1,68 @@
 package techcourse.myblog.domain;
 
-import techcourse.myblog.web.dto.ArticleRequestDto;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import techcourse.myblog.exception.ArticleToUpdateNotFoundException;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
-@Entity
-public class Article {
 
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 100)
     private String title;
+
+    @Column(nullable = false)
     private String coverUrl;
+
+    @Lob
+    @Column(nullable = false)
     private String contents;
 
-    public static Article of(Long id, String title, String coverUrl, String contents) {
-        Article newArticle = new Article();
-        newArticle.id = id;
-        newArticle.title = title;
-        newArticle.coverUrl = coverUrl;
-        newArticle.contents = contents;
-        return newArticle;
+    @ManyToOne
+    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    private User author;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    @Column(name = "last_modified_date", updatable = true)
+    private LocalDateTime lastModifiedDate;
+
+    private Article() {
     }
 
-    public static Article of(String title, String coverUrl, String content) {
-        return of(null, title, coverUrl, content);
+    public Article(final String title, final String coverUrl, final String contents, User author) {
+        this.title = Objects.requireNonNull(title);
+        this.coverUrl = Objects.requireNonNull(coverUrl);
+        this.contents = Objects.requireNonNull(contents);
+        this.author = Objects.requireNonNull(author);
     }
 
-    public static Article from(ArticleRequestDto dto) {
-        Article newArticle = new Article();
-        newArticle.title = dto.getTitle();
-        newArticle.coverUrl = dto.getCoverUrl();
-        newArticle.contents = dto.getContents();
-        return newArticle;
+    public void update(final Article article) {
+        if (Objects.isNull(article)) {
+            throw new ArticleToUpdateNotFoundException("업데이트 해야할 게시글이 없습니다.");
+        }
+        this.title = article.getTitle();
+        this.coverUrl = article.getCoverUrl();
+        this.contents = article.getContents();
+        this.author = article.getAuthor();
     }
 
     public Long getId() {
@@ -55,10 +81,16 @@ public class Article {
         return contents;
     }
 
-    public void update(Article article) {
-        title = article.getTitle();
-        coverUrl = article.coverUrl;
-        contents = article.contents;
+    public User getAuthor() {
+        return author;
+    }
+
+    public List<Comment> getComments() {
+        return Collections.unmodifiableList(comments);
+    }
+
+    public boolean matchAuthor(Long userId) {
+        return author.matchId(userId);
     }
 
     @Override
@@ -66,14 +98,11 @@ public class Article {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Article article = (Article) o;
-        return Objects.equals(id, article.id) &&
-            Objects.equals(title, article.title) &&
-            Objects.equals(coverUrl, article.coverUrl) &&
-            Objects.equals(contents, article.contents);
+        return Objects.equals(id, article.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, coverUrl, contents);
+        return Objects.hash(id);
     }
 }

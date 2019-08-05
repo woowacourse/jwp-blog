@@ -4,61 +4,58 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.exception.DuplicatedEmailException;
+import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.web.dto.LoginRequestDto;
-import techcourse.myblog.web.dto.UserRequestDto;
-import techcourse.myblog.web.dto.UserUpdateRequestDto;
+import techcourse.myblog.service.dto.UserRequestDto;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
+
 
 @Service
 @Transactional
 public class UserService {
-
-    private final UserRepository userRepository;
+    public static final String USER_SESSION_KEY = "user";
+    final private UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(final UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public Long register(UserRequestDto request) {
-        User newUser = User.of(request.getName(), request.getEmail(), request.getPassword());
-        userRepository.save(newUser);
-        return newUser.getId();
+    public User save(final UserRequestDto userRequestDto) {
+        User user = userRequestDto.toEntity();
+        String email = user.getEmail();
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new DuplicatedEmailException("이메일이 중복됩니다.");
+        }
+        return userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
-    public User authenticate(LoginRequestDto request) {
-        User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(UserAuthenticateException::new);
-
-        if (!user.authenticate(request.getPassword())) {
-            throw new UserAuthenticateException();
-        }
-
-        return user;
-    }
-
-    public User update(Long id, UserUpdateRequestDto request) {
-        User user = userRepository.findById(id)
-            .orElseThrow(() -> new UserUpdateException("사용자를 찾을 수 없습니다"));
-        user.update(User.of(request.getName(), user.getEmail(), user.getPassword()));
-        return user;
+    public User findById(Long id) {
+        User retrieveUser = userRepository.findById(id)
+            .orElseThrow(UserNotFoundException::new);
+        return retrieveUser;
     }
 
     @Transactional(readOnly = true)
     public List<User> findAll() {
-        return userRepository.findAll();
+        return Collections.unmodifiableList(userRepository.findAll());
     }
 
-    @Transactional(readOnly = true)
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User update(final String email, final String name) {
+        User retrieveUser = userRepository.findByEmail(Objects.requireNonNull(email))
+            .orElseThrow(UserNotFoundException::new);
+        retrieveUser.update(Objects.requireNonNull(name));
+        return retrieveUser;
     }
 
-    public void delete(Long id) {
-        userRepository.deleteById(id);
+    public void delete(final Long id) {
+        User retrieveUser = userRepository.findById(Objects.requireNonNull(id))
+            .orElseThrow(UserNotFoundException::new);
+        userRepository.delete(retrieveUser);
     }
 }

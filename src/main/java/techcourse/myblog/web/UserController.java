@@ -1,137 +1,84 @@
 package techcourse.myblog.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.service.UserService;
-import techcourse.myblog.web.dto.LoginRequestDto;
-import techcourse.myblog.web.dto.UserRequestDto;
-import techcourse.myblog.web.dto.UserUpdateRequestDto;
+import techcourse.myblog.service.dto.UserRequestDto;
+import techcourse.myblog.web.dto.UserDto;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import static techcourse.myblog.web.LoginUtil.SESSION_USER_KEY;
-import static techcourse.myblog.web.LoginUtil.isLoggedIn;
+import static techcourse.myblog.service.UserService.USER_SESSION_KEY;
 
 @Controller
 public class UserController {
-
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
-    private final UserService userService;
+    final private UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(final UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping("/signup")
-    public String registerView(HttpSession session) {
-        if (isLoggedIn(session)) {
-            return "redirect:/";
-        }
+    public String showSignUp() {
         return "signup";
     }
 
+    @GetMapping("/users")
+    public String showUsers(Model model) {
+        List<UserDto> userDtos = userService.findAll().stream().map(UserDto::from)
+            .collect(Collectors.toList());
+        model.addAttribute("users", userDtos);
+        return "user-list";
+    }
+
     @PostMapping("/users")
-    public String register(@Valid UserRequestDto userRequestDto, BindingResult bindingResult,
-                           Model model,
-                           @SessionAttribute(name = SESSION_USER_KEY, required = false) User currentUser) {
+    public String registerUsers(@Valid final UserRequestDto userRequestDto, final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("error", true);
-            model.addAttribute("message", bindingResult.getAllErrors().get(0).getDefaultMessage());
             return "signup";
         }
-        if (currentUser != null) {
-            return "redirect:/";
-        }
-        userService.register(userRequestDto);
+        userService.save(userRequestDto);
         return "redirect:/login";
     }
 
-    @GetMapping("/login")
-    public String loginView(@SessionAttribute(name = SESSION_USER_KEY, required = false) User currentUser) {
-        if (currentUser != null) {
-            return "redirect:/";
-        }
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String login(@Valid LoginRequestDto requestDto, BindingResult bindingResult, Model model, HttpSession session) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("error", true);
-            model.addAttribute("message", bindingResult.getAllErrors().get(0).getDefaultMessage());
-            return "login";
-        }
-        if (isLoggedIn(session)) {
-            return "redirect:/";
-        }
-        session.setAttribute(SESSION_USER_KEY, userService.findByEmail(requestDto.getEmail())
-            .orElseThrow(null));
+    @DeleteMapping("/users")
+    public String deleteUser(final HttpSession session) {
+        User user = (User) session.getAttribute(USER_SESSION_KEY);
+        userService.delete(user.getId());
+        session.invalidate();
         return "redirect:/";
     }
 
-    @GetMapping("/users")
-    public String userListView(Model model) {
-        model.addAttribute("users", userService.findAll());
-        return "user-list";
+    @GetMapping("/mypage")
+    public String showMyPage() {
+        return "mypage";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        if (isLoggedIn(session)) {
-            session.invalidate();
-            return "redirect:/";
-        }
-        return "redirect:/login";
+        session.invalidate();
+        return "redirect:/";
     }
 
-    @GetMapping("/mypage")
-    public String myPageView(HttpSession session) {
-        if (isLoggedIn(session)) {
-            return "mypage";
-        }
-        return "redirect:/login";
-    }
-
-    @GetMapping("/mypage-edit")
-    public String myPageEditView(@SessionAttribute(name = SESSION_USER_KEY, required = false) User currentUser) {
-        if (currentUser == null) {
-            return "redirect:login";
-        }
+    @GetMapping("/mypage/mypage-edit")
+    public String showMyPageEdit() {
         return "mypage-edit";
     }
 
-    @PutMapping("/users")
-    public String updateUser(@Valid UserUpdateRequestDto updateRequestDto, BindingResult bindingResult, HttpSession session, Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("error", true);
-            model.addAttribute("message", bindingResult.getAllErrors().get(0).getDefaultMessage());
-            return "mypage";
-        }
-        if (!isLoggedIn(session)) {
-            return "redirect:/login";
-        }
-        User user = (User) session.getAttribute(SESSION_USER_KEY);
-        User updated = userService.update(user.getId(), updateRequestDto);
-        session.setAttribute(SESSION_USER_KEY, updated);
+    @PutMapping("/mypage/mypage-edit")
+    public String editMyPage(final HttpSession session, final String name) {
+        User user = (User) session.getAttribute(USER_SESSION_KEY);
+        session.setAttribute(USER_SESSION_KEY, userService.update(user.getEmail(), name));
         return "redirect:/mypage";
-    }
-
-    @DeleteMapping("/withdraw")
-    public String deleteUser(HttpSession session) {
-        if (!isLoggedIn(session)) {
-            return "redirect:/login";
-        }
-        userService.delete(((User) session.getAttribute(SESSION_USER_KEY)).getId());
-        session.invalidate();
-        return "redirect:/";
     }
 }
