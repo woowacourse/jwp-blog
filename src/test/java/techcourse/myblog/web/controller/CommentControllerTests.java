@@ -6,17 +6,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.domain.repository.CommentRepository;
 import techcourse.myblog.domain.repository.UserRepository;
+import techcourse.myblog.dto.CommentDto;
 
 import java.util.Objects;
-
-import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -61,17 +60,18 @@ public class CommentControllerTests extends AuthedWebTestClient {
                     SEAN_ARTICLE_ID = Integer.parseInt(path.substring(index + 1));
                 });
 
-//        commentId++;
-//        addComments();
+        commentId++;
+        addComments();
     }
 
     @Test
     void 댓글_생성() {
+        CommentDto commentDto = new CommentDto(CONTENT, SEAN_ARTICLE_ID);
+
         webTestClient.post().uri("/articles/" + SEAN_ARTICLE_ID + "/comments")
                 .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(fromFormData(CONTENT, CONTENT)
-                        .with("articleId", "" + SEAN_ARTICLE_ID))
+                .body(Mono.just(commentDto), CommentDto.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -85,9 +85,11 @@ public class CommentControllerTests extends AuthedWebTestClient {
     void 댓글_수정() {
         getStatus(POBI_EMAIL, UPDATED_COMMENT)
                 .expectStatus()
-                .isFound()
-                .expectHeader()
-                .valueMatches(HttpHeaders.LOCATION, ARTICLE_PATTERN + SEAN_ARTICLE_ID);
+                .isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.id").isEqualTo(1L)
+                .jsonPath("$.contents").isEqualTo(UPDATED_COMMENT);
     }
 
     @Test
@@ -110,9 +112,7 @@ public class CommentControllerTests extends AuthedWebTestClient {
         String deletePath = "/articles/" + SEAN_ARTICLE_ID + "/comments/" + commentId;
 
         delete(deletePath, POBI_EMAIL, DEFAULT_PASSWORD)
-                .isFound()
-                .expectHeader()
-                .valueMatches(HttpHeaders.LOCATION, ARTICLE_PATTERN + SEAN_ARTICLE_ID);
+                .isOk();
     }
 
     @AfterEach
@@ -123,22 +123,28 @@ public class CommentControllerTests extends AuthedWebTestClient {
     }
 
     private void addComments() {
+        CommentDto commentDto = new CommentDto(CONTENT, SEAN_ARTICLE_ID);
+
         webTestClient.post().uri("/articles/" + SEAN_ARTICLE_ID + "/comments")
                 .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData(CONTENT, CONTENT)
-                        .with("articleId", "" + SEAN_ARTICLE_ID))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentDto), CommentDto.class)
                 .exchange()
-                .expectStatus().isFound()
-                .expectHeader().valueMatches(HttpHeaders.LOCATION, ARTICLE_PATTERN + SEAN_ARTICLE_ID);
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.id").isEqualTo(1L)
+                .jsonPath("$.contents").isEqualTo(CONTENT)
+                .jsonPath("$.author.name").isEqualTo(POBI_NAME);
     }
 
     private WebTestClient.ResponseSpec getStatus(String pobiEmail, String comment) {
+        CommentDto commentDto = new CommentDto(UPDATED_COMMENT, SEAN_ARTICLE_ID);
+
         return webTestClient.put().uri("/articles/" + SEAN_ARTICLE_ID + "/comments/" + commentId)
                 .cookie(JSESSIONID, getResponseCookie(pobiEmail, DEFAULT_PASSWORD).getValue())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(fromFormData(CONTENT, comment)
-                        .with("articleId", "" + SEAN_ARTICLE_ID))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentDto), CommentDto.class)
                 .exchange();
     }
 }

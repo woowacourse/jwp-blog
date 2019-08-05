@@ -26,23 +26,23 @@ public class CommentController {
         this.articleService = articleService;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping
     public ResponseEntity<Comment> createComment(@RequestBody CommentDto commentDto, @LoginUser User loginUser) {
         Comment comment = convert(commentDto, loginUser);
         Comment savedComment = commentService.save(comment);
         return new ResponseEntity<>(savedComment, HttpStatus.OK);
     }
 
-    @PutMapping("/{commentId}")
-    public RedirectView updateComment(@PathVariable long articleId, @PathVariable long commentId, @LoginUser User loginUser, String contents) {
-        commentService.update(commentId, loginUser, contents);
-        return new RedirectView("/articles/" + articleId);
+    @PutMapping(value = "/{commentId}")
+    public ResponseEntity<Comment> updateComment(@PathVariable long commentId, @LoginUser User loginUser, @RequestBody CommentDto commentDto) {
+        Comment updatedComment = commentService.update(commentId, loginUser, commentDto.getContents());
+        return new ResponseEntity<>(updatedComment, HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")
-    public RedirectView deleteComment(@PathVariable long commentId, @PathVariable long articleId, @LoginUser User loginUser) {
+    public ResponseEntity<Comment> deleteComment(@PathVariable long commentId, @LoginUser User loginUser) {
         commentService.deleteById(commentId, loginUser.getId());
-        return new RedirectView("/articles/" + articleId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private Comment convert(CommentDto commentDto, @LoginUser User loginUser) {
