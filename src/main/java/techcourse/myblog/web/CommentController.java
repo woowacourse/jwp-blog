@@ -7,38 +7,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.service.dto.CommentRequestDto;
-import techcourse.myblog.web.util.LoginChecker;
-
-import javax.servlet.http.HttpSession;
+import techcourse.myblog.service.dto.UserSessionDto;
 
 @Controller
 public class CommentController {
-    private CommentService commentService;
-    private LoginChecker loginChecker;
+	private CommentService commentService;
 
-    public CommentController(CommentService commentService, LoginChecker loginChecker) {
-        this.commentService = commentService;
-        this.loginChecker = loginChecker;
-    }
+	public CommentController(CommentService commentService) {
+		this.commentService = commentService;
+	}
 
-    @PostMapping("/comment")
-    public String createComment(CommentRequestDto commentRequestDto, HttpSession session) {
-        commentService.save(loginChecker.getLoggedInUser(session), commentRequestDto);
-        return "redirect:/articles/" + commentRequestDto.getArticleId();
-    }
+	@PostMapping("/comment")
+	public String createComment(CommentRequestDto commentRequestDto, UserSessionDto userSession) {
+		commentService.save(userSession, commentRequestDto);
+		return "redirect:/articles/" + commentRequestDto.getArticleId();
+	}
 
-    @PutMapping("/articles/{articleId}/comment/{commentId}")
-    public String updateComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
-                                CommentRequestDto commentRequestDto, HttpSession session) {
-        // commentId, commentRequestDto
-        commentService.update(loginChecker.getLoggedInUser(session), commentId, commentRequestDto);
-        return "redirect:/articles/" + articleId;
-    }
+	@PutMapping("/articles/{articleId}/comment/{commentId}")
+	public String updateComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
+	                            CommentRequestDto commentRequestDto, UserSessionDto userSession) {
+		commentService.update(userSession, commentId, commentRequestDto);
+		return "redirect:/articles/" + articleId;
+	}
 
-    @DeleteMapping("/articles/{articleId}/comment/{commentId}")
-    public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
-                                HttpSession session) {
-        commentService.delete(loginChecker.getLoggedInUser(session), commentId);
-        return "redirect:/articles/" + articleId;
-    }
+	@DeleteMapping("/articles/{articleId}/comment/{commentId}")
+	public String deleteComment(@PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId,
+	                            UserSessionDto userSession) {
+		commentService.delete(userSession, commentId);
+		return "redirect:/articles/" + articleId;
+	}
 }
