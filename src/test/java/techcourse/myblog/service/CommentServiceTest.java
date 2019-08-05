@@ -67,7 +67,7 @@ class CommentServiceTest {
         article.addComment(comment);
         article = articleRepository.findById(article.getId()).get();
         comment = article.getComments().get(0);
-        comment.updateContents("updated", user);
+        comment.updateContents("updated");
         assertThat(commentRepository.findById(comment.getId()).get().getContents()).isEqualTo("updated");
     }
 
