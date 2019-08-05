@@ -76,34 +76,10 @@
                 <div class="width-100 border bottom mrg-btm-2
                 0 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
+                    <span class="font-size-16 text-info">2</span>
                 </div>
                 <div class="comment">
                     <ul id="comments" class="list-unstyled list-info" data-th-data-article-id="${article.id}">
-                        <li class="comment-item border bottom mrg-btm-15 mrg-top-15" th:each="comment : ${comments}">
-                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4"
-                                 alt="">
-                            <div class="info">
-                                <span class="text-bold inline-block" th:text="${comment.commenter.name}">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span class="elapsed-time" th:text="${comment.elapsedTime}">6</span>
-                                </span>
-                                <div th:id="'comment' + ${comment.id}" class="comment-box" data-th-data-id="${comment.id}">
-                                    <div>
-                                        <p class="width-80" th:text="${comment.contents}">브라운 멋져</p>
-                                    </div>
-                                    <div class="hidden">
-                                        <input type="text" th:value="${comment.contents}">
-                                        <button type="button" class="btn-sm btn-dark update-button">update</button>
-                                    </div>
-                                    <th:block th:if="${comment.commenter.id == session.user?.id}">
-                                        <button class="modify-button btn-sm btn-dark">edit</button>
-                                        <button type="button" class="btn-sm btn-dark remove-button">remove</button>
-                                    </th:block>
-                                </div>
-                            </div>
-                        </li>
                     </ul>
                     <th:block th:if="${session.user != null}">
                         <div class="add-comment">
@@ -231,31 +207,51 @@
             });
     });
 
+    window.addEventListener('DOMContentLoaded', () => {
+        // get
+        let articleId = document.getElementById("comments").dataset.articleId;
+        fetch('/comments/' + articleId, {
+            method: "GET",
+            headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        }).then(response => response.json())
+            .then(data => {
+                let template = document.getElementById('template');
+
+                data.comments.forEach(comment => {
+                    let resultHtml = template.innerHTML.replace(/{id}/g, comment.id)
+                        .replace(/{name}/g, comment.commenter.name)
+                        .replace(/{contents}/g, comment.contents)
+                        .replace(/{elapsedTime}/g, comment.createdDate);
+
+                    document.getElementById('comments').innerHTML += resultHtml;
+                })
+            });
+    });
 </script>
 
 <script id="template" type="text/template">
-        <li class="comment-item border bottom mrg-btm-15 mrg-top-15">
-            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4"
-                 alt="">
-            <div class="info">
-                <span class="text-bold inline-block">{name}</span>
-                <span class="sub-title inline-block pull-right">
+    <li class="comment-item border bottom mrg-btm-15 mrg-top-15">
+        <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4"
+             alt="">
+        <div class="info">
+            <span class="text-bold inline-block">{name}</span>
+            <span class="sub-title inline-block pull-right">
                     <i class="ti-timer pdd-right-5"></i>
                     <span class="elapsed-time">{elapsedTime}</span>
                 </span>
-                <div id="comment{id}" class="comment-box" data-id="{id}">
-                    <div>
-                        <p class="width-80">{contents}</p>
-                    </div>
-                    <div class="hidden">
-                        <input type="text" value="{contents}">
-                        <button type="button" class="btn-sm btn-dark update-button">update</button>
-                    </div>
-                        <button class="modify-button btn-sm btn-dark">edit</button>
-                        <button type="button" class="btn-sm btn-dark remove-button">remove</button>
+            <div id="comment{id}" class="comment-box" data-id="{id}">
+                <div>
+                    <p class="width-80">{contents}</p>
                 </div>
+                <div class="hidden">
+                    <input type="text" value="{contents}">
+                    <button type="button" class="btn-sm btn-dark update-button">update</button>
+                </div>
+                <button class="modify-button btn-sm btn-dark">edit</button>
+                <button type="button" class="btn-sm btn-dark remove-button">remove</button>
             </div>
-        </li>
+        </div>
+    </li>
 </script>
 </body>
 </html>
