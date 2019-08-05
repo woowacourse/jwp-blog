@@ -83,4 +83,36 @@ const COMMENT = (function () {
     }
 
 })();
+
 COMMENT.init();
+
+const saveButton = document.querySelector("#comment-save-button");
+const articleId = document.querySelector("#article-id").value;
+saveButton.addEventListener("click", savePost);
+
+function savePost(e) {
+    let contents = document.querySelector("#comment-contents").value;
+    fetch("/articles/" + articleId + "/comments", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+
+        },
+        body: JSON.stringify({contents: contents}),
+        credentials: "include"
+    })
+        .then(function (response) {
+            return response.json()
+        }).then(function (json) {
+        if (json.status == "success") {
+            console.log(json)
+            addComment(contents, articleId)
+        }
+    });
+}
+
+function addComment(contents, id) {
+
+}
+
+

@@ -86,7 +86,6 @@
                                         <i class="ti-timer pdd-right-5"></i>p
                                         <span>6 min ago</span>
                                     </span>
-
                                     <form method="post"
                                           th:action="'/articles/' + ${article.id} + '/comments/' + ${comment.id}">
                                         <input name="_method" type="hidden" value="DELETE"/>
@@ -98,22 +97,20 @@
                                     <button class="comment-edit float-right pointer btn btn-icon">
                                         <i class="comment-edit ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                                     </button>
-                                    <p class="width-80" th:text="${comment.contents}">브라운 멋져</p>
+                                    <p class="width-80" th:text="${comment.contents}"></p>
                                 </div>
-
                             </li>
                         </ul>
                     </div>
-                    <form accept-charset="utf-8" method="post"
-                          th:action="'/articles/' + ${article.id} + '/comments/'">
+
                         <div class="add-comment">
                             <input id="comment-contents" name="contents" type="hidden">
+                            <input id="article-id" th:value="${article.id}" type="hidden">
                             <div id="editSection"></div>
-                            <button class="btn btn-default" id="save-btn" type="submit">
+                            <button class="btn btn-default" id="comment-save-button" type="submit">
                                 댓글 등록
                             </button>
                         </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -140,19 +137,6 @@
             events: {
                 change: function () {
                     document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
-                }
-            },
-            height: '200px'
-        });
-
-
-        const editor2 = new tui.Editor({
-            el: document.querySelector('#editSection2'),
-            initialEditType: 'markdown',
-            previewStyle: 'horizontal',
-            events: {
-                change: function () {
-                    document.getElementById('comment-contents2').setAttribute('value', editor2.getMarkdown())
                 }
             },
             height: '200px'
