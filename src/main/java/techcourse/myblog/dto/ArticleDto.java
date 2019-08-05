@@ -4,11 +4,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import techcourse.myblog.domain.article.ArticleDetails;
 
+@Data
+@EqualsAndHashCode(of = "id")
 public class ArticleDto {
-    @Data
-    @EqualsAndHashCode(of = "id")
-    public static class Response {
-        private Long id;
-        private ArticleDetails articleDetails;
-    }
+    private Long id;
+    private ArticleDetails articleDetails;
 }

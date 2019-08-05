@@ -31,30 +31,30 @@ public class ArticleService {
         return articleRepository.save(article).getId();
     }
 
-    public List<ArticleDto.Response> findAll() {
+    public List<ArticleDto> findAll() {
         List<Article> articles = (List<Article>) articleRepository.findAll();
         return articles.stream()
-                .map(article -> modelMapper.map(article, ArticleDto.Response.class))
+                .map(article -> modelMapper.map(article, ArticleDto.class))
                 .collect(Collectors.toList());
     }
 
-    public ArticleDto.Response findById(Long articleId) {
+    public ArticleDto findById(Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        return modelMapper.map(article, ArticleDto.Response.class);
+        return modelMapper.map(article, ArticleDto.class);
     }
 
-    public ArticleDto.Response findById(UserDto.Response userDto, Long articleId) {
+    public ArticleDto findById(UserDto.Response userDto, Long articleId) {
         checkAuthor(userDto, articleId);
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
-        return modelMapper.map(article, ArticleDto.Response.class);
+        return modelMapper.map(article, ArticleDto.class);
     }
 
     @Transactional
-    public ArticleDto.Response update(UserDto.Response userDto, Long articleId, ArticleDetails articleDetails) {
+    public ArticleDto update(UserDto.Response userDto, Long articleId, ArticleDetails articleDetails) {
         checkAuthor(userDto, articleId);
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundArticleException::new);
         article.update(articleDetails);
-        return modelMapper.map(article, ArticleDto.Response.class);
+        return modelMapper.map(article, ArticleDto.class);
     }
 
     public void deleteById(UserDto.Response userDto, Long articleId) {

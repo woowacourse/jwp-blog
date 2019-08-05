@@ -38,19 +38,6 @@ public class CommentDto {
         @Size(max = 300)
         @NotBlank
         private String contents;
-        private LocalDateTime regDate;
-        private LocalDateTime modifiedDate;
-
-        public Comment toComment(Long id, User user, Article article) {
-            return Comment.builder()
-                .id(id)
-                .user(user)
-                .article(article)
-                .regDate(regDate)
-                .modfiedDate(modifiedDate)
-                .contents(contents)
-                .build();
-        }
     }
 
     @Data
