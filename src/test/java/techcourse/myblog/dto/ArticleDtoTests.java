@@ -11,16 +11,14 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.dto.ArticleDto.CONTENTS_CONSTRAINT_MESSAGE;
-import static techcourse.myblog.dto.ArticleDto.TITLE_CONSTRAINT_MESSAGE;
 
 class ArticleDtoTests {
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     static Stream<Arguments> invalidArticleParameters() {
         return Stream.of(
-                Arguments.of("", "coverUrl", "contents", TITLE_CONSTRAINT_MESSAGE),
-                Arguments.of("title", "coverUrl", "", CONTENTS_CONSTRAINT_MESSAGE)
+                Arguments.of("", "coverUrl", "contents", "제목없어 실패"),
+                Arguments.of("title", "coverUrl", "", "내용없어 실패")
         );
     }
 
