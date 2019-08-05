@@ -61,8 +61,8 @@ public class ArticleControllerTests {
 
     @Test
     void addNewArticleTest() {
-        String redirectUrl = postRequest("/articles", ArticleVO.class, testTitle, testContents, testCoverUrl);
-        EntityExchangeResult<byte[]> result = getRequest(redirectUrl);
+        EntityExchangeResult<byte[]> postResponse = postFormRequest("/articles", ArticleVO.class, testTitle, testContents, testCoverUrl);
+        EntityExchangeResult<byte[]> result = getRequest(postResponse.getResponseHeaders().getLocation().toString());
         String body = new String(result.getResponseBody());
         assertTest(body, testTitle, testContents, testCoverUrl);
     }
@@ -294,20 +294,35 @@ public class ArticleControllerTests {
                 .returnResult();
     }
 
-    String postRequest(String uri, Class mappingClass, String... args) {
+    EntityExchangeResult<byte[]> postFormRequest(String uri, Class mappingClass, String... args) {
         return webTestClient.post()
                 .uri(uri)
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(mapBy(mappingClass, args))
                 .exchange()
-                .expectStatus()
-                .isFound()
                 .expectBody()
-                .returnResult()
-                .getResponseHeaders()
-                .getLocation()
-                .toString();
+                .returnResult();
+    }
+
+    EntityExchangeResult<byte[]> deleteRequest(String uri) {
+        return webTestClient.delete()
+                .uri(uri)
+                .header("Cookie", cookie)
+                .exchange()
+                .expectBody()
+                .returnResult();
+    }
+
+    EntityExchangeResult<byte[]> putFormRequest(String uri, Class mappingClass, String... args) {
+        return webTestClient.put()
+                .uri(uri)
+                .header("Cookie", cookie)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(mapBy(mappingClass, args))
+                .exchange()
+                .expectBody()
+                .returnResult();
     }
 
     private void assertTest(String body, String... args) {
