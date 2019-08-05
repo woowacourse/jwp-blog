@@ -41,8 +41,8 @@
                              src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                     </div>
                     <div class="col-md-10 col-sm-7">
-                        <span class="font-size-16 text-bold pdd-btm-5" th:text="${article.user.userName}">Brown</span>
-                        <span class="font-size-12 text-gray" th:text="${article.user.email}"> / gracefulBrown@woowahan.com</span>
+                        <span class="font-size-16 text-bold pdd-btm-5" th:text="${article.user.userName}"></span>
+                        <span class="font-size-12 text-gray" th:text="${article.user.email}"></span>
                         <p class="font-size-13 text-dimgray lh-1-3">
                             백엔드 개발자: 설계.테스트.생산성.클린코드.멘토링에 관심이 많음 <br>
                             Woowahantechcourse Organizer / Coach / Husband
@@ -69,51 +69,53 @@
                     <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
                 </div>
                 <div class="comment">
+
                     <ul class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30" th:each="comment: ${comments}">
-                            <img alt=""
-                                 class="thumb-img img-circle"
-                                 src="https://avatars3.githubusercontent.com/u/50367798?v=4">
-                            <div class="info">
-                                <span class="text-bold inline-block" name="author" th:text="${comment.author.userName}">Jun</span>
-                                <form class="pull-right" method="post" style="display: inline-block;"
-                                      th:action="@{'/comments/' + ${comment.id}}">
-                                    <input name="_method" type="hidden" value="delete">
-                                    <button class="btn-sm btn-link pull-right" style="border-width: 0; text-decoration: none;
+                        <div id="commentList">
+                            <li class="comment-item border bottom mrg-btm-30" th:each="comment: ${comments}">
+                                <img alt="" class="thumb-img img-circle"
+                                     src="https://avatars3.githubusercontent.com/u/50367798?v=4">
+                                <div class="info">
+                                    <span class="text-bold inline-block" name="author"
+                                          th:text="${comment.author.userName}"></span>
+                                    <form class="pull-right" method="post" style="display: inline-block;"
+                                          th:action="@{'/comments/' + ${comment.id}}">
+                                        <input name="_method" type="hidden" value="delete">
+                                        <button class="btn-sm btn-link pull-right" style="border-width: 0; text-decoration: none;
                                                padding-left: 1rem; padding-right: 0.5rem;
                                                padding-bottom: 0; padding-top: 0"
-                                            type="submit">
-                                        <i class="ti-trash" style="color: gray;"></i>
-                                    </button>
-                                </form>
-                                <form class="pull-right" method="get"
-                                      style="display: inline-block;"
-                                      th:action="@{'/comments/' + ${comment.id} + '/edit'}">
-                                    <button class="btn-sm btn-link pull-right" style="border-width: 0; text-decoration: none;
+                                                type="submit">
+                                            <i class="ti-trash" style="color: gray;"></i>
+                                        </button>
+                                    </form>
+                                    <form class="pull-right" method="get"
+                                          style="display: inline-block;"
+                                          th:action="@{'/comments/' + ${comment.id} + '/edit'}">
+                                        <button class="btn-sm btn-link pull-right" style="border-width: 0; text-decoration: none;
                                                padding-left: 1rem; padding-right: 0.5rem;
                                                padding-bottom: 0; padding-top: 0"
-                                            type="submit">
-                                        <i class="ti-pencil" style="color: gray;"></i>
-                                    </button>
-                                </form>
-                                <span class="sub-title inline-block pull-right">
+                                                type="submit">
+                                            <i class="ti-pencil" style="color: gray;"></i>
+                                        </button>
+                                    </form>
+                                    <span class="sub-title inline-block pull-right">
                                    <i class="ti-timer pdd-right-5"></i>
                                    <span th:text="${comment.updateTime}">time</span>
                                </span>
-                                <p class="width-80" name="contents" th:text="${comment.contents}">contents</p>
+                                    <p class="width-80" name="contents" th:text="${comment.contents}">contents</p>
 
-                            </div>
-                        </li>
-
+                                </div>
+                            </li>
+                        </div>
                     </ul>
                     <form action="/comments" method="post">
-                        <input name="articleId" th:value="${article.id}" type="hidden">
+                        <input id="articleId" th:value="${article.id}" type="hidden">
                         <div class="add-comment">
                             <div id="editSection"></div>
                         </div>
-                        <input id="commentContents" name="contents" type="hidden"/>
+                        <input id="commentContents" type="hidden"/>
                         <div class="mrg-top-20 text-right">
-                            <button class="btn btn-tumblr" type="submit">댓글 작성</button>
+                            <button class="btn btn-tumblr" type="button" onclick="commentSubmit()">댓글 작성</button>
                         </div>
                     </form>
                 </div>
@@ -147,6 +149,53 @@
         },
         height: '200px'
     });
+
+    function commentSubmit() {
+        let data = {
+            articleId: document.getElementById('articleId').value,
+            contents: document.getElementById('commentContents').value
+        };
+
+        const xhr = new XMLHttpRequest();
+        const message = JSON.stringify(data);
+
+        xhr.open('POST', 'http://localhost:8080/comments');
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        xhr.send(message);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === xhr.DONE && xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                $("#commentList").append(commentForm(data.id, data.userName, data.updatedTime, data.contents));
+            }
+        };
+
+        const commentForm = function (id, userName, updatedTime, content) {
+            return "<li class='comment-item border bottom mrg-btm-30'>" +
+                "<img alt='' class='thumb-img img-circle' src='https://avatars3.githubusercontent.com/u/50367798?v=4'>" +
+                    "<div class='info'>" +
+                        "<span class='text-bold inline-block' name='author'>" + userName + "</span>" +
+                        "<form class='pull-right' method='post' style='display: inline-block;' action='/comments/" + id + "'>" +
+                            "<input name='_method' type='hidden' value='delete'>" +
+                                "<button class='btn-sm btn-link pull-right' style='border-width: 0; text-decoration: none; padding-left: 1rem; padding-right: 0.5rem; padding-bottom: 0; padding-top: 0' type='submit'>" +
+                                    "<i class='ti-trash' style='color: gray;'/>" +
+                                "</button>" +
+                        "</form>" +
+                        "<form class='pull-right' method='post' style='display: inline-block;' action='/comments/" + id + "/edit'>" +
+                            "<button class='btn-sm btn-link pull-right' style='border-width: 0; text-decoration: none; padding-left: 1rem; padding-right: 0.5rem; padding-bottom: 0; padding-top: 0' type='submit'>" +
+                                "<i class='ti-pencil' style='color: gray;'/>" +
+                            "</button>" +
+                        "</form>" +
+                        "<span class='sub-title inline-block pull-right'>" +
+                            "<i class='ti-timer pdd-right-5'/>" +
+                            "<span>" + updatedTime + "</span>" +
+                        "</span>" +
+                        "<p class='width-80' name='contents'>" + content + "</p>" +
+                    "</div>" +
+            "</li>"
+        };
+    }
+
 
 </script>
 </body>
