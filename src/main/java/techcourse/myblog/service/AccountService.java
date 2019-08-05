@@ -1,11 +1,15 @@
 package techcourse.myblog.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.exception.UserDuplicateEmailException;
+import techcourse.myblog.exception.UserNotFoundException;
 
 import java.util.List;
 
@@ -23,7 +27,7 @@ public class AccountService {
     }
 
     public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(RuntimeException::new);
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
 
     }
 
@@ -31,7 +35,7 @@ public class AccountService {
     public User save(UserDto userDto) {
         User user = userDto.toUser();
         if (isExistsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException();
+            throw new UserDuplicateEmailException();
         }
         return save(user);
     }

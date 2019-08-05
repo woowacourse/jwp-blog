@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.*;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.exception.ArticleNotFoundException;
 
 import java.util.List;
 
@@ -26,19 +27,11 @@ public class ArticleService {
     }
 
     public Article findArticleById(long id) {
-        return articleRepository.findById(id).orElseThrow(RuntimeException::new);
+        return articleRepository.findById(id).orElseThrow(ArticleNotFoundException::new);
     }
 
     public List<Comment> findAllCommentsByArticleId(long id) {
         return commentRepository.findAllByArticle_Id(id);
-    }
-
-    public void deleteById(long articleId) {
-        articleRepository.deleteById(articleId);
-    }
-
-    private void delete(Article article) {
-        articleRepository.delete(article);
     }
 
     @Transactional
@@ -50,15 +43,23 @@ public class ArticleService {
 
     @Transactional
     public Article update(ArticleDto articleDto, long articleId, User user) {
-        Article preArticle = articleRepository.findById(articleId).orElseThrow(RuntimeException::new);
+        Article preArticle = articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new);
         return preArticle.update(articleDto, user);
     }
 
     @Transactional
     public void delete(long articleId, User user) {
-        Article article = articleRepository.findById(articleId).orElseThrow(RuntimeException::new);
+        Article article = articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new);
         if (article.isMatchAuthor(user)) {
             deleteById(articleId);
         }
+    }
+
+    private void deleteById(long articleId) {
+        articleRepository.deleteById(articleId);
+    }
+
+    private void delete(Article article) {
+        articleRepository.delete(article);
     }
 }

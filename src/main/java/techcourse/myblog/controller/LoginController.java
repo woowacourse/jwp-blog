@@ -27,16 +27,10 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String processLogin(UserDto userDto, HttpSession session, Model model) {
-        String errorMessage = "아이디나 비밀번호가 잘못되었습니다.";
-        Optional<User> user = loginService.findByEmail(userDto.getEmail());
+    public String processLogin(UserDto userDto, HttpSession session) {
+        User user = loginService.login(userDto);
 
-        if (!user.isPresent() || !userDto.getPassword().equals(user.get().getPassword())) {
-            model.addAttribute("error", errorMessage);
-            return "login";
-        }
-
-        session.setAttribute("user", user.get());
+        session.setAttribute("user", user);
         return "redirect:/";
 
     }

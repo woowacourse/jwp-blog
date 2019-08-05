@@ -31,12 +31,7 @@ public class ArticleController {
     @GetMapping("{articleId}/edit")
     public String showArticleEditingPage(@PathVariable long articleId, Model model, User user) {
         log.debug(">>> article Id : {}", articleId);
-        Article article;
-        try {
-            article =  articleService.find(articleId, user);
-        } catch (RuntimeException e) {
-            return "redirect:/";
-        }
+        Article article =  articleService.find(articleId, user);
 
         model.addAttribute("article", article);
         return "article-edit";
@@ -63,11 +58,7 @@ public class ArticleController {
     @PutMapping("{articleId}")
     public String updateArticleByIdPage(@PathVariable long articleId, ArticleDto articleDto, User user) {
         log.debug(">>> put article Id : {}, ArticleDto : {}, user : {}", articleId, articleDto, user);
-        try {
-            articleService.update(articleDto, articleId, user);
-        } catch (RuntimeException e) {
-            return "redirect:/";
-        }
+        articleService.update(articleDto, articleId, user);
 
         return "redirect:/articles/" + articleId;
     }

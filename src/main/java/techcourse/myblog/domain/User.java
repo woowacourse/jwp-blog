@@ -2,6 +2,7 @@ package techcourse.myblog.domain;
 
 import lombok.*;
 import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.exception.UserNotMatchedException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -55,8 +56,16 @@ public class User {
 
     private void checkMatch(User target) {
         if (!equals(target)) {
-            throw new IllegalArgumentException();
+            throw new UserNotMatchedException();
         }
+    }
+
+    public boolean isMatchedPassword(String target) {
+        return password.equals(target);
+    }
+
+    public boolean isNotMatchedPassword(String target) {
+        return !isMatchedPassword(target);
     }
 }
 

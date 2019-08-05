@@ -24,12 +24,7 @@ public class CommentController {
 
     @GetMapping("{id}/edit")
     public String showEditPage(@PathVariable long id, Model model, User user) {
-        Comment comment;
-        try {
-            comment = commentService.find(id, user);
-        } catch (RuntimeException e) {
-            return "redirect:/";
-        }
+        Comment comment = commentService.find(id, user);
         model.addAttribute("comment", comment);
         return "comment-edit";
     }
@@ -44,22 +39,14 @@ public class CommentController {
     @PutMapping("{id}")
     public String update(@PathVariable long id, CommentDto commentDto, User user) {
         log.debug(">>> update commentDto : {}", commentDto);
-        if (commentService.isSuccessUpdate(id, commentDto, user)) {
-            return "redirect:/articles/" + commentDto.getArticleId();
-        }
-
-        return "redirect:/";
+        commentService.update(id, commentDto, user);
+        return "redirect:/articles/" + commentDto.getArticleId();
     }
 
     @DeleteMapping("{id}")
     public String delete(@PathVariable long id, User user) {
         log.debug(">>> delete id : {}", id);
-        long articleId;
-        try {
-            articleId = commentService.deleteAndReturnArticleId(id, user);
-        } catch (RuntimeException e) {
-            return "redirect:/";
-        }
+        long articleId = commentService.deleteAndReturnArticleId(id, user);
         return "redirect:/articles/" + articleId;
     }
 

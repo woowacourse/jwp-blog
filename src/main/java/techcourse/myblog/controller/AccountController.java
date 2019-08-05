@@ -5,8 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.domain.User;
+import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.exception.UserDuplicateEmailException;
 import techcourse.myblog.service.AccountService;
 
 import javax.servlet.http.HttpSession;
@@ -62,10 +63,11 @@ public class AccountController {
 
         try {
             accountService.save(userDto);
-        } catch (RuntimeException e) {
+        } catch (UserDuplicateEmailException e) {
             errors.rejectValue("email", "0", "이메일 중복입니다.");
             return "signup";
         }
+
         return "redirect:/";
     }
 
@@ -75,13 +77,7 @@ public class AccountController {
             return "mypage-edit";
         }
 
-        User updatedUser;
-        try {
-            updatedUser = accountService.update(id, userDto, user);
-        } catch (RuntimeException e) {
-            return "redirect:/";
-        }
-
+        User updatedUser = accountService.update(id, userDto, user);
         session.setAttribute("user", updatedUser);
 
         return "redirect:/accounts/profile/" + id;

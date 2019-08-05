@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.dto.CommentDto;
+import techcourse.myblog.exception.CommentNotMatchedException;
 
 import javax.persistence.*;
 
@@ -40,14 +41,13 @@ public class Comment {
     }
 
     private Comment update(CommentDto commentDto) {
-        checkUpdateCondition(commentDto, user);
         this.contents = commentDto.getContents();
         return this;
     }
 
     public void checkMatchUser(User user) {
         if (this.user.isNotMatch(user)) {
-            throw new IllegalArgumentException("not match user");
+            throw new CommentNotMatchedException("not match user");
         }
     }
 
@@ -62,7 +62,7 @@ public class Comment {
 
     private void checkMatchArticleId(long articleId) {
         if (this.article.isNotMatch(articleId)) {
-            throw new IllegalArgumentException("not match article id");
+            throw new CommentNotMatchedException("not match article id");
         }
     }
 }

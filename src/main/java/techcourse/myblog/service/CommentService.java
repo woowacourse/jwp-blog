@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.*;
 import techcourse.myblog.dto.CommentDto;
+import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.exception.CommentNotFoundException;
 
 @Slf4j
 @Service
@@ -32,33 +34,25 @@ public class CommentService {
     }
 
     @Transactional
-    public boolean isSuccessUpdate(long id, CommentDto commentDto, User user) {
-        Comment preComment = commentRepository.findById(id).orElseThrow(RuntimeException::new);
-        log.debug(">>> isSuccessUpdate : preComment : {}", preComment);
-
-        try {
-            preComment.update(commentDto, user);
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-
-        return true;
+    public Comment update(long id, CommentDto commentDto, User user) {
+        Comment preComment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
+        return preComment.update(commentDto, user);
     }
 
     @Transactional
     public long deleteAndReturnArticleId(long id, User user) {
-        Comment preComment = commentRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        Comment preComment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
         preComment.checkMatchUser(user);
         delete(preComment);
         return preComment.getArticleId();
     }
 
     private Comment findById(long id) {
-        return commentRepository.findById(id).orElseThrow(RuntimeException::new);
+        return commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
     }
 
     private Article findArticleByArticleId(long articleId) {
-        return articleRepository.findById(articleId).orElseThrow(RuntimeException::new);
+        return articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new);
     }
 
     private Comment save(Comment comment) {

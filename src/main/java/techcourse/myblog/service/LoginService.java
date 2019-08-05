@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.UserRepository;
+import techcourse.myblog.dto.UserDto;
+import techcourse.myblog.exception.LoginNotMatchedException;
 
 import java.util.Optional;
 
@@ -16,7 +18,15 @@ public class LoginService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User login(UserDto userDto) {
+        User user = findByEmail(userDto.getEmail());
+        if (user.isNotMatchedPassword(userDto.getPassword())) {
+            throw new LoginNotMatchedException();
+        }
+        return user;
+    }
+
+    private User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(LoginNotMatchedException::new);
     }
 }

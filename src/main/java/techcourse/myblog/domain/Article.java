@@ -2,6 +2,7 @@ package techcourse.myblog.domain;
 
 import lombok.*;
 import techcourse.myblog.dto.ArticleDto;
+import techcourse.myblog.exception.UserNotMatchedException;
 
 import javax.persistence.*;
 
@@ -42,7 +43,7 @@ public class Article {
 
     public void checkMatchAuthor(User user) {
         if (isNotMatchAuthor(user)) {
-            throw new IllegalArgumentException();
+            throw new UserNotMatchedException();
         }
     }
 
