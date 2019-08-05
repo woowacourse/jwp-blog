@@ -28,7 +28,7 @@ public class CommentController {
     @PostMapping
     @ResponseBody
     public Comment createComment(SessionUser loginUser, @PathVariable Long articleId, @RequestBody CommentDto commentDto) {
-        log.info("Comment Create : {}", commentDto.getContents());
+        log.info("Comment create: contents={}", commentDto.getContents());
 
         Article article = articleReadService.findById(articleId);
         Comment comment = commentService.save(commentDto.toComment(loginUser.getUser(), article));
@@ -37,11 +37,14 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public RedirectView updateComment(SessionUser loginUser, @PathVariable Long commentId, @PathVariable Long articleId, CommentDto commentDto) {
-        Article article = articleReadService.findById(articleId);
-        commentService.modify(commentId, commentDto.toComment(loginUser.getUser(), article));
+    @ResponseBody
+    public Comment updateComment(SessionUser loginUser, @PathVariable Long commentId, @PathVariable Long articleId, @RequestBody CommentDto commentDto) {
+        log.info("Comment update: id={}, contents={}", commentId, commentDto.getContents());
 
-        return new RedirectView("/articles/" + articleId);
+        Article article = articleReadService.findById(articleId);
+        Comment updatedComment = commentService.modify(commentId, commentDto.toComment(loginUser.getUser(), article));
+
+        return updatedComment;
     }
 
     @DeleteMapping("/{commentId}")

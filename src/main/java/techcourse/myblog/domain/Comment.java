@@ -53,13 +53,15 @@ public class Comment {
         }
     }
 
-    public void update(Comment comment) {
+    public Comment update(Comment comment) {
         if (comment == null) {
             throw new CommentUpdateFailedException();
         }
 
         checkAuth(comment);
         this.contents = comment.contents;
+
+        return this;
     }
 
     private void checkAuth(Comment comment) {
