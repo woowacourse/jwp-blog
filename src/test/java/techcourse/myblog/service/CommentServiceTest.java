@@ -2,14 +2,15 @@ package techcourse.myblog.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.AdditionalMatchers;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.exception.ArticleNotFoundException;
 import techcourse.myblog.exception.CommentDeleteException;
 import techcourse.myblog.exception.CommentUpdateException;
-import techcourse.myblog.exception.UserNotFoundException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 import techcourse.myblog.repository.UserRepository;
@@ -19,9 +20,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class CommentServiceTest {
     private static final Long DEFAULT_USER_ID = 1L;
     private static final String DEFAULT_USER_EMAIL = "john123@example.com";
@@ -40,68 +41,47 @@ public class CommentServiceTest {
     private Article defaultArticle;
     private Comment defaultComment;
 
+    @Mock
     private UserRepository userRepository;
+    @Mock
     private ArticleRepository articleRepository;
+    @Mock
     private CommentRepository commentRepository;
 
+    @InjectMocks
     private CommentService commentService;
 
     @BeforeEach
     void setup() {
-        defaultUser = mock(User.class);
-        when(defaultUser.getId()).thenReturn(DEFAULT_USER_ID);
-        when(defaultUser.getEmail()).thenReturn(DEFAULT_USER_EMAIL);
-        when(defaultUser.getName()).thenReturn(DEFAULT_USER_NAME);
-        when(defaultUser.getPassword()).thenReturn(DEFAULT_USER_PASSWORD);
-
-        defaultArticle = mock(Article.class);
-        when(defaultArticle.getId()).thenReturn(DEFAULT_ARTICLE_ID);
-        when(defaultArticle.getTitle()).thenReturn(DEFAULT_ARTICLE_TITLE);
-        when(defaultArticle.getCoverUrl()).thenReturn(DEFAULT_ARTICLE_COVER_URL);
-        when(defaultArticle.getContents()).thenReturn(DEFAULT_ARTICLE_CONTENTS);
-        when(defaultArticle.getAuthor()).thenReturn(defaultUser);
-        when(defaultArticle.matchAuthor(any())).thenReturn(false);
-        when(defaultArticle.matchAuthor(eq(DEFAULT_USER_ID))).thenReturn(true);
-
-        defaultComment = mock(Comment.class);
-        when(defaultComment.getId()).thenReturn(DEFAULT_COMMENT_ID);
-        when(defaultComment.getContents()).thenReturn(DEFAULT_COMMENT_CONTENTS);
-        when(defaultComment.getAuthor()).thenReturn(defaultUser);
-        when(defaultComment.getArticle()).thenReturn(defaultArticle);
-        when(defaultComment.matchAuthor(DEFAULT_USER_ID)).thenReturn(true);
-
-        userRepository = mock(UserRepository.class);
-        when(userRepository.findById(defaultUser.getId())).thenReturn(Optional.of(defaultUser));
-        when(userRepository.findById(AdditionalMatchers.not(eq(defaultUser.getId())))).thenThrow(UserNotFoundException.class);
-        articleRepository = mock(ArticleRepository.class);
-        when(articleRepository.findById(defaultArticle.getId())).thenReturn(Optional.of(defaultArticle));
-        when(articleRepository.findById(AdditionalMatchers.not(eq(defaultArticle.getId())))).thenThrow(ArticleNotFoundException.class);
-        commentRepository = mock(CommentRepository.class);
-        when(commentRepository.save(any())).thenReturn(defaultComment);
-        when(commentRepository.findById(defaultComment.getId())).thenReturn(Optional.of(defaultComment));
-
-        commentService = new CommentService(commentRepository, userRepository, articleRepository);
+        defaultUser = spy(new User(DEFAULT_USER_EMAIL, DEFAULT_USER_NAME, DEFAULT_USER_PASSWORD));
+        defaultArticle = spy(new Article(DEFAULT_ARTICLE_TITLE, DEFAULT_ARTICLE_COVER_URL, DEFAULT_ARTICLE_CONTENTS, defaultUser));
+        defaultComment = spy(new Comment(DEFAULT_COMMENT_CONTENTS, defaultUser, defaultArticle));
     }
 
     @Test
     void 댓글_작성() {
         // Given
         CommentRequestDto commentDto = new CommentRequestDto(defaultComment.getContents());
+        when(userRepository.findById(DEFAULT_USER_ID)).thenReturn(Optional.of(defaultUser));
+        when(articleRepository.findById(DEFAULT_ARTICLE_ID)).thenReturn(Optional.of(defaultArticle));
+        when(commentRepository.save(any())).thenReturn(defaultComment);
 
         // When
-        commentService.save(commentDto, defaultComment.getAuthor().getId(), defaultComment.getArticle().getId());
+        commentService.save(commentDto, DEFAULT_USER_ID, DEFAULT_ARTICLE_ID);
 
         // Then
-        verify(commentRepository, atLeastOnce()).save(any());
+        verify(commentRepository).save(any());
     }
 
     @Test
     void 작성자가_댓글_수정() {
         // Given
         CommentRequestDto commentDto = new CommentRequestDto("new Hello");
+        when(commentRepository.findById(DEFAULT_COMMENT_ID)).thenReturn(Optional.of(defaultComment));
+        doReturn(true).when(defaultComment).matchAuthor(DEFAULT_USER_ID);
 
         // When
-        commentService.update(commentDto, defaultComment.getId(), defaultComment.getAuthor().getId());
+        commentService.update(commentDto, DEFAULT_COMMENT_ID, DEFAULT_USER_ID);
 
         // Then
         verify(defaultComment, atLeastOnce()).update(anyString());
@@ -111,6 +91,8 @@ public class CommentServiceTest {
     void 타인이_댓글_수정() {
         // Given
         CommentRequestDto commentDto = new CommentRequestDto("new Hello");
+        when(defaultUser.getId()).thenReturn(DEFAULT_USER_ID);
+        when(defaultComment.getId()).thenReturn(DEFAULT_COMMENT_ID);
 
         // When
         assertThrows(CommentUpdateException.class, () -> {
@@ -123,8 +105,12 @@ public class CommentServiceTest {
 
     @Test
     void 작성자가_댓글_삭제() {
+        // Given
+        when(commentRepository.findById(DEFAULT_COMMENT_ID)).thenReturn(Optional.of(defaultComment));
+        doReturn(true).when(defaultComment).matchAuthor(DEFAULT_USER_ID);
+
         // When
-        commentService.delete(DEFAULT_COMMENT_ID, defaultComment.getAuthor().getId());
+        commentService.delete(DEFAULT_COMMENT_ID, DEFAULT_USER_ID);
 
         // Then
         verify(commentRepository, atLeastOnce()).delete(any());
@@ -132,6 +118,10 @@ public class CommentServiceTest {
 
     @Test
     void 타인이_댓글_삭제() {
+        // Given
+        when(defaultUser.getId()).thenReturn(DEFAULT_USER_ID);
+        when(defaultComment.getId()).thenReturn(DEFAULT_COMMENT_ID);
+
         // When
         assertThrows(CommentDeleteException.class, () -> {
             commentService.delete(defaultComment.getId(), defaultComment.getAuthor().getId() + 1);
