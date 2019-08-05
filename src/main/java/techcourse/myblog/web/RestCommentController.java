@@ -1,15 +1,21 @@
 package techcourse.myblog.web;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.service.CommentService;
+import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
+import techcourse.myblog.service.dto.UserPublicInfoDto;
+import techcourse.myblog.web.exception.NotLoggedInException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
 public class RestCommentController {
+    private static final String LOGGED_IN_USER = "loggedInUser";
+
     private CommentService commentService;
 
     public RestCommentController(CommentService commentService) {
@@ -19,5 +25,21 @@ public class RestCommentController {
     @GetMapping("/comments/{id}")
     public List<CommentResponseDto> readComments(@PathVariable("id") Long id) {
         return commentService.findCommentsByArticleId(id);
+    }
+
+    @PostMapping("/comments")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void createComment(CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
+        Long userId = getLoggedInUser(httpServletRequest).getId();
+        commentService.save(userId, commentRequestDto);
+    }
+
+    private UserPublicInfoDto getLoggedInUser(HttpServletRequest httpServletRequest) {
+        HttpSession httpSession = httpServletRequest.getSession();
+        UserPublicInfoDto user = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
+        if (user == null) {
+            throw new NotLoggedInException();
+        }
+        return user;
     }
 }

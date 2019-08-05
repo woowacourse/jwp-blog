@@ -23,12 +23,12 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/comment")
-    public String createComment(CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
-        Long userId = getLoggedInUser(httpServletRequest).getId();
-        commentService.save(userId, commentRequestDto);
-        return "redirect:/articles/" + commentRequestDto.getArticleId();
-    }
+//    @PostMapping("/comment")
+//    public String createComment(CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
+//        Long userId = getLoggedInUser(httpServletRequest).getId();
+//        commentService.save(userId, commentRequestDto);
+//        return "redirect:/articles/" + commentRequestDto.getArticleId();
+//    }
 
     @PutMapping("/comment/{commentId}")
     public String updateComment(@PathVariable("commentId") Long commentId,
