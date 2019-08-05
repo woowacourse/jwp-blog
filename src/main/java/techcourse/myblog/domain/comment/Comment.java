@@ -33,6 +33,12 @@ public class Comment {
     @Column(nullable = false)
     private String contents;
 
+    public Comment(Long id, String contents, User user, Article article) {
+        this.id = id;
+        this.contents = contents;
+        this.user = user;
+        this.article = article;
+    }
 
     @ManyToOne
     @JoinColumn(name = "user_id")

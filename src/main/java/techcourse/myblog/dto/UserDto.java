@@ -51,6 +51,12 @@ public class UserDto {
         private String email;
         private String name;
 
+        public Response(Long userId, String userEmail, String userName) {
+            id = userId;
+            email = userEmail;
+            name = userName;
+        }
+
         public User toUser() {
             return User.builder()
                 .id(id)
@@ -58,6 +64,7 @@ public class UserDto {
                 .email(email)
                 .build();
         }
+
     }
 
     @Data

@@ -19,13 +19,15 @@ public class CommentDto {
         @NotBlank
         private String contents;
 
-        private LocalDateTime regDate;
+        public Create(Long articleId, String contents) {
+            this.articleId = articleId;
+            this.contents = contents;
+        }
 
         public Comment toComment(User user, Article article) {
             return Comment.builder()
                 .user(user)
                 .article(article)
-                .regDate(regDate)
                 .contents(contents)
                 .build();
         }
@@ -38,6 +40,11 @@ public class CommentDto {
         @Size(max = 300)
         @NotBlank
         private String contents;
+
+        public Update(Long articleId, String contents) {
+            this.articleId = articleId;
+            this.contents = contents;
+        }
     }
 
     @Data
