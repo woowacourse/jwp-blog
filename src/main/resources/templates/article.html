@@ -103,14 +103,14 @@
                         </ul>
                     </div>
 
-                        <div class="add-comment">
-                            <input id="comment-contents" name="contents" type="hidden">
-                            <input id="article-id" th:value="${article.id}" type="hidden">
-                            <div id="editSection"></div>
-                            <button class="btn btn-default" id="comment-save-button" type="submit">
-                                댓글 등록
-                            </button>
-                        </div>
+                    <div class="add-comment">
+                        <input id="comment-contents" name="contents" type="hidden">
+                        <input id="article-id" th:value="${article.id}" type="hidden">
+                        <div id="editSection"></div>
+                        <button class="btn btn-default" id="comment-save-button" type="submit">
+                            댓글 등록
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -144,6 +144,41 @@
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
+
+    <script id="comment-template" type="rv-template">
+
+        <li class="comment-item border bottom mrg-btm-30">
+            <img alt=""
+                 class="thumb-img img-circle"
+                 src="https://avatars2.githubusercontent.com/u/3433096?v=4">
+            <div class="info">
+                <span class="text-bold inline-block" href="" text="{{userName}}">JUN</span>
+
+                <span class="sub-title inline-block pull-right">
+                                        <i class="ti-timer pdd-right-5"></i>p
+                                        <span>6 min ago</span>
+                                    </span>
+
+                {buttonTemplate}
+                <p class="width-80">{{contents}}</p>
+            </div>
+        </li>
+    </script>
+
+    <script id="comment-button-template" type="rv-template">
+        <form method="post"
+              action="'/articles/' + {{articleId}} + '/comments/' + {{commentId}}">
+            <input name="_method" type="hidden" value="DELETE"/>
+            <button class="btn btn-icon float-right pointer"
+                    type="submit">
+                <i class="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
+            </button>
+        </form>
+        <button class="comment-edit float-right pointer btn btn-icon">
+            <i class="comment-edit ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+        </button>
+    </script>
+
     <script src="/js/comment.js"></script>
     <script th:if="${commentError != null}" th:inline="javascript">
         const error = [[ ${commentError}]];
