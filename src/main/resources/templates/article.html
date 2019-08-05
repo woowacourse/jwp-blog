@@ -91,12 +91,12 @@
                                         </form>
                                     </div>
                                 </span>
-                                <p class="width-80" th:text="${comment.contents}"></p>
+                                <p class="width-80" th:id="'comment-' + ${comment.id} + '-contents'" th:text="${comment.contents}"></p>
                             </div>
                             <form  method="post" th:action="${article.id} + '/comment/'+ ${comment.id}" class="edit edit-form">
                                 <input name="_method" type="hidden" value="PUT" />
-                                <input class="edit" name="contents" th:value="${comment.contents}">
-                                <button type="submit" class="btn btn-default">
+                                <input class="edit" th:id="'comment-' + ${comment.id}"name="contents" th:value="${comment.contents}">
+                                <button type="button" th:id="${comment.id}" class="btn btn-default comment-modify-button comment-modify">
                                     <i class="ti-save "></i>
                                 </button>
                                 <button type="button" class="btn btn-default comment-modify">
@@ -106,7 +106,7 @@
                         </li>
                     </ul>
 
-                    <form th:method="post" th:action="${article.id} + '/comment/'">
+                    <form th:method="post" th:action="${article.id} + '/comment'">
                         <div class="add-comment">
                             <input type="hidden" name="contents" id="article-comment">
                             <div id="editSection"></div>
@@ -144,18 +144,17 @@
                 <span>{{updateTimeAt}}</span>
                     {{buttons}}
             </span>
-            <p class="width-80">{{contents}}</p>
+            <p id="comment-{{id}}-contents" class="width-80">{{contents}}</p>
         </div>
-        <form method="post" action="{{article.id}}/comment/{{id}}" class="edit edit-form">
-            <input name="_method" type="hidden" value="PUT" />
-            <input class="edit" name="contents" value="{{contents}}">
-            <button type="submit" class="btn btn-default">
-                <i class="ti-save "></i>
+        <div class="edit edit-form">
+            <input class="edit" id="comment-{{id}}" name="contents" value="{{contents}}">
+            <button type="button" id="{{id}}" class="btn btn-default comment-modify-button comment-modify">
+                <i class="ti-save"></i>
             </button>
             <button type="button" class="btn btn-default comment-modify">
                 <i class="ti-close comment-modify"></i>
             </button>
-        </form>
+        </div>
     </li>
 </script>
 <script type="text/javascript" th:inline="javascript">
@@ -193,6 +192,7 @@
 
             const updateComment = function() {
                 const commentList = document.getElementById('comment-list');
+                commentList.addEventListener('click', commentService.modifyToggle);
                 commentList.addEventListener('click', commentService.modify);
             };
 
@@ -212,21 +212,52 @@
 
             const save = (event) => {
                 fetch('/articles/' + articleId + '/comment', {
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8'
+                    },
                     method: 'POST',
                     body: JSON.stringify({
                         contents: editor.getMarkdown()
-                    }),
-                    headers: {
-                        'Content-type': 'application/json; charset=UTF-8'
+                    })
+                }).then(response => {
+                    if(response.status === 200){
+                        return response.json();
                     }
-                }).then(response => response.json())
-                        .then(json => {
-                        appendComment(json);
-
-                    });
+                    throw response;
+                }).then(json => {
+                    appendComment(json)
+                }).catch(error => {error.json().then(json => alert(json.message))});
             };
 
             const modify = (event) => {
+                if (!event.target.classList.contains('comment-modify-button')) {
+                    return;
+                }
+                const commentId = event.target.id;
+                const inputComment = document.querySelector('#comment-' + commentId);
+
+                fetch('/articles/' + articleId + '/comment/' + commentId, {
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8'
+                    },
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        contents: inputComment.value
+                    })
+                }).then(response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    }
+                    throw response;
+                }).then(json => {
+                    const commentContents = document.querySelector('#comment-'+commentId+'-contents');
+                    commentContents.innerText = json.contents;
+                }).catch(error => {
+                    error.json().then(json => alert(json.message));
+                });
+            };
+
+            const modifyToggle = (event) => {
                 if (event.target.classList.contains('comment-modify')) {
                     const commentList = event.target.closest("li");
                     commentList.classList.toggle('editing');
@@ -274,6 +305,7 @@
 
             return {
                 save: save,
+                modifyToggle: modifyToggle,
                 modify: modify
             }
         };

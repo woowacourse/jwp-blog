@@ -20,8 +20,8 @@ public class CommentWriteService {
         return commentRepository.save(comment);
     }
 
-    public void modify(Long commentId, Comment comment) {
-        commentReadService.findById(commentId).update(comment);
+    public Comment modify(Long commentId, Comment comment) {
+        return commentReadService.findById(commentId).update(comment);
     }
 
     public void deleteById(Long id) {

@@ -1,6 +1,9 @@
 package techcourse.myblog.presentation.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -13,6 +16,7 @@ import techcourse.myblog.application.exception.NotFoundCommentException;
 import techcourse.myblog.domain.article.exception.MismatchArticleAuthorException;
 import techcourse.myblog.domain.comment.exception.InvalidCommentException;
 import techcourse.myblog.domain.comment.exception.MismatchCommentAuthorException;
+import techcourse.myblog.presentation.support.exception.CustomException;
 
 @ControllerAdvice
 public class UserControllerExceptionHandler {
@@ -29,15 +33,13 @@ public class UserControllerExceptionHandler {
     }
 
     @ExceptionHandler({MismatchArticleAuthorException.class, MismatchCommentAuthorException.class})
-    public RedirectView handleMismatchAuthorException(RuntimeException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return new RedirectView("/");
+    public ResponseEntity<CustomException> handleMismatchAuthorException(RuntimeException e) {
+        return new ResponseEntity<>(new CustomException(e.getMessage()), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler({NotFoundArticleException.class, NotFoundCommentException.class})
-    public RedirectView handleNotFoundException(RuntimeException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return new RedirectView("/");
+    public ResponseEntity<CustomException> handleNotFoundException(RuntimeException e) {
+        return new ResponseEntity<>(new CustomException(e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(InvalidCommentException.class)

@@ -63,10 +63,11 @@ public class Comment {
         }
     }
 
-    public void update(Comment comment) {
+    public Comment update(Comment comment) {
         validateComment(comment);
         validateArticleAndAuthor(comment);
         this.contents = comment.contents;
+        return this;
     }
     
     private void validateComment(Comment comment) {
