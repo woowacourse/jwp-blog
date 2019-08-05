@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
+import techcourse.myblog.user.exception.LoginException;
 import techcourse.myblog.user.service.LoginService;
 import techcourse.myblog.user.service.UserService;
 import techcourse.myblog.utils.model.ModelUtil;
@@ -17,6 +16,7 @@ import techcourse.myblog.utils.session.SessionUtil;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Map;
 
 import static techcourse.myblog.utils.session.SessionContext.USER;
 
@@ -45,9 +45,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid UserRequestDto userRequestDto, BindingResult result) {
+    public String login(@RequestBody @Valid UserRequestDto userRequestDto, BindingResult result) {
         if (result.hasErrors()) {
-            return "login";
+            throw new LoginException();
         }
 
         UserResponseDto userResponseDto = loginService.loginByEmailAndPwd(userRequestDto);
