@@ -3,14 +3,12 @@ package techcourse.myblog.comment;
 import java.time.LocalDateTime;
 import javax.persistence.*;
 
-import org.hibernate.annotations.DynamicInsert;
 import techcourse.myblog.user.User;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @EntityListeners(AuditingEntityListener.class)
-@DynamicInsert
 @Entity
 public class Comment {
 	@Id
