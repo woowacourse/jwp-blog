@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.controller.dto.ArticleDto;
-import techcourse.myblog.controller.dto.CommentDto;
+import techcourse.myblog.controller.dto.RequestCommentDto;
 import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.utils.Utils;
@@ -64,10 +64,10 @@ class CommentControllerTest {
         articleUrl = Utils.createArticle(articleDto, cookie, baseUrl);
         articleId = Utils.getId(articleUrl);
 
-        CommentDto commentDto = new CommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS);
-        Utils.createComment(commentDto, cookie, baseUrl);
-        CommentDto commentDto2 = new CommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS_2);
-        Utils.createComment(commentDto2, cookie, baseUrl);
+        RequestCommentDto requestCommentDto = new RequestCommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS);
+        Utils.createComment(requestCommentDto, cookie, baseUrl);
+        RequestCommentDto requestCommentDto2 = new RequestCommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS_2);
+        Utils.createComment(requestCommentDto2, cookie, baseUrl);
     }
 
     @Test
@@ -188,8 +188,8 @@ class CommentControllerTest {
         Utils.createUser(webTestClient, new UserDto(USER_NAME_2, EMAIL_2, PASSWORD_2));
         cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL_2, PASSWORD_2));
 
-        CommentDto commentDto3 = new CommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS_3);
-        String createLocationUrl = Utils.createComment(commentDto3, cookie, baseUrl);
+        RequestCommentDto requestCommentDto3 = new RequestCommentDto(Long.parseLong(articleId), COMMENTS_CONTENTS_3);
+        String createLocationUrl = Utils.createComment(requestCommentDto3, cookie, baseUrl);
         String id = Utils.getId(createLocationUrl);
 
         EntityExchangeResult<byte[]> result = webTestClient.delete().uri("/comments/" + id)
