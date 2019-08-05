@@ -1,41 +1,50 @@
 package techcourse.myblog.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Objects;
+import javax.persistence.*;
 
-@Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter
 @EqualsAndHashCode(of = "id")
+@ToString
+@Entity
 public class Article {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String coverUrl;
+
+    @Lob
     private String contents;
-    
-    private Article(String title, String coverUrl, String contents) {
+
+    @ManyToOne
+    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    private User author;
+
+    @Builder
+    public Article(String title, String coverUrl, String contents, User author) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.author = author;
     }
-    
-    public static Article from(String title, String coverUrl, String contents) {
-        return new Article(title, coverUrl, contents);
+
+    public boolean isCoverUrl() {
+        return StringUtils.isNotBlank(coverUrl);
     }
-    
+
     public void update(Article article) {
         this.title = article.title;
         this.coverUrl = article.coverUrl;
         this.contents = article.contents;
+    }
+
+    public boolean isAuthor(User user) {
+        return author.equals(user);
     }
 }
