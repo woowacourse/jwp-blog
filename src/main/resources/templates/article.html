@@ -35,7 +35,7 @@
                         </li>
                         <li role="separator" class="divider"></li>
                         <li class="text-dark">
-                            <a href="/">
+                            <a href="/logout">
                                 <i class="ti-power-off pdd-right-10"></i>
                                 <span class="text-dark">로그아웃</span>
                             </a>
@@ -57,17 +57,19 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <form th:action="'/articles/' + ${article.id}" method="post">
-                    <input type="hidden" name="_method" value="delete"/>
-                    <a class="float-right pointer btn btn-icon">
-                        <button type="submit" class="float-right pointer btn btn-icon">
-                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
-                        </button>
+                <div th:if ="${isAuthor} == true">
+                    <form th:action="'/articles/' + ${article.id}" method="post">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <a class="float-right pointer btn btn-icon">
+                            <button type="submit" class="float-right pointer btn btn-icon">
+                                <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                            </button>
+                        </a>
+                    </form>
+                    <a th:href="'/articles/' + ${article.id} + '/edit'" class="float-right pointer btn btn-icon">
+                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                     </a>
-                </form>
-                <a th:href="'/articles/' + ${article.id} + '/edit'" class="float-right pointer btn btn-icon">
-                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                </a>
+                </div>
                 <div id="viewerSection"></div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
@@ -76,7 +78,8 @@
                         <img class="width-80px border-radius-round" src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                     </div>
                     <div class="col-md-10 col-sm-7">
-                        <span class="font-size-16 text-bold pdd-btm-5">Brown</span><span class="font-size-12 text-gray"> / gracefulBrown@woowahan.com</span>
+                        <span class="font-size-16 text-bold pdd-btm-5" th:text="${article.author.name}"}>Brown</span>
+                        <span class="font-size-12 text-gray" th:text="${article.author.email}"> / gracefulBrown@woowahan.com</span>
                         <p class="font-size-13 text-dimgray lh-1-3">
                             백엔드 개발자: 설계.테스트.생산성.클린코드.멘토링에 관심이 많음 <br>
                             Woowahantechcourse Organizer / Coach / Husband
@@ -102,37 +105,73 @@
                     <span class="font-size-16 text-info">2</span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
+                    <ul class="list-unstyled list-info" th:each="comment, status : ${comments}">
                         <li class="comment-item border bottom mrg-btm-30">
-                            <img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                            <div class="info">
-                                <span href="" class="text-bold inline-block">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
-                            </span>
-                            <p class="width-80">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로 살다 보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄 수 있는 계기가 되었다.</p>
-                            </div>
-                        </li>
+                                <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
+                                <div class="info">
+                                    <input type="text" th:id="'content-input'+ ${comment.id}" style="display:none"/>
+                                    <span href="" class="text-bold inline-block" th:text="${comment.author.name}">Jun</span>
+                                    <span class="sub-title inline-block pull-right">
+                                        <i class="ti-timer pdd-right-5"></i>
+                                        <span>6 min ago</span>
+                                    </span>
 
-                        <li class="comment-item border bottom mrg-btm-30">
-                            <img class="thumb-img img-circle" src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
-                            <div class="info">
-                                <span href="" class="text-bold inline-block">Jun</span>
-                                <span class="sub-title inline-block pull-right">
-                                    <i class="ti-timer pdd-right-5"></i>
-                                    <span>6 min ago</span>
-                                </span>
-                                <p class="width-80">브라운 멋져</p>
-                            </div>
+                                    <div th:if ="${checkCommentsAuthor[status.index]} == true">
+                                        <!-- <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}">
+                                            <input type="hidden" name="_method" value="put"/> -->
+                                        <button type="button" class="float-right pointer btn btn-icon" th:onclick="'clickPencil('+${article.id}+', '+${comment.id}+')'">
+                                            <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                        </button>
+                                        <!-- </form>
+ -->
+                                        <form th:action="'/articles/'+${article.id}+'/comments/'+${comment.id}" method="post">
+                                            <input type="hidden" name="_method" value="DELETE"/>
+                                            <button type="submit" class="float-right pointer btn btn-icon">
+                                                <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+
+
+                                    <p th:id="'commentContents-'+${comment.id}" class="width-80" th:text="${comment.contents}">브라운 멋져</p>
+                                </div>
                         </li>
 
                     </ul>
                     <div class="add-comment">
                         <div id="editSection"></div>
+                        <form th:action="'/articles/' + ${article.id} + '/comments'" method="post">
+                            <input id="comment-contents" name="contents" type="hidden">
+                            <a class="float-right pointer btn btn-icon">
+                                <button id="save-btn" type="submit" class="btn btn-default">
+                                    <i class="ti-save"></i>
+                                </button>
+                            </a>
+                        </form>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="commentModifyForm" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Title</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="_method" value="PUT"/>
+                    <input type="text" id="modalInput" name="contents"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -158,10 +197,18 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
+                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
             }
         },
         height: '200px'
     });
+
+    function clickPencil(articleId, commentId) {
+        let commentContents = document.getElementById("commentContents-"+commentId);
+        $('#modalInput').val(commentContents.textContent)
+        document.getElementById('commentModifyForm').action="/articles/"+articleId+"/comments/"+commentId
+        $('#exampleModal').modal('show')
+    }
 </script>
 </body>
 </html>

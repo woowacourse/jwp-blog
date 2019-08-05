@@ -1,5 +1,7 @@
 package techcourse.myblog.presentation.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,10 +13,14 @@ import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 import techcourse.myblog.presentation.controller.exception.InvalidUpdateException;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 
 @ControllerAdvice(basePackages = {"techcourse.myblog.presentation.controller"})
 public class UserExceptionHandlers {
+    private static final Logger log = LoggerFactory.getLogger(UserExceptionHandlers.class);
+
     @ExceptionHandler(DuplicatedIdException.class)
     public RedirectView handleDuplicatedIdError(RedirectAttributes redirectAttributes, DuplicatedIdException e) {
         RedirectView redirectView = new RedirectView("/signup");
@@ -24,7 +30,7 @@ public class UserExceptionHandlers {
 
     @ExceptionHandler(NotExistUserIdException.class)
     public RedirectView handleNotExistIdError(RedirectAttributes redirectAttributes, NotExistUserIdException e) {
-        RedirectView redirectView = new RedirectView(e.getNextView());
+        RedirectView redirectView = new RedirectView("/");
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
         return redirectView;
     }
@@ -45,13 +51,32 @@ public class UserExceptionHandlers {
 
     @ExceptionHandler(BindException.class)
     public RedirectView handleBindError(RedirectAttributes redirectAttributes, BindException e) {
-        RedirectView redirectView = new RedirectView("signup");
+        RedirectView redirectView = new RedirectView("/");
 
         String errorMessages = e.getFieldErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining("\n"));
 
         redirectAttributes.addFlashAttribute("errormessage", errorMessages);
+        return redirectView;
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public RedirectView handleVaidationError(RedirectAttributes redirectAttributes, ConstraintViolationException e) {
+        RedirectView redirectView = new RedirectView("/");
+
+        String errorMessages = e.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining("\n"));
+
+        redirectAttributes.addFlashAttribute("errormessage", errorMessages);
+        return redirectView;
+    }
+
+    @ExceptionHandler(Exception.class)
+    public RedirectView handleUnexpectedError(RedirectAttributes redirectAttributes, Exception e) {
+        RedirectView redirectView = new RedirectView("/");
+        redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
         return redirectView;
     }
 }
