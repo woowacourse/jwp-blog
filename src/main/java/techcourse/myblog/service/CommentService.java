@@ -34,8 +34,8 @@ public class CommentService {
         throw new MismatchAuthorException();
     }
 
-    public void modify(Long id, Comment comment) {
-        findById(id).update(comment);
+    public Comment modify(Long id, Comment comment) {
+        return findById(id).update(comment);
     }
 
     private Comment findById(Long id) {
