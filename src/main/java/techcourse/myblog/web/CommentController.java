@@ -1,34 +1,49 @@
 package techcourse.myblog.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.application.CommentService;
 import techcourse.myblog.application.dto.CommentRequest;
+import techcourse.myblog.application.dto.CommentResponse;
 import techcourse.myblog.application.dto.UserResponse;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/articles/{articleId}")
 public class CommentController {
 
+    private static final Logger log = LoggerFactory.getLogger(CommentController.class);
+
     private final CommentService commentService;
 
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, ObjectMapper objectMapper) {
         this.commentService = commentService;
     }
 
-    @PostMapping("/comments")
-    public String saveComment(@PathVariable("articleId") Long articleId, @Valid CommentRequest commentRequest,
-                              BindingResult bindingResult, HttpSession httpSession) {
-        if (!bindingResult.hasErrors()) {
-            UserResponse user = (UserResponse) httpSession.getAttribute("user");
-            commentService.save(commentRequest, articleId, user.getId());
-        }
+//    @PostMapping("/comments")
+//    public String saveComment(@PathVariable("articleId") Long articleId, @Valid CommentRequest commentRequest,
+//                              BindingResult bindingResult, HttpSession httpSession) {
+//        if (!bindingResult.hasErrors()) {
+//            UserResponse user = (UserResponse) httpSession.getAttribute("user");
+//            commentService.save(commentRequest, articleId, user.getId());
+//        }
+//
+//        return "redirect:/articles/" + articleId;
+//    }
 
-        return "redirect:/articles/" + articleId;
+    @PostMapping("/comments")
+    @ResponseBody
+    public CommentResponse saveComment(@PathVariable("articleId") Long articleId, @RequestBody CommentRequest commentRequest,
+                                       BindingResult bindingResult, HttpSession httpSession) {
+        log.info(commentRequest.getContents());
+
+        UserResponse user = (UserResponse) httpSession.getAttribute("user");
+        return commentService.save(commentRequest, articleId, user.getId());
     }
 
     @DeleteMapping("/comments/{commentId}")

@@ -108,15 +108,25 @@
                             </div>
                         </li>
                     </ul>
-                    <form th:if="${session.user}" id="commentForm" method="post" th:action="'/articles/' + ${article.id} + '/comments'">
-                        <input type="hidden" name="contents" id="commentContents"/>
-                        <div class="add-comment">
-                            <div id="editSection"></div>
-                            <button type="button" onclick="saveComment()" id="saveCommentBtn" class="float-right pointer btn btn-icon">
-                                <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                            </button>
-                        </div>
-                    </form>
+<!--                    <form th:if="${session.user}" id="commentForm" method="post" th:action="'/articles/' + ${article.id} + '/comments'">-->
+<!--                        <input type="hidden" name="contents" id="commentContents"/>-->
+<!--                        <div class="add-comment">-->
+<!--                            <div id="editSection"></div>-->
+<!--                            <button type="button" onclick="saveComment()" id="saveCommentBtn" class="float-right pointer btn btn-icon">-->
+<!--                                <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </form>-->
+
+                    <!--                    ajax fetch version-->
+                    <input type="hidden" name="contents" id="commentContents"/>
+                    <div class="add-comment">
+                        <div id="editSection"></div>
+                        <button type="button" id="saveCommentBtn" class="float-right pointer btn btn-icon">
+                            <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -126,6 +136,39 @@
 <th:block th:include="/fragments/article-js :: articleJs"/>
 
 <script>
+    var articleId = [[${article.id}]]
+
+    // function showComment()
+
+    function createComment(comment) {
+        fetch('/articles/' + articleId + '/comments', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify(comment)
+        }).then(function(response) {
+            // console.log(response);
+            return response.json();
+        }).then(function(data) {
+            console.log('2: ' + data.contents);
+        })
+    }
+
+    function submitComment() {
+        var contents = editor.getMarkdown();
+        if (contents) {
+            createComment({
+                contents: contents
+            });
+        } else {
+            alert('내용을 입력하세요!');
+        }
+    }
+
+    var submitButton = document.querySelector('#saveCommentBtn');
+    submitButton.addEventListener('click', submitComment);
+
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
         viewer: true,
@@ -144,15 +187,15 @@
         height: '200px'
     });
 
-    function saveComment() {
-        var contents = editor.getMarkdown();
-        if (contents === "") {
-            alert('내용을 입력하세요!');
-            return;
-        }
-        document.getElementById("commentContents").value = contents;
-        document.getElementById("commentForm").submit();
-    }
+    // function saveComment() {
+    //     var contents = editor.getMarkdown();
+    //     if (contents === "") {
+    //         alert('내용을 입력하세요!');
+    //         return;
+    //     }
+    //     document.getElementById("commentContents").value = contents;
+    //     document.getElementById("commentForm").submit();
+    // }
 
     function showCommentInput(commentId){
         let commentContents = document.querySelector("#commentContents" + commentId);

@@ -3,6 +3,7 @@ package techcourse.myblog.application;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.application.dto.CommentRequest;
+import techcourse.myblog.application.dto.CommentResponse;
 import techcourse.myblog.application.dto.UserResponse;
 import techcourse.myblog.application.exception.CommentNotFoundException;
 import techcourse.myblog.application.exception.NoArticleException;
@@ -35,15 +36,18 @@ public class CommentService {
         this.modelMapper = modelMapper;
     }
 
-    public void save(CommentRequest commentRequest, Long articleId, Long userId) {
+    public CommentResponse save(CommentRequest commentRequest, Long articleId, Long userId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new NoArticleException("게시글이 존재하지 않습니다."));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoUserException("유저가 존재하지 않습니다."));
 
         Comment comment = new Comment(commentRequest.getContents(), user, article);
-
         commentRepository.save(comment);
+
+        CommentResponse commentResponse = modelMapper.map(comment, CommentResponse.class);
+        commentResponse.setAuthor(modelMapper.map(user, UserResponse.class));
+        return commentResponse;
     }
 
     public List<Comment> findCommentsByArticle(Article article) {
