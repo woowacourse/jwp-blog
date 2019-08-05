@@ -61,8 +61,24 @@ public class CommentControllerTests extends AuthedWebTestClient {
                     SEAN_ARTICLE_ID = Integer.parseInt(path.substring(index + 1));
                 });
 
-        commentId++;
-        addComments();
+//        commentId++;
+//        addComments();
+    }
+
+    @Test
+    void 댓글_생성() {
+        webTestClient.post().uri("/articles/" + SEAN_ARTICLE_ID + "/comments")
+                .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(fromFormData(CONTENT, CONTENT)
+                        .with("articleId", "" + SEAN_ARTICLE_ID))
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.id").isEqualTo(1L)
+                .jsonPath("$.contents").isEqualTo(CONTENT)
+                .jsonPath("$.author.name").isEqualTo(POBI_NAME);
     }
 
     @Test

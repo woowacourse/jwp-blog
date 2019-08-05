@@ -114,6 +114,11 @@
                             </li>
                         </div>
                     </ul>
+                    <ul id="comments" class="list-unstyled list-info">
+                    </ul>
+                    <button id="save-btn2" type="submit" class="btn btn-default btn-group">
+                        <i class="ti-save"></i>
+                    </button>
                     <div class="add-comment">
                         <form th:action="${#strings.concat('/articles/', article.id, '/comments/')}"
                               name="comment" method="post" accept-charset="UTF-8">
@@ -160,6 +165,59 @@
         const content = document.getElementById("contents-"+index);
         content.innerHTML = "<textarea name='contents'>" + content.innerText + "</textarea>  <button value='수정' type='submit'>수정</button>"
     }
+
+    const CREATE_URL = `${location.pathname}/comments`
+    const comments = document.getElementById("comments")
+
+    const parseCommentToHtml = comment => `
+     <li class="comment-item border bottom mrg-btm-30">
+        <span>
+        <img class="thumb-img img-circle"
+             src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+        <div class="info">
+            <span href=""
+                  class="text-bold inline-block">${comment.author.name}</span>
+            <span class="sub-title inline-block pull-right">
+                <i class="ti-timer pdd-right-5"></i>
+                <span >${comment.updatedDate}</span>
+            </span>
+            <form th:action="${'comments/' + comment.id}" th:method="put">
+                <p class="width-80" th:id="'contents-' + ${comment.id}">${comment.contents}</p>
+            </form>
+        </div>
+        </span>
+    </li>
+    `
+
+    const createButton = document.getElementById("save-btn2")
+
+    const createComment = () => {
+        const config = {
+            headers: {
+                'Content-Type' : 'application/json;charset=UTF-8'
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                articleId: 1,
+                contents: editor.getMarkdown()
+            })
+        }
+        console.log(config.body)
+        return fetch(CREATE_URL, config)
+            .then(res => {
+                console.log(res)
+                return res.json()
+            })
+            .then(comment => {
+                console.log(comment)
+                const div = document.createElement('div');
+                div.innerHTML = parseCommentToHtml(comment)
+                comments.appendChild(div)
+            })
+            .catch(error => console.error(error))
+    }
+    createButton.addEventListener("click", createComment)
+
 </script>
 </body>
 </html>

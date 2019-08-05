@@ -1,7 +1,9 @@
 package techcourse.myblog.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
@@ -12,7 +14,7 @@ import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.annotation.LoginUser;
 
-@Controller
+@RestController
 @RequestMapping("/articles/{articleId}/comments")
 public class CommentController {
     private final CommentService commentService;
@@ -24,11 +26,11 @@ public class CommentController {
         this.articleService = articleService;
     }
 
-    @PostMapping("")
-    public RedirectView createComment(CommentDto commentDto, @LoginUser User loginUser) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Comment> createComment(@RequestBody CommentDto commentDto, @LoginUser User loginUser) {
         Comment comment = convert(commentDto, loginUser);
-        commentService.save(comment);
-        return new RedirectView("/articles/" + commentDto.getArticleId());
+        Comment savedComment = commentService.save(comment);
+        return new ResponseEntity<>(savedComment, HttpStatus.OK);
     }
 
     @PutMapping("/{commentId}")
