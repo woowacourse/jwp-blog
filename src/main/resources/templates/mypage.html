@@ -45,7 +45,7 @@
                                 <p class="mrg-top-10 text-dark"><b>Name</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10" th:text="${user.name}">Brown</p>
+                                <p class="mrg-top-10" th:text="${session.user.name}">Brown</p>
                             </div>
                         </div>
                         <hr>
@@ -54,7 +54,7 @@
                                 <p class="mrg-top-10 text-dark"> <b>Email</b></p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mrg-top-10" th:text="${user.email}">gracefulBrown@woowahan.com</p>
+                                <p class="mrg-top-10" th:text="${session.user.email}">gracefulBrown@woowahan.com</p>
                             </div>
                         </div>
                         <hr>
@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 <div class="col-md-7 mx-auto">
-                    <form th:action="'/users/' + ${user.id}" method="post">
+                    <form th:action="'/users/' + ${session.user.id}" method="post">
                         <input type="hidden" name="_method" value="delete"/>
                         <button type="submit" class="remove-user-btn" >탈퇴하기</button>
                     </form>
