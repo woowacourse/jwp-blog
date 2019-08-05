@@ -38,13 +38,13 @@ public class CommentController {
 //        return "redirect:/articles/" + commentService.findArticleId(commentId);
 //    }
 
-    @DeleteMapping("/comment/{commentId}")
-    public String deleteComment(@PathVariable("commentId") Long commentId, HttpServletRequest httpServletRequest) {
-        Long userId = getLoggedInUser(httpServletRequest).getId();
-        Long articleId = commentService.findArticleId(commentId);
-        commentService.delete(userId, commentId);
-        return "redirect:/articles/" + articleId;
-    }
+//    @DeleteMapping("/comment/{commentId}")
+//    public String deleteComment(@PathVariable("commentId") Long commentId, HttpServletRequest httpServletRequest) {
+//        Long userId = getLoggedInUser(httpServletRequest).getId();
+//        Long articleId = commentService.findArticleId(commentId);
+//        commentService.delete(userId, commentId);
+//        return "redirect:/articles/" + articleId;
+//    }
 
     private UserPublicInfoDto getLoggedInUser(HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();

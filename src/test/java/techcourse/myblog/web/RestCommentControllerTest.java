@@ -9,8 +9,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import techcourse.myblog.service.dto.CommentResponseDto;
 
-import static techcourse.myblog.Utils.TestConstants.SAMPLE_ARTICLE_ID;
-import static techcourse.myblog.Utils.TestConstants.SAMPLE_COMMENT_ID;
+import static techcourse.myblog.Utils.TestConstants.*;
 import static techcourse.myblog.Utils.TestUtils.logInAsBaseUser;
 import static techcourse.myblog.Utils.TestUtils.logInAsMismatchUser;
 
@@ -26,7 +25,6 @@ class RestCommentControllerTest {
     @Test
     void 비동기_댓글_조회() {
         webTestClient.get().uri("/comments/" + SAMPLE_ARTICLE_ID)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -82,6 +80,31 @@ class RestCommentControllerTest {
                 .body(BodyInserters
                         .fromFormData("articleId", "1")
                         .with("comment", "comment"))
+                .exchange()
+                .expectStatus().is5xxServerError();
+    }
+
+    @Test
+    void 비동기_댓글_삭제_비로그인() {
+        webTestClient.delete().uri("/comments/" + SAMPLE_DELETE_COMMENT_ID)
+                .exchange()
+                .expectStatus().isFound()
+                .expectHeader()
+                .valueMatches("location", ".*/login.*");
+    }
+
+    @Test
+    void 비동기_댓글_삭제() {
+        webTestClient.delete().uri("/comments/" + SAMPLE_DELETE_COMMENT_ID)
+                .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void 비동기_댓글_삭제_다른_유저() {
+        webTestClient.delete().uri("/comments/" + SAMPLE_DELETE_COMMENT_ID)
+                .cookie("JSESSIONID", logInAsMismatchUser(webTestClient))
                 .exchange()
                 .expectStatus().is5xxServerError();
     }

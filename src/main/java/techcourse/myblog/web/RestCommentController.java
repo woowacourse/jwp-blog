@@ -42,6 +42,13 @@ public class RestCommentController {
         commentService.update(userId, commentId, commentRequestDto);
     }
 
+    @DeleteMapping("/comments/{commentId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void deleteComment(@PathVariable("commentId") Long commentId, HttpServletRequest httpServletRequest) {
+        Long userId = getLoggedInUser(httpServletRequest).getId();
+        commentService.delete(userId, commentId);
+    }
+
     private UserPublicInfoDto getLoggedInUser(HttpServletRequest httpServletRequest) {
         HttpSession httpSession = httpServletRequest.getSession();
         UserPublicInfoDto user = (UserPublicInfoDto) httpSession.getAttribute(LOGGED_IN_USER);
