@@ -13,4 +13,5 @@ public class CommentSaveResponseDto {
     private String contents;
     private Long articleId;
     private String userName;
+    private Long commentId;
 }

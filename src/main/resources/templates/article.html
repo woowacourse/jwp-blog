@@ -164,32 +164,36 @@
             .then(response => response.json())
             .then(function (json) {
                 const node = document.createElement("LI");
-                node.innerHTML = '<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">' +
+                node.innerHTML = '<form id="comment-update-form' + json.commentId + '" method="post"' +
+                    'action="/comment/' + json.commentId + '">' +
+                    '<input id="comment-update" type="hidden" name="_method" value="put"/>' +
+                    '<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">' +
                     '<div class="info">' +
                     '<span class="text-bold inline-block">' + json.userName + '</span>' +
                     '<span class="sub-title inline-block pull-right">' +
-                    '<a onclick="showCommentInput(event)">' +
+                    '<a onclick="showCommentInput(event, ' + json.commentId + ')">' +
                     '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>' +
                     '</a>' +
                     '<a onclick="deleteComment(event)">' +
                     '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>' +
                     '</a>' +
                     '</span>' +
-                    '<p id="comment-contents-p" class="width-80">' + json.contents + '</p>' +
-                    '<div id="comment-edit"></div>' +
-                    '</div>';
+                    '<p id="comment-contents-p-' + json.commentId + '" class="width-80">' + json.contents + '</p>' +
+                    '<div id="comment-edit-' + json.commentId + '"></div>' +
+                    '</div>' +
+                    '</form>';
 
                 document.getElementById("comment-ul-tag").appendChild(node);
             })
     }
 
-    function showCommentInput(event) {
+    function showCommentInput(event, commentId) {
         event.preventDefault()
         const e = document.createElement('span');
-        e.innerHTML = '<textarea id="comment-edit-input" name="editedContents"></textarea><button type="submit" class="btn btn-tumblr">수정</button>';
-        document.getElementById("comment-edit").appendChild(e);
+        e.innerHTML = '<textarea id="comment-edit-input" name="editedContents"></textarea><button type="submit" class="btn btn-tumblr" >수정</button>';
+        document.getElementById("comment-edit-" + commentId).appendChild(e);
 
-        const commentContents = document.getElementById("comment-contents-p");
+        const commentContents = document.getElementById("comment-contents-p-" + commentId);
         document.getElementById("comment-edit-input").value = commentContents.innerHTML;
 
         commentContents.parentNode.removeChild(commentContents);
