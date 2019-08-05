@@ -37,10 +37,6 @@ public class User {
         throw new UserHasNotAuthorityException();
     }
 
-//    public boolean match(final String email) {
-//        return this.email.equals(email);
-//    }
-
     public boolean match(final User user) {
         return this.equals(user);
     }
