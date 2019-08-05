@@ -51,6 +51,7 @@ public class Article {
         this.contents = contents;
         this.coverUrl = validUrl(coverUrl);
         this.author = author;
+        author.addArticle(this);
     }
 
     private String validUrl(String coverUrl) {
