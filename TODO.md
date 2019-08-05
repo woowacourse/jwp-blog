@@ -103,8 +103,7 @@
     - [X] 댓글 추가 비동기 방식으로 구현
     - [X] 댓글 수정 비동기 방식으로 구현
     - [X] 댓글 삭제 비동기 방식으로 구현
-- [ ] 회원가입 Validation 비동기 방식으로 구현
 - [ ] Script를 활용하여 자동 배포하기
 - [ ] RollingFileAppender를 이용하여 배포한 서버의 로그를 저장하기
 - [ ] application.properties 를 application.yml 로 변경하기
-- [ ] Test Code 를 RestAssured 로 작성하기
+- [X] Test Code 를 RestAssured 로 작성하기

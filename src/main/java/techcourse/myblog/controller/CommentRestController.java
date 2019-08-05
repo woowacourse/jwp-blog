@@ -54,6 +54,11 @@ public class CommentRestController {
         return comments;
     }
 
+    @GetMapping("/total")
+    public int getCountOfComment(@RequestParam Long articleId) {
+        return articleService.findCommentsByArticleId(articleId).size();
+    }
+
     @PostMapping
     public CommentResponse save(@RequestBody CommentRequest commentRequest) {
         User user = userSessionManager.getUser();
