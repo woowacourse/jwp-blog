@@ -1,10 +1,11 @@
 package techcourse.myblog.comment.controller;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.comment.domain.Comment;
 import techcourse.myblog.dto.CommentRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.comment.service.CommentService;
@@ -23,11 +24,11 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    @ResponseBody
     @PostMapping("/comment/{articleId}")
-    public String saveComment(@PathVariable Long articleId, @Valid CommentRequestDto commentRequestDto, UserResponseDto userResponseDto) {
-        commentService.addComment(commentRequestDto, userResponseDto, articleId);
-
-        return "redirect:/articles/" + articleId;
+    public ResponseEntity<Comment> saveComment(@PathVariable Long articleId, @RequestBody @Valid CommentRequestDto commentRequestDto, UserResponseDto userResponseDto) {
+        Comment comment = commentService.addComment(commentRequestDto, userResponseDto, articleId);
+        return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
     @PutMapping("/comment/{articleId}/{commentId}")

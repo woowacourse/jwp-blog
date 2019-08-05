@@ -31,12 +31,14 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public void addComment(CommentRequestDto commentRequestDto, UserResponseDto userResponseDto, Long articleId) {
+    public Comment addComment(CommentRequestDto commentRequestDto, UserResponseDto userResponseDto, Long articleId) {
         String contents = commentRequestDto.getContents();
         User commenter = userService.getUserByEmail(userResponseDto.getEmail());
         Article article = articleService.findArticle(articleId);
 
-        article.addComments(new Comment(contents, commenter, article));
+        Comment comment = new Comment(contents, commenter, article);
+        article.addComments(comment);
+        return comment;
     }
 
     public void update(Long commentId, CommentRequestDto commentRequestDto, UserResponseDto userResponseDto) {

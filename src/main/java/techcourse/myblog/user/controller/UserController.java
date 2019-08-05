@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
 import techcourse.myblog.user.exception.LoginException;
@@ -16,7 +15,6 @@ import techcourse.myblog.utils.session.SessionUtil;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Map;
 
 import static techcourse.myblog.utils.session.SessionContext.USER;
 

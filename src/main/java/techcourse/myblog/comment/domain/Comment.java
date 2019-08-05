@@ -1,5 +1,6 @@
 package techcourse.myblog.comment.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.data.annotation.CreatedDate;
 import techcourse.myblog.article.domain.Article;
 import techcourse.myblog.comment.exception.CommentAuthenticationException;
@@ -24,6 +25,7 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "articleId", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
+    @JsonManagedReference
     private Article article;
 
     @CreatedDate

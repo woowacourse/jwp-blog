@@ -4,9 +4,9 @@
         <span th:text="${#lists.size(comments)}" class="font-size-16 text-info"></span>
     </div>
     <div class="comment">
-        <ul th:each="comment : ${comments}" class="list-unstyled list-info">
+        <ul id="comment-list" class="list-unstyled list-info">
 
-            <li class="comment-item border bottom mrg-btm-30">
+            <li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
                 <img alt=""
                      class="thumb-img img-circle"
                      src="https://avatars3.githubusercontent.com/u/50367798?v=4">
@@ -37,19 +37,16 @@
 
         </ul>
 
-        <form th:if="${session.user} != null" th:action="@{/comment/{articleId}(articleId=${article.id})}"
-              th:method="post">
-            <div class="add-comment">
-                <div id="editSection"></div>
-                <input id="comment-contents" name="contents" type="hidden">
+        <div th:if="${session.user} != null" class="add-comment">
+            <div id="editSection"></div>
+            <input id="comment-contents" name="contents" type="hidden">
+        </div>
+        <div class="col-lg-1 col-md-1">
+            <div class="btn-group btn-group-vertical">
+                <button class="btn btn-default" id="save-btn" type="button">
+                    <i class="ti-save"></i>
+                </button>
             </div>
-            <div class="col-lg-1 col-md-1">
-                <div class="btn-group btn-group-vertical">
-                    <button class="btn btn-default" id="save-btn" type="submit">
-                        <i class="ti-save"></i>
-                    </button>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
