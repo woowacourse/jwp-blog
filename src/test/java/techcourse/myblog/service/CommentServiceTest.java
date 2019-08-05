@@ -54,7 +54,7 @@ public class CommentServiceTest {
     @BeforeEach
     void setup() {
         defaultUser = spy(new User(DEFAULT_USER_EMAIL, DEFAULT_USER_NAME, DEFAULT_USER_PASSWORD));
-        defaultArticle = spy(new Article(DEFAULT_ARTICLE_TITLE, DEFAULT_ARTICLE_COVER_URL, DEFAULT_ARTICLE_CONTENTS, defaultUser));
+        defaultArticle = new Article(DEFAULT_ARTICLE_TITLE, DEFAULT_ARTICLE_COVER_URL, DEFAULT_ARTICLE_CONTENTS, defaultUser);
         defaultComment = spy(new Comment(DEFAULT_COMMENT_CONTENTS, defaultUser, defaultArticle));
     }
 
