@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
@@ -46,6 +48,10 @@ public class CommentService {
                 });
     }
 
+    public Comment save(Comment comment) {
+        return commentRepository.save(comment);
+    }
+
     public Comment save(CommentDto commentDto, User user, long articleId) {
         Article article = findArticleById(articleId);
         Comment comment = commentDto.toDomain(user, article);
@@ -82,5 +88,9 @@ public class CommentService {
     public void update(long commentId, CommentDto commentDto, User user) {
         Comment comment = getAuthorizedComment(commentId, user);
         comment.update(commentDto.getContents());
+    }
+
+    public List<Comment> findAllByArticleId(Long articleId) {
+        return commentRepository.findAllByArticleId(articleId);
     }
 }

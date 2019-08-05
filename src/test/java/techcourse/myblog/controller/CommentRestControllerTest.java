@@ -63,4 +63,27 @@ public class CommentRestControllerTest extends WebClientGenerator {
 
         assertThat(comment.get("contents")).isEqualTo(commentRequest.getContents());
     }
+
+    @Test
+    public void Comment_수정하기() {
+        UserDto userDto = new UserDto("", "luffy@luffy.com", "@Password12");
+        MultiValueMap<String, ResponseCookie> loginCookie = getLoginCookie(userDto);
+
+        CommentRequest commentRequest = new CommentRequest(1L, "수정한 댓글입니다.");
+
+        Response response = given()
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .cookie("JSESSIONID", Objects.requireNonNull(loginCookie.getFirst("JSESSIONID")).getValue())
+                .body(commentRequest)
+                .expect()
+                .statusCode(200)
+                .when()
+                .put("http://localhost:" + port + "/comments/" + 1);
+
+        Map<String, String> comment = response.getBody()
+                .jsonPath()
+                .get("");
+
+        assertThat(comment.get("contents")).isEqualTo(commentRequest.getContents());
+    }
 }
