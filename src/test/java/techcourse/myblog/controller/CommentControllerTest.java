@@ -11,7 +11,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.controller.dto.ArticleDto;
-import techcourse.myblog.controller.dto.CommentDto;
+import techcourse.myblog.controller.dto.RequestCommentDto;
 import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.controller.dto.UserDto;
 import techcourse.myblog.utils.Utils;
@@ -50,7 +50,7 @@ class CommentControllerTest {
     private String baseUrl;
     private String articleUrl;
     private String articleId;
-    private CommentDto commentDto;
+    private RequestCommentDto requestCommentDto;
 
     @BeforeEach
     void setUp() {
@@ -67,8 +67,8 @@ class CommentControllerTest {
         articleUrl = Utils.createArticle(articleDto, cookie, baseUrl);
         articleId = getArticleId(articleUrl);
 
-        commentDto = new CommentDto();
-        commentDto.setArticleId(Long.parseLong(articleId));
+        requestCommentDto = new RequestCommentDto();
+        requestCommentDto.setArticleId(Long.parseLong(articleId));
     }
 
     private String getArticleId(String articleUrl) {
@@ -116,8 +116,8 @@ class CommentControllerTest {
     @Test
     @DisplayName("comment를 수정한다.")
     void updateComment() {
-        commentDto.setContents(COMMENTS_CONTENTS);
-        Utils.createComment(commentDto, cookie, baseUrl);
+        requestCommentDto.setContents(COMMENTS_CONTENTS);
+        Utils.createComment(requestCommentDto, cookie, baseUrl);
 
         WebTestClient.ResponseSpec response = webTestClient.put().uri("/comments/1")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -138,8 +138,8 @@ class CommentControllerTest {
     @Test
     @DisplayName("comment를 삭제한다.")
     void deleteComment() {
-        commentDto.setContents(CONTENTS_FOR_DELETE_TEST);
-        Utils.createComment(commentDto, cookie, baseUrl);
+        requestCommentDto.setContents(CONTENTS_FOR_DELETE_TEST);
+        Utils.createComment(requestCommentDto, cookie, baseUrl);
 
         WebTestClient.ResponseSpec response = webTestClient.delete().uri("/comments/1")
                 .header("Cookie", cookie)
