@@ -26,10 +26,12 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public void deleteById(Long id, User user) {
+    public Long deleteById(Long id, User user) {
+        long beforeCount = commentRepository.count();
         if (findById(id).matchWriter(user)) {
             commentRepository.deleteById(id);
-            return;
+            long afterCount = commentRepository.count();
+            return afterCount - beforeCount;
         }
         throw new MismatchAuthorException();
     }
@@ -41,5 +43,9 @@ public class CommentService {
     private Comment findById(Long id) {
         return commentRepository.findById(id)
                 .orElseThrow(NotFoundCommentException::new);
+    }
+
+    public long countByArticleId(Long articleId) {
+        return commentRepository.countByArticleId(articleId);
     }
 }

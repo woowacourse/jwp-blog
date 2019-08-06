@@ -69,7 +69,8 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info" th:text="${comments.size()}"></span>
+                    <!--                    <span class="font-size-16 text-info" id="comment-count" th:text="${comments.size()}"></span>-->
+                    <span class="font-size-16 text-info" id="comment-count"></span>
                 </div>
                 <div class="comment" id="comment">
                     <ul class="list-unstyled list-info" id="comment-list">
@@ -134,6 +135,7 @@
 
     window.onload = function () {
         [[${comments}]].forEach(comment => appendComment(comment));
+        drawCommentCount([[${comments.size()}]])
     }
 
     const sessionUser = [[${session.user}]];
@@ -179,6 +181,17 @@
         const commentList = document.querySelector('#comment-list');
         commentList.insertAdjacentHTML("beforeend", getCompiledCommentTemplate(comment));
     };
+
+    const drawCommentCount = (commentCount) => {
+        document.querySelector("#comment-count").innerText = commentCount;
+    }
+
+    const countComment = () => {
+        fetch(commentUrl + "/count", {
+            method: "GET",
+        }).then(response => response.text())
+            .then(commentCount => drawCommentCount(commentCount))
+    }
 
     const button = (function () {
         const CommentController = function () {
@@ -231,7 +244,10 @@
                     },
                     body: JSON.stringify({contents: commentContents.value})
                 }).then(response => response.json())
-                    .then(json => appendComment(json))
+                    .then(json => {
+                        appendComment(json);
+                        countComment();
+                    })
             }
 
             const modify = function (event) {
