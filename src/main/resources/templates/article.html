@@ -20,15 +20,6 @@
                 <h1 th:if="${article.title} != null" th:text="${article.title}" class="text-center cover-title"></h1>
             </div>
         </div>
-    <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
-        <div class="row">
-            <div class="col-lg-10 mx-auto">
-                <a th:if="${session.user.id} == ${article.author.id}" th:href="'/articles/' + ${article.id}+ '/edit'" class="float-right pointer btn btn-icon">
-                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                </a>
-                <form th:if="${session.user.id} == ${article.author.id}" method="post" th:action="'/articles/' + ${article.id}">
-            </div>
-        </div>
     </div>
 
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
@@ -76,89 +67,6 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
-                    <div class="profile-container row mrg-top-30 mrg-btm-30">
-                        <div class="col-md-2 col-sm-4">
-                            <img class="width-80px border-radius-round"
-                                 src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
-                        </div>
-                        <div class="col-md-10 col-sm-7">
-                            <span class="font-size-16 text-bold pdd-btm-5">Brown</span><span
-                                class="font-size-12 text-gray"> / gracefulBrown@woowahan.com</span>
-                            <p class="font-size-13 text-dimgray lh-1-3">
-                                백엔드 개발자: 설계.테스트.생산성.클린코드.멘토링에 관심이 많음 <br>
-                                Woowahantechcourse Organizer / Coach / Husband
-                            </p>
-                            <ul class="list-unstyle list-inline mrg-vertical-15">
-                                <li class="list-inline-item no-pdd-horizon">
-                                    <a class="btn-sm btn-facebook btn-icon btn-rounded sns-btn" href="">
-                                        <i class="ti-facebook font-size-12"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item no-pdd-horizon">
-                                    <a class="btn-sm btn-dark btn-icon btn-rounded sns-btn" href="">
-                                        <i class="ti-github font-size-12"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-<<<<<<< HEAD
-                <div class="comment">
-                    <ul class="list-unstyled list-info">
-                        <div th:each="comment, index : ${comments}">
-                            <li class="comment-item border bottom mrg-btm-30">
-                                <span>
-                                <img class="thumb-img img-circle"
-                                     src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                                <div class="info">
-                                    <span href="" th:text="${comment.author.name}"
-                                          class="text-bold inline-block">name</span>
-                                    <span class="sub-title inline-block pull-right">
-                                        <i class="ti-timer pdd-right-5"></i>
-                                        <span th:text="${comment.updatedDate}">6 min ago</span>
-                                    </span>
-                                    <form th:action="${#strings.concat('/articles/', article.id, '/comments/', comment.id)}" th:method="put">
-                                        <p class="width-80" th:id="'contents-' + ${index.index}" th:text="${comment.contents}"></p>
-                                    </form>
-                                </div>
-                                </span>
-
-                                <div th:if="${session.user.id} == ${comment.author.id}" class="btn-group btn-group-horizontal">
-                                    <button class="float-right pointer btn btn-icon" type="submit" th:onclick="|editBtnClickHandler('${index.index}')|">
-                                    <button class="float-right pointer btn btn-icon" type="submit" th:onclick="|editBtnClickHandler('${index.index}')|">
-                                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                                    </button>
-                                    <form method="post" th:action="${#strings.concat('/articles/', article.id, '/comments/', comment.id)}">
-                                        <input type="hidden" name="_method" value="delete">
-                                        <input type="hidden" name="articleId" th:value="${article.id}">
-                                        <button type="submit"
-                                                class="float-right btn btn-default no-border-line"
-                                                style="border:transparent; background:transparent;">
-                                            <i class="ti-trash font-size-16"></i>
-                                        </button>
-                                    </form>
-                                </div>
-
-                                <div>
-
-                                </div>
-
-                            </li>
-                        </div>
-                    </ul>
-                    <div class="add-comment">
-                        <form th:action="${#strings.concat('/articles/', article.id, '/comments/')}"
-                              name="comment" method="post" accept-charset="UTF-8">
-                            <input type="hidden" name="articleId" th:value="${article.id}">
-                            <input id="comment-contents" name="contents" type="hidden">
-                            <div id="editSection" ></div>
-                            <button id="save-btn" type="submit" class="btn btn-default btn-group">
-                                <i class="ti-save"></i>
-                            </button>
-                        </form>
-                </div>
             </div>
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
@@ -178,28 +86,6 @@
             </div>
         </div>
     </div>
-</th:block>
-<th:block layout:fragment="custom-js">
-    <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-    <script>
-        const comments = document.getElementById("comments");
-        const editor = new tui.Editor({
-            el: document.querySelector('#editSection'),
-            initialEditType: 'markdown',
-            previewStyle: 'horizontal',
-            events: {
-                change: function () {
-                    document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown());
-                    comments.querySelectorAll("input[name='content']").forEach(content => {
-                        console.log(content);
-                        content.setAttribute('value', editor.getMarkdown());
-                    });
-                }
-            },
-            height: '200px'
-        });
-    </script>
-</th:block>
 </div>
 
 <!-- include fragments/footer -->
@@ -214,7 +100,6 @@
         height: '100%',
         initialValue: initValue
     });
-
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
@@ -226,34 +111,29 @@
         },
         height: '200px'
     });
-
     function editBtnClickHandler(index) {
         const content = document.getElementById("contents-" + index);
         content.innerHTML = "<textarea name='contents'>" + content.innerText + "</textarea>  <button value='수정' type='submit'>수정</button>"
     }
-
     const BASE_URL = `${location.pathname}/comments`
     const comments = document.getElementById("comments")
-
     const renderComment = (comment) => {
         const div = document.createElement('div');
         div.innerHTML = parseCommentToHtml(comment)
         comments.appendChild(div)
     }
-
     window.onload = () => {
         fetch(BASE_URL, {method: 'GET'})
-                .then(res => res.json()
-        )
-        .then(({comments}) => {
-            console.log(comments)
-            comments.forEach((comment) => renderComment(comment))
-        })
-        .catch(error => console.warn(error))
+            .then(res => res.json()
+            )
+            .then(({comments}) => {
+                console.log(comments)
+                comments.forEach((comment) => renderComment(comment))
+            })
+            .catch(error => console.warn(error))
     }
-
     const parseCommentToHtml = comment =>
-    `
+        `
      <li class="comment-item border bottom mrg-btm-30">
         <span>
         <img class="thumb-img img-circle"
@@ -276,14 +156,11 @@
                     </button>
                 </div>
             </div>
-
         </div>
         </span>
     </li>
     `
-
     const createButton = document.getElementById("save-btn")
-
     const createComment = () => {
         const config = {
             headers: {
@@ -301,9 +178,7 @@
             })
             .catch(error => console.warn(error))
     }
-
     createButton.addEventListener("click", createComment)
-
     const updateAndDeleteComment = (event) => {
         event.preventDefault()
         console.log(event)
@@ -323,18 +198,16 @@
                 })
                 .catch(error => console.warn(error))
         }
-
         if (event.target.tagName === 'BUTTON' && event.target.classList.contains("delete")) {
             console.log(event.target)
             const commentId = event.target.getAttribute("data-id")
             fetch(BASE_URL + "/" + commentId, {
                 method: 'DELETE'
             }).then(res => {
-              event.target.closest("li.comment-item").remove()
+                event.target.closest("li.comment-item").remove()
             }).catch(error => console.warn(error))
         }
     }
-
     comments.addEventListener('click', updateAndDeleteComment)
 </script>
 </body>
