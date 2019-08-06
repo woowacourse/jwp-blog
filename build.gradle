@@ -47,6 +47,9 @@ dependencies {
 	implementation "org.hibernate.validator:hibernate-validator"
 	implementation "org.apache.tomcat.embed:tomcat-embed-el"
 	implementation 'org.springframework.boot:spring-boot-devtools'
+
+	annotationProcessor 'org.projectlombok:lombok:1.18.8'
+	compileOnly 'org.projectlombok:lombok:1.18.8'
     
 	testImplementation 'io.rest-assured:rest-assured:3.3.0'	
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
