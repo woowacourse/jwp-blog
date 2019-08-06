@@ -66,7 +66,7 @@ public class CommentControllerTests extends AuthedWebTestClient {
 
     @Test
     void 댓글_생성() {
-        CommentDto commentDto = new CommentDto(CONTENT, SEAN_ARTICLE_ID);
+        CommentDto commentDto = new CommentDto(CONTENT);
 
         webTestClient.post().uri("/articles/" + SEAN_ARTICLE_ID + "/comments")
                 .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
@@ -76,7 +76,7 @@ public class CommentControllerTests extends AuthedWebTestClient {
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
-                .jsonPath("$.id").isEqualTo(1L)
+                .jsonPath("$.id").isEqualTo(2L)
                 .jsonPath("$.contents").isEqualTo(CONTENT)
                 .jsonPath("$.author.name").isEqualTo(POBI_NAME);
     }
@@ -123,7 +123,7 @@ public class CommentControllerTests extends AuthedWebTestClient {
     }
 
     private void addComments() {
-        CommentDto commentDto = new CommentDto(CONTENT, SEAN_ARTICLE_ID);
+        CommentDto commentDto = new CommentDto(CONTENT);
 
         webTestClient.post().uri("/articles/" + SEAN_ARTICLE_ID + "/comments")
                 .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
@@ -139,7 +139,7 @@ public class CommentControllerTests extends AuthedWebTestClient {
     }
 
     private WebTestClient.ResponseSpec getStatus(String pobiEmail, String comment) {
-        CommentDto commentDto = new CommentDto(UPDATED_COMMENT, SEAN_ARTICLE_ID);
+        CommentDto commentDto = new CommentDto(UPDATED_COMMENT);
 
         return webTestClient.put().uri("/articles/" + SEAN_ARTICLE_ID + "/comments/" + commentId)
                 .cookie(JSESSIONID, getResponseCookie(pobiEmail, DEFAULT_PASSWORD).getValue())

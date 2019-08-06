@@ -2,10 +2,8 @@ package techcourse.myblog.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
@@ -27,8 +25,8 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Comment> createComment(@RequestBody CommentDto commentDto, @LoginUser User loginUser) {
-        Comment comment = convert(commentDto, loginUser);
+    public ResponseEntity<Comment> createComment(@RequestBody CommentDto commentDto, @PathVariable long articleId, @LoginUser User loginUser) {
+        Comment comment = convert(commentDto, loginUser, articleId);
         Comment savedComment = commentService.save(comment);
         return new ResponseEntity<>(savedComment, HttpStatus.OK);
     }
@@ -45,8 +43,8 @@ public class CommentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private Comment convert(CommentDto commentDto, @LoginUser User loginUser) {
-        Article article = articleService.findById(commentDto.getArticleId());
+    private Comment convert(CommentDto commentDto, @LoginUser User loginUser, long articleId) {
+        Article article = articleService.findById(articleId);
         return new Comment(commentDto.getContents(), loginUser, article);
     }
 }

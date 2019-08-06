@@ -179,7 +179,7 @@
                   class="text-bold inline-block">${comment.author.name}</span>
             <span class="sub-title inline-block pull-right">
                 <i class="ti-timer pdd-right-5"></i>
-                <span >${comment.updatedDate}</span>
+                <span>${comment.updatedDate}</span>
             </span>
             <form th:action="${'comments/' + comment.id}" th:method="put">
                 <p class="width-80" th:id="'contents-' + ${comment.id}">${comment.contents}</p>
@@ -198,23 +198,19 @@
             },
             method: 'POST',
             body: JSON.stringify({
-                articleId: 1,
                 contents: editor.getMarkdown()
             })
         }
         console.log(config.body)
         return fetch(CREATE_URL, config)
-            .then(res => {
-                console.log(res)
-                return res.json()
-            })
+            .then(res => res.json())
             .then(comment => {
                 console.log(comment)
                 const div = document.createElement('div');
                 div.innerHTML = parseCommentToHtml(comment)
                 comments.appendChild(div)
             })
-            .catch(error => console.error(error))
+            .catch(error => console.warn(error))
     }
     createButton.addEventListener("click", createComment)
 
