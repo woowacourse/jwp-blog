@@ -40,10 +40,12 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment update(RequestCommentDto requestCommentDto, Long commentId, User user) {
+    public ResponseCommentDto update(RequestCommentDto requestCommentDto, Long commentId, User user) {
         Comment oldComment = findById(commentId, user);
-        Comment updatedComment = new Comment(requestCommentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle());
-        return oldComment.update(updatedComment);
+        Comment updatedComment = oldComment.update(
+                new Comment(requestCommentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle()));
+
+        return new ResponseCommentDto(updatedComment.getId(), updatedComment.getAuthor().getUserName(), updatedComment.getUpdateTime(), updatedComment.getContents());
     }
 
     public ResponseCommentDto delete(Long commentId, User user) {

@@ -26,28 +26,16 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @GetMapping("/{commentId}/edit")
-    public String editCommentForm(@PathVariable Long commentId, Model model, @ModelAttribute User user) {
-        Comment comment = commentService.findById(commentId, user);
-        model.addAttribute("comment", comment);
-        return "comment-edit";
-    }
-
-//    @DeleteMapping("/{commentId}")
-//    public String deleteComment(@PathVariable Long commentId, @ModelAttribute User user) {
-//        return "redirect:/articles/" + commentService.delete(commentId, user).getId();
-//    }
-
-    @PutMapping("/{commentId}")
-    public String updateComment(@PathVariable Long commentId, RequestCommentDto requestCommentDto, @ModelAttribute User user) {
-        Comment newComment = commentService.update(requestCommentDto, commentId, user);
-        Article commentedArticle = newComment.getArticle();
-        return "redirect:/articles/" + commentedArticle.getId();
-    }
-
     @PostMapping
     public ResponseEntity<ResponseCommentDto> createComment(@RequestBody RequestCommentDto requestCommentDto, @ModelAttribute User user) {
         return new ResponseEntity<>(commentService.save(requestCommentDto, user), HttpStatus.OK);
+    }
+
+    @PutMapping("/{commentId}")
+    public ResponseEntity<ResponseCommentDto> updateComment(@PathVariable Long commentId,
+                                                            @RequestBody RequestCommentDto requestCommentDto,
+                                                            @ModelAttribute User user) {
+        return new ResponseEntity<>(commentService.update(requestCommentDto, commentId, user), HttpStatus.OK);
     }
 
     @DeleteMapping("/{commentId}")

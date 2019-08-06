@@ -75,34 +75,28 @@
                             <img alt="" class="thumb-img img-circle"
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4">
                             <div class="info">
-                                    <span class="text-bold inline-block" name="author"
+                                <span class="text-bold inline-block" name="author"
                                           th:text="${comment.author.userName}"></span>
-                                <form class="pull-right" method="post" style="display: inline-block;"
-                                      th:action="@{'/comments/' + ${comment.id}}">
-                                    <input name="_method" type="hidden" value="delete">
-                                    <button class="btn-sm btn-link pull-right" style="border-width: 0; text-decoration: none;
+                                <button class="btn-sm btn-link pull-right" style="border-width: 0; text-decoration: none;
                                                 padding-left: 1rem; padding-right: 0.5rem;
                                                 padding-bottom: 0; padding-top: 0"
-                                            th:onclick="|javascript:deleteComment('${comment.id}')|"
-                                            type="button">
-                                        <i class="ti-trash" style="color: gray;"></i>
-                                    </button>
-                                </form>
-                                <form class="pull-right" method="post"
-                                      style="display: inline-block;"
-                                      th:action="@{'/comments/' + ${comment.id} + '/edit'}">
-                                    <button class="btn-sm btn-link pull-right" style="border-width: 0; text-decoration: none;
+                                        th:onclick="|javascript:deleteComment('${comment.id}'); this.onclick=null;|"
+                                        type="button">
+                                    <i class="ti-trash" style="color: gray;"></i>
+                                </button>
+                                <button class="btn-sm btn-link pull-right" style="border-width: 0; text-decoration: none;
                                                 padding-left: 1rem; padding-right: 0.5rem;
                                                 padding-bottom: 0; padding-top: 0"
-                                            type="submit">
-                                        <i class="ti-pencil" style="color: gray;"></i>
-                                    </button>
-                                </form>
+                                        th:onclick="|javascript:updateCommentForm('${comment.id}'); this.onclick=null;|"
+                                        type="button">
+                                    <i class="ti-pencil" style="color: gray;"></i>
+                                </button>
                                 <span class="sub-title inline-block pull-right">
-                                            <i class="ti-timer pdd-right-5"></i>
-                                            <span th:text="${comment.updateTime}">time</span>
-                                        </span>
-                                <p class="width-80" name="contents" th:text="${comment.contents}">contents</p>
+                                    <i class="ti-timer pdd-right-5"></i>
+                                    <span th:text="${comment.updateTime}">time</span>
+                                </span>
+                                <p th:id="@{'edit_contents_' + ${comment.id}}" class="width-80" name="contents"
+                                   th:text="${comment.contents}">contents</p>
                             </div>
                         </li>
                     </ul>
@@ -150,6 +144,7 @@
     });
 
     document.querySelector("#create_comment_btn").addEventListener("click", createComment);
+
 </script>
 </body>
 </html>
