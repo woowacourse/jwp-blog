@@ -9,7 +9,7 @@ echo "> [GIT] PULL"
 git pull
 
 echo "> [GRADLE] Project BUILD START"
-./gradlew build
+./gradlew clean build
 
 echo "> [SYSTEM] BUILD file copy"
 cp ./build/libs/*.jar $REPOSITORY/
@@ -31,4 +31,4 @@ JAR_NAME=$(ls $REPOSITORY/ | grep 'myblog' | tail -n 1)
 
 echo "> [SYSTEM] JAR Name: $JAR_NAME"
 
-nohup java -jar $REPOSITORY/$JAR_NAME &
+java -jar $REPOSITORY/$JAR_NAME
