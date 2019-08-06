@@ -32,8 +32,8 @@ public class CommentController {
         return "comment-edit";
     }
 
-    @PostMapping("/articles/{articleId}/comments")
     @ResponseBody
+    @PostMapping("/articles/{articleId}/comments")
     public CommentResponseDto createComment(@PathVariable long articleId, UserSession userSession, @RequestBody CommentCreateDto commentDto) {
         log.debug(">>> commentDto : {}", commentDto);
         return commentService.save(articleId, userSession.getId(), commentDto);

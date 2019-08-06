@@ -30,8 +30,8 @@ public class LoginController {
         return "login";
     }
 
-    @PostMapping("/login")
     @ResponseBody
+    @PostMapping("/login")
     public UserResponseDto login(@RequestBody @Valid UserLoginDto userDto, BindingResult result, HttpSession session) {
         log.debug(">>> userDto : {}", userDto);
         if (result.hasErrors()) {

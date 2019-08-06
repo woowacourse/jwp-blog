@@ -11,16 +11,15 @@ import techcourse.myblog.user.exception.*;
 import techcourse.myblog.utils.Error;
 
 @ControllerAdvice(value = "techcourse.myblog.user.controller")
+@ResponseStatus(HttpStatus.BAD_REQUEST)
 public class UserExceptionAdvice {
     @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidSignUpFormException.class)
     public Error handleInvalidSignUpFormException(InvalidSignUpFormException e) {
         return new Error(e.getMessage());
     }
 
     @ExceptionHandler(InvalidEditFormException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handelInvalidEditFormException(InvalidEditFormException e, UserSession session, Model model) {
         model.addAttribute("user", session);
         model.addAttribute("errorMessage", e.getMessage());
@@ -29,28 +28,24 @@ public class UserExceptionAdvice {
 
     @ResponseBody
     @ExceptionHandler(InvalidLoginFormException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Error handleInvalidLoginException(InvalidLoginFormException e) {
         return new Error(e.getMessage());
     }
 
     @ResponseBody
     @ExceptionHandler(DuplicatedUserException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Error handelDuplicatedUserException(DuplicatedUserException e) {
         return new Error(e.getMessage());
     }
 
-    @ExceptionHandler(NotFoundUserException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
+    @ExceptionHandler(NotFoundUserException.class)
     public Error handleNotFoundUserException(NotFoundUserException e) {
         return new Error(e.getMessage());
     }
 
-    @ExceptionHandler(NotMatchPasswordException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
+    @ExceptionHandler(NotMatchPasswordException.class)
     public Error handleNotMatchPasswordException(NotMatchPasswordException e) {
         return new Error(e.getMessage());
     }
