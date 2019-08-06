@@ -165,9 +165,8 @@
         "</div>" +
         "<button class=\"btn-update-comment\">수정</button>" +
         "<form action=\"/articles/ + {{articleId}} + comments/ + {{id}} \" class=\"d-none\" name=\"commentRequest\">" +
-        "<input type=\"hidden\" value=\"put\" name=\"_method\">" +
-        "<textarea name=\"comment\" rows=\"5\"></textarea>" +
-        "<button type=\"submit\">수정하기</button>" +
+        "<textarea id='comment-update-content{{id}}' name=\"comment\" rows=\"5\"></textarea>" +
+        "<button type=\"button\" onclick='onUpdateCommentClick({{id}})'>수정하기</button>" +
         "</form>" +
         "</li>";
 
@@ -191,7 +190,6 @@
             return res.json()
         })
             .then(json => {
-                console.log(json);
                 const commentList = document.getElementById('comment-list');
                 commentList.innerText = "";
                 for (let i = 0; i < json.length; i++) {
@@ -206,6 +204,39 @@
             })
             .catch(error => console.log(error));
     }
+
+    function onUpdateCommentClick(id) {
+        const content = document.getElementById('comment-update-content' + id).value;
+        const url = document.location.href;
+        const commentRequest = {
+            comment: content
+        };
+
+        fetch(url + "/comments/" + id, {
+            method: "PUT",
+            body: JSON.stringify(commentRequest),
+            headers: {
+                "Accept": "application/json",
+                "Content-type": "application/json"
+            }
+        }).then(res => {
+            return res.json()
+        }).then(json => {
+            const commentList = document.getElementById('comment-list');
+            commentList.innerText = "";
+            for (let i = 0; i < json.length; i++) {
+                commentList.insertAdjacentHTML('beforeend', commentItemTemplate({
+                    "content": json[i].content,
+                    "authorName": json[i].authorName,
+                    "createdDate": json[i].createdDate,
+                    "articleId": json[i].articleId,
+                    "id": json[i].id
+                }));
+            }
+        }).catch(error => console.log(error));
+
+    }
+
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
