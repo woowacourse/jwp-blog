@@ -2,7 +2,6 @@ package techcourse.myblog.web.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
@@ -13,7 +12,7 @@ import techcourse.myblog.web.support.SessionUser;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/articles/{articleId}/comments")
 public class CommentController {
     private static final Logger log = LoggerFactory.getLogger(CommentController.class);
@@ -27,19 +26,16 @@ public class CommentController {
     }
 
     @GetMapping
-    @ResponseBody
     public List<Comment> showComments(@PathVariable Long articleId) {
         return commentService.findByArticleId(articleId);
     }
 
     @GetMapping("/count")
-    @ResponseBody
     public long countComments(@PathVariable Long articleId) {
         return commentService.countByArticleId(articleId);
     }
 
     @PostMapping
-    @ResponseBody
     public Comment createComment(SessionUser loginUser, @PathVariable Long articleId, @RequestBody CommentDto commentDto) {
         log.info("Comment create: contents={}", commentDto.getContents());
 
@@ -50,7 +46,6 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    @ResponseBody
     public Comment updateComment(SessionUser loginUser, @PathVariable Long commentId, @PathVariable Long articleId, @RequestBody CommentDto commentDto) {
         log.info("Comment update: id={}, contents={}", commentId, commentDto.getContents());
 
@@ -61,7 +56,6 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    @ResponseBody
     public Long removeComment(@PathVariable Long commentId, SessionUser loginUser) {
         Long deletedId = commentService.deleteById(commentId, loginUser.getUser());
 
