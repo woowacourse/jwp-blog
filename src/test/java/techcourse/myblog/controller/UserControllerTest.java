@@ -27,7 +27,6 @@ class UserControllerTest extends WebClientGenerator {
     private String name;
     private String email;
     private String password;
-    private
 
     @BeforeEach
     void setup() {
@@ -275,6 +274,6 @@ class UserControllerTest extends WebClientGenerator {
 
     @AfterEach
     void 초기화() {
-        userRepository.deleteAll();
+        userRepository.findByEmail(email).ifPresent(user -> userRepository.delete(user));
     }
 }
