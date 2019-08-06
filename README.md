@@ -129,8 +129,8 @@
     - ~~RestCommentController 클래스 생성~~
     - RestCommentService 클래스 생성
     - ~~GET 메서드~~
-    - POST 메서드
-    - DELETE 메서드
+    - ~~POST 메서드~~
+    - ~~DELETE 메서드~~
     - PUT 메서드
 - 댓글 수정 프론트엔드 작업
     - 댓글 추가 버튼 누를 시 POST ajax 요청

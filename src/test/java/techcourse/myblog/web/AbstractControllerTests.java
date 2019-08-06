@@ -96,6 +96,22 @@ public class AbstractControllerTests {
                 .returnResult();
     }
 
+    protected EntityExchangeResult<byte[]> putJsonRequest(String uri, Class mappingClass, String... args) {
+        Map<String, String> params = new HashMap();
+
+        for (int i = 0; i < mappingClass.getDeclaredFields().length; i++) {
+            params.put(mappingClass.getDeclaredFields()[i].getName(), args[i]);
+        }
+
+        return webTestClient.put()
+                .uri(uri)
+                .header("Cookie", cookie)
+                .body(Mono.just(params), Map.class)
+                .exchange()
+                .expectBody()
+                .returnResult();
+    }
+
     private <T> BodyInserters.FormInserter<String> mapBy(Class<T> classType, String... parameters) {
         BodyInserters.FormInserter<String> body = BodyInserters.fromFormData(Strings.EMPTY, Strings.EMPTY);
 

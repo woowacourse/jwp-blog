@@ -41,4 +41,8 @@ public class CommentService {
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList()));
     }
+
+    public Comment findById(long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+    }
 }

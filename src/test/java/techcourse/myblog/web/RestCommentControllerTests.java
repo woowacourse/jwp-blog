@@ -3,19 +3,37 @@ package techcourse.myblog.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RestCommentControllerTests extends AbstractControllerTests {
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @Test
     void 댓글들_GET_요청_테스트() throws IOException {
-        EntityExchangeResult<byte[]> result = getRequest("/articles/1/comments");
-        String json = new String(result.getResponseBody());
-        ObjectMapper objectMapper = new ObjectMapper();
+        String json = new String(Objects.requireNonNull(getRequest("/articles/1/comments").getResponseBody()));
         CommentResponseDto[] responses = objectMapper.readValue(json, CommentResponseDto[].class);
-        assertThat(responses.length).isEqualTo(5);
+        assertThat(responses.length).isGreaterThanOrEqualTo(4);
+    }
+
+    @Test
+    void 댓글_추가_POST_요청_테스트() throws IOException {
+        String newComment = "new comment";
+        String json = new String(Objects.requireNonNull(postJsonRequest("/articles/1/comments/rest", CommentRequestDto.class, newComment).getResponseBody()));
+        CommentResponseDto[] responses = objectMapper.readValue(json, CommentResponseDto[].class);
+        assertThat(responses[responses.length - 1].getComment()).isEqualTo(newComment);
+    }
+
+    @Test
+    void 댓글_수정_PUT_요청_테스트() throws IOException {
+        String updatedComment = "updated comment";
+        String json = new String(Objects.requireNonNull(putJsonRequest("/comments/1/rest", CommentRequestDto.class, updatedComment).getResponseBody()));
+        CommentResponseDto[] responses = objectMapper.readValue(json, CommentResponseDto[].class);
+        assertThat(responses[0].getComment()).isEqualTo(updatedComment);
     }
 }
