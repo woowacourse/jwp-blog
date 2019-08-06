@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.dto.CommentDto;
@@ -23,6 +22,12 @@ public class CommentController {
     public CommentController(CommentService commentService, ArticleReadService articleReadService) {
         this.commentService = commentService;
         this.articleReadService = articleReadService;
+    }
+
+    @GetMapping("/count")
+    @ResponseBody
+    public long countComments(@PathVariable Long articleId) {
+        return commentService.countByArticleId(articleId);
     }
 
     @PostMapping
@@ -48,9 +53,10 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public RedirectView removeComment(@PathVariable Long commentId, @PathVariable Long articleId, SessionUser loginUser) {
-        commentService.deleteById(commentId, loginUser.getUser());
+    @ResponseBody
+    public long removeComment(@PathVariable Long commentId, @PathVariable Long articleId, SessionUser loginUser) {
+        long deleteCount = commentService.deleteById(commentId, loginUser.getUser());
 
-        return new RedirectView("/articles/" + articleId);
+        return deleteCount;
     }
 }
