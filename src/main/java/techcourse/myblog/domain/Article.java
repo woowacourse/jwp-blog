@@ -82,4 +82,17 @@ public class Article {
     public void setAuthor(User user) {
         this.author = user;
     }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                ", createdDate=" + createdDate +
+                ", modifiedDate=" + modifiedDate +
+                ", author=" + author +
+                '}';
+    }
 }

@@ -32,6 +32,7 @@ public class ArticleController {
     @GetMapping("/articles/edit")
     public String formArticle(Model model) {
         log.debug("begin");
+
         model.addAttribute("article", null);
         return "article-edit";
     }
@@ -39,14 +40,19 @@ public class ArticleController {
     @PostMapping("/articles")
     public String saveArticle(@Valid ArticleRequest articleRequest, Model model, HttpSession httpSession) {
         log.debug("begin");
+
         User user = (User) httpSession.getAttribute("user");
         Article article = articleService.save(articleRequest, user);
+        log.info("article: {}", article);
+
         model.addAttribute("article", article);
         return "redirect:/articles/" + article.getId();
     }
 
     @GetMapping("/articles/{articleId}")
     public String showArticlePage(@PathVariable("articleId") long articleId, Model model) {
+        log.debug("begin");
+
         model.addAttribute("articleId", articleId);
         return "article";
     }
@@ -54,12 +60,16 @@ public class ArticleController {
     @GetMapping("/api/articles/{articleId}")
     @ResponseBody
     public ResponseEntity<Article> selectArticle(@PathVariable("articleId") long articleId) {
+        log.debug("begin");
+
         return new ResponseEntity<>(articleService.findById(articleId), HttpStatus.OK);
     }
 
 
     @GetMapping("/articles/{articleId}/edit")
     public String edit(@PathVariable("articleId") long articleId, Model model, HttpSession httpSession) {
+        log.debug("begin");
+
         Article article = articleService.findByIdWithUser(articleId, (User) httpSession.getAttribute("user"));
         model.addAttribute("article", article);
         return "article-edit";
@@ -67,6 +77,8 @@ public class ArticleController {
 
     @PutMapping("/articles/{articleId}")
     public String editArticle(@PathVariable("articleId") long articleId, @ModelAttribute ArticleRequest articleRequest, HttpSession httpSession, Model model) {
+        log.debug("begin");
+
         Article article = articleService.editArticle(articleRequest, articleId, (User) httpSession.getAttribute("user"));
         model.addAttribute("article", article);
         return "redirect:/articles/" + articleId;
@@ -74,12 +86,18 @@ public class ArticleController {
 
     @DeleteMapping("/articles/{articleId}")
     public String deleteArticle(@PathVariable("articleId") long articleId, HttpSession httpSession) {
+        log.debug("begin");
+
         articleService.deleteById(articleId, (User) httpSession.getAttribute("user"));
+        log.info("articleId: {}", articleId);
+
         return "redirect:/";
     }
 
     @GetMapping("/api/articles/{articleId}/comments")
     public ResponseEntity<CommentsResponse> getComment(@PathVariable("articleId") long articleId) {
+        log.debug("begin");
+
         return new ResponseEntity<>(commentService.findByArticleId(articleId), HttpStatus.OK);
     }
 }
