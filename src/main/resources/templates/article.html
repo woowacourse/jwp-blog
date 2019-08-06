@@ -196,7 +196,6 @@
             let contents = {contents: document.getElementById("comment" + commentId + "text").value};
             putData('/articles/' + articleId + '/comment/' + commentId, contents)
                 .then(data => {
-                    console.log(data);
                     print(data)
                     return JSON.stringify(data);
                 })
@@ -229,7 +228,6 @@
             const data = {contents: document.getElementById('comment-contents').value};
             postData('http://localhost:8080/articles/' + aId + '/comment', data)
                 .then(data => {
-                    console.log(data);
                     commentList = data;
                     print(commentList)
                     return JSON.stringify(data);
