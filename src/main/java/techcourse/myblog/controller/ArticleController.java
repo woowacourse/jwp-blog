@@ -104,7 +104,7 @@ public class ArticleController {
     @ExceptionHandler(RuntimeException.class)
     public RedirectView exceptionHandler(RuntimeException exception, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         redirectAttributes.addFlashAttribute("articleError", exception.getMessage());
-        log.error("error: {}", exception);
+        log.error("error: {}", exception.getMessage());
 
         return new RedirectView(request.getHeader("Referer"));
     }
