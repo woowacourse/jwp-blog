@@ -75,7 +75,7 @@
                 <div class="width-100 border bottom mrg-btm-2
                 0 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info">2</span>
+                    <span id="comment-size" class="font-size-16 text-info">0</span>
                 </div>
                 <div class="comment">
                     <ul id="comments" class="list-unstyled list-info">
@@ -167,6 +167,8 @@
                 method: "DELETE",
             }).then(() => {
                 parent.closest('li').remove();
+
+                updateCommentSize();
             });
         }
     });
@@ -192,6 +194,8 @@
 
                 document.getElementById('comments').innerHTML += resultHtml;
                 editor.setValue("");
+
+                updateCommentSize();
             });
     });
 
@@ -222,7 +226,9 @@
                         .replace(/{elapsedTime}/g, convertTime(comment.createdDate));
 
                     document.getElementById('comments').innerHTML += resultHtml;
-                })
+                });
+
+                updateCommentSize();
             });
     });
 
@@ -242,6 +248,12 @@
                 }
             });
     });
+
+    const updateCommentSize = function () {
+        const size = document.getElementById('comments').childElementCount;
+
+        document.getElementById('comment-size').innerText = size;
+    }
 </script>
 
 <script id="template" type="text/template">
