@@ -20,19 +20,19 @@ import java.util.List;
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ARTICLE_ID")
+    @Column(name = "article_id")
     private Long id;
 
     @NonNull
-    @Column(name = "TITLE", nullable = false, length = 30)
+    @Column(name = "title", nullable = false, length = 30)
     private String title;
 
     @NonNull
-    @Column(name = "COVER_URL")
+    @Column(name = "cover_url")
     private String coverUrl;
 
     @NonNull
-    @Column(name = "CONTENTS", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "contents", nullable = false, columnDefinition = "TEXT")
     @Lob
     private String contents;
 
@@ -46,7 +46,7 @@ public class Article {
 
     @NonNull
     @ManyToOne
-    @JoinColumn(name = "USER_ID", nullable = false, foreignKey = @ForeignKey(name = "fk_article_to_user"))
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User user;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)

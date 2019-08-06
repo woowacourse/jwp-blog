@@ -42,7 +42,7 @@ class ArticleServiceTest {
         user = new User(USER_NAME, EMAIL, PASSWORD);
         testArticle = new Article(TITLE, COVER_URL, CONTENTS, user);
         testArticleDto = new ArticleDto(TITLE, COVER_URL, CONTENTS, user.getEmail());
-   }
+    }
 
     @Test
     @DisplayName("게시글을 저장한다.")
