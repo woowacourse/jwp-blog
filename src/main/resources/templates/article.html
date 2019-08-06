@@ -36,65 +36,33 @@
                 <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30" id="comment-list">
                     <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                         <span class="font-size-16">댓글</span>
-                        <span class="font-size-16 text-info" th:text="${comments.size()}"></span>
+                        <span class="font-size-16 text-info" id="comments-size"></span>
                     </div>
 
                     <div class="comment">
-                        <ul class="list-unstyled list-info" th:each="comment, index : ${comments}">
-                            <li class="comment-item border bottom mrg-btm-30">
-                                <img class="thumb-img img-circle"
-                                     src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                                <div class="info">
-                                    <span href="" class="text-bold inline-block" th:text="${comment.user.name}"></span>
-                                        <span class="sub-title inline-block pull-right">
-                                            <i class="ti-timer pdd-right-5"></i>
-                                                <span th:text="${comment.modifiedDate}"></span>
-
-                                               <button class="btn btn-icon float-right pointer" id="comment-modify-form-button" type="submit" th:onclick="|editBtnClickHandler('${index.index}')|">
-                                                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                                               </button>
-
-                                                <form name="comments-delete"
-                                                      th:action="${#strings.concat('/articles/', article.id, '/comments/', comment.id)}"
-                                                      th:method="delete">
-                                                    <button class="btn btn-icon float-right pointer"
-                                                            id="comment-delete-button" type="submit">
-                                                        <i class="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
-                                                    </button>
-                                                </form>
-                                        </span>
-
-                                            <form name="comments-put" th:action="${#strings.concat('/articles/', article.id, '/comments/', comment.id)}" th:method="put">
-                                                    <p class="width-80" th:id="'contents-' + ${index.index}" th:text="${comment.contents}"></p>
-                                            </form>
-                                </div>
-                            </li>
+                        <ul class="list-unstyled list-info" id="comment-section">
 
                         </ul>
+                    </div>
 
-                        <form name="comments-post" th:action="${#strings.concat('/articles/', article.id, '/comments')}"
-                              method="post">
-                            <div class="add-comment">
-                                <div id="editSection"></div>
-
-                                <input id="comment-contents" name="contents" type="hidden"/>
-                                <input type="hidden" name="articleId" th:value="${article.id}">
-
-                                <div class="btn-group btn-group-vertical">
-                                    <button id="save-btn" type="submit" class="btn btn-default">
-                                        <i class="ti-save"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                    <div class="add-comment">
+                        <input id="comment-post-contents" name="contents" type="hidden"/>
+                        <input type="hidden" id="articleId" name="articleId" th:value="${article.id}">
+                        <div id="editSection"></div>
+                        <button id="comment-post-button" type="submit" class="btn btn-default">
+                            <i class="ti-save"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="/js/comment.js"></script>
     <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
     <script>
+        window.onload = printComments;
+
         const initValue = document.getElementById("content").value;
 
         const viewer = tui.Editor.factory({
@@ -110,28 +78,12 @@
             previewStyle: 'horizontal',
             events: {
                 change: function () {
-                    document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
+                    document.getElementById('comment-post-contents').setAttribute('value', editor.getMarkdown())
                 }
             },
             height: '200px'
         });
 
-
-        function editBtnClickHandler(index) {
-            // event.preventDefault()
-
-            const content = document.getElementById("contents-"+index);
-            console.log(content)
-            content.innerHTML = "<textarea name='contents'></textarea>  <button value='수정' type='submit'>수정</button>"
-        }
-
-        function cancleEditHandler(event) {
-            if (event.target.classList.contains('comment-edit-text') && event.key === "Escape") {
-                event.target.value = "";
-                const editDiv = event.target.parentElement.parentElement;
-                editDiv.style.visibility = "hidden";
-            }
-        }
     </script>
 </th:block>
 </html>
