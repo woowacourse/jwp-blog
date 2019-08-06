@@ -1,73 +1,54 @@
 package techcourse.myblog.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import techcourse.myblog.application.service.exception.NotExistUserIdException;
 
+import javax.persistence.*;
+
+@Getter
+@EqualsAndHashCode(of = "id")
 @Entity
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String coverUrl;
+
+    @Lob
+    @Column(nullable = false)
     private String contents;
 
-    private Article() {
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    private Article() {
     }
 
-    public Article(String title, String coverUrl, String contents) {
+    public Article(String title, String coverUrl, String contents, User user) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.user = user;
     }
 
-    public void modify(Article article) {
+    public void modify(Article article, User user) {
+        if (!this.user.equals(user)) {
+            throw new NotExistUserIdException("작성자가 아닙니다.");
+        }
         this.title = article.title;
         this.coverUrl = article.coverUrl;
         this.contents = article.contents;
+
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return id.equals(article.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", coverUrl='" + coverUrl + '\'' +
-                ", contents='" + contents + '\'' +
-                '}';
+    public boolean checkAuthor(String email) {
+        return user.checkEmail(email);
     }
 }
