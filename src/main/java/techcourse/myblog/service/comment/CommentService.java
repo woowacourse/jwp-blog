@@ -16,6 +16,9 @@ import techcourse.myblog.service.dto.comment.CommentRequest;
 import techcourse.myblog.service.dto.comment.CommentResponse;
 import techcourse.myblog.service.dto.user.UserResponse;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 import static techcourse.myblog.service.comment.CommentAssembler.convertToDto;
 import static techcourse.myblog.service.comment.CommentAssembler.convertToEntity;
 
@@ -29,6 +32,16 @@ public class CommentService {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.articleRepository = articleRepository;
+    }
+
+    public CommentResponse findById(final Long id) {
+        return convertToDto(commentRepository.findById(id).orElseThrow(CommentNotFoundException::new));
+    }
+
+    public List<CommentResponse> findByArticleId(Long articleId) {
+        return commentRepository.findByArticleId(articleId).stream()
+                .map(CommentAssembler::convertToDto)
+                .collect(toList());
     }
 
     public CommentResponse save(final CommentRequest commentRequest, final Long userId, final Long articleId) {
@@ -56,9 +69,5 @@ public class CommentService {
             return;
         }
         throw new UserHasNotAuthorityException();
-    }
-
-    public CommentResponse findById(final Long id) {
-        return convertToDto(commentRepository.findById(id).orElseThrow(CommentNotFoundException::new));
     }
 }

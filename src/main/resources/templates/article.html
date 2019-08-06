@@ -106,7 +106,7 @@
                     <span class="font-size-16 text-info">2</span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
+                    <ul id="comment-list" class="list-unstyled list-info">
 
                         <li class="comment-item border bottom mrg-btm-30" th:each="comment: ${articleDTO.comments}">
                             <img class="thumb-img img-circle"
@@ -131,13 +131,9 @@
 
                     </ul>
                     <div class="add-comment">
-                        <form th:action="@{'/articles/' + ${articleDTO.id} + '/comments'}" method="post"
-                              name="commentRequest">
                             <input id="comment-contents" name="comment" type="hidden">
                             <div id="editSection"></div>
-                            <button type="submit" class="btn btn-primary">등록하기</button>
-                        </form>
-
+                        <button type="button" class="btn btn-primary" onclick="onAddCommentClick()">등록하기</button>
                     </div>
                 </div>
             </div>
@@ -146,6 +142,7 @@
 </div>
 <th:block th:include="includes/common-js"></th:block>
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
     const initValue = /*[[${articleDTO.contents}]]*/;
 
@@ -156,6 +153,59 @@
         initialValue: initValue
     });
 
+    const commentTemplate =
+        "<li class=\"comment-item border bottom mrg-btm-30\">" +
+        "<img class=\"thumb-img img-circle\" src=\"https://avatars3.githubusercontent.com/u/50367798?v=4\" alt=\"\">" +
+        "<div class=\"info\">" +
+        "<span href=\"\" class=\"text-bold inline-block\">{{authorName}}</span>" +
+        "<span class=\"sub-title inline-block pull-right\">" +
+        "<i class=\"ti-timer pdd-right-5\"></i>" +
+        "<span>{{createdDate}}</span>" + "</span>" +
+        "<p class=\"width-80\" >{{content}}</p>" +
+        "</div>" +
+        "<button class=\"btn-update-comment\">수정</button>" +
+        "<form action=\"/articles/ + {{articleId}} + comments/ + {{id}} \" class=\"d-none\" name=\"commentRequest\">" +
+        "<input type=\"hidden\" value=\"put\" name=\"_method\">" +
+        "<textarea name=\"comment\" rows=\"5\"></textarea>" +
+        "<button type=\"submit\">수정하기</button>" +
+        "</form>" +
+        "</li>";
+
+    const commentItemTemplate = Handlebars.compile(commentTemplate);
+
+    function onAddCommentClick() {
+        const content = document.getElementById('comment-contents').value;
+        const url = document.location.href;
+        const commentRequest = {
+            comment: content
+        };
+
+        fetch(url + "/comments", {
+            method: "POST",
+            body: JSON.stringify(commentRequest),
+            headers: {
+                "Accept": "application/json",
+                "Content-type": "application/json"
+            }
+        }).then(res => {
+            return res.json()
+        })
+            .then(json => {
+                console.log(json);
+                const commentList = document.getElementById('comment-list');
+                commentList.innerText = "";
+                for (let i = 0; i < json.length; i++) {
+                    commentList.insertAdjacentHTML('beforeend', commentItemTemplate({
+                        "content": json[i].content,
+                        "authorName": json[i].authorName,
+                        "createdDate": json[i].createdDate,
+                        "articleId": json[i].articleId,
+                        "id": json[i].id
+                    }));
+                }
+            })
+            .catch(error => console.log(error));
+    }
     const editor = new tui.Editor({
         el: document.querySelector('#editSection'),
         initialEditType: 'markdown',
