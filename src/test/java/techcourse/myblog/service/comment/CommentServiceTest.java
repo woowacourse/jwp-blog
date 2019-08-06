@@ -29,14 +29,14 @@ public class CommentServiceTest {
     void 댓글_작성() {
         CommentRequest commentDto = new CommentRequest("comment");
         CommentResponse persistComment = commentService.save(commentDto, DEFAULT_USER_ID, DEFAULT_ARTICLE_ID);
-        assertThat(persistComment).isEqualTo(new CommentResponse(DEFAULT_COMMENT_ID + AUTO_INCREMENT_ID, "comment", DEFAULT_USER_ID, "john", null));
+        assertThat(persistComment).isEqualTo(new CommentResponse(DEFAULT_COMMENT_ID + AUTO_INCREMENT_ID, "comment", DEFAULT_USER_ID, "john", DEFAULT_ARTICLE_ID, null));
     }
 
     @Test
     void 댓글_수정() {
         CommentRequest commentDto = new CommentRequest("new Hello");
         CommentResponse updateComment = commentService.update(commentDto, DEFAULT_COMMENT_ID, DEFAULT_ARTICLE_ID, new UserResponse(DEFAULT_USER_ID + 1, "paul123@example.com", "paul"));
-        assertThat(updateComment).isEqualTo(new CommentResponse(DEFAULT_COMMENT_ID, "new Hello", 1000L, "paul", null));
+        assertThat(updateComment).isEqualTo(new CommentResponse(DEFAULT_COMMENT_ID, "new Hello", 1000L, "paul", DEFAULT_ARTICLE_ID, null));
     }
 
     @Test

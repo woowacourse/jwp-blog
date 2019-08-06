@@ -33,6 +33,6 @@ public class CommentAssemblerTest {
     @Test
     void entity를_dto로_변환하는지_확인() {
         Comment comment = new Comment("comment", user, article);
-        assertThat(convertToDto(comment)).isEqualTo(new CommentResponse(null, "comment", null, "john", LocalDateTime.MIN));
+        assertThat(convertToDto(comment)).isEqualTo(new CommentResponse(null, "comment", null, "john", null, LocalDateTime.MIN));
     }
 }

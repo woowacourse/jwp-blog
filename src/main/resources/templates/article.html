@@ -159,6 +159,8 @@
         initialValue: initValue
     });
 
+    const url = window.location.host;
+
     const commentTemplate =
         "<li class=\"comment-item border bottom mrg-btm-30\">" +
         "<img class=\"thumb-img img-circle\" src=\"https://avatars3.githubusercontent.com/u/50367798?v=4\" alt=\"\">" +
@@ -185,7 +187,6 @@
 
     function onAddCommentClick() {
         const content = document.getElementById('comment-contents').value;
-        const url = document.location.href;
         const commentRequest = {
             comment: content
         };
@@ -218,7 +219,6 @@
 
     function onUpdateCommentClick(id) {
         const content = document.getElementById('comment-update-content' + id).value;
-        const url = document.location.href;
         const commentRequest = {
             comment: content
         };
@@ -248,8 +248,6 @@
     }
 
     function onDeleteClick(id) {
-        const url = document.location.href;
-
         fetch(url + "/comments/" + id, {
             method: "DELETE",
             headers: {
