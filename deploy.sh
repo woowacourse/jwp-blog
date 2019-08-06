@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/zsh
 
-# Build project
+kill $(lsof -t -i:8080)
 git pull
 ./gradlew clean build
-java -jar ./build/libs/$(ls ./build/libs)
+java -jar ./build/libs/$(ls ./build/libs) &
