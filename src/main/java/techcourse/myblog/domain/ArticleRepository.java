@@ -1,8 +1,15 @@
 package techcourse.myblog.domain;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ArticleRepository extends JpaRepository<Article, Long> {
+import java.util.ArrayList;
+import java.util.List;
 
+@Repository
+public class ArticleRepository {
+    private List<Article> articles = new ArrayList<>();
+
+    public List<Article> findAll() {
+        return articles;
+    }
 }
-//
