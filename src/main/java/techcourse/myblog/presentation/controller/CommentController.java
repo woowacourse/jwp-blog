@@ -7,6 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.application.annotation.EmailAnnot;
 import techcourse.myblog.application.dto.CommentJsonDto;
+import techcourse.myblog.application.dto.UpdateCommentJsonDto;
 import techcourse.myblog.application.service.CommentService;
 import techcourse.myblog.domain.Email;
 import techcourse.myblog.domain.vo.CommentContents;
@@ -48,5 +49,11 @@ public class CommentController {
     public CommentJsonDto saveComment(@RequestBody CommentJsonDto commentJsonDto, @EmailAnnot Email email) {
         CommentJsonDto responseCommentJsonDto = commentService.saveJson(commentJsonDto, email.getEmail());
         return responseCommentJsonDto;
+    }
+    @PutMapping("/articles/{articleId}/jsoncomments/{updateCommentId}")
+    @ResponseBody
+    public UpdateCommentJsonDto updateComment(@RequestBody CommentJsonDto commentJsonDto){
+        UpdateCommentJsonDto responseUpdateCommentJsonDto = commentService.update(commentJsonDto);
+        return responseUpdateCommentJsonDto;
     }
 }

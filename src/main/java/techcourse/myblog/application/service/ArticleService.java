@@ -71,7 +71,7 @@ public class ArticleService {
         User author = findById(articleId).getAuthor();
         log.info("author: " + author);
         log.info("email: " + email);
-        if (!author.compareEmail(email)) {
+        if (!author.isNotMatchEmail(email)) {
             throw new NotMatchAuthorException("너는 이 글에 작성자가 아니다. 꺼져라!");
         }
     }

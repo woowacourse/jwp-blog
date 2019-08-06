@@ -84,4 +84,8 @@ public class Comment {
     public Long getArticleId() {
         return article.getId();
     }
+
+    public boolean isNotValidCommenter(String email) {
+        return this.getAuthor().isNotMatchEmail(email);
+    }
 }
