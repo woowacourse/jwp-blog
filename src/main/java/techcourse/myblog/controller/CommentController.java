@@ -15,10 +15,9 @@ import techcourse.myblog.service.CommentService;
 @SessionAttributes("user")
 @RestController
 public class CommentController {
+    private static final Logger log = LoggerFactory.getLogger(CommentController.class);
     private final CommentService commentService;
     private final ArticleService articleService;
-
-    private static final Logger log = LoggerFactory.getLogger(CommentController.class);
 
     public CommentController(CommentService commentService, ArticleService articleService) {
         this.commentService = commentService;
@@ -56,11 +55,9 @@ public class CommentController {
         );
     }
 
-    // TODO: json
     @DeleteMapping("/{commentId}")
     private void deleteComment(@PathVariable Long commentId, @ModelAttribute User user) {
         commentService.checkOwner(commentId, user);
-
         commentService.delete(commentId);
     }
 }

@@ -12,19 +12,19 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID")
+    @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "USER_NAME", nullable = false, length = 30)
     @NonNull
+    @Column(name = "user_name", nullable = false, length = 30)
     private String userName;
 
-    @Column(name = "EMAIL", nullable = false, length = 50, unique = true)
     @NonNull
+    @Column(name = "email", nullable = false, length = 50, unique = true)
     private String email;
 
-    @Column(name = "PASSWORD", nullable = false, length = 30)
     @NonNull
+    @Column(name = "password", nullable = false, length = 30)
     private String password;
 
     public User update(User updatedUser) {

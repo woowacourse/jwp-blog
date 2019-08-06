@@ -36,5 +36,4 @@ public class LoginController {
         sessionStatus.setComplete();
         return "redirect:/";
     }
-
 }

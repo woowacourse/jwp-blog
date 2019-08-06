@@ -40,7 +40,7 @@ class LoginServiceTest {
 
     @BeforeEach
     void setUp() {
-         user = new User(USER_NAME, TEST_EMAIL, TEST_PASSWORD);
+        user = new User(USER_NAME, TEST_EMAIL, TEST_PASSWORD);
     }
 
     @Test

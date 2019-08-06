@@ -33,8 +33,7 @@ public class CommentService {
     @Transactional
     public Comment update(RequestCommentDto requestCommentDto, Long commentId) {
         Comment oldComment = findById(commentId);
-        Comment updatedComment = new Comment(
-                requestCommentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle());
+        Comment updatedComment = new Comment(requestCommentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle());
         return oldComment.update(updatedComment);
     }
 

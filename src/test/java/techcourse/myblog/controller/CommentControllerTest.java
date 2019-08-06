@@ -24,22 +24,21 @@ class CommentControllerTest {
 
     private String cookie;
     private Long articleId;
-    private RequestCommentDto requestCommentDto;
+
 
     @BeforeEach
     void setUp() {
         cookie = Utils.getLoginCookie(webTestClient, new LoginDto(EMAIL, PASSWORD));
-
         articleId = 9l;
-
-        requestCommentDto = new RequestCommentDto();
-        requestCommentDto.setContents("contents");
-        requestCommentDto.setArticleId(articleId);
     }
 
     @Test
     @DisplayName("comment를 저장한다.")
     public void saveComment() {
+        RequestCommentDto requestCommentDto = new RequestCommentDto();
+        requestCommentDto.setContents("contents");
+        requestCommentDto.setArticleId(articleId);
+
         webTestClient.post().uri("/comments")
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -58,9 +57,8 @@ class CommentControllerTest {
     void updateComment() {
         RequestCommentDto updateRequestCommentDto = new RequestCommentDto();
         updateRequestCommentDto.setContents("update contents");
-        updateRequestCommentDto.setArticleId(articleId);
 
-        webTestClient.put().uri("/comments/" + 9)
+        webTestClient.put().uri("/comments/" + 20)
                 .header("Cookie", cookie)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -76,7 +74,7 @@ class CommentControllerTest {
     @Test
     @DisplayName("comment를 삭제한다.")
     void deleteComment() {
-        webTestClient.delete().uri("/comments/" + 9)
+        webTestClient.delete().uri("/comments/" + 19)
                 .header("Cookie", cookie)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
