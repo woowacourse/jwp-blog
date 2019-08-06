@@ -6,7 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
 
 import static techcourse.myblog.Utils.TestConstants.*;
@@ -33,25 +34,25 @@ class RestCommentControllerTest {
 
     @Test
     void 비동기_댓글_생성() {
+        CommentRequestDto commentRequestDto = new CommentRequestDto(1L, "comment");
+
         webTestClient.post().uri("/comments")
                 .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(BodyInserters
-                        .fromFormData("articleId", "1")
-                        .with("comment", "comment"))
+                .body(Mono.just(commentRequestDto), CommentRequestDto.class)
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void 비동기_댓글_생성_비로그인() {
+        CommentRequestDto commentRequestDto = new CommentRequestDto(1L, "comment");
+
         webTestClient.post().uri("/comments")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(BodyInserters
-                        .fromFormData("articleId", "1")
-                        .with("comment", "comment"))
+                .body(Mono.just(commentRequestDto), CommentRequestDto.class)
                 .exchange()
                 .expectStatus().isFound()
                 .expectHeader()
@@ -60,26 +61,26 @@ class RestCommentControllerTest {
 
     @Test
     void 비동기_댓글_수정() {
+        CommentRequestDto commentRequestDto = new CommentRequestDto(1L, "edit comment");
+
         webTestClient.put().uri("/comments/" + SAMPLE_COMMENT_ID)
                 .cookie("JSESSIONID", logInAsBaseUser(webTestClient))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(BodyInserters
-                        .fromFormData("articleId", "1")
-                        .with("comment", "comment"))
+                .body(Mono.just(commentRequestDto), CommentRequestDto.class)
                 .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void 비동기_댓글_수정_다른_유저() {
+        CommentRequestDto commentRequestDto = new CommentRequestDto(1L, "edit comment");
+
         webTestClient.put().uri("/comments/" + SAMPLE_COMMENT_ID)
                 .cookie("JSESSIONID", logInAsMismatchUser(webTestClient))
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(BodyInserters
-                        .fromFormData("articleId", "1")
-                        .with("comment", "comment"))
+                .body(Mono.just(commentRequestDto), CommentRequestDto.class)
                 .exchange()
                 .expectStatus().is5xxServerError();
     }
