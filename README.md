@@ -123,7 +123,7 @@
 - ~~Add modifyCommentById controller method in CommentController~~
 - ~~Add deleteCommentById controller method in CommentController~~
 - ~~게시글 삭제시 댓글도 삭제~~
-- aws ec2 인스턴스 설정 쉘 스크립트 작성
+- ~~aws ec2 인스턴스 설정 쉘 스크립트 작성~~
 - 배포 쉘 스크립트 작성
 - 댓글 수정 Restful 백엔드 작업
     - RestCommentController 클래스 생성
