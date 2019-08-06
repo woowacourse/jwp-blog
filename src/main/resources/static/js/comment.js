@@ -59,6 +59,7 @@ function initComments(data) {
     data.forEach(x => {
         refresh(x);
     });
+    addCommentCount(data);
 }
 
 function cancelEditHandler(event) {
@@ -111,6 +112,11 @@ function addSave(event) {
         .catch(data => console.log(data));
     editor.setValue('');
     commentContents.value = '';
+}
+
+function addCommentCount(data) {
+    const commentCount = document.getElementById("comment-count");
+    commentCount.innerText = data.length;
 }
 
 const saveBtn = document.getElementById('save-btn');
