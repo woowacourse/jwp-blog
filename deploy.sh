@@ -19,7 +19,7 @@ CURRENT_PID=$(pgrep -f jwp-blog)
 echo "$CURRENT_PID"
 
 if [ -z $CURRENT_PID ]; then
-    echo "> [SYSTEM] 현재 구동중인 어플리케이션이 없으므로 종료하지 않습니다."
+    echo "> [SYSTEM] $CURRENT_PID is not occupied. There is no application to terminate"
 else
     echo "> [SYSTEM] kill -2 $CURRENT_PID"
     kill -2 $CURRENT_PID
@@ -27,7 +27,7 @@ else
 fi
 
 echo "> [SYSTEM] new application deploy"
-JAR_NAME=$(ls $REPOSITORY/ |grep 'jwp-blog' | tail -n 1)
+JAR_NAME=$(ls $REPOSITORY/ | grep 'myblog' | tail -n 1)
 
 echo "> [SYSTEM] JAR Name: $JAR_NAME"
 
