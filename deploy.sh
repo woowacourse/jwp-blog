@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPOSITORY=/home/ubuntu/git
+REPOSITORY=/home/ubuntu
 
 cd $REPOSITORY/jwp-blog/
 
@@ -18,15 +18,22 @@ cp ./build/libs/*.jar $REPOSITORY/
 
 echo "> 현재 구동중인 애플리케이션 pid 확인"
 
-for p in `sudo lsof -n -i:8080 | grep LISTEN | awk '{print $2}'`; do sudo kill -2 $p; done
-sleep 5
+CURRENT_PID=$(pgrep -f jwp-blog)
+
+echo "$CURRENT_PID"
+
+if [ -z $CURRENT_PID ]; then
+    echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다."
+else
+    echo "> kill -2 $CURRENT_PID"
+    kill -9 $CURRENT_PID
+    sleep 5
+fi
 
 echo "> 새 어플리케이션 배포"
 
-JAR_NAME=$(ls $REPOSITORY/ |grep 'myblog' | tail -n 1)
+JAR_NAME=$(ls $REPOSITORY/ |grep 'jwp-blog' | tail -n 1)
 
 echo "> JAR Name: $JAR_NAME"
 
 nohup java -jar $REPOSITORY/$JAR_NAME &
-
-/home/ubuntu/./slack.sh "배포 완료"
