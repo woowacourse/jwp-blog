@@ -1,6 +1,6 @@
 package techcourse.myblog.web.argumentResolver;
 
-import techcourse.myblog.service.dto.user.UserResponse;
+import techcourse.myblog.user.dto.UserResponse;
 
 public class AccessUserInfo {
     private final UserResponse user;

@@ -4,11 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.exception.ArticleNotFoundException;
+import techcourse.myblog.article.dto.ArticleRequest;
+import techcourse.myblog.article.dto.ArticleResponse;
+import techcourse.myblog.article.exception.ArticleNotFoundException;
+import techcourse.myblog.article.service.ArticleService;
 import techcourse.myblog.exception.UserHasNotAuthorityException;
-import techcourse.myblog.service.dto.article.ArticleRequest;
-import techcourse.myblog.service.dto.article.ArticleResponse;
-import techcourse.myblog.service.dto.user.UserResponse;
+import techcourse.myblog.user.dto.UserResponse;
 
 import java.util.Arrays;
 import java.util.Collections;

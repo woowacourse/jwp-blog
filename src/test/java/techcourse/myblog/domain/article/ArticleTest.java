@@ -1,8 +1,9 @@
 package techcourse.myblog.domain.article;
 
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.user.User;
+import techcourse.myblog.article.Article;
 import techcourse.myblog.exception.UserHasNotAuthorityException;
+import techcourse.myblog.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

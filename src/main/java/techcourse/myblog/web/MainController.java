@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techcourse.myblog.service.article.ArticleService;
-import techcourse.myblog.service.dto.article.ArticleResponse;
-import techcourse.myblog.service.dto.user.UserResponse;
+import techcourse.myblog.article.dto.ArticleResponse;
+import techcourse.myblog.article.service.ArticleService;
+import techcourse.myblog.user.dto.UserResponse;
 import techcourse.myblog.web.argumentResolver.AccessUserInfo;
 
 import java.util.List;

@@ -2,16 +2,16 @@ package techcourse.myblog.service.article;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.dto.article.ArticleRequest;
-import techcourse.myblog.service.dto.article.ArticleResponse;
+import techcourse.myblog.article.Article;
+import techcourse.myblog.article.dto.ArticleRequest;
+import techcourse.myblog.article.dto.ArticleResponse;
+import techcourse.myblog.user.User;
 
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.service.article.ArticleAssembler.convertToDto;
-import static techcourse.myblog.service.article.ArticleAssembler.convertToEntity;
+import static techcourse.myblog.article.service.ArticleAssembler.convertToDto;
+import static techcourse.myblog.article.service.ArticleAssembler.convertToEntity;
 
 public class ArticleAssemblerTest {
     private static final User DEFAULT_AUTHOR = new User("user@example.com", "john", "p@ssW0rd");

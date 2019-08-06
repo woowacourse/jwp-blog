@@ -5,10 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.exception.InvalidPasswordException;
-import techcourse.myblog.exception.UserNotFoundException;
-import techcourse.myblog.service.dto.user.UserResponse;
-import techcourse.myblog.service.user.UserService;
+import techcourse.myblog.user.dto.UserResponse;
+import techcourse.myblog.user.exception.InvalidPasswordException;
+import techcourse.myblog.user.exception.UserNotFoundException;
+import techcourse.myblog.user.service.LoginService;
+import techcourse.myblog.user.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

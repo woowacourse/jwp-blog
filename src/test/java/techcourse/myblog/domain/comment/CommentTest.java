@@ -2,9 +2,10 @@ package techcourse.myblog.domain.comment;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.user.User;
+import techcourse.myblog.article.Article;
+import techcourse.myblog.comment.Comment;
 import techcourse.myblog.exception.UserHasNotAuthorityException;
+import techcourse.myblog.user.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

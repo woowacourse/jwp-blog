@@ -2,17 +2,17 @@ package techcourse.myblog.service.comment;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.article.Article;
-import techcourse.myblog.domain.comment.Comment;
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.dto.comment.CommentRequest;
-import techcourse.myblog.service.dto.comment.CommentResponse;
+import techcourse.myblog.article.Article;
+import techcourse.myblog.comment.Comment;
+import techcourse.myblog.comment.dto.CommentRequest;
+import techcourse.myblog.comment.dto.CommentResponse;
+import techcourse.myblog.user.User;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.service.comment.CommentAssembler.convertToDto;
-import static techcourse.myblog.service.comment.CommentAssembler.convertToEntity;
+import static techcourse.myblog.comment.service.CommentAssembler.convertToDto;
+import static techcourse.myblog.comment.service.CommentAssembler.convertToEntity;
 
 public class CommentAssemblerTest {
     private User user;

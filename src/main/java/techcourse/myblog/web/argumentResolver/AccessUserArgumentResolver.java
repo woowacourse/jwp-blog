@@ -5,13 +5,13 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import techcourse.myblog.service.dto.user.UserResponse;
+import techcourse.myblog.user.dto.UserResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Objects;
 
-import static techcourse.myblog.service.user.UserService.USER_SESSION_KEY;
+import static techcourse.myblog.user.service.UserService.USER_SESSION_KEY;
 
 public class AccessUserArgumentResolver implements HandlerMethodArgumentResolver {
     @Override

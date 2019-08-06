@@ -2,13 +2,13 @@ package techcourse.myblog.service.user;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import techcourse.myblog.domain.user.User;
-import techcourse.myblog.service.dto.user.UserRequest;
-import techcourse.myblog.service.dto.user.UserResponse;
+import techcourse.myblog.user.User;
+import techcourse.myblog.user.dto.UserRequest;
+import techcourse.myblog.user.dto.UserResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.service.user.UserAssembler.convertToDto;
-import static techcourse.myblog.service.user.UserAssembler.convertToEntity;
+import static techcourse.myblog.user.service.UserAssembler.convertToDto;
+import static techcourse.myblog.user.service.UserAssembler.convertToEntity;
 
 public class UserAssemblerTest {
     private User user;
