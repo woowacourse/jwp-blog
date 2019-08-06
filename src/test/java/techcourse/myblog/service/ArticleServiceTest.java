@@ -52,8 +52,8 @@ class ArticleServiceTest {
         author = new User(NAME, PASSWORD, EMAIL);
         article = new Article(TITLE, CONTENTS, COVER_URL, author);
         articleRequestDto = new ArticleRequest(TITLE, CONTENTS, COVER_URL);
-        userResponseDto = new UserResponse(NAME, EMAIL);
-        notAuthor = new UserResponse(NAME_2, EMAIL_2);
+        userResponseDto = new UserResponse(id, NAME, EMAIL);
+        notAuthor = new UserResponse(id, NAME_2, EMAIL_2);
     }
 
     @Test

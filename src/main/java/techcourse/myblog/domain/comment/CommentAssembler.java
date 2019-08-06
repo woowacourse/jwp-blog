@@ -19,6 +19,6 @@ public class CommentAssembler {
         User commenter = comment.getCommenter();
         LocalDateTime updatedTime = comment.getUpdatedTime();
 
-        return new CommentResponse(id, contents, new User(commenter.getName(), commenter.getEmail()), updatedTime);
+        return new CommentResponse(id, contents, new User(commenter.getId(), commenter.getName(), commenter.getEmail()), updatedTime);
     }
 }

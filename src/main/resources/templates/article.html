@@ -68,7 +68,7 @@
 
     const initValue = [[${article.contents}]];
     const articleId = [[${article.id}]];
-    // const sessionUser = [[${session.user.id}]];
+    const sessionUser = [[${session.user.id}]];
 
     const commentCreateTemplate =
         "<li class=\"comment-item border bottom mrg-btm-30\" id=\"comment-{{comment.id}}\">" +
@@ -80,24 +80,23 @@
         "<span>{{comment.updatedTime}}</span>" +
         "</span>" +
         "<p class=\"width-80\" id=\"commentContents-{{comment.id}}\">{{comment.contents}}</p>" +
-        // "{{>commentUpdateAndDeleteButton}}" +
+        "{{>commentUpdateAndDeleteButton}}" +
         "</div>" +
         "</li>"
 
-    // const commentUpdateAndDeleteTemplate =
-    //     "<div class=\"comment-button\" style = \"margin-bottom:90px\">" +
-    //     "<button class=\"btn btn-icon float-right pointer\" onclick=\"deleteComment({{comment.id}})\">" +
-    //     "<i class =\"ti-trash text-dark font-size-16 pdd-horizon-5\"></i>" +
-    //     "</button>" +
-    //     "<input class= \"none\" type=\"text\" id=\"inputUpdateContents-{{comment.id}}\" value=\"{{comment.contents}}\">" +
-    //     "</form>" +
-    //     "<button id=\"showInputForm-{{comment.id}}\" onclick=\"showCommentInput({{comment.id}})\" class=\"float-right pointer btn btn-icon\">" +
-    //     "수정" +
-    //     "</button>" +
-    //     "<button id=\"updateButton-{{comment.id}}\" onclick=\"updateComment({{comment.id}})\" class=\"none float-right pointer btn btn-icon\">" +
-    //     "확인" +
-    //     "</button>" +
-    //     "</div>"
+    const commentUpdateAndDeleteTemplate =
+        "<div class=\"comment-button\" style = \"margin-bottom:90px\">" +
+        "<button class=\"btn btn-icon float-right pointer\" onclick=\"deleteComment({{comment.id}})\">" +
+        "<i class =\"ti-trash text-dark font-size-16 pdd-horizon-5\"></i>" +
+        "</button>" +
+        "<input class= \"none\" type=\"text\" id=\"inputUpdateContents-{{comment.id}}\" value=\"{{comment.contents}}\">" +
+        "<button id=\"showInputForm-{{comment.id}}\" onclick=\"showCommentInput({{comment.id}})\" class=\"float-right pointer btn btn-icon\">" +
+        "수정" +
+        "</button>" +
+        "<button id=\"updateButton-{{comment.id}}\" onclick=\"updateComment({{comment.id}})\" class=\"none float-right pointer btn btn-icon\">" +
+        "확인" +
+        "</button>" +
+        "</div>"
 
     const commentItemTemplate = Handlebars.compile(commentCreateTemplate);
 
@@ -113,10 +112,11 @@
             // console.log(response);
             return response.json();
         }).then(function(comment) {
-            console.log(comment);
-            // if(sessionUser === comment.commenter.id) {
-            //     Handlebars.registerPartial("commentUpdateAndDeleteButton", commentUpdateAndDeleteTemplate)
-            // }
+            console.log(sessionUser);
+            console.log(comment.commenter.id);
+            if(sessionUser === comment.commenter.id) {
+                Handlebars.registerPartial("commentUpdateAndDeleteButton", commentUpdateAndDeleteTemplate)
+            }
             document.getElementById('comment-list')
                 .insertAdjacentHTML('beforeend', commentItemTemplate({"comment":comment}))
         })
@@ -136,6 +136,19 @@
     var submitButton = document.querySelector('#saveCommentBtn');
     submitButton.addEventListener('click', submitComment);
 
+    function deleteComment(commentId) {
+        fetch('/comments/' + articleId + "/" + commentId, {
+            method: 'delete'
+        }).then(function(response) {
+            if (response.ok) {
+                var currentComment = document.querySelector('#comment-' + commentId);
+                var parent = currentComment.parentNode;
+                parent.removeChild(currentComment)
+            } else {
+                alert("삭제 실패")
+            }
+        })
+    }
 
     // function editComment(commentId) {
     //     document.getElementById('comment-div-' + commentId).style.display = 'none';

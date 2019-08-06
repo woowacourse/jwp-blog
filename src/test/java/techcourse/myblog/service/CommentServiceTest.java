@@ -54,8 +54,8 @@ public class CommentServiceTest {
         article = new Article(TITLE, CONTENTS, COVER_URL, author);
         comment = new Comment(COMMENT_CONTENTS, author, article);
         commentRequest = new CommentRequest(COMMENT_CONTENTS);
-        userResponseDto = new UserResponse(NAME, EMAIL);
-        notCommenter = new UserResponse(NAME_2, EMAIL_2);
+        userResponseDto = new UserResponse(id, NAME, EMAIL);
+        notCommenter = new UserResponse(id, NAME_2, EMAIL_2);
     }
 
     @Test
