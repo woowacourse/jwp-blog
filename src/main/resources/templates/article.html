@@ -1,27 +1,4 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
-<html lang="ko"
-      layout:decorate="~{layout/layout}"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-    <link href="/css/article.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.33.0/codemirror.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-    <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css" rel="stylesheet">
-    <link href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css" rel="stylesheet">
-</head>
-
-<th:block layout:fragment="content">
-    <div th:object="${article}">
-        <th:block th:replace="layout/header :: header"></th:block>
-
-        <div class="about-cover card no-border ">
-            <div class="cover-img overlay-dark bg" th:style=" 'background-image:url(' + ${article.coverUrl} + ');' ">
-                <div class="padding-30">
-                    <h1 class="text-center cover-title" th:text="${article.title}">목적의식 있는 연습을 통한 효과적인 학습</h1>
-                </div>
-=======
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <!-- include fragments/head -->
@@ -41,23 +18,8 @@
         <div class="cover-img overlay-dark bg" th:style="'background-image: url(\'' + ${article.coverUrl} + '\')'">
             <div class="padding-30">
                 <h1 th:if="${article.title} != null" th:text="${article.title}" class="text-center cover-title"></h1>
->>>>>>> parent of c529696... Revert "[댓글 기능] 해리 미션 제출합니다. (#137)"
             </div>
         </div>
-
-<<<<<<< HEAD
-        <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
-            <div class="row">
-                <div class="col-lg-10 mx-auto">
-                    <a class="float-right pointer btn btn-icon"
-                       th:href="@{/articles/{articleId}/edit(articleId = ${article.id})}">
-                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                    </a>
-                    <form th:action="@{/articles/{articleId}(articleId=${article.id})}" th:method="delete">
-                        <button type="submit">X</button>
-                    </form>
-                    <div id="viewerSection" th:text="${article.contents}"></div>
-=======
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
@@ -65,6 +27,19 @@
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
                 <form th:if="${session.user.id} == ${article.author.id}" method="post" th:action="'/articles/' + ${article.id}">
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <a th:if="${session.user.id} == ${article.author.id}" th:href="'/articles/' + ${article.id}+ '/edit'"
+                   class="float-right pointer btn btn-icon">
+                    <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                </a>
+                <form th:if="${session.user.id} == ${article.author.id}" method="post"
+                      th:action="'/articles/' + ${article.id}">
                     <input type="hidden" name="_method" value="delete">
                     <button type="submit" class="float-right btn btn-default no-border-line"
                             style="border:transparent; background:transparent;">
@@ -100,7 +75,6 @@
                             </li>
                         </ul>
                     </div>
->>>>>>> parent of c529696... Revert "[댓글 기능] 해리 미션 제출합니다. (#137)"
                 </div>
                 <div class="col-lg-10 col-md-10 col-sm-10 mx-auto">
                     <div class="profile-container row mrg-top-30 mrg-btm-30">
@@ -130,52 +104,6 @@
                         </div>
                     </div>
                 </div>
-<<<<<<< HEAD
-                <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
-                    <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
-                        <span class="font-size-16">댓글</span>
-                        <span class="font-size-16 text-info" th:text="${#lists.size(comments)}">0</span>
-                    </div>
-                    <div class="comment">
-                        <ul class="list-unstyled list-info" id="comments">
-                            <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
-                                <img alt=""
-                                     class="thumb-img img-circle"
-                                     src="https://avatars3.githubusercontent.com/u/50367798?v=4">
-                                <div class="info">
-                                    <span class="text-bold inline-block" th:text="${comment.user.name}">Jun</span>
-                                    <form th:action="@{/articles/{articleId}/comments/{commentId}(articleId=${comment.article.id}, commentId=${comment.id})}"
-                                          th:method="put">
-                                        <input name="content" th:value="${comment.content}" type="hidden">
-                                        <button class="float-right pointer btn btn-icon">
-                                            <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                                        </button>
-                                    </form>
-                                    <form th:action="@{/articles/{articleId}/comments/{commentId}(articleId=${comment.article.id}, commentId=${comment.id})}"
-                                          th:method="delete">
-                                        <button class="btn btn-icon float-right pointer" id="deletebutton"
-                                                type="submit">
-                                            <i class="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
-                                        </button>
-                                    </form>
-                                    <span class="sub-title inline-block pull-right">
-                                        <i class="ti-timer pdd-right-5"></i>
-                                        <span th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">6 min ago</span>
-                                </span>
-                                    <p class="width-80" th:text="${comment.content}">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인
-                                        연습을 기반으로 미션을 진행하도록 설계했다. 교육자로
-                                        살다 보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의
-                                        중요성을 느낄 수 있는 계기가 되었다.</p>
-                                </div>
-                            </li>
-                        </ul>
-                        <form method="post" th:action="@{/articles/{articleId}/comments(articleId=${article.id})}">
-                            <input id="comment-contents" name="content" type="hidden">
-                            <div class="add-comment">
-                                <div id="editSection"></div>
-                            </div>
-                            <button class="btn btn-default" id="save-btn" type="submit">
-=======
                 <div class="comment">
                     <ul class="list-unstyled list-info">
                         <div th:each="comment, index : ${comments}">
@@ -226,16 +154,29 @@
                             <input id="comment-contents" name="contents" type="hidden">
                             <div id="editSection" ></div>
                             <button id="save-btn" type="submit" class="btn btn-default btn-group">
->>>>>>> parent of c529696... Revert "[댓글 기능] 해리 미션 제출합니다. (#137)"
                                 <i class="ti-save"></i>
                             </button>
                         </form>
+                </div>
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
+                <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
+                    <span class="font-size-16">댓글</span>
+                    <span class="font-size-16 text-info">2</span>
+                </div>
+                <div class="comment">
+                    <ul id="comments" class="list-unstyled list-info">
+                    </ul>
+                    <div class="add-comment">
+                        <div id="editSection"></div>
+                        <button id="save-btn" type="submit" class="btn btn-default btn-group">
+                            <i class="ti-save"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<<<<<<< HEAD
 </th:block>
 <th:block layout:fragment="custom-js">
     <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
@@ -259,6 +200,8 @@
     </script>
 </th:block>
 =======
+=======
+>>>>>>> pair/younghyeon
 </div>
 
 <!-- include fragments/footer -->
@@ -280,17 +223,105 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
+<<<<<<< HEAD
                 document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
+=======
+                document.getElementById('comment-contents')
+>>>>>>> pair/younghyeon
             }
         },
         height: '200px'
     });
 
     function editBtnClickHandler(index) {
+<<<<<<< HEAD
         const content = document.getElementById("contents-"+index);
         content.innerHTML = "<textarea name='contents'>" + content.innerText + "</textarea>  <button value='수정' type='submit'>수정</button>"
     }
 </script>
 </body>
 >>>>>>> parent of c529696... Revert "[댓글 기능] 해리 미션 제출합니다. (#137)"
+=======
+        const content = document.getElementById("contents-" + index);
+        content.innerHTML = "<textarea name='contents'>" + content.innerText + "</textarea>  <button value='수정' type='submit'>수정</button>"
+    }
+
+    const BASE_URL = `${location.pathname}/comments`
+    const comments = document.getElementById("comments")
+
+    const renderComment = (comment) => {
+        const div = document.createElement('div');
+        div.innerHTML = parseCommentToHtml(comment)
+        comments.appendChild(div)
+    }
+
+    window.onload = () => {
+        fetch(BASE_URL, {method: 'GET'})
+                .then(res => res.json()
+        )
+        .then(({comments}) => {
+            console.log(comments)
+            comments.forEach((comment) => renderComment(comment))
+        })
+        .catch(error => console.warn(error))
+    }
+
+    const parseCommentToHtml = comment =>
+    `
+     <li class="comment-item border bottom mrg-btm-30">
+        <span>
+        <img class="thumb-img img-circle"
+             src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
+        <div class="info">
+            <span href=""
+                  class="text-bold inline-block">${comment.author.name}</span>
+            <span class="sub-title inline-block pull-right">
+                <i class="ti-timer pdd-right-5"></i>
+                <span>${comment.updatedDate}</span>
+            </span>
+            <form th:action="${'comments/' + comment.id}" th:method="put">
+                <p class="width-80" th:id="'contents-' + ${comment.id}">${comment.contents}</p>
+                <div class="btn-group btn-group-horizontal">
+                     <button class="float-right pointer btn btn-icon" type="submit">
+                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                    </button>
+                    <button type="submit" class="float-right btn btn-default no-border-line" style="border:transparent; background:transparent;">
+                        <i class="ti-trash font-size-16"></i>
+                    </button>
+                </div>
+            </form>
+
+        </div>
+        </span>
+    </li>
+
+
+
+    `
+
+    const createButton = document.getElementById("save-btn")
+
+    const createComment = () => {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                contents: editor.getMarkdown()
+            })
+        }
+        return fetch(BASE_URL, config)
+            .then(res => res.json())
+            .then(comment => {
+                renderComment(comment)
+            })
+            .catch(error => console.warn(error))
+    }
+
+    createButton.addEventListener("click", createComment)
+
+</script>
+</body>
+>>>>>>> pair/younghyeon
 </html>

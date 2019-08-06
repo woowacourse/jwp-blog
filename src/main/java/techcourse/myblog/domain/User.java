@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 @Entity
 @Getter
 @EqualsAndHashCode
@@ -25,7 +26,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    public User(final String name, final String email, final String password) {
+    public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;

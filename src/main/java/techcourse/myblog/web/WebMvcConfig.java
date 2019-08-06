@@ -27,23 +27,23 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public LoginUserArgumentResolver loginUserMethodArgumentResolver() {
         return new LoginUserArgumentResolver();
     }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/")
-                .excludePathPatterns("/login")
-                .excludePathPatterns("/signup")
-                .excludePathPatterns("/users")
-                .excludePathPatterns("/css/**")
-                .excludePathPatterns("/js/**")
-                .excludePathPatterns("/images/**");
-
-        registry.addInterceptor(userAuthInterceptor)
-                .addPathPatterns("/user/update/{pageId}")
-                .addPathPatterns("/user/delete/{pageId}");
-    }
+    
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(loginInterceptor)
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/")
+//                .excludePathPatterns("/login")
+//                .excludePathPatterns("/signup")
+//                .excludePathPatterns("/users")
+//                .excludePathPatterns("/css/**")
+//                .excludePathPatterns("/js/**")
+//                .excludePathPatterns("/images/**");
+//
+//        registry.addInterceptor(userAuthInterceptor)
+//                .addPathPatterns("/user/update/{pageId}")
+//                .addPathPatterns("/user/delete/{pageId}");
+//    }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {

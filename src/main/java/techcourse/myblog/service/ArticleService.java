@@ -6,9 +6,15 @@ import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.exception.ArticleNotFoundException;
 import techcourse.myblog.domain.repository.ArticleRepository;
+<<<<<<< HEAD
 import techcourse.myblog.dto.ArticleDto;
 
 import java.util.List;
+=======
+
+import java.util.List;
+
+>>>>>>> pair/younghyeon
 import static java.util.Collections.unmodifiableList;
 
 @Service

@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import techcourse.myblog.domain.Article;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
-   Article findArticleById(long id);
+    Article findArticleById(long id);
 }
