@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/article.css">
 </head>
 <body>
+<div type="hidden" id="session-email" th:text="${sessionEmail}"></div>
 <div>
     <header id="header" class="header navbar bg-transparent no-border">
         <div class="header-container">
@@ -132,8 +133,6 @@
                                             <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
                                         </button>
                                     </div>
-
-
                                     <p th:id="'commentContents-'+${comment.id}" class="width-80"
                                        th:text="${comment.contents}">브라운 멋져</p>
                                 </div>
@@ -178,16 +177,12 @@
         </div>
     </div>
 </div>
-
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <th:block th:include="fragments/body"></th:block>
 <script type="text/javascript" th:inline="javascript">
     /* <![CDATA[ */
-    const saveButton = document.getElementById('save-btn');
-    saveButton.addEventListener('click', saveComment)
-
-    const initValue = /*[[${article.contents}]]*/;
-
+    const initValue = /*[[${article.contents}]]*/
+    /*]]>*/
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
         viewer: true,
@@ -205,79 +200,7 @@
         },
         height: '200px'
     });
-
-    function clickPencil(articleId, commentId) {
-        let commentContents = document.getElementById("commentContents-" + commentId);
-        $('#modalInput').val(commentContents.textContent)
-        document.getElementById('commentModifyForm').action = "/articles/" + articleId + "/comments/" + commentId
-        $('#exampleModal').modal('show')
-    }
-
-    function saveComment() {
-        const contents = document.getElementById('comment-contents').value;
-        const articleId = document.getElementById('articleId').innerText;
-        console.log(articleId);
-        const email = [[${sessionEmail}]];
-        console.log(email)
-        fetch("http://localhost:8080/articles/" + articleId + "/jsoncomments", {
-            method: "POST",
-            body: JSON.stringify({
-                email: email,
-                contents: contents,
-                articleId: articleId,
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8",
-                "Accept": "application/json; charset=UTF-8"
-            }
-        })
-            .then(response => response.json())
-            .then(function (json) {
-                console.log("inside the function: ");
-                console.log(json);
-                const email = json.email;
-                const commentId = json.id;
-                const contents = json.contents;
-                const articleId = json.articleId;
-                const isValidUser = json.validUser;
-                console.log("json_email: " + email);
-                console.log("json_contents: " + contents);
-                console.log("json_commentId: " + commentId);
-                console.log("json_articleId: " + articleId);
-                console.log("json_isvaliduser: " + isValidUser);
-                let msg = "<ul class=\"list-unstyled list-info\">"
-                    + "<li class=\"comment-item border bottom mrg-btm-30\">"
-                    + "<img class=\"thumb-img img-circle\" src=\"https://avatars2.githubusercontent.com/u/3433096?v=4\" alt=\"\">"
-                    + "<div class=\"info\">"
-                    + "<input type=\"text\" id=\"content-input1\" style=\"display:none\">"
-                    + "<span href=\"\" id='email' class=\"text-bold inline-block\">" + email + "</span>"
-                    + "<span class=\"sub-title inline-block pull-right\">"
-                    + "<div id='visiblebuttons'></div>"
-                    + "<i class=\"ti-timer pdd-right-5\"></i>"
-                    + "<span>6 min ago</span>"
-                    + " </span>"
-                    + "<p id='" + commentId + "' class=\"width-80\">" + contents + "</p>"
-                    + "</div>"
-                    + "</li>"
-                    + "</ul>"
-                if (isValidUser) {
-                    const update = "<button type=\"button\" class=\"float-right pointer btn btn-icon\">"
-                        + "<i class=\"ti-pencil text-dark font-size-16 pdd-horizontal-5\"></i>"
-                        + "</button>";
-                    const deleteButton = "<button type=\"submit\" class=\"float-right pointer btn btn-icon\">"
-                        + "<i class=\"ti-trash text-dark font-size-16 pdd-horizontal-5\"></i>"
-                        + "</button>";
-                    $("#comment-div").append(msg)
-                    $("#visiblebuttons").append(update)
-                    $("#visiblebuttons").append(deleteButton)
-                } else {
-                    $("#comment-div").append(msg)
-                }
-
-            })
-    }
-
-    /*]]>*/
 </script>
+<script src="/js/article.js"></script>
 </body>
 </html>
