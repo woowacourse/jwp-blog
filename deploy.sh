@@ -1,5 +1,5 @@
 # git pull
-git pull origin wbluke
+git pull origin final
 
 # build
 ./gradlew clean build
