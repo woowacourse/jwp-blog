@@ -1,17 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE configuration>
 <configuration>
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{HH:mm:ss.SSS} [%-5level] [%thread] [%logger{36}] - %m%n</Pattern>
-        </layout>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Support multiple-JVM writing to the same log file -->
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+        ​
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
     </appender>
-
-    <!-- 자바 패키지별 log level을 설정한다. -->
-    <logger name="techcourse" level="DEBUG"/>
-
-    <!-- 기본 log level을 설정한다. -->
-    <root level="INFO">
-        <appender-ref ref="STDOUT"/>
+    ​
+    <root level="DEBUG">
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>
