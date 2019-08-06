@@ -1,9 +1,12 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-import techcourse.myblog.domain.Article;
-import techcourse.myblog.domain.ArticleRepository;
+import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.user.User;
+
+import java.util.Optional;
 
 @Service
 public class ArticleService {
@@ -13,11 +16,8 @@ public class ArticleService {
         this.articleRepository = articleRepository;
     }
 
-    public boolean tryRender(long articleId, Model model) {
-        return articleRepository.findById(articleId).map(article -> {
-                                                            model.addAttribute("article", article);
-                                                            return true;
-                                                        }).orElse(false);
+    public Optional<Article> maybeArticle(long articleId) {
+        return articleRepository.findById(articleId);
     }
 
     public Iterable<Article> loadEveryArticles() {
@@ -28,15 +28,15 @@ public class ArticleService {
         return articleRepository.save(toWrite).getId();
     }
 
-    public boolean tryUpdate(long articleId, Article toUpdate) {
-        return articleRepository.findById(articleId).map(ifExists -> {
-                                                            toUpdate.setId(articleId);
-                                                            articleRepository.save(toUpdate);
-                                                            return true;
-                                                        }).orElse(false);
+    @Transactional
+    public void tryUpdate(long articleId, Article toUpdate) {
+        articleRepository.findById(articleId).filter(article -> article.isSameAuthor(toUpdate))
+                                            .ifPresent(original -> original.update(toUpdate));
     }
 
-    public void delete(long articleId) {
-        articleRepository.deleteById(articleId);
+    @Transactional
+    public void tryDelete(long articleId, User user) {
+        articleRepository.findById(articleId).filter(article -> article.isSameAuthor(user))
+                                            .ifPresent(article -> articleRepository.deleteById(articleId));
     }
 }

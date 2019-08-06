@@ -11,7 +11,7 @@
     <div th:object="${article}">
         <th:block th:replace="layout/header :: header"></th:block>
         <div class="about-cover card no-border ">
-            <div class="cover-img overlay-dark bg" th:style=" 'background-image:url(' + ${article.coverUrl} + ');' ">
+            <div class="cover-img overlay-dark bg" th:style="'background-image:url(' + ${article.coverUrl} + ');' ">
                 <div class="padding-30">
                     <h1 class="text-center cover-title" th:text="${article.title}">목적의식 있는 연습을 통한 효과적인 학습</h1>
                 </div>
@@ -34,7 +34,7 @@
                             <img class="width-80px border-radius-round" src="https://scontent-icn1-1.xx.fbcdn.net/v/t1.0-9/1514627_858869820895635_1119508450771753991_n.jpg?_nc_cat=110&_nc_ht=scontent-icn1-1.xx&oh=a32aa56b750b212aee221da7e9711bb1&oe=5D8781A4">
                         </div>
                         <div class="col-md-10 col-sm-7">
-                            <span class="font-size-16 text-bold pdd-btm-5">Brown</span><span class="font-size-12 text-gray"> / gracefulBrown@woowahan.com</span>
+                            <span class="font-size-16 text-bold pdd-btm-5" th:text=${article.author.name}></span><span class="font-size-12 text-gray" th:text="${' / ' + article.author.email}"></span>
                             <p class="font-size-13 text-dimgray lh-1-3">
                                 백엔드 개발자: 설계.테스트.생산성.클린코드.멘토링에 관심이 많음 <br>
                                 Woowahantechcourse Organizer / Coach / Husband
@@ -57,40 +57,51 @@
                 <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                     <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                         <span class="font-size-16">댓글</span>
-                        <span class="font-size-16 text-info">2</span>
+                        <span th:text="${comments.size()}"class="font-size-16 text-info"></span>
                     </div>
                     <div class="comment">
                         <ul class="list-unstyled list-info">
-                            <li class="comment-item border bottom mrg-btm-30">
-                                <img class="thumb-img img-circle"
-                                     src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
-                                <div class="info">
-                                    <span href="" class="text-bold inline-block">Jun</span>
-                                    <span class="sub-title inline-block pull-right">
-                                        <i class="ti-timer pdd-right-5"></i>
-                                        <span>6 min ago</span>
-                                </span>
-                                    <p class="width-80">3주라는 짧은 기간에 효과적으로 연습하도록 하기 위해 의식적인 연습을 기반으로 미션을 진행하도록 설계했다. 교육자로
-                                        살다 보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의 재발견”이라는 책을 통해 의식적인 연습의
-                                        중요성을 느낄 수 있는 계기가 되었다.</p>
-                                </div>
-                            </li>
-                            <li class="comment-item border bottom mrg-btm-30">
+                            <li th:each="comment,index: ${comments}" class="comment-item border bottom mrg-btm-30">
                                 <img class="thumb-img img-circle"
                                      src="https://avatars2.githubusercontent.com/u/3433096?v=4" alt="">
                                 <div class="info">
-                                    <span href="" class="text-bold inline-block">Jun</span>
+                                    <span th:text="${comment.author.name}" href="" class="text-bold inline-block">Jun</span>
                                     <span class="sub-title inline-block pull-right">
                                         <i class="ti-timer pdd-right-5"></i>
-                                        <span>6 min ago</span>
+                                        <span th:text="${comment.createdTimeAt}"></span>
                                     </span>
-                                    <p class="width-80">브라운 멋져</p>
+                                    <p th:text="${comment.contents}" class="comment-paragraph width-80"></p>
+                                    <textarea onkeyup="editChange(event)" th:placeholder="${comment.contents}"  class="comment-edit-form"  type="are" style="display:none; width:70%"></textarea>
+                                </div>
+                                <div class="comment-buttons">
+                                    <form method="post" th:action="${'/articles/' + article.getId() + '/comment/' + comment.id}">
+                                        <input type="hidden" name="_method" value="PUT">
+                                        <input class="comment-edit-input" name="contents" type="hidden">
+                                        <button type="submit" class="comment-edit-save" style="display:none">
+                                            <i class="ti ti-save text-dark font-size-16 pdd-horizontal-5"></i>
+                                        </button>
+                                    </form>
+                                    <button onclick="showEdit(event)" class="comment-edit">
+                                        <i class="ti ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                                    </button>
+                                    <form method="post" th:action="${'/articles/' + article.id + '/comment/' + comment.id}" >
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button class="comment-delete">
+                                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </li>
                         </ul>
-                        <div class="add-comment">
-                            <div id="editSection"></div>
-                        </div>
+                        <form th:if="${session.email} != null" th:action="${'/articles/' + article.getId() + '/comment'}" name="comment" method="post">
+                            <div class="add-comment">
+                                <input id="comment-contents" name="contents" type="hidden" value="">
+                                <div id="editSection"></div>
+                                <button id="save-btn" type="submit" class="btn btn-default">
+                                    <i class="ti-save"></i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -106,10 +117,26 @@
             previewStyle: 'horizontal',
             events: {
                 change: function () {
+                    document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
                 }
             },
             height: '200px'
         });
+
+        const showEdit = function(e){
+            let content = e.currentTarget.closest(".comment-item");
+            e.currentTarget.style.display = "none";
+            content.getElementsByClassName('comment-edit-form')[0].style.display = "block";
+            content.getElementsByClassName('comment-edit-save')[0].style.display = "inline";
+            content.getElementsByClassName('comment-paragraph')[0].style.display = "none";
+        }
+
+        const editChange = function(e){
+            let content = e.currentTarget.closest(".comment-item");
+            let nowContents = e.currentTarget.value;
+            console.log(nowContents);
+            content.getElementsByClassName('comment-edit-input')[0].setAttribute('value',nowContents);
+        }
     </script>
 </th:block>
 </html>

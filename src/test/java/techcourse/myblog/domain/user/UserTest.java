@@ -1,6 +1,7 @@
-package techcourse.myblog.domain;
+package techcourse.myblog.domain.user;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -29,5 +30,10 @@ class UserTest {
     void validationPasswordTest() {
         assertThatThrownBy(() -> new User(rightName, rightEmail, wrongPassword));
         assertThat(new User(rightName, rightEmail, rightPassword));
+    }
+
+    @Test
+    void authenticationTest() {
+        assertThat(new User(rightName, rightEmail, rightPassword).authenticate(rightPassword)).isTrue();
     }
 }
