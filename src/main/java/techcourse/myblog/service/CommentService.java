@@ -11,9 +11,6 @@ import techcourse.myblog.service.dto.CommentsResponse;
 import techcourse.myblog.service.exception.NoCommentException;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,19 +30,9 @@ public class CommentService {
         return new CommentsResponse(commentRepository.findByArticleId(articleId).stream()
                 .map(comment -> new CommentResponse(comment.getId(),
                         comment.getContents(),
-                        comment.getCreatedDate().until(LocalDateTime.now(), ChronoUnit.MILLIS),
+                        comment.getCreatedDate(),
                         comment.getCommenter()))
                 .collect(Collectors.toList()));
-    }
-
-    public List<CommentResponse> findByArticle(Article article) {
-        // FIXME: 2019-07-31 search more simple way
-        return commentRepository.findByArticle(article).stream()
-                .map(comment -> new CommentResponse(comment.getId(),
-                        comment.getContents(),
-                        comment.getCreatedDate().until(LocalDateTime.now(), ChronoUnit.MILLIS),
-                        comment.getCommenter()))
-                .collect(Collectors.toList());
     }
 
     @Transactional
