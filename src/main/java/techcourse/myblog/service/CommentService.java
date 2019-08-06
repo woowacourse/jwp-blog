@@ -2,7 +2,7 @@ package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import techcourse.myblog.controller.dto.CommentDto;
+import techcourse.myblog.controller.dto.RequestCommentDto;
 import techcourse.myblog.exception.CommentNotFoundException;
 import techcourse.myblog.model.Article;
 import techcourse.myblog.model.Comment;
@@ -17,12 +17,12 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public void save(CommentDto commentDto) {
-        Article article = commentDto.getArticle();
-        Comment comment = new Comment(commentDto.getContents(), commentDto.getUser(), article);
+    public Comment save(RequestCommentDto requestCommentDto) {
+        Article article = requestCommentDto.getArticle();
+        Comment comment = new Comment(requestCommentDto.getContents(), requestCommentDto.getUser(), article);
         article.addComment(comment);
 
-        commentRepository.save(comment);
+        return commentRepository.save(comment);
     }
 
     public Comment findById(Long commentId) {
@@ -31,10 +31,10 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment update(CommentDto commentDto, Long commentId) {
+    public Comment update(RequestCommentDto requestCommentDto, Long commentId) {
         Comment oldComment = findById(commentId);
         Comment updatedComment = new Comment(
-                commentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle());
+                requestCommentDto.getContents(), oldComment.getAuthor(), oldComment.getArticle());
         return oldComment.update(updatedComment);
     }
 
