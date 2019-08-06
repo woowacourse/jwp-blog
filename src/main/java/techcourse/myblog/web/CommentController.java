@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import static techcourse.myblog.utils.session.SessionContext.USER;
-import static techcourse.myblog.web.URL.*;
+import static techcourse.myblog.web.URL.COMMENT;
 
 @Controller
 public class CommentController {
@@ -34,14 +34,15 @@ public class CommentController {
     }
 
     @PutMapping(COMMENT + "/{articleId}" + "/{commentId}")
-    public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @Valid CommentRequest commentRequest) {
+    @ResponseBody
+    public CommentResponse updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @RequestBody @Valid CommentRequest commentRequest) {
         UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
-        commentService.update(commentId, commentRequest, userResponse);
 
-        return REDIRECT + ARTICLES + "/" + articleId;
+        return commentService.update(commentId, commentRequest, userResponse);
     }
 
     @DeleteMapping(COMMENT + "/{articleId}" + "/{commentId}")
+    @ResponseBody
     public void deleteComment(@PathVariable Long articleId, @PathVariable Long commentId) {
         UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
         commentService.delete(commentId, userResponse);

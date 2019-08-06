@@ -41,10 +41,13 @@ public class CommentService {
     }
 
     @Transactional
-    public void update(Long commentId, CommentRequest commentRequest, UserResponse userResponse) {
+    public CommentResponse update(Long commentId, CommentRequest commentRequest, UserResponse userResponse) {
         checkAuthentication(commentId, userResponse);
         Comment comment = getCommentFindById(commentId);
+
         comment.update(CommentAssembler.toEntity(commentRequest));
+
+        return CommentAssembler.toDto(comment);
     }
 
     private Comment getCommentFindById(Long commentId) {

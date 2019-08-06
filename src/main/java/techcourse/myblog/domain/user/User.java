@@ -39,6 +39,11 @@ public class User {
         this.email = email;
     }
 
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
     private String validatePassword(String password) {
         Matcher matcher = PASSWORD_PATTERN.matcher(password);
         if (!matcher.find()) {

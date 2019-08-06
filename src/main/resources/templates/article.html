@@ -17,15 +17,16 @@
     <div class="container-fluid max-width-lg mx-auto mrg-vertical-30 padding-30">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                <a th:if="${session.user} != null AND ${article.author.email} == ${session.user.email}"
+                <a class="float-right pointer btn btn-icon"
                    th:href="@{/articles/{articleId}/edit(articleId=${article.id})}"
-                   class="float-right pointer btn btn-icon">
+                   th:if="${session.user} != null AND ${article.author.email} == ${session.user.email}">
                     <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                 </a>
 
-                <form th:if="${session.user} != null AND ${article.author.email} == ${session.user.email}"
-                      th:action="${#strings.concat('/articles/', article.id)}"
-                      accept-charset="utf-8" method="post" name="article">
+                <form accept-charset="utf-8"
+                      method="post"
+                      name="article" th:action="${#strings.concat('/articles/', article.id)}"
+                      th:if="${session.user} != null AND ${article.author.email} == ${session.user.email}">
                     <input name="_method" type="hidden" value="DELETE">
                     <button class="btn btn-default" id="delete-btn" type="submit">
                         <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
@@ -82,7 +83,7 @@
         "<p class=\"width-80\" id=\"commentContents-{{comment.id}}\">{{comment.contents}}</p>" +
         "{{>commentUpdateAndDeleteButton}}" +
         "</div>" +
-        "</li>"
+        "</li>";
 
     const commentUpdateAndDeleteTemplate =
         "<div class=\"comment-button\" style = \"margin-bottom:90px\">" +
@@ -96,29 +97,25 @@
         "<button id=\"updateButton-{{comment.id}}\" onclick=\"updateComment({{comment.id}})\" class=\"none float-right pointer btn btn-icon\">" +
         "확인" +
         "</button>" +
-        "</div>"
+        "</div>";
 
     const commentItemTemplate = Handlebars.compile(commentCreateTemplate);
 
     function createComment(commentContents) {
-        console.log(articleId);
         fetch('/comments/' + articleId, {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8'
             },
             body: JSON.stringify(commentContents)
-        }).then(function(response) {
-            // console.log(response);
+        }).then(function (response) {
             return response.json();
-        }).then(function(comment) {
-            console.log(sessionUser);
-            console.log(comment.commenter.id);
-            if(sessionUser === comment.commenter.id) {
+        }).then(function (comment) {
+            if (sessionUser === comment.commenter.id) {
                 Handlebars.registerPartial("commentUpdateAndDeleteButton", commentUpdateAndDeleteTemplate)
             }
             document.getElementById('comment-list')
-                .insertAdjacentHTML('beforeend', commentItemTemplate({"comment":comment}))
+                .insertAdjacentHTML('beforeend', commentItemTemplate({"comment": comment}))
         })
     }
 
@@ -136,10 +133,35 @@
     var submitButton = document.querySelector('#saveCommentBtn');
     submitButton.addEventListener('click', submitComment);
 
+    function updateComment(commentId) {
+        var updatedContents = document.querySelector('#inputUpdateContents-' + commentId).value;
+        if (updatedContents === "") {
+            alert('내용을 입력하세요');
+            return;
+        }
+        console.log(updatedContents)
+        fetch('/comments/' + articleId + "/" + commentId, {
+            method: 'put',
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify({contents: updatedContents})
+        }).then(function (response) {
+            return response.json();
+        }).then(function (comment) {
+            console.log(comment)
+            var currentContents = document.querySelector('#commentContents-' + commentId);
+            currentContents.innerHTML = "";
+            currentContents.insertAdjacentHTML('beforeend', comment.contents);
+            hideCommentInput(commentId);
+        })
+    }
+
     function deleteComment(commentId) {
         fetch('/comments/' + articleId + "/" + commentId, {
             method: 'delete'
-        }).then(function(response) {
+        }).then(function (response) {
+            console.log(response);
             if (response.ok) {
                 var currentComment = document.querySelector('#comment-' + commentId);
                 var parent = currentComment.parentNode;
@@ -149,63 +171,6 @@
             }
         })
     }
-
-    // function editComment(commentId) {
-    //     document.getElementById('comment-div-' + commentId).style.display = 'none';
-    //     document.getElementById('edit-a-' + commentId).style.display = 'none';
-    //     document.getElementById('delete-a-' + commentId).style.display = 'none';
-    //
-    //     document.getElementById('edit-section-' + commentId).style.display = 'block';
-    //     document.getElementById('update-a-' + commentId).style.display = 'block';
-    //     document.getElementById('cancel-a-' + commentId).style.display = 'block';
-    // }
-    //
-    // function cancelComment(commentId) {
-    //     document.getElementById('comment-div-' + commentId).style.display = 'block';
-    //     document.getElementById('edit-a-' + commentId).style.display = 'block';
-    //     document.getElementById('delete-a-' + commentId).style.display = 'block';
-    //
-    //     document.getElementById('edit-section-' + commentId).style.display = 'none';
-    //     document.getElementById('update-a-' + commentId).style.display = 'none';
-    //     document.getElementById('cancel-a-' + commentId).style.display = 'none';
-    // }
-    //
-    // function deleteComment(articleId, commentId) {
-    //     const deleteForm = document.createElement('form');
-    //     deleteForm.setAttribute("method", "Post");
-    //     deleteForm.setAttribute("action", "/comment/" + articleId + "/" + commentId);
-    //
-    //     const hiddenField = document.createElement("input");
-    //     hiddenField.setAttribute("type", "hidden");
-    //     hiddenField.setAttribute("name", "_method");
-    //     hiddenField.setAttribute("value", "delete");
-    //     deleteForm.appendChild(hiddenField);
-    //
-    //     document.body.appendChild(deleteForm);
-    //     deleteForm.submit();
-    // }
-    //
-    // function updateComment(articleId, commentId) {
-    //     const updateForm = document.createElement('form');
-    //     updateForm.setAttribute("method", "Post");
-    //     updateForm.setAttribute("action", "/comment/" + articleId + "/" + commentId);
-    //
-    //     const hiddenField = document.createElement("input");
-    //     hiddenField.setAttribute("type", "hidden");
-    //     hiddenField.setAttribute("name", "_method");
-    //     hiddenField.setAttribute("value", "put");
-    //     updateForm.appendChild(hiddenField);
-    //
-    //     const commentContent = document.createElement("input");
-    //     const content = document.getElementById('edit-section-' + commentId).value;
-    //     commentContent.setAttribute("type", "text");
-    //     commentContent.setAttribute("name", "contents");
-    //     commentContent.setAttribute("value", content);
-    //     updateForm.appendChild(commentContent);
-    //
-    //     document.body.appendChild(updateForm);
-    //     updateForm.submit();
-    // }
 
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),
@@ -225,6 +190,30 @@
         },
         height: '200px'
     });
+
+    function showCommentInput(commentId) {
+        let commentContents = document.querySelector("#commentContents-" + commentId);
+        let showButton = document.querySelector("#showInputForm-" + commentId);
+        let updateButton = document.querySelector("#updateButton-" + commentId);
+        let contentInput = document.querySelector("#inputUpdateContents-" + commentId);
+
+        contentInput.classList.remove("none");
+        showButton.classList.add("none");
+        commentContents.classList.add("none");
+        updateButton.classList.remove("none");
+    }
+
+    function hideCommentInput(commentId) {
+        let commentContents = document.querySelector("#commentContents-" + commentId);
+        let showButton = document.querySelector("#showInputForm-" + commentId);
+        let updateButton = document.querySelector("#updateButton-" + commentId);
+        let contentInput = document.querySelector("#inputUpdateContents-" + commentId);
+
+        contentInput.classList.add("none");
+        showButton.classList.remove("none");
+        commentContents.classList.remove("none");
+        updateButton.classList.add("none");
+    }
 </script>
 </body>
 </html>
