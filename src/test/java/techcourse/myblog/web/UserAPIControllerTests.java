@@ -12,6 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.application.dto.ErrorResponse;
+import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserEditRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,12 +22,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 public class UserAPIControllerTests {
 
-    private static final String name = "bmo";
-    private static final String email = "bmo@bmo.com";
-    private static final String password = "Password123!";
+    private static final String NAME = "bmo";
+    private static final String EMAIL = "bmo@bmo.com";
+    private static final String PASSWORD = "Password123!";
     private static final String LONG_NAME = "abcdefghijk";
     private static final String WRONG_NAME = "123123";
     private static final String GOOD_NAME = "iamgood";
+    private static final String WRONG_PASSWORD = "WrongPassword";
 
     private String cookie;
 
@@ -36,10 +38,10 @@ public class UserAPIControllerTests {
     @BeforeEach
     void setUp() {
         // 회원가입
-        signUp(name, email, password);
+        signUp(NAME, EMAIL, PASSWORD);
 
         // 로그인
-        cookie = login(email, password);
+        cookie = login(EMAIL, PASSWORD);
     }
 
     private void signUp(String name, String email, String password) {
@@ -52,12 +54,14 @@ public class UserAPIControllerTests {
     }
 
     private String login(String email, String password) {
+        LoginRequest request = new LoginRequest(email, password);
+
         return webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", email)
-                        .with("password", password))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(request), LoginRequest.class)
                 .exchange()
                 .expectStatus()
-                .isFound()
+                .isOk()
                 .returnResult(String.class)
                 .getResponseHeaders()
                 .getFirst("Set-Cookie");
@@ -117,4 +121,5 @@ public class UserAPIControllerTests {
                 .expectBody()
                 .isEmpty();
     }
+
 }

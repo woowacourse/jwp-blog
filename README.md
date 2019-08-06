@@ -39,10 +39,10 @@
 ---
 # Ajax를 사용하도록 기능 변경
 - [x] 댓글 기능
-- [ ] 헤더의 로그인 정보
-- [ ] MyPage put 요청
-- [ ] SignUp
+- [x] MyPage put 요청
 - [ ] Login
+- [ ] 헤더의 로그인 정보
+- [ ] SignUp
 
 # Script를 이용한 자동 배포
 - [ ] 배포 성공
