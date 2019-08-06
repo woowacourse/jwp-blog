@@ -14,14 +14,19 @@ repositories {
 }
 
 dependencies {
+    /* lombok */
     implementation 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+    /* spring */
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-devtools'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    
+    /* db */
     implementation 'mysql:mysql-connector-java'
     implementation group: 'org.hibernate', name: 'hibernate-java8', version: '5.0.0.CR1'
 
@@ -33,5 +38,5 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.2'
     testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testImplementation 'com.h2database:h2'
-    
+
 }
