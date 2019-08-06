@@ -49,9 +49,10 @@ public class ArticleService {
     }
 
     @Transactional
-    public void addComment(Long articleId, Comment comment) {
+    public Article addComment(Long articleId, Comment comment) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new);
         article.addComment(comment);
+        return article;
     }
 
     public void checkAvailableUpdateUser(Article article, User user) {
