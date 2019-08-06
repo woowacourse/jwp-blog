@@ -46,14 +46,14 @@ public class CommentService {
         return oldComment.update(updatedComment);
     }
 
-    public Article delete(Long commentId, User user) {
+    public ResponseCommentDto delete(Long commentId, User user) {
         Comment comment = findById(commentId, user);
         Article deleteArticle = comment.getArticle();
 
         deleteArticle.deleteComment(comment);
         commentRepository.deleteById(commentId);
 
-        return deleteArticle;
+        return new ResponseCommentDto(commentId, comment.getAuthor().getUserName(), comment.getUpdateTime(), comment.getContents());
     }
 
     private Comment checkOwner(Long commentId, User user) {
