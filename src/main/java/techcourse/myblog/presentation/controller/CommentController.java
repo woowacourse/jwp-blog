@@ -1,6 +1,8 @@
 package techcourse.myblog.presentation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -55,5 +57,12 @@ public class CommentController {
     public UpdateCommentJsonDto updateComment(@RequestBody CommentJsonDto commentJsonDto){
         UpdateCommentJsonDto responseUpdateCommentJsonDto = commentService.update(commentJsonDto);
         return responseUpdateCommentJsonDto;
+    }
+
+    @DeleteMapping("/articles/{articleId}/jsoncomments/{deleteCommentId}")
+    @ResponseBody
+    public ResponseEntity deleteComment(@RequestBody CommentJsonDto commentJsonDto){
+        commentService.delete(commentJsonDto.getId());
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

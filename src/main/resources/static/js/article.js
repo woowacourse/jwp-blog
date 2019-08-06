@@ -18,10 +18,15 @@ const articleApp = (function () {
             const divSection = document.getElementById("comment-div");
             divSection.addEventListener('click', articleService.update);
         }
+        const deleteComment = function () {
+            const divSection = document.getElementById("comment-div");
+            divSection.addEventListener('click', articleService.deleteComment);
+        }
         const init = function () {
             save()
             edit()
             update()
+            deleteComment()
         }
 
         return {
@@ -141,10 +146,36 @@ const articleApp = (function () {
                     });
             }
         }
+        const deleteComment = function (event) {
+            console.log("시작!");
+            if(event.target.classList.contains("ti-trash")) {
+                console.log("쓰레기통")
+                const litag = event.target.closest('li');
+                const deleteCommentId = litag.querySelectorAll('div')[1].id;
+                const commenterEmail = litag.querySelector('span').innerText;
+                fetch("http://localhost:8080/articles/" + articleId + "/jsoncomments/" + deleteCommentId, {
+                    method: "DELETE",
+                    body: JSON.stringify({
+                        email: commenterEmail,
+                        articleId: articleId,
+                        id: deleteCommentId
+                    }),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8",
+                        "Accept": "application/json; charset=UTF-8"
+                    }
+                })
+                    .then(function () {
+                        console.log("삭제왓음")
+                        litag.remove()
+                    });
+            }
+        }
         return {
             save: save,
             prepareEdit: prepareEdit,
-            update: update
+            update: update,
+            deleteComment: deleteComment
         }
     }
     const init = function () {
