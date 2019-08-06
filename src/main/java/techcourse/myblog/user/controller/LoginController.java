@@ -32,7 +32,7 @@ public class LoginController {
 
     @PostMapping("/login")
     @ResponseBody
-    public UserResponseDto login(@RequestBody @Valid UserLoginDto userDto,BindingResult result, HttpSession session) {
+    public UserResponseDto login(@RequestBody @Valid UserLoginDto userDto, BindingResult result, HttpSession session) {
         log.debug(">>> userDto : {}", userDto);
         if (result.hasErrors()) {
             throw new InvalidLoginFormException(result.getFieldError().getDefaultMessage());
