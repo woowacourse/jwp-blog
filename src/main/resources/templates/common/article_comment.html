@@ -7,6 +7,7 @@
         <ul id="comment-list" class="list-unstyled list-info">
 
             <li th:each="comment : ${comments}" class="comment-item border bottom mrg-btm-30">
+                <input type="hidden" th:value="${comment.id}">
                 <img alt=""
                      class="thumb-img img-circle"
                      src="https://avatars3.githubusercontent.com/u/50367798?v=4">
@@ -21,7 +22,6 @@
 
                         <a th:if="${session.user} != null AND ${comment.commenter.email} == ${session.user.email}"
                            th:id="'update-a-' + ${comment.id}"
-                           th:onclick="'updateComment(' + ${article.id} + ',' + ${comment.id} + ')'"
                            style="display: none">저장</a>
                         <a th:if="${session.user} != null AND ${comment.commenter.email} == ${session.user.email}"
                            th:id="'cancel-a-' + ${comment.id}" th:onclick="'cancelComment(' + ${comment.id} + ')'"

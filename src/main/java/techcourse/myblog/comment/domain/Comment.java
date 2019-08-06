@@ -23,7 +23,7 @@ public class Comment {
     @JoinColumn(name = "commenterId", foreignKey = @ForeignKey(name = "fk_comment_to_user"))
     private User commenter;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "articleId", foreignKey = @ForeignKey(name = "fk_comment_to_article"))
     @JsonManagedReference
     private Article article;

@@ -147,20 +147,21 @@
     function getCommentTemplate(comment) {
         const articleId = [[${article.id}]];
         return '<li class="comment-item border bottom mrg-btm-30">' +
-            '<img alt="" class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4">' +
-            '<div class="info">' +
-            '<span class="text-bold inline-block" href="">' + comment.commenter.name + '</span>' +
-            '<span class="sub-title inline-block pull-right">' +
-            '<a id="edit-a-' + comment.id + '" onclick="editComment(' + comment.id + ')">수정</a>' +
-            '<a id="delete-a-' + comment.id + '" onclick="deleteComment(' + articleId + ',' + comment.id + ')">삭제</a>' +
-            '<a id="update-a-' + comment.id + '" onclick="updateComment(' + articleId + ',' + comment.id + ')" style="display: none">저장</a>' +
-            '<a id="cancel-a-' + comment.id + '" onclick="cancelComment(' + comment.id + ')" style="display: none">취소</a>' +
-            '<span>' + comment.date + '</span>' +
-            '</span>' +
-            '<p id="comment-div-' + comment.id + '" class="width-80">' + comment.contents + '</p>' +
-            '<textarea class="edit" id="edit-section-' + comment.id + '" name="edit-contents" style="display: none">' + comment.contents + '</textarea>' +
-            '</div>' +
-            '</li>';
+                    '<input type="hidden" value="' + comment.id + '">' +
+                    '<img alt="" class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4">' +
+                    '<div class="info">' +
+                        '<span class="text-bold inline-block" href="">' + comment.commenter.name + '</span>' +
+                        '<span class="sub-title inline-block pull-right">' +
+                            '<a id="edit-a-' + comment.id + '" onclick="editComment(' + comment.id + ')">수정</a>' +
+                            '<a id="delete-a-' + comment.id + '" onclick="deleteComment(' + articleId + ',' + comment.id + ')">삭제</a>' +
+                            '<a id="update-a-' + comment.id + '" style="display: none">저장</a>' +
+                            '<a id="cancel-a-' + comment.id + '" onclick="cancelComment(' + comment.id + ')" style="display: none">취소</a>' +
+                            '<span>' + comment.date + '</span>' +
+                        '</span>' +
+                        '<p id="comment-div-' + comment.id + '" class="width-80">' + comment.contents + '</p>' +
+                        '<textarea class="edit" id="edit-section-' + comment.id + '" name="edit-contents" style="display: none">' + comment.contents + '</textarea>' +
+                    '</div>' +
+                '</li>';
     }
 
     document.getElementById('save-btn').addEventListener('click', function () {
@@ -180,6 +181,29 @@
                 document.getElementById('comment-contents').value = '';
             });
     });
+
+    document.getElementById('comment-list').addEventListener('click',
+        function (event) {
+            const commentId = event.target.parentNode.parentNode.parentNode.querySelector("input").value;
+            const updateContents = document.getElementById('edit-section-' + commentId).value;
+            const updateCommentData = {contents: updateContents};
+
+            if (event.target.innerText === "저장") {
+                fetch("/comment/" + [[${article.id}]] + "/" + commentId, {
+                    method: "PUT",
+                    headers: {'Content-Type': 'application/json; charset=utf-8'},
+                    body: JSON.stringify(updateCommentData)
+                }).then(response => response.json())
+                    .then(json => {
+                        console.log(json);
+                        cancelComment(commentId);
+                        console.log(json);
+                        document.getElementById('comment-div-'+commentId).innerText = json.contents;
+                        document.getElementById('edit-section-'+commentId).value = json.contents;
+                    });
+            }
+        });
+
 </script>
 </body>
 </html>

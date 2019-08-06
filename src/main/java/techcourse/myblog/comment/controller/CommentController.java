@@ -1,20 +1,15 @@
 package techcourse.myblog.comment.controller;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.comment.domain.Comment;
+import techcourse.myblog.comment.service.CommentService;
 import techcourse.myblog.dto.CommentRequestDto;
 import techcourse.myblog.dto.UserResponseDto;
-import techcourse.myblog.comment.service.CommentService;
-import techcourse.myblog.utils.session.SessionUtil;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
-import static techcourse.myblog.utils.session.SessionContext.USER;
 
 @Controller
 public class CommentController {
@@ -31,11 +26,13 @@ public class CommentController {
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
+    @ResponseBody
     @PutMapping("/comment/{articleId}/{commentId}")
-    public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, CommentRequestDto commentRequestDto, UserResponseDto userResponseDto) {
-        commentService.update(commentId, commentRequestDto, userResponseDto);
+    public ResponseEntity<Comment> updateComment(@PathVariable Long articleId, @PathVariable Long commentId,
+                                                 @RequestBody CommentRequestDto commentRequestDto, UserResponseDto userResponseDto) {
+        Comment comment = commentService.update(commentId, commentRequestDto, userResponseDto);
 
-        return "redirect:/articles/" + articleId;
+        return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
     @DeleteMapping("/comment/{articleId}/{commentId}")
