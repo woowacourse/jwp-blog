@@ -111,7 +111,7 @@ function savePost(e) {
         })
         .catch((response) =>
             response.json().then(json =>
-                console.log(json)
+                alert(json.errorMessage)
             )
         );
 }
