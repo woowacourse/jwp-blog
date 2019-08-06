@@ -16,8 +16,8 @@ spring:
         format_sql: true
   datasource:
     url: jdbc:mysql://localhost:3306/myblog?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
-    username: luffy
-    password: 159456
+    username: cony
+    password: 924
 
 logging:
   level:
