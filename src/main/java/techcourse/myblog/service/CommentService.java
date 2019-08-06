@@ -20,9 +20,10 @@ public class CommentService {
     }
 
     @Transactional
-    public void tryUpdate(long commentId, String contents, User author) {
-        commentRepository.findById(commentId).filter(comment -> comment.isSameAuthor(author))
-                                            .ifPresent(comment -> comment.setContents(contents));
+    public Comment tryUpdate(long commentId, String contents, User author) {
+        return commentRepository.findById(commentId).filter(comment -> comment.isSameAuthor(author))
+                                                    .map(comment -> comment.setContents(contents))
+                                                    .orElse(null);
     }
 
     @Transactional

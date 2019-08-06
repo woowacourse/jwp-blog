@@ -59,7 +59,8 @@ public class Comment {
         return this.contents;
     }
 
-    public void setContents(String contents){
+    public Comment setContents(String contents){
         this.contents = contents;
+        return this;
     }
 }

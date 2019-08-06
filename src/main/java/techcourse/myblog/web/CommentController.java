@@ -31,7 +31,7 @@ public class CommentController {
     }
 
     @PostMapping("/articles/{articleId}/comment")
-    public @ResponseBody CommentDTO writeComment(@PathVariable long articleId, @RequestBody CommentDTO comment, HttpSession session) {
+    public CommentDTO writeComment(@PathVariable long articleId, @RequestBody CommentDTO comment, HttpSession session) {
         Comment written = commentService.write(
                 articleService.maybeArticle(articleId).get(), getCurrentUser(session), comment.getContents()
         );
@@ -39,23 +39,19 @@ public class CommentController {
     }
 
     @PutMapping("/articles/{articleId}/comment/{commentId}")
-    public RedirectView updateComment(
+    public CommentDTO updateComment(
             @PathVariable long articleId,
             @PathVariable long commentId,
-            String contents,
+            @RequestBody CommentDTO comment,
             HttpSession session
     ) {
-        commentService.tryUpdate(commentId, contents, getCurrentUser(session));
-        return new RedirectView("/articles/" + articleId);
+        Comment written = commentService.tryUpdate(commentId, comment.getContents(), getCurrentUser(session));
+        return new CommentDTO(written.getId(), written.getAuthor().getName(), written.getContents(), written.getCreatedTimeAt());
     }
 
     @DeleteMapping("/articles/{articleId}/comment/{commentId}")
-    public RedirectView deleteComment(
-            @PathVariable long articleId,
-            @PathVariable long commentId,
-            HttpSession session
-    ) {
+    public boolean deleteComment(@PathVariable long articleId, @PathVariable long commentId, HttpSession session) {
         commentService.delete(commentId, getCurrentUser(session));
-        return new RedirectView("/articles/" + articleId);
+        return true;
     }
 }
