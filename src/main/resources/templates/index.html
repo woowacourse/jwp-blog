@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>우아한테크코스 기술블로그</title>
+    <th:block th:replace="fragments/head :: headFragment"></th:block>
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+
+<div>
+    <th:block th:if="${session.loggedInUser}">
+        <th:block th:replace="fragments/login-header :: loginHeaderFragment"></th:block>
+    </th:block>
+    <th:block th:unless="${session.loggedInUser}">
+        <th:block th:replace="fragments/logout-header :: logoutHeaderFragment"></th:block>
+    </th:block>
+
+    <div class="about-cover card no-border mrg-btm-0">
+        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')"></div>
+        <div class="welcome-text-container">
+            <div class="welcome-txt">
+                <h1 class="text-white border bottom font-size-35 padding-5">Welcome Brown!</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid width-100 mrg-btm-30">
+        <div class="row">
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                <div class="tab-info center-tabs">
+                    <ul class="nav nav-tabs no-border" role="tablist">
+                        <li class="nav-item">
+                            <a href="#tab-centered-1" class="nav-link active" role="tab" data-toggle="tab">All</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#tab-centered-2" class="nav-link" role="tab" data-toggle="tab">Java</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#tab-centered-3" class="nav-link" role="tab" data-toggle="tab">Learning</a>
+                        </li>
+                    </ul>
+                    <div class="width-100 absolute left-0 border bottom"></div>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="tab-centered-1">
+                            <div class="pdd-horizon-15 pdd-vertical-20">
+                                <a th:each="article : ${articles}" th:href="@{'/articles/' + ${article.id}}"
+                                   class="card article-container">
+                                    <div class="card-horizon">
+                                        <div class="image-container col-md-4">
+                                            <div class="background-holder has-content"
+                                                 th:style="'background:url(' + ${article.coverUrl} + ');'"></div>
+                                        </div>
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col-md-8 ml-auto">
+                                                    <div class="pdd-vertical-30 pdd-horizon-25">
+                                                        <h2 th:text="${article.title}"
+                                                            class="mrg-btm-20 text-bold"></h2>
+                                                        <p th:text="${article.contents}"></p>
+                                                        <ul class="list-style-none pdd-left-0">
+                                                            <li class="inline-block mrg-right-5">
+                                                                <i class="ti-heart text-danger pdd-right-5"></i>
+                                                                <span class="text-gray font-size-14 relative">33</span>
+                                                            </li>
+                                                            <li class="inline-block">
+                                                                <i class="ti-comments text-primary pdd-right-5"></i>
+                                                                <span th:text="${article.commentCount}" class="text-gray font-size-14 relative"></span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab-centered-2">
+                            <div class="pdd-horizon-15 pdd-vertical-20">
+
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tab-centered-3">
+                            <div class="pdd-horizon-15 pdd-vertical-20">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3"></div>
+        </div>
+
+        <a href="/articles/new"
+           class="btn btn-primary btn-rounded btn-icon fixed lh-2-4 right-50 bottom-50 width-50px height-50px">
+            <i class="ti-plus"></i>
+        </a>
+    </div>
+</div>
+
+<footer th:replace="fragments/footer :: footerFragment"></footer>
+
+<th:block th:replace="fragments/script :: scriptFragment"></th:block>
+</html>
