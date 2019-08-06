@@ -3,6 +3,7 @@ package techcourse.myblog.application.converter;
 import org.springframework.stereotype.Component;
 import techcourse.myblog.application.dto.CommentDto;
 import techcourse.myblog.application.dto.CommentJsonDto;
+import techcourse.myblog.application.dto.UpdateCommentJsonDto;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 public class CommentConverter {
     public List<CommentDto> toDto(List<Comment> comments, String sessionEmail) {
         return comments.stream()
-                .map(comment -> new CommentDto(comment.getId(), comment.getContents().getContents(), comment.getAuthor().getName(), comment.getAuthor().compareEmail(sessionEmail)))
+                .map(comment -> new CommentDto(comment.getId(), comment.getContents().getContents(), comment.getAuthor().getName(), comment.getAuthor().isNotMatchEmail(sessionEmail)))
                 .collect(Collectors.toList());
     }
 
@@ -25,5 +26,9 @@ public class CommentConverter {
 
     public CommentJsonDto toCommentJsonDto(Comment savedComment, Boolean isValidUser) {
         return new CommentJsonDto(savedComment.getUserEmail(),savedComment.getCommentContents(), savedComment.getArticleId(),savedComment.getId(),isValidUser);
+    }
+
+    public UpdateCommentJsonDto toUpdateCommentJsonDto(Comment savedComment) {
+        return new UpdateCommentJsonDto(savedComment.getUserEmail(),savedComment.getCommentContents(), savedComment.getArticleId(), savedComment.getId());
     }
 }

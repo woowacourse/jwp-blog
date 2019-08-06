@@ -43,7 +43,11 @@ public class User {
         return this.password.equals(password);
     }
 
-    public boolean compareEmail(String email) {
+    public boolean isNotMatchEmail(String email) {
+        return !this.email.equals(email);
+    }
+
+    public boolean isMatchEmail(String email) {
         return this.email.equals(email);
     }
 
