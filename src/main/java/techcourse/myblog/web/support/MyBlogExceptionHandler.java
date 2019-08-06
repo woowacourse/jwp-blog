@@ -1,5 +1,7 @@
 package techcourse.myblog.web.support;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,26 +14,32 @@ import techcourse.myblog.web.controller.*;
 
 @ControllerAdvice
 public class MyBlogExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(MyBlogExceptionHandler.class);
+
     @ExceptionHandler(SignUpBindException.class)
     public RedirectView handleSignUpBindException(SignUpBindException e, RedirectAttributes redirectAttributes) {
+        logError(e);
         setBindExceptionRedirectAttributes(e, redirectAttributes);
         return new RedirectView("/signup");
     }
 
     @ExceptionHandler(LoginBindException.class)
     public RedirectView handleLoginBindException(LoginBindException e, RedirectAttributes redirectAttributes) {
+        logError(e);
         setBindExceptionRedirectAttributes(e, redirectAttributes);
         return new RedirectView("/login");
     }
 
     @ExceptionHandler(EditUserBindException.class)
     public RedirectView handleEditUserBindException(EditUserBindException e, RedirectAttributes redirectAttributes) {
+        logError(e);
         setBindExceptionRedirectAttributes(e, redirectAttributes);
         return new RedirectView("/mypage/edit");
     }
 
     @ExceptionHandler(CreateArticleBindException.class)
     public RedirectView handleEditUserBindException(CreateArticleBindException e, RedirectAttributes redirectAttributes) {
+        logError(e);
         setBindExceptionRedirectAttributes(e, redirectAttributes);
         return new RedirectView("/writing");
     }
@@ -44,38 +52,45 @@ public class MyBlogExceptionHandler {
 
     @ExceptionHandler(SignUpFailedException.class)
     public RedirectView handleSignupFail(SignUpFailedException e, RedirectAttributes redirectAttributes) {
+        logError(e);
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/signup");
     }
 
     @ExceptionHandler(LoginFailedException.class)
     public RedirectView handleLoginFail(LoginFailedException e, RedirectAttributes redirectAttributes) {
+        logError(e);
         redirectAttributes.addFlashAttribute("error", e.getMessage());
         return new RedirectView("/login");
     }
 
     @ExceptionHandler(MismatchAuthorException.class)
     public RedirectView handleMismatchArticleAuthorFail(MismatchAuthorException e, RedirectAttributes redirectAttributes) {
+        logError(e);
         return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
     }
 
     @ExceptionHandler(NotFoundArticleException.class)
     public RedirectView handleArticleFail(NotFoundArticleException e, RedirectAttributes redirectAttributes) {
+        logError(e);
         return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
     }
 
     @ExceptionHandler(InvalidCommentException.class)
     public RedirectView handleCommentFail(InvalidCommentException e, RedirectAttributes redirectAttributes) {
+        logError(e);
         return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
     }
 
     @ExceptionHandler(CommentUpdateFailedException.class)
     public RedirectView handleUpdateCommentFail(CommentUpdateFailedException e, RedirectAttributes redirectAttributes) {
+        logError(e);
         return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
     }
 
     @ExceptionHandler(UnauthorizedRequestException.class)
     public RedirectView handleUnauthorizedRequest(UnauthorizedRequestException e, RedirectAttributes redirectAttributes) {
+        logError(e);
         return redirectToRootWithErrorMsg(redirectAttributes, e.getMessage());
     }
 
@@ -87,5 +102,9 @@ public class MyBlogExceptionHandler {
     @ExceptionHandler(NotFoundCommentException.class)
     public RedirectView handleNotFoundCommentException() {
         return new RedirectView("/");
+    }
+
+    private void logError(Exception e) {
+        log.error("exception={}, error message={}", e.getClass().getName(), e.getMessage());
     }
 }
