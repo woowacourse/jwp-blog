@@ -66,35 +66,29 @@
             <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                 <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                     <span class="font-size-16">댓글</span>
-                    <span class="font-size-16 text-info" th:text="${comments.size()}">2</span>
+                    <span id="comment-count" class="font-size-16 text-info" th:text="${comments.size()}">2</span>
                 </div>
                 <div class="comment">
-                    <ul class="list-unstyled list-info">
-                        <li class="comment-item border bottom mrg-btm-30" th:each="comment: ${comments}">
+                    <ul id="comment-list" class="list-unstyled list-info">
+                        <li th:each="comment: ${comments}" class="comment-item border bottom mrg-btm-30"
+                            th:data-comment-id="${comment.id}">
                             <img alt=""
                                  class="thumb-img img-circle"
                                  src="https://avatars3.githubusercontent.com/u/50367798?v=4">
                             <div class="info">
                                 <span class="text-bold inline-block" name="author" th:text="${comment.author.userName}">Jun</span>
-                                <form class="pull-right" method="post" th:action="@{'/comments/' + ${comment.id}}"
-                                      style="display: inline-block;">
-                                    <input name="_method" type="hidden" value="delete">
-                                    <button class="btn-sm btn-link pull-right" type="submit"
-                                            style="border-width: 0; text-decoration: none;
+                                <button class="btn-sm btn-link pull-right" type="button"
+                                        style="border-width: 0; text-decoration: none;
                                                 padding-left: 1rem; padding-right: 0.5rem;
                                                 padding-bottom: 0; padding-top: 0">
-                                        <i class="ti-trash" style="color: gray;"></i>
-                                    </button>
-                                </form>
-                                <form class="pull-right" method="get" th:action="@{'/comments/' + ${comment.id} + '/edit'}"
-                                      style="display: inline-block;">
-                                    <button class="btn-sm btn-link pull-right" type="submit"
-                                            style="border-width: 0; text-decoration: none;
+                                    <i class="ti-trash" style="color: gray;" data-btn-type="delete"></i>
+                                </button>
+                                <button class="btn-sm btn-link pull-right" type="button"
+                                        style="border-width: 0; text-decoration: none;
                                                 padding-left: 1rem; padding-right: 0.5rem;
                                                 padding-bottom: 0; padding-top: 0">
-                                        <i class="ti-pencil" style="color: gray;"></i>
-                                    </button>
-                                </form>
+                                    <i class="ti-pencil" style="color: gray;" data-btn-type="update"></i>
+                                </button>
                                 <span class="sub-title inline-block pull-right">
                                     <i class="ti-timer pdd-right-5"></i>
                                     <span th:text="${comment.updateTime}">time</span>
@@ -102,18 +96,22 @@
                                 <p class="width-80" name="contents" th:text="${comment.contents}">contents</p>
                             </div>
                         </li>
-
                     </ul>
-                    <form action="/comments" method="post">
-                        <input name="articleId" th:value="${article.id}" type="hidden">
-                        <div class="add-comment">
-                            <div id="editSection"></div>
-                        </div>
-                        <input id="commentContents" name="contents" type="hidden"/>
-                        <div class="mrg-top-20 text-right">
-                            <button class="btn btn-tumblr" type="submit">댓글 작성</button>
-                        </div>
-                    </form>
+
+                    <div class="add-comment">
+                        <div id="editSection"></div>
+                    </div>
+                    <input id="article-id" th:value="${article.id}" type="hidden" />
+                    <input id="comment-id" name="contents" type="hidden" />
+                    <div class="mrg-top-20 text-right">
+                        <button class="btn btn-tumblr" type="button" id="comment-add-btn">댓글 작성</button>
+                        <button class="btn btn-tumblr" type="button" id="comment-update-btn" style="display: none">댓글
+                            수정
+                        </button>
+                        <button class="btn btn-tumblr" type="button" id="update-cancel-btn" style="display: none">수정
+                            취소
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -134,18 +132,7 @@
         initialValue: initValue
     });
 
-    const editor = new tui.Editor({
-        el: document.querySelector('#editSection'),
-        initialEditType: 'markdown',
-        previewStyle: 'horizontal',
-        events: {
-            change: function () {
-                document.getElementById("commentContents").setAttribute('value', editor.getMarkdown())
-            }
-        },
-        height: '200px'
-    });
-
 </script>
+<script src="/js/comment.js"></script>
 </body>
 </html>

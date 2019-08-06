@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import techcourse.myblog.controller.dto.CommentDto;
+import techcourse.myblog.controller.dto.RequestCommentDto;
 import techcourse.myblog.model.Article;
 import techcourse.myblog.model.Comment;
 import techcourse.myblog.model.User;
@@ -48,12 +48,12 @@ class CommentServiceTest {
     @Test
     @DisplayName("comment를 저장한다.")
     void saveComment() {
-        CommentDto commentDto = new CommentDto();
-        commentDto.setContents(COMMENTS_CONTENTS);
-        commentDto.setUser(user);
-        commentDto.setArticle(article);
+        RequestCommentDto requestCommentDto = new RequestCommentDto();
+        requestCommentDto.setContents(COMMENTS_CONTENTS);
+        requestCommentDto.setUser(user);
+        requestCommentDto.setArticle(article);
 
-        commentService.save(commentDto);
+        commentService.save(requestCommentDto);
 
         verify(commentRepository, atLeast(1))
                 .save(comment);
@@ -78,10 +78,10 @@ class CommentServiceTest {
                 .willReturn(Optional.of(comment));
 
         // When
-        CommentDto commentDto = new CommentDto();
-        commentDto.setArticleId(TEST_ARTICLE_ID);
-        commentDto.setContents(updatedContents);
-        Comment updatedComment = commentService.update(commentDto, TEST_COMMENT_ID);
+        RequestCommentDto requestCommentDto = new RequestCommentDto();
+        requestCommentDto.setArticleId(TEST_ARTICLE_ID);
+        requestCommentDto.setContents(updatedContents);
+        Comment updatedComment = commentService.update(requestCommentDto, TEST_COMMENT_ID);
 
         // Then
         assertThat(updatedComment.getContents()).isEqualTo(updatedContents);

@@ -3,7 +3,7 @@ package techcourse.myblog.utils;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.controller.dto.ArticleDto;
-import techcourse.myblog.controller.dto.CommentDto;
+import techcourse.myblog.controller.dto.RequestCommentDto;
 import techcourse.myblog.controller.dto.LoginDto;
 import techcourse.myblog.controller.dto.UserDto;
 
@@ -32,10 +32,10 @@ public class Utils {
                 .getHeader("Location");
     }
 
-    public static String createComment(CommentDto commentDto, String cookie, String baseUrl) {
+    public static String createComment(RequestCommentDto requestCommentDto, String cookie, String baseUrl) {
         return given()
-                .param("articleId", commentDto.getArticleId())
-                .param("contents", commentDto.getContents())
+                .param("articleId", requestCommentDto.getArticleId())
+                .param("contents", requestCommentDto.getContents())
                 .cookie(cookie)
                 .post(baseUrl + "/comments")
                 .getHeader("Location");
