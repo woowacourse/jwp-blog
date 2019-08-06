@@ -17,8 +17,14 @@ const COMMENT = (function () {
             const comments = document.getElementById('comment-list');
             comments.addEventListener('click', commentService.update);
         };
+
+        const deleteComment = function () {
+            const comments = document.getElementById('comment-list');
+            comments.addEventListener('click', commentService.remove);
+        }
         const init = function () {
             updateComment();
+            deleteComment();
         };
         return {
             init: init
@@ -63,9 +69,18 @@ const COMMENT = (function () {
                 });
             }
         };
+        const remove = function (event) {
+            const targetButton = event.target
+            if (targetButton.classList.contains("comment-del-button")) {
+                const comment = targetButton.closest('li')
+                const commentId = comment.dataset.commentId
+                deleteCommentFetch(articleId, commentId, comment);
+            }
+        }
 
         return {
-            update: update
+            update: update,
+            remove: remove
         };
     };
 
@@ -83,8 +98,9 @@ COMMENT.init();
 
 const saveButton = document.querySelector('#comment-save-button');
 const articleId = document.querySelector('#article-id').value;
-saveButton.addEventListener('click', savePost);
-function savePost(e) {
+saveButton.addEventListener('click', addCommentFetch);
+
+function addCommentFetch(e) {
     let contents = document.querySelector('#comment-contents').value;
     fetch('/articles/' + articleId + '/comments', {
         method: 'POST',
@@ -116,6 +132,29 @@ function savePost(e) {
         );
 }
 
+function deleteCommentFetch(articleId, commentId, targetComment) {
+    fetch('/articles/' + articleId + '/comments/' + commentId,
+        {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8'
+            },
+            credentials: 'include'
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json()
+            }
+            throw response.json();
+        })
+        .then(json => {
+            targetComment.remove();
+        })
+        .catch(
+            json => alert(json.errorMessage)
+        )
+}
+
 function addComment(articleId, commentDto) {
     console.log("abcd");
     let buttonTemplate = `<form method="post"
@@ -131,7 +170,7 @@ function addComment(articleId, commentDto) {
         </button>`;
 
     let commentTemplate = `
-        <li class="comment-item border bottom mrg-btm-30">
+        <li class="comment-item border bottom mrg-btm-30" data-id ="${commentDto.id}">
             <img alt=""
                  class="thumb-img img-circle"
                  src="https://avatars2.githubusercontent.com/u/3433096?v=4">
