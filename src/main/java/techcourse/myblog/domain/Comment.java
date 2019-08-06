@@ -1,48 +1,55 @@
 package techcourse.myblog.domain;
 
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import techcourse.myblog.exception.NotMatchAuthenticationException;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import techcourse.myblog.domain.exception.InvalidAccessException;
 
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Getter
-@EqualsAndHashCode(of = {"id"}, callSuper = false)
-@EntityListeners(AuditingEntityListener.class)
-@NoArgsConstructor
-public class Comment extends EntityDates {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class Comment extends AuditLog {
+    private static final String INVALID_ERROR = "잘못된 접근 입니다.";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Lob
-    private String content;
+    private long id;
+
+    @Column(name = "contents", nullable = false)
+    private String contents;
+
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    private User user;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_comment_to_user"), nullable = false)
+    private User author;
+
     @ManyToOne
-    @JoinColumn(name = "ARTICLE_ID", foreignKey = @ForeignKey(name = "FK_ARTICLE_TO_COMMENT"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "article", foreignKey = @ForeignKey(name = "fk_comment_to_article"), nullable = false)
     private Article article;
 
-    @Builder
-    public Comment(final String content, final User user, final Article article) {
-        this.content = content;
-        this.user = user;
+    public Comment(String contents, User author, Article article) {
+        this.contents = contents;
+        this.author = author;
         this.article = article;
     }
 
-    public Comment update(final String content, final User user) {
-        authorizeFor(user);
-        this.content = content;
-        return this;
+    public void update(String contents, long loginUserId) {
+        isAuthor(loginUserId);
+        this.contents = contents;
     }
 
-    public void authorizeFor(User user) {
-        if (!this.user.equals(user)) {
-            throw new NotMatchAuthenticationException("권한이 없습니다.");
+    public void isAuthor(long loginUserId) {
+        if (loginUserId == author.getId()) {
+            return;
         }
+
+        throw new InvalidAccessException(INVALID_ERROR);
     }
 }
