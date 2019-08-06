@@ -15,6 +15,11 @@ public class ErrorResponse extends BaseResponse {
         message = e.getMessage();
     }
 
+    public ErrorResponse(String message) {
+        super("fail");
+        this.message = message;
+    }
+
     public String getMessage() {
         return message;
     }
