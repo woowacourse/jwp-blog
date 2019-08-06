@@ -3,6 +3,7 @@ package techcourse.myblog.presentation.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -39,27 +40,18 @@ class CommentControllerTests extends ControllerTestTemplate {
     }
 
     @Test
-    public void 로그아웃_상태_댓글작성_리다이렉트() {
+    void 로그아웃_상태_댓글작성_리다이렉트() {
         String redirectUrl = getRedirectUrl(httpRequestWithData(POST, savedArticleUrl + "/comment", parser(commentDto)));
         assertEquals("/login", redirectUrl);
     }
 
     @Test
-    public void 로그인_상태_댓글작성_성공() {
-        webTestClient.post().uri(savedArticleUrl + "/comment")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .cookie("JSESSIONID", getLoginSessionId(savedUserDto))
-                .body(Mono.just(COMMENT_DTO), CommentDto.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBody()
+    void 로그인_상태_댓글작성_성공() {
+        loginAndRequestWithMonoData(POST, savedArticleUrl + "/comment", HttpStatus.OK, COMMENT_DTO, savedUserDto)
                 .jsonPath("$.contents").isEqualTo("contents")
                 .jsonPath("$.writer.id").isEqualTo(savedUser.getId())
                 .jsonPath("$.writer.name").isEqualTo(savedUser.getName())
-                .jsonPath("$.writer.email").isEqualTo(savedUser.getEmail())
-        ;
+                .jsonPath("$.writer.email").isEqualTo(savedUser.getEmail());
     }
 
     @Test
@@ -71,55 +63,34 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 작성자_로그인_상태_댓글삭제_성공() {
-        webTestClient.delete().uri(getCommentUrl())
-                .cookie("JSESSIONID", getLoginSessionId(savedUserDto))
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
+        loginAndRequestWithMonoData(DELETE, getCommentUrl(), HttpStatus.OK, COMMENT_DTO, savedUserDto)
                 .consumeWith(response -> {
                     String result = new String(response.getResponseBody());
                     assertTrue(result.contains(DELETE_SUCCESS_MESSAGE));
-                })
-        ;
+                });
     }
 
     @Test
     void 작성자가_아닌_사용자_로그인_상태_댓글삭제_실패() {
         UserDto other = READER_DTO;
         userRepository.save(other.toUser());
-        webTestClient.delete().uri(getCommentUrl())
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .cookie("JSESSIONID", getLoginSessionId(other))
-                .exchange()
-                .expectStatus().isForbidden()
-                .expectBody()
-                .jsonPath("$.message").isEqualTo(MISMATCH_COMMENT_AUTHOR_EXCEPTION_MESSAGE)
-        ;
 
+        loginAndRequestWithMonoData(DELETE, getCommentUrl(), HttpStatus.FORBIDDEN, COMMENT_DTO, other)
+                .jsonPath("$.message").isEqualTo(MISMATCH_COMMENT_AUTHOR_EXCEPTION_MESSAGE);
     }
 
     @Test
     void 로그아웃_상태_댓글수정_리다이렉트() {
-        CommentDto commentDto = UPDATE_COMMENT_DTO;
         String commentUrl = getCommentUrl();
-        String redirectUrl = getRedirectUrl(httpRequestWithData(PUT, commentUrl, parser(commentDto)));
+        String redirectUrl = getRedirectUrl(httpRequestWithData(PUT, commentUrl, parser(UPDATE_COMMENT_DTO)));
     
         assertEquals("/login", redirectUrl);
     }
 
     @Test
     void 작성자_로그인_상태_댓글수정_성공() {
-        webTestClient.put().uri(getCommentUrl())
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .cookie("JSESSIONID", getLoginSessionId(savedUserDto))
-                .body(Mono.just(UPDATE_COMMENT_DTO), CommentDto.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBody()
-                .jsonPath("$.contents").isEqualTo("new-contents")
-        ;
+        loginAndRequestWithMonoData(PUT, getCommentUrl(), HttpStatus.OK, UPDATE_COMMENT_DTO, savedUserDto)
+                .jsonPath("$.contents").isEqualTo("new-contents");
     }
 
     @Test
@@ -127,33 +98,13 @@ class CommentControllerTests extends ControllerTestTemplate {
         UserDto other = READER_DTO;
         userRepository.save(other.toUser());
 
-        webTestClient.put().uri(getCommentUrl())
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .cookie("JSESSIONID", getLoginSessionId(other))
-                .body(Mono.just(UPDATE_COMMENT_DTO), CommentDto.class)
-                .exchange()
-                .expectStatus().isForbidden()
-                .expectBody()
-                .jsonPath("$.message").isEqualTo(MISMATCH_COMMENT_AUTHOR_EXCEPTION_MESSAGE)
-        ;
+        loginAndRequestWithMonoData(PUT, getCommentUrl(), HttpStatus.FORBIDDEN, UPDATE_COMMENT_DTO, other)
+                .jsonPath("$.message").isEqualTo(MISMATCH_COMMENT_AUTHOR_EXCEPTION_MESSAGE);
+
     }
 
     private String getCommentUrl() {
-        webTestClient.post().uri(savedArticleUrl + "/comment")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
-                .cookie("JSESSIONID", getLoginSessionId(savedUserDto))
-                .body(Mono.just(COMMENT_DTO), CommentDto.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBody()
-                .jsonPath("$.contents").isEqualTo("contents")
-                .jsonPath("$.writer.id").isEqualTo(savedUser.getId())
-                .jsonPath("$.writer.name").isEqualTo(savedUser.getName())
-                .jsonPath("$.writer.email").isEqualTo(savedUser.getEmail())
-        ;
+        loginAndRequestWithMonoData(POST, savedArticleUrl + "/comment", HttpStatus.OK, COMMENT_DTO, savedUserDto);
 
         Comment comment = commentRepository.findAll().get(0);
 
