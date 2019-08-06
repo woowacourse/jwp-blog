@@ -14,7 +14,6 @@ import reactor.core.publisher.Mono;
 import techcourse.myblog.application.dto.CommentRequest;
 import techcourse.myblog.application.dto.CommentResponse;
 import techcourse.myblog.application.dto.ErrorResponse;
-import techcourse.myblog.domain.Comment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class CommentControllerTests {
+public class CommentAPIControllerTests {
 
     private static final String name = "bmo";
     private static final String email = "bmo@bmo.com";
@@ -82,8 +81,6 @@ public class CommentControllerTests {
                 .exchange()
         ;
     }
-
-    private
 
     @Test
     void 댓글_작성_성공_테스트() {
@@ -149,8 +146,7 @@ public class CommentControllerTests {
                 .expectStatus()
                 .isOk()
                 .expectBody(CommentResponse.class)
-                .returnResult()
-                ;
+                .returnResult();
 
         assertThat(response.getResponseBody().getComment().getContents()).isEqualTo(request.getContents());
 
@@ -207,7 +203,7 @@ public class CommentControllerTests {
                 .jsonPath("$.result").isEqualTo("fail")
         ;
     }
-    
+
     private WebTestClient.ResponseSpec requestSaveCommentJson(String commentContents) {
         CommentRequest request = new CommentRequest(commentContents);
         return webTestClient.post()
