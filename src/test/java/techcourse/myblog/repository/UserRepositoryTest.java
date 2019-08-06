@@ -9,6 +9,7 @@ import techcourse.myblog.domain.user.UserEmail;
 import techcourse.myblog.domain.user.UserException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -24,14 +25,18 @@ class UserRepositoryTest {
     }
 
     @Test
-    void findByNameTest() {
-        userRepository.save(new User("andole", "A!1bcdefg", "andole@gmail.com"));
+    void findByEmailTest() {
         assertThatThrownBy(() -> userRepository.findByEmail(UserEmail.of("abc@gmail.com")).orElseThrow(UserException::new))
                 .isInstanceOf(UserException.class);
     }
 
     @Test
-    void name() {
-        User user = userRepository.findByEmail_Email("test@test.com").get();
+    void findByEmailTest2() {
+        assertDoesNotThrow(() -> userRepository.findByEmail(UserEmail.of("test@test.com")));
+    }
+
+    @Test
+    void findByEmail_EmailTest() {
+        assertDoesNotThrow(() -> userRepository.findByEmail_Email("test@test.com"));
     }
 }

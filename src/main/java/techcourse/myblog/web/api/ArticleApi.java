@@ -10,7 +10,7 @@ import techcourse.myblog.web.support.SessionInfo;
 import techcourse.myblog.web.support.UserSessionInfo;
 
 @RestController
-@RequestMapping("/articles")
+@RequestMapping("/api/articles")
 public class ArticleApi {
     private final ArticleService articleService;
 
