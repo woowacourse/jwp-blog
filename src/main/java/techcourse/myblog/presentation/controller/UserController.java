@@ -26,9 +26,9 @@ public class UserController {
 
     @PostMapping("/users")
     public RedirectView createUser(@Valid UserDto user) {
+        RedirectView redirectView = new RedirectView("/login");
         userService.save(user);
-
-        return new RedirectView("/login");
+        return redirectView;
     }
 
     @GetMapping("/users")
@@ -41,10 +41,11 @@ public class UserController {
     @PostMapping("/login")
     public RedirectView login(HttpSession httpSession, LoginDto loginDto) {
         userService.login(loginDto);
+
+        RedirectView redirectView = new RedirectView("/");
         httpSession.setAttribute("email", loginDto.getEmail());
         httpSession.setMaxInactiveInterval(600);
-
-        return new RedirectView("/");
+        return redirectView;
     }
 
     @GetMapping("/logout")
@@ -58,9 +59,8 @@ public class UserController {
     public ModelAndView readMyPage(HttpSession httpSession) {
         ModelAndView modelAndView = new ModelAndView();
         String email = (String) httpSession.getAttribute("email");
-
         modelAndView.setViewName("mypage");
-        modelAndView.addObject("user", userService.findByEmail(email));
+        modelAndView.addObject("user", userService.findById(email));
 
         return modelAndView;
     }
@@ -70,25 +70,29 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         String email = (String) httpSession.getAttribute("email");
         modelAndView.setViewName("mypage-edit");
-        modelAndView.addObject("user", userService.findByEmail(email));
-
+        modelAndView.addObject("user", userService.findById(email));
         return modelAndView;
     }
 
     @PutMapping("/mypage/edit")
     public RedirectView updateUser(HttpSession httpSession, @Valid UserDto user) {
+        RedirectView redirectView = new RedirectView();
         String email = (String) httpSession.getAttribute("email");
+
         userService.modify(user, email);
 
-        return new RedirectView("/mapage");
+        redirectView.setUrl("/mypage");
+        return redirectView;
     }
 
     @DeleteMapping("/users")
     public RedirectView deleteUser(HttpSession httpSession, @Valid UserDto user) {
+        RedirectView redirectView = new RedirectView("/");
         String email = (String) httpSession.getAttribute("email");
+
         userService.removeById(user, email);
         httpSession.invalidate();
 
-        return new RedirectView("/");
+        return redirectView;
     }
 }

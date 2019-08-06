@@ -3,49 +3,38 @@ package techcourse.myblog.application.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import techcourse.myblog.application.converter.ArticleConverter;
 import techcourse.myblog.application.dto.ArticleDto;
-import techcourse.myblog.application.dto.UserDto;
 import techcourse.myblog.application.service.exception.NotExistArticleIdException;
-import techcourse.myblog.application.service.exception.NotMatchEmailException;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.ArticleRepository;
-import techcourse.myblog.domain.User;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
-    private final UserService userService;
+    private final ArticleConverter articleConverter;
 
     @Autowired
-    public ArticleService(ArticleRepository articleRepository, UserService userService) {
+    public ArticleService(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
-        this.userService = userService;
+        articleConverter = ArticleConverter.getInstance();
     }
 
     @Transactional
-    public Long save(ArticleDto articleDto, String email) {
-        User user = userService.findUserByEmail(email);
-        Article article = new Article(articleDto.getTitle(),
-                articleDto.getCoverUrl(),
-                articleDto.getContents(),
-                user);
-
-        return articleRepository.save(article).getId();
+    public Long save(ArticleDto articleDto) {
+        return articleRepository.save(articleConverter.convertFromDto(articleDto))
+                .getId();
     }
 
     @Transactional(readOnly = true)
     public ArticleDto findById(Long articleId) {
-        return ArticleDto.of(findArticleById(articleId));
-    }
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new NotExistArticleIdException("존재하지 않는 Article 입니다."));
 
-    @Transactional(readOnly = true)
-    public Article findArticleById(Long articleId) {
-        return articleRepository.findById(articleId)
-                .orElseThrow(() -> new NotExistArticleIdException("해당 게시물을 찾을 수 없습니다."));
+        return articleConverter.convertFromEntity(article);
     }
 
     @Transactional
@@ -54,36 +43,15 @@ public class ArticleService {
     }
 
     @Transactional
-    public void modify(Long articleId, ArticleDto articleDto, String email) {
-        User user = userService.findUserByEmail(email);
-        Article article = findArticleById(articleId);
+    public void modify(Long articleId, ArticleDto articleDto) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new NotExistArticleIdException(""));
 
-        article.modify(new Article(articleDto.getTitle(),
-                        articleDto.getCoverUrl(),
-                        articleDto.getContents(),
-                        user)
-                , user);
+        article.modify(articleConverter.convertFromDto(articleDto));
     }
 
     @Transactional(readOnly = true)
     public List<ArticleDto> findAll() {
-        return articleRepository.findAll().stream()
-                .map(ArticleDto::of)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public void checkAuthor(Long articleId, String email) {
-        Article article = findArticleById(articleId);
-        if (!article.checkAuthor(email)) {
-            throw new NotMatchEmailException("작성자가 다릅니다.");
-        }
-    }
-
-    @Transactional
-    public UserDto findAuthor(long articleId) {
-        User user = findArticleById(articleId)
-                .getUser();
-        return UserDto.of(user);
+        return articleConverter.createFromEntities(articleRepository.findAll());
     }
 }

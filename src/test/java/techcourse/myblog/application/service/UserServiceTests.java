@@ -10,6 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.application.converter.UserConverter;
 import techcourse.myblog.application.dto.LoginDto;
 import techcourse.myblog.application.dto.UserDto;
+import techcourse.myblog.application.service.exception.DuplicatedIdException;
 import techcourse.myblog.application.service.exception.NotExistUserIdException;
 import techcourse.myblog.application.service.exception.NotMatchPasswordException;
 import techcourse.myblog.domain.User;
@@ -24,13 +25,13 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
-class UserServiceTests {
+public class UserServiceTests {
 
     @InjectMocks
     private UserService userService;
 
     @Mock
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     private InOrder inOrder;
 
@@ -47,36 +48,47 @@ class UserServiceTests {
         inOrder = inOrder(userRepository);
         UserConverter userConverter = UserConverter.getInstance();
 
-
         email = "zino@naver.com";
         name = "zino";
         password = "zinozino";
-        user = new User(email, name, password);
 
-        userDto = UserDto.of(user);
-        loginDto = new LoginDto();
-        loginDto.setEmail(email);
-        loginDto.setPassword(password);
+        userDto = new UserDto(email, name, password);
+        loginDto = new LoginDto(email, password);
+        user = userConverter.convertFromDto(userDto);
+    }
+
+    @Test
+    void 중복되지_않은_User_생성() {
+        userService.save(userDto);
+
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void 중복된_User_생성_예외발생() {
+        given(userRepository.findById(user.getEmail())).willReturn(Optional.of(user));
+
+        assertThrows(DuplicatedIdException.class, () -> userService.save(userDto));
     }
 
     @Test
     void 저장된_User_조회() {
-        given(userRepository.findByEmail(user.getEmail()))
+        given(userRepository.findById(user.getEmail()))
                 .willReturn(Optional.of(user));
 
-        assertThat(userService.findByEmail(userDto.getEmail())).isEqualTo(userDto);
+        assertThat(userService.findById(userDto.getEmail())).isEqualTo(userDto);
     }
 
     @Test
     void 저장되지_않은_User_조회_예외발생() {
         String email = "zino1@naver.com";
 
-        assertThrows(NotExistUserIdException.class, () -> userService.findByEmail(email));
+        assertThrows(NotExistUserIdException.class, () -> userService.findById(email));
     }
 
     @Test
     void 저장된_User_삭제() {
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+        given(userRepository.findById(user.getEmail())).willReturn(Optional.of(user));
 
         userService.removeById(userDto, userDto.getEmail());
 
@@ -85,7 +97,7 @@ class UserServiceTests {
 
     @Test
     void 저장된_id_login() {
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+        given(userRepository.findById(user.getEmail())).willReturn(Optional.of(user));
 
         assertDoesNotThrow(() -> userService.login(loginDto));
     }
@@ -94,7 +106,7 @@ class UserServiceTests {
     void 저장되지_않은_id_login() {
         loginDto.setEmail("bimo@hi.com");
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+        given(userRepository.findById(user.getEmail())).willReturn(Optional.of(user));
 
         assertThrows(NotExistUserIdException.class, () -> userService.login(loginDto));
     }
@@ -103,8 +115,9 @@ class UserServiceTests {
     void 비밀번호_불일치_login_예외발생() {
         loginDto.setPassword("123123123");
 
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+        given(userRepository.findById(user.getEmail())).willReturn(Optional.of(user));
 
         assertThrows(NotMatchPasswordException.class, () -> userService.login(loginDto));
+
     }
 }

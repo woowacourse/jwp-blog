@@ -13,9 +13,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginCheckInterceptor())
                 .addPathPatterns("/mypage")
                 .addPathPatterns("/mypage/edit")
-                .addPathPatterns("/logout")
-                .addPathPatterns("/writing")
-                .addPathPatterns("/articles/*")
-                .addPathPatterns("/articles/*/edit");
+                .addPathPatterns("/logout");
     }
 }
