@@ -19,6 +19,8 @@ const CommentApp = (function () {
     }
 
     const CommentService = function () {
+        const DOMAIN_URL = location.protocol + "//" + location.host;
+
         const remove = function (event) {
             console.log("hello")
             const articleId = document.getElementById('article-id').value;
@@ -33,7 +35,7 @@ const CommentApp = (function () {
             const btn = event.target;
             console.log(btn.parentNode)
             const url = '/articles/' + articleId + '/comment/' + btn.value;
-            const URL = "http://localhost:8080/" + url;
+            const URL = DOMAIN_URL + url;
             console.log(URL);
             const obj = {
                 method: 'DELETE',
@@ -57,7 +59,7 @@ const CommentApp = (function () {
             const articleId = document.getElementById('article-id').value;
             const btn = event.target;
             if(btn.classList.contains("btn-lg")) {
-                const url = 'articles/' + articleId + '/comment/' + btn.value;
+                const url = '/articles/' + articleId + '/comment/' + btn.value;
                 console.log(url);
                 document.getElementById('comment-update-url').setAttribute('value', url);
             }
