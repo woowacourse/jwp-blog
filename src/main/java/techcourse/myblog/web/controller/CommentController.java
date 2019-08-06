@@ -62,9 +62,9 @@ public class CommentController {
 
     @DeleteMapping("/{commentId}")
     @ResponseBody
-    public long removeComment(@PathVariable Long commentId, @PathVariable Long articleId, SessionUser loginUser) {
-        long deleteCount = commentService.deleteById(commentId, loginUser.getUser());
+    public Long removeComment(@PathVariable Long commentId, SessionUser loginUser) {
+        Long deletedId = commentService.deleteById(commentId, loginUser.getUser());
 
-        return deleteCount;
+        return deletedId;
     }
 }

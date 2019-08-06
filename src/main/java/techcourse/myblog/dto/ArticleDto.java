@@ -7,13 +7,16 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class ArticleDto {
-    @NotBlank(message = "제목을 입력하세요")
+    public static final String TITLE_CONSTRAINT_MSG = "제목을 입력하세요";
+    public static final String CONTENTS_CONSTRAINT_MSG = "내용을 입력하세요";
+
+    @NotBlank(message = TITLE_CONSTRAINT_MSG)
     private String title;
 
     @NotNull
     private String coverUrl;
 
-    @NotBlank(message = "내용을 입력하세요")
+    @NotBlank(message = CONTENTS_CONSTRAINT_MSG)
     private String contents;
 
     public ArticleDto(String title, String coverUrl, String contents) {
