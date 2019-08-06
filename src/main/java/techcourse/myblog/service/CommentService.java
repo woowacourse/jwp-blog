@@ -1,7 +1,6 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.CommentRepository;
 import techcourse.myblog.domain.User;
@@ -15,14 +14,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
+    private final ArticleService articleService;
     private final CommentRepository commentRepository;
 
-    public CommentService(CommentRepository commentRepository) {
+    public CommentService(ArticleService articleService, CommentRepository commentRepository) {
+        this.articleService = articleService;
         this.commentRepository = commentRepository;
     }
 
-    public Comment save(CommentRequest commentRequest, Article article, User user) {
-        Comment comment = new Comment(commentRequest.getContents(), article, user);
+    public Comment save(CommentRequest commentRequest, User user) {
+        Comment comment = new Comment(commentRequest.getContents(),
+                articleService.findById(commentRequest.getArticleId()), user);
         return commentRepository.save(comment);
     }
 
