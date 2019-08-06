@@ -43,26 +43,23 @@ public class CommentController {
         Comment comment = commentDTO.toDomain(article, user);
         article.add(comment);
         commentRepository.save(comment);
-        ResponseMessage responseMessage = new ResponseMessage("success", comment.getId().toString(), "", "");
         return new CommentResponseDto(article.getAuthor().getUserName(), comment.getContents(),
                 comment.getId());
     }
 
     @DeleteMapping("/{commentId}")
-    public RedirectView delete(@PathVariable long articleId,
-                               @PathVariable long commentId,
-                               @UserFromSession User user) {
-
+    public ResponseEntity<ResponseMessage> delete(@PathVariable long articleId,
+                                                  @PathVariable long commentId,
+                                                  @UserFromSession User user) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(NotFoundCommentException::new);
         comment.validate(user);
-
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
         article.remove(comment);
         commentRepository.delete(comment);
-
-        return new RedirectView("/articles/" + articleId);
+        ResponseMessage responseMessage = new ResponseMessage("success", "", "", "");
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @Transactional
