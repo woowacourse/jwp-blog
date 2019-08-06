@@ -58,4 +58,13 @@ public class RestCommentController {
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList()), HttpStatus.ACCEPTED);
     }
+
+    @DeleteMapping("/comments/{commentId}/rest")
+    public ResponseEntity<List<CommentResponseDto>> processDeleteCommentRest(@PathVariable long commentId) {
+        Comment comment = commentService.findById(commentId);
+        commentService.deleteById(commentId);
+        return new ResponseEntity<>(commentService.findByArticle(comment.getArticle()).stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList()), HttpStatus.ACCEPTED);
+    }
 }

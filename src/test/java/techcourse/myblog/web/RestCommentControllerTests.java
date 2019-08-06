@@ -2,7 +2,6 @@ package techcourse.myblog.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import techcourse.myblog.service.dto.CommentRequestDto;
 import techcourse.myblog.service.dto.CommentResponseDto;
 
@@ -18,7 +17,7 @@ public class RestCommentControllerTests extends AbstractControllerTests {
     void 댓글들_GET_요청_테스트() throws IOException {
         String json = new String(Objects.requireNonNull(getRequest("/articles/1/comments").getResponseBody()));
         CommentResponseDto[] responses = objectMapper.readValue(json, CommentResponseDto[].class);
-        assertThat(responses.length).isGreaterThanOrEqualTo(4);
+        assertThat(responses.length).isGreaterThanOrEqualTo(3);
     }
 
     @Test
@@ -35,5 +34,14 @@ public class RestCommentControllerTests extends AbstractControllerTests {
         String json = new String(Objects.requireNonNull(putJsonRequest("/comments/1/rest", CommentRequestDto.class, updatedComment).getResponseBody()));
         CommentResponseDto[] responses = objectMapper.readValue(json, CommentResponseDto[].class);
         assertThat(responses[0].getComment()).isEqualTo(updatedComment);
+    }
+    @Test
+    void 댓글_삭제_DELETE_요청_테스트() throws IOException {
+        String json = new String(Objects.requireNonNull(getRequest("/articles/1/comments").getResponseBody()));
+        CommentResponseDto[] getResponses = objectMapper.readValue(json, CommentResponseDto[].class);
+
+        json = new String(Objects.requireNonNull(deleteRequest("/comments/3/rest").getResponseBody()));
+        CommentResponseDto[] deleteResponses = objectMapper.readValue(json, CommentResponseDto[].class);
+        assertThat(getResponses.length).isGreaterThan(deleteResponses.length);
     }
 }
