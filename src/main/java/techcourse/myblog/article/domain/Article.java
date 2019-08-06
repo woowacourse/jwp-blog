@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import techcourse.myblog.article.dto.ArticleUpdateDto;
 import techcourse.myblog.user.domain.User;
 
@@ -25,6 +27,7 @@ public class Article {
     private String contents;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User author;
 
     @Builder
