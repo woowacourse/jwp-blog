@@ -15,7 +15,7 @@ echo "> [SYSTEM] BUILD file copy"
 cp ./build/libs/*.jar $REPOSITORY/
 
 echo "> [SYSTEM] application pid check"
-CURRENT_PID=$(pgrep -f jwp-blog)
+CURRENT_PID=$(pgrep -f myblog)
 echo "$CURRENT_PID"
 
 if [ -z $CURRENT_PID ]; then
