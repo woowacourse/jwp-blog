@@ -61,7 +61,7 @@
 			<div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
 				<div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
 					<span class="font-size-16">댓글</span>
-					<span th:text="${comments.size()}" class="font-size-16 text-info"></span>
+					<span id="comment-size-span" th:text="${comments.size()}" class="font-size-16 text-info"></span>
 				</div>
 				<div class="comment">
 					<ul id="comment-ul-tag" class="list-unstyle list-info">
@@ -184,7 +184,16 @@
                     '</form>';
 
                 document.getElementById("comment-ul-tag").appendChild(node);
+
+                editor.setValue('');
+
+                updateCommentSizeBy(1);
             })
+    }
+
+    function updateCommentSizeBy(addedSize) {
+        const currentSizeSpan = document.getElementById("comment-size-span");
+        currentSizeSpan.innerText = Number(currentSizeSpan.innerText) + addedSize;
     }
 
     function showCommentInput(event, commentId) {
@@ -235,6 +244,8 @@
                     document.getElementById("comment-update-form" + commentId).remove();
                 }
             });
+
+        updateCommentSizeBy(-1);
     }
 </script>
 </body>
