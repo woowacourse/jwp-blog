@@ -1,1 +1,0 @@
-INSERT INTO user (name, email, password) VALUES ('donut', 'donut@woowa.com', 'qwer1234');
