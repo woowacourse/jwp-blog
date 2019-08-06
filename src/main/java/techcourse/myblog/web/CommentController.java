@@ -2,10 +2,7 @@ package techcourse.myblog.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.article.Article;
 import techcourse.myblog.comment.Comment;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
@@ -13,7 +10,6 @@ import techcourse.myblog.service.dto.CommentDto;
 import techcourse.myblog.user.User;
 
 import javax.servlet.http.HttpSession;
-import java.awt.*;
 import java.util.List;
 
 @RequestMapping("/articles/{articleId}/comment")
@@ -31,7 +27,6 @@ public class CommentController {
 
     @PostMapping
     public List<Comment> createComment(@PathVariable Long articleId, @RequestBody CommentDto commentDto, HttpSession httpSession) {
-        log.info("아티클 아이디{}",articleId);
         User author = (User) httpSession.getAttribute("user");
         Comment comment = commentService.createComment(commentDto, author);
         articleService.addComment(articleId, comment);
