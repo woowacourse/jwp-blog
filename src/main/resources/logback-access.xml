@@ -6,7 +6,7 @@
         </encoder>
     </appender>
     <appender-ref ref="CONSOLE"/>
-    <property name="LOG_HOME" value ="target/"/>
+    <property name="LOG_HOME" value="target/"/>
 
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/mylog.txt</file>

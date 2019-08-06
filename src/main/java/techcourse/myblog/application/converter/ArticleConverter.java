@@ -10,8 +10,6 @@ import techcourse.myblog.domain.Article;
 public class ArticleConverter extends Converter<ArticleDto, Article> {
     private static final Logger log = LoggerFactory.getLogger(ArticleConverter.class);
 
-    private static ArticleConverter converter = new ArticleConverter();
-
     private ArticleConverter() {
         super(articleDto -> new Article(new Article.ArticleBuilder()
                         .title(articleDto.getTitle())
@@ -28,9 +26,5 @@ public class ArticleConverter extends Converter<ArticleDto, Article> {
 
                     return articleDto;
                 });
-    }
-
-    public static ArticleConverter getInstance() {
-        return converter;
     }
 }

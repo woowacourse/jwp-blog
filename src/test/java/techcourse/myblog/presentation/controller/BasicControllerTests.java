@@ -59,7 +59,7 @@ public class BasicControllerTests {
 
     protected void finishTestForComment() {
         deleteArticle(articleUri);
-        ID ++;
+        ID++;
     }
 
     protected String logInAndGetSessionIdDiff() {

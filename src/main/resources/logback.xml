@@ -8,14 +8,14 @@
     </appender>
 
     <!-- 자바 패키지별 log level을 설정한다. -->
-<!--    <logger name="core" level="DEBUG" />-->
+    <!--    <logger name="core" level="DEBUG" />-->
 
-<!--    logging.level.techcourse.myblog.web = DEBUG-->
-    <logger name="org.springframework" level="INFO" />
+    <!--    logging.level.techcourse.myblog.web = DEBUG-->
+    <logger name="org.springframework" level="INFO"/>
 
 
     <!-- 기본 log level을 설정한다. -->
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

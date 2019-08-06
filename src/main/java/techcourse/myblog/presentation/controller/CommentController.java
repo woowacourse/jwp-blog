@@ -35,7 +35,7 @@ public class CommentController {
         commentService.checkAuthor(commentId, email.getEmail());
         commentService.delete(commentId);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setView(new RedirectView("/articles/"+articleId));
+        modelAndView.setView(new RedirectView("/articles/" + articleId));
         return modelAndView;
     }
 
@@ -43,7 +43,7 @@ public class CommentController {
     public RedirectView updateComment(CommentContents commentContents, @PathVariable("articleId") Long articleId, @PathVariable("commentId") Long commentId, @EmailAnnot Email email) {
         commentService.checkAuthor(commentId, email.getEmail());
         commentService.modify(commentId, commentContents);
-        return new RedirectView("/articles/"+articleId);
+        return new RedirectView("/articles/" + articleId);
     }
 
     @PostMapping("/articles/{articleId}/jsoncomments")
@@ -52,16 +52,17 @@ public class CommentController {
         CommentJsonDto responseCommentJsonDto = commentService.saveJson(commentJsonDto, email.getEmail());
         return responseCommentJsonDto;
     }
+
     @PutMapping("/articles/{articleId}/jsoncomments/{updateCommentId}")
     @ResponseBody
-    public UpdateCommentJsonDto updateComment(@RequestBody CommentJsonDto commentJsonDto){
+    public UpdateCommentJsonDto updateComment(@RequestBody CommentJsonDto commentJsonDto) {
         UpdateCommentJsonDto responseUpdateCommentJsonDto = commentService.update(commentJsonDto);
         return responseUpdateCommentJsonDto;
     }
 
     @DeleteMapping("/articles/{articleId}/jsoncomments/{deleteCommentId}")
     @ResponseBody
-    public ResponseEntity deleteComment(@RequestBody CommentJsonDto commentJsonDto){
+    public ResponseEntity deleteComment(@RequestBody CommentJsonDto commentJsonDto) {
         commentService.delete(commentJsonDto.getId());
         return new ResponseEntity(HttpStatus.OK);
     }

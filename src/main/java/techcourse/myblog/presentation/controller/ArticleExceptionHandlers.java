@@ -16,6 +16,5 @@ public class ArticleExceptionHandlers {
         RedirectView redirectView = new RedirectView(url.substring(0, url.length() - 5));
         redirectAttributes.addFlashAttribute("errormessage", e.getMessage());
         return redirectView;
-
     }
 }

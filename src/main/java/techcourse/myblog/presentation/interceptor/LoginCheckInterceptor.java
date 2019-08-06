@@ -9,10 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if(request.getSession().getAttribute("email") == null){
+        if (request.getSession().getAttribute("email") == null) {
             response.sendRedirect("/login");
             FlashMap flashMap = new FlashMap();
             flashMap.put("errormessage", "로그인이 필요합니다.");

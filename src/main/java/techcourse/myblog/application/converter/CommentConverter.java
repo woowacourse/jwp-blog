@@ -25,10 +25,10 @@ public class CommentConverter {
     }
 
     public CommentJsonDto toCommentJsonDto(Comment savedComment, Boolean isValidUser) {
-        return new CommentJsonDto(savedComment.getUserEmail(),savedComment.getCommentContents(), savedComment.getArticleId(),savedComment.getId(),isValidUser);
+        return new CommentJsonDto(savedComment.getUserEmail(), savedComment.getCommentContents(), savedComment.getArticleId(), savedComment.getId(), isValidUser);
     }
 
     public UpdateCommentJsonDto toUpdateCommentJsonDto(Comment savedComment) {
-        return new UpdateCommentJsonDto(savedComment.getUserEmail(),savedComment.getCommentContents(), savedComment.getArticleId(), savedComment.getId());
+        return new UpdateCommentJsonDto(savedComment.getUserEmail(), savedComment.getCommentContents(), savedComment.getArticleId(), savedComment.getId());
     }
 }

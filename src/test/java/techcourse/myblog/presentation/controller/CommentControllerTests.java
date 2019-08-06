@@ -7,7 +7,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.application.dto.CommentJsonDto;
-import techcourse.myblog.application.dto.UpdateCommentJsonDto;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -142,7 +141,7 @@ public class CommentControllerTests extends BasicControllerTests {
                 .expectStatus()
                 .isOk();
 
-        CommentJsonDto expectUpdateCommentJsonDto = new CommentJsonDto("hard@gmail.com", "8888", 2L, 3L,true);
+        CommentJsonDto expectUpdateCommentJsonDto = new CommentJsonDto("hard@gmail.com", "8888", 2L, 3L, true);
         System.out.println(articleUri);
         webTestClient.put().uri(articleUri + "/jsoncomments/1")
                 .header("Cookie", sessionId)
