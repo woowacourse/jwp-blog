@@ -1,11 +1,9 @@
 package techcourse.myblog.web;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.dto.comment.CommentRequest;
+import techcourse.myblog.dto.comment.CommentResponse;
 import techcourse.myblog.dto.user.UserResponse;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.utils.session.SessionUtil;
@@ -28,11 +26,11 @@ public class CommentController {
     }
 
     @PostMapping(COMMENT + "/{articleId}")
-    public String saveComment(@PathVariable Long articleId, @Valid CommentRequest commentRequest) {
+    @ResponseBody
+    public CommentResponse saveComment(@PathVariable Long articleId, @RequestBody @Valid CommentRequest commentRequest) {
         UserResponse userResponse = (UserResponse) SessionUtil.getAttribute(session, USER);
-        commentService.addComment(commentRequest, userResponse, articleId);
 
-        return REDIRECT + ARTICLES + "/" + articleId;
+        return commentService.addComment(commentRequest, userResponse, articleId);
     }
 
     @PutMapping(COMMENT + "/{articleId}" + "/{commentId}")

@@ -21,9 +21,10 @@ public class UserAssembler {
     }
 
     public static UserResponse toDto(User user) {
+        Long id = user.getId();
         String name = user.getName();
         String email = user.getEmail();
 
-        return new UserResponse(name, email);
+        return new UserResponse(id, name, email);
     }
 }

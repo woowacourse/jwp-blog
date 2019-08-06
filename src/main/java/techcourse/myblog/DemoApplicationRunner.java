@@ -17,8 +17,8 @@ public class DemoApplicationRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        User user = new User("ike", "ike@gmail.com", "ASas!@12");
-        User user2 = new User("ikee", "ike2@gmail.com", "ASas!@12");
+        User user = new User("ike", "ASas!@12", "ike@gmail.com");
+        User user2 = new User("ikee", "ASas!@12", "ike2@gmail.com");
 
         userRepository.save(user);
         userRepository.save(user2);
