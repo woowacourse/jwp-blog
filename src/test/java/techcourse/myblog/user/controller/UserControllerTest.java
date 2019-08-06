@@ -4,7 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.dto.UserRequestDto;
 import techcourse.myblog.template.LoginTemplate;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserControllerTest extends LoginTemplate {
 
@@ -46,10 +50,14 @@ public class UserControllerTest extends LoginTemplate {
 
     @Test
     void 로그인_성공_테스트() {
+        // given
+        UserRequestDto userRequestDto = new UserRequestDto(null, PASSWORD, EMAIL);
+
+        // when
         webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", EMAIL)
-                        .with("password", PASSWORD))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(userRequestDto), UserRequestDto.class)
                 .exchange()
                 .expectStatus().isFound()
                 .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/;jsessionid=.*");
@@ -57,24 +65,42 @@ public class UserControllerTest extends LoginTemplate {
 
     @Test
     void 이메일_없음_테스트() {
+        // given
+        UserRequestDto userRequestDto = new UserRequestDto(null, PASSWORD, "xxx@gmail.com");
+
+        // when
         webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", "xxx@gmail.com")
-                        .with("password", "A!1bcdefg"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(userRequestDto), UserRequestDto.class)
                 .exchange()
-                .expectStatus().isFound()
-                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/login.*");
+                .expectStatus().isUnauthorized()
+                .expectBody().consumeWith(res -> {
+            String s = new String(res.getResponseBody());
+
+            // then
+            assertThat(s).isEqualTo("등록된 이메일이 없습니다.");
+        });
     }
 
     @Test
     void 비밀번호_틀림_테스트() {
+        // given
+        UserRequestDto userRequestDto = new UserRequestDto(null, "B!1bcdefg", EMAIL);
+
+        // when
         webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromFormData("email", EMAIL)
-                        .with("password", "B!1bcdefg"))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(userRequestDto), UserRequestDto.class)
                 .exchange()
-                .expectStatus().isFound()
-                .expectHeader().valueMatches("Location", "http://localhost:[0-9]+/login.*");
+                .expectStatus().isUnauthorized()
+                .expectBody().consumeWith(res -> {
+            String s = new String(res.getResponseBody());
+
+            // then
+            assertThat(s).isEqualTo("비밀번호가 일치하지 않습니다.");
+        });
     }
 
     @Test
