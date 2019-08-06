@@ -142,7 +142,7 @@
                 "contents": parent.getElementsByTagName('input')[0].value,
             };
 
-            fetch('/comments/' + id, {
+            fetch('/api/comments/' + id, {
                 method: "PUT",
                 headers: {'Content-Type': 'application/json; charset=UTF-8'},
                 body: JSON.stringify(commentRequest),
@@ -163,7 +163,7 @@
         if (target.classList.contains("remove-button")) {
             let id = parent.dataset.id;
 
-            fetch('/comments/' + id, {
+            fetch('/api/comments/' + id, {
                 method: "DELETE",
             }).then(() => {
                 parent.closest('li').remove();
@@ -178,7 +178,7 @@
             contents: document.getElementById('comment-contents').value,
         };
 
-        fetch('/comments', {
+        fetch('/api/comments', {
             method: "POST",
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             body: JSON.stringify(commentRequest),
@@ -208,7 +208,7 @@
 
     // 댓글 불러오기
     window.addEventListener('DOMContentLoaded', () => {
-        fetch('/comments/' + articleId, {
+        fetch('/api/articles/' + articleId + '/comments/', {
             method: "GET",
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
         }).then(response => response.json())
@@ -238,7 +238,7 @@
                 viewer.setValue(article.contents);
 
                 if (article.coverUrl !== null) {
-                    document.getElementsByClassName("cover-img").item(0).style.backgroundImage = 'url(' + article.coverUrl+ ')';
+                    document.getElementsByClassName("cover-img").item(0).style.backgroundImage = 'url(' + article.coverUrl + ')';
                 }
             });
     });
