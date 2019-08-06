@@ -9,8 +9,9 @@
 
 <script type="text/javascript" th:inline="javascript">
     const errorMessage = [[${errorMessage}]];
-    const path = [[${path}]];
-
+    let path = [[${path}]] == null ? "/" : [[${path}]];
+    console.log(path)
+    path = errorMessage === null ? "/" : path;
     window.onload = function (ev) {
         alert(errorMessage);
         location.href = path;
