@@ -73,8 +73,8 @@ const COMMENT = (function () {
             const targetButton = event.target
             if (targetButton.classList.contains("comment-del-button")) {
                 const comment = targetButton.closest('li')
-                const commentId = comment.dataset.commentId
-                deleteCommentFetch(articleId, commentId, comment);
+                let id = comment.dataset.commentId
+                deleteCommentFetch(articleId, id, comment);
             }
         }
 
@@ -145,32 +145,30 @@ function deleteCommentFetch(articleId, commentId, targetComment) {
             if (response.ok) {
                 return response.json()
             }
-            throw response.json();
+            throw response;
         })
         .then(json => {
             targetComment.remove();
         })
         .catch(
-            json => alert(json.errorMessage)
+            response => response.json().then((json) => alert(json.errorMessage))
         )
 }
 
 function addComment(articleId, commentDto) {
     console.log("abcd");
-    let buttonTemplate = `<form method="post"
-              action="/articles/${articleId}/comments/${commentDto.id}">
-            <input name="_method" type="hidden" value="DELETE"/>
-            <button class="btn btn-icon float-right pointer"
-                    type="submit">
-                <i class="ti-trash text-dark font-size-16 pdd-horizon-5"></i>
+    let buttonTemplate = `
+            <button class="btn btn-icon float-right pointer comment-del-button"
+                    type="button">
+                <i class="ti-trash text-dark font-size-16 pdd-horizon-5 comment-del-button"></i>
             </button>
-        </form>
+        
         <button class="comment-edit float-right pointer btn btn-icon">
             <i class="comment-edit ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
         </button>`;
 
     let commentTemplate = `
-        <li class="comment-item border bottom mrg-btm-30" data-id ="${commentDto.id}">
+        <li class="comment-item border bottom mrg-btm-30" data-comment-id ="${commentDto.id}">
             <img alt=""
                  class="thumb-img img-circle"
                  src="https://avatars2.githubusercontent.com/u/3433096?v=4">
