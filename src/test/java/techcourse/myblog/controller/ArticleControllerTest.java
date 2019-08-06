@@ -7,8 +7,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.domain.repository.ArticleRepository;
+import techcourse.myblog.domain.repository.UserRepository;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package techcourse.myblog.repository;
+package techcourse.myblog.domain.repository;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

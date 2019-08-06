@@ -8,11 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.annotation.UserFromSession;
+import techcourse.myblog.annotation.LoginUser;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.exception.NotFoundArticleException;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.domain.repository.ArticleRepository;
 import techcourse.myblog.service.dto.ArticleDTO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,14 +45,14 @@ public class ArticleController {
     }
 
     @GetMapping("/new")
-    public String createForm(HttpSession session, @UserFromSession User user,
+    public String createForm(HttpSession session, @LoginUser User user,
                              Model model) {
         model.addAttribute("user", user);
         return "article-edit";
     }
 
     @PostMapping
-    public String create(ArticleDTO articleDTO, @UserFromSession User user) {
+    public String create(ArticleDTO articleDTO, @LoginUser User user) {
         Article article = articleDTO.toDomain(user);
 
         articleRepository.save(article);
@@ -61,7 +61,7 @@ public class ArticleController {
 
     @GetMapping("/{articleId}/edit")
     public Object updateForm(@PathVariable Long articleId,
-                             @UserFromSession User user,
+                             @LoginUser User user,
                              Model model) {
         Article article = articleRepository
                 .findById(articleId)
@@ -76,7 +76,7 @@ public class ArticleController {
 
     @Transactional
     @PutMapping("/{articleId}")
-    public String update(@PathVariable Long articleId, @UserFromSession User user,
+    public String update(@PathVariable Long articleId, @LoginUser User user,
                          ArticleDTO articleDTO) {
         Article article = articleRepository
                 .findById(articleId)
@@ -91,7 +91,7 @@ public class ArticleController {
 
 
     @DeleteMapping("/{articleId}")
-    public String delete(@PathVariable Long articleId, @UserFromSession User user) {
+    public String delete(@PathVariable Long articleId, @LoginUser User user) {
         Article article = articleRepository
                 .findById(articleId)
                 .orElseThrow(NotFoundArticleException::new);
@@ -105,7 +105,6 @@ public class ArticleController {
     public RedirectView exceptionHandler(RuntimeException exception, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         redirectAttributes.addFlashAttribute("articleError", exception.getMessage());
         log.error("error: {}", exception.getMessage());
-
         return new RedirectView(request.getHeader("Referer"));
     }
 }

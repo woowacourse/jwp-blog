@@ -9,9 +9,9 @@ import reactor.core.publisher.Mono;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.repository.ArticleRepository;
-import techcourse.myblog.repository.CommentRepository;
-import techcourse.myblog.repository.UserRepository;
+import techcourse.myblog.domain.repository.ArticleRepository;
+import techcourse.myblog.domain.repository.CommentRepository;
+import techcourse.myblog.domain.repository.UserRepository;
 import techcourse.myblog.service.dto.CommentDTO;
 
 import java.util.List;

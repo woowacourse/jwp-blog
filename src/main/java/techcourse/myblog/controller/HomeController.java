@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.domain.repository.ArticleRepository;
 
 import javax.servlet.http.HttpSession;
 
