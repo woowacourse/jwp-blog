@@ -30,4 +30,13 @@ public class ArticleDto {
     public Article toArticle(User author) {
         return new Article(title, coverUrl, contents, author);
     }
+
+    @Override
+    public String toString() {
+        return "ArticleDto{" +
+                ", title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                '}';
+    }
 }

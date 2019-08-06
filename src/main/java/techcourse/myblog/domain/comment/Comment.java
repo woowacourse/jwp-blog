@@ -101,4 +101,16 @@ public class Comment {
     private boolean matchAuthor(User user) {
         return writer.equals(user);
     }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", contents='" + contents + '\'' +
+                ", writer=" + writer +
+                ", article=" + article +
+                ", createTimeAt=" + createTimeAt +
+                ", updateTimeAt=" + updateTimeAt +
+                '}';
+    }
 }
