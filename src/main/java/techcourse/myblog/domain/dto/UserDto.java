@@ -1,10 +1,10 @@
-package techcourse.myblog.service.dto;
+package techcourse.myblog.domain.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import techcourse.myblog.exception.NotValidUserInfoException;
-import techcourse.myblog.user.User;
+import techcourse.myblog.domain.user.User;
 
 import javax.validation.constraints.Pattern;
 

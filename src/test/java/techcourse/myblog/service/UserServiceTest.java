@@ -7,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.exception.NotValidUserInfoException;
-import techcourse.myblog.service.dto.UserDto;
-import techcourse.myblog.user.UserRepository;
+import techcourse.myblog.domain.dto.UserDto;
+import techcourse.myblog.domain.user.UserRepository;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
-import static techcourse.myblog.user.UserTest.user;
+import static techcourse.myblog.domain.user.UserTest.user;
 
 @SpringBootTest
 public class UserServiceTest {

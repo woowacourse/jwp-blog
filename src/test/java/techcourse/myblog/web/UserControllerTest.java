@@ -7,7 +7,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.user.UserTest.user;
+import static techcourse.myblog.domain.user.UserTest.user;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest extends AbstractControllerTest {

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import techcourse.myblog.exception.LoginException;
 import techcourse.myblog.service.LoginService;
-import techcourse.myblog.service.dto.AuthenticationDto;
-import techcourse.myblog.user.User;
+import techcourse.myblog.domain.dto.AuthenticationDto;
+import techcourse.myblog.domain.user.User;
 
 import javax.servlet.http.HttpSession;
 

@@ -3,11 +3,11 @@ package techcourse.myblog.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
-import techcourse.myblog.comment.Comment;
+import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
-import techcourse.myblog.service.dto.CommentDto;
-import techcourse.myblog.user.User;
+import techcourse.myblog.domain.dto.CommentDto;
+import techcourse.myblog.domain.user.User;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;

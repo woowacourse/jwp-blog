@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
-import static techcourse.myblog.user.UserTest.user;
+import static techcourse.myblog.domain.user.UserTest.user;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LoginControllerTest extends AbstractControllerTest{

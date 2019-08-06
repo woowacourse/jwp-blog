@@ -3,7 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import techcourse.myblog.user.User;
+import techcourse.myblog.domain.user.User;
 
 import java.util.stream.Stream;
 

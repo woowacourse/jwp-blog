@@ -1,12 +1,12 @@
-package techcourse.myblog.article;
+package techcourse.myblog.domain.article;
 
 import org.junit.jupiter.api.Test;
 import techcourse.myblog.exception.InvalidAuthorException;
-import techcourse.myblog.user.User;
-import techcourse.myblog.user.UserTest;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserTest;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static techcourse.myblog.user.UserTest.user;
+import static techcourse.myblog.domain.user.UserTest.user;
 
 
 public class ArticleTest {

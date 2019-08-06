@@ -5,12 +5,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
-import techcourse.myblog.service.dto.CommentDto;
+import techcourse.myblog.domain.dto.CommentDto;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
-import static techcourse.myblog.user.UserTest.user;
-import static techcourse.myblog.user.UserTest.user2;
+import static techcourse.myblog.domain.user.UserTest.user;
+import static techcourse.myblog.domain.user.UserTest.user2;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CommentControllerTest extends AbstractControllerTest {

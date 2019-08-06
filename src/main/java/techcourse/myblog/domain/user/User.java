@@ -1,4 +1,4 @@
-package techcourse.myblog.user;
+package techcourse.myblog.domain.user;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
-import techcourse.myblog.date.BaseEntity;
+import techcourse.myblog.domain.date.BaseEntity;
 
 import javax.persistence.*;
 

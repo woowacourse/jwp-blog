@@ -1,4 +1,4 @@
-package techcourse.myblog.comment;
+package techcourse.myblog.domain.comment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

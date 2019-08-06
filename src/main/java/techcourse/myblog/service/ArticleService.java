@@ -1,12 +1,12 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
-import techcourse.myblog.article.Article;
-import techcourse.myblog.article.ArticleRepository;
-import techcourse.myblog.comment.Comment;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.article.ArticleRepository;
+import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.exception.NotFoundObjectException;
-import techcourse.myblog.service.dto.ArticleDto;
-import techcourse.myblog.user.User;
+import techcourse.myblog.domain.dto.ArticleDto;
+import techcourse.myblog.domain.user.User;
 
 import javax.transaction.Transactional;
 import java.util.List;

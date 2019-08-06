@@ -5,13 +5,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.service.dto.ArticleDto;
+import techcourse.myblog.domain.dto.ArticleDto;
 
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static techcourse.myblog.article.ArticleTest.article;
-import static techcourse.myblog.user.UserTest.user;
+import static techcourse.myblog.domain.article.ArticleTest.article;
+import static techcourse.myblog.domain.user.UserTest.user;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticleControllerTest extends AbstractControllerTest {

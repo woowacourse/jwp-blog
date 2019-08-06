@@ -1,10 +1,10 @@
-package techcourse.myblog.service.dto;
+package techcourse.myblog.domain.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import techcourse.myblog.article.Article;
-import techcourse.myblog.user.User;
+import techcourse.myblog.domain.article.Article;
+import techcourse.myblog.domain.user.User;
 
 @Getter
 @Setter

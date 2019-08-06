@@ -4,19 +4,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import techcourse.myblog.comment.CommentRepository;
+import techcourse.myblog.domain.comment.CommentRepository;
 import techcourse.myblog.exception.InvalidAuthorException;
 import techcourse.myblog.exception.NotFoundObjectException;
-import techcourse.myblog.service.dto.CommentDto;
+import techcourse.myblog.domain.dto.CommentDto;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
-import static techcourse.myblog.comment.CommentTest.comment;
-import static techcourse.myblog.user.UserTest.user;
-import static techcourse.myblog.user.UserTest.user2;
+import static techcourse.myblog.domain.comment.CommentTest.comment;
+import static techcourse.myblog.domain.user.UserTest.user;
+import static techcourse.myblog.domain.user.UserTest.user2;
 
 @SpringBootTest
 class CommentServiceTest {

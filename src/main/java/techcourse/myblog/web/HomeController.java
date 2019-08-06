@@ -3,7 +3,7 @@ package techcourse.myblog.web;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techcourse.myblog.article.ArticleRepository;
+import techcourse.myblog.domain.article.ArticleRepository;
 
 @Controller
 public class HomeController {

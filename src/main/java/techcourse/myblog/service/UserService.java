@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import techcourse.myblog.exception.NotFoundObjectException;
 import techcourse.myblog.exception.NotValidUserInfoException;
-import techcourse.myblog.service.dto.UserDto;
-import techcourse.myblog.service.dto.UserUpdateRequestDto;
-import techcourse.myblog.user.User;
-import techcourse.myblog.user.UserRepository;
+import techcourse.myblog.domain.dto.UserDto;
+import techcourse.myblog.domain.dto.UserUpdateRequestDto;
+import techcourse.myblog.domain.user.User;
+import techcourse.myblog.domain.user.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
