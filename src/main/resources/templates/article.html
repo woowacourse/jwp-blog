@@ -80,7 +80,7 @@
                 <div class="comment">
                     <ul id="comments" class="list-unstyled list-info">
                     </ul>
-                    <th:block th:if="${session.user != null}">
+                    <div th:class="${session.user != null} ? '' : 'hidden'">
                         <div class="add-comment">
                             <div id="editSection"></div>
                         </div>
@@ -88,7 +88,7 @@
                             <button id="comment-submit" type="submit" class="button">댓글달기</button>
                             <input id="comment-contents" name="contents" type="hidden" value=""/>
                         </div>
-                    </th:block>
+                    </div>
                 </div>
             </div>
         </div>
