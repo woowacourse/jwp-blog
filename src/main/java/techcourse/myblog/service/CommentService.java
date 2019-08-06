@@ -4,14 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentDto;
-import techcourse.myblog.exception.IllegalRequestException;
+import techcourse.myblog.dto.CommentRequest;
 import techcourse.myblog.exception.NotFoundArticleException;
 import techcourse.myblog.exception.NotFoundCommentException;
+import techcourse.myblog.exception.UnauthorizedException;
 import techcourse.myblog.repository.ArticleRepository;
 import techcourse.myblog.repository.CommentRepository;
 
@@ -22,7 +25,6 @@ public class CommentService {
 
     private static final String NOT_FOUND_COMMENT_ERROR = "존재하지 않는 댓글";
     private static final String NOT_FOUND_ARTICLE_ERROR = "존재하지 않는 게시글";
-    private static final String UNAUTHORIZED_USER_ERROR = "권한이 없는 사용자 입니다.";
 
     private final CommentRepository commentRepository;
     private final ArticleRepository articleRepository;
@@ -33,10 +35,6 @@ public class CommentService {
         this.articleRepository = articleRepository;
     }
 
-    public Comment find(Long commentId) {
-        return findCommentById(commentId);
-    }
-
     private Comment findCommentById(Long commentId) {
         return commentRepository
                 .findById(commentId)
@@ -44,6 +42,10 @@ public class CommentService {
                     log.debug(String.valueOf(commentId));
                     return new NotFoundCommentException(NOT_FOUND_COMMENT_ERROR);
                 });
+    }
+
+    public Comment save(Comment comment) {
+        return commentRepository.save(comment);
     }
 
     public Comment save(CommentDto commentDto, User user, long articleId) {
@@ -75,12 +77,16 @@ public class CommentService {
 
     private void checkAuthorizedUser(User user, Comment comment) {
         if (!comment.isAuthorized(user)) {
-            throw new IllegalRequestException(UNAUTHORIZED_USER_ERROR);
+            throw new UnauthorizedException();
         }
     }
 
-    public void update(long commentId, CommentDto commentDto, User user) {
+    public Comment update(Long commentId, CommentRequest commentRequest, User user) {
         Comment comment = getAuthorizedComment(commentId, user);
-        comment.update(commentDto.getContents());
+        return comment.update(commentRequest.getContents());
+    }
+
+    public List<Comment> findAllByArticleId(Long articleId) {
+        return commentRepository.findAllByArticleId(articleId);
     }
 }
