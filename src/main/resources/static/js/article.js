@@ -1,12 +1,7 @@
 const articleApp = (function () {
     const articleId = document.getElementById('articleId').innerText;
     const email = document.getElementById('session-email').innerText;
-    const updateTemplate = "<button type=\"button\" class=\"float-right pointer btn btn-icon\">"
-        + "<i class=\"ti-pencil text-dark font-size-16 pdd-horizontal-5\"></i>"
-        + "</button>"
-        + "<button type=\"submit\" class=\"float-right pointer btn btn-icon\">"
-        + "<i class=\"ti-trash text-dark font-size-16 pdd-horizontal-5\"></i>"
-        + "</button>";
+
     const ArticleEvent = function () {
         const articleService = new ArticleService();
 
@@ -61,14 +56,23 @@ const articleApp = (function () {
                         + "<input type=\"text\" id=\"content-input1\" style=\"display:none\">"
                         + "<span href=\"\" class=\"text-bold inline-block\">" + email + "</span>"
                         + "<span class=\"sub-title inline-block pull-right\">"
-                    + "<div id= '"+ commentId + "'  ></div>"
+                        + "<div id= '" + commentId + "'  ></div>"
                         + "<i class=\"ti-timer pdd-right-5\"></i>"
                         + "<span>6 min ago</span>"
                         + " </span>"
-                        + "<p  class=\"width-80\"> "+ contents +"</p>"
+                        + "<p class=\"width-80\"> " + contents + "</p>"
                         + "</div>"
                         + "</li>"
                         + "</ul>"
+                    const updateId = "update-" + commentId;
+                    const deleteId = "delete-" + commentId;
+                    const updateTemplate = "<button type=\"button\" id= '"+ updateId +"' class=\"float-right pointer btn btn-icon\">"
+                        + "<i class=\"ti-pencil text-dark font-size-16 pdd-horizontal-5\"></i>"
+                        + "</button>"
+                        + "<button type=\"submit\" id= '"+ deleteId +"' class=\"float-right pointer btn btn-icon\">"
+                        + "<i class=\"ti-trash text-dark font-size-16 pdd-horizontal-5\"></i>"
+                        + "</button>";
+
                     const commentDiv = document.getElementById("comment-div");
                     commentDiv.insertAdjacentHTML("beforeend", template);
                     const visibleButtons = document.getElementById(commentId);
