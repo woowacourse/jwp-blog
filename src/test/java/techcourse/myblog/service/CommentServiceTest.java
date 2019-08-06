@@ -74,7 +74,10 @@ class CommentServiceTest {
     @Test
     void 다른사람이_수정_테스트() {
         Comment comment = commentService.add(article.getId(), user, new CommentDto("abc"));
-        assertThatThrownBy(() -> commentService.update(article.getId(), user, new CommentDto("edit")))
+        assertThatThrownBy(() ->
+                commentService.update(article.getId(),
+                        new User("hacker", "A!1bcdefg", "hacker@hacker.com"),
+                        new CommentDto("edit")))
                 .isInstanceOf(CommentException.class);
     }
 
@@ -82,7 +85,8 @@ class CommentServiceTest {
     void 다른사람이_삭제_테스트() {
         Comment comment = commentService.add(article.getId(), user, new CommentDto("abc"));
         assertThatThrownBy(() ->
-                commentService.delete(article.getId(), new User("hacker", "A!1bcdefg", "hacker@hacker.com")))
+                commentService.delete(article.getId(),
+                        new User("hacker", "A!1bcdefg", "hacker@hacker.com")))
                 .isInstanceOf(CommentException.class);
     }
 }

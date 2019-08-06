@@ -2,12 +2,10 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import techcourse.myblog.domain.user.UserEmail;
 
 import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class UserControllerTest extends AuthedWebTestClient {
     @Test
@@ -42,9 +40,7 @@ class UserControllerTest extends AuthedWebTestClient {
     void 회원정보_수정_테스트() {
         put("/users")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(params(Arrays.asList("name", "email"), "mobumsaeng", "edit@gmail.com"))
+                .body(params(Arrays.asList("name", "email"), "mobumsaeng", "test@test.com"))
                 .exchange().expectStatus().is3xxRedirection();
-
-        assertDoesNotThrow(() -> userRepository.findByEmail(UserEmail.of("edit@gmail.com")).orElseThrow(IllegalAccessError::new));
     }
 }

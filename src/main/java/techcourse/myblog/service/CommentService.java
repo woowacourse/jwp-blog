@@ -38,8 +38,9 @@ public class CommentService {
         commentRepository.deleteById(commentId);
     }
 
-    public void update(long commentId, User user, CommentDto commentDto) {
+    public Comment update(long commentId, User user, CommentDto commentDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentException::new);
         comment.updateContents(commentDto.getContents(), user);
+        return comment;
     }
 }

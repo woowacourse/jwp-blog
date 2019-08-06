@@ -38,14 +38,13 @@ public class CommentApi {
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<List<Comment>> update(@PathVariable long articleId,
-                                                @PathVariable long commentId,
-                                                @RequestBody CommentDto.JSON json,
-                                                @SessionInfo UserSessionInfo userSessionInfo) {
+    public ResponseEntity<Comment> update(@PathVariable long articleId,
+                                          @PathVariable long commentId,
+                                          @RequestBody CommentDto.JSON json,
+                                          @SessionInfo UserSessionInfo userSessionInfo) {
         log.debug("[Comment] [Update] API: ArticleId = {} Comment = {}", commentId, json.getContents());
-        commentService.update(commentId, userSessionInfo.toUser(), json.toDto());
-        List<Comment> comments = articleService.findArticle(articleId).getComments();
-        return new ResponseEntity<>(comments, HttpStatus.ACCEPTED);
+        Comment comment = commentService.update(commentId, userSessionInfo.toUser(), json.toDto());
+        return new ResponseEntity<>(comment, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{commentId}")
