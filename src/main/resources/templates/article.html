@@ -121,6 +121,12 @@
                                     기반으로 미션을 진행하도록 설계했다. 교육자로 살다 보니 효과적인 학습 방법에 대한 관심이 높아졌다. 효과적인 학습 방법을 찾던 중 “1만 시간의
                                     재발견”이라는 책을 통해 의식적인 연습의 중요성을 느낄 수 있는 계기가 되었다.</p>
                             </div>
+                            <form th:action="@{'/articles/' + ${articleDTO.id} + '/comments/' + ${comment.id}}"
+                                  th:method="delete">
+                                <button type="submit" class="btn btn-icon">
+                                    <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+                                </button>
+                            </form>
                             <button class="btn-update-comment">수정</button>
                             <form th:action="@{'/articles/' + ${articleDTO.id} + '/comments/' + ${comment.id}}"
                                   th:method="'put'" class="d-none" name="commentRequest">
@@ -163,10 +169,15 @@
         "<span>{{createdDate}}</span>" + "</span>" +
         "<p class=\"width-80\" >{{content}}</p>" +
         "</div>" +
+        "<form action=\"/articles/ + {{articleId}} + /comments/ + {{id}}\">" +
+        "<button type=\"button\" class=\"btn btn-icon\" onclick=\'onDeleteClick({{id}})\'>" +
+        "<i class=\"ti-trash text-dark font-size-16 pdd-horizontal-5\"></i>" +
+        "</button>" +
+        "</form>" +
         "<button class=\"btn-update-comment\">수정</button>" +
         "<form action=\"/articles/ + {{articleId}} + comments/ + {{id}} \" class=\"d-none\" name=\"commentRequest\">" +
-        "<textarea id='comment-update-content{{id}}' name=\"comment\" rows=\"5\"></textarea>" +
-        "<button type=\"button\" onclick='onUpdateCommentClick({{id}})'>수정하기</button>" +
+        "<textarea id=\'comment-update-content{{id}}\' name=\"comment\" rows=\"5\"></textarea>" +
+        "<button type=\"button\" onclick=\'onUpdateCommentClick({{id}})\'>수정하기</button>" +
         "</form>" +
         "</li>";
 
@@ -234,7 +245,32 @@
                 }));
             }
         }).catch(error => console.log(error));
+    }
 
+    function onDeleteClick(id) {
+        const url = document.location.href;
+
+        fetch(url + "/comments/" + id, {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json",
+                "Content-type": "application/json"
+            }
+        }).then(res => {
+            return res.json()
+        }).then(json => {
+            const commentList = document.getElementById('comment-list');
+            commentList.innerText = "";
+            for (let i = 0; i < json.length; i++) {
+                commentList.insertAdjacentHTML('beforeend', commentItemTemplate({
+                    "content": json[i].content,
+                    "authorName": json[i].authorName,
+                    "createdDate": json[i].createdDate,
+                    "articleId": json[i].articleId,
+                    "id": json[i].id
+                }));
+            }
+        }).catch(error => console.log(error));
     }
 
     const editor = new tui.Editor({
