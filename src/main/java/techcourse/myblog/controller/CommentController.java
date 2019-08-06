@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.annotation.UserFromSession;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
@@ -64,18 +63,19 @@ public class CommentController {
 
     @Transactional
     @PutMapping("/{commentId}")
-    public RedirectView update(@PathVariable long articleId,
-                               @PathVariable long commentId,
-                               @ModelAttribute CommentDTO commentDTO,
-                               @UserFromSession User user) {
+    public ResponseEntity<ResponseMessage> update(@PathVariable long articleId,
+                                                  @PathVariable long commentId,
+                                                  @RequestBody CommentDTO commentDTO,
+                                                  @UserFromSession User user) {
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(NotFoundCommentException::new);
         comment.validate(user);
 
         comment.update(commentDTO.toDomain(comment.getArticle(), comment.getAuthor()));
+        ResponseMessage responseMessage = new ResponseMessage("success", "", "", "");
 
-        return new RedirectView("/articles/" + articleId);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @ExceptionHandler(RuntimeException.class)
