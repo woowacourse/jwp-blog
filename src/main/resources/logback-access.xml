@@ -6,4 +6,26 @@
         </encoder>
     </appender>
     <appender-ref ref="CONSOLE"/>
+
+    <property name="LOG_HOME" value="target/log" />
+
+    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/access-log.txt</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_HOME}/log-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>500MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+
+            <!-- maximum number of archive files to keep, deleting older files. For example, if you specify monthly rollover, and set maxHistory to 6, then 6 months worth of archives files will be kept with files older than 6 months deleted. -->
+            <maxHistory>6</maxHistory>
+
+        </rollingPolicy>
+        <encoder>
+            <pattern>%fullRequest%n%n%fullResponse</pattern>
+        </encoder>
+    </appender>
+    <appender-ref ref="ROLLING"/>
 </configuration>
