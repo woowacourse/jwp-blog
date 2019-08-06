@@ -29,7 +29,6 @@ public class CommentControllerTests extends AuthedWebTestClient {
     private static final String CONTENT = "contents";
     private static final String DEFAULT_URL = "/";
     private static final String UPDATED_COMMENT = "updated_comment";
-    private static final String ARTICLE_PATTERN = ".*articles/";
 
     private static int SEAN_ARTICLE_ID;
 
@@ -62,6 +61,16 @@ public class CommentControllerTests extends AuthedWebTestClient {
 
         commentId++;
         addComments();
+    }
+
+    @Test
+    void 모든_댓글_조회() {
+        addComments();
+
+        webTestClient.get().uri("/articles/" + SEAN_ARTICLE_ID + "/comments")
+                .exchange()
+                .expectBody()
+                .jsonPath("$.comments.length()").isEqualTo(2);
     }
 
     @Test
@@ -129,13 +138,7 @@ public class CommentControllerTests extends AuthedWebTestClient {
                 .cookie(JSESSIONID, getResponseCookie(POBI_EMAIL, DEFAULT_PASSWORD).getValue())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentDto), CommentDto.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBody()
-                .jsonPath("$.id").isEqualTo(1L)
-                .jsonPath("$.contents").isEqualTo(CONTENT)
-                .jsonPath("$.author.name").isEqualTo(POBI_NAME);
+                .exchange();
     }
 
     private WebTestClient.ResponseSpec getStatus(String pobiEmail, String comment) {

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.Comments;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.service.ArticleService;
@@ -22,6 +23,13 @@ public class CommentController {
     public CommentController(CommentService commentService, ArticleService articleService) {
         this.commentService = commentService;
         this.articleService = articleService;
+    }
+
+    @GetMapping
+    public ResponseEntity<Comments> getComments(@PathVariable long articleId) {
+        Article article = articleService.findById(articleId);
+        Comments comments = commentService.findByArticle(article);
+        return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
     @PostMapping

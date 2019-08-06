@@ -5,11 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
 import techcourse.myblog.domain.Comment;
+import techcourse.myblog.domain.Comments;
 import techcourse.myblog.domain.User;
 import techcourse.myblog.domain.exception.CommentNotFoundException;
 import techcourse.myblog.domain.repository.CommentRepository;
-
-import java.util.List;
 
 @Service
 public class CommentService {
@@ -42,7 +41,7 @@ public class CommentService {
     }
 
     @Transactional
-    public List<Comment> findByArticle(Article article) {
-        return commentRepository.findCommentsByArticle(article);
+    public Comments findByArticle(Article article) {
+        return new Comments(commentRepository.findCommentsByArticle(article));
     }
 }
