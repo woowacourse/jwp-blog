@@ -48,6 +48,10 @@ public class ArticleService {
         return article.getComments();
     }
 
+    public List<Comment> findAllComments(Long articleId) {
+        return articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new).getComments();
+    }
+
     @Transactional
     public Article addComment(Long articleId, Comment comment) {
         Article article = articleRepository.findById(articleId).orElseThrow(NotFoundObjectException::new);
