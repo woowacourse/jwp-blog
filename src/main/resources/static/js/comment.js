@@ -4,7 +4,7 @@ const template = '<li class="comment-item border bottom mrg-btm-30">\n' +
     '<div class="info">\n' +
     '<a class="text-bold inline-block"\n' +
     'href="/mypage/{{author.id}}"\n>{{author.name.name}}</a>\n' +
-    '<button class="inline-block sub-title pull-right>"\n' +
+    '<button class="inline-block sub-title pull-right">\n' +
     '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5 delete-comment-btn"></i>\n' +
     '</button>\n' +
     '<a class="inline-block sub-title pull-right">\n' +
@@ -15,7 +15,9 @@ const template = '<li class="comment-item border bottom mrg-btm-30">\n' +
     '<input id="change{{id}}" class="width-80 tempInput"\n' +
     'style="display: none;">\n' +
     '</div>\n' +
-    '</li>'
+    '</li>';
+
+const host = 'http://' + window.location.host;
 
 const commentTemplate = Handlebars.compile(template);
 
@@ -33,7 +35,7 @@ function editBtnClickHandler(event) {
             const updateComment = {
                 contents: editAble.value,
             }
-            putData('PUT', 'http://localhost:8080/ajax/articles/' + articleId + '/comments/' + editId, updateComment)
+            putData('PUT', host + '/ajax/articles/' + articleId + '/comments/' + editId, updateComment)
                 .then(data => initComments(data))
                 .catch(data => console.log(data))
             editAble.style.display = "none";
@@ -47,7 +49,7 @@ function editBtnClickHandler(event) {
     if (event.target.classList.contains("delete-comment-btn")) {
         const editAble = getInputContents(comment);
         const editId = editAble.id.substring(6, editAble.id.length);
-        putData('DELETE', 'http://localhost:8080/ajax/articles/' + articleId + '/comments/' + editId)
+        putData('DELETE', host + '/ajax/articles/' + articleId + '/comments/' + editId)
             .then(data => initComments(data))
             .catch(data => console.log(data))
 
@@ -105,9 +107,9 @@ function addSave(event) {
     const commentContents = document.getElementById('comment-contents');
     const comments = {
         contents: commentContents.value
-    }
+    };
 
-    putData('POST', 'http://localhost:8080/ajax/articles/' + articleId + '/comments', comments)
+    putData('POST', host + '/ajax/articles/' + articleId + '/comments', comments)
         .then(data => initComments(data))
         .catch(data => console.log(data));
     editor.setValue('');
