@@ -141,9 +141,9 @@
 - 자기가 쓴 댓글만 수정/삭제 가능
 
 리팩토링
-- 컨트롤러 클래스를 추상화한 AbstractControllerTests 작성
-    - Setup 에서 로그인
-    - EntityExchangeResult 를 반환하는 GET 요청 메서드
-    - EntityExchangeResult 를 반환하는 POST 요청 메서드
-    - EntityExchangeResult 를 반환하는 PUT 요청 메서드
-    - EntityExchangeResult 를 반환하는 DELETE 요청 메서드
+- ~~컨트롤러 클래스를 추상화한 AbstractControllerTests 작성~~
+    - ~~Setup 에서 로그인~~
+    - ~~EntityExchangeResult 를 반환하는 GET 요청 메서드~~
+    - ~~EntityExchangeResult 를 반환하는 POST 요청 메서드~~
+    - ~~EntityExchangeResult 를 반환하는 PUT 요청 메서드~~
+    - ~~EntityExchangeResult 를 반환하는 DELETE 요청 메서드~~
