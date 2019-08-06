@@ -153,10 +153,22 @@
             </span>
             <form th:action="${'comments/' + comment.id}" th:method="put">
                 <p class="width-80" th:id="'contents-' + ${comment.id}">${comment.contents}</p>
+                <div class="btn-group btn-group-horizontal">
+                     <button class="float-right pointer btn btn-icon" type="submit">
+                        <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+                    </button>
+                    <button type="submit" class="float-right btn btn-default no-border-line" style="border:transparent; background:transparent;">
+                        <i class="ti-trash font-size-16"></i>
+                    </button>
+                </div>
             </form>
+
         </div>
         </span>
     </li>
+
+
+
     `
 
     const createButton = document.getElementById("save-btn")
