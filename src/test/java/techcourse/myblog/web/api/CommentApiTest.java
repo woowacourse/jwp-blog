@@ -24,6 +24,7 @@ class CommentApiTest extends AuthedWebTestClient {
         EntityExchangeResult<byte[]> result = postJson("/api/articles/1/comments")
                 .body(Mono.just(commentJson), CommentDto.JSON.class)
                 .exchange()
+                .expectStatus().isCreated()
                 .expectBody().returnResult();
 
         String body = new String(Objects.requireNonNull(result.getResponseBody()));

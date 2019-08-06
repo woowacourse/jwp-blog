@@ -1,13 +1,19 @@
 package techcourse.myblog.web;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import techcourse.myblog.repository.UserRepository;
 
 import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 class UserControllerTest extends AuthedWebTestClient {
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Test
     void 인덱스_페이지_GET() {
         get("/users")

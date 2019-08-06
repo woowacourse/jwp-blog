@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.repository.UserRepository;
 
 import java.util.List;
 
@@ -19,8 +18,6 @@ public abstract class AuthedWebTestClient {
 
     @Autowired
     protected WebTestClient webTestClient;
-    @Autowired
-    protected UserRepository userRepository;
 
     private String loginCookie() {
         log.debug("Start Authed Session ...");
