@@ -70,4 +70,13 @@ public class User {
     private boolean isEmpty(String text) {
         return (text == null) || ("").equals(text);
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

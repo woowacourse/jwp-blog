@@ -1,5 +1,7 @@
 package techcourse.myblog.presentation.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import techcourse.myblog.presentation.support.LoginUser;
 @RequestMapping("/articles/{articleId}/comment")
 public class CommentController {
     private static final String DELETE_SUCCESS_MESSAGE = "삭제가 완료되었습니다.";
+    private static final Logger log = LoggerFactory.getLogger(CommentController.class);
 
     private final CommentReadService commentReadService;
     private final CommentWriteService commentWriteService;
@@ -28,18 +31,25 @@ public class CommentController {
 
     @PostMapping
     public Comment createComment(@PathVariable Long articleId, @RequestBody CommentDto commentDto, LoginUser loginUser) {
+        log.debug("comment save request data : -> {}, {}", articleId, commentDto);
         Article article = articleReadService.findById(articleId);
-        return commentWriteService.save(commentDto.toComment(loginUser.getUser(), article));
+        Comment comment = commentWriteService.save(commentDto.toComment(loginUser.getUser(), article));
+        log.debug("comment save response data : -> {}", comment);
+        return comment;
     }
 
     @PutMapping("/{commentId}")
     public Comment updateComment(@PathVariable Long commentId, @PathVariable Long articleId, @RequestBody CommentDto commentDto, LoginUser loginUser) {
+        log.debug("comment update request data : -> {}, {}", articleId, commentDto);
         Article article = articleReadService.findById(articleId);
-        return commentWriteService.modify(commentId, commentDto.toComment(loginUser.getUser(), article));
+        Comment comment = commentWriteService.modify(commentId, commentDto.toComment(loginUser.getUser(), article));
+        log.debug("comment update response data : -> {}", comment);
+        return comment;
     }
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<String> removeComment(@PathVariable Long commentId, LoginUser loginUser) {
+        log.debug("comment remove request data : -> {}", commentId);
         commentReadService.findById(commentId).validateAuthor(loginUser.getUser());
         commentWriteService.deleteById(commentId);
         return new ResponseEntity<>(DELETE_SUCCESS_MESSAGE, HttpStatus.OK);

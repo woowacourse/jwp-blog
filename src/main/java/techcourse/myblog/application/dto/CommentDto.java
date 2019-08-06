@@ -21,4 +21,11 @@ public class CommentDto {
     public Comment toComment(User writer, Article article) {
         return new Comment(contents, writer, article);
     }
+
+    @Override
+    public String toString() {
+        return "CommentDto{" +
+                "contents=" + contents +
+                '}';
+    }
 }

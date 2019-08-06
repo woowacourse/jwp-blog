@@ -77,4 +77,17 @@ public class Article {
     private boolean matchAuthor(Article article) {
         return article.author.equals(this.author);
     }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                ", author=" + author +
+                ", createTimeAt=" + createTimeAt +
+                ", updateTimeAt=" + updateTimeAt +
+                '}';
+    }
 }

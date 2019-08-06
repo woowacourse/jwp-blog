@@ -15,9 +15,9 @@ public class UserWriteService {
         this.userRepository = userRepository;
     }
 
-    public void save(User user) {
+    public User save(User user) {
         verifyDuplicateEmail(user);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     private void verifyDuplicateEmail(User user) {

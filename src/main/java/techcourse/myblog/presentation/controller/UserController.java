@@ -1,5 +1,7 @@
 package techcourse.myblog.presentation.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +22,7 @@ import javax.validation.groups.Default;
 public class UserController {
     private final UserReadService userReadService;
     private final UserWriteService userWriteService;
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     public UserController(UserReadService userReadService, UserWriteService userWriteService) {
         this.userReadService = userReadService;
@@ -42,7 +45,9 @@ public class UserController {
 
     @PostMapping("/users")
     public RedirectView createUser(@ModelAttribute("/signup") @Validated({Default.class, UserInfo.class}) UserDto userDto) {
-        userWriteService.save(userDto.toUser());
+        log.debug("user save request data : -> {}", userDto);
+        User savedUser = userWriteService.save(userDto.toUser());
+        log.debug("user save response data : -> {}", savedUser);
         return new RedirectView("/login");
     }
 
@@ -58,7 +63,9 @@ public class UserController {
     @PostMapping("/login")
     public RedirectView login(HttpSession session,
                               @ModelAttribute("/login") @Validated(Default.class) UserDto userDto) {
+        log.debug("user login request data : -> {}", userDto);
         User loginUser = userReadService.findByEmailAndPassword(userDto);
+        log.debug("user login response data : -> {}", loginUser);
         session.setAttribute("user", loginUser);
         return new RedirectView("/");
     }
