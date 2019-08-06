@@ -20,16 +20,16 @@ public class CommentRequestDto {
         return comment;
     }
 
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public Long getArticleId() {
         return articleId;
     }
 
     public void setArticleId(Long articleId) {
         this.articleId = articleId;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
     }
 
     public Comment toEntity(User author, Article article) {

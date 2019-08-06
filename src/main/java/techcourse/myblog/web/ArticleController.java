@@ -48,9 +48,6 @@ public class ArticleController {
 
         UserPublicInfoDto userPublicInfoDto = userService.findUserPublicInfoById(articleDto.getUserId());
         model.addAttribute("articleUser", userPublicInfoDto);
-
-        List<CommentResponseDto> commentResponseDtos = commentService.findCommentsByArticleId(id);
-        model.addAttribute("comments", commentResponseDtos);
         return "article";
     }
 

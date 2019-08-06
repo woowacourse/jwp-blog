@@ -29,7 +29,7 @@ public class RestCommentController {
 
     @PostMapping("/comments")
     @ResponseStatus(value = HttpStatus.OK)
-    public void createComment(CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
+    public void createComment(@RequestBody CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
         Long userId = getLoggedInUser(httpServletRequest).getId();
         commentService.save(userId, commentRequestDto);
     }
@@ -37,7 +37,8 @@ public class RestCommentController {
     @PutMapping("/comments/{commentId}")
     @ResponseStatus(value = HttpStatus.OK)
     public void updateComment(@PathVariable("commentId") Long commentId,
-                                CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
+                             @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
+
         Long userId = getLoggedInUser(httpServletRequest).getId();
         commentService.update(userId, commentId, commentRequestDto);
     }
