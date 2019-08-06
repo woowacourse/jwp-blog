@@ -1,15 +1,21 @@
 package techcourse.myblog.web;
 
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
+import techcourse.myblog.service.dto.CommentResponseDto;
 
-@AutoConfigureWebTestClient
-@ExtendWith(SpringExtension.class)
-@TestPropertySource("classpath:application_test.properties")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RestCommentControllerTests {
+import java.io.IOException;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class RestCommentControllerTests extends AbstractControllerTests {
+    @Test
+    void 댓글들_GET_요청_테스트() throws IOException {
+        EntityExchangeResult<byte[]> result = getRequest("/articles/1/comments");
+        String json = new String(result.getResponseBody());
+        ObjectMapper objectMapper = new ObjectMapper();
+        CommentResponseDto[] responses = objectMapper.readValue(json, CommentResponseDto[].class);
+        assertThat(responses.length).isEqualTo(5);
+    }
 }

@@ -126,9 +126,9 @@
 - ~~aws ec2 인스턴스 설정 쉘 스크립트 작성~~
 - ~~배포 쉘 스크립트 작성~~
 - 댓글 수정 Restful 백엔드 작업
-    - RestCommentController 클래스 생성
+    - ~~RestCommentController 클래스 생성~~
     - RestCommentService 클래스 생성
-    - GET 메서드
+    - ~~GET 메서드~~
     - POST 메서드
     - DELETE 메서드
     - PUT 메서드
@@ -139,3 +139,11 @@
     - 댓글 수정 버튼 누를 시 PUT ajax 요청
     - article.html 이 로드될 시 GET ajax 요청
 - 자기가 쓴 댓글만 수정/삭제 가능
+
+리팩토링
+- 컨트롤러 클래스를 추상화한 AbstractControllerTests 작성
+    - Setup 에서 로그인
+    - EntityExchangeResult 를 반환하는 GET 요청 메서드
+    - EntityExchangeResult 를 반환하는 POST 요청 메서드
+    - EntityExchangeResult 를 반환하는 PUT 요청 메서드
+    - EntityExchangeResult 를 반환하는 DELETE 요청 메서드
