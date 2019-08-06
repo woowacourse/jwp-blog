@@ -30,16 +30,15 @@ public class Article extends AuditLog {
     @Lob
     @Column(name = "contents", nullable = false)
     private String contents;
-
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"), nullable = false)
+    @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(name = "FK_ARTICLE_USER"), nullable = false)
     private User author;
 
     public Article(String title, String coverUrl, String contents) {
         this.title = title;
         this.coverUrl = coverUrl;
         this.contents = contents;
+        this.author = author;
     }
 
     public void update(Article articleToUpdate, long loginUserId) {

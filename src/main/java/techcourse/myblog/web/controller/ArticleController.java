@@ -18,18 +18,6 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
-<<<<<<< HEAD
-    private static final String USER = "user";
-    private static final String ARTICLE = "article";
-
-    private final ArticleService articleService;
-    private final CommentService commentService;
-
-    @Autowired
-    public ArticleController(ArticleService articleService, CommentService commentService) {
-        this.articleService = articleService;
-        this.commentService = commentService;
-=======
     private static final String ARTICLE = "article";
 
     private final ArticleService articleService;
@@ -37,7 +25,6 @@ public class ArticleController {
     @Autowired
     public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
->>>>>>> pair/younghyeon
     }
 
     @PostMapping("")
@@ -50,10 +37,6 @@ public class ArticleController {
     public String selectArticle(@PathVariable long articleId, Model model) {
         Article article = articleService.findById(articleId);
         model.addAttribute(ARTICLE, article);
-<<<<<<< HEAD
-        model.addAttribute("comments", commentService.findByArticle(article));
-=======
->>>>>>> pair/younghyeon
         return "article";
     }
 

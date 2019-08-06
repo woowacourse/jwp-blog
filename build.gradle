@@ -23,6 +23,7 @@ dependencies {
     runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
     runtimeOnly 'mysql:mysql-connector-java'
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.mockito:mockito-junit-jupiter:2.23.0'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
     }

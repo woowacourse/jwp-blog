@@ -104,6 +104,7 @@
                         </div>
                     </div>
                 </div>
+<<<<<<< HEAD
                 <div class="comment">
                     <ul class="list-unstyled list-info">
                         <div th:each="comment, index : ${comments}">
@@ -199,9 +200,6 @@
         });
     </script>
 </th:block>
-=======
-=======
->>>>>>> pair/younghyeon
 </div>
 
 <!-- include fragments/footer -->
@@ -223,25 +221,13 @@
         previewStyle: 'horizontal',
         events: {
             change: function () {
-<<<<<<< HEAD
-                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
-=======
                 document.getElementById('comment-contents')
->>>>>>> pair/younghyeon
             }
         },
         height: '200px'
     });
 
     function editBtnClickHandler(index) {
-<<<<<<< HEAD
-        const content = document.getElementById("contents-"+index);
-        content.innerHTML = "<textarea name='contents'>" + content.innerText + "</textarea>  <button value='수정' type='submit'>수정</button>"
-    }
-</script>
-</body>
->>>>>>> parent of c529696... Revert "[댓글 기능] 해리 미션 제출합니다. (#137)"
-=======
         const content = document.getElementById("contents-" + index);
         content.innerHTML = "<textarea name='contents'>" + content.innerText + "</textarea>  <button value='수정' type='submit'>수정</button>"
     }
@@ -323,5 +309,4 @@
 
 </script>
 </body>
->>>>>>> pair/younghyeon
 </html>
