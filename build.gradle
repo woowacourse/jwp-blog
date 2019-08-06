@@ -14,12 +14,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-<<<<<<< HEAD
-
     implementation 'org.springframework.boot:spring-boot-devtools'
     implementation 'org.apache.commons:commons-lang3:3.0'
 
@@ -29,23 +26,11 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
 
-=======
-    implementation 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.apache.commons:commons-lang3:3.0'
-
-    runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
-    runtimeOnly 'mysql:mysql-connector-java'
-    
->>>>>>> 718db4a8f894a1e21ed4c30919a57ba653413cd7
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit'
     }
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
-<<<<<<< HEAD
-
-=======
->>>>>>> 718db4a8f894a1e21ed4c30919a57ba653413cd7
     testImplementation "org.junit.jupiter:junit-jupiter-params:5.4.2"
     testImplementation 'com.h2database:h2:1.4.194'
 }
