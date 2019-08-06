@@ -73,15 +73,17 @@
 								<div class="info">
 									<span th:text="${comment.user.name.name}" class="text-bold inline-block"></span>
 									<span class="sub-title inline-block pull-right">
-										<a th:if="${comment.user.equals(session.user)}" onclick="showCommentInput(event)">
+										<a th:if="${comment.user.equals(session.user)}"
+										   th:onclick="|showCommentInput(event, '${comment.id}')|">
 											<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
 										</a>
-										<a th:if="${comment.user.equals(session.user)}" onclick="deleteComment(event)">
+										<a th:if="${comment.user.equals(session.user)}"
+										   th:onclick="|deleteComment(event, '${comment.id}')|">
 											<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
 										</a>
 									</span>
-									<p id="comment-contents-p" th:text="${comment.contents}" class="width-80"></p>
-									<div id="comment-edit"></div>
+									<p th:id="'comment-contents-p-' + ${comment.id}" th:text="${comment.contents}" class="width-80"></p>
+									<div th:id="'comment-edit-' + ${comment.id}"></div>
 								</div>
 							</form>
 						</li>
@@ -164,6 +166,8 @@
             .then(response => response.json())
             .then(function (json) {
                 const node = document.createElement("LI");
+                node.setAttribute("class", "comment-item border bottom mrg-btm-30");
+
                 node.innerHTML = '<form id="comment-update-form' + json.commentId + '" method="post"' +
                     'action="/comment/' + json.commentId + '">' +
                     '<input id="comment-update" type="hidden" name="_method" value="put"/>' +
@@ -241,7 +245,7 @@
             .then(response => response.json())
             .then(function (json) {
                 if (json.commentId == commentId) {
-                    document.getElementById("comment-update-form" + commentId).remove();
+                    document.getElementById("comment-update-form" + commentId).parentNode.remove();
                 }
             });
 
