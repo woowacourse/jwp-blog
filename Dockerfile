@@ -1,7 +1,9 @@
 FROM openjdk:8
 
-COPY ./build/libs/myblog-0.0.1-SNAPSHOT.jar /usr/src/app
+COPY . /usr/src/app
 
 WORKDIR /usr/src/app
 
-CMD ["java" "-jar" "myblog-0.0.1-SNAPSHOT.jar"]
+RUN ./gradlew clean build
+
+CMD ["java" "-jar" "/usr/src/app/build/libs/myblog-0.0.1-SNAPSHOT.jar"]
