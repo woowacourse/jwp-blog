@@ -17,8 +17,8 @@ class ArticleDtoTests {
 
     static Stream<Arguments> invalidArticleParameters() {
         return Stream.of(
-                Arguments.of("", "coverUrl", "contents", "제목없어 실패"),
-                Arguments.of("title", "coverUrl", "", "내용없어 실패")
+                Arguments.of("", "coverUrl", "contents", ArticleDto.TITLE_CONSTRAINT_MSG),
+                Arguments.of("title", "coverUrl", "", ArticleDto.CONTENTS_CONSTRAINT_MSG)
         );
     }
 

@@ -27,6 +27,7 @@ class CommentControllerTests extends ControllerTestTemplate {
     private CommentDto updateCommentDto = new CommentDto("new comment");
     private String savedArticleUrl;
     private String commentUrl;
+    private Comment comment;
 
     @BeforeEach
     public void setup() {
@@ -97,9 +98,14 @@ class CommentControllerTests extends ControllerTestTemplate {
 
     @Test
     void 작성자_로그인_상태_댓글삭제_성공() {
-        String authorDeleteCommentRedirectUrl = getRedirectUrl(loginAndRequest(authorDto, DELETE, getCommentUrl()));
-
-        assertThat(authorDeleteCommentRedirectUrl.equals(savedArticleUrl)).isTrue();
+        webTestClient.delete()
+                .uri(getCommentUrl())
+                .cookie("JSESSIONID", getLoginSessionId(authorDto))
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$").isEqualTo(comment.getId());
     }
 
     @Test
@@ -154,7 +160,7 @@ class CommentControllerTests extends ControllerTestTemplate {
                 .exchange()
         ;
 
-        Comment comment = commentRepository.findAll().get(0);
+        comment = commentRepository.findAll().get(0);
 
         return String.format("/articles/%d/comments/%d", comment.getArticle().getId(), comment.getId());
     }

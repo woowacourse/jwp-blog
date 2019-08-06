@@ -27,11 +27,9 @@ public class CommentService {
     }
 
     public Long deleteById(Long id, User user) {
-        long beforeCount = commentRepository.count();
         if (findById(id).matchWriter(user)) {
             commentRepository.deleteById(id);
-            long afterCount = commentRepository.count();
-            return afterCount - beforeCount;
+            return id;
         }
         throw new MismatchAuthorException();
     }
