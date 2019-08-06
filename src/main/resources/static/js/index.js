@@ -12,13 +12,13 @@ window.addEventListener('scroll', function (evt) {
         logoDark.classList.remove("d-none");
         logoWhite.classList.add("d-none");
         userInfo.classList.remove("text-white");
-        userInfo.classList.add("text-dark")
+        userInfo.classList.add("text-dark");
     } else {
         header.classList.add("no-border");
         header.classList.remove("bg-white", "border", "bottom");
         logoDark.classList.add("d-none");
         logoWhite.classList.remove("d-none");
         userInfo.classList.add("text-white");
-        userInfo.classList.remove("text-dark")
+        userInfo.classList.remove("text-dark");
     }
 });

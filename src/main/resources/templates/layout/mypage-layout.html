@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/config :: configFragment">
+    </th:block>
+</head>
+<body>
+<div>
+    <header th:replace="fragments/header :: headerFragment">
+    </header>
+    <div class="about-cover card no-border">
+        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
+            <div class="display-block height-100">
+
+            </div>
+        </div>
+    </div>
+    <th:block layout:fragment="content">
+    </th:block>
+</div>
+
+<th:block th:replace="fragments/script :: scriptFragment">
+</th:block>
+
+<th:block layout:fragment="addScript">
+</th:block>
+
+</body>
+</html>
