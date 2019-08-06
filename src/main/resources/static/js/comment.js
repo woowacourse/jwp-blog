@@ -1,30 +1,28 @@
 const COMMENT = (function () {
     'use strict';
 
-    const commentEditTemplate = `<form accept-charset="utf-8" method="post" action ="{{url}}">
-        <div class="add-comment">
-        <input id="{{contentsId}}" name="contents" type="hidden">
-        <div id="{{editorId}}" class = "comment-editor"></div>
-        <input name="_method" type="hidden" value="put"/>
-        <button class="btn btn-default" id="{{buttonId}}" type="submit">댓글 수정
-        </button></div>
-        </form>`;
-    const compiledCommentEditTemplate = Handlebars.compile(commentEditTemplate);
+
     const CommentController = function () {
         const commentService = new CommentService();
 
-        const updateComment = function () {
+        const updateCommentForm = function () {
             const comments = document.getElementById('comment-list');
-            comments.addEventListener('click', commentService.update);
+            comments.addEventListener('click', commentService.updateForm);
         };
 
         const deleteComment = function () {
             const comments = document.getElementById('comment-list');
             comments.addEventListener('click', commentService.remove);
         }
+        const updateComment = function () {
+            const comments = document.getElementById('comment-list');
+            comments.addEventListener('click', commentService.update);
+
+        }
         const init = function () {
-            updateComment();
+            updateCommentForm();
             deleteComment();
+            updateComment();
         };
         return {
             init: init
@@ -32,29 +30,28 @@ const COMMENT = (function () {
     };
 
     const CommentService = function () {
-        const update = function (event) {
+        const updateForm = function (event) {
             const target = event.target;
             const parent = target.closest('li');
-            const form = parent.getElementsByTagName('form')[0];
             if (
                 target.classList.contains('comment-edit') &&
                 parent.getElementsByClassName('comment-editor').length === 0
             ) {
-                const url = form.action;
-                const tokens = form.action.split('/');
-                const commentId = tokens[tokens.length - 1];
+                const commentId = parent.dataset.commentId;
                 const editorId = 'editSection' + commentId;
                 const contentsId = 'comment-contents' + commentId;
                 const buttonId = 'comment-edit-finish-button' + commentId;
 
+                const commentEditTemplate =
+                    `<div class="add-comment edit-comment-form">
+                    <input id="${contentsId}" name="contents" type="hidden">
+                    <div id="${editorId}" class = "comment-editor"></div>
+                    <button class="btn btn-default comment-edit-finish-button" id="${buttonId}" type="button">댓글 수정
+                    </button></div>
+                    `;
+
                 parent.insertAdjacentHTML(
-                    'beforeend',
-                    compiledCommentEditTemplate({
-                        url: url,
-                        editorId: editorId,
-                        contentsId: contentsId,
-                        buttonId: buttonId
-                    })
+                    'beforeend', commentEditTemplate
                 );
                 const editor2 = new tui.Editor({
                     el: document.querySelector('#' + editorId),
@@ -78,9 +75,23 @@ const COMMENT = (function () {
             }
         }
 
+        const update = function (event) {
+            const targetButton = event.target
+            if (targetButton.classList.contains("comment-edit-finish-button")) {
+                const comment = targetButton.closest('li')
+                let id = comment.dataset.commentId
+                let p = comment.getElementsByTagName("p")[0]
+                let editedContents = document.getElementById("comment-contents" + id).value;
+                console.log(editedContents)
+                updateCommentFetch(articleId, id, p, editedContents);
+            }
+        }
+
+
         return {
-            update: update,
-            remove: remove
+            updateForm: updateForm,
+            remove: remove,
+            update: update
         };
     };
 
@@ -149,6 +160,31 @@ function deleteCommentFetch(articleId, commentId, targetComment) {
         })
         .then(json => {
             targetComment.remove();
+        })
+        .catch(
+            response => response.json().then((json) => alert(json.errorMessage))
+        )
+}
+
+function updateCommentFetch(articleId, commentId, editParagraph, contents) {
+    fetch('/articles/' + articleId + '/comments/' + commentId,
+        {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8'
+            },
+            body: JSON.stringify({contents: contents}),
+            credentials: 'include'
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json()
+            }
+            throw response;
+        })
+        .then(json => {
+            editParagraph.innerText = contents;
+            document.querySelectorAll('.edit-comment-form').forEach(e => e.parentNode.removeChild(e));
         })
         .catch(
             response => response.json().then((json) => alert(json.errorMessage))
