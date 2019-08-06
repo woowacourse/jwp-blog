@@ -1,5 +1,5 @@
 INSERT INTO user(user_name, email, password, create_time)
-VALUES ('heejoo', 'heejoo@gmail.com', 'Aa12345!',now());
+VALUES ('tiber', 'tiber@gmail.com', 'Aa12345!',now());
 
 INSERT INTO user(user_name, email, password, create_time)
 VALUES ('cony', 'cony@gmail.com', 'Aa12345!', now());
