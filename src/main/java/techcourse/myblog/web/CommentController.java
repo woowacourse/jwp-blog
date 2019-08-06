@@ -1,7 +1,6 @@
 package techcourse.myblog.web;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 import techcourse.myblog.domain.comment.Comment;
 import techcourse.myblog.domain.user.User;
 import techcourse.myblog.service.ArticleService;
