@@ -110,61 +110,37 @@
                 <div class="comment">
                     <ul class="list-unstyled list-info" id="comment-list">
                         <div th:each="comment : ${comments}" id = "commnetList">
-                            <li class="comment-item border bottom mrg-btm-30" th:id = "${comment.id}">
+                            <form th:id="'comment-update-form' + ${comment.id}" method="post"
+                                  th:action="'/comment/' + ${comment.id}">
+                                <input id="comment-update" type="hidden" name="_method" value="put"/>
                                 <img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">
                                 <div class="info">
-                                    <span href="" class="text-bold inline-block" th:text="${comment.userName}">Jun</span>
+                                    <span th:text="${comment.userName}" class="text-bold inline-block"></span>
                                     <span class="sub-title inline-block pull-right">
-                                        <i class="ti-timer pdd-right-5"></i>
-                                        <span th:text="${comment.createDateTime}"></span>
-                                    </span>
-                                    <form th:action="${'/articles/' + article.id + '/' + comment.id}" method="post">
-                                        <input type="hidden" name="_method" value="delete"/>
-                                        <a class="float-right pointer btn btn-icon">
-                                            <button type="submit" class="float-right pointer btn btn-icon">
-                                                <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
-                                            </button>
-                                        </a>
-                                    </form>
-                                    <form th:action="${'/articles/' + article.id + '/comment-edit/' + comment.id}" method="post">
-                                        <input type="hidden" name="_method" value="put"/>
-                                        <a class="float-right pointer btn btn-icon" data-toggle="modal" th:data-target="'#commentEdit-' + ${comment.id}">
-                                            <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
-                                        </a>
-                                        <div class="modal fade" th:id="'commentEdit-' + ${comment.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel" th:text="${comment.userName}"></h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label th:for="'commentEditContents-' + ${comment.id}"></label>
-                                                            <textarea class="form-control" th:id="'commentEditContents-' + ${comment.id}" rows="3" th:text="${comment.contents}" name="contents"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Save changes</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <p class="width-80" th:text="${comment.contents}"></p>
+<!--										<a th:if="${comment.user.equals(session.user)}" onclick="showCommentInput(event)">-->
+
+                                        <a th:onclick="|showCommentInput(event, '${comment.id}')|">
+											<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
+										</a>
+
+                                        <a th:onclick="|deleteComment(event, '${comment.id}')|">
+                                            <i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>
+										</a>
+									</span>
+                                    <p id="comment-contents-p" th:text="${comment.contents}" class="width-80"></p>
+                                    <div id="comment-edit"></div>
                                 </div>
-                            </li>
+                            </form>
+
                         </div>
                     </ul>
                     <div class="add-comment">
-                        <form th:action="${'/articles/' + article.id + '/writing'}" method="post">
-                            <input id = "comment-contents" name = "contents" type = "hidden">
-                            <div id="editSection"></div>
-                            <button type="submit">전송</button>
-                        </form>
+                        <input type="hidden" id="comment-contents" name="contents">
+                        <div id="editSection"></div>
+                        <input type="hidden" name="articleId" th:value="${article.id}">
+                        <div class="mrg-top-20 text-right">
+                            <button id="comment-submit-button" type="button" class="btn btn-tumblr">댓글 작성</button>
+                        </div>
 
                     </div>
                 </div>
@@ -197,24 +173,62 @@
         height: '200px'
     });
 
-    const updateComment = function() {
-        const commentList = document.getElementById('comment-list')
-        commentList.addEventListener('click', (event) => {
-            if (event.target.classList.contains('li')) {
-                const content = event.target.value;
-
-            }
-        })
+    function showCommentInput(event, commentId) {
+        event.preventDefault()
+        const e = document.createElement('span');
+        e.innerHTML = '<textarea id="comment-edit-input" name="editedContents"></textarea><button type="button" class="btn btn-tumblr" onclick="updateComment(' + commentId + ')">수정</button>';
+        e.setAttribute("id", "comment-update-span-" + commentId);
+        document.getElementById("comment-edit-" + commentId).appendChild(e);
+        const commentContents = document.getElementById("comment-contents-p-" + commentId);
+        document.getElementById("comment-edit-input").value = commentContents.innerHTML;
+        commentContents.parentNode.removeChild(commentContents);
     }
 
     document.querySelector("#comment-submit-button").addEventListener("click", createComment);
     function createComment() {
-        const articleId = /*[[${article.id}]]*/;
-        fetch('/comment/writing', {
-            method: "POST",
+        const articleId = [[${article.id}]];
+        fetch(articleId + '/writing' , {
+            method : "POST" ,
+            body : JSON.stringify({
+                contents : editor.getMarkdown() ,
+                //articleId: articleId
+            }) ,
+            headers : {
+                "Content-type" : "application/json; charset=UTF-8"
+            }
+        })
+            .then(response => response.json())
+            .then(function (json) {
+                    const node = document.createElement("LI");
+                node.innerHTML = '<form id="comment-update-form' + json.commentId + '" method="post"' +
+                    'action="/comment/' + json.commentId + '">' +
+                    '<input id="comment-update" type="hidden" name="_method" value="put"/>' +
+                    '<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">' +
+                    '<div class="info">' +
+                    '<span class="text-bold inline-block">' + json.userName + '</span>' +
+                    '<span class="sub-title inline-block pull-right">' +
+                    '<a onclick="showCommentInput(event, ' + json.commentId + ')">' +
+                    '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>' +
+                    '</a>' +
+                    '<a onclick="deleteComment(event, ' + json.commentId + ')">' +
+                    '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>' +
+                    '</a>' +
+                    '</span>' +
+                    '<p id="comment-contents-p-' + json.commentId + '" class="width-80">' + json.contents + '</p>' +
+                    '<div id="comment-edit-' + json.commentId + '"></div>' +
+                    '</div>' +
+                    '</form>';
+
+                document.getElementById("commnetList").appendChild(node);
+                })
+            }
+
+    function updateComment(commentId) {
+        const articleId = [[${article.id}]];
+        fetch(articleId + '/comment-edit/' + commentId, {
+            method: "PUT",
             body: JSON.stringify({
-                contents: editor.getMarkdown(),
-                articleId: articleId
+                editedContents: document.getElementById("comment-edit-input").value
             }),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
@@ -222,78 +236,30 @@
         })
             .then(response => response.json())
             .then(function (json) {
-                    const node = document.createElement("LI");
-                    node.innerHTML =
+                const e = document.createElement('span');
+                e.innerHTML = '<p id="comment-contents-p-' + commentId + '" class="width-80">' + json.editedContents + '</p>';
+                let element = document.getElementById("comment-update-span-" + commentId);
+                element.parentNode.appendChild(e);
+                element.remove();
+            });
+    }
+    function deleteComment(event, commentId) {
 
-                        '<li class="comment-item border bottom mrg-btm-30" id = "${json.id}">\n' +
-                        '<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">\n' +
-                        '<div class="info">\n' +
-                        '<span href="" class="text-bold inline-block" text="${json.userName}">Jun</span>\n' +
-                        '<span class="sub-title inline-block pull-right">\n' +
-                        '<i class="ti-timer pdd-right-5"></i>\n' +
-                        '<span text="${json.createDateTime}"></span>\n' +
-                        '</span>\n' +
-                        '<form action="${\'/articles/\' + article.id + \'/\' + json.id}" method="post">\n' +
-                        '<input type="hidden" name="_method" value="delete"/>\n' +
-                        '<a class="float-right pointer btn btn-icon">\n' +
-                        '<button type="submit" class="float-right pointer btn btn-icon">\n' +
-                        '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>\n' +
-                        '</button>\n' +
-                        '</a>\n' +
-                        '</form>\n' +
-                        '<form action="${\'/articles/\' + article.id + \'/comment-edit/\' + comment.id}" method="post">\n' +
-                        '<input type="hidden" name="_method" value="put"/>\n' +
-                        '<a class="float-right pointer btn btn-icon" data-toggle="modal" data-target="\'#commentEdit-\' + ${json.id}">\n' +
-                        '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>\n' +
-                        '</a>\n' +
-                        '<div class="modal fade" id="\'commentEdit-\' + ${json.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\n' +
-                        '<div class="modal-dialog" role="document">\n' +
-                        '<div class="modal-content">\n' +
-                        '<div class="modal-header">\n' +
-                        '<h5 class="modal-title" id="exampleModalLabel" text="${json.userName}"></h5>\n' +
-                        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
-                        '<span aria-hidden="true">&times;</span>\n' +
-                        '</button>\n' +
-                        '</div>\n' +
-                        '<div class="modal-body">\n' +
-                        '<div class="form-group">\n' +
-                        '<label for="commentEditContents-' + json.id + '"></label>\n' +
-                        '<textarea class="form-control" id="commentEditContents-' + json.id + '" rows="3" text="' + json.contents + '"  name="contents"></textarea>\n' +
-                        '</div>\n' +
-                        '</div>\n' +
-                        '<div class="modal-footer">\n' +
-                        '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>\n' +
-                        '<button type="submit" class="btn btn-primary">Save changes</button>\n' +
-                        '</div>\n' +
-                        '</div>\n' +
-                        '</div>\n' +
-                        '</div>\n' +
-                        '</form>\n' +
-                        '<p class="width-80" text="' + json.contents + '"></p>\n' +
-                        '</div>\n' +
-                        '</li>'
-
-
-
-
-
-                        '<img class="thumb-img img-circle" src="https://avatars3.githubusercontent.com/u/50367798?v=4" alt="">' +
-                        '<div class="info">' +
-                        '<span class="text-bold inline-block">' + json.userName + '</span>' +
-                        '<span class="sub-title inline-block pull-right">' +
-                        '<a onclick="showCommentInput(event)">' +
-                        '<i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>' +
-                        '</a>' +
-                        '<a onclick="deleteComment(event)">' +
-                        '<i class="ti-trash text-dark font-size-16 pdd-horizontal-5"></i>' +
-                        '</a>' +
-                        '</span>' +
-                        '<p id="comment-contents-p" class="width-80">' + json.contents + '</p>' +
-                        '<div id="comment-edit"></div>' +
-                        '</div>';
-                    document.getElementById("commnetList").appendChild(node);
-                })
+        event.preventDefault()
+        const articleId = [[${article.id}]];
+        fetch(articleId + '/' + commentId, {
+            method: "DELETE",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
             }
+        })
+            .then(response => response.json())
+            .then(function (json) {
+                if (json.commentId == commentId) {
+                    document.getElementById("comment-update-form" + commentId).remove();
+                }
+            });
+    }
 </script>
 </body>
 </html>

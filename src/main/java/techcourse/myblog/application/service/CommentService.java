@@ -32,7 +32,6 @@ public class CommentService {
         Article article = articleService.findArticleById(articleId);
 
         Comment comment = new Comment(commentDto.getContents(), user, article);
-
         return CommentDto.of(commentRepository.save(comment));
     }
 
