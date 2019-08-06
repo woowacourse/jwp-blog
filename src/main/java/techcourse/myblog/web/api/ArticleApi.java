@@ -23,7 +23,7 @@ public class ArticleApi {
 
     @GetMapping
     public ResponseEntity<Integer> getCount(@RequestParam(value = "author", required = false) String author) {
-        log.debug("author:{}",author);
+        log.debug("author:{}", author);
         int count = articleService.findAllByAuthor(author).size();
         return new ResponseEntity<>(count, HttpStatus.FOUND);
     }

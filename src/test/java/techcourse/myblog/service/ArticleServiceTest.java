@@ -132,7 +132,7 @@ class ArticleServiceTest {
     }
 
     @Test
-    void 특정_author_Article_전체_조회(){
+    void 특정_author_Article_전체_조회() {
         // given
         List articles = mock(List.class);
         when(articleRepository.findAllByAuthor(user)).thenReturn(articles);
@@ -148,7 +148,7 @@ class ArticleServiceTest {
     }
 
     @Test
-    void Article_전체_조회(){
+    void Article_전체_조회() {
         // given
         List articles = mock(List.class);
         when(articleRepository.findAll()).thenReturn(articles);

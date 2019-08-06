@@ -1,6 +1,5 @@
 package techcourse.myblog.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -80,7 +79,7 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public List<Article> findAllByAuthor(String author) {
-        if(author != null){
+        if (author != null) {
             User user = userService.findByEmail(author);
             return articleRepository.findAllByAuthor(user);
         }

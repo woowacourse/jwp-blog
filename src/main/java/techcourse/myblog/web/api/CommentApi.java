@@ -47,8 +47,8 @@ public class CommentApi {
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<CommentResponse> delete(@PathVariable Long articleId,
-                                                            @PathVariable Long commentId,
-                                                            UserSession userSession) {
+                                                  @PathVariable Long commentId,
+                                                  UserSession userSession) {
         log.debug("commentId: {}", commentId);
 
         commentService.delete(commentId, userSession.getId());
@@ -59,9 +59,9 @@ public class CommentApi {
 
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentResponse> update(@PathVariable Long articleId,
-                                                            @PathVariable Long commentId,
-                                                            @RequestBody CommentDto.Update commentUpdate,
-                                                            UserSession userSession) {
+                                                  @PathVariable Long commentId,
+                                                  @RequestBody CommentDto.Update commentUpdate,
+                                                  UserSession userSession) {
         log.debug("commentId: {}", commentId);
 
         commentUpdate.setArticleId(articleId);

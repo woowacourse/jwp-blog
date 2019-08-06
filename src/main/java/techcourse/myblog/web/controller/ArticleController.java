@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import techcourse.myblog.domain.Comment;
 import techcourse.myblog.dto.ArticleDto;
 import techcourse.myblog.service.ArticleService;
-import techcourse.myblog.domain.Comment;
 import techcourse.myblog.web.UserSession;
 
 import java.util.List;

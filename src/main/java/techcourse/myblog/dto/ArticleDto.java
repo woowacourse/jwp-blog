@@ -2,8 +2,8 @@ package techcourse.myblog.dto;
 
 
 import lombok.*;
-import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.Article;
+import techcourse.myblog.domain.Comment;
 import techcourse.myblog.domain.User;
 
 import java.util.List;

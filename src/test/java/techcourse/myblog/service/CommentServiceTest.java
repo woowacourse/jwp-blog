@@ -98,13 +98,14 @@ class CommentServiceTest {
         // then
         verify(commentRepository).delete(comment);
     }
+
     @Test
     void 다른_작성자_댓글_삭제_예외처리() {
         // given
         when(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment));
 
         // when & then
-        assertThrows(AuthException.class, () ->commentService.delete(1L, ANOTHER_USER_ID));
+        assertThrows(AuthException.class, () -> commentService.delete(1L, ANOTHER_USER_ID));
     }
 
     //
