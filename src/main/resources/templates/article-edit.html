@@ -1,148 +1,88 @@
 <!DOCTYPE html>
-<html lang="ko" layout:decorator="~{layout/article-layout}"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <th:block th:replace="fragments/config :: configFragment"/>
     <title>우아한테크코스 기술블로그</title>
     <link href="/css/index.css" rel="stylesheet">
     <link href="/css/article-edit.css" rel="stylesheet">
+    <th:block th:replace="fragments/article-config :: articleConfigFragment"/>
 </head>
 <body>
 <div>
-    <th:block layout:fragment="content">
-        <div class="header navbar bg-transparent no-border">
-            <div class="header-container">
-                <ul class="nav-left mrg-left-0">
-                    <li>
-                        <a href="/">
-                            <div class="logo logo-dark d-none"
-                                 style="background-image: url('/images/logo/logo_full_dark.png')"></div>
-                            <div class="logo logo-white"
-                                 style="background-image: url('/images/logo/logo_full_white.png')"></div>
-                        </a>
-                    </li>
-                </ul>
-                <ul class="nav-right">
-                    <li class="user-profile dropdown no-border pointer" id="header-user-dropdown-btn">
-                        <a class="user-info-link user-dropdown-menu dropdown-toggle" data-toggle="dropdown">
-                            <img alt="Brown"
-                                 class="profile-img img-fluid"
-                                 src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
-                            <div class="user-info text-white">
-                                <span class="name pdd-right-5">Brown</span>
-                                <i class="ti-angle-down font-size-10"></i>
-                            </div>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="text-dark">
-                                <a href="mypage.html">
-                                    <i class="ti-user pdd-right-10"></i>
-                                    <span class="text-dark">마이 페이지</span>
-                                </a>
-                            </li>
-                            <li class="divider" role="separator"></li>
-                            <li class="text-dark">
-                                <a href="index.html">
-                                    <i class="ti-power-off pdd-right-10"></i>
-                                    <span class="text-dark">로그아웃</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+    <th:block th:replace="fragments/header :: headerFragment"/>
+
+    <form accept-charset="utf-8" method="post" name="article"
+          th:action="${article}? '/articles/' + ${article.id} : '/articles'">
+        <input name="_method" th:if="${article}" type="hidden" value="put"/>
+        <div class="about-cover card no-border">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
+                <div class="height-300px vertical-center pdd-horizon-50">
+                    <div class="width-80">
+                        <input autocomplete="off"
+                               class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
+                               name="title"
+                               placeholder="제목을 입력해주세요"
+                               th:value="${article?.title}" type="text">
+                        <input autocomplete="off"
+                               class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
+                               name="coverUrl"
+                               placeholder="배경 url을 입력해주세요"
+                               th:value="${article?.coverUrl}" type="text">
+                    </div>
+                </div>
             </div>
         </div>
 
-        <form accept-charset="utf-8" method="post" name="article"
-              th:action="${articleId == null} ? '/articles/write' : |/articles/${articleId}|">
-            <div class="about-cover card no-border">
-                <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
-                    <div class="height-300px vertical-center pdd-horizon-50">
-                        <div class="width-80">
-                            <input name="id" th:value="${articleId != null} ? ${articleId} : 0" type="hidden"/>
-                            <input autocomplete="off"
-                                   class="text-center bg-transparent no-border font-size-30 width-60 mx-auto d-block text-white border bottom"
-                                   name="title"
-                                   placeholder="제목을 입력해주세요" th:value="${article != null} ? ${article.title} : ''"
-                                   type="text">
-                            <input autocomplete="off"
-                                   class="text-center bg-transparent no-border font-size-16 width-30 mx-auto d-block text-light text-white border bottom pdd-top-20"
-                                   name="coverUrl"
-                                   placeholder="배경 url을 입력해주세요" th:value="${article != null} ? ${article.coverUrl} : ''"
-                                   type="text">
-                        </div>
+        <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
+            <div class="row">
+                <div class="col-lg-1 col-md-1"></div>
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                    <input id="article-contents" name="contents" type="hidden">
+                    <div id="editSection"></div>
+                </div>
+                <div class="col-lg-1 col-md-1">
+                    <div class="btn-group btn-group-vertical">
+                        <button class="btn btn-default" id="save-btn" type="submit">
+                            <i class="ti-save"></i>
+                        </button>
+                        <button class="btn btn-default" id="remove-btn" th:if="${article}" type="button">
+                            <i class="ti-trash"></i>
+                        </button>
+                        <a class="btn btn-default" href="/">
+                            <i class="ti-close"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-
-            <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
-                <div class="row">
-                    <div class="col-lg-1 col-md-1"></div>
-                    <div class="col-lg-10 col-md-10 col-sm-10">
-                        <input id="article-contents" name="contents" type="hidden">
-                        <div id="editSection"></div>
-                    </div>
-                    <div class="col-lg-1 col-md-1">
-                        <div class="btn-group btn-group-vertical">
-                            <button class="btn btn-default" id="save-btn" type="submit">
-                                <i class="ti-save"></i>
-                            </button>
-                            <a class="btn btn-default" href="/" th:if="${articleId == null}">
-                                <i class="ti-close"></i>
-                            </a>
-                            <button class="btn btn-default" id="remove-btn" th:unless="${articleId == null}"
-                                    type="button">
-                                <i class="ti-close"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <input name="_method" th:if="${articleId != null}" type="hidden" value="put"/>
-        </form>
-    </th:block>
+        </div>
+    </form>
 </div>
 
-<th:block layout:fragment="addScript">
-    <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-    <script th:if="${article != null}" th:inline="javascript">
-        /* <![CDATA[ */
-        const initValue = [[ ${article.contents}]];
-        /* ]]> */
-        // const initValue = ${#strings.unescapeJavaScript(article.contents)};
+<th:block th:replace="fragments/script :: scriptFragment"/>
+<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<script th:inline="javascript">
+    /* <![CDATA[ */
+    const initValue = [[ ${article?.contents}]];
+    /* ]]> */
 
-        const editor = new tui.Editor({
-            el: document.querySelector('#editSection'),
-            initialEditType: 'markdown',
-            previewStyle: 'vertical',
-            events: {
-                change: function () {
-                    document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
-                }
-            },
-            height: 'calc(100vh - 360px)',
-            initialValue: initValue
-        });
+    const editor = new tui.Editor({
+        el: document.querySelector('#editSection'),
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        events: {
+            change: function () {
+                document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
+            }
+        },
+        height: 'calc(100vh - 360px)',
+        initialValue: initValue
+    });
 
-        document.getElementById('remove-btn').addEventListener('click', function () {
-            document.querySelector('input[name="_method"]').value = 'delete';
-            document.querySelector('form[name="article"]').submit();
-        });
-    </script>
-    <script th:inline="javascript" th:unless="${article != null}">
-        const editor = new tui.Editor({
-            el: document.querySelector('#editSection'),
-            initialEditType: 'markdown',
-            previewStyle: 'vertical',
-            events: {
-                change: function () {
-                    document.getElementById('article-contents').setAttribute('value', editor.getMarkdown())
-                }
-            },
-            height: 'calc(100vh - 360px)'
-        });
-    </script>
-</th:block>
+    document.getElementById('remove-btn').addEventListener('click', function () {
+        document.querySelector('input[name="_method"]').value = 'delete';
+        document.querySelector('form[name="article"]').submit();
+    });
 
+</script>
 </body>
 </html>

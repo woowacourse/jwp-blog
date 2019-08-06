@@ -1,32 +1,28 @@
 package techcourse.myblog.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import techcourse.myblog.model.User;
-import techcourse.myblog.repository.ArticleRepository;
+import org.springframework.web.bind.annotation.RequestMapping;
+import techcourse.myblog.service.ArticleService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+@RequestMapping("/")
 @Controller
 public class HomeController {
-    private final ArticleRepository articleRepository;
+    private final ArticleService articleService;
 
-    @Autowired
-    public HomeController(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
+    public HomeController(ArticleService articleService) {
+        this.articleService = articleService;
     }
 
-    @GetMapping("/")
-    public String home(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-            model.addAttribute("user", user);
-        }
-        model.addAttribute("articles", articleRepository.findAll());
+    @GetMapping
+    public String home(Model model,
+                       @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC, size = 2) Pageable pageable) {
+        model.addAttribute("articles", articleService.getAllArticles(pageable));
         return "index";
     }
+
 }

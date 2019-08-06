@@ -1,51 +1,54 @@
 <!DOCTYPE html>
-<html lang="ko" layout:decorator="~{layout/login-layout}"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <th:block th:replace="fragments/config :: configFragment"/>
     <title>우아한테크코스 기술블로그</title>
-    <link href="/css/index.css" rel="stylesheet" th:href="@{css/index.css}">
+    <link href="/css/index.css" rel="stylesheet">
 </head>
 <body>
 <div>
-    <th:block layout:fragment="content">
-        <div class="about-cover card no-border">
-            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
-                <div class="display-block height-100">
-                </div>
+    <th:block th:replace="fragments/header :: headerFragment"/>
+
+    <div class="about-cover card no-border">
+        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
+            <div class="display-block height-100">
             </div>
         </div>
+    </div>
 
-        <div class="container-fluid z-10 bottom-120 relative max-width-lg mx-auto mrg-btm-30 padding-30">
-            <div class="row">
-                <div class="col-md-6 mx-auto">
-                    <div class="card">
-                        <div class="card-heading border bottom">
-                            <h4 class="card-title">User List</h4>
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-unstyled list-info">
-                                <li>
-                                    <div class="pdd-vertical-10" th:each="user, index:${users}">
-                                        <img alt=""
-                                             class="thumb-img img-circle"
-                                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
-                                        <div class="info">
-                                            <a class="title no-pdd-vertical text-semibold inline-block lh-1"
-                                               th:text="${user.userName}">Brown</a>
-                                            <span class="sub-title">
+    <div class="container-fluid z-10 bottom-120 relative max-width-lg mx-auto mrg-btm-30 padding-30">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card">
+                    <div class="card-heading border bottom">
+                        <h4 class="card-title">User List</h4>
+                    </div>
+                    <div class="card-body" th:each="user : ${users}">
+                        <ul class="list-unstyled list-info">
+                            <li>
+                                <div class="pdd-vertical-10">
+                                    <img alt=""
+                                         class="thumb-img img-circle"
+                                         src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4">
+                                    <div class="info">
+                                        <a class="title no-pdd-vertical text-semibold inline-block lh-1"
+                                           th:href="${'/mypage/' + user.id}"
+                                           th:text="${user.userName}">Brown</a>
+                                        <span class="sub-title">
                                             <span th:text="${user.email}">gracefulBrown@woowahan.com</span>
                                         </span>
-                                        </div>
                                     </div>
-                                </li>
-                            </ul>
-                        </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
-    </th:block>
+    </div>
 </div>
+
+<th:block th:replace="fragments/footer :: footerFragment"/>
+<th:block th:replace="fragments/script :: scriptFragment"/>
 </body>
 </html>
