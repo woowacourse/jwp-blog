@@ -2,17 +2,15 @@ package techcourse.myblog.web;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static techcourse.myblog.web.ControllerTestUtil.*;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -23,15 +21,7 @@ public class UserControllerTests {
 
     @BeforeEach
     void setUp() {
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", "Bob")
-                        .with("email", "test@gmail.com")
-                        .with("password", "PassWord1!")
-                        .with("reconfirmPassword", "PassWord1!"))
-                .exchange()
-                .expectStatus()
-                .isFound()
-        ;
+        signUp(webTestClient, NAME, EMAIL, PASSWORD);
     }
 
     @Test
@@ -56,7 +46,7 @@ public class UserControllerTests {
     void 유저_동일한_email() {
         webTestClient.post().uri("/users")
                 .body(BodyInserters.fromFormData("name", "Alice")
-                        .with("email", "test@gmail.com")
+                        .with("email", EMAIL)
                         .with("password", "PassWord1!")
                         .with("reconfirmPassword", "PassWord1!"))
                 .exchange()
@@ -67,60 +57,6 @@ public class UserControllerTests {
                     String body = new String(response.getResponseBody());
                     assertTrue(body.contains("중복된 이메일입니다!"));
                 })
-        ;
-    }
-
-    @Test
-    void 로그인후_메인화면() {
-        webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", "test@gmail.com")
-                        .with("password", "PassWord1!"))
-                .exchange()
-                .expectStatus()
-                .is3xxRedirection()
-        ;
-    }
-
-    @Test
-    void 로그인실패_이메일이_없는_경우() {
-        webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", "nothing@gmail.com")
-                        .with("password", "PassWord1!"))
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertTrue(body.contains("일치하는 email이 없습니다!"));
-                })
-        ;
-    }
-
-    @Test
-    void 로그인실패_비밀번호가_틀린_경우() {
-        webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", "test@gmail.com")
-                        .with("password", "PassWord1!!"))
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody()
-                .consumeWith(response -> {
-                    String body = new String(response.getResponseBody());
-                    assertTrue(body.contains("비밀번호가 일치하지 않습니다!"));
-                })
-        ;
-    }
-
-    @Test
-    void 로그인안하고_userlist_페이지접근시_로그인화면으로_이동() {
-        webTestClient.get().uri("/users")
-                .exchange()
-                .expectHeader()
-                .valueMatches("location", ".*/login")
-                .expectStatus()
-                .is3xxRedirection()
         ;
     }
 
@@ -148,7 +84,7 @@ public class UserControllerTests {
 
     @Test
     void 로그인_후_userlist_정상_이동() {
-        String cookie = getCookie();
+        String cookie = login(webTestClient, EMAIL, PASSWORD);
         webTestClient.get().uri("/users")
                 .header("Cookie", cookie)
                 .exchange()
@@ -159,7 +95,7 @@ public class UserControllerTests {
 
     @Test
     void 로그인_후_mypage_정상_이동() {
-        String cookie = getCookie();
+        String cookie = login(webTestClient, EMAIL, PASSWORD);
         webTestClient.get().uri("/mypage")
                 .header("Cookie", cookie)
                 .exchange()
@@ -170,45 +106,12 @@ public class UserControllerTests {
 
     @Test
     void 로그인_후_mypageedit_정상_이동() {
-        String cookie = getCookie();
+        String cookie = login(webTestClient, EMAIL, PASSWORD);
         webTestClient.get().uri("/mypage-edit")
                 .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk()
-        ;
-    }
-
-    private String getCookie() {
-        return webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", "test@gmail.com")
-                        .with("password", "PassWord1!"))
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .getFirst("Set-Cookie");
-    }
-
-    @Test
-    void 회원_이름_정상_수정() {
-        webTestClient.put().uri("/users/1")
-                .body(BodyInserters.fromFormData("name", "editName"))
-                .exchange()
-                .expectStatus()
-                .is3xxRedirection()
-                .expectBody()
-                .consumeWith(response -> {
-                    webTestClient.get().uri(response.getResponseHeaders().getLocation())
-                            .exchange()
-                            .expectBody()
-                            .consumeWith(response2 -> {
-                                String body = new String(response2.getResponseBody());
-                                assertTrue(body.contains("editName"));
-                            })
-                    ;
-                })
         ;
     }
 

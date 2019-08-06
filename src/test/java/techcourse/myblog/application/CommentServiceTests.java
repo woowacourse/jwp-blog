@@ -173,7 +173,7 @@ public class CommentServiceTests {
                 () -> commentService.updateComment(COMMENT_ID, userResponse, commentRequest));
     }
 
-    private UserResponse 사용자_응답_만들기(Long 아이디){
+    private UserResponse 사용자_응답_만들기(Long 아이디) {
         UserResponse 사용자_응답 = new UserResponse();
         사용자_응답.setId(아이디);
         사용자_응답.setName(NAME);

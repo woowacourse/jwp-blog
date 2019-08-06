@@ -9,26 +9,20 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.application.dto.ErrorResponse;
-import techcourse.myblog.application.dto.LoginRequest;
 import techcourse.myblog.application.dto.UserEditRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.web.ControllerTestUtil.*;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class UserAPIControllerTests {
-
-    private static final String NAME = "bmo";
-    private static final String EMAIL = "bmo@bmo.com";
-    private static final String PASSWORD = "Password123!";
     private static final String LONG_NAME = "abcdefghijk";
     private static final String WRONG_NAME = "123123";
     private static final String GOOD_NAME = "iamgood";
-    private static final String WRONG_PASSWORD = "WrongPassword";
 
     private String cookie;
 
@@ -38,33 +32,10 @@ public class UserAPIControllerTests {
     @BeforeEach
     void setUp() {
         // 회원가입
-        signUp(NAME, EMAIL, PASSWORD);
+        signUp(webTestClient, NAME, EMAIL, PASSWORD);
 
         // 로그인
-        cookie = login(EMAIL, PASSWORD);
-    }
-
-    private void signUp(String name, String email, String password) {
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange()
-        ;
-    }
-
-    private String login(String email, String password) {
-        LoginRequest request = new LoginRequest(email, password);
-
-        return webTestClient.post().uri("/login")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(request), LoginRequest.class)
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .getFirst("Set-Cookie");
+        cookie = login(webTestClient, EMAIL, PASSWORD);
     }
 
 

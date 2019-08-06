@@ -9,20 +9,17 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.application.dto.ErrorResponse;
 import techcourse.myblog.application.dto.LoginRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static techcourse.myblog.web.ControllerTestUtil.*;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class LoginAPIControllerTests {
-    private static final String NAME = "bmo";
-    private static final String EMAIL = "bmo@bmo.com";
-    private static final String PASSWORD = "Password123!";
     private static final String WRONG_PASSWORD = "WrongPassword";
 
     @Autowired
@@ -31,17 +28,8 @@ public class LoginAPIControllerTests {
     @BeforeEach
     void setUp() {
         // 회원가입
-        signUp(NAME, EMAIL, PASSWORD);
+        signUp(webTestClient, NAME, EMAIL, PASSWORD);
 
-    }
-
-    private void signUp(String name, String email, String password) {
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange()
-        ;
     }
 
     @Test
