@@ -11,6 +11,8 @@ import techcourse.myblog.service.ArticleReadService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.support.SessionUser;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/articles/{articleId}/comments")
 public class CommentController {
@@ -22,6 +24,12 @@ public class CommentController {
     public CommentController(CommentService commentService, ArticleReadService articleReadService) {
         this.commentService = commentService;
         this.articleReadService = articleReadService;
+    }
+
+    @GetMapping
+    @ResponseBody
+    public List<Comment> showComments(@PathVariable Long articleId) {
+        return commentService.findByArticleId(articleId);
     }
 
     @GetMapping("/count")
