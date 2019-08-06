@@ -1,61 +1,48 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <head th:include="fragments/main/main_head :: mainHead"></head>
-</head>
-<body>
-<div>
-    <div th:replace="fragments/main/header :: header"></div>
-    <div class="about-cover card no-border">
-        <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
-            <div class="display-block height-100">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      lang="ko">
+
+<th:block layout:fragment="content">
+    <div>
+        <th:block th:replace="fragment/header :: header"></th:block>
+
+        <div class="about-cover card no-border">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/bg.jpg')">
+                <div class="display-block height-100">
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="container-fluid z-10 bottom-120 relative max-width-lg mx-auto mrg-btm-30 padding-30">
-        <div class="row">
-            <div class="col-md-6 mx-auto">
-                <div class="card">
-                    <div class="card-heading border bottom">
-                        <h4 class="card-title">User List</h4>
-                    </div>
-                    <div class="card-body">
-                        <ul th:each="user : ${users}" class="list-unstyled list-info">
-                            <li>
-                                <div class="pdd-vertical-10">
-                                    <img class="thumb-img img-circle"
-                                         src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
-                                    <div class="info">
-                                        <a th:href="${'/accounts/profile/' + user.id}" th:text="${user.name}"
-                                           class="title no-pdd-vertical text-semibold inline-block lh-1">Brown</a>
-                                        <span class="sub-title">
-                                            <span th:text="${user.email}">gracefulBrown@woowahan.com</span>
-                                        </span>
+        <div class="container-fluid z-10 bottom-120 relative max-width-lg mx-auto mrg-btm-30 padding-30">
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <div class="card">
+                        <div class="card-heading border bottom">
+                            <h4 class="card-title">User List</h4>
+                        </div>
+                        <div class="card-body" th:if="${users} != null" th:each="user : ${users}" th:object="${user}">
+                            <ul class="list-unstyled list-info">
+                                <li>
+                                    <div class="pdd-vertical-10">
+                                        <img class="thumb-img img-circle"
+                                             src="https://avatars3.githubusercontent.com/u/46308949?s=460&v=4" alt="">
+                                        <div class="info">
+                                            <a href="" class="title no-pdd-vertical text-semibold inline-block lh-1" th:text="*{name}"></a>
+                                            <span class="sub-title">
+                                                <span th:text="*{email}"></span>
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                        </ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<footer class="content-footer">
-    <div class="footer">
-        <div class="copyright">
-            <img class="d-inline-block logo relative right-5" src="/images/logo/logo_full_dark.png">
-            <p class="pdd-left-5 mrg-top-minus-15px">Copyright © <b class="text-dark">우아한테크코스</b>. All rights reserved.
-            </p>
-        </div>
-        <a href="https://woowabros.github.io/" target="_blank" class="btn btn-default btn-rounded bg-transparent">우아한형제들
-            기술블로그</a>
-    </div>
-</footer>
-
-<div th:include="fragments/main/js :: js"></div>
-<script src="/js/index.js"></script>
-</body>
+    <th:block th:replace="fragment/footer :: main-footer"></th:block>
+</th:block>
 </html>

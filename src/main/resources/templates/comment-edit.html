@@ -1,47 +1,64 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <head th:include="fragments/main/main_head :: mainHead"></head>
-    <link rel="stylesheet" href="/css/article-edit.css">
-    <link rel="stylesheet" href="/css/article.css">
+    <link href="/css/article-edit.css" rel="stylesheet">
+    <th:block th:replace="fragment/article-head :: article-head"></th:block>
 </head>
-<body>
-<div>
-    <div th:replace="fragments/main/header :: header"></div>
-    <form th:action="${'/comment/' + comment.id}" th:method="put">
-        <div class="add-comment">
-            <input id="comment-contents" name="contents" type="hidden">
-<!--            <input name="id" th:value="${comment.id}" type="hidden">-->
-            <input name="articleId" th:value="${comment.article.id}" type="hidden">
-            <div id="editSection"></div>
+<th:block layout:fragment="content">
+    <div>
+        <th:block th:replace="fragment/header :: header"></th:block>
+
+        <div class="about-cover card no-border ">
+            <div class="cover-img overlay-dark bg" style="background-image: url('/images/pages/index/study.jpg')">
+                <!--th:style=" 'background-image:url(' + ${article.coverUrl} + ');' "-->
+            </div>
         </div>
-        <button id="comment-btn" type="submit" class="float-right pointer btn btn-icon">
-            수정
-        </button>
-    </form>
-</div>
 
-<div th:include="fragments/main/js :: js"></div>
-<script src="/js/index.js"></script>
-<script th:inline="javascript">
-    var initValue = "";
+        <form th:action="@{/articles/{articleId}/comments/{commentId}(articleId=${comments.article.id},commentId=${comments.id})}"
+              th:method="put">
+            <div class="container-fluid max-width-lg mx-auto mrg-btm-30">
+                <div class="row">
+                    <div class="col-lg-1 col-md-1"></div>
+                    <div class="col-lg-10 col-md-10 col-sm-10">
+                        <input id="comment-contents" name="contents" type="hidden">
+                        <div id="editSection"></div>
+                    </div>
+                    <div class="col-lg-1 col-md-1">
+                        <div class="btn-group btn-group-vertical">
+                            <button class="btn btn-default" id="save-btn" type="submit">
+                                <i class="ti-save"></i>
+                            </button>
+                            <a class="btn btn-default"
+                               th:href="@{/articles/{articleId}(articleId=${comments.article.id})}">
+                                <i class="ti-close"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</th:block>
 
-    const editor = new tui.Editor({
-        el: document.querySelector('#editSection'),
-        initialEditType: 'markdown',
-        previewStyle: 'vertical',
-        events: {
-            change: function () {
-                document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
-            }
-        },
-        height: 'calc(100vh - 360px)',
-        initialValue: initValue
-    });
+<th:block layout:fragment="custom-js">
+    <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 
-    if([[${comment}]]) {
-        editor.setValue([[${comment?.contents}]]);
-    }
-</script>
-</body>
+    <script th:inline="javascript" type="text/javascript">
+        const editor = new tui.Editor({
+            el: document.querySelector('#editSection'),
+            initialEditType: 'markdown',
+            previewStyle: 'vertical',
+            events: {
+                change: function () {
+                    document.getElementById('comment-contents').setAttribute('value', editor.getMarkdown())
+                }
+            },
+            initialValue: [[ ${comments.contents}]],
+            height: 'calc(100vh - 360px)'
+        });
+    </script>
+</th:block>
 </html>
