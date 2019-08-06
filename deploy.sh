@@ -1,6 +1,7 @@
 #!/bin/bash
 
 kill $(lsof -t -i:8080)
+cd jwp-blog
 git pull
-~/jwp-blog/gradlew clean build
-java -jar ~/jwp-blog/build/libs/$(ls ~/jwp-blog/build/libs) &
+./gradlew clean build
+java -jar ./build/libs/$(ls ./build/libs) &
