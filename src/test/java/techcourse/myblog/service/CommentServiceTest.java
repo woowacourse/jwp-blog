@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import techcourse.myblog.controller.dto.RequestCommentDto;
+import techcourse.myblog.controller.dto.ResponseCommentDto;
 import techcourse.myblog.model.Article;
 import techcourse.myblog.model.Comment;
 import techcourse.myblog.model.User;
@@ -72,7 +73,7 @@ class CommentServiceTest {
         given(commentRepository.findById(TEST_COMMENT_ID))
                 .willReturn(Optional.of(new Comment(COMMENTS_CONTENTS, USER, ARTICLE)));
 
-        Comment updatedComment = commentService.update(requestCommentDto, TEST_COMMENT_ID, USER);
+        ResponseCommentDto updatedComment = commentService.update(requestCommentDto, TEST_COMMENT_ID, USER);
 
         assertThat(updatedComment.getContents()).isEqualTo(COMMENTS_CONTENTS_2);
     }

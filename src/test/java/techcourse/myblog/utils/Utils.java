@@ -1,7 +1,9 @@
 package techcourse.myblog.utils;
 
+import io.restassured.http.ContentType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 import techcourse.myblog.controller.dto.ArticleDto;
 import techcourse.myblog.controller.dto.RequestCommentDto;
 import techcourse.myblog.controller.dto.LoginDto;
@@ -58,17 +60,17 @@ public class Utils {
                 .exchange();
     }
 
-    public static String createComment(RequestCommentDto requestCommentDto, String cookie, String baseUrl) {
-        return given()
-                .param("articleId", requestCommentDto.getArticleId())
-                .param("contents", requestCommentDto.getContents())
-                .cookie(cookie)
-                .post(baseUrl + "/comments")
-                .getHeader("Location");
+    public static void createComment(RequestCommentDto requestCommentDto, String cookie, WebTestClient webTestClient) {
+        webTestClient.post().uri("/comments")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .header("Cookie", cookie)
+                .body(Mono.just(requestCommentDto), RequestCommentDto.class)
+                .exchange();
     }
 
-    public static String getId(String articleUrl) {
-        List<String> list = Arrays.asList(articleUrl.split("/"));
+    public static String getId(String url) {
+        List<String> list = Arrays.asList(url.split("/"));
         return list.get(list.size() - 1);
     }
 }

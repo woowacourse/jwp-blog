@@ -31,7 +31,7 @@ public class CommentService {
         return new ResponseCommentDto(comment.getId(), comment.getAuthor().getUserName(), comment.getUpdateTime(), comment.getContents());
     }
 
-    private Article findByArticleId(Long articleId) {
+    public Article findByArticleId(Long articleId) {
         return articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException("게시글을 찾을 수 없습니다."));
     }
 
@@ -62,5 +62,9 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("댓글을 찾을수 없습니다."));
         comment.checkOwner(user);
         return comment;
+    }
+
+    public void deleteAll() {
+        commentRepository.deleteAll();
     }
 }
