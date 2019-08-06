@@ -11,6 +11,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.web.controller.BaseControllerTests;
+import techcourse.myblog.web.view.CommentResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,24 +28,21 @@ class CommentApiTest extends BaseControllerTests {
     ObjectMapper objectMapper;
 
     private String jSessionId;
+    private Long commentId;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         final String userPassword = "P@ssw0rd";
         final String userEmail = "emailArticle@gamil.com";
 
         addUser("name", userEmail, userPassword);
         jSessionId = getJSessionId(userEmail, userPassword);
-    }
 
-    @Test
-    public void create() throws IOException {
-
-        final String contents = "changed contents";
+        String contents = "changed contents";
         CommentDto.Create commentDto = new CommentDto.Create();
         commentDto.setContents(contents);
 
-        final EntityExchangeResult<byte[]> entityExchangeResult = webTestClient.post().uri("/api/articles/1/comments")
+        EntityExchangeResult<byte[]> entityExchangeResult = webTestClient.post().uri("/api/articles/1/comments")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .cookie(JSESSIONID, jSessionId)
@@ -55,9 +53,47 @@ class CommentApiTest extends BaseControllerTests {
                 .expectBody().returnResult();
 
         String body = new String(Objects.requireNonNull(entityExchangeResult.getResponseBody()));
+        CommentResponse commentResponses = new ObjectMapper().readValue(body, CommentResponse.class);
+        commentId = commentResponses.getId();
+    }
 
+    @Test
+    void list() throws IOException {
+        EntityExchangeResult<byte[]> entityExchangeResult = webTestClient.get().uri("/api/articles/1/comments")
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .cookie(JSESSIONID, jSessionId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody().returnResult();
+
+        String body = new String(Objects.requireNonNull(entityExchangeResult.getResponseBody()));
         List<CommentDto.Response> comments = new ObjectMapper().readValue(body, List.class);
-
         assertThat(comments).isNotEmpty();
+    }
+
+    @Test
+    void delete() throws IOException {
+        webTestClient.delete().uri("/api/articles/1/comments/{id}", commentId)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .cookie(JSESSIONID, jSessionId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8);
+    }
+
+    @Test
+    void update() throws IOException {
+        String contents = "changed contents";
+        CommentDto.Create commentDto = new CommentDto.Create();
+        commentDto.setContents(contents);
+
+        webTestClient.put().uri("/api/articles/1/comments/{id}", commentId)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .cookie(JSESSIONID, jSessionId)
+                .body(Mono.just(commentDto), CommentDto.Create.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8);
     }
 }

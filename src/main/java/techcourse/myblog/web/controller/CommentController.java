@@ -9,6 +9,7 @@ import techcourse.myblog.dto.CommentDto;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.UserSession;
 
+@Deprecated
 @Controller
 @RequestMapping("/articles/{articleId}/comments")
 @RequiredArgsConstructor
