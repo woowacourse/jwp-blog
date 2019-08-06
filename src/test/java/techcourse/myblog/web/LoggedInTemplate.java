@@ -25,29 +25,25 @@ public class LoggedInTemplate extends SignUpTemplate {
     public WebTestClient.RequestBodySpec loggedInPostRequest(String uri) {
         return webTestClient.post()
                 .uri(uri)
-                .header("Cookie", getCookie())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+                .header("Cookie", getCookie());
     }
 
     public WebTestClient.RequestBodySpec loggedInPostRequest(String uri, String email, String password) {
         return webTestClient.post()
                 .uri(uri)
-                .header("Cookie", getCookie(email, password))
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+                .header("Cookie", getCookie(email, password));
     }
 
     public WebTestClient.RequestBodySpec loggedInPutRequest(String uri) {
         return webTestClient.put()
                 .uri(uri)
-                .header("Cookie", getCookie())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+                .header("Cookie", getCookie());
     }
 
     public WebTestClient.RequestBodySpec loggedInPutRequest(String uri, String email, String password) {
         return webTestClient.put()
                 .uri(uri)
-                .header("Cookie", getCookie(email, password))
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED);
+                .header("Cookie", getCookie(email, password));
     }
 
     public WebTestClient.RequestHeadersSpec loggedInDeleteRequest(String uri) {
