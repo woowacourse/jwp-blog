@@ -1,12 +1,11 @@
 package techcourse.myblog.utils;
 
-import io.restassured.http.ContentType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.controller.dto.ArticleDto;
-import techcourse.myblog.controller.dto.RequestCommentDto;
 import techcourse.myblog.controller.dto.LoginDto;
+import techcourse.myblog.controller.dto.RequestCommentDto;
 import techcourse.myblog.controller.dto.UserDto;
 
 import java.nio.charset.StandardCharsets;

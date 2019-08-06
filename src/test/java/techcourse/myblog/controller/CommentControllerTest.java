@@ -9,22 +9,14 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.controller.dto.ArticleDto;
-import techcourse.myblog.controller.dto.RequestCommentDto;
 import techcourse.myblog.controller.dto.LoginDto;
+import techcourse.myblog.controller.dto.RequestCommentDto;
 import techcourse.myblog.controller.dto.UserDto;
-import techcourse.myblog.model.Article;
-import techcourse.myblog.model.Comment;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.utils.Utils;
-
-import java.net.URI;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -174,6 +166,6 @@ class CommentControllerTest {
 
     @AfterEach
     void tearDown() {
-        commentService.deleteAll();
+//        commentService.deleteAll();
     }
 }
