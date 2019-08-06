@@ -122,6 +122,8 @@
     });
 </script>
 <script>
+    const BASE_URL = `http://${window.location.host}`
+
     const commentGenerator = (id, contents, authorName) => {
         return `<li class="comment-item border bottom mrg-btm-30">
                     <img class="thumb-img img-circle"
@@ -202,13 +204,13 @@
     const articleId = url.replace("/articles/", "")
 
 
-    const loadComments = (id) => {
-        fetch('http://localhost:8080/comments?articleId=' + id)
+    const loadComments = (articleId) => {
+        fetch(`${BASE_URL}/comments?articleId=${articleId}`)
             .then(response => {
                 if (response.ok) {
                     return response.json()
                 }
-                throw new Error('dasdsdasdsdsadasd!!!!')
+                throw new Error('댓글을 불러오는 중 에러 발생')
             })
             .then(comments => {
                 commentList.innerHTML = ''
@@ -230,7 +232,7 @@
             alert('댓글을 입력해주세요')
             return
         }
-        fetch('http://localhost:8080/comments', {
+        fetch(`${BASE_URL}/comments`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -242,7 +244,7 @@
                 if (response.ok) {
                     return response.json()
                 }
-                throw new Error('asdfgh!!!!')
+                throw new Error('댓글 저장 중 실패!')
             })
             .then(() => {
                 getCountOfComment(articleId)
@@ -270,7 +272,7 @@
             return
         }
 
-        fetch('http://localhost:8080/comments/' + id, {
+        fetch(`${BASE_URL}/comments/${id}`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -296,7 +298,7 @@
     }
 
     const deleteComment = (id) => {
-        fetch('http://localhost:8080/comments/' + id, {
+        fetch(`${BASE_URL}/comments/${id}`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -321,7 +323,7 @@
     }
 
     function getCountOfComment(articleId) {
-        fetch('http://localhost:8080/comments/total?articleId=' + articleId)
+        fetch(`${BASE_URL}/comments/total?articleId=${articleId}`)
             .then(response => {
                 if (response.ok) {
                     return response.text()
