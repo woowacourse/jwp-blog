@@ -108,32 +108,38 @@ const articleApp = (function () {
         }
 
         const update = function (event) {
-            const litag =event.target.closest('li')
-            const input = litag.querySelector('input')
-            const updateCommentId = litag.querySelectorAll('div')[1].id;
-            console.log("this is the id: " + updateCommentId);
-            const updateCommentContents = input.value;
-            const commenterEmail = litag.querySelector('span').innerText;
-            console.log(commenterEmail);
-            console.log("this is the contents: " + updateCommentContents);
-            fetch("http://localhost:8080/articles/" + articleId + "/jsoncomments/" + updateCommentId, {
-                method: "PUT",
-                body: JSON.stringify({
-                    email: commenterEmail,
-                    contents: updateCommentContents,
-                    articleId: articleId,
-                    id: updateCommentId
-                }),
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8",
-                    "Accept": "application/json; charset=UTF-8"
-                }
-            })
-                .then(response => response.json())
-                .then(function (json) {
-                    console.log(json)
-                });
-
+            if(event.target.classList.contains("btn-icon")) {
+                const litag = event.target.closest('li')
+                const ptag = litag.querySelector('p')
+                const confirmButton = litag.querySelector('button')
+                const input = litag.querySelector('input')
+                const updateCommentId = litag.querySelectorAll('div')[1].id;
+                console.log("this is the id: " + updateCommentId);
+                const updateCommentContents = input.value;
+                const commenterEmail = litag.querySelector('span').innerText;
+                console.log(commenterEmail);
+                console.log("this is the contents: " + updateCommentContents);
+                fetch("http://localhost:8080/articles/" + articleId + "/jsoncomments/" + updateCommentId, {
+                    method: "PUT",
+                    body: JSON.stringify({
+                        email: commenterEmail,
+                        contents: updateCommentContents,
+                        articleId: articleId,
+                        id: updateCommentId
+                    }),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8",
+                        "Accept": "application/json; charset=UTF-8"
+                    }
+                })
+                    .then(response => response.json())
+                    .then(function (json) {
+                        console.log(json)
+                        input.setAttribute('style', "visibility:hidden");
+                        confirmButton.setAttribute('style', "visibility:hidden");
+                        ptag.innerText = json.contents;
+                    });
+            }
         }
         return {
             save: save,
