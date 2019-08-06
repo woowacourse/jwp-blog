@@ -7,6 +7,27 @@
         </layout>
     </appender>
 
+    <property name="LOG_HOME" value="C:\\Users\\gusud\\Desktop\\log" />
+
+    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/log.txt</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_HOME}/log-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>500MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+
+            <!-- maximum number of archive files to keep, deleting older files. For example, if you specify monthly rollover, and set maxHistory to 6, then 6 months worth of archives files will be kept with files older than 6 months deleted. -->
+            <maxHistory>6</maxHistory>
+
+        </rollingPolicy>
+        <encoder>
+            <Pattern>%d{HH:mm:ss.SSS} [%-5level] [%thread] [%logger{36}] - %m%n</Pattern>
+        </encoder>
+    </appender>
+
     <!-- 자바 패키지별 log level을 설정한다. -->
     <logger name="test" level="ERROR" />
 
@@ -15,5 +36,6 @@
     <!-- 기본 log level을 설정한다. -->
     <root level="INFO">
         <appender-ref ref="STDOUT" />
+        <appender-ref ref="ROLLING" />
     </root>
 </configuration>
