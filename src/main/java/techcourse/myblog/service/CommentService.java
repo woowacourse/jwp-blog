@@ -16,9 +16,11 @@ import java.util.stream.Collectors;
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final ArticleService articleService;
 
-    public CommentService(CommentRepository commentRepository) {
+    public CommentService(CommentRepository commentRepository, ArticleService articleService) {
         this.commentRepository = commentRepository;
+        this.articleService = articleService;
     }
 
     @Transactional
@@ -48,5 +50,12 @@ public class CommentService {
 
     public void deleteById(long commentId) {
         commentRepository.deleteById(commentId);
+    }
+
+    public List<CommentResponseDto> findByArticleId(long articleId) {
+        return findByArticle(articleService.findById(articleId))
+                .stream()
+                .map(CommentResponseDto::new)
+                .collect(Collectors.toList());
     }
 }
