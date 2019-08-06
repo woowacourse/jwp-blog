@@ -35,9 +35,10 @@ public class CommentController {
         return commentService.findByArticleId(articleId);
     }
 
+    @ResponseBody
     @DeleteMapping("/{commentId}")
-    public String deleteComment(@PathVariable final Long articleId, @PathVariable final Long commentId, final AccessUserInfo accessUserInfo) {
+    public List<CommentResponse> deleteComment(@PathVariable final Long articleId, @PathVariable final Long commentId, final AccessUserInfo accessUserInfo) {
         commentService.delete(commentId, accessUserInfo.getUser());
-        return "redirect:/articles/" + articleId;
+        return commentService.findByArticleId(articleId);
     }
 }
