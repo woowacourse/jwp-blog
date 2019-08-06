@@ -136,6 +136,8 @@
 <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
 <script src="/js/comment.js"></script>
 <script th:inline="javascript">
+    const DOMAIN_URL = location.protocol + "//" + location.host;
+
     const commentHTML = "<li class=\"comment-item border bottom mrg-btm-30\">\n" +
         "                            <img class=\"thumb-img img-circle\"\n" +
         "                                 src=\"https://avatars3.githubusercontent.com/u/50367798?v=4\" alt=\"\">\n" +
@@ -199,7 +201,7 @@
     document.getElementById("save-btn").addEventListener("click", function (e) {
         const articleId = [[${article.id}]]
         console.log("adsfsadfqwerqwer");
-        const URL = "http://localhost:8080/comment"
+        const URL = DOMAIN_URL + "/comment";
         const obj = {
             method: 'POST',
             body: JSON.stringify({
@@ -229,7 +231,7 @@
     const handleUpdate = function (e) {
         console.log("update 실행");
         const url = document.getElementById("comment-update-url").value;
-        const URL = "http://localhost:8080/" + url;
+        const URL = DOMAIN_URL + url;
         const obj = {
             method: 'PUT',
             body: JSON.stringify({
@@ -269,14 +271,11 @@
     const handleDelete = function (e) {
         console.log("delete 실행");
         const url = document.getElementById("comment-update-url").value;
-        const URL = "http://localhost:8080/" + url;
+        const URL = DOMAIN_URL + url;
         fetch(URL)
             .then(function (response) {
                 console.log("삭제 결과물 " + response);
             })
-
     }
-
-
 </script>
 </html>
