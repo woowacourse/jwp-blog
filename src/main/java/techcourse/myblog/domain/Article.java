@@ -1,41 +1,63 @@
 package techcourse.myblog.domain;
 
-import lombok.Builder;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import techcourse.myblog.domain.exception.InvalidAccessException;
 
 import javax.persistence.*;
 
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
 @Entity
-public class Article {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@EqualsAndHashCode(callSuper = false)
+@Getter
+public class Article extends AuditLog {
+    private static final String INVALID_ERROR = "작성자가 아닙니다.";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "id")
+    private long id;
 
-    @Column(name = "title", length = 500, nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "contents", length = 6000, nullable = false, columnDefinition = "TEXT")
-    private String contents;
-
-    @Column(name = "coverUrl", length = 1000, nullable = false)
+    @Column(name = "coverUrl", nullable = false)
     private String coverUrl;
 
-    public Article(int id, String title, String contents, String coverUrl) {
-        this.id = id;
+    @Lob
+    @Column(name = "contents", nullable = false)
+    private String contents;
+
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"), nullable = false)
+    private User author;
+
+    public Article(String title, String coverUrl, String contents) {
         this.title = title;
-        this.contents = contents;
         this.coverUrl = coverUrl;
+        this.contents = contents;
     }
 
-    public void updateArticle(String title, String coverUrl, String contents) {
-        this.title = title;
-        this.coverUrl = coverUrl;
-        this.contents = contents;
+    public void update(Article articleToUpdate, long loginUserId) {
+        isAuthor(loginUserId);
+        this.title = articleToUpdate.title;
+        this.coverUrl = articleToUpdate.coverUrl;
+        this.contents = articleToUpdate.contents;
+    }
+
+    public void setAuthor(User persistUser) {
+        this.author = persistUser;
+    }
+
+    public void isAuthor(long loginUserId) {
+        if (loginUserId == id) {
+            return;
+        }
+
+        throw new InvalidAccessException(INVALID_ERROR);
     }
 }

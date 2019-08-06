@@ -1,75 +1,55 @@
 package techcourse.myblog.service;
 
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.repository.UserRepository;
-import techcourse.myblog.dto.UserDto;
-import techcourse.myblog.dto.UserLoginDto;
-import techcourse.myblog.exception.UserException;
+import techcourse.myblog.domain.exception.DuplicateEmailException;
+import techcourse.myblog.domain.repository.UserRepository;
+import techcourse.myblog.dto.MyPageDto;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
+
+import static java.util.Collections.unmodifiableList;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
+    private static final String DUPLICATED_ERROR = "중복된 Email 입니다.";
+
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
 
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Transactional
+    public User updateUserInfo(long id, MyPageDto userInfo) {
+        User user = userRepository.findUserById(id);
+        user.updateUserInfo(userInfo.getName());
+        return user;
+    }
+
+    @Transactional
+    public User save(User user) {
+        if (userRepository.findUserByEmail(user.getEmail()) != null) {
+            throw new DuplicateEmailException(DUPLICATED_ERROR);
+        }
+        return userRepository.save(user);
+    }
+
+    @Transactional(readOnly = true)
     public List<User> findAll() {
-        return userRepository.findAll();
+        return unmodifiableList(userRepository.findAll());
     }
 
     @Transactional
-    public void delete(String email) {
-        User user = userRepository.findUserByEmail(email);
-
-        if (!email.equals(user.getEmail())) {
-            throw new UserException("작성자가 아닙니다.");
-        }
-
-        userRepository.delete(user);
+    public void deleteById(long id) {
+        userRepository.deleteById(id);
     }
 
     @Transactional
-    public UserDto save(String sessionEmail, UserDto userDto) {
-        if (!sessionEmail.equals(userDto.getEmail())) {
-            throw new UserException("인증된 사용자 정보가 아닙니다.");
-        }
-
-        User user = userRepository.findUserByEmail(userDto.getEmail());
-        user.updateUser(userDto.getName(), userDto.getPassword());
-
-        return userDto;
-    }
-
-    public User login(UserLoginDto loginDto) {
-        User dbUser = userRepository.findUserByEmail(loginDto.getEmail());
-
-        if (!dbUser.checkPassword(loginDto.getPassword())) {
-            throw new UserException("패스워드가 올바르지 않습니다.");
-        }
-
-        return dbUser;
-    }
-
-    public void signUpUser(UserDto userDto) {
-        if (!isNull(userDto.getEmail())) {
-            throw new UserException("유저가 이미 존재합니다.");
-        }
-
-        User user = modelMapper.map(userDto, User.class);
-        userRepository.save(user);
-    }
-
-    public User findUser(String email) {
-        return userRepository.findUserByEmail(email);
-    }
-
-    private boolean isNull(String email) {
-        return Objects.isNull(userRepository.findUserByEmail(email));
+    public User findUserById(long id) {
+        return userRepository.findUserById(id);
     }
 }

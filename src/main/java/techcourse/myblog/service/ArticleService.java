@@ -1,52 +1,60 @@
 package techcourse.myblog.service;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.Article;
-import techcourse.myblog.dto.ArticleDto;
-import techcourse.myblog.exception.ArticleException;
-import techcourse.myblog.repository.ArticleRepository;
+import techcourse.myblog.domain.exception.ArticleNotFoundException;
+import techcourse.myblog.domain.repository.ArticleRepository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
-@Slf4j
+import static java.util.Collections.unmodifiableList;
+
 @Service
-@RequiredArgsConstructor
 public class ArticleService {
+    private static final String ARTICLE_ERROR = "해당하는 게시글을 찾지 못했습니다.";
+
     private final ArticleRepository articleRepository;
-    private final ModelMapper modelMapper;
 
+    @Autowired
+    public ArticleService(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
+
+    @Transactional(readOnly = true)
     public List<Article> findAll() {
-        return articleRepository.findAll();
-    }
-
-    public Article findById(int id) {
-        return articleRepository.findById(id).orElseThrow(() -> {
-            log.error("사용자를 찾을 수 없음 : id >>> {}", id);
-            return new ArticleException("id를 찾을 수 없습니다.");
-        });
+        return unmodifiableList(articleRepository.findAll());
     }
 
     @Transactional
-    public void deleteById(int id) {
-        articleRepository.deleteById(id);
-    }
-
-    @Transactional
-    public Article write(ArticleDto articleDto) {
-        Article article = modelMapper.map(articleDto, Article.class);
+    public Article save(Article article) {
         return articleRepository.save(article);
     }
 
     @Transactional
-    public Article update(ArticleDto articleDto, int articleId) {
-        Article dbArticle = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException("id를 찾을 수 없습니다."));
+    public Article findById(long articleId) {
+        return articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException(ARTICLE_ERROR));
+    }
 
-        dbArticle.updateArticle(articleDto.getTitle(), articleDto.getCoverUrl(), articleDto.getContents());
+    @Transactional
+    public Article findById(long articleId, long loginUserId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleNotFoundException(ARTICLE_ERROR));
+        article.isAuthor(loginUserId);
+        return article;
+    }
 
-        return dbArticle;
+    @Transactional
+    public Article update(long id, Article articleToUpdate) {
+        Article originArticle = articleRepository.findArticleById(id);
+        long loginUserId = articleToUpdate.getAuthor().getId();
+        originArticle.update(articleToUpdate, loginUserId);
+
+        return originArticle;
+    }
+
+    @Transactional
+    public void deleteById(long id) {
+        articleRepository.deleteById(id);
     }
 }
