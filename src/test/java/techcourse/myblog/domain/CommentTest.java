@@ -12,7 +12,7 @@ public class CommentTest {
 
     @BeforeEach
     void setUp() {
-        author = new User("userName", "woowa@gmail.com", "Password123!");
+        author = new User("userName", "Password123!", "woowa@gmail.com");
         article = new Article(author, "title", "goodPicture.jpg", "contents");
     }
 

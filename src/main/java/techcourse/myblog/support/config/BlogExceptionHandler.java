@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import techcourse.myblog.application.dto.*;
+import techcourse.myblog.application.dto.BaseResponse;
+import techcourse.myblog.application.dto.ErrorResponse;
+import techcourse.myblog.application.dto.LoginRequest;
+import techcourse.myblog.application.dto.UserEditRequest;
 import techcourse.myblog.application.exception.*;
 
 @ControllerAdvice

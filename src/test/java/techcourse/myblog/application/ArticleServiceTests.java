@@ -45,8 +45,8 @@ public class ArticleServiceTests {
     @Mock
     private ModelMapper modelMapper;
 
-    private User user = new User("bmo", "bmo@gmail.com", "Password123!");
-    private User notAuthorUser = new User("remo", "remo@reader.com", "Password123!");
+    private User user = new User("bmo", "Password123!", "bmo@gmail.com");
+    private User notAuthorUser = new User("remo", "Password123!", "remo@reader.com");
     private UserResponse userResponse = createUserResponse(USER_ID);
     private UserResponse notAuthorResponse = createUserResponse(NOT_AUTHOR_USER_ID);
     private Article article = new Article(user, "title", "coverUrl", "contents");

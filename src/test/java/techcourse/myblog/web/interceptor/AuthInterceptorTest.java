@@ -1,5 +1,6 @@
 package techcourse.myblog.web.interceptor;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,20 +8,34 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
-import techcourse.myblog.domain.User;
+
+import static techcourse.myblog.web.ControllerTestUtil.*;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthInterceptorTest {
+
+    private String cookie;
+
     @Autowired
     private WebTestClient webTestClient;
 
+    @BeforeEach
+    void setUp() {
+        // 회원 가입
+        signUp(webTestClient, NAME, EMAIL, PASSWORD);
+
+        // 로그인
+
+        cookie = login(webTestClient, EMAIL, PASSWORD);
+    }
+
     @Test
     void 로그인후_userlist_페이지_접근() {
-        login();
+        login(webTestClient, EMAIL, PASSWORD);
         webTestClient.get().uri("/users")
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -33,14 +48,14 @@ public class AuthInterceptorTest {
                 .expectStatus()
                 .isFound()
                 .expectHeader()
-                .valueMatches("location", ".*/login")
+                .valueMatches("Location", ".*/login.*")
         ;
     }
 
     @Test
     void 로그인후_mypage_페이지_접근() {
-        login();
         webTestClient.get().uri("/mypage")
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -59,8 +74,8 @@ public class AuthInterceptorTest {
 
     @Test
     void 로그인후_mypage_edit_페이지_접근() {
-        login();
         webTestClient.get().uri("/mypage-edit")
+                .header("Cookie", cookie)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -87,24 +102,4 @@ public class AuthInterceptorTest {
                 .valueMatches("location", ".*/login");
     }
 
-    @Test
-    void 로그인_후_댓글_작성() {
-        login();
-        webTestClient.post().uri("/articles/1/comments")
-                .body(BodyInserters.fromFormData("contents", "contents"))
-                .exchange()
-                .expectStatus()
-                .isOk()
-        ;
-    }
-
-    private void login() {
-        webTestClient = WebTestClient.bindToWebHandler(exchange ->
-                exchange.getSession()
-                        .doOnNext(webSession ->
-                                webSession.getAttributes().put("user",
-                                        new User("CODEMCD", "iloveCU@gmail.com", "PassWord!1")))
-                        .then()
-        ).build();
-    }
 }

@@ -9,7 +9,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 import techcourse.myblog.application.dto.CommentRequest;
 import techcourse.myblog.application.dto.CommentResponse;
@@ -17,21 +16,17 @@ import techcourse.myblog.application.dto.ErrorResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static techcourse.myblog.web.ControllerTestUtil.*;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 public class CommentAPIControllerTests {
 
-    private static final String name = "bmo";
-    private static final String email = "bmo@bmo.com";
-    private static final String password = "Password123!";
-    private static final String title = "googler bmo";
-    private static final String coverUrl = "bmo.jpg";
-    private static final String contents = "why bmo so great?";
+
     private static final String BLANK = " ";
-    private static final String name2 = "cmo";
-    private static final String email2 = "cmo@cmo.com";
+    private static final String NAME2 = "cmo";
+    private static final String EMAIL2 = "cmo@cmo.com";
 
     private String cookie;
 
@@ -42,44 +37,14 @@ public class CommentAPIControllerTests {
     void setUp() {
 
         // 회원가입
-        signup(name, email, password);
-        signup(name2, email2, password);
+        signUp(webTestClient, NAME, EMAIL, PASSWORD);
+        signUp(webTestClient, NAME2, EMAIL2, PASSWORD);
 
         // 로그인
-        cookie = login(email, password);
+        cookie = login(webTestClient, EMAIL, PASSWORD);
 
         // 게시글 작성
-        webTestClient.post()
-                .uri("/articles")
-                .header("Cookie", cookie)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("title", title)
-                        .with("coverUrl", coverUrl)
-                        .with("contents", contents))
-                .exchange()
-        ;
-    }
-
-    private String login(String email, String password) {
-        return webTestClient.post().uri("/login")
-                .body(BodyInserters.fromFormData("email", email)
-                        .with("password", password))
-                .exchange()
-                .expectStatus()
-                .isFound()
-                .returnResult(String.class)
-                .getResponseHeaders()
-                .getFirst("Set-Cookie");
-    }
-
-    private void signup(String name, String email, String password) {
-        webTestClient.post().uri("/users")
-                .body(BodyInserters.fromFormData("name", name)
-                        .with("email", email)
-                        .with("password", password))
-                .exchange()
-        ;
+        writeArticle(webTestClient, TITLE, COVER_URL, CONTENTS, cookie);
     }
 
     @Test
@@ -109,7 +74,7 @@ public class CommentAPIControllerTests {
     @Test
     void 작성자가_아닌_사람이_댓글_수정_시도_실패() {
         // 작성자가 아닌 사용자로 로그인
-        String anotherUserCookie = login(email2, password);
+        String anotherUserCookie = login(webTestClient, EMAIL2, PASSWORD);
 
         // 댓글 작성
         String commentContents = "comment contents";
@@ -188,7 +153,7 @@ public class CommentAPIControllerTests {
     @Test
     void 작성자가_아닌_유저가_댓글_삭제시_예외_발생() {
         // 작성자가 아닌 사용자로 로그인
-        String anotherUserCookie = login(email2, password);
+        String anotherUserCookie = login(webTestClient, EMAIL2, PASSWORD);
 
         // 댓글 작성
         String commentContents = "comment contents";
