@@ -1,4 +1,4 @@
-#!/usr/bin/zsh
+#!/bin/bash
 
 kill $(lsof -t -i:8080)
 git pull
