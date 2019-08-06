@@ -65,7 +65,8 @@
                 <div class="col-lg-10 col-md-10 col-sm-10 mx-auto mrg-top-30">
                     <div class="width-100 border bottom mrg-btm-20 pdd-btm-10">
                         <span class="font-size-16">댓글</span>
-                        <span class="font-size-16 text-info" th:text="${#lists.size(comments)}"></span>
+                        <span class="font-size-16 text-info" id="comment-count"
+                              th:text="${#lists.size(comments)}"></span>
                     </div>
                     <div class="comment">
                         <ul class="list-unstyled list-info" id="comment-list">
@@ -76,14 +77,12 @@
                                     <a class="text-bold inline-block"
                                        th:href="@{/mypage/{userId}(userId=${comment.author.id})}"
                                        th:text="${comment.author.name.name}"></a>
-                                    <form th:action="@{/articles/{articleId}/comments/{commentId}(articleId=${article.id},commentId=${comment.id})}"
-                                          th:method="delete">
-                                        <button class="inline-block sub-title pull-right"
-                                                th:if="${session.user.id == comment.author.id}" type="submit">
+                                    <a class="inline-block sub-title pull-right"
+                                       th:if="${session.user.id == comment.author.id}">
                                             <i class="ti-trash text-dark font-size-16 pdd-horizontal-5 delete-comment-btn"></i>
-                                        </button>
-                                    </form>
-                                    <a class="inline-block sub-title pull-right">
+                                    </a>
+                                    <a class="inline-block sub-title pull-right"
+                                       th:if="${session.user.id == comment.author.id}">
                                         <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5 edit-comment-btn"></i>
                                     </a>
                                     <p th:id="comment+${comment.id}" class="width-80 tempComment" style="display: block"
