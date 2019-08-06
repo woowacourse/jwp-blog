@@ -1,4 +1,4 @@
-REPOSITORY=/home/ubuntu
+REPOSITORY=/home/ubuntu/git
 
 cd $REPOSITORY/jwp-blog/
 
@@ -24,4 +24,4 @@ JAR_NAME=$(ls $REPOSITORY/ |grep 'myblog' | tail -n 1)
 
 echo "> JAR Name: $JAR_NAME"
 
-nohup java -jav $REPOSITORY/$JAR_NAME &
+nohup java -jar $REPOSITORY/$JAR_NAME &
