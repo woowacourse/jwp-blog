@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.application.dto.CommentRequest;
 
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
@@ -71,4 +73,24 @@ public class ControllerTemplate {
                 .exchange()
                 ;
     }
+
+    public WebTestClient.BodyContentSpec requestWriteCommentAjax(String cookie, String contents) {
+        CommentRequest commentRequest = new CommentRequest(contents);
+        return webTestClient.post()
+                .uri("/articles/1/comments")
+                .header("Cookie", cookie)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentRequest), CommentRequest.class)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.contents").isNotEmpty()
+                .jsonPath("$.contents").isEqualTo(contents);
+    }
+
+
 }

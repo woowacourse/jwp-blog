@@ -6,6 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Mono;
+import techcourse.myblog.application.dto.CommentRequest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -41,44 +43,43 @@ public class CommentControllerTests extends ControllerTemplate {
         // 게시글 작성
         requestWriteArticle(cookie1, TITLE, COVER_URL, CONTENTS);
 
-        // 댓글 작성 성공 테스트
-        requestWriteComment(cookie1, COMMENT_CONTENTS)
-                .expectStatus()
-                .isFound()
-                .expectHeader()
-                .valueMatches("location", ".*/articles/1")
-        ;
+        // 댓글 작성
+        requestWriteCommentAjax(cookie1, COMMENT_CONTENTS);
     }
 
     @Test
     void 댓글_수정_성공_테스트() {
         String updatedContents = "ThisIsUpdatedCommentContents";
+        CommentRequest commentRequest = new CommentRequest(updatedContents);
+
         webTestClient.put()
                 .uri("/articles/1/comments/1")
                 .header("Cookie", cookie1)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("contents", updatedContents))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
                 .expectStatus()
-                .isFound()
+                .isOk()
                 .expectHeader()
-                .valueMatches("location", ".*/articles/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$.contents").isNotEmpty()
+                .jsonPath("$.contents").isEqualTo(updatedContents)
         ;
     }
 
     @Test
     void 다른_유저가_댓글_수정하는_오류() {
         String updatedContents = "ThisIsUpdatedCommentContents";
+        CommentRequest commentRequest = new CommentRequest(updatedContents);
         webTestClient.put()
                 .uri("/articles/1/comments/1")
                 .header("Cookie", cookie2)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("contents", updatedContents))
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentRequest), CommentRequest.class)
                 .exchange()
                 .expectStatus()
-                .isFound()
+                .is4xxClientError()
                 .expectHeader()
                 .valueMatches("location", ".*/")
         ;
@@ -88,12 +89,10 @@ public class CommentControllerTests extends ControllerTemplate {
     void 댓글_삭제_성공_테스트() {
         webTestClient.delete()
                 .uri("/articles/1/comments/1")
-                .header("Cookie", cookie2)
+                .header("Cookie", cookie1)
                 .exchange()
                 .expectStatus()
-                .isFound()
-                .expectHeader()
-                .valueMatches("location", ".*/")
+                .isOk()
         ;
     }
 
@@ -104,7 +103,7 @@ public class CommentControllerTests extends ControllerTemplate {
                 .header("Cookie", cookie2)
                 .exchange()
                 .expectStatus()
-                .isFound()
+                .is4xxClientError()
                 .expectHeader()
                 .valueMatches("location", ".*/")
         ;
