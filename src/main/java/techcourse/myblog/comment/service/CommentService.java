@@ -41,11 +41,13 @@ public class CommentService {
         return comment;
     }
 
-    public void update(Long commentId, CommentRequestDto commentRequestDto, UserResponseDto userResponseDto) {
+    public Comment update(Long commentId, CommentRequestDto commentRequestDto, UserResponseDto userResponseDto) {
         Comment comment = getCommentById(commentId);
 
         checkAuthentication(commentId, userResponseDto);
         comment.update(commentRequestDto, userService.getUserByEmail(userResponseDto.getEmail()));
+
+        return comment;
     }
 
     private Comment getCommentById(Long commentId) {
