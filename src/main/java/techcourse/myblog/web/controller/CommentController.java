@@ -1,5 +1,6 @@
 package techcourse.myblog.web.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import techcourse.myblog.service.ArticleService;
 import techcourse.myblog.service.CommentService;
 import techcourse.myblog.web.annotation.LoginUser;
 
+@Slf4j
 @RestController
 @RequestMapping("/articles/{articleId}/comments")
 public class CommentController {
@@ -27,6 +29,7 @@ public class CommentController {
 
     @GetMapping
     public ResponseEntity<Comments> getComments(@PathVariable long articleId) {
+        log.info("articleId : {}", articleId);
         Article article = articleService.findById(articleId);
         Comments comments = commentService.findByArticle(article);
         return new ResponseEntity<>(comments, HttpStatus.OK);
@@ -34,6 +37,9 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<Comment> createComment(@RequestBody CommentDto commentDto, @PathVariable long articleId, @LoginUser User loginUser) {
+        log.info("articleId : {}", articleId);
+        log.info("loginUser : {}", loginUser);
+        log.info("CommentDto : {}", commentDto);
         Comment comment = convert(commentDto, loginUser, articleId);
         Comment savedComment = commentService.save(comment);
         return new ResponseEntity<>(savedComment, HttpStatus.OK);

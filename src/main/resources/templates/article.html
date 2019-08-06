@@ -265,24 +265,21 @@
                 <i class="ti-timer pdd-right-5"></i>
                 <span>${comment.updatedDate}</span>
             </span>
-            <form th:action="${'comments/' + comment.id}" th:method="put">
-                <p class="width-80" th:id="'contents-' + ${comment.id}">${comment.contents}</p>
+            <div class="comment-body">
+                <p class="comment-content width-80">${comment.contents}</p>
                 <div class="btn-group btn-group-horizontal">
-                     <button class="float-right pointer btn btn-icon" type="submit">
+                     <button class="float-right pointer btn btn-icon edit" data-id="${comment.id}" type="submit">
                         <i class="ti-pencil text-dark font-size-16 pdd-horizontal-5"></i>
                     </button>
-                    <button type="submit" class="float-right btn btn-default no-border-line" style="border:transparent; background:transparent;">
+                    <button type="submit" class="float-right btn btn-default no-border-line delete" data-id="${comment.id}" style="border:transparent; background:transparent;">
                         <i class="ti-trash font-size-16"></i>
                     </button>
                 </div>
-            </form>
+            </div>
 
         </div>
         </span>
     </li>
-
-
-
     `
 
     const createButton = document.getElementById("save-btn")
@@ -307,6 +304,38 @@
 
     createButton.addEventListener("click", createComment)
 
+    const updateAndDeleteComment = (event) => {
+        event.preventDefault()
+        console.log(event)
+        if (event.target.tagName === 'BUTTON' && event.target.classList.contains("edit")) {
+            const commentId = event.target.getAttribute("data-id")
+            fetch(BASE_URL + "/" + commentId, {
+                headers: {
+                    'Content-Type': 'application/json;charset=UTF-8'
+                },
+                method: 'PUT',
+                body: JSON.stringify({
+                    contents: editor.getMarkdown() || event.target.innerText
+                })
+            }).then(res => res.json())
+                .then(comment => {
+                    event.target.closest("div.comment-body").querySelector("p.comment-content").innerText = comment.contents
+                })
+                .catch(error => console.warn(error))
+        }
+
+        if (event.target.tagName === 'BUTTON' && event.target.classList.contains("delete")) {
+            console.log(event.target)
+            const commentId = event.target.getAttribute("data-id")
+            fetch(BASE_URL + "/" + commentId, {
+                method: 'DELETE'
+            }).then(res => {
+              event.target.closest("li.comment-item").remove()
+            }).catch(error => console.warn(error))
+        }
+    }
+
+    comments.addEventListener('click', updateAndDeleteComment)
 </script>
 </body>
 </html>

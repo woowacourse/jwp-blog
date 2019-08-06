@@ -1,7 +1,10 @@
 package techcourse.myblog.dto;
 
+import lombok.ToString;
+
 import javax.validation.constraints.NotBlank;
 
+@ToString
 public class CommentDto {
     @NotBlank
     private String contents;
