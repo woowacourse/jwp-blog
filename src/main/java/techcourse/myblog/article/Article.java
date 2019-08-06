@@ -30,7 +30,7 @@ public class Article extends BaseEntity {
     @Lob
     private String contents;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "author", foreignKey = @ForeignKey(name = "fk_article_to_user"))
     private User author;
 
@@ -66,5 +66,17 @@ public class Article extends BaseEntity {
 
     public int getCountOfComment() {
         return comments.size();
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "articleId=" + articleId +
+                ", title='" + title + '\'' +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", contents='" + contents + '\'' +
+                ", author=" + author +
+                ", comments=" + comments +
+                '}';
     }
 }

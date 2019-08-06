@@ -2,8 +2,6 @@
 <html layout:decorator="layout/default"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
-
-
 <th:block layout:fragment="content">
     <div>
         <div class="about-cover card no-border ">
@@ -70,7 +68,7 @@
                         <span class="font-size-16 text-info" th:text="${article.countOfComment}"></span>
                     </div>
                     <div class="comment">
-                        <ul class="list-unstyled list-info">
+                        <ul id="comment-list" class="list-unstyled list-info">
                             <li class="comment-item border bottom mrg-btm-30" th:each="comment : ${comments}">
                                 <img alt=""
                                      class="thumb-img img-circle"
@@ -119,7 +117,8 @@
                             <form th:action="@{/articles/{articleId}/comment(articleId=${article.articleId})}"
                                   method="post" style="margin-top: 20px;">
                                 <input id="comment-contents" name="contents" type="hidden">
-                                <input class="btn btn-info float-right mrg-btm-0 relative bottom-5" type="submit"
+                                <input id="comment-create" class="btn btn-info float-right mrg-btm-0 relative bottom-5"
+                                       type="button"
                                        value="댓글 작성">
                             </form>
                         </div>
@@ -128,7 +127,6 @@
             </div>
         </div>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
     <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
     <script th:inline="javascript" type="text/javascript">
@@ -154,9 +152,107 @@
     </script>
     <script>
         function update(id) {
-            var x = document.getElementById("comment" + id);
+            const temp = "comment" + id;
+            var x = document.getElementById(temp);
+            console.log(temp)
+            console.log("***********")
+            console.log(x)
             x.style.display = "block";
         }
     </script>
+    <script th:inline="javascript" type="text/javascript">
+        const articleId = /*[[${articleId}]]*/'';
+
+        let comments;
+        document.getElementById("comment-create").addEventListener('click', function () {
+            const data = {contents: document.getElementById('comment-contents').value};
+            postData('http://localhost:8080/articles/' + articleId + '/comment', data)
+                .then(data => {
+                    console.log(data.comments);
+                    comments=data.comments;
+                    print(comments)
+                    console.log(JSON.stringify(data.author));
+                    return JSON.stringify(data);
+                }) // JSON-string from `response.json()` call
+                .catch(error => console.error(error));
+        })
+
+        function postData(url, data) {
+            // Default options are marked with *
+
+            return fetch(url, {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, cors, *same-origin
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'same-origin', // include, *same-origin, omit
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'dataType':'json'
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: 'follow', // manual, *follow, error
+                referrer: 'no-referrer', // no-referrer, *client
+                body: JSON.stringify(data), // body data type must match "Content-Type" header
+            })
+                .then(response => response.json()); // parses JSON response into native JavaScript objects
+        }
+
+        function print(comments) {
+            var i;
+            console.log("rewwerrwerew");
+            console.log(comments[0]);
+            console.log(comments[0].author);
+            var template = '';
+            for(i =0; i<comments.length; i++){
+                template = template + '<li class="comment-item border bottom mrg-btm-30" >\n' +
+                '<img alt=""\n' +
+                'class="thumb-img img-circle"\n' +
+                'src="https://avatars3.githubusercontent.com/u/50367798?v=4">\n' +
+                '<div class="info">\n' +
+                '<span class="text-bold inline-block"\n' +
+                `>${comments[i].author.userName}</span>\n` +
+                '<span class="sub-title inline-block pull-right">\n' +
+                '<i class="ti-timer pdd-right-5"></i>\n' +
+                '<span>6 min ago</span>\n' +
+                '\n' +
+                '</span>\n' +
+                `<p class="width-80" >${comments[i].contents}</p>\n` +
+                `<div id = comment${comments[i].id} style="display: none;">\n` +
+                '<form method="post"\n' +
+                `action=/articles/${articleId}/comment/${comments[i].id}>\n` +
+                '<input name="_method" type="hidden" value="put">\n' +
+                `<input value=${comments[i].contents} name="contents" class="text-area"\n` +
+                'type="text"\n' +
+                'style="border: 0; background-color: #fff; width: 80%; height: 100px; border-radius: 10px; margin-bottom: 10px">\n' +
+                '<button class="btn btn-info float-right mrg-btm-0 relative bottom-5"\n' +
+                'type="submit">수정\n' +
+                '</button>\n' +
+                '</form>\n' +
+                '</div>\n' +
+                '<div>\n' +
+                `<button class="pointer btn btn-icon" style="float: left;"\n onclick=update(${comments[i].id})>\n`+
+                '<i class="ti-pencil text-dark font-size-10 pdd-horizontal-5"></i>\n' +
+                '</button>\n' +
+                '<form method="post"\n' +
+                `action=/articles/${articleId}/comment/${comments[i].id}>\n` +
+                '<input name="_method" type="hidden" value="delete">\n' +
+                '<button class="pointer btn btn-icon" style="float: left;" type="submit">\n' +
+                '<i class="ti-trash text-dark font-size-10 pdd-horizontal-5"></i>\n' +
+                '</button>\n' +
+                '</form>\n' +
+                '</div>\n' +
+                '<p id="comment-edit-section" style="clear: both;"></p>\n' +
+                '</div>\n' +
+                '</li>';
+
+                console.log(template);
+                document.getElementById('comment-list').innerHTML = template;
+
+            }
+        }
+
+
+    </script>
 </th:block>
+
 </html>
