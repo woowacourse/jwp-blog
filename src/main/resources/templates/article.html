@@ -157,19 +157,15 @@
             '<a id="cancel-a-' + comment.id + '" onclick="cancelComment(' + comment.id + ')" style="display: none">취소</a>' +
             '<span>' + comment.date + '</span>' +
             '</span>' +
-            '<p id="comment-div-' + comment.id + ' class="width-80">' + comment.contents + '</p>' +
+            '<p id="comment-div-' + comment.id + '" class="width-80">' + comment.contents + '</p>' +
             '<textarea class="edit" id="edit-section-' + comment.id + '" name="edit-contents" style="display: none">' + comment.contents + '</textarea>' +
             '</div>' +
             '</li>';
     }
 
     document.getElementById('save-btn').addEventListener('click', function () {
-
         const commentList = document.getElementById('comment-list');
-
-
         const contents = document.getElementById('comment-contents').value;
-        console.log("contents   " + contents);
         const commentData = {contents: contents};
 
         fetch("/comment/" + [[${article.id}]], {
@@ -180,6 +176,8 @@
             .then(json => {
                 console.log(json);
                 commentList.insertAdjacentHTML('beforeend', getCommentTemplate(json));
+                editor.setMarkdown('');
+                document.getElementById('comment-contents').value = '';
             });
     });
 </script>
