@@ -2,16 +2,18 @@ package techcourse.myblog.service.dto;
 
 import techcourse.myblog.domain.User;
 
+import java.time.LocalDateTime;
+
 public class CommentResponse {
     private Long id;
     private String contents;
-    private long elapsedTime;
+    private LocalDateTime createdDate;
     private User commenter;
 
-    public CommentResponse(Long id, String contents, long elapsedTime, User commenter) {
+    public CommentResponse(Long id, String contents, LocalDateTime createdDate, User commenter) {
         this.id = id;
         this.contents = contents;
-        this.elapsedTime = elapsedTime;
+        this.createdDate = createdDate;
         this.commenter = commenter;
     }
 
@@ -31,12 +33,12 @@ public class CommentResponse {
         this.contents = contents;
     }
 
-    public long getElapsedTime() {
-        return elapsedTime;
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
-    public void setElapsedTime(long elapsedTime) {
-        this.elapsedTime = elapsedTime;
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     public User getCommenter() {
