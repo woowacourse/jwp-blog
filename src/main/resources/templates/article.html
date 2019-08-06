@@ -133,15 +133,24 @@
 <script type="text/javascript" th:inline="javascript">
     `use strict`
 
-    window.onload = function () {
-        [[${comments}]].forEach(comment => appendComment(comment));
-        drawCommentCount([[${comments.size()}]])
-    }
-
     const sessionUser = [[${session.user}]];
     const articleContents = [[${article.contents}]];
     const articleId = [[${article.id}]];
     const commentUrl = `/articles/${articleId}/comments`;
+
+    window.onload = function () {
+        drawComments();
+    }
+
+    const drawComments = () => {
+        fetch(commentUrl, {
+            method: "GET",
+        }).then(response => response.json())
+            .then(comments => {
+                comments.forEach(comment => appendComment(comment))
+                drawCommentCount(comments.length)
+            })
+    }
 
     const viewer = tui.Editor.factory({
         el: document.querySelector('#viewerSection'),

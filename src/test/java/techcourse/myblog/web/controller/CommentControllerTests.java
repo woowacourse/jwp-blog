@@ -26,6 +26,7 @@ class CommentControllerTests extends ControllerTestTemplate {
     private CommentDto commentDto = new CommentDto("comment");
     private CommentDto updateCommentDto = new CommentDto("new comment");
     private String savedArticleUrl;
+    private String commentUrl;
 
     @BeforeEach
     public void setup() {
@@ -33,17 +34,49 @@ class CommentControllerTests extends ControllerTestTemplate {
         ArticleDto articleDto = new ArticleDto("title", "coverUrl", "contents");
         savedArticleUrl = getRedirectUrl(
                 loginAndRequest(authorDto, POST, "/articles/write", parseArticle(articleDto)));
+        commentUrl = savedArticleUrl + "/comments";
+    }
+
+    @Test
+    public void 게시글의_댓글_개수_요청() {
+        //댓글 작성 전 0개
+        webTestClient.get().uri(commentUrl + "/count")
+                .cookie("JSESSIONID", getLoginSessionId(authorDto))
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$").isEqualTo(0);
+
+        //댓글 하나 작성
+        webTestClient.post().uri(commentUrl)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(commentDto), CommentDto.class)
+                .cookie("JSESSIONID", getLoginSessionId(authorDto))
+                .exchange()
+                .returnResult(String.class);
+
+        //댓글 작성 후 1개
+        webTestClient.get().uri(commentUrl + "/count")
+                .cookie("JSESSIONID", getLoginSessionId(authorDto))
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$").isEqualTo(1);
+
     }
 
     @Test
     public void 로그아웃_상태_댓글작성_리다이렉트() {
-        String logoutWriteCommentRedirectUrl = getRedirectUrl(httpRequest(POST, savedArticleUrl + "/comments", parser(commentDto)));
+        String logoutWriteCommentRedirectUrl = getRedirectUrl(httpRequest(POST, commentUrl, parser(commentDto)));
         assertThat(logoutWriteCommentRedirectUrl.equals("/login"));
     }
 
     @Test
     public void 로그인_상태_댓글작성_성공() {
-        webTestClient.post().uri(savedArticleUrl + "/comments")
+        webTestClient.post().uri(commentUrl)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentDto), CommentDto.class)
@@ -113,7 +146,7 @@ class CommentControllerTests extends ControllerTestTemplate {
     }
 
     private String getCommentUrl() {
-        webTestClient.post().uri(savedArticleUrl + "/comments")
+        webTestClient.post().uri(commentUrl)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(commentDto), CommentDto.class)
