@@ -105,7 +105,8 @@
                                         <form method="post"
                                               th:action="@{/articles/{articleId}/comment/{commentId}(articleId=${article.articleId}, commentId=${comment.id})}">
                                             <input name="_method" type="hidden" value="delete">
-                                            <button class="pointer btn btn-icon" style="float: left;" type="submit">
+                                            <button class="pointer btn btn-icon" style="float: left;" type="button"
+                                                    th:onclick="|javascript:deleteComment(${comment.id})|">
                                                 <i class="ti-trash text-dark font-size-10 pdd-horizontal-5"></i>
                                             </button>
                                         </form>
@@ -152,6 +153,35 @@
             height: '200px'
         });
     </script>
+    <script th:inline="javascript" type="text/javascript">
+        function deleteComment(commentId) {
+            deleteData('/articles/' + articleId + '/comment/' + commentId)
+                .then(data => {
+                    console.log(data);
+                    print(data)
+                    return JSON.stringify(data);
+                })
+                .catch(error => console.error(error));
+
+        }
+
+        function deleteData(url, data) {
+            return fetch(url, {
+                method: 'DELETE',
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                redirect: 'follow',
+                referrer: 'no-referrer',
+                body: JSON.stringify(data),
+            })
+                .then(response => response.json());
+        }
+
+    </script>
     <script>
         function update(id) {
             const temp = "comment" + id;
@@ -168,79 +198,63 @@
                 .then(data => {
                     console.log(data);
                     print(data)
-                    // console.log(JSON.stringify(data.author));
                     return JSON.stringify(data);
-                }) // JSON-string from `response.json()` call
+                })
                 .catch(error => console.error(error));
 
         }
 
         function putData(url, data) {
-            // Default options are marked with *
-
             return fetch(url, {
-                method: 'PUT', // *GET, POST, PUT, DELETE, etc.
-                mode: 'cors', // no-cors, cors, *same-origin
-                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                credentials: 'same-origin', // include, *same-origin, omit
+                method: 'PUT',
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json',
-                    // 'dataType':'json'
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                redirect: 'follow', // manual, *follow, error
-                referrer: 'no-referrer', // no-referrer, *client
-                body: JSON.stringify(data), // body data type must match "Content-Type" header
+                redirect: 'follow',
+                referrer: 'no-referrer',
+                body: JSON.stringify(data),
             })
-                .then(response => response.json()); // parses JSON response into native JavaScript objects
+                .then(response => response.json());
         }
 
     </script>
 
     <script th:inline="javascript" type="text/javascript">
-        const aId = /*[[${articleId}]]*/'';
-
+        let aId = /*[[${articleId}]]*/'';
         let commentList;
         document.getElementById("comment-create").addEventListener('click', function () {
             const data = {contents: document.getElementById('comment-contents').value};
-            console.log("----------------")
-            console.log(data)
             postData('http://localhost:8080/articles/' + aId + '/comment', data)
                 .then(data => {
                     console.log(data);
                     commentList = data;
                     print(commentList)
-                    // console.log(JSON.stringify(data[0].author));
                     return JSON.stringify(data);
-                }) // JSON-string from `response.json()` call
+                })
                 .catch(error => console.error(error));
         })
 
         function postData(url, data) {
-            // Default options are marked with *
-
             return fetch(url, {
-                method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                mode: 'cors', // no-cors, cors, *same-origin
-                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                credentials: 'same-origin', // include, *same-origin, omit
+                method: 'POST',
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json',
-                    // 'dataType':'json'
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                redirect: 'follow', // manual, *follow, error
-                referrer: 'no-referrer', // no-referrer, *client
-                body: JSON.stringify(data), // body data type must match "Content-Type" header
+                redirect: 'follow',
+                referrer: 'no-referrer',
+                body: JSON.stringify(data),
             })
-                .then(response => response.json()); // parses JSON response into native JavaScript objects
+                .then(response => response.json());
         }
 
         function print(comments) {
             var i;
-            console.log("rewwerrwerew");
-            console.log(comments[0]);
-            console.log(comments[0].author);
             var template = '';
             for (i = 0; i < comments.length; i++) {
                 template = template + '<li class="comment-item border bottom mrg-btm-30" >\n' +
@@ -275,7 +289,7 @@
                     '<form method="post"\n' +
                     `action=/articles/${articleId}/comment/${comments[i].id}>\n` +
                     '<input name="_method" type="hidden" value="delete">\n' +
-                    '<button class="pointer btn btn-icon" style="float: left;" type="submit">\n' +
+                    `<button class="pointer btn btn-icon" style="float: left;" type="button" onclick="deleteComment(${comments[i].id})">\n` +
                     '<i class="ti-trash text-dark font-size-10 pdd-horizontal-5"></i>\n' +
                     '</button>\n' +
                     '</form>\n' +
@@ -288,9 +302,6 @@
 
             }
         }
-
-
     </script>
 </th:block>
-
 </html>
