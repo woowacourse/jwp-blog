@@ -1,6 +1,7 @@
 package techcourse.myblog.service;
 
 import org.springframework.stereotype.Service;
+import techcourse.myblog.article.Article;
 import techcourse.myblog.comment.Comment;
 import techcourse.myblog.comment.CommentRepository;
 import techcourse.myblog.exception.NotFoundObjectException;
@@ -8,6 +9,7 @@ import techcourse.myblog.service.dto.CommentDto;
 import techcourse.myblog.user.User;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class CommentService {
@@ -30,9 +32,10 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateComment(Long commentId, User user, CommentDto commentDto) {
+    public Comment updateComment(Long commentId, User user, CommentDto commentDto) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundObjectException::new);
         Comment updateComment = commentDto.toEntity(user);
         comment.update(updateComment, user);
+        return comment;
     }
 }

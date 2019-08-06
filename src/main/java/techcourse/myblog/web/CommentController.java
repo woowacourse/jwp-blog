@@ -14,6 +14,7 @@ import techcourse.myblog.user.User;
 
 import javax.servlet.http.HttpSession;
 import java.awt.*;
+import java.util.List;
 
 @RequestMapping("/articles/{articleId}/comment")
 @RestController
@@ -28,27 +29,27 @@ public class CommentController {
         this.articleService = articleService;
     }
 
-//    @PostMapping
-//    public String createComment(@PathVariable Long articleId, CommentDto commentDto, HttpSession httpSession) {
-//        User author = (User) httpSession.getAttribute("user");
-//        Comment comment = commentService.createComment(commentDto, author);
-//        articleService.addComment(articleId, comment);
+    @PostMapping
+    public List<Comment> createComment(@PathVariable Long articleId, @RequestBody CommentDto commentDto, HttpSession httpSession) {
+        log.info("아티클 아이디{}",articleId);
+        User author = (User) httpSession.getAttribute("user");
+        Comment comment = commentService.createComment(commentDto, author);
+        articleService.addComment(articleId, comment);
+        return articleService.findAllComments(articleId);
+    }
+
+//    @PutMapping("/{commentId}")
+//    public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, CommentDto commentDto, HttpSession httpSession) {
+//        User user = (User) httpSession.getAttribute("user");
+//        commentService.updateComment(commentId, user, commentDto);
 //        return "redirect:/articles/" + articleId;
 //    }
 
-    @PostMapping
-    public Article createComment(@PathVariable Long articleId, @RequestBody CommentDto commentDto, HttpSession httpSession) {
-        System.out.println("나와라: "+commentDto.getContents());
-        User author = (User) httpSession.getAttribute("user");
-        Comment comment = commentService.createComment(commentDto, author);
-        return articleService.addComment(articleId, comment);
-    }
-
     @PutMapping("/{commentId}")
-    public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, CommentDto commentDto, HttpSession httpSession) {
+    public List<Comment> updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @RequestBody CommentDto commentDto, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         commentService.updateComment(commentId, user, commentDto);
-        return "redirect:/articles/" + articleId;
+        return articleService.findAllComments(articleId);
     }
 
     @DeleteMapping("/{commentId}")
