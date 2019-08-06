@@ -3,9 +3,8 @@ package techcourse.myblog.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import techcourse.myblog.domain.User;
-import techcourse.myblog.domain.assembler.UserAssembler;
-import techcourse.myblog.dto.UserRequest;
-import techcourse.myblog.dto.UserResponse;
+import techcourse.myblog.domain.UserAssembler;
+import techcourse.myblog.dto.UserDto;
 import techcourse.myblog.exception.DuplicateEmailException;
 import techcourse.myblog.exception.FailedLoginException;
 import techcourse.myblog.exception.FailedPasswordVerificationException;
@@ -24,35 +23,35 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User save(UserRequest userDto) {
+    public void save(UserDto userDto) {
         validateUniqueEmail(userDto);
         validatePasswordConfirm(userDto);
         User user = UserAssembler.writeUser(userDto);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
-    private void validateUniqueEmail(UserRequest userDto) {
+    private void validateUniqueEmail(UserDto userDto) {
         if (userRepository.countByEmail(userDto.getEmail()) > NOT_FOUND_RESULT) {
             throw new DuplicateEmailException();
         }
     }
 
-    private void validatePasswordConfirm(UserRequest userDto) {
+    private void validatePasswordConfirm(UserDto userDto) {
         if (!userDto.getPassword().equals(userDto.getPasswordConfirm())) {
             throw new FailedPasswordVerificationException();
         }
     }
 
-    public List<UserResponse> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return UserAssembler.writeDtos(userRepository.findAll());
     }
 
     public User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException("잘못된 접근입니다."));
     }
 
-    public User findUserByEmailAndPassword(UserRequest userDto) {
+    public User findUserByEmailAndPassword(UserDto userDto) {
         String email = userDto.getEmail();
         String password = userDto.getPassword();
         checkEmail(email);
@@ -67,8 +66,8 @@ public class UserService {
     }
 
     @Transactional
-    public User update(UserRequest userDto) {
-        User updatedUser = new User(userDto.getName(), userDto.getEmail(), userDto.getPassword());
+    public User update(UserDto userDto) {
+        User updatedUser = new User(userDto.getUserId(), userDto.getName(), userDto.getEmail(), userDto.getPassword());
         User user = userRepository.findUserByEmail(updatedUser.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
         return user.update(updatedUser);

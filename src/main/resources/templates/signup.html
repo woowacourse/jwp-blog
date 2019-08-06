@@ -38,7 +38,7 @@
                                                             회원가입</h2>
                                                     </div>
                                                     <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger" role="alert"></div>
-                                                    <form action="/users" method="post" onsubmit="return enrollUser();">
+                                                    <form action="/users/new" method="post" onsubmit="return enrollUser();">
                                                         <div class="form-group">
                                                             <label class="text-normal text-dark">Username</label>
                                                             <input type="text" name="name" class="form-control" pattern="^[a-zA-Zㄱ-ㅎ가-힣]*$" minlength="2" maxlength="10" required>
@@ -90,7 +90,7 @@
     const password = document.getElementById("password");
     const passwordConfirm = document.getElementById("passwordConfirm");
 
-    function validatePassword() {
+    function validatePassword(){
         if (password.value != passwordConfirm.value) {
             passwordConfirm.setCustomValidity("비밀번호가 일치하지 않습니다.");
         } else {

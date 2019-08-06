@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 @Entity
-public class User extends Auditable {
+public class User {
     private static Pattern PATTERN_NAME = Pattern.compile("^[a-zA-Zㄱ-ㅎ가-힣]*$");
     private static Pattern PATTERN_EMAIL = Pattern.compile("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$");
     private static Pattern PATTERN_PASSWORD = Pattern.compile("^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,}$");
@@ -28,11 +28,12 @@ public class User extends Auditable {
     public User() {
     }
 
-    public User(String name, String email, String password) {
+    public User(long userId, String name, String email, String password) {
         validateName(name);
         validateEmail(email);
         validatePassword(password);
 
+        this.userId = userId;
         this.name = name;
         this.email = email;
         this.password = password;
