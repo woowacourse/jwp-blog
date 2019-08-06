@@ -38,13 +38,6 @@ public class CommentController {
         return articleService.findAllComments(articleId);
     }
 
-//    @PutMapping("/{commentId}")
-//    public String updateComment(@PathVariable Long articleId, @PathVariable Long commentId, CommentDto commentDto, HttpSession httpSession) {
-//        User user = (User) httpSession.getAttribute("user");
-//        commentService.updateComment(commentId, user, commentDto);
-//        return "redirect:/articles/" + articleId;
-//    }
-
     @PutMapping("/{commentId}")
     public List<Comment> updateComment(@PathVariable Long articleId, @PathVariable Long commentId, @RequestBody CommentDto commentDto, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
@@ -53,10 +46,10 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public String deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession httpSession) {
+    public List<Comment> deleteComment(@PathVariable Long articleId, @PathVariable Long commentId, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
         commentService.deleteComment(commentId, user);
-        return "redirect:/articles/" + articleId;
+        return articleService.findAllComments(articleId);
     }
 
 }
