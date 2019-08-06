@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import techcourse.myblog.user.domain.vo.*;
+import techcourse.myblog.user.dto.UserResponseDto;
 
 import javax.persistence.*;
 
@@ -41,6 +42,14 @@ public class User {
 
     public boolean checkPassword(String password) {
         return this.password.isCorrect(password);
+    }
+
+    public UserResponseDto mapUserResponse() {
+        return UserResponseDto.builder()
+                .id(this.id)
+                .email(this.email.getEmail())
+                .name(this.name.getName())
+                .build();
     }
 }
 

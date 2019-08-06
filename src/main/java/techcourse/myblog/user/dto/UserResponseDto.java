@@ -1,9 +1,6 @@
 package techcourse.myblog.user.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -13,4 +10,11 @@ public class UserResponseDto {
     private long id;
     private String email;
     private String name;
+
+    @Builder
+    public UserResponseDto(long id, String email, String name) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+    }
 }
